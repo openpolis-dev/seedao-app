@@ -27,7 +27,7 @@ jobs:
 
      - name: Pushes to another repository
        run: |
-         git clone --single-branch --branch "main" "https://xrdavies:${{ secrets.PERSONAL_TOKEN }}@github.com/TheSeed-Labs/os-frontend-preview.git";
+         git clone --single-branch --branch "main" "https://xrdavies:${{ secrets.PERSONAL_TOKEN }}@github.com/TheSeed-Labs/os-frondend-preview.git";
          cd os-frontend-preview;
          git config --global user.name bot;
          git config --global user.email bot@theseedlabs.io;
@@ -36,4 +36,4 @@ jobs:
          git status;
          git commit -m "deploy";
          git status;
-         git push "https://xrdavies:${{ secrets.PERSONAL_TOKEN }}@github.com/TheSeed-Labs/os-frontend-preview.git" --set-upstream main
+         git push "https://xrdavies:${{ secrets.PERSONAL_TOKEN }}@github.com/TheSeed-Labs/os-frondend-preview.git" --set-upstream main
