@@ -1,0 +1,39 @@
+name: Deploy to another repo
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+     - name: Checkout
+       uses: actions/checkout@v3
+
+     - name: Setup Node
+       uses: actions/setup-node@v2
+       with:
+         node-version: '16.17.0'
+
+     - name: Compile
+       env:
+         CI: false
+       run: |
+         npm install;
+         npm run build;
+
+     - name: Pushes to another repository
+       run: |
+         git clone --single-branch --branch "main" "https://xrdavies:${{ secrets.PERSONAL_TOKEN }}@github.com/TheSeed-Labs/os-frontend-preview.git";
+         cd os-frontend-preview;
+         git config --global user.name bot;
+         git config --global user.email bot@theseedlabs.io;
+         cp -R ../build/* .;
+         git add .;
+         git status;
+         git commit -m "deploy";
+         git status;
+         git push "https://xrdavies:${{ secrets.PERSONAL_TOKEN }}@github.com/TheSeed-Labs/os-frontend-preview.git" --set-upstream main
