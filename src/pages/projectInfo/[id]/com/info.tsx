@@ -3,10 +3,15 @@ import styled from 'styled-components';
 import { Button } from '@paljs/ui/Button';
 
 const Box = styled.div`
-  margin-top: 40px;
+  margin-top: 50px;
 `;
 
-const TopImg = styled.div``;
+const TopImg = styled.div`
+  margin-bottom: 40px;
+  img {
+    max-width: 600px;
+  }
+`;
 
 const InfoBox = styled.div`
   dl {
@@ -33,6 +38,9 @@ const InfoBox = styled.div`
 
 const Title = styled.div`
   font-weight: bold;
+  border-bottom: 1px solid #eee;
+  padding: 10px 20px;
+  margin-bottom: 20px;
 `;
 export default function Info() {
   return (
