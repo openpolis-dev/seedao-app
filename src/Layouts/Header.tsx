@@ -7,6 +7,7 @@ import { Actions } from '@paljs/ui/Actions';
 import ContextMenu from '@paljs/ui/ContextMenu';
 import User from '@paljs/ui/User';
 import { breakpointDown } from '@paljs/ui/breakpoints';
+import Select from '@paljs/ui/Select';
 
 interface HeaderProps {
   toggleSidebar: () => void;
@@ -19,7 +20,28 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = (props) => {
-  const router = useRouter();
+  const { locale, asPath, pathname } = useRouter();
+
+  const getLanguages = () => [
+    {
+      value: 'en',
+      label: (
+        <Link href={`/en${asPath}`} locale="en">
+          Engilsh
+        </Link>
+      ),
+    },
+    {
+      value: 'zh',
+      label: (
+        <Link href={asPath} locale="zh">
+          中文
+        </Link>
+      ),
+    },
+  ];
+
+  // const onSelectLanguage = (data: null | { value: string; label: JSX.Element }) => {};
   return (
     <LayoutHeader fixed>
       <HeaderStyle>
@@ -49,11 +71,23 @@ const Header: React.FC<HeaderProps> = (props) => {
           actions={[
             {
               content: (
+                <SelectStyled
+                  instanceId="react-select-input"
+                  isSearchable={false}
+                  shape="SemiRound"
+                  placeholder="Themes"
+                  value={getLanguages().find((item) => item.value === locale)}
+                  options={getLanguages()}
+                />
+              ),
+            },
+            {
+              content: (
                 <ContextMenu
                   nextJs
                   style={{ cursor: 'pointer' }}
                   placement="bottom"
-                  currentPath={router.pathname}
+                  currentPath={pathname}
                   items={[
                     { title: 'Profile', link: { href: '/user' } },
                     { title: 'Vault', link: { href: '/user' } },
@@ -101,6 +135,10 @@ const HeaderStyle = styled.div`
   }
 `;
 
+const SelectStyled = styled(Select)`
+  min-width: 150px;
+`;
+
 const LogoIcon = styled.img`
-  width: 100px;
+  width: 70px;
 `;

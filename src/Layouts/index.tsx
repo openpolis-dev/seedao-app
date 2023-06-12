@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, Fragment } from 'react';
+import React, { useState, useRef, useEffect, Fragment, useMemo } from 'react';
 import { DefaultTheme, ThemeProvider } from 'styled-components';
 import themes from './themes';
 import { Layout, LayoutContent, LayoutContainer, LayoutColumns, LayoutColumn } from '@paljs/ui/Layout';
@@ -13,6 +13,7 @@ import { Menu, MenuRefObject } from '@paljs/ui/Menu';
 import Link from 'next/link';
 import menuItems from './menuItem';
 import SEO, { SEOProps } from 'components/SEO';
+import useTranslation from 'hooks/useTranslation';
 
 const getDefaultTheme = (): DefaultTheme['name'] => {
   if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
@@ -25,6 +26,7 @@ const getDefaultTheme = (): DefaultTheme['name'] => {
 
 const LayoutPage: React.FC<SEOProps> = ({ children, ...rest }) => {
   const [theme, setTheme] = useState<DefaultTheme['name']>('default');
+  const { t } = useTranslation();
   const [dir, setDir] = useState<'ltr' | 'rtl'>('ltr');
   const sidebarRef = useRef<SidebarRefObject>(null);
   const router = useRouter();
@@ -52,6 +54,10 @@ const LayoutPage: React.FC<SEOProps> = ({ children, ...rest }) => {
     const newDir = dir === 'ltr' ? 'rtl' : 'ltr';
     setDir(newDir);
   };
+
+  const menuItemsFormat = useMemo(() => {
+    return menuItems.map((d) => ({ ...d, title: t(d.title) }));
+  }, [t]);
 
   return (
     <Fragment>
@@ -96,7 +102,7 @@ const LayoutPage: React.FC<SEOProps> = ({ children, ...rest }) => {
                     className="sidebar-menu"
                     Link={Link}
                     ref={menuRef}
-                    items={menuItems}
+                    items={menuItemsFormat}
                     currentPath={router.pathname}
                     toggleSidebar={() => sidebarRef.current?.hide()}
                   />
