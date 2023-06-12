@@ -1,5 +1,9 @@
 {
   "menus": {
-    "Proposal": "提案"
+    "Proposal": "提案",
+    "Project": "项目",
+    "Guild": "工会",
+    "city-hall": "市政厅",
+    "assets": "SeeDAO资产"
   }
 }

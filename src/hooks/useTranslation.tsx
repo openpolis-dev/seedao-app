@@ -14,13 +14,20 @@ const LANGUAGE_PACKAGES: { [key: string]: I18nStoreType } = {
 
 const useTranslation = () => {
   const { locale } = useRouter();
+
   const jsonFun = useCallback(
     (key: string, params = {}) => {
       if (!key || !locale) {
         return key;
       }
-      let value = LANGUAGE_PACKAGES[locale][key];
+      let strArr = key.split('.');
+      let value = LANGUAGE_PACKAGES[locale];
+      strArr.map((item) => {
+        value = value[item];
+      });
+      // let value = LANGUAGE_PACKAGES[locale][key];
       console.log('~', LANGUAGE_PACKAGES[locale]);
+
       console.log('~key', key);
       console.log('~value', value);
       if (!value || typeof value !== 'string') {

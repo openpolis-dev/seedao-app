@@ -6,19 +6,19 @@ const items: MenuItemType[] = [
     link: { href: '/proposal' },
   },
   {
-    title: 'Project',
+    title: 'menus.Project',
     link: { href: '/project' },
   },
   {
-    title: 'Guild',
+    title: 'menus.Guild',
     link: { href: '/guild' },
   },
   {
-    title: 'City Hall',
+    title: 'menus.city-hall',
     link: { href: '/city-hall' },
   },
   {
-    title: 'SeeDAO Assets',
+    title: 'menus.assets',
     link: { href: '/assets' },
   },
 ];

@@ -1,5 +1,9 @@
 {
   "menus": {
-    "Proposal": "Proposal"
+    "Proposal": "Proposal",
+    "Project": "Project",
+    "Guild": "Guild",
+    "city-hall": "City Hall",
+    "assets": "SeeDAO Assets"
   }
 }
