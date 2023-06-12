@@ -17,12 +17,18 @@ instance.interceptors.response.use(
   },
 );
 
+export interface ResponseData<T = any> {
+  code: number;
+  msg: string;
+  data: T;
+}
+
 /**
  * get
  * @method get
  * @param {url, params, loading}
  */
-const get = function (url: string, params: any = {}) {
+const get = function (url: string, params: any = {}): Promise<ResponseData> {
   return new Promise((resolve, reject) => {
     instance
       .get(url, { params })
@@ -39,7 +45,7 @@ const get = function (url: string, params: any = {}) {
  * @method post
  * @param {url, params}
  */
-const post = function (url: string, data: any) {
+const post = function (url: string, data: any): Promise<ResponseData> {
   return new Promise((resolve, reject) => {
     instance
       .post(url, data)
@@ -57,7 +63,7 @@ const post = function (url: string, data: any) {
  * @method put
  * @param {url, params}
  */
-const put = function (url: string, data: any) {
+const put = function (url: string, data: any): Promise<ResponseData> {
   return new Promise((resolve, reject) => {
     instance
       .post(url, data)
@@ -70,7 +76,7 @@ const put = function (url: string, data: any) {
   });
 };
 
-const rdelete = function (url: string, params: any) {
+const rdelete = function (url: string, params: any): Promise<ResponseData> {
   return new Promise((resolve, reject) => {
     instance
       .delete(url, {
