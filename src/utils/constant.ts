@@ -1,0 +1,1 @@
+export const SELECT_WALLET = 'SEEDAO_WALLET';
