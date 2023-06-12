@@ -25,11 +25,6 @@ const useTranslation = () => {
       strArr.map((item) => {
         value = value[item];
       });
-      // let value = LANGUAGE_PACKAGES[locale][key];
-      console.log('~', LANGUAGE_PACKAGES[locale]);
-
-      console.log('~key', key);
-      console.log('~value', value);
       if (!value || typeof value !== 'string') {
         return key;
       }
