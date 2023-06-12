@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import Layout from 'Layouts';
 import requests from 'requests';
-import { ICategory } from 'type/proposal.type';
+import { ICategory, IBaseProposal } from 'type/proposal.type';
+import { Tabs, Tab } from '@paljs/ui/Tabs';
 
 export default function Index() {
   const [categories, setCategories] = useState<ICategory[]>([]);
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [proposals, setProposals] = useState<IBaseProposal[]>([]);
 
   const getCategories = async () => {
     try {
@@ -15,23 +19,50 @@ export default function Index() {
     }
   };
 
+  const getAllProposals = async () => {
+    try {
+      const resp = await requests.proposal.getAllProposals({ page, per_page: pageSize, sort: 'latest' });
+      setProposals(resp.data.threads);
+    } catch (error) {
+      console.error('getAllProposals failed', error);
+    }
+  };
+
   useEffect(() => {
-    getCategories();
+    getAllProposals();
   }, []);
+
+  const handleSelectTab = (index: number) => {
+    if (index === 0) {
+      getCategories();
+    } else {
+      getAllProposals();
+    }
+  };
 
   return (
     <Layout title="SeeDAO Proposal">
-      <h1>proposal</h1>
-      {categories.map((category) => (
-        <div>
-          <h2>{category.name}</h2>
-          <ul key={category.id}>
-            {category.children.map((subCategory) => (
-              <li key={subCategory.id}>{subCategory.name}</li>
+      <Tabs activeIndex={0} fullWidth onSelect={handleSelectTab}>
+        <Tab title="Categories" responsive>
+          {categories.map((category) => (
+            <div>
+              <h2>{category.name}</h2>
+              <ul key={category.id}>
+                {category.children.map((subCategory) => (
+                  <li key={subCategory.id}>{subCategory.name}</li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </Tab>
+        <Tab title="Latest" responsive>
+          <ul>
+            {proposals.map((prop) => (
+              <li key={prop.id}>{prop.title}</li>
             ))}
           </ul>
-        </div>
-      ))}
+        </Tab>
+      </Tabs>
     </Layout>
   );
 }

@@ -13,3 +13,25 @@ export interface ISubCategory extends IBaseCategory {}
 export interface ICategory extends IBaseCategory {
   children: ISubCategory[];
 }
+
+export interface IBaseProposal {
+  category_name: string;
+  id: string;
+  title: string;
+  is_pin: string;
+  is_delete: string;
+  first_post: {
+    id: number;
+    content: string;
+  };
+  likes_count: number;
+  posts_count: number;
+  user: {
+    photo_url: string;
+    user_title: {
+      name: string;
+      background: '#2ecc71';
+    };
+    username: string;
+  };
+}

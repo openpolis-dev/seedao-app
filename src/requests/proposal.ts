@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { ICategory } from 'type/proposal.type';
+import { ICategory, IBaseProposal } from 'type/proposal.type';
 
 export interface ResponseData<T = any> {
   code: number;
@@ -38,4 +38,24 @@ interface IProposalCategoriesData {
 
 export const getCategories = (): Promise<ResponseData<IProposalCategoriesData>> => {
   return get('https://forum.seedao.xyz/api/custom/group/info');
+};
+
+interface IPageParams {
+  page: number;
+  per_page: number;
+}
+
+interface IListProposalsParams extends IPageParams {
+  sort: 'latest' | 'ordest';
+}
+
+interface IListProposalsData {
+  threads: IBaseProposal[];
+}
+
+export const getAllProposals = (data: IListProposalsParams): Promise<ResponseData<IListProposalsData>> => {
+  return get(
+    'https://forum.seedao.xyz/api/thread/list?filter=all&category_index_id=0&tag_id=0&sort=latest&group_name=seedao',
+    data,
+  );
 };
