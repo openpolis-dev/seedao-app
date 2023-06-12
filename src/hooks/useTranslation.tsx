@@ -21,7 +21,7 @@ const useTranslation = () => {
         return key;
       }
       let strArr = key.split('.');
-      let value = LANGUAGE_PACKAGES[locale];
+      let value: any = LANGUAGE_PACKAGES[locale];
       strArr.map((item) => {
         value = value[item];
       });
