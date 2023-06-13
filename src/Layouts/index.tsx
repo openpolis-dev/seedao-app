@@ -81,21 +81,21 @@ const LayoutPage: React.FC<SEOProps> = ({ children, ...rest }) => {
                 responsive
                 className="menu-sidebar"
               >
-                {seeHeader && (
-                  <header>
-                    <Button
-                      size="Tiny"
-                      status="Primary"
-                      onClick={() => {
-                        setMenuState(!menuState);
-                        menuRef.current?.toggle();
-                      }}
-                      fullWidth
-                    >
-                      {menuState ? <EvaIcon name="arrow-circle-up" /> : <EvaIcon name="arrow-circle-down" />}
-                    </Button>
-                  </header>
-                )}
+                {/*{seeHeader && (*/}
+                {/*  <header>*/}
+                {/*    <Button*/}
+                {/*      size="Tiny"*/}
+                {/*      status="Primary"*/}
+                {/*      onClick={() => {*/}
+                {/*        setMenuState(!menuState);*/}
+                {/*        menuRef.current?.toggle();*/}
+                {/*      }}*/}
+                {/*      fullWidth*/}
+                {/*    >*/}
+                {/*      {menuState ? <EvaIcon name="arrow-circle-up" /> : <EvaIcon name="arrow-circle-down" />}*/}
+                {/*    </Button>*/}
+                {/*  </header>*/}
+                {/*)}*/}
                 <SidebarBody>
                   <Menu
                     nextJs
