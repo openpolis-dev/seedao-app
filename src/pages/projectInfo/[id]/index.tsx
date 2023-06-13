@@ -5,7 +5,7 @@ import Col from '@paljs/ui/Col';
 import { Tabs, Tab } from '@paljs/ui/Tabs';
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
-import { Card, CardHeader } from '@paljs/ui/Card';
+import { Card } from '@paljs/ui/Card';
 import Info from 'pages/projectInfo/[id]/com/info';
 import Members from 'pages/projectInfo/[id]/com/members';
 
@@ -15,15 +15,23 @@ const Box = styled.div`
     padding: 0 !important;
   }
 `;
+
+const CardBox = styled(Card)`
+  min-height: 85vh;
+`;
+
+const TopBox = styled.div`
+  padding: 20px;
+`;
 export default function Index() {
   const router = useRouter();
   return (
     <Layout title="SeeDAO Project">
-      <Card>
+      <CardBox>
         <Box>
           <Row>
             <Col breakPoint={{ xs: 12 }}>
-              <CardHeader>
+              <TopBox>
                 <Tabs>
                   <Tab key="0" title="Project Info" responsive>
                     <Info />
@@ -38,11 +46,11 @@ export default function Index() {
                     <div>ddd</div>
                   </Tab>
                 </Tabs>
-              </CardHeader>
+              </TopBox>
             </Col>
           </Row>
         </Box>
-      </Card>
+      </CardBox>
     </Layout>
   );
 }

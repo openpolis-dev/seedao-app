@@ -8,6 +8,7 @@ import styled from 'styled-components';
 import { ButtonLink } from '@paljs/ui/Button';
 import { useRouter } from 'next/router';
 import { Card, CardHeader } from '@paljs/ui/Card';
+import { EvaIcon } from '@paljs/ui/Icon';
 
 const Box = styled.div`
   position: relative;
@@ -23,6 +24,8 @@ const TopLine = styled.div`
   z-index: 9;
   cursor: pointer;
 `;
+
+const CardBox = styled(Card)``;
 
 export default function Index() {
   const router = useRouter();

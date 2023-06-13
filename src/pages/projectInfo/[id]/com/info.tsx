@@ -9,7 +9,8 @@ const Box = styled.div`
 const TopImg = styled.div`
   margin-bottom: 40px;
   img {
-    max-width: 600px;
+    //max-width: 600px;
+    width: 300px;
   }
 `;
 
