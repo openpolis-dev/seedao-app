@@ -6,8 +6,9 @@ import { Tabs, Tab } from '@paljs/ui/Tabs';
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
 import { Card } from '@paljs/ui/Card';
-import Info from 'pages/projectInfo/[id]/com/info';
-import Members from 'pages/projectInfo/[id]/com/members';
+import Info from './com/info';
+import Members from './com/members';
+import Assets from './com/assets';
 
 const Box = styled.div`
   position: relative;
@@ -24,7 +25,7 @@ const TopBox = styled.div`
   padding: 20px;
 `;
 export default function Index() {
-  const router = useRouter();
+  // const router = useRouter();
   return (
     <Layout title="SeeDAO Project">
       <CardBox>
@@ -40,9 +41,12 @@ export default function Index() {
                     <Members />
                   </Tab>
                   <Tab key="2" title="Project Assets" responsive>
-                    <div>ddd</div>
+                    <Assets />
                   </Tab>
                   <Tab key="3" title="Project Proposal" responsive>
+                    <div>ddd</div>
+                  </Tab>
+                  <Tab key="3" title="登记" responsive>
                     <div>ddd</div>
                   </Tab>
                 </Tabs>

@@ -7,12 +7,6 @@ import Del from './Del';
 
 const Box = styled.div`
   padding: 20px;
-  ul,
-  li {
-    padding: 0;
-    margin: 0;
-    list-style: none;
-  }
 `;
 
 const ItemBox = styled.div`
