@@ -23,7 +23,7 @@ jobs:
          CI: false
        run: |
          npm install;
-         npm run build;
+         npm run export;
 
      - name: Pushes to another repository
        run: |
