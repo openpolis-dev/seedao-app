@@ -8,6 +8,10 @@ import ContextMenu from '@paljs/ui/ContextMenu';
 import User from '@paljs/ui/User';
 import { breakpointDown } from '@paljs/ui/breakpoints';
 import Select from '@paljs/ui/Select';
+import { useAuthContext, AppActionType } from 'providers/authProvider';
+import { useWeb3React } from '@web3-react/core';
+import { Button } from '@paljs/ui';
+import LoginModal from 'components/modals/login';
 
 interface HeaderProps {
   toggleSidebar: () => void;
@@ -21,6 +25,12 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = (props) => {
   const { locale, asPath, pathname } = useRouter();
+  const { account } = useWeb3React();
+
+  const {
+    state: { show_login_modal },
+    dispatch,
+  } = useAuthContext();
 
   const getLanguages = () => [
     {
@@ -40,6 +50,10 @@ const Header: React.FC<HeaderProps> = (props) => {
       ),
     },
   ];
+
+  const showWalletLogin = () => {
+    dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: true });
+  };
 
   // const onSelectLanguage = (data: null | { value: string; label: JSX.Element }) => {};
   return (
@@ -94,13 +108,18 @@ const Header: React.FC<HeaderProps> = (props) => {
                   ]}
                   Link={Link}
                 >
-                  <User image="url('/icons/icon-72x72.png')" name="Ahmed Elywa" title="Manger" size="Medium" />
+                  {account ? (
+                    <User image="url('/icons/icon-72x72.png')" name={account} size="Medium" />
+                  ) : (
+                    <Button onClick={showWalletLogin}>Connect Wallet</Button>
+                  )}
                 </ContextMenu>
               ),
             },
           ]}
         />
       </HeaderStyle>
+      {show_login_modal && <LoginModal />}
     </LayoutHeader>
   );
 };
