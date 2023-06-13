@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from 'react';
+import Link from 'next/link';
 import Layout from 'Layouts';
 import requests from 'requests';
 import { ICategory, IBaseProposal } from 'type/proposal.type';
 import { Tabs, Tab } from '@paljs/ui/Tabs';
+import { useRouter } from 'next/router';
 
 export default function Index() {
+  const { locale } = useRouter();
+
   const [categories, setCategories] = useState<ICategory[]>([]);
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -49,7 +53,7 @@ export default function Index() {
               <h2>{category.name}</h2>
               <ul key={category.id}>
                 {category.children.map((subCategory) => (
-                  <li key={subCategory.id}>{subCategory.name}</li>
+                  <li>{subCategory.name}</li>
                 ))}
               </ul>
             </div>
@@ -58,7 +62,11 @@ export default function Index() {
         <Tab title="Latest" responsive>
           <ul>
             {proposals.map((prop) => (
-              <li key={prop.id}>{prop.title}</li>
+              <li>
+                <Link href={`${locale}/proposal/${prop.id}`} key={prop.id}>
+                  {prop.title}
+                </Link>
+              </li>
             ))}
           </ul>
         </Tab>
