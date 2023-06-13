@@ -8,5 +8,5 @@ module.exports = {
     styledComponents: true,
   },
 
-  assetPrefix: isProd ? '/os-frondend-preview' : '',
+  // assetPrefix: isProd ? '/os-frondend-preview' : '',
 };
