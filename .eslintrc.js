@@ -15,12 +15,14 @@ module.exports = {
     },
   },
   rules: {
-    '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_|^req|^next' }],
+    '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_|^req|^next' }],
     '@typescript-eslint/no-explicit-any': 0,
     '@typescript-eslint/explicit-function-return-type': 0,
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     'react/prop-types': 0,
     'no-empty-function': 'off',
+    "react/no-unescaped-entities": "off",
+    "@next/next/no-page-custom-font": "off",
   },
   settings: {
     react: {
