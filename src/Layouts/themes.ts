@@ -1,7 +1,6 @@
 import { createTheme } from '@paljs/theme';
 import { DefaultTheme } from 'styled-components';
 
-
 // color definited by https://paljs.com/ui/themes/cosmic
 const colorTheme: Partial<DefaultTheme> = {
   colorPrimary100: '#faf7ff',

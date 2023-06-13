@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Web3ReactProvider, Web3ReactHooks } from '@web3-react/core';
 import { SELECT_WALLET } from 'utils/constant';
 import { getConnectorForWallet, useConnectors } from 'wallet/connector';
