@@ -31,7 +31,7 @@ jobs:
          cd os-frontend-preview;
          git config --global user.name bot;
          git config --global user.email bot@theseedlabs.io;
-         cp -R ../build/* .;
+         cp -R ../out/* .;
          git add .;
          git status;
          git commit -m "deploy";
