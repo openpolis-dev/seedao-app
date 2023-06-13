@@ -55,7 +55,7 @@ export default function Index() {
       <Card>
         <Box>
           <TopLine>
-            <ButtonLink onClick={() => router.push('/')} fullWidth shape="Rectangle">
+            <ButtonLink onClick={() => router.push('/createProject')} fullWidth shape="Rectangle">
               Create Project
             </ButtonLink>
           </TopLine>

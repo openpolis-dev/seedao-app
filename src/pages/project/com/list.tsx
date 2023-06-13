@@ -3,6 +3,7 @@ import Col from '@paljs/ui/Col';
 // import { Card, CardBody} from '@paljs/ui/Card';
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
+import React from 'react';
 
 const Box = styled.div`
   margin-top: 40px;

@@ -50,7 +50,7 @@ interface obj {
   address: string;
 }
 interface Iprops {
-  closeAdd: Function;
+  closeAdd: () => void;
 }
 export default function Add(props: Iprops) {
   const { closeAdd } = props;
@@ -81,26 +81,26 @@ export default function Add(props: Iprops) {
   };
 
   const handleAddMember = () => {
-    let arr = [...memberList];
+    const arr = [...memberList];
     arr.push({
       address: '',
     });
     setMemberList(arr);
   };
   const handleAddAdmin = () => {
-    let arr = [...adminList];
+    const arr = [...adminList];
     arr.push({
       address: '',
     });
     setAdminList(arr);
   };
   const removeMember = (index: number) => {
-    let arr = [...memberList];
+    const arr = [...memberList];
     arr.splice(index, 1);
     setMemberList(arr);
   };
   const removeAdmin = (index: number) => {
-    let arr = [...adminList];
+    const arr = [...adminList];
     arr.splice(index, 1);
     setAdminList(arr);
   };

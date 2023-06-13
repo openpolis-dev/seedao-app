@@ -123,7 +123,7 @@ export default function Members() {
   const handleSelect = (num: number) => {
     const selectHas = selectArr.findIndex((item) => item === num);
     console.log(selectHas);
-    let arr = [...selectArr];
+    const arr = [...selectArr];
     if (selectHas > 0) {
       arr.splice(selectHas, 1);
     } else {

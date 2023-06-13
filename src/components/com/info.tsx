@@ -1,6 +1,7 @@
 import Container from '@paljs/ui/Container';
 import styled from 'styled-components';
 import { Button } from '@paljs/ui/Button';
+import React from 'react';
 
 const Box = styled.div`
   margin-top: 50px;

@@ -38,7 +38,7 @@ const ItemBox = styled.div`
 `;
 
 interface Iprops {
-  closeRemove: Function;
+  closeRemove: () => void;
   selectArr: number[];
 }
 export default function Del(props: Iprops) {

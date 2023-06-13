@@ -10,8 +10,8 @@ export default function Index() {
   const { locale } = useRouter();
 
   const [categories, setCategories] = useState<ICategory[]>([]);
-  const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+  const [page] = useState(1);
+  const [pageSize] = useState(10);
   const [proposals, setProposals] = useState<IBaseProposal[]>([]);
 
   const getCategories = async () => {
@@ -49,11 +49,11 @@ export default function Index() {
       <Tabs activeIndex={0} fullWidth onSelect={handleSelectTab}>
         <Tab title="Categories" responsive>
           {categories.map((category) => (
-            <div>
+            <div key={category.id}>
               <h2>{category.name}</h2>
-              <ul key={category.id}>
+              <ul>
                 {category.children.map((subCategory) => (
-                  <li>{subCategory.name}</li>
+                  <li key={subCategory.name}>{subCategory.name}</li>
                 ))}
               </ul>
             </div>
@@ -62,10 +62,8 @@ export default function Index() {
         <Tab title="Latest" responsive>
           <ul>
             {proposals.map((prop) => (
-              <li>
-                <Link href={`${locale}/proposal/${prop.id}`} key={prop.id}>
-                  {prop.title}
-                </Link>
+              <li key={prop.id}>
+                <Link href={`${locale}/proposal/${prop.id}`}>{prop.title}</Link>
               </li>
             ))}
           </ul>

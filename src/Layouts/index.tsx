@@ -33,7 +33,8 @@ const LayoutPage: React.FC<SEOProps> = ({ children, ...rest }) => {
   const [menuState, setMenuState] = useState(false);
   const menuRef = useRef<MenuRefObject>(null);
   const [seeHeader, setSeeHeader] = useState(true);
-
+  const AnyComponent = ThemeProvider as any;
+  const MyGlobalStyle = SimpleLayout as any;
   const getState = (state?: 'hidden' | 'visible' | 'compacted' | 'expanded') => {
     setSeeHeader(state !== 'compacted');
   };
@@ -62,9 +63,9 @@ const LayoutPage: React.FC<SEOProps> = ({ children, ...rest }) => {
   return (
     <Fragment>
       <SEO {...rest} />
-      <ThemeProvider theme={themes(theme, dir)}>
+      <AnyComponent theme={themes(theme, dir)}>
         <Fragment>
-          <SimpleLayout />
+          <MyGlobalStyle />
           <Layout evaIcons={icons} dir={dir}>
             <Header
               dir={dir}
@@ -116,7 +117,7 @@ const LayoutPage: React.FC<SEOProps> = ({ children, ...rest }) => {
             </LayoutContainer>
           </Layout>
         </Fragment>
-      </ThemeProvider>
+      </AnyComponent>
     </Fragment>
   );
 };

@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Layout from 'Layouts';
 import Row from '@paljs/ui/Row';
 import Col from '@paljs/ui/Col';
 import { Tabs, Tab } from '@paljs/ui/Tabs';
 import styled from 'styled-components';
-import { useRouter } from 'next/router';
+// import { useRouter } from 'next/router';
 import { Card } from '@paljs/ui/Card';
-import Info from './com/info';
-import Members from './com/members';
-import Assets from './com/assets';
+import Info from 'components/com/info';
+import Members from 'components/com/members';
+import Assets from 'components/com/assets';
 
 const Box = styled.div`
   position: relative;

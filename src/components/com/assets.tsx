@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import AssetList from './assetList';
+import React from 'react';
 
 const Box = styled.div`
   padding: 40px 20px;

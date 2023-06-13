@@ -5,7 +5,7 @@ module.exports = {
     'plugin:@typescript-eslint/recommended',
     'prettier',
     'plugin:prettier/recommended',
-    'plugin:@next/next/recommended'
+    'plugin:@next/next/recommended',
   ],
   parserOptions: {
     ecmaVersion: 2018,
@@ -21,8 +21,9 @@ module.exports = {
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     'react/prop-types': 0,
     'no-empty-function': 'off',
-    "react/no-unescaped-entities": "off",
-    "@next/next/no-page-custom-font": "off",
+    'react/no-unescaped-entities': 'off',
+    '@next/next/no-page-custom-font': 'off',
+    '@next/next/no-img-element': 'off',
   },
   settings: {
     react: {
