@@ -24,7 +24,7 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = (props) => {
-  const { locale, asPath, pathname } = useRouter();
+  const router = useRouter();
   const { account } = useWeb3React();
 
   const {
@@ -32,22 +32,19 @@ const Header: React.FC<HeaderProps> = (props) => {
     dispatch,
   } = useAuthContext();
 
+  const changeLang = (v: string) => {
+    router.query.lang = v;
+    router.push(router);
+  };
+
   const getLanguages = () => [
     {
       value: 'en',
-      label: (
-        <Link href={`/en${asPath}`} locale="en">
-          Engilsh
-        </Link>
-      ),
+      label: <span onClick={() => changeLang('en')}>English</span>,
     },
     {
       value: 'zh',
-      label: (
-        <Link href={asPath} locale="zh">
-          中文
-        </Link>
-      ),
+      label: <span onClick={() => changeLang('zh')}>中文</span>,
     },
   ];
 
@@ -90,7 +87,7 @@ const Header: React.FC<HeaderProps> = (props) => {
                   isSearchable={false}
                   shape="SemiRound"
                   placeholder="Themes"
-                  value={getLanguages().find((item) => item.value === locale)}
+                  value={getLanguages().find((item) => item.value === router.query.lang) || getLanguages()[0]}
                   options={getLanguages()}
                 />
               ),
@@ -101,7 +98,7 @@ const Header: React.FC<HeaderProps> = (props) => {
                   nextJs
                   style={{ cursor: 'pointer' }}
                   placement="bottom"
-                  currentPath={pathname}
+                  currentPath={router.pathname}
                   items={[
                     { title: 'Profile', link: { href: '/user' } },
                     { title: 'Vault', link: { href: '/user' } },

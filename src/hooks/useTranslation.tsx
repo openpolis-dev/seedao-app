@@ -13,15 +13,15 @@ const LANGUAGE_PACKAGES: { [key: string]: I18nStoreType } = {
 };
 
 const useTranslation = () => {
-  const { locale } = useRouter();
+  const { query } = useRouter();
 
   const jsonFun = useCallback(
     (key: string, params = {}) => {
-      if (!key || !locale) {
+      if (!key || !query.lang) {
         return key;
       }
-      let strArr = key.split('.');
-      let value: any = LANGUAGE_PACKAGES[locale];
+      const strArr = key.split('.');
+      let value: any = LANGUAGE_PACKAGES[query.lang as string];
       strArr.map((item) => {
         value = value[item];
       });
@@ -33,7 +33,7 @@ const useTranslation = () => {
       });
       return value;
     },
-    [locale],
+    [query.lang],
   );
   return {
     t: jsonFun,
