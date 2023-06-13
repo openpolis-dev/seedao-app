@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import { useRouter } from 'next/router';
 import { Card, CardHeader } from '@paljs/ui/Card';
 import Info from 'pages/projectInfo/[id]/com/info';
+import Members from 'pages/projectInfo/[id]/com/members';
 
 const Box = styled.div`
   position: relative;
@@ -28,7 +29,7 @@ export default function Index() {
                     <Info />
                   </Tab>
                   <Tab key="1" title="Members" responsive>
-                    <div>ddd</div>
+                    <Members />
                   </Tab>
                   <Tab key="2" title="Project Assets" responsive>
                     <div>ddd</div>

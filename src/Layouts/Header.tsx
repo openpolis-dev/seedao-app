@@ -140,5 +140,7 @@ const SelectStyled = styled(Select)`
 `;
 
 const LogoIcon = styled.img`
-  width: 70px;
+  //width: 70px;
+  height: 65px;
+  margin-top: -16px;
 `;
