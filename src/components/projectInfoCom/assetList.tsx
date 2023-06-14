@@ -4,6 +4,7 @@ import Select from '@paljs/ui/Select';
 import React, { useState } from 'react';
 import Page from 'components/pagination';
 import ViewHash from './viewHash';
+import DatePickerStyle from 'components/datePicker';
 
 const Box = styled.div``;
 const TitBox = styled.div`
@@ -46,7 +47,16 @@ const TimeLine = styled.div`
 const TimeBox = styled.div`
   display: flex;
   align-items: center;
-  margin-right: 40px;
+`;
+
+const BorderBox = styled.div`
+  border: 1px solid #eee;
+  padding: 10px 20px;
+  border-radius: 5px;
+`;
+
+const MidBox = styled.div`
+  margin: 0 20px;
 `;
 
 export default function AssetList() {
@@ -54,6 +64,7 @@ export default function AssetList() {
   const [pageSize, setPageSize] = useState(10);
   const [total, setTotal] = useState(100);
   const [show, setShow] = useState(false);
+  const [dateTime, setDateTime] = useState<Date | null>(null);
 
   const statusOption: { value: any; label: any }[] = [
     { label: '待审核', value: '待审核' },
@@ -74,6 +85,12 @@ export default function AssetList() {
   };
   const closeShow = () => {
     setShow(false);
+  };
+
+  const changeDate = (time: Date) => {
+    console.log(time?.getTime());
+    const str = new Date(time?.getTime());
+    setDateTime(str);
   };
   return (
     <Box>
@@ -97,9 +114,13 @@ export default function AssetList() {
         </TopLine>
         <TimeLine>
           <TimeBox>
-            <div></div>
-            <div>~</div>
-            <div></div>
+            <BorderBox>
+              <DatePickerStyle placeholder="开始时间" onChange={changeDate} dateTime={dateTime} />
+            </BorderBox>
+            <MidBox>~</MidBox>
+            <BorderBox>
+              <DatePickerStyle placeholder="开始时间" onChange={changeDate} dateTime={dateTime} />
+            </BorderBox>
           </TimeBox>
           <Button size="Small">导出</Button>
         </TimeLine>

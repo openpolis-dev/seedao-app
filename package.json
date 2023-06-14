@@ -10,6 +10,7 @@
     "@paljs/ui": "1.1.1",
     "@tinymce/tinymce-react": "3.12.6",
     "@types/react-copy-to-clipboard": "^5.0.4",
+    "@types/react-datepicker": "^4.11.2",
     "@web3-react/core": "^8.0.35-beta.0",
     "@web3-react/metamask": "^8.0.28-beta.0",
     "axios": "^1.4.0",
