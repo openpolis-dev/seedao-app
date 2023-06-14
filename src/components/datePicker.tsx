@@ -110,7 +110,7 @@ const Box = styled.div`
 interface DateProps {
   placeholder: string;
   dateTime: Date | null;
-  onChange: Function;
+  onChange: (a: any, b: string | undefined) => void;
   type?: string;
 }
 

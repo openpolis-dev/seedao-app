@@ -82,11 +82,11 @@ const Box = styled.div`
     }
   }
 `;
-const NumBox = styled.div`
-  font-size: 14px;
-  font-weight: 400;
-  color: #949999;
-`;
+// const NumBox = styled.div`
+//   font-size: 14px;
+//   font-weight: 400;
+//   color: #949999;
+// `;
 
 const GoToBox = styled.div`
   display: flex;
@@ -135,8 +135,8 @@ interface Props {
   total: number;
   current: number;
   hidden?: boolean;
-  handleToPage: Function;
-  handlePageSize: Function;
+  handleToPage: (a: number) => void;
+  handlePageSize: (a: number) => void;
 }
 
 const Page: FC<Props> = ({ itemsPerPage, total, handleToPage, handlePageSize }) => {
