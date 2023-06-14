@@ -59,3 +59,13 @@ export const getAllProposals = (data: IListProposalsParams): Promise<ResponseDat
     data,
   );
 };
+
+interface ISubCategoryProposalsParams extends IListProposalsParams {
+  category_index_id: number;
+}
+
+export const getProposalsBySubCategory = (
+  data: ISubCategoryProposalsParams,
+): Promise<ResponseData<IListProposalsData>> => {
+  return get('https://forum.seedao.xyz/api/thread/list?filter=category&tag_id=0&group_name=seedao', data);
+};

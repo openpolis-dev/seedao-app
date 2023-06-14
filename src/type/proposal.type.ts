@@ -12,6 +12,11 @@ export interface ICategory extends IBaseCategory {
   children: IBaseCategory[];
 }
 
+type ProposalTag = {
+  id: number;
+  name: string;
+};
+
 export interface IBaseProposal {
   category_name: string;
   id: string;
@@ -32,4 +37,6 @@ export interface IBaseProposal {
     };
     username: string;
   };
+  updated_at: string;
+  tags: ProposalTag[];
 }
