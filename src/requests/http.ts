@@ -45,7 +45,7 @@ const get = function (url: string, params: any = {}): Promise<ResponseData> {
  * @method post
  * @param {url, params}
  */
-const post = function (url: string, data: any): Promise<ResponseData> {
+const post = function (url: string, data: any = {}): Promise<ResponseData> {
   return new Promise((resolve, reject) => {
     instance
       .post(url, data)
