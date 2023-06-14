@@ -1,7 +1,12 @@
 export interface IUser {
   id: string;
+  name: string;
   avatar: string;
-  discord_url: string;
+  email: string;
+
+  discordProfile: string;
+  twitterProfile: string;
+  googleProfile: string;
 }
 
 export interface IUserInfo {

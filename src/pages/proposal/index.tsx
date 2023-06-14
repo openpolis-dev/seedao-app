@@ -4,11 +4,12 @@ import Layout from 'Layouts';
 import requests from 'requests';
 import { ICategory, IBaseProposal } from 'type/proposal.type';
 import { Tabs, Tab } from '@paljs/ui/Tabs';
-import { useRouter } from 'next/router';
+import { useAuthContext, AppActionType } from 'providers/authProvider';
+import { Accordion, AccordionItem } from '@paljs/ui/Accordion';
+import styled from 'styled-components';
 
 export default function Index() {
-  const { locale } = useRouter();
-
+  const { dispatch } = useAuthContext();
   const [categories, setCategories] = useState<ICategory[]>([]);
   const [page] = useState(1);
   const [pageSize] = useState(10);
@@ -18,6 +19,7 @@ export default function Index() {
     try {
       const resp = await requests.proposal.getCategories();
       setCategories(resp.data.group.categories);
+      dispatch({ type: AppActionType.SET_PROPOSAL_CATEGORIES, payload: resp.data.group.categories });
     } catch (error) {
       console.error('getCategories failed', error);
     }
@@ -33,7 +35,7 @@ export default function Index() {
   };
 
   useEffect(() => {
-    getAllProposals();
+    getCategories();
   }, []);
 
   const handleSelectTab = (index: number) => {
@@ -49,21 +51,25 @@ export default function Index() {
       <Tabs activeIndex={0} fullWidth onSelect={handleSelectTab}>
         <Tab title="Categories" responsive>
           {categories.map((category) => (
-            <div key={category.id}>
-              <h2>{category.name}</h2>
-              <ul>
-                {category.children.map((subCategory) => (
-                  <li key={subCategory.name}>{subCategory.name}</li>
-                ))}
-              </ul>
-            </div>
+            <CategoryCard key={category.id}>
+              <AccordionItem uniqueKey={1} title={category.name} key={category.id}>
+                <SubCategoryCard>
+                  {category.children.map((subCategory) => (
+                    <SubCategoryItem key={subCategory.category_id}>
+                      <SubCategoryIcon src="/images/proposal/message.png" alt="" />
+                      <Link href={`/proposal/category/${subCategory.category_id}`}>{subCategory.name}</Link>
+                    </SubCategoryItem>
+                  ))}
+                </SubCategoryCard>
+              </AccordionItem>
+            </CategoryCard>
           ))}
         </Tab>
         <Tab title="Latest" responsive>
           <ul>
             {proposals.map((prop) => (
               <li key={prop.id}>
-                <Link href={`${locale}/proposal/${prop.id}`}>{prop.title}</Link>
+                <Link href={`/proposal/thread/${prop.id}`}>{prop.title}</Link>
               </li>
             ))}
           </ul>
@@ -72,3 +78,26 @@ export default function Index() {
     </Layout>
   );
 }
+
+const CategoryCard = styled(Accordion)`
+  margin-bottom: 20px;
+`;
+
+const SubCategoryCard = styled.div`
+  display: flex;
+  gap: 20px;
+  justify-content: space-between;
+  flex-wrap: wrap;
+`;
+
+const SubCategoryItem = styled.div`
+  width: 30%;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+`;
+
+const SubCategoryIcon = styled.img`
+  width: 24px;
+  height: 24px;
+`;

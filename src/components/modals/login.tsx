@@ -44,7 +44,7 @@ export default function LoginModal() {
       sign: signData,
     });
     dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: false });
-    console.log('res:', res);
+    dispatch({ type: AppActionType.SET_USER_DATA, payload: res.data });
   };
 
   useEffect(() => {

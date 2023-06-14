@@ -1,13 +1,19 @@
 import React, { useReducer, createContext, useContext, useEffect, useCallback } from 'react';
+import { IUser } from 'type/user.type';
+import { ICategory } from 'type/proposal.type';
 
 interface IState {
   account?: string;
   show_login_modal?: boolean;
+  userData?: IUser;
+  proposal_categories: ICategory[];
 }
 
 export enum AppActionType {
   SET_ACCOUNT = 'set_account',
   SET_LOGIN_MODAL = 'set_login_modal',
+  SET_USER_DATA = 'set_user_data',
+  SET_PROPOSAL_CATEGORIES = 'set_proposal_categories',
 }
 
 interface IAction {
@@ -15,7 +21,7 @@ interface IAction {
   payload: any;
 }
 
-const INIT_STATE: IState = { show_login_modal: false };
+const INIT_STATE: IState = { show_login_modal: false, proposal_categories: [] };
 
 const AuthContext = createContext<{
   state: IState;
@@ -31,6 +37,10 @@ const reducer = (state: IState, action: IAction): IState => {
       return { ...state, account: action.payload };
     case AppActionType.SET_LOGIN_MODAL:
       return { ...state, show_login_modal: action.payload };
+    case AppActionType.SET_USER_DATA:
+      return { ...state, userData: action.payload };
+    case AppActionType.SET_PROPOSAL_CATEGORIES:
+      return { ...state, proposal_categories: action.payload };
     default:
       throw new Error(`Unknown type: ${action.type}`);
   }
