@@ -16,6 +16,7 @@
     "axios": "^1.4.0",
     "babel-plugin-styled-components": "^1.13.2",
     "eslint-config-next": "^13.4.5",
+    "ethers": "^6.6.0",
     "eventemitter3": "^5.0.1",
     "next": "^11.1.2",
     "react": "17.0.2",
