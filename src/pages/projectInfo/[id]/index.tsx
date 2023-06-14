@@ -6,9 +6,9 @@ import { Tabs, Tab } from '@paljs/ui/Tabs';
 import styled from 'styled-components';
 // import { useRouter } from 'next/router';
 import { Card } from '@paljs/ui/Card';
-import Info from 'components/com/info';
-import Members from 'components/com/members';
-import Assets from 'components/com/assets';
+import Info from 'components/projectInfoCom/info';
+import Members from 'components/projectInfoCom/members';
+import Assets from 'components/projectInfoCom/assets';
 
 const Box = styled.div`
   position: relative;

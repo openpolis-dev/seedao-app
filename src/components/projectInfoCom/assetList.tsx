@@ -1,7 +1,9 @@
 import styled from 'styled-components';
 import { Button } from '@paljs/ui/Button';
 import Select from '@paljs/ui/Select';
-import React from 'react';
+import React, { useState } from 'react';
+import Page from 'components/pagination';
+import ViewHash from './viewHash';
 
 const Box = styled.div``;
 const TitBox = styled.div`
@@ -10,8 +12,10 @@ const TitBox = styled.div`
 `;
 const FirstLine = styled.div`
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column;
+  margin-bottom: 40px;
+  //align-items: center;
+  //justify-content: space-between;
 `;
 
 const TopLine = styled.ul`
@@ -34,16 +38,47 @@ const TopLine = styled.ul`
   }
 `;
 
+const TimeLine = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const TimeBox = styled.div`
+  display: flex;
+  align-items: center;
+  margin-right: 40px;
+`;
+
 export default function AssetList() {
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [total, setTotal] = useState(100);
+  const [show, setShow] = useState(false);
+
   const statusOption: { value: any; label: any }[] = [
-    { label: 'Clean', value: '' },
-    { value: 'Info', label: 'Info' },
-    { value: 'Success', label: 'Success' },
-    { value: 'Danger', label: 'Danger' },
-    { value: 'Primary', label: 'Primary' },
+    { label: '待审核', value: '待审核' },
+    { value: '被驳回', label: '被驳回' },
+    { value: '待发放', label: '待发放' },
+    { value: '已发放', label: '已发放' },
   ];
+
+  const handlePage = (num: number) => {
+    setPage(num + 1);
+  };
+  const handlePageSize = (num: number) => {
+    setPageSize(num);
+  };
+  const handleShow = (num: number) => {
+    setShow(true);
+    console.log(num);
+  };
+  const closeShow = () => {
+    setShow(false);
+  };
   return (
     <Box>
+      {show && <ViewHash closeShow={closeShow} />}
+
       <TitBox>记录</TitBox>
       <FirstLine>
         <TopLine>
@@ -60,7 +95,14 @@ export default function AssetList() {
             <Select className="sel" options={statusOption} placeholder="Status" />
           </li>
         </TopLine>
-        <div>dd</div>
+        <TimeLine>
+          <TimeBox>
+            <div></div>
+            <div>~</div>
+            <div></div>
+          </TimeBox>
+          <Button size="Small">导出</Button>
+        </TimeLine>
       </FirstLine>
 
       <table className="table" cellPadding="0" cellSpacing="0">
@@ -87,7 +129,7 @@ export default function AssetList() {
           <td>WD</td>
           <td>WD</td>
           <td>
-            <Button appearance="outline" size="Tiny">
+            <Button appearance="outline" size="Tiny" onClick={() => handleShow(0)}>
               查看
             </Button>
           </td>
@@ -103,12 +145,19 @@ export default function AssetList() {
           <td>WD</td>
           <td>WD</td>
           <td>
-            <Button appearance="outline" size="Tiny">
+            <Button appearance="outline" size="Tiny" onClick={() => handleShow(0)}>
               查看
             </Button>
           </td>
         </tr>
       </table>
+      <Page
+        itemsPerPage={pageSize}
+        total={total}
+        current={page - 1}
+        handleToPage={handlePage}
+        handlePageSize={handlePageSize}
+      />
     </Box>
   );
 }
