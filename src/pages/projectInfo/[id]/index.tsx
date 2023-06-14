@@ -9,6 +9,7 @@ import { Card } from '@paljs/ui/Card';
 import Info from 'components/projectInfoCom/info';
 import Members from 'components/projectInfoCom/members';
 import Assets from 'components/projectInfoCom/assets';
+import ProjectProposal from 'components/projectInfoCom/proposal';
 
 const Box = styled.div`
   position: relative;
@@ -44,7 +45,7 @@ export default function Index() {
                     <Assets />
                   </Tab>
                   <Tab key="3" title="Project Proposal" responsive>
-                    <div>ddd</div>
+                    <ProjectProposal />
                   </Tab>
                   <Tab key="3" title="登记" responsive>
                     <div>ddd</div>

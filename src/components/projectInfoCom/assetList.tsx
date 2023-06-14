@@ -13,9 +13,10 @@ const TitBox = styled.div`
 `;
 const FirstLine = styled.div`
   display: flex;
-  flex-direction: column;
-  margin-bottom: 40px;
-  //align-items: center;
+  //flex-direction: column;
+  margin-bottom: 20px;
+  align-items: center;
+  flex-wrap: wrap;
   //justify-content: space-between;
 `;
 
@@ -42,11 +43,13 @@ const TopLine = styled.ul`
 const TimeLine = styled.div`
   display: flex;
   align-items: center;
+  margin-bottom: 20px;
 `;
 
 const TimeBox = styled.div`
   display: flex;
   align-items: center;
+  margin-right: 20px;
 `;
 
 const BorderBox = styled.div`
@@ -122,7 +125,7 @@ export default function AssetList() {
               <DatePickerStyle placeholder="开始时间" onChange={changeDate} dateTime={dateTime} />
             </BorderBox>
           </TimeBox>
-          <Button size="Small">导出</Button>
+          <Button size="Medium">导出</Button>
         </TimeLine>
       </FirstLine>
 
