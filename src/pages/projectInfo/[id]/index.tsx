@@ -10,6 +10,7 @@ import Info from 'components/projectInfoCom/info';
 import Members from 'components/projectInfoCom/members';
 import Assets from 'components/projectInfoCom/assets';
 import ProjectProposal from 'components/projectInfoCom/proposal';
+import Reg from 'components/projectInfoCom/reg';
 
 const Box = styled.div`
   position: relative;
@@ -48,7 +49,7 @@ export default function Index() {
                     <ProjectProposal />
                   </Tab>
                   <Tab key="3" title="登记" responsive>
-                    <div>ddd</div>
+                    <Reg />
                   </Tab>
                 </Tabs>
               </TopBox>
