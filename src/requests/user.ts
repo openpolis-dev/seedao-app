@@ -11,7 +11,7 @@ type LoginParams = {
 };
 
 export const login = (data: LoginParams): Promise<ResponseData<IUserInfo & { id: string }>> => {
-  return request.post(`${PATH_PREFIX}/${login}`, data);
+  return request.post(`${PATH_PREFIX}/login`, data);
 };
 
 export const logout = () => {

@@ -1,16 +1,57 @@
 import { Button } from '@paljs/ui';
 import { useAuthContext, AppActionType } from 'providers/authProvider';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { injected as connector } from 'wallet/connector';
+import requests from 'requests';
+import { useWeb3React } from '@web3-react/core';
+import { signMessage } from 'utils/sign';
+
+enum LoginStatus {
+  Default = 0,
+  Pending,
+}
 
 export default function LoginModal() {
   const { dispatch } = useAuthContext();
+  const { account, provider } = useWeb3React();
+  const [loginStatus, setLoginStatus] = useState<LoginStatus>(LoginStatus.Default);
   const connect = async () => {
+    setLoginStatus(LoginStatus.Pending);
     await connector.activate();
-    // TODO
-    dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: false });
   };
+
+  const handleLoginSys = async () => {
+    if (!account || !provider) {
+      return;
+    }
+    // sign
+    let signData = '';
+    const now = Date.now();
+    try {
+      signData = await provider.send('personal_sign', [signMessage(account, now), account]);
+    } catch (error) {
+      console.error('sign failed', error);
+    }
+    if (!signData) {
+      return;
+    }
+
+    // login
+    const res = await requests.user.login({
+      wallet: account,
+      timestamp: now,
+      sign: signData,
+    });
+    dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: false });
+    console.log('res:', res);
+  };
+
+  useEffect(() => {
+    if (account && loginStatus) {
+      handleLoginSys();
+    }
+  }, [account, loginStatus]);
   return (
     <Mask>
       <Modal>
