@@ -69,3 +69,11 @@ export const getProposalsBySubCategory = (
 ): Promise<ResponseData<IListProposalsData>> => {
   return get('https://forum.seedao.xyz/api/thread/list?filter=category&tag_id=0&group_name=seedao', data);
 };
+
+interface IProposalResponseData {
+  thread: IBaseProposal;
+}
+
+export const getProposalDetail = (pid: number): Promise<ResponseData<IProposalResponseData>> => {
+  return get(`https://forum.seedao.xyz/api/get_thread/${pid}?group_name=seedao`);
+};
