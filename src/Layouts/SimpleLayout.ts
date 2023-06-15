@@ -104,6 +104,9 @@ ${({ theme }) => css`
       }
     }
   }
+  .sidebar-menu .menu-title {
+    font-size: 14px !important;
+  }
 
   ${breakpointDown('xs')`
     .main-content {
