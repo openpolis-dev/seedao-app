@@ -13,7 +13,7 @@ export default function ProposalNav({ navs }: { navs: ICatergoryNav[] }) {
     <Nav>
       {navs.map((n, i) => (
         <li key={n.category_id}>
-          {i !== 0 && <Arrow>{`>`}</Arrow>}
+          {i !== 0 && <Arrow>➡️</Arrow>}
           <Link href={n.to}>
             <NavText>{n.name}</NavText>
           </Link>

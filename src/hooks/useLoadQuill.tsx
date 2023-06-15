@@ -19,6 +19,12 @@ export default function useLoadQuill() {
     ShiftEnterBlot.tagName = 'br';
     Quill.register(ShiftEnterBlot);
 
+    // @ts-ignore
+    class HrBlot extends Parchment.Embed {} // Actually EmbedBlot
+    HrBlot.blotName = 'hr';
+    HrBlot.tagName = 'br';
+    Quill.register(HrBlot);
+
     Quill.register('modules/markdownOptions', QuillMarkdown.default, true);
     Quill.register('modules/mention', QuillMention?.default, true);
     Quill.register('modules/emoji', Emoji?.default, true);

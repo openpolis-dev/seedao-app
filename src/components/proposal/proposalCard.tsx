@@ -1,11 +1,16 @@
 import React from 'react';
-import { Card, CardBody, CardFooter } from '@paljs/ui/Card';
+import { Card, CardBody } from '@paljs/ui/Card';
 import { IBaseProposal } from 'type/proposal.type';
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
 
+import QuillViewer from 'components/proposal/quillViewer';
+import useLoadQuill from 'hooks/useLoadQuill';
+
 export default function ProposalCard({ data }: { data: IBaseProposal }) {
   const router = useRouter();
+  const enableQuill = useLoadQuill();
+
   const openProposal = () => {
     router.push(`/proposal/thread/${data.id}`);
   };
@@ -23,15 +28,10 @@ export default function ProposalCard({ data }: { data: IBaseProposal }) {
         </CardHeaderStyled>
         <CardBody>
           <Title>{data.title}</Title>
+          <ProposalContent>
+            {enableQuill && data?.first_post.content && <QuillViewer content={data?.first_post.content} />}
+          </ProposalContent>
         </CardBody>
-        <CardFooterStyled>
-          <div></div>
-          <Tags>
-            {data.tags.map((tag) => (
-              <li key={tag.id}>{tag.name}</li>
-            ))}
-          </Tags>
-        </CardFooterStyled>
       </div>
     </Card>
   );
@@ -43,21 +43,6 @@ const CardHeaderStyled = styled.div`
   padding: 1rem 1.25rem;
 `;
 
-const CardFooterStyled = styled(CardFooter)`
-  display: flex;
-  justify-content: space-between;
-`;
-
-const Tags = styled.ul`
-  display: flex;
-  gap: 10px;
-  li {
-    padding-inline: 12px;
-    border-radius: 12px;
-    border: 1px solid #ccc;
-  }
-`;
-
 const UserAvatar = styled.img`
   width: 40px;
   height: 40px;
@@ -67,4 +52,15 @@ const UserAvatar = styled.img`
 const Title = styled.div`
   font-weight: 600;
   font-size: 16px;
+`;
+
+const ProposalContent = styled.div`
+  -webkit-box-orient: vertical;
+  display: -webkit-box;
+  -webit-line-clamp: 2;
+  overflow: hidden;
+  height: 52px;
+  .ql-editor p {
+    line-height: 24px;
+  }
 `;
