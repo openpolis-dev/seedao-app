@@ -4,6 +4,9 @@ import { useRouter } from 'next/router';
 import styled from 'styled-components';
 import requests from 'requests';
 import { IBaseProposal } from 'type/proposal.type';
+import { Card } from '@paljs/ui/Card';
+import { Button } from '@paljs/ui/Button';
+
 // import QuillViewer from 'components/proposal/quillViewer';
 // import { initQuill } from 'utils/quillUtil';
 // initQuill();
@@ -27,6 +30,10 @@ export default function Proposal() {
     getProposalInfo();
   }, [router.query.id]);
 
+  const lookMore = () => {
+    window.open(`https://forum.seedao.xyz/thread/${router.query.id}`, '_blank');
+  };
+
   return (
     <Layout title="SeeDAO Proposal">
       <ProposalContainer>
@@ -40,14 +47,21 @@ export default function Proposal() {
             <div className="date">{data?.updated_at}</div>
           </div>
         </User>
-        <div>{data?.first_post.content}</div>
+        <MoreButton shape="Rectangle" appearance="outline" size="Tiny" onClick={lookMore}>
+          查看更多
+        </MoreButton>
+        <div style={{ overflow: 'hidden' }}>{data?.first_post.content}</div>
         {/* {enableQuill && data?.first_post.content &&  <QuillViewer content={data?.first_post.content} />} */}
       </ProposalContainer>
     </Layout>
   );
 }
 
-const ProposalContainer = styled.div``;
+const ProposalContainer = styled(Card)`
+  min-height: 85vh;
+  padding: 20px;
+  position: relative;
+`;
 
 const ProposalTitle = styled.div``;
 const User = styled.div`
@@ -59,4 +73,10 @@ const UserAvatar = styled.img`
   width: 40px;
   height: 40px;
   border-radius: 50%;
+`;
+
+const MoreButton = styled(Button)`
+  position: absolute;
+  right: 20px;
+  top: 30px;
 `;

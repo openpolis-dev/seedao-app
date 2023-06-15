@@ -7,6 +7,8 @@ import { Tabs, Tab } from '@paljs/ui/Tabs';
 import { useAuthContext, AppActionType } from 'providers/authProvider';
 import { Accordion, AccordionItem } from '@paljs/ui/Accordion';
 import styled from 'styled-components';
+import { Card } from '@paljs/ui/Card';
+import ProposalCard from 'components/proposal/proposalCard';
 
 export default function Index() {
   const { dispatch } = useAuthContext();
@@ -48,36 +50,40 @@ export default function Index() {
 
   return (
     <Layout title="SeeDAO Proposal">
-      <Tabs activeIndex={0} fullWidth onSelect={handleSelectTab}>
-        <Tab title="Categories" responsive>
-          {categories.map((category) => (
-            <CategoryCard key={category.id}>
-              <AccordionItem uniqueKey={1} title={category.name} key={category.id}>
-                <SubCategoryCard>
-                  {category.children.map((subCategory) => (
-                    <SubCategoryItem key={subCategory.category_id}>
-                      <SubCategoryIcon src="/images/proposal/message.png" alt="" />
-                      <Link href={`/proposal/category/${subCategory.category_id}`}>{subCategory.name}</Link>
-                    </SubCategoryItem>
-                  ))}
-                </SubCategoryCard>
-              </AccordionItem>
-            </CategoryCard>
-          ))}
-        </Tab>
-        <Tab title="Latest" responsive>
-          <ul>
-            {proposals.map((prop) => (
-              <li key={prop.id}>
-                <Link href={`/proposal/thread/${prop.id}`}>{prop.title}</Link>
-              </li>
+      <ProposalContainer>
+        <Tabs activeIndex={0} fullWidth onSelect={handleSelectTab}>
+          <Tab title="Categories" responsive>
+            {categories.map((category) => (
+              <CategoryCard key={category.id}>
+                <AccordionItem uniqueKey={1} title={category.name} key={category.id}>
+                  <SubCategoryCard>
+                    {category.children.map((subCategory) => (
+                      <SubCategoryItem key={subCategory.category_id}>
+                        <SubCategoryIcon src="/images/proposal/message.png" alt="" />
+                        <Link href={`/proposal/category/${subCategory.category_id}`}>{subCategory.name}</Link>
+                      </SubCategoryItem>
+                    ))}
+                  </SubCategoryCard>
+                </AccordionItem>
+              </CategoryCard>
             ))}
-          </ul>
-        </Tab>
-      </Tabs>
+          </Tab>
+          <Tab title="Latest" responsive>
+            <ul>
+              {proposals.map((proposal) => (
+                <ProposalCard key={proposal.id} data={proposal} />
+              ))}
+            </ul>
+          </Tab>
+        </Tabs>
+      </ProposalContainer>
     </Layout>
   );
 }
+
+const ProposalContainer = styled(Card)`
+  min-height: 85vh;
+`;
 
 const CategoryCard = styled(Accordion)`
   margin-bottom: 20px;
