@@ -51,7 +51,7 @@ export default function Index() {
   return (
     <Layout title="SeeDAO Proposal">
       <ProposalContainer>
-        <Tabs activeIndex={0} fullWidth onSelect={handleSelectTab}>
+        <Tabs activeIndex={0} onSelect={handleSelectTab}>
           <Tab title="Categories" responsive>
             {categories.map((category) => (
               <CategoryCard key={category.id}>
