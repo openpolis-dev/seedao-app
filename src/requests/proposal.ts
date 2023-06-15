@@ -46,7 +46,7 @@ interface IPageParams {
 }
 
 interface IListProposalsParams extends IPageParams {
-  sort: 'latest' | 'ordest';
+  sort: 'latest' | 'new' | 'old';
 }
 
 interface IListProposalsData {

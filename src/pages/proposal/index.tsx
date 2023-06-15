@@ -9,6 +9,7 @@ import { Accordion, AccordionItem } from '@paljs/ui/Accordion';
 import styled from 'styled-components';
 import { Card } from '@paljs/ui/Card';
 import ProposalCard from 'components/proposal/proposalCard';
+import ProposalSubNav from 'components/proposal/proposalSubNav';
 
 export default function Index() {
   const { dispatch } = useAuthContext();
@@ -16,6 +17,8 @@ export default function Index() {
   const [page] = useState(1);
   const [pageSize] = useState(10);
   const [proposals, setProposals] = useState<IBaseProposal[]>([]);
+  const [orderType, setOrderType] = useState<'latest' | 'old'>('latest');
+  const [activeTab, setActiveTab] = useState(0);
 
   const getCategories = async () => {
     try {
@@ -29,11 +32,15 @@ export default function Index() {
 
   const getAllProposals = async () => {
     try {
-      const resp = await requests.proposal.getAllProposals({ page, per_page: pageSize, sort: 'latest' });
+      const resp = await requests.proposal.getAllProposals({ page, per_page: pageSize, sort: orderType });
       setProposals(resp.data.threads);
     } catch (error) {
       console.error('getAllProposals failed', error);
     }
+  };
+
+  const handleChangeOrder = (index: number) => {
+    setOrderType(index === 0 ? 'latest' : 'old');
   };
 
   useEffect(() => {
@@ -41,18 +48,27 @@ export default function Index() {
   }, []);
 
   const handleSelectTab = (index: number) => {
-    if (index === 0) {
+    setActiveTab(index);
+  };
+
+  useEffect(() => {
+    if (activeTab === 0) {
       getCategories();
     } else {
       getAllProposals();
     }
-  };
+  }, [activeTab, orderType]);
 
   return (
     <Layout title="SeeDAO Proposal">
       <ProposalContainer>
-        <Tabs activeIndex={0} onSelect={handleSelectTab}>
-          <Tab title="Categories" responsive>
+        <Tabs activeIndex={activeTab} onSelect={handleSelectTab}>
+          <Tab title="Categories" responsive></Tab>
+          <Tab title="Latest" responsive></Tab>
+        </Tabs>
+        {activeTab === 1 && <ProposalSubNav onSelect={handleChangeOrder} />}
+        {activeTab === 0 ? (
+          <div>
             {categories.map((category) => (
               <CategoryCard key={category.id}>
                 <AccordionItem uniqueKey={1} title={category.name} key={category.id}>
@@ -67,15 +83,16 @@ export default function Index() {
                 </AccordionItem>
               </CategoryCard>
             ))}
-          </Tab>
-          <Tab title="Latest" responsive>
+          </div>
+        ) : (
+          <div>
             <ul>
               {proposals.map((proposal) => (
                 <ProposalCard key={proposal.id} data={proposal} />
               ))}
             </ul>
-          </Tab>
-        </Tabs>
+          </div>
+        )}
       </ProposalContainer>
     </Layout>
   );
