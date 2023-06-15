@@ -12,6 +12,7 @@ import { useAuthContext, AppActionType } from 'providers/authProvider';
 import { useWeb3React } from '@web3-react/core';
 import { Button } from '@paljs/ui';
 import LoginModal from 'components/modals/login';
+import PublicJs from 'utils/publicJs';
 
 interface HeaderProps {
   toggleSidebar: () => void;
@@ -121,7 +122,7 @@ const Header: React.FC<HeaderProps> = (props) => {
                   Link={Link}
                 >
                   {account ? (
-                    <User image="url('/icons/icon-72x72.png')" name={account} size="Medium" />
+                    <User image="url('/icons/icon-72x72.png')" name={PublicJs.AddressToShow(account)} size="Medium" />
                   ) : (
                     <Button onClick={showWalletLogin}>Connect Wallet</Button>
                   )}
