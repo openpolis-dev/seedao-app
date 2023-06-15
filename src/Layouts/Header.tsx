@@ -44,8 +44,9 @@ const Header: React.FC<HeaderProps> = (props) => {
 
   useEffect(() => {
     let myLan = localStorage.getItem('language');
+    console.error(language, myLan);
     if (!language) {
-      if (typeof localStorage !== 'undefined') {
+      if (!myLan) {
         let lanInit = getLanguages()[0];
         localStorage.setItem('language', lanInit.value);
         changeLang(lanInit.value);
