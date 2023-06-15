@@ -53,7 +53,6 @@ const reducer = (state: IState, action: IAction): IState => {
 
 const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, INIT_STATE);
-  console.log('=====state', state);
 
   return <AuthContext.Provider value={{ state, dispatch }}>{children}</AuthContext.Provider>;
 };
