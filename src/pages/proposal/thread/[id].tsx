@@ -7,14 +7,12 @@ import { IBaseProposal } from 'type/proposal.type';
 import { Card } from '@paljs/ui/Card';
 import { Button } from '@paljs/ui/Button';
 
-// import QuillViewer from 'components/proposal/quillViewer';
-// import { initQuill } from 'utils/quillUtil';
-// initQuill();
-// import useLoadQuill from 'hooks/useLoadQuill';
+import QuillViewer from 'components/proposal/quillViewer';
+import useLoadQuill from 'hooks/useLoadQuill';
 
 export default function Proposal() {
   const router = useRouter();
-  // const enableQuill = useLoadQuill();
+  const enableQuill = useLoadQuill();
   const [data, setData] = useState<IBaseProposal>();
 
   const getProposalInfo = async () => {
@@ -50,8 +48,8 @@ export default function Proposal() {
         <MoreButton shape="Rectangle" appearance="outline" size="Tiny" onClick={lookMore}>
           查看更多
         </MoreButton>
-        <div style={{ overflow: 'hidden' }}>{data?.first_post.content}</div>
-        {/* {enableQuill && data?.first_post.content &&  <QuillViewer content={data?.first_post.content} />} */}
+        {/* <div style={{ overflow: 'hidden' }}>{data?.first_post.content}</div> */}
+        {enableQuill && data?.first_post.content && <QuillViewer content={data?.first_post.content} />}
       </ProposalContainer>
     </Layout>
   );
