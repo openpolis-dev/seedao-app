@@ -70,7 +70,7 @@ const TopBox = styled.div`
   }
 `;
 
-export default function Audit() {
+export default function ProjectAudit() {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [total, setTotal] = useState(100);
@@ -114,14 +114,6 @@ export default function Audit() {
             <span className="tit">状态</span>
             <Select className="sel" options={statusOption} placeholder="Status" />
           </li>
-          <li>
-            <span className="tit">治理公会</span>
-            <Select className="sel" options={statusOption} placeholder="Status" />
-          </li>
-          <li>
-            <span className="tit">登记人</span>
-            <Select className="sel" options={statusOption} placeholder="Status" />
-          </li>
         </TopLine>
         <TimeLine>
           <TimeBox>
@@ -144,32 +136,21 @@ export default function Audit() {
         <tr>
           <th>&nbsp;</th>
           <th>时间</th>
-          <th>钱包地址</th>
-          <th>登记积分</th>
-          <th>登记Token</th>
-          <th>事项内容</th>
+          <th>项目</th>
+          <th>申请内容</th>
           <th>备注</th>
           <th>状态</th>
-          <th>登记人</th>
-          <th>审核人</th>
+          <th>申请人</th>
         </tr>
         {[...Array(20)].map((item, index) => (
           <tr key={index}>
             <td>
-              <Checkbox
-                status="Primary"
-                checked={false}
-                onChange={(value) => onChangeCheckbox(value, index)}
-              ></Checkbox>
+              <Checkbox status="Primary" checked={true} onChange={(value) => onChangeCheckbox(value, index)}></Checkbox>
             </td>
-            <td>2023/06/13</td>
-            <td>0Xfds...sdf</td>
-            <td>d</td>
-            <td>100USD</td>
-            <td>酬劳</td>
+            <td>全球DAO场战略项目</td>
+            <td>关闭项目</td>
             <td>--</td>
             <td>待审核</td>
-            <td>WD</td>
             <td>WD</td>
           </tr>
         ))}

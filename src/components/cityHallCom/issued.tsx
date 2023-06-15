@@ -5,6 +5,7 @@ import React, { useState } from 'react';
 import Page from 'components/pagination';
 import DatePickerStyle from 'components/datePicker';
 import { Checkbox } from '@paljs/ui/Checkbox';
+import IssuedModal from 'components/cityHallCom/issuedModal';
 
 const Box = styled.div``;
 const FirstLine = styled.div`
@@ -70,7 +71,7 @@ const TopBox = styled.div`
   }
 `;
 
-export default function Audit() {
+export default function Issued() {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [total, setTotal] = useState(100);
@@ -90,9 +91,8 @@ export default function Audit() {
   const handlePageSize = (num: number) => {
     setPageSize(num);
   };
-  const handleShow = (num: number) => {
+  const handleShow = () => {
     setShow(true);
-    console.log(num);
   };
   const closeShow = () => {
     setShow(false);
@@ -108,18 +108,12 @@ export default function Audit() {
   };
   return (
     <Box>
+      {show && <IssuedModal closeShow={closeShow} />}
+
       <FirstLine>
         <TopLine>
           <li>
             <span className="tit">状态</span>
-            <Select className="sel" options={statusOption} placeholder="Status" />
-          </li>
-          <li>
-            <span className="tit">治理公会</span>
-            <Select className="sel" options={statusOption} placeholder="Status" />
-          </li>
-          <li>
-            <span className="tit">登记人</span>
             <Select className="sel" options={statusOption} placeholder="Status" />
           </li>
         </TopLine>
@@ -137,8 +131,7 @@ export default function Audit() {
         </TimeLine>
       </FirstLine>
       <TopBox>
-        <Button>通过</Button>
-        <Button appearance="outline">驳回</Button>
+        <Button onClick={() => handleShow()}>发放完成</Button>
       </TopBox>
       <table className="table" cellPadding="0" cellSpacing="0">
         <tr>

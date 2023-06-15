@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { Tab, Tabs } from '@paljs/ui/Tabs';
 import Audit from 'components/cityHallCom/audit';
 import ProjectAudit from 'components/cityHallCom/projectAudit';
+import Issued from 'components/cityHallCom/issued';
 
 const Box = styled.div`
   //position: relative;
@@ -48,7 +49,7 @@ export default function Index() {
                 <ProjectAudit />
               </Tab>
               <Tab key="2" title="发放" responsive>
-                <div>ddd</div>
+                <Issued />
               </Tab>
             </TabsBox>
           </TopBox>
