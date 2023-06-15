@@ -1,7 +1,8 @@
 import Container from '@paljs/ui/Container';
 import styled from 'styled-components';
 import { Button } from '@paljs/ui/Button';
-import React from 'react';
+import React, { useState } from 'react';
+import CloseTips from 'components/projectInfoCom/closeTips';
 
 const Box = styled.div`
   margin-top: 50px;
@@ -25,11 +26,12 @@ const InfoBox = styled.div`
     margin-right: 10px;
   }
   dt {
-    line-height: 1.5em;
+    line-height: 2.5em;
     display: inline-block;
     min-width: 140px;
     background: #f5f5f5;
     padding: 0 20px;
+    margin-right: 20px;
   }
   dd {
     display: flex;
@@ -45,8 +47,19 @@ const Title = styled.div`
   margin-bottom: 20px;
 `;
 export default function Info() {
+  const [show, setShow] = useState(false);
+
+  const closeModal = () => {
+    setShow(false);
+  };
+  const handleShow = () => {
+    setShow(true);
+  };
+
   return (
     <Box>
+      {show && <CloseTips closeModal={closeModal} />}
+
       <Container>
         <TopImg>
           <img
@@ -59,7 +72,7 @@ export default function Info() {
             <dt>Project Name:</dt>
             <dd>
               <div className="info">全球DAO场战略项目</div>
-              <Button shape="Rectangle" appearance="outline" size="Tiny">
+              <Button shape="Rectangle" appearance="outline" size="Medium" onClick={() => handleShow()}>
                 关闭项目
               </Button>
             </dd>
@@ -72,7 +85,7 @@ export default function Info() {
                 <span>1000</span>
                 <span>（已使用100，剩余900）</span>
               </div>
-              <Button shape="Rectangle" appearance="outline" size="Tiny">
+              <Button shape="Rectangle" appearance="outline" size="Medium">
                 修改
               </Button>
             </dd>
@@ -84,7 +97,7 @@ export default function Info() {
                 <span>1000</span>
                 <span>（已使用100，剩余900）</span>
               </div>
-              <Button shape="Rectangle" appearance="outline" size="Tiny">
+              <Button shape="Rectangle" appearance="outline" size="Medium">
                 修改
               </Button>
             </dd>
