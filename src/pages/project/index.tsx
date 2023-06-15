@@ -15,6 +15,10 @@ const Box = styled.div`
   .tab-content {
     padding: 0 !important;
   }
+  a:hover {
+    color: #fff;
+    opacity: 0.8;
+  }
 `;
 
 const TopLine = styled.div`

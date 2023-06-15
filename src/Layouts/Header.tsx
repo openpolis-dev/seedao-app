@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import styled, { DefaultTheme } from 'styled-components';
@@ -26,6 +26,7 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = (props) => {
   const router = useRouter();
   const { account } = useWeb3React();
+  const [lan, setLan] = useState('en');
 
   const {
     state: { show_login_modal },
@@ -34,8 +35,22 @@ const Header: React.FC<HeaderProps> = (props) => {
 
   const changeLang = (v: string) => {
     router.query.lang = v;
+    setLan(v);
     router.push(router);
+    localStorage.setItem('language', v);
   };
+
+  useEffect(() => {
+    let myLan = localStorage.getItem('language');
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('language', lan);
+      setLan(lan);
+      changeLang(lan);
+    } else {
+      setLan(myLan!);
+      changeLang(myLan!);
+    }
+  }, []);
 
   const getLanguages = () => [
     {

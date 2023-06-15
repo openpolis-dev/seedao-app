@@ -1,18 +1,16 @@
 import React from 'react';
 import Layout from 'Layouts';
-import { Card, CardHeader, CardBody } from '@paljs/ui/Card';
+import { Card } from '@paljs/ui/Card';
 import styled from 'styled-components';
-import Row from '@paljs/ui/Row';
-import Col from '@paljs/ui/Col';
 import { Tab, Tabs } from '@paljs/ui/Tabs';
 import Audit from 'components/cityHallCom/audit';
-import { Button } from '@paljs/ui/Button';
+import ProjectAudit from 'components/cityHallCom/projectAudit';
 
 const Box = styled.div`
-  position: relative;
+  //position: relative;
   .tab-content {
-    padding: 0 !important;
-    height: 100% !important;
+    padding: 0 0 30px !important;
+    box-sizing: border-box;
   }
 `;
 const CardBox = styled(Card)`
@@ -25,10 +23,13 @@ const TopBox = styled.div`
   flex-grow: 1;
   display: flex;
   flex-direction: column;
+  box-sizing: border-box;
 `;
 
 const TabsBox = styled(Tabs)`
   flex-grow: 1;
+  display: flex;
+  flex-direction: column;
   .tabs {
     height: 100%;
   }
@@ -44,7 +45,7 @@ export default function Index() {
                 <Audit />
               </Tab>
               <Tab key="1" title="项目审核" responsive>
-                <div>ddd</div>
+                <ProjectAudit />
               </Tab>
               <Tab key="2" title="发放" responsive>
                 <div>ddd</div>
