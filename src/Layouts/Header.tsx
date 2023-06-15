@@ -115,8 +115,8 @@ const Header: React.FC<HeaderProps> = (props) => {
                   placement="bottom"
                   currentPath={router.pathname}
                   items={[
-                    { title: 'Profile', link: { href: '/user' } },
-                    { title: 'Vault', link: { href: '/user' } },
+                    { title: 'Profile', link: { href: '/user/profile' } },
+                    { title: 'Vault', link: { href: '/user/vault' } },
                   ]}
                   Link={Link}
                 >
