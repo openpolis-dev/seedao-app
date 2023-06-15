@@ -10,10 +10,15 @@ import { Button } from '@paljs/ui/Button';
 import QuillViewer from 'components/proposal/quillViewer';
 import useLoadQuill from 'hooks/useLoadQuill';
 
+import useProposalCategory from 'hooks/useProposalCategory';
+
 export default function Proposal() {
   const router = useRouter();
   const enableQuill = useLoadQuill();
+
   const [data, setData] = useState<IBaseProposal>();
+
+  const ProposalNav = useProposalCategory(data?.category_index_id);
 
   const getProposalInfo = async () => {
     const id = Number(router.query.id);
@@ -34,6 +39,7 @@ export default function Proposal() {
 
   return (
     <Layout title="SeeDAO Proposal">
+      {ProposalNav}
       <ProposalContainer>
         <ProposalTitle>{data?.title}</ProposalTitle>
         <User>

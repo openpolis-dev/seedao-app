@@ -19,6 +19,7 @@ type ProposalTag = {
 
 export interface IBaseProposal {
   category_name: string;
+  category_index_id: number;
   id: string;
   thread_id: number; // Primary key
   title: string;
