@@ -2,6 +2,7 @@ import { useRouter } from 'next/router';
 import { useCallback } from 'react';
 import EN from 'i18n/en.json';
 import ZH from '../i18n/zh.json';
+import { useAuthContext } from 'providers/authProvider';
 
 type JSONValue = string | { [x: string]: JSONValue };
 
@@ -14,14 +15,17 @@ const LANGUAGE_PACKAGES: { [key: string]: I18nStoreType } = {
 
 const useTranslation = () => {
   const { query } = useRouter();
+  const {
+    state: { language },
+  } = useAuthContext();
 
   const jsonFun = useCallback(
     (key: string, params = {}) => {
-      if (!key || !query.lang) {
+      if (!key || !language) {
         return key;
       }
       const strArr = key.split('.');
-      let value: any = LANGUAGE_PACKAGES[query.lang as string];
+      let value: any = LANGUAGE_PACKAGES[language as string];
       strArr.map((item) => {
         value = value[item];
       });
@@ -33,7 +37,7 @@ const useTranslation = () => {
       });
       return value;
     },
-    [query.lang],
+    [language],
   );
   return {
     t: jsonFun,

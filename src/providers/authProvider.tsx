@@ -7,6 +7,7 @@ interface IState {
   show_login_modal?: boolean;
   userData?: IUser;
   proposal_categories: ICategory[];
+  language: string | null;
 }
 
 export enum AppActionType {
@@ -14,6 +15,7 @@ export enum AppActionType {
   SET_LOGIN_MODAL = 'set_login_modal',
   SET_USER_DATA = 'set_user_data',
   SET_PROPOSAL_CATEGORIES = 'set_proposal_categories',
+  SET_LAN = 'SET_LAN',
 }
 
 interface IAction {
@@ -21,7 +23,7 @@ interface IAction {
   payload: any;
 }
 
-const INIT_STATE: IState = { show_login_modal: false, proposal_categories: [] };
+const INIT_STATE: IState = { show_login_modal: false, proposal_categories: [], language: null };
 
 const AuthContext = createContext<{
   state: IState;
@@ -41,6 +43,9 @@ const reducer = (state: IState, action: IAction): IState => {
       return { ...state, userData: action.payload };
     case AppActionType.SET_PROPOSAL_CATEGORIES:
       return { ...state, proposal_categories: action.payload };
+
+    case AppActionType.SET_LAN:
+      return { ...state, language: action.payload };
     default:
       throw new Error(`Unknown type: ${action.type}`);
   }
@@ -48,6 +53,7 @@ const reducer = (state: IState, action: IAction): IState => {
 
 const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, INIT_STATE);
+  console.log('=====state', state);
 
   return <AuthContext.Provider value={{ state, dispatch }}>{children}</AuthContext.Provider>;
 };

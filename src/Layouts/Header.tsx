@@ -30,28 +30,46 @@ const Header: React.FC<HeaderProps> = (props) => {
   const [lan, setLan] = useState('en');
 
   const {
-    state: { show_login_modal },
+    state: { show_login_modal, language },
     dispatch,
   } = useAuthContext();
 
   const changeLang = (v: string) => {
-    router.query.lang = v;
+    // router.query.lang = v;
     setLan(v);
-    router.push(router);
+    dispatch({ type: AppActionType.SET_LAN, payload: v });
+    // router.push(router);
     localStorage.setItem('language', v);
   };
 
   useEffect(() => {
     let myLan = localStorage.getItem('language');
-    if (typeof localStorage !== 'undefined') {
-      localStorage.setItem('language', lan);
-      setLan(lan);
-      changeLang(lan);
+    if (!language) {
+      if (typeof localStorage !== 'undefined') {
+        let lanInit = getLanguages()[0];
+        localStorage.setItem('language', lanInit.value);
+        changeLang(lanInit.value);
+      } else {
+        changeLang(myLan!);
+      }
     } else {
-      setLan(myLan!);
-      changeLang(myLan!);
+      changeLang(language);
     }
-  }, []);
+  }, [language]);
+
+  // useEffect(() => {
+  //   let myLan = localStorage.getItem('language');
+  //   console.log(myLan)
+  //   if (typeof localStorage !== 'undefined') {
+  //     let lanInit =  getLanguages()[0];
+  //     localStorage.setItem('language', lanInit.value);
+  //     setLan(lanInit.value);
+  //     changeLang(lanInit.value);
+  //   } else {
+  //     setLan(myLan!);
+  //     changeLang(myLan!);
+  //   }
+  // }, []);
 
   const getLanguages = () => [
     {
@@ -103,7 +121,7 @@ const Header: React.FC<HeaderProps> = (props) => {
                   isSearchable={false}
                   shape="SemiRound"
                   placeholder="Themes"
-                  value={getLanguages().find((item) => item.value === router.query.lang) || getLanguages()[0]}
+                  value={getLanguages().find((item) => item.value === lan) || getLanguages()[0]}
                   options={getLanguages()}
                 />
               ),
