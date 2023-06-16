@@ -2,10 +2,14 @@ import Layout from 'Layouts';
 import { Card, CardHeader, CardBody } from '@paljs/ui/Card';
 import styled from 'styled-components';
 import { InputGroup } from '@paljs/ui/Input';
-import React, { ChangeEvent, useState } from 'react';
+import React, { ChangeEvent, FormEvent, useState } from 'react';
 import { Button } from '@paljs/ui/Button';
 import { EvaIcon } from '@paljs/ui/Icon';
-
+import { useRouter } from 'next/router';
+import useTranslation from 'hooks/useTranslation';
+import { createProjects } from 'requests/project';
+import { IBaseProject } from 'type/project.type';
+import { AppActionType, useAuthContext } from 'providers/authProvider';
 const Box = styled.div`
   .btnBtm {
     margin-right: 20px;
@@ -30,7 +34,9 @@ const UlBox = styled.ul`
     .title {
       margin-right: 20px;
       line-height: 2.5em;
-      min-width: 90px;
+      min-width: 180px;
+      background: #f8f8f8;
+      padding: 0 20px;
     }
   }
 `;
@@ -46,34 +52,76 @@ const ItemBox = styled.div`
   align-items: center;
   .titleLft {
     margin-right: 10px;
+    width: 50px;
   }
 `;
 
-interface obj {
-  address: string;
-}
+const BackBox = styled.div`
+  padding: 30px 20px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  .icon {
+    font-size: 24px;
+  }
+`;
+
+const BtnBox = styled.label`
+  background: #f8f8f8;
+  height: 200px;
+  width: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  margin-top: 20px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+  font-weight: 700;
+  font-size: 14px;
+  margin-bottom: 40px;
+  .iconRht {
+    margin-right: 10px;
+  }
+  img {
+    max-width: 100%;
+    max-height: 100%;
+  }
+`;
+
+const ImgBox = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  .del {
+    position: absolute;
+    right: -15px;
+    top: -15px;
+    z-index: 999;
+    padding: 6px;
+    border-radius: 100%;
+    background: #a16eff;
+    color: #fff;
+    cursor: pointer;
+  }
+`;
 
 export default function CreateProject() {
-  const [adminList, setAdminList] = useState<obj[]>([
-    {
-      address: '0x183F09C3cE99C02118c570e03808476b22d63191',
-    },
-  ]);
-  const [memberList, setMemberList] = useState<obj[]>([
-    {
-      address: '0x183F09C3cE99C02118c570e03808476b22d63191',
-    },
-  ]);
-  const [proList, setProList] = useState([
-    {
-      link: 'http://--',
-    },
-  ]);
+  const router = useRouter();
+  const { t } = useTranslation();
+  const { dispatch } = useAuthContext();
+  const [adminList, setAdminList] = useState(['']);
+  const [memberList, setMemberList] = useState(['']);
+  const [proList, setProList] = useState(['']);
   const [token, setToken] = useState<string | number>('');
 
   const [credit, setCredit] = useState<string | number>('');
 
   const [proName, setProName] = useState('');
+  const [url, setUrl] = useState('');
 
   const handleInput = (e: ChangeEvent, index: number, type: string) => {
     const { value } = e.target as HTMLInputElement;
@@ -81,17 +129,17 @@ export default function CreateProject() {
     switch (type) {
       case 'member':
         arr = [...memberList];
-        arr[index].address = value;
+        arr[index] = value;
         setMemberList(arr);
         break;
       case 'admin':
         arr = [...adminList];
-        arr[index].address = value;
+        arr[index] = value;
         setAdminList(arr);
         break;
       case 'proposal':
         arr = [...proList];
-        arr[index].link = value;
+        arr[index] = value;
         setProList(arr);
         break;
       case 'proName':
@@ -111,23 +159,17 @@ export default function CreateProject() {
     switch (type) {
       case 'member':
         arr = [...memberList];
-        arr.push({
-          address: '',
-        });
+        arr.push('');
         setMemberList(arr);
         break;
       case 'admin':
         arr = [...adminList];
-        arr.push({
-          address: '',
-        });
+        arr.push('');
         setAdminList(arr);
         break;
       case 'proposal':
         arr = [...proList];
-        arr.push({
-          link: '',
-        });
+        arr.push('');
         setProList(arr);
         break;
     }
@@ -152,42 +194,120 @@ export default function CreateProject() {
         break;
     }
   };
+  const handleSubmit = async () => {
+    const obj: IBaseProject = {
+      logo: url,
+      name: proName,
+      sponsors: adminList,
+      members: memberList,
+      proposals: proList,
+      budgets: [
+        {
+          name: 'USDT',
+          totalAmount: token,
+        },
+        {
+          name: 'SCORE',
+          totalAmount: credit,
+        },
+      ],
+    };
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    await createProjects(obj);
+    dispatch({ type: AppActionType.SET_LOADING, payload: null });
+    router.push('/project');
+  };
+
+  const getBase64 = (imgUrl: string) => {
+    window.URL = window.URL || window.webkitURL;
+    const xhr = new XMLHttpRequest();
+    xhr.open('get', imgUrl, true);
+    xhr.responseType = 'blob';
+    xhr.onload = function () {
+      if (this.status == 200) {
+        const blob = this.response;
+        console.log('blob', blob);
+
+        const oFileReader = new FileReader();
+        oFileReader.onloadend = function (e) {
+          const { result } = e.target as any;
+          console.log(result);
+          setUrl(result);
+        };
+        oFileReader.readAsDataURL(blob);
+      }
+    };
+    xhr.send();
+  };
+
+  const updateLogo = (e: FormEvent) => {
+    const { files } = e.target as any;
+    const url = window.URL.createObjectURL(files[0]);
+    getBase64(url);
+  };
+
+  const removeUrl = () => {
+    setUrl('');
+  };
 
   return (
     <Layout title="">
       <Box>
         <CardBox>
-          <CardHeader>Create Project</CardHeader>
+          <BackBox onClick={() => router.back()}>
+            <EvaIcon name="chevron-left-outline" className="icon" /> <span>{t('general.back')}</span>
+          </BackBox>
+          <CardHeader> {t('Project.create')}</CardHeader>
           <CardBody>
+            <BtnBox htmlFor="fileUpload" onChange={(e) => updateLogo(e)}>
+              {!url && (
+                <div>
+                  <input id="fileUpload" type="file" hidden accept="image/*" />
+                  <EvaIcon name="cloud-upload-outline" className="iconRht" />
+                  <span> {t('Project.upload')}</span>
+                </div>
+              )}
+              {!!url && (
+                <ImgBox>
+                  <div className="del" onClick={() => removeUrl()}>
+                    <EvaIcon name="close-outline" status="Control" />
+                  </div>
+                  <img src={url} alt="" />
+                </ImgBox>
+              )}
+            </BtnBox>
             <UlBox>
               <li>
-                <div className="title">项目名称</div>
+                <div className="title">{t('Project.ProjectName')}</div>
                 <InputBox fullWidth>
                   <input
                     type="text"
-                    placeholder="Size small"
+                    placeholder={t('Project.ProjectName')}
                     value={proName}
                     onChange={(e) => handleInput(e, 0, 'proName')}
                   />
                 </InputBox>
               </li>
               <li>
-                <div className="title">负责人</div>
+                <div className="title">{t('Project.Dominator')}</div>
                 <div>
                   {adminList.map((item, index) => (
                     <ItemBox key={`mem_${index}`}>
                       <InputBox fullWidth>
                         <input
                           type="text"
-                          placeholder="Size small"
-                          value={item.address}
+                          placeholder={t('Project.Dominator')}
+                          value={item}
                           onChange={(e) => handleInput(e, index, 'admin')}
                         />
                       </InputBox>
-                      <span onClick={() => handleAdd('admin')}>
-                        <EvaIcon name="plus-outline" status="Primary" />
-                      </span>
-                      {!(!index && index === memberList.length - 1) && (
+                      {index === adminList.length - 1 && (
+                        <span onClick={() => handleAdd('admin')}>
+                          <EvaIcon name="plus-outline" status="Primary" />
+                        </span>
+                      )}
+
+                      {!(!index && index === adminList.length - 1) && (
                         <span onClick={() => removeItem(index, 'admin')}>
                           <EvaIcon name="minus-outline" status="Primary" />
                         </span>
@@ -197,22 +317,25 @@ export default function CreateProject() {
                 </div>
               </li>
               <li>
-                <div className="title">关联提案</div>
+                <div className="title">{t('Project.AssociatedProposal')}</div>
                 <div>
                   {proList.map((item, index) => (
                     <ItemBox key={`mem_${index}`}>
                       <InputBox fullWidth>
                         <input
                           type="text"
-                          placeholder="Size small"
-                          value={item.link}
+                          placeholder={t('Project.AssociatedProposal')}
+                          value={item}
                           onChange={(e) => handleInput(e, index, 'proposal')}
                         />
                       </InputBox>
-                      <span onClick={() => handleAdd('proposal')}>
-                        <EvaIcon name="plus-outline" status="Primary" />
-                      </span>
-                      {!(!index && index === memberList.length - 1) && (
+                      {index === proList.length - 1 && (
+                        <span onClick={() => handleAdd('proposal')}>
+                          <EvaIcon name="plus-outline" status="Primary" />
+                        </span>
+                      )}
+
+                      {!(!index && index === proList.length - 1) && (
                         <span onClick={() => removeItem(index, 'proposal')}>
                           <EvaIcon name="minus-outline" status="Primary" />
                         </span>
@@ -222,14 +345,14 @@ export default function CreateProject() {
                 </div>
               </li>
               <li>
-                <div className="title">预算</div>
+                <div className="title">{t('Project.Budget')}</div>
                 <div>
                   <ItemBox>
-                    <span className="titleLft">积分</span>
+                    <span className="titleLft">{t('Project.Points')}</span>
                     <InputGroup fullWidth>
                       <input
                         type="text"
-                        placeholder="Size small"
+                        placeholder={t('Project.Points')}
                         value={credit}
                         onChange={(e) => handleInput(e, 0, 'credit')}
                       />
@@ -238,32 +361,30 @@ export default function CreateProject() {
                   <ItemBox>
                     <span className="titleLft">USD</span>
                     <InputGroup fullWidth>
-                      <input
-                        type="text"
-                        placeholder="Size small"
-                        value={token}
-                        onChange={(e) => handleInput(e, 0, 'token')}
-                      />
+                      <input type="text" placeholder="USD" value={token} onChange={(e) => handleInput(e, 0, 'token')} />
                     </InputGroup>
                   </ItemBox>
                 </div>
               </li>
               <li>
-                <div className="title">成员</div>
+                <div className="title">{t('Project.Members')}</div>
                 <div>
                   {memberList.map((item, index) => (
                     <ItemBox key={`mem_${index}`}>
                       <InputBox fullWidth>
                         <input
                           type="text"
-                          placeholder="Size small"
-                          value={item.address}
+                          placeholder={t('Project.Members')}
+                          value={item}
                           onChange={(e) => handleInput(e, index, 'member')}
                         />
                       </InputBox>
-                      <span onClick={() => handleAdd('member')}>
-                        <EvaIcon name="plus-outline" status="Primary" />
-                      </span>
+                      {index === memberList.length - 1 && (
+                        <span onClick={() => handleAdd('member')}>
+                          <EvaIcon name="plus-outline" status="Primary" />
+                        </span>
+                      )}
+
                       {!(!index && index === memberList.length - 1) && (
                         <span onClick={() => removeItem(index, 'member')}>
                           <EvaIcon name="minus-outline" status="Primary" />
@@ -276,9 +397,9 @@ export default function CreateProject() {
             </UlBox>
             <BtmBox>
               <Button appearance="outline" className="btnBtm">
-                取消
+                {t('general.cancel')}
               </Button>
-              <Button>确定</Button>
+              <Button onClick={() => handleSubmit()}> {t('general.confirm')}</Button>
             </BtmBox>
           </CardBody>
         </CardBox>

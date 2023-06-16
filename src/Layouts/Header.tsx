@@ -16,6 +16,7 @@ import PublicJs from 'utils/publicJs';
 import useCheckLogin from 'hooks/useCheckLogin';
 import { parseToken, checkTokenValid, clearStorage } from 'utils/auth';
 import { SEEDAO_USER } from 'utils/constant';
+import Loading from 'components/loading';
 
 interface HeaderProps {
   toggleSidebar: () => void;
@@ -34,7 +35,7 @@ const Header: React.FC<HeaderProps> = (props) => {
   const [lan, setLan] = useState('en');
 
   const {
-    state: { show_login_modal, language },
+    state: { show_login_modal, language, loading },
     dispatch,
   } = useAuthContext();
 
@@ -47,10 +48,10 @@ const Header: React.FC<HeaderProps> = (props) => {
   };
 
   useEffect(() => {
-    let myLan = localStorage.getItem('language');
+    const myLan = localStorage.getItem('language');
     if (!language) {
       if (!myLan) {
-        let lanInit = getLanguages()[0];
+        const lanInit = getLanguages()[0];
         localStorage.setItem('language', lanInit.value);
         changeLang(lanInit.value);
       } else {
@@ -110,6 +111,8 @@ const Header: React.FC<HeaderProps> = (props) => {
   // const onSelectLanguage = (data: null | { value: string; label: JSX.Element }) => {};
   return (
     <LayoutHeader fixed>
+      {loading && <Loading />}
+
       <HeaderStyle>
         <Actions
           size="Medium"

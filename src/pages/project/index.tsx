@@ -9,6 +9,7 @@ import { ButtonLink } from '@paljs/ui/Button';
 import { useRouter } from 'next/router';
 import { Card, CardHeader } from '@paljs/ui/Card';
 import { EvaIcon } from '@paljs/ui/Icon';
+import useTranslation from 'hooks/useTranslation';
 
 const Box = styled.div`
   position: relative;
@@ -32,19 +33,20 @@ const TopLine = styled.div`
 const CardBox = styled(Card)``;
 
 export default function Index() {
+  const { t } = useTranslation();
   const router = useRouter();
   const [current, setCurrent] = useState<number>(0);
   const [list] = useState([
     {
-      name: 'ALL',
+      name: t('Project.AllProjects'),
       id: 0,
     },
     {
-      name: 'Closed',
+      name: t('Project.Closed'),
       id: 1,
     },
     {
-      name: 'Joined',
+      name: t('Project.Joined'),
       id: 2,
     },
   ]);
@@ -60,7 +62,7 @@ export default function Index() {
         <Box>
           <TopLine>
             <ButtonLink onClick={() => router.push('/createProject')} fullWidth shape="Rectangle">
-              Create Project
+              {t('Project.create')}
             </ButtonLink>
           </TopLine>
           <Row>

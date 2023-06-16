@@ -9,6 +9,7 @@ interface IState {
   userData?: IUser;
   proposal_categories: ICategory[];
   language: string | null;
+  loading: boolean | null;
 }
 
 export enum AppActionType {
@@ -18,6 +19,7 @@ export enum AppActionType {
   CLEAR_AUTH = 'clear_auth',
   SET_PROPOSAL_CATEGORIES = 'set_proposal_categories',
   SET_LAN = 'SET_LAN',
+  SET_LOADING = 'SET_LOADING',
 }
 
 interface IAction {
@@ -25,7 +27,7 @@ interface IAction {
   payload: any;
 }
 
-const INIT_STATE: IState = { show_login_modal: false, proposal_categories: [], language: null };
+const INIT_STATE: IState = { show_login_modal: false, proposal_categories: [], language: null, loading: null };
 
 const AuthContext = createContext<{
   state: IState;
@@ -49,6 +51,8 @@ const reducer = (state: IState, action: IAction): IState => {
       return { ...state, account: undefined, userData: undefined };
     case AppActionType.SET_PROPOSAL_CATEGORIES:
       return { ...state, proposal_categories: action.payload };
+    case AppActionType.SET_LOADING:
+      return { ...state, loading: action.payload };
 
     case AppActionType.SET_LAN:
       return { ...state, language: action.payload };
@@ -59,6 +63,7 @@ const reducer = (state: IState, action: IAction): IState => {
 
 const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, INIT_STATE);
+  console.log('=====state', state);
   return <AuthContext.Provider value={{ state, dispatch }}>{children}</AuthContext.Provider>;
 };
 
