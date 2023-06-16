@@ -147,6 +147,7 @@ export default function ProjectAudit() {
             <td>
               <Checkbox status="Primary" checked={true} onChange={(value) => onChangeCheckbox(value, index)}></Checkbox>
             </td>
+            <td></td>
             <td>全球DAO场战略项目</td>
             <td>关闭项目</td>
             <td>--</td>

@@ -43,7 +43,7 @@ const TitleBox = styled.div`
   padding: 10px 0;
 `;
 const TopBox = styled.div`
-  background: #f5f5f5;
+  background: #f8f8f8;
   display: flex;
   justify-content: flex-end;
   padding: 20px;

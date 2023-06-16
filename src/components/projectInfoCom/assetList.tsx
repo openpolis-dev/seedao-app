@@ -5,6 +5,7 @@ import React, { useState } from 'react';
 import Page from 'components/pagination';
 import ViewHash from './viewHash';
 import DatePickerStyle from 'components/datePicker';
+import { Checkbox } from '@paljs/ui/Checkbox';
 
 const Box = styled.div``;
 const TitBox = styled.div`
@@ -95,6 +96,9 @@ export default function AssetList() {
     const str = new Date(time?.getTime());
     setDateTime(str);
   };
+  const onChangeCheckbox = (value: boolean, key: number) => {
+    // setCheckbox({ ...checkbox, [key]: value });
+  };
   return (
     <Box>
       {show && <ViewHash closeShow={closeShow} />}
@@ -107,7 +111,7 @@ export default function AssetList() {
             <Select className="sel" options={statusOption} placeholder="Status" />
           </li>
           <li>
-            <span className="tit">治理公会</span>
+            <span className="tit">预算来源</span>
             <Select className="sel" options={statusOption} placeholder="Status" />
           </li>
           <li>
@@ -131,6 +135,7 @@ export default function AssetList() {
 
       <table className="table" cellPadding="0" cellSpacing="0">
         <tr>
+          <th>&nbsp;</th>
           <th>时间</th>
           <th>钱包地址</th>
           <th>登记积分</th>
@@ -143,6 +148,9 @@ export default function AssetList() {
           <th>交易ID</th>
         </tr>
         <tr>
+          <td>
+            <Checkbox status="Primary" checked={false} onChange={(value) => onChangeCheckbox(value, 0)}></Checkbox>
+          </td>
           <td>2023/06/13</td>
           <td>0Xfds...sdf</td>
           <td>d</td>
@@ -159,6 +167,9 @@ export default function AssetList() {
           </td>
         </tr>
         <tr>
+          <td>
+            <Checkbox status="Primary" checked={false} onChange={(value) => onChangeCheckbox(value, 0)}></Checkbox>
+          </td>
           <td>2023/06/13</td>
           <td>0Xfds...sdf</td>
           <td>d</td>
