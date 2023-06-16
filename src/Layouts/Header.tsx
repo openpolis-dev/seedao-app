@@ -13,6 +13,7 @@ import { useWeb3React } from '@web3-react/core';
 import { Button } from '@paljs/ui';
 import LoginModal from 'components/modals/login';
 import PublicJs from 'utils/publicJs';
+import useCheckLogin from 'hooks/useCheckLogin';
 
 interface HeaderProps {
   toggleSidebar: () => void;
@@ -27,6 +28,7 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = (props) => {
   const router = useRouter();
   const { account } = useWeb3React();
+  const isLogin = useCheckLogin();
   const [lan, setLan] = useState('en');
 
   const {
@@ -139,8 +141,8 @@ const Header: React.FC<HeaderProps> = (props) => {
                   ]}
                   Link={Link}
                 >
-                  {account ? (
-                    <User image="url('/icons/icon-72x72.png')" name={PublicJs.AddressToShow(account)} size="Medium" />
+                  {isLogin && account ? (
+                    <User image="url('/icons/avatar')" name={PublicJs.AddressToShow(account)} size="Medium" />
                   ) : (
                     <Button onClick={showWalletLogin}>Connect Wallet</Button>
                   )}

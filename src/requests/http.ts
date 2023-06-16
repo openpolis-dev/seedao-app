@@ -1,4 +1,6 @@
 import axios from 'axios';
+import { SEEDAO_USER } from 'utils/constant';
+import { parseToken, checkTokenValid, clearStorage } from 'utils/auth';
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_ENDPOINT;
 const API_VERSION = process.env.NEXT_PUBLIC_API_VERSION;
@@ -8,6 +10,34 @@ const instance = axios.create({
   timeout: 15000,
   headers: { 'content-type': 'application/json' },
 });
+
+instance.interceptors.request.use(
+  (config: any) => {
+    const method = config.method?.toLowerCase();
+    if (!['post', 'put', 'delete'].includes(method)) {
+      return;
+    }
+    const tokenstr = localStorage.getItem(SEEDAO_USER);
+    if (!tokenstr) {
+      return config;
+    }
+
+    const tokenData = parseToken(tokenstr);
+    if (!checkTokenValid(tokenData?.token, tokenData?.expireAt)) {
+      clearStorage();
+      return Promise.reject();
+    }
+
+    if (!config.headers) {
+      config.headers = {};
+    }
+    config.headers['Authorization'] = `Bearer${tokenData?.token || ''}`;
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  },
+);
 
 instance.interceptors.response.use(
   (response) => {

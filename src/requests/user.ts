@@ -13,10 +13,10 @@ type LoginParams = {
 interface ILogininRespons {
   token: string;
   tokenExp: number;
-  user: IUser;
+  user: IUser & IUserInfo;
 }
 
-export const login = (data: LoginParams): Promise<ResponseData<IUserInfo & { id: string }>> => {
+export const login = (data: LoginParams): Promise<ResponseData<ILogininRespons>> => {
   return request.post(`${PATH_PREFIX}/login`, data);
 };
 

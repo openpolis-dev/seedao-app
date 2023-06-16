@@ -1,6 +1,7 @@
 import React, { useReducer, createContext, useContext, useEffect, useCallback } from 'react';
 import { IUser } from 'type/user.type';
 import { ICategory } from 'type/proposal.type';
+import { SEEDAO_USER } from 'utils/constant';
 
 interface IState {
   account?: string;
@@ -14,6 +15,7 @@ export enum AppActionType {
   SET_ACCOUNT = 'set_account',
   SET_LOGIN_MODAL = 'set_login_modal',
   SET_USER_DATA = 'set_user_data',
+  CLEAR_AUTH = 'clear_auth',
   SET_PROPOSAL_CATEGORIES = 'set_proposal_categories',
   SET_LAN = 'SET_LAN',
 }
@@ -40,7 +42,11 @@ const reducer = (state: IState, action: IAction): IState => {
     case AppActionType.SET_LOGIN_MODAL:
       return { ...state, show_login_modal: action.payload };
     case AppActionType.SET_USER_DATA:
+      localStorage.setItem(SEEDAO_USER, JSON.stringify(action.payload));
       return { ...state, userData: action.payload };
+    case AppActionType.CLEAR_AUTH:
+      localStorage.deleteItem(SEEDAO_USER);
+      return { ...state, account: undefined, userData: undefined };
     case AppActionType.SET_PROPOSAL_CATEGORIES:
       return { ...state, proposal_categories: action.payload };
 

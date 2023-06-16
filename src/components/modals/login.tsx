@@ -55,6 +55,7 @@ export default function LoginModal() {
   return (
     <Mask>
       <Modal>
+        <Title>Connect Wallet</Title>
         <Button onClick={connect}>MetaMask</Button>
       </Modal>
     </Mask>
@@ -78,11 +79,17 @@ const Modal = styled.div`
   width: 632px;
   height: 292px;
   opacity: 1;
-  border-radius: 20px;
+  border-radius: 8px;
   background: #fff linear-gradient(90deg, rgba(235, 255, 255, 0.6) 0%, rgba(230, 255, 255, 0) 100%);
   padding: 60px 48px;
   position: relative;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+`;
+
+const Title = styled.div`
+  font-size: 18px;
+  font-weight: 600;
+  text-align: center;
 `;
