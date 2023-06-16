@@ -14,8 +14,8 @@ const instance = axios.create({
 instance.interceptors.request.use(
   (config: any) => {
     const method = config.method?.toLowerCase();
-    console.log(config.url.includes('my'));
-    if (!['post', 'put', 'delete'].includes(method) && !config.url.includes('my')) {
+    console.log(config.url);
+    if (!['post', 'put', 'delete'].includes(method) && !config.url.includes('my') && !config.url.includes('user')) {
       return config;
     }
     const tokenstr = localStorage.getItem(SEEDAO_USER);
@@ -99,7 +99,7 @@ const post = function (url: string, data: any = {}): Promise<ResponseData> {
 const put = function (url: string, data: any): Promise<ResponseData> {
   return new Promise((resolve, reject) => {
     instance
-      .post(url, data)
+      .put(url, data)
       .then((res) => {
         resolve(res.data);
       })

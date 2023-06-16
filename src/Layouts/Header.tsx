@@ -15,8 +15,9 @@ import LoginModal from 'components/modals/login';
 import PublicJs from 'utils/publicJs';
 import useCheckLogin from 'hooks/useCheckLogin';
 import { parseToken, checkTokenValid, clearStorage } from 'utils/auth';
-import { SEEDAO_USER } from 'utils/constant';
+import { SEEDAO_USER, SEEDAO_USER_DATA } from 'utils/constant';
 import Loading from 'components/loading';
+import requests from 'requests';
 
 interface HeaderProps {
   toggleSidebar: () => void;
@@ -80,6 +81,15 @@ const Header: React.FC<HeaderProps> = (props) => {
     dispatch({ type: AppActionType.SET_ACCOUNT, payload: account });
   }, [account]);
 
+  const getUser = async () => {
+    const res = await requests.user.getUser();
+    dispatch({ type: AppActionType.SET_USER_DATA, payload: res.data });
+  };
+
+  useEffect(() => {
+    isLogin && getUser();
+  }, [isLogin]);
+
   useEffect(() => {
     if (!dispatch) {
       return;
@@ -89,7 +99,19 @@ const Header: React.FC<HeaderProps> = (props) => {
     if (!checkTokenValid(tokenData?.token, tokenData?.token_exp)) {
       clearStorage();
     } else {
-      tokenData && dispatch({ type: AppActionType.SET_USER_DATA, payload: tokenData });
+      const local_user_data = localStorage.getItem(SEEDAO_USER_DATA) || '';
+      let user;
+      try {
+        user = JSON.parse(local_user_data) || {};
+      } catch (error) {}
+      tokenData &&
+        dispatch({
+          type: AppActionType.SET_LOGIN_DATA,
+          payload: {
+            ...tokenData,
+            user,
+          },
+        });
     }
   }, [dispatch]);
 

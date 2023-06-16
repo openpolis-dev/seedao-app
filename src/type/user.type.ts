@@ -4,16 +4,21 @@ export interface IUser {
   avatar: string;
   email: string;
 
-  discordProfile: string;
-  twitterProfile: string;
-  googleProfile: string;
+  discord_profile: string;
+  twitter_profile: string;
+  google_profile: string;
 }
 
 export interface IUserInfo {
   name: string;
   avatar: string;
   email: string;
-  discordProfile: string;
-  twitterProfile: string;
-  googleProfile: string;
+  discord_profile: string;
+  twitter_profile: string;
+  google_profile: string;
+}
+
+export interface ITokenType {
+  token: string;
+  token_exp: number;
 }

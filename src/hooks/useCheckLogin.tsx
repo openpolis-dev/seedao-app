@@ -5,15 +5,15 @@ const useCheckLogin = () => {
   const { account } = useWeb3React();
 
   const {
-    state: { account: tokenAccount, userData },
+    state: { account: tokenAccount, tokenData },
     dispatch,
   } = useAuthContext();
 
-  if (userData && account && tokenAccount && account.toLocaleLowerCase() !== tokenAccount.toLocaleLowerCase()) {
+  if (tokenData && account && tokenAccount && account.toLocaleLowerCase() !== tokenAccount.toLocaleLowerCase()) {
     dispatch({ type: AppActionType.CLEAR_AUTH, payload: undefined });
     return false;
   }
-  return userData && account && account === tokenAccount;
+  return tokenData && account && account === tokenAccount;
 };
 
 export default useCheckLogin;

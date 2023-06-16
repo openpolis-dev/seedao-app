@@ -1,9 +1,5 @@
 import { SEEDAO_USER } from './constant';
-
-export type TokenType = {
-  token: string;
-  token_exp: number;
-};
+import { ITokenType } from 'type/user.type';
 
 export const clearStorage = () => {
   localStorage.removeItem(SEEDAO_USER);
@@ -18,9 +14,9 @@ export const checkTokenValid = (token?: string, expireAt?: number) => {
   }
 };
 
-export const parseToken = (tokenstr: string): TokenType | undefined => {
+export const parseToken = (tokenstr: string): ITokenType | undefined => {
   try {
-    const data = JSON.parse(tokenstr) as TokenType;
+    const data = JSON.parse(tokenstr) as ITokenType;
     return { ...data };
   } catch (error) {}
   return;
