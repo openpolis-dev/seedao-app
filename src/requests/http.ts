@@ -23,7 +23,7 @@ instance.interceptors.request.use(
     }
 
     const tokenData = parseToken(tokenstr);
-    if (!checkTokenValid(tokenData?.token, tokenData?.expireAt)) {
+    if (!checkTokenValid(tokenData?.token, tokenData?.token_exp)) {
       clearStorage();
       return Promise.reject();
     }
@@ -31,7 +31,7 @@ instance.interceptors.request.use(
     if (!config.headers) {
       config.headers = {};
     }
-    config.headers['Authorization'] = `Bearer${tokenData?.token || ''}`;
+    config.headers['Authorization'] = `Bearer ${tokenData?.token || ''}`;
     return config;
   },
   (error) => {

@@ -1,9 +1,8 @@
 import { SEEDAO_USER } from './constant';
 
 export type TokenType = {
-  account: string;
   token: string;
-  expireAt: number;
+  token_exp: number;
 };
 
 export const clearStorage = () => {

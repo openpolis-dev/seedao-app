@@ -44,6 +44,7 @@ export default function LoginModal() {
       sign: signData,
     });
     dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: false });
+    res.data.token_exp = now + res.data.token_exp * 1000;
     dispatch({ type: AppActionType.SET_USER_DATA, payload: res.data });
   };
 

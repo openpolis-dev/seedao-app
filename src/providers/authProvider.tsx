@@ -45,7 +45,7 @@ const reducer = (state: IState, action: IAction): IState => {
       localStorage.setItem(SEEDAO_USER, JSON.stringify(action.payload));
       return { ...state, userData: action.payload };
     case AppActionType.CLEAR_AUTH:
-      localStorage.deleteItem(SEEDAO_USER);
+      localStorage.removeItem(SEEDAO_USER);
       return { ...state, account: undefined, userData: undefined };
     case AppActionType.SET_PROPOSAL_CATEGORIES:
       return { ...state, proposal_categories: action.payload };
@@ -59,7 +59,6 @@ const reducer = (state: IState, action: IAction): IState => {
 
 const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, INIT_STATE);
-
   return <AuthContext.Provider value={{ state, dispatch }}>{children}</AuthContext.Provider>;
 };
 

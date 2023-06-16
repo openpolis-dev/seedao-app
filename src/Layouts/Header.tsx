@@ -14,6 +14,8 @@ import { Button } from '@paljs/ui';
 import LoginModal from 'components/modals/login';
 import PublicJs from 'utils/publicJs';
 import useCheckLogin from 'hooks/useCheckLogin';
+import { parseToken, checkTokenValid, clearStorage } from 'utils/auth';
+import { SEEDAO_USER } from 'utils/constant';
 
 interface HeaderProps {
   toggleSidebar: () => void;
@@ -72,6 +74,23 @@ const Header: React.FC<HeaderProps> = (props) => {
   //     changeLang(myLan!);
   //   }
   // }, []);
+
+  useEffect(() => {
+    dispatch({ type: AppActionType.SET_ACCOUNT, payload: account });
+  }, [account]);
+
+  useEffect(() => {
+    if (!dispatch) {
+      return;
+    }
+    const tokenDataStr = localStorage.getItem(SEEDAO_USER) || '';
+    const tokenData = parseToken(tokenDataStr);
+    if (!checkTokenValid(tokenData?.token, tokenData?.token_exp)) {
+      clearStorage();
+    } else {
+      tokenData && dispatch({ type: AppActionType.SET_USER_DATA, payload: tokenData });
+    }
+  }, [dispatch]);
 
   const getLanguages = () => [
     {

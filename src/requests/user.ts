@@ -12,7 +12,7 @@ type LoginParams = {
 
 interface ILogininRespons {
   token: string;
-  tokenExp: number;
+  token_exp: number;
   user: IUser & IUserInfo;
 }
 
