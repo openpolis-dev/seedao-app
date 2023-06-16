@@ -19,5 +19,5 @@ export const getProjectById = (projectId: string) => {
   return request.get(`${PATH_PREFIX}${projectId}`);
 };
 export const closeProjectById = (projectId: string) => {
-  return request.get(`${PATH_PREFIX}${projectId}/close`);
+  return request.post(`${PATH_PREFIX}${projectId}/close`);
 };

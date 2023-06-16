@@ -10,7 +10,7 @@ import { useRouter } from 'next/router';
 import { Card, CardHeader } from '@paljs/ui/Card';
 import useTranslation from 'hooks/useTranslation';
 import { getMyProjects, getProjects } from 'requests/project';
-import { useAuthContext } from 'providers/authProvider';
+import { AppActionType, useAuthContext } from 'providers/authProvider';
 import Page from 'components/pagination';
 import { ReTurnProject } from 'type/project.type';
 
@@ -44,11 +44,12 @@ export default function Index() {
   const { t } = useTranslation();
   const {
     state: { language },
+    dispatch,
   } = useAuthContext();
   const router = useRouter();
 
   const [pageCur, setPageCur] = useState(1);
-  const [size, setSize] = useState(1);
+  const [pageSize, setPageSize] = useState(20);
   const [total, setTotal] = useState(1);
 
   const [current, setCurrent] = useState<number>(0);
@@ -56,7 +57,11 @@ export default function Index() {
   const [proList, setProList] = useState<ReTurnProject[]>([]);
 
   useEffect(() => {
-    getList();
+    if (current < 2) {
+      getList();
+    } else {
+      getMyList();
+    }
   }, [pageCur, current]);
 
   useEffect(() => {
@@ -77,43 +82,47 @@ export default function Index() {
   }, [language]);
 
   const getList = async () => {
+    if (current > 2) return;
     const stt = current === 1 ? 'closed' : '';
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
     const obj: IPageParams = {
       status: stt,
       page: pageCur,
-      size,
+      size: pageSize,
       sort_order: 'desc',
       sort_field: 'created_at',
     };
-    console.log('===current=', current, obj);
-    if (current < 2) {
-      const rt = await getProjects(obj);
-      console.log('====rt.data=', rt.data);
-      const { rows, page, size, total } = rt.data;
-      console.log('=======obj', size, total, page);
-      setProList(rows);
-      setSize(size);
-      setTotal(total);
-      setPageCur(page);
-    } else {
-      console.error('===current=', current, obj);
-      const rt = await getMyProjects(obj);
-      const { rows, page, size, total } = rt.data;
-      console.error('=====222==obj', size, obj);
-      setProList(rows);
-      setSize(size);
-      setTotal(total);
-      setPageCur(page);
-    }
+    const rt = await getProjects(obj);
+    dispatch({ type: AppActionType.SET_LOADING, payload: null });
+    const { rows, page, size, total } = rt.data;
+    setProList(rows);
+    setPageSize(size);
+    setTotal(total);
+    setPageCur(page);
+  };
+
+  const getMyList = async () => {
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    const obj: IPageParams = {
+      page: pageCur,
+      size: pageSize,
+      sort_order: 'desc',
+      sort_field: 'created_at',
+    };
+    const rt = await getMyProjects(obj);
+    dispatch({ type: AppActionType.SET_LOADING, payload: null });
+    const { rows, page, size, total } = rt.data;
+    setProList(rows);
+    setPageSize(size);
+    setTotal(total);
+    setPageCur(page);
   };
   const selectCurrent = (e: number) => {
     setCurrent(e);
+    setPageCur(1);
   };
   const handlePage = (num: number) => {
     setPageCur(num + 1);
-  };
-  const handlePageSize = (num: number) => {
-    // setSize(num);
   };
 
   return (
@@ -130,23 +139,18 @@ export default function Index() {
               <CardHeader>
                 <Tabs activeIndex={0} onSelect={(e) => selectCurrent(e)}>
                   {list.map((item) => (
-                    <Tab key={item.id} title={item.name} responsive>
-                      <ProjectAllList list={proList} />
-                      {size}
-                      {total > size && (
-                        <div>
-                          <Page
-                            itemsPerPage={size}
-                            total={total}
-                            current={pageCur - 1}
-                            handleToPage={handlePage}
-                            handlePageSize={handlePageSize}
-                          />
-                        </div>
-                      )}
-                    </Tab>
+                    <Tab key={item.id} title={item.name} responsive />
                   ))}
                 </Tabs>
+
+                <div>
+                  <ProjectAllList list={proList} />
+                  {total > pageSize && (
+                    <div>
+                      <Page itemsPerPage={pageSize} total={total} current={pageCur - 1} handleToPage={handlePage} />
+                    </div>
+                  )}
+                </div>
               </CardHeader>
             </Col>
           </Row>

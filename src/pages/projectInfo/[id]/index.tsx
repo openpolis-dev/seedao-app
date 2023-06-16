@@ -16,6 +16,7 @@ import { getProjectById } from 'requests/project';
 import { ReTurnProject } from 'type/project.type';
 import useTranslation from 'hooks/useTranslation';
 import { de } from 'date-fns/locale';
+import { AppActionType, useAuthContext } from 'providers/authProvider';
 
 const Box = styled.div`
   position: relative;
@@ -46,7 +47,8 @@ export default function Index() {
   const router = useRouter();
   const { t } = useTranslation();
   const { id } = router.query;
-  const [detail, setDetail] = useState<ReTurnProject>();
+  const [detail, setDetail] = useState<ReTurnProject | undefined>();
+  const { dispatch } = useAuthContext();
 
   useEffect(() => {
     if (!id) return;
@@ -54,7 +56,9 @@ export default function Index() {
   }, [id]);
 
   const getDetail = async () => {
-    const dt = await getProjectById(id!);
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    const dt = await getProjectById(id as any);
+    dispatch({ type: AppActionType.SET_LOADING, payload: null });
     setDetail(dt.data);
   };
 
@@ -63,7 +67,7 @@ export default function Index() {
       <CardBox>
         <Box>
           <BackBox onClick={() => router.back()}>
-            <EvaIcon name="chevron-left-outline" className="icon" /> <span> {t('Project.create')}</span>
+            <EvaIcon name="chevron-left-outline" className="icon" /> <span> {t('general.back')}</span>
           </BackBox>
           <Row>
             <Col breakPoint={{ xs: 12 }}>

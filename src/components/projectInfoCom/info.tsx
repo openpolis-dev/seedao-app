@@ -3,10 +3,12 @@ import styled from 'styled-components';
 import { Button } from '@paljs/ui/Button';
 import React, { useEffect, useState } from 'react';
 import CloseTips from 'components/projectInfoCom/closeTips';
+import CloseSuccess from 'components/projectInfoCom/closeSuccess';
 import useTranslation from 'hooks/useTranslation';
 import { budgetObj, ReTurnProject } from 'type/project.type';
-import { getProjectById } from 'requests/project';
 import { useRouter } from 'next/router';
+import { closeProjectById } from 'requests/project';
+import { AppActionType, useAuthContext } from 'providers/authProvider';
 
 const Box = styled.div`
   margin-top: 50px;
@@ -51,22 +53,25 @@ const Title = styled.div`
   margin-bottom: 20px;
 `;
 interface Iprops {
-  detail: ReTurnProject;
+  detail: ReTurnProject | undefined;
 }
 export default function Info(props: Iprops) {
   const { detail } = props;
   const [show, setShow] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
   const { t } = useTranslation();
   const router = useRouter();
   const { id } = router.query;
+  const { dispatch } = useAuthContext();
 
   const [token, setToken] = useState<budgetObj | null>();
-
   const [points, setPoints] = useState<budgetObj | null>();
+
   useEffect(() => {
-    if (!id) return;
+    if (!id || !detail) return;
     getDetail();
-  }, [id]);
+  }, [id, detail]);
+
   const getDetail = async () => {
     const tokenArr = detail?.budgets?.filter((item) => item.name === 'USDT');
     const rt = tokenArr?.length ? tokenArr[0] : null;
@@ -83,9 +88,26 @@ export default function Info(props: Iprops) {
     setShow(true);
   };
 
+  // const handleShow = () => {
+  //   setShow(true);
+  // };
+
+  const handleClosePro = async () => {
+    setShow(false);
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    const rt = await closeProjectById(id);
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    setShowSuccess(true);
+  };
+
+  const closeSuccess = () => {
+    setShowSuccess(false);
+  };
+
   return (
     <Box>
-      {show && <CloseTips closeModal={closeModal} />}
+      {show && <CloseTips closeModal={closeModal} handleClosePro={handleClosePro} />}
+      {showSuccess && <CloseSuccess closeModal={closeSuccess} />}
 
       <Container>
         <TopImg>
@@ -110,7 +132,7 @@ export default function Info(props: Iprops) {
                 <span>
                   （
                   {t('Project.HasBeenUsedAndRemains', {
-                    used: points?.total_amount - points?.remain_amount,
+                    used: Number(points?.total_amount) - Number(points?.remain_amount),
                     remain: points?.remain_amount,
                   })}
                   ）
@@ -129,7 +151,7 @@ export default function Info(props: Iprops) {
                 <span>
                   （
                   {t('Project.HasBeenUsedAndRemains', {
-                    used: token?.total_amount - token?.remain_amount,
+                    used: Number(token?.total_amount) - Number(token?.remain_amount),
                     remain: token?.remain_amount,
                   })}
                   ）

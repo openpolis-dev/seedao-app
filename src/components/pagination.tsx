@@ -134,18 +134,13 @@ interface Props {
   itemsPerPage: number;
   total: number;
   current: number;
-  hidden?: boolean;
   handleToPage: (a: number) => void;
-  handlePageSize: (a: number) => void;
 }
 
-const Page: FC<Props> = ({ itemsPerPage, total, handleToPage, handlePageSize }) => {
+const Page: FC<Props> = ({ itemsPerPage, total, handleToPage }) => {
   const [pageCount, setPageCount] = useState(0);
-  const [pageSize, setPageSize] = useState(0);
   const [current, setCurrent] = useState(0);
-  const [pageList] = useState([10, 50, 100]);
   const [pageToGo, setPageToGo] = useState('');
-  const [currentSize, setCurrentSize] = useState(0);
   const [show, setShow] = useState(false);
   const MyPaginate = ReactPaginate as any;
 
@@ -159,11 +154,6 @@ const Page: FC<Props> = ({ itemsPerPage, total, handleToPage, handlePageSize }) 
     setPageCount(Math.ceil(total / itemsPerPage));
   }, [itemsPerPage, total]);
 
-  useEffect(() => {
-    const ps = pageList[currentSize];
-    setPageSize(Number(ps));
-    handlePageSize(pageList[currentSize]);
-  }, [currentSize]);
   useEffect(() => {
     handleToPage(current);
   }, [current]);

@@ -226,12 +226,9 @@ export default function CreateProject() {
     xhr.onload = function () {
       if (this.status == 200) {
         const blob = this.response;
-        console.log('blob', blob);
-
         const oFileReader = new FileReader();
         oFileReader.onloadend = function (e) {
           const { result } = e.target as any;
-          console.log(result);
           setUrl(result);
         };
         oFileReader.readAsDataURL(blob);
