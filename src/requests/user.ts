@@ -24,12 +24,12 @@ export const logout = () => {
   return request.post(`${PATH_PREFIX}/logout`);
 };
 
-export const getUser = (): Promise<ResponseData<IUserInfo & { id: string }>> => {
+export const getUser = (): Promise<ResponseData<IUser>> => {
   return request.get(`${PATH_PREFIX}/me`);
 };
 
 export const updateUser = (data: IUserInfo) => {
-  return request.post(`${PATH_PREFIX}/me`, data);
+  return request.put(`${PATH_PREFIX}/me`, data);
 };
 
 export const getUsers = (wallets: string[]): Promise<ResponseData<IUser[]>> => {
