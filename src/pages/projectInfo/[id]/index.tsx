@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Layout from 'Layouts';
 import Row from '@paljs/ui/Row';
 import Col from '@paljs/ui/Col';
@@ -12,6 +12,10 @@ import Assets from 'components/projectInfoCom/assets';
 import ProjectProposal from 'components/projectInfoCom/proposal';
 import Reg from 'components/projectInfoCom/reg';
 import { EvaIcon } from '@paljs/ui/Icon';
+import { getProjectById } from 'requests/project';
+import { ReTurnProject } from 'type/project.type';
+import useTranslation from 'hooks/useTranslation';
+import { de } from 'date-fns/locale';
 
 const Box = styled.div`
   position: relative;
@@ -40,30 +44,44 @@ const BackBox = styled.div`
 
 export default function Index() {
   const router = useRouter();
+  const { t } = useTranslation();
+  const { id } = router.query;
+  const [detail, setDetail] = useState<ReTurnProject>();
+
+  useEffect(() => {
+    if (!id) return;
+    getDetail();
+  }, [id]);
+
+  const getDetail = async () => {
+    const dt = await getProjectById(id!);
+    setDetail(dt.data);
+  };
+
   return (
     <Layout title="SeeDAO Project">
       <CardBox>
         <Box>
           <BackBox onClick={() => router.back()}>
-            <EvaIcon name="chevron-left-outline" className="icon" /> <span>返回</span>
+            <EvaIcon name="chevron-left-outline" className="icon" /> <span> {t('Project.create')}</span>
           </BackBox>
           <Row>
             <Col breakPoint={{ xs: 12 }}>
               <TopBox>
                 <Tabs>
-                  <Tab key="0" title="Project Info" responsive>
-                    <Info />
+                  <Tab key="0" title={t('Project.ProjectInformation')} responsive>
+                    <Info detail={detail} />
                   </Tab>
-                  <Tab key="1" title="Members" responsive>
+                  <Tab key="1" title={t('Project.Members')} responsive>
                     <Members />
                   </Tab>
-                  <Tab key="2" title="Project Assets" responsive>
+                  <Tab key="2" title={t('Project.Asset')} responsive>
                     <Assets />
                   </Tab>
-                  <Tab key="3" title="Project Proposal" responsive>
+                  <Tab key="3" title={t('Project.ProjectProposal')} responsive>
                     <ProjectProposal />
                   </Tab>
-                  <Tab key="3" title="登记" responsive>
+                  <Tab key="3" title={t('Project.Add')} responsive>
                     <Reg />
                   </Tab>
                 </Tabs>

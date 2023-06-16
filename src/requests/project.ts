@@ -9,9 +9,15 @@ export const createProjects = (data: IBaseProject) => {
 };
 
 export const getProjects = (data: IPageParams) => {
-  return request.get(`${PATH_PREFIX}?status=open&page=1&size=10&sort_field=created_at&sort_order=desc`);
+  return request.get(PATH_PREFIX, data);
+};
+export const getMyProjects = (data: IPageParams) => {
+  return request.get(`${PATH_PREFIX}my`, data);
 };
 
 export const getProjectById = (projectId: string) => {
-  return request.get(PATH_PREFIX, { id: projectId });
+  return request.get(`${PATH_PREFIX}${projectId}`);
+};
+export const closeProjectById = (projectId: string) => {
+  return request.get(`${PATH_PREFIX}${projectId}/close`);
 };

@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { Card, CardHeader, CardBody, CardFooter } from '@paljs/ui/Card';
 import { Button } from '@paljs/ui/Button';
 import React from 'react';
+import useTranslation from 'hooks/useTranslation';
 
 const Mask = styled.div`
   background: rgba(0, 0, 0, 0.3);
@@ -14,9 +15,12 @@ const Mask = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  .btn {
+  .btnBtmAll {
     margin-right: 20px;
   }
+`;
+const InnerBox = styled.div`
+  width: 400px;
 `;
 
 interface Iprops {
@@ -25,17 +29,20 @@ interface Iprops {
 
 export default function CloseTips(props: Iprops) {
   const { closeModal } = props;
+  const { t } = useTranslation();
 
   return (
     <Mask>
       <Card>
-        <CardHeader>关闭项目</CardHeader>
-        <CardBody>已申请关闭项目，审核通过后项目将被关闭</CardBody>
+        <CardHeader> {t('Project.CloseProject')}</CardHeader>
+        <CardBody>
+          <InnerBox>{t('Project.closeTips')}</InnerBox>
+        </CardBody>
         <CardFooter>
-          <Button appearance="outline" className="btn" onClick={() => closeModal()}>
-            取消
+          <Button appearance="outline" className="btnBtmAll" onClick={() => closeModal()}>
+            {t('general.cancel')}
           </Button>
-          <Button>确定</Button>
+          <Button>{t('general.confirm')}</Button>
         </CardFooter>
       </Card>
     </Mask>

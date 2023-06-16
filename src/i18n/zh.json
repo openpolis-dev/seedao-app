@@ -5,5 +5,31 @@
     "Guild": "工会",
     "city-hall": "市政厅",
     "assets": "SeeDAO资产"
+  },
+  "general": {
+    "back": "返回",
+    "cancel": "取消",
+    "confirm": "确定",
+    "Change": "修改"
+  },
+  "Project": {
+    "create": "创建项目",
+    "AllProjects": "所有项目",
+    "Closed": "已关闭",
+    "Joined": "已加入",
+    "ProjectName": "项目名称",
+    "Dominator": "负责人",
+    "AssociatedProposal": "关联提案",
+    "Budget": "预算",
+    "Points": "积分",
+    "Members": "成员",
+    "upload": "上传LOGO",
+    "ProjectInformation": "项目信息",
+    "ProjectProposal": "项目提案",
+    "Add": "登记",
+    "Asset": "资产",
+    "CloseProject": "关闭项目",
+    "HasBeenUsedAndRemains": "已使用{used}，剩余{remain}",
+    "closeTips": "已申请关闭项目，审核通过后项目将被关闭"
   }
 }

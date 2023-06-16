@@ -14,7 +14,8 @@ const instance = axios.create({
 instance.interceptors.request.use(
   (config: any) => {
     const method = config.method?.toLowerCase();
-    if (!['post', 'put', 'delete'].includes(method)) {
+    console.log(config.url.includes('my'));
+    if (!['post', 'put', 'delete'].includes(method) && !config.url.includes('my')) {
       return config;
     }
     const tokenstr = localStorage.getItem(SEEDAO_USER);
@@ -32,6 +33,7 @@ instance.interceptors.request.use(
       config.headers = {};
     }
     config.headers['Authorization'] = `Bearer ${tokenData?.token || ''}`;
+    console.log(config);
     return config;
   },
   (error) => {

@@ -4,6 +4,7 @@ import Col from '@paljs/ui/Col';
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
 import React from 'react';
+import { ReTurnProject } from 'type/project.type';
 
 const Box = styled.div`
   margin-top: 40px;
@@ -77,8 +78,12 @@ const Photo = styled.div`
     }
   }
 `;
+interface Iprops {
+  list: ReTurnProject[];
+}
 
-export default function ProjectAllList() {
+export default function ProjectAllList(props: Iprops) {
+  const { list } = props;
   const router = useRouter();
 
   const toGo = (num: number) => {
@@ -87,25 +92,21 @@ export default function ProjectAllList() {
   return (
     <Box>
       <Row>
-        {[...Array(20)].map((item, index) => (
+        {list?.map((item, index) => (
           <Col breakPoint={{ xs: 3, sm: 3, md: 3, lg: 2.4 }} key={index}>
             <CardBox>
-              <Item onClick={() => toGo(index)}>
+              <Item onClick={() => toGo(item.id)}>
                 <ImageBox>
                   <Photo>
                     <div className="aspect" />
                     <div className="content">
                       <div className="innerImg">
-                        <img
-                          src="https://img0.baidu.com/it/u=2050198963,701666245&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=501"
-                          alt=""
-                        />
+                        <img src={item.logo} alt="" />
                       </div>
                     </div>
                   </Photo>
                 </ImageBox>
-
-                <div className="title">全球DAO场战略项目全球DAO场战略项目全球DAO场战略项目全球DAO场战略项目{item}</div>
+                <div className="title">{item.name}</div>
               </Item>
             </CardBox>
           </Col>

@@ -1,8 +1,12 @@
 import Container from '@paljs/ui/Container';
 import styled from 'styled-components';
 import { Button } from '@paljs/ui/Button';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import CloseTips from 'components/projectInfoCom/closeTips';
+import useTranslation from 'hooks/useTranslation';
+import { budgetObj, ReTurnProject } from 'type/project.type';
+import { getProjectById } from 'requests/project';
+import { useRouter } from 'next/router';
 
 const Box = styled.div`
   margin-top: 50px;
@@ -46,8 +50,31 @@ const Title = styled.div`
   padding: 10px 20px;
   margin-bottom: 20px;
 `;
-export default function Info() {
+interface Iprops {
+  detail: ReTurnProject;
+}
+export default function Info(props: Iprops) {
+  const { detail } = props;
   const [show, setShow] = useState(false);
+  const { t } = useTranslation();
+  const router = useRouter();
+  const { id } = router.query;
+
+  const [token, setToken] = useState<budgetObj | null>();
+
+  const [points, setPoints] = useState<budgetObj | null>();
+  useEffect(() => {
+    if (!id) return;
+    getDetail();
+  }, [id]);
+  const getDetail = async () => {
+    const tokenArr = detail?.budgets?.filter((item) => item.name === 'USDT');
+    const rt = tokenArr?.length ? tokenArr[0] : null;
+    setToken(rt);
+    const pArr = detail?.budgets?.filter((item) => item.name === 'SCORE');
+    const rt2 = pArr?.length ? pArr[0] : null;
+    setPoints(rt2);
+  };
 
   const closeModal = () => {
     setShow(false);
@@ -62,31 +89,35 @@ export default function Info() {
 
       <Container>
         <TopImg>
-          <img
-            src="https://img0.baidu.com/it/u=2050198963,701666245&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=501"
-            alt=""
-          />
+          <img src={detail?.logo} alt="" />
         </TopImg>
         <InfoBox>
           <dl>
-            <dt>Project Name:</dt>
+            <dt>{t('Project.ProjectName')}:</dt>
             <dd>
-              <div className="info">全球DAO场战略项目</div>
+              <div className="info">{detail?.name}</div>
               <Button shape="Rectangle" appearance="outline" size="Medium" onClick={() => handleShow()}>
-                关闭项目
+                {t('Project.CloseProject')}
               </Button>
             </dd>
           </dl>
-          <Title>预算</Title>
+          <Title>{t('Project.Budget')}</Title>
           <dl>
-            <dt>积分:</dt>
+            <dt>{t('Project.Points')}:</dt>
             <dd>
               <div className="info">
-                <span>1000</span>
-                <span>（已使用100，剩余900）</span>
+                <span>{points?.total_amount}</span>
+                <span>
+                  （
+                  {t('Project.HasBeenUsedAndRemains', {
+                    used: points?.total_amount - points?.remain_amount,
+                    remain: points?.remain_amount,
+                  })}
+                  ）
+                </span>
               </div>
               <Button shape="Rectangle" appearance="outline" size="Medium">
-                修改
+                {t('general.Change')}
               </Button>
             </dd>
           </dl>
@@ -94,11 +125,18 @@ export default function Info() {
             <dt>USDT:</dt>
             <dd>
               <div className="info">
-                <span>1000</span>
-                <span>（已使用100，剩余900）</span>
+                <span>{token?.total_amount}</span>
+                <span>
+                  （
+                  {t('Project.HasBeenUsedAndRemains', {
+                    used: token?.total_amount - token?.remain_amount,
+                    remain: token?.remain_amount,
+                  })}
+                  ）
+                </span>
               </div>
               <Button shape="Rectangle" appearance="outline" size="Medium">
-                修改
+                {t('general.Change')}
               </Button>
             </dd>
           </dl>
