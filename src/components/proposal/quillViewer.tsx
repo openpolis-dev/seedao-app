@@ -1,3 +1,4 @@
+import React from 'react';
 import { quillModules } from 'utils/quillUtil';
 import dynamic from 'next/dynamic';
 const ReactQuill = dynamic(import('react-quill'), { ssr: false });
