@@ -2,6 +2,7 @@ import { AppProps } from 'next/app';
 import Web3Provider from 'providers/web3Provider';
 import AuthProvider from 'providers/authProvider';
 import React from 'react';
+import 'styles/quill.css';
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface CustomPageProps {}
 
