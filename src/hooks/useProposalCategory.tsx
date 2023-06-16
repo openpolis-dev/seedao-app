@@ -14,7 +14,10 @@ export default function useProposalCategory(proposal_category_id?: number) {
   const findCategoryList = (id: number): ICatergoryNav[] => {
     const category = proposal_categories.find((category) => category.category_id === id);
     if (category) {
-      return [HomeNav, { name: category.name, category_id: category.category_id, to: '/proposal' }];
+      return [
+        HomeNav,
+        { name: category.name, category_id: category.category_id, to: `/proposal/category/${category.category_id}` },
+      ];
     }
     for (const category of proposal_categories) {
       const subCategory = category.children.find((child) => child.category_id === id);
@@ -32,8 +35,6 @@ export default function useProposalCategory(proposal_category_id?: number) {
     }
     return [];
   };
-  console.log('proposal_category_id', proposal_category_id);
-  console.log('proposal_categories', proposal_categories);
 
   useEffect(() => {
     if (!proposal_category_id || !proposal_categories.length) return;
