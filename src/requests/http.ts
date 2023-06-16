@@ -15,7 +15,7 @@ instance.interceptors.request.use(
   (config: any) => {
     const method = config.method?.toLowerCase();
     if (!['post', 'put', 'delete'].includes(method)) {
-      return;
+      return config;
     }
     const tokenstr = localStorage.getItem(SEEDAO_USER);
     if (!tokenstr) {
