@@ -35,7 +35,7 @@ const RhtBox = styled.div`
 const BtnBox = styled.label`
   background: #a16eff;
   color: #fff;
-  height: 44px;
+  height: 42px;
   padding: 0 25px;
   display: flex;
   align-items: center;
@@ -45,6 +45,8 @@ const BtnBox = styled.label`
     'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
   font-weight: 700;
   font-size: 14px;
+  margin-right: 20px;
+  cursor: pointer;
   .iconRht {
     margin-right: 10px;
   }
@@ -52,6 +54,10 @@ const BtnBox = styled.label`
 export default function Reg() {
   const { t } = useTranslation();
   const [list, setList] = useState<ExcelObj[]>([]);
+
+  const Clear = () => {
+    setList([]);
+  };
   const updateLogo = (e: FormEvent) => {
     const { files } = e.target as any;
     const fileReader = new FileReader();
@@ -102,7 +108,8 @@ export default function Reg() {
   return (
     <Box>
       <FirstBox>
-        <Button>{t('Project.SubmitForReview')}</Button>
+        <Button disabled={!list.length}>{t('Project.SubmitForReview')}</Button>
+
         <RhtBox>
           <ButtonLink className="rhtBtn" appearance="outline">
             <EvaIcon name="cloud-download-outline" />
@@ -110,10 +117,23 @@ export default function Reg() {
           </ButtonLink>
 
           <BtnBox htmlFor="fileUpload" onChange={(e) => updateLogo(e)}>
-            <input id="fileUpload" accept=".xlsx, .xls, .csv" type="file" hidden />
+            <input
+              id="fileUpload"
+              accept=".xlsx, .xls, .csv"
+              type="file"
+              hidden
+              onClick={(event) => {
+                (event.target as any).value = null;
+              }}
+            />
             <EvaIcon name="cloud-upload-outline" className="iconRht" />
             <span>{t('Project.ImportForm')}</span>
           </BtnBox>
+          {!!list.length && (
+            <Button appearance="outline" disabled={!list.length} onClick={() => Clear()}>
+              {t('general.Clear')}
+            </Button>
+          )}
         </RhtBox>
       </FirstBox>
       <RegList uploadList={list} />

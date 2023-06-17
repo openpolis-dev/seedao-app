@@ -11,7 +11,8 @@
     "cancel": "Cancel",
     "confirm": "Confirm",
     "Change": "Change",
-    "ok": "OK"
+    "ok": "OK",
+    "Clear": "Clear"
   },
   "Project": {
     "create": "Create Project",
@@ -51,6 +52,7 @@
     "Note": "Note",
     "SubmitForReview": "Submit For Review",
     "DownloadForm": "Download Form",
-    "ImportForm": "Import Form"
+    "ImportForm": "Import Form",
+    "Tips": "Download the form,fill in the information and import the form"
   }
 }

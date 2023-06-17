@@ -13,6 +13,7 @@ import { getMyProjects, getProjects } from 'requests/project';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import Page from 'components/pagination';
 import { ReTurnProject } from 'type/project.type';
+import NoItem from 'components/noItem';
 
 const Box = styled.div`
   position: relative;
@@ -145,6 +146,7 @@ export default function Index() {
 
                 <div>
                   <ProjectAllList list={proList} />
+                  {!proList.length && <NoItem />}
                   {total > pageSize && (
                     <div>
                       <Page itemsPerPage={pageSize} total={total} current={pageCur - 1} handleToPage={handlePage} />
