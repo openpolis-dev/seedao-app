@@ -12,6 +12,7 @@ import Link from 'next/link';
 import PublicJs from 'utils/publicJs';
 import { useRouter } from 'next/router';
 import { Toastr, ToastrRef } from '@paljs/ui/Toastr';
+import { AppActionType, useAuthContext } from 'providers/authProvider';
 
 const Box = styled.div`
   padding: 20px;
@@ -111,6 +112,7 @@ export default function Members(props: Iprops) {
   const { id } = router.query;
   const toastrRef = useRef<ToastrRef>(null);
   const { t } = useTranslation();
+  const { dispatch } = useAuthContext();
 
   const [edit, setEdit] = useState(false);
   const [show, setShow] = useState(false);
@@ -131,12 +133,13 @@ export default function Members(props: Iprops) {
     const { members, sponsors } = detail!;
     setMemberArr(members);
     setAdminArr(sponsors);
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
     const aL = await getUsers(sponsors);
-
     setAdminList(aL.data);
 
     const mL = await getUsers(members);
     setMemberList(mL.data);
+    dispatch({ type: AppActionType.SET_LOADING, payload: null });
   };
 
   const handleDel = () => {

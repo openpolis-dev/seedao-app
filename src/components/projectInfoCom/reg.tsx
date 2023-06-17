@@ -5,6 +5,7 @@ import { EvaIcon } from '@paljs/ui/Icon';
 import React, { ChangeEvent, FormEvent, useState } from 'react';
 import useTranslation from 'hooks/useTranslation';
 import * as XLSX from 'xlsx';
+import { ExcelObj } from 'type/project.type';
 
 const Box = styled.div`
   padding: 20px;
@@ -50,7 +51,7 @@ const BtnBox = styled.label`
 `;
 export default function Reg() {
   const { t } = useTranslation();
-  const [list, setList] = useState<string[]>([]);
+  const [list, setList] = useState<ExcelObj[]>([]);
   const updateLogo = (e: FormEvent) => {
     const { files } = e.target as any;
     const fileReader = new FileReader();
@@ -73,8 +74,6 @@ export default function Reg() {
 
             for (const item of arrs) {
               const vals = item.split(',');
-              // const addr = vals[0];
-              // const _amount = vals[1];
               const [address, points, token, content, note] = vals;
               objs.push({
                 address,
@@ -88,8 +87,6 @@ export default function Reg() {
             data = objs;
           }
         }
-
-        console.log('=====data', data);
 
         data.splice(0, 1);
         setList(data);
