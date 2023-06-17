@@ -13,6 +13,7 @@ import PublicJs from 'utils/publicJs';
 import { useRouter } from 'next/router';
 import { Toastr, ToastrRef } from '@paljs/ui/Toastr';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
+import NoItem from 'components/noItem';
 
 const Box = styled.div`
   padding: 20px;
@@ -287,6 +288,8 @@ export default function Members(props: Iprops) {
           ))}
         </UlBox>
       </ItemBox>
+      {!adminList.length && <NoItem />}
+
       <ItemBox>
         <TitleBox>{t('Project.Others')}</TitleBox>
         <UlBox>
@@ -322,6 +325,7 @@ export default function Members(props: Iprops) {
           ))}
         </UlBox>
       </ItemBox>
+      {!memberList.length && <NoItem />}
     </Box>
   );
 }
