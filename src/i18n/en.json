@@ -41,6 +41,8 @@
     "changeProName": "Change Project Name Successful",
     "addMemberSuccess": "Add Members Successful",
     "addAdminSuccess": "Add Dominator Successful",
-    "ConfirmationPopup": "Confirm remove the following members?"
+    "ConfirmationPopup": "Confirm remove the following members?",
+    "RemoveMemSuccess": "移除成员成功",
+    "RemoveSPSuccess": "移除负责人成功"
   }
 }

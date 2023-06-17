@@ -42,6 +42,8 @@
     "changeProName": "修改项目名称成功",
     "addMemberSuccess": "添加成员成功",
     "addAdminSuccess": "添加负责人成功",
-    "ConfirmationPopup": "确定要移除以下成员？"
+    "ConfirmationPopup": "确定要移除以下成员？",
+    "RemoveMemSuccess": "移除成员成功",
+    "RemoveSPSuccess": "移除负责人成功"
   }
 }

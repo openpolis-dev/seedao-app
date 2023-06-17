@@ -53,7 +53,7 @@ const UlBox = styled.ul`
       border-radius: 50px;
       margin-right: 20px;
     }
-    .topRht{
+    .topRht {
       position: absolute;
       right: 0;
       top: 0;
@@ -66,20 +66,18 @@ const UlBox = styled.ul`
       //.inner{
       //  display:none;
       //  }
-      }
-      .active{
-        border: 1px solid #a16eff;
-        background: #fff;
-        display:flex ;
-        align-items: center;
-        justify-content: center;
-        .inner{
-
-          width: 10px;
-          height: 10px;
-          background: #a16eff;
-          border-radius: 20px;
-        }
+    }
+    .active {
+      border: 1px solid #a16eff;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      .inner {
+        width: 10px;
+        height: 10px;
+        background: #a16eff;
+        border-radius: 20px;
       }
     }
   }
@@ -117,8 +115,8 @@ export default function Members(props: Iprops) {
   const [edit, setEdit] = useState(false);
   const [show, setShow] = useState(false);
   const [showDel, setShowDel] = useState(false);
-  const [selectAdminArr, setSelectAdminArr] = useState<number[]>([]);
-  const [selectMemArr, setSelectMemArr] = useState<number[]>([]);
+  const [selectAdminArr, setSelectAdminArr] = useState<IUser[]>([]);
+  const [selectMemArr, setSelectMemArr] = useState<IUser[]>([]);
   const [adminList, setAdminList] = useState<IUser[]>([]);
   const [memberList, setMemberList] = useState<IUser[]>([]);
   const [memberArr, setMemberArr] = useState<string[]>([]);
@@ -145,7 +143,7 @@ export default function Members(props: Iprops) {
     setEdit(true);
   };
   const closeDel = () => {
-    // setEdit(false)
+    setEdit(false);
     setShowDel(true);
   };
   const closeAdd = () => {
@@ -156,37 +154,65 @@ export default function Members(props: Iprops) {
   };
   const closeRemove = () => {
     setShowDel(false);
+    setEdit(false);
+    setSelectAdminArr([]);
+    setSelectMemArr([]);
   };
 
-  const handleSelect = (num: number, type: string) => {
-    // const selectHas = selectArr.findIndex((item) => item === num);
-    // console.log(selectHas);
-    // const arr = [...selectArr];
-    // if (selectHas > 0) {
-    //   arr.splice(selectHas, 1);
-    // } else {
-    //   arr.push(num);
-    // }
-    // setSelectArr(arr);
+  const handleAdminSelect = (selItem: IUser) => {
+    const selectHas = selectAdminArr.findIndex((item) => item?.wallet === selItem.wallet);
+
+    const arr = [...selectAdminArr];
+    if (selectHas > 0) {
+      arr.splice(selectHas, 1);
+    } else {
+      arr.push(selItem);
+    }
+    setSelectAdminArr(arr);
   };
-  const formatAdminActive = (num: number) => {
-    const arr = selectAdminArr.filter((item) => item === num);
+  const handleMemSelect = (selItem: IUser) => {
+    const selectHas = selectMemArr.findIndex((item) => item?.wallet === selItem.wallet);
+    const arr = [...selectMemArr];
+    if (selectHas > 0) {
+      arr.splice(selectHas, 1);
+    } else {
+      arr.push(selItem);
+    }
+    setSelectMemArr(arr);
+  };
+  const formatAdminActive = (num: string) => {
+    const arr = selectAdminArr.filter((item) => item.wallet === num);
     return !!arr.length;
   };
-  const formatMemActive = (num: number) => {
-    const arr = selectMemArr.filter((item) => item === num);
+  const formatMemActive = (num: string) => {
+    const arr = selectMemArr.filter((item) => item.wallet === num);
     return !!arr.length;
   };
 
   const showToastr = (message: string, title: string, type: string) => {
     toastrRef.current?.add(message, title, { status: type });
   };
+
   return (
     <Box>
       {show && (
-        <Add closeAdd={closeAdd} oldMemberList={memberArr} oldAdminList={adminArr} id={id} showToastr={showToastr} />
+        <Add
+          closeAdd={closeAdd}
+          oldMemberList={memberArr}
+          oldAdminList={adminArr}
+          id={id as string}
+          showToastr={showToastr}
+        />
       )}
-      {showDel && <Del closeRemove={closeRemove} selectAdminArr={selectAdminArr} selectMemArr={selectMemArr} />}
+      {showDel && (
+        <Del
+          id={id as string}
+          closeRemove={closeRemove}
+          selectAdminArr={selectAdminArr}
+          selectMemArr={selectMemArr}
+          showToastr={showToastr}
+        />
+      )}
       <Toastr
         ref={toastrRef}
         position="topEnd"
@@ -215,9 +241,12 @@ export default function Members(props: Iprops) {
           </Button>
         )}
         {edit && (
-          <Button appearance="outline" onClick={() => closeDel()}>
-            {t('general.confirm')}
-          </Button>
+          <>
+            <Button onClick={() => closeDel()}>{t('general.confirm')}</Button>
+            <Button appearance="outline" onClick={() => closeRemove()}>
+              {t('general.cancel')}
+            </Button>
+          </>
         )}
       </TopBox>
       <ItemBox>
@@ -236,8 +265,8 @@ export default function Members(props: Iprops) {
                 </div>
                 {edit && (
                   <div
-                    className={formatAdminActive(index) ? 'topRht active' : 'topRht'}
-                    onClick={() => handleSelect(index, 'admin')}
+                    className={formatAdminActive(item.wallet!) ? 'topRht active' : 'topRht'}
+                    onClick={() => handleAdminSelect(item)}
                   >
                     <div className="inner" />
                   </div>
@@ -271,8 +300,8 @@ export default function Members(props: Iprops) {
                 </div>
                 {edit && (
                   <div
-                    className={formatMemActive(index) ? 'topRht active' : 'topRht'}
-                    onClick={() => handleSelect(index, 'members')}
+                    className={formatMemActive(item.wallet!) ? 'topRht active' : 'topRht'}
+                    onClick={() => handleMemSelect(item)}
                   >
                     <div className="inner" />
                   </div>

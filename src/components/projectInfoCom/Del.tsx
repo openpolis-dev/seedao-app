@@ -3,6 +3,9 @@ import { Card, CardHeader, CardBody, CardFooter } from '@paljs/ui/Card';
 import React, { useEffect } from 'react';
 import { Button } from '@paljs/ui/Button';
 import useTranslation from 'hooks/useTranslation';
+import { IUser } from 'type/user.type';
+import { AppActionType, useAuthContext } from 'providers/authProvider';
+import { updateMembers, updateSponsors } from 'requests/project';
 
 const Mask = styled.div`
     background: rgba(0,0,0,0.3);
@@ -30,6 +33,7 @@ const ItemBox = styled.div`
   align-items: center;
   justify-content: flex-start;
   margin-top: 30px;
+  width: 500px;
   img {
     width: 40px;
     height: 40px;
@@ -40,19 +44,54 @@ const ItemBox = styled.div`
 
 interface Iprops {
   closeRemove: () => void;
-  selectAdminArr: number[];
-  selectMemArr: number[];
+  selectAdminArr: IUser[];
+  selectMemArr: IUser[];
+  showToastr: (a: string, b: string, c: string) => void;
+  id: string;
 }
 export default function Del(props: Iprops) {
-  const { closeRemove, selectAdminArr, selectMemArr } = props;
+  const { closeRemove, selectAdminArr, selectMemArr, id, showToastr } = props;
   const { t } = useTranslation();
+  const { dispatch } = useAuthContext();
 
-  useEffect(() => {
-    console.log(selectAdminArr);
-  }, [selectAdminArr]);
-  useEffect(() => {
-    console.log(selectMemArr);
-  }, [selectMemArr]);
+  const submitUpdate = async () => {
+    const uniqueM: string[] = [];
+    const uniqueAdd: string[] = [];
+    selectMemArr.map((item) => {
+      uniqueM.push(item.wallet!);
+    });
+    selectAdminArr.map((item) => {
+      uniqueAdd.push(item.wallet!);
+    });
+
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    try {
+      await updateMembers(id as string, { members: uniqueM });
+      closeRemove();
+      showToastr(t('Project.RemoveMemSuccess'), 'Success', 'Primary');
+      window.location.reload();
+      dispatch({ type: AppActionType.SET_LOADING, payload: null });
+    } catch (e) {
+      console.error(e);
+      closeRemove();
+      showToastr(JSON.stringify(e), 'Failed', 'Danger');
+      dispatch({ type: AppActionType.SET_LOADING, payload: null });
+    }
+
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    try {
+      await updateSponsors(id as string, { sponsors: uniqueAdd });
+      closeRemove();
+      window.location.reload();
+      showToastr(t('Project.RemoveSPSuccess'), 'Success', 'Primary');
+      dispatch({ type: AppActionType.SET_LOADING, payload: null });
+    } catch (e) {
+      console.error(e);
+      closeRemove();
+      showToastr(JSON.stringify(e), 'Failed', 'Danger');
+      dispatch({ type: AppActionType.SET_LOADING, payload: null });
+    }
+  };
 
   return (
     <Mask>
@@ -60,14 +99,25 @@ export default function Del(props: Iprops) {
         <CardHeader>{t('Project.RemoveMember')}</CardHeader>
         <CardBody>
           <div className="tips">{t('Project.ConfirmationPopup')}</div>
-          {[...Array(3)].map((item, index) => (
-            <ItemBox key={index}>
+          {selectAdminArr.map((item, index) => (
+            <ItemBox key={item.wallet}>
               <div>
-                <img src="" alt="" />
+                <img src={item.avatar} alt="" />
               </div>
               <div>
-                <div>{t('Project.Nickname')}</div>
-                <div>0x183F09C3cE99C02118c570e03808476b22d63191</div>
+                <div>{item.name}</div>
+                <div>{item.wallet}</div>
+              </div>
+            </ItemBox>
+          ))}
+          {selectMemArr.map((item, index) => (
+            <ItemBox key={item.wallet}>
+              <div>
+                <img src={item.avatar} alt="" />
+              </div>
+              <div>
+                <div>{item.name}</div>
+                <div>{item.wallet}</div>
               </div>
             </ItemBox>
           ))}
@@ -76,7 +126,7 @@ export default function Del(props: Iprops) {
           <Button appearance="outline" className="btnBtm" onClick={() => closeRemove()}>
             {t('general.cancel')}
           </Button>
-          <Button> {t('general.confirm')}</Button>
+          <Button onClick={() => submitUpdate()}> {t('general.confirm')}</Button>
         </CardFooter>
       </Card>
     </Mask>
