@@ -17,6 +17,7 @@ import { ReTurnProject } from 'type/project.type';
 import useTranslation from 'hooks/useTranslation';
 import { de } from 'date-fns/locale';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
+import { listObj } from 'pages/project';
 
 const Box = styled.div`
   position: relative;
@@ -43,12 +44,18 @@ const BackBox = styled.div`
   }
 `;
 
+const BtmBox = styled.div``;
 export default function Index() {
   const router = useRouter();
   const { t } = useTranslation();
+  const {
+    state: { language },
+    dispatch,
+  } = useAuthContext();
   const { id } = router.query;
   const [detail, setDetail] = useState<ReTurnProject | undefined>();
-  const { dispatch } = useAuthContext();
+  const [current, setCurrent] = useState<number>(0);
+  const [list, setList] = useState<listObj[]>([]);
 
   useEffect(() => {
     if (!id) return;
@@ -62,6 +69,35 @@ export default function Index() {
     setDetail(dt.data);
   };
 
+  const selectCurrent = (e: number) => {
+    setCurrent(e);
+  };
+
+  useEffect(() => {
+    setList([
+      {
+        name: t('Project.ProjectInformation'),
+        id: 0,
+      },
+      {
+        name: t('Project.Members'),
+        id: 1,
+      },
+      {
+        name: t('Project.Asset'),
+        id: 2,
+      },
+      {
+        name: t('Project.ProjectProposal'),
+        id: 3,
+      },
+      {
+        name: t('Project.Add'),
+        id: 4,
+      },
+    ]);
+  }, [language]);
+
   return (
     <Layout title="SeeDAO Project">
       <CardBox>
@@ -72,23 +108,18 @@ export default function Index() {
           <Row>
             <Col breakPoint={{ xs: 12 }}>
               <TopBox>
-                <Tabs>
-                  <Tab key="0" title={t('Project.ProjectInformation')} responsive>
-                    <Info detail={detail} />
-                  </Tab>
-                  <Tab key="1" title={t('Project.Members')} responsive>
-                    <Members />
-                  </Tab>
-                  <Tab key="2" title={t('Project.Asset')} responsive>
-                    <Assets />
-                  </Tab>
-                  <Tab key="3" title={t('Project.ProjectProposal')} responsive>
-                    <ProjectProposal />
-                  </Tab>
-                  <Tab key="3" title={t('Project.Add')} responsive>
-                    <Reg />
-                  </Tab>
+                <Tabs activeIndex={0} onSelect={(e) => selectCurrent(e)}>
+                  {list.map((item) => (
+                    <Tab key={item.id} title={item.name} responsive />
+                  ))}
                 </Tabs>
+                <BtmBox>
+                  {current === 0 && <Info detail={detail} />}
+                  {current === 1 && <Members detail={detail} />}
+                  {current === 2 && <Assets />}
+                  {current === 3 && <ProjectProposal />}
+                  {current === 4 && <Reg />}
+                </BtmBox>
               </TopBox>
             </Col>
           </Row>

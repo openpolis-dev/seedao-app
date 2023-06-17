@@ -1,9 +1,17 @@
 import styled from 'styled-components';
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { EvaIcon } from '@paljs/ui/Icon';
 import { Button } from '@paljs/ui/Button';
 import Add from './add';
 import Del from './Del';
+import useTranslation from 'hooks/useTranslation';
+import { ReTurnProject } from 'type/project.type';
+import { getUsers } from 'requests/user';
+import { IUser } from 'type/user.type';
+import Link from 'next/link';
+import PublicJs from 'utils/publicJs';
+import { useRouter } from 'next/router';
+import { Toastr, ToastrRef } from '@paljs/ui/Toastr';
 
 const Box = styled.div`
   padding: 20px;
@@ -51,7 +59,7 @@ const UlBox = styled.ul`
       top: 0;
       width: 20px;
       height: 20px;
-      background: #f1f1f1;
+      background: #f8f8f8;
       border: 1px solid #ccc;
       border-radius: 40px;
       cursor: pointer;
@@ -96,12 +104,42 @@ const TopBox = styled.div`
   }
 `;
 
-export default function Members() {
-  // const [current,setCurrent]= useState(0);
+interface Iprops {
+  detail: ReTurnProject | undefined;
+}
+export default function Members(props: Iprops) {
+  const { detail } = props;
+  const router = useRouter();
+  const { id } = router.query;
+  const toastrRef = useRef<ToastrRef>(null);
+  const { t } = useTranslation();
+
   const [edit, setEdit] = useState(false);
   const [show, setShow] = useState(false);
   const [showDel, setShowDel] = useState(false);
-  const [selectArr, setSelectArr] = useState<number[]>([0, 3, 5]);
+  const [selectAdminArr, setSelectAdminArr] = useState<number[]>([]);
+  const [selectMemArr, setSelectMemArr] = useState<number[]>([]);
+  const [adminList, setAdminList] = useState<IUser[]>([]);
+  const [memberList, setMemberList] = useState<IUser[]>([]);
+  const [memberArr, setMemberArr] = useState<string[]>([]);
+  const [adminArr, setAdminArr] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (!id || !detail) return;
+    getDetail();
+  }, [id, detail]);
+
+  const getDetail = async () => {
+    const { members, sponsors } = detail!;
+    setMemberArr(members);
+    setAdminArr(sponsors);
+    const aL = await getUsers(sponsors);
+
+    setAdminList(aL.data);
+
+    const mL = await getUsers(members);
+    setMemberList(mL.data);
+  };
 
   const handleDel = () => {
     setEdit(true);
@@ -120,93 +158,133 @@ export default function Members() {
     setShowDel(false);
   };
 
-  const handleSelect = (num: number) => {
-    const selectHas = selectArr.findIndex((item) => item === num);
-    console.log(selectHas);
-    const arr = [...selectArr];
-    if (selectHas > 0) {
-      arr.splice(selectHas, 1);
-    } else {
-      arr.push(num);
-    }
-    setSelectArr(arr);
+  const handleSelect = (num: number, type: string) => {
+    // const selectHas = selectArr.findIndex((item) => item === num);
+    // console.log(selectHas);
+    // const arr = [...selectArr];
+    // if (selectHas > 0) {
+    //   arr.splice(selectHas, 1);
+    // } else {
+    //   arr.push(num);
+    // }
+    // setSelectArr(arr);
   };
-  const formatActive = (num: number) => {
-    const arr = selectArr.filter((item) => item === num);
+  const formatAdminActive = (num: number) => {
+    const arr = selectAdminArr.filter((item) => item === num);
     return !!arr.length;
+  };
+  const formatMemActive = (num: number) => {
+    const arr = selectMemArr.filter((item) => item === num);
+    return !!arr.length;
+  };
+
+  const showToastr = (message: string, title: string, type: string) => {
+    toastrRef.current?.add(message, title, { status: type });
   };
   return (
     <Box>
-      {show && <Add closeAdd={closeAdd} />}
-      {showDel && <Del closeRemove={closeRemove} selectArr={selectArr} />}
+      {show && (
+        <Add closeAdd={closeAdd} oldMemberList={memberArr} oldAdminList={adminArr} id={id} showToastr={showToastr} />
+      )}
+      {showDel && <Del closeRemove={closeRemove} selectAdminArr={selectAdminArr} selectMemArr={selectMemArr} />}
+      <Toastr
+        ref={toastrRef}
+        position="topEnd"
+        status="Primary"
+        duration={3000}
+        icons={{
+          Danger: 'flash-outline',
+          Success: 'checkmark-outline',
+          Info: 'question-mark-outline',
+          Warning: 'alert-triangle-outline',
+          Control: 'email-outline',
+          Basic: 'email-outline',
+          Primary: 'checkmark-outline',
+        }}
+        hasIcon={true}
+        destroyByClick={false}
+        preventDuplicates={false}
+      />
       <TopBox>
-        <Button onClick={() => handleAdd()}>添加成员</Button>
+        <Button onClick={() => handleAdd()} disabled={edit}>
+          {t('Project.AddMember')}
+        </Button>
         {!edit && (
           <Button appearance="outline" onClick={() => handleDel()}>
-            移除成员
+            {t('Project.RemoveMember')}
           </Button>
         )}
         {edit && (
           <Button appearance="outline" onClick={() => closeDel()}>
-            确定
+            {t('general.confirm')}
           </Button>
         )}
       </TopBox>
       <ItemBox>
-        <TitleBox>负责人</TitleBox>
+        <TitleBox>{t('Project.Dominator')}</TitleBox>
         <UlBox>
-          {[...Array(3)].map((item, index) => (
+          {adminList.map((item, index) => (
             <li key={index}>
               <div className="fst">
-                <img src="" alt="" />
+                <img src={item.avatar} alt="" />
                 <div>
-                  <div>昵称</div>
+                  <div>{t('Project.Nickname')}</div>
                   <div>
-                    <span>0x23...Fdf0</span>
+                    <span>{PublicJs.AddressToShow(item.wallet!)}</span>
                     <EvaIcon name="clipboard-outline" />
                   </div>
                 </div>
                 {edit && (
-                  <div className={formatActive(index) ? 'topRht active' : 'topRht'}>
+                  <div
+                    className={formatAdminActive(index) ? 'topRht active' : 'topRht'}
+                    onClick={() => handleSelect(index, 'admin')}
+                  >
                     <div className="inner" />
                   </div>
                 )}
               </div>
               <LinkBox>
-                <img src="/images/twitterNor.svg" alt="" />
-                <img src="/images/discordNor.svg" alt="" />
+                <Link href={item.twitter_profile}>
+                  <img src="/images/twitterNor.svg" alt="" />
+                </Link>
+                <Link href={item.discord_profile}>
+                  <img src="/images/discordNor.svg" alt="" />
+                </Link>
               </LinkBox>
             </li>
           ))}
         </UlBox>
       </ItemBox>
       <ItemBox>
-        <TitleBox>其他成员</TitleBox>
+        <TitleBox>{t('Project.Others')}</TitleBox>
         <UlBox>
-          {[...Array(10)].map((item, index) => (
+          {memberList.map((item, index) => (
             <li key={index}>
               <div className="fst">
                 <img src="" alt="" />
                 <div>
-                  <div>昵称</div>
+                  <div>{t('Project.Nickname')}</div>
                   <div>
-                    <span>0x23...Fdf0</span>
+                    <span>{PublicJs.AddressToShow(item.wallet!)}</span>
                     <EvaIcon name="clipboard-outline" />
                   </div>
                 </div>
                 {edit && (
-                  <div className={formatActive(index) ? 'topRht active' : 'topRht'} onClick={() => handleSelect(index)}>
+                  <div
+                    className={formatMemActive(index) ? 'topRht active' : 'topRht'}
+                    onClick={() => handleSelect(index, 'members')}
+                  >
                     <div className="inner" />
                   </div>
                 )}
               </div>
               <LinkBox>
-                <a href="#" target="_blank" rel="noreferrer">
+                <Link href={item.twitter_profile}>
                   <img src="/images/twitterNor.svg" alt="" />
-                </a>
-                <a href="#" target="_blank" rel="noreferrer">
+                </Link>
+                <Link href={item.discord_profile}>
                   <img src="/images/discordNor.svg" alt="" />
-                </a>
+                </Link>
               </LinkBox>
             </li>
           ))}

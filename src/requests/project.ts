@@ -27,3 +27,9 @@ export const UpdateBudget = (projectId: string, data: BudgetObj) => {
 export const UpdateInfo = (projectId: string, data: InfoObj) => {
   return request.put(`${PATH_PREFIX}${projectId}`, data);
 };
+export const updateMembers = (projectId: string, data: string[]) => {
+  return request.post(`${PATH_PREFIX}${projectId}/update_members`, data);
+};
+export const updateSponsors = (projectId: string, data: string[]) => {
+  return request.post(`${PATH_PREFIX}${projectId}/update_sponsors`, data);
+};

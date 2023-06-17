@@ -33,5 +33,9 @@ export const updateUser = (data: IUserInfo) => {
 };
 
 export const getUsers = (wallets: string[]): Promise<ResponseData<IUser[]>> => {
-  return request.get(`${PATH_PREFIX}/users`, { wallets });
+  const data: string[] = [];
+  wallets.map((item, index) => {
+    data.push(`wallets=${item}`);
+  });
+  return request.get(`${PATH_PREFIX}/users?${data.join('&')}`);
 };

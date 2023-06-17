@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { Card, CardHeader, CardBody, CardFooter } from '@paljs/ui/Card';
 import React, { useEffect } from 'react';
 import { Button } from '@paljs/ui/Button';
+import useTranslation from 'hooks/useTranslation';
 
 const Mask = styled.div`
     background: rgba(0,0,0,0.3);
@@ -15,7 +16,7 @@ const Mask = styled.div`
   align-items: center;
   justify-content: center;
   
-  .btn{
+  .btnBtm{
     margin-right: 20px;
 
   }
@@ -39,38 +40,43 @@ const ItemBox = styled.div`
 
 interface Iprops {
   closeRemove: () => void;
-  selectArr: number[];
+  selectAdminArr: number[];
+  selectMemArr: number[];
 }
 export default function Del(props: Iprops) {
-  const { closeRemove, selectArr } = props;
+  const { closeRemove, selectAdminArr, selectMemArr } = props;
+  const { t } = useTranslation();
 
   useEffect(() => {
-    console.log(selectArr);
-  }, [selectArr]);
+    console.log(selectAdminArr);
+  }, [selectAdminArr]);
+  useEffect(() => {
+    console.log(selectMemArr);
+  }, [selectMemArr]);
 
   return (
     <Mask>
       <Card>
-        <CardHeader>移除成员</CardHeader>
+        <CardHeader>{t('Project.RemoveMember')}</CardHeader>
         <CardBody>
-          <div className="tips">确定要移除以下成员？</div>
+          <div className="tips">{t('Project.ConfirmationPopup')}</div>
           {[...Array(3)].map((item, index) => (
             <ItemBox key={index}>
               <div>
                 <img src="" alt="" />
               </div>
               <div>
-                <div>昵称</div>
+                <div>{t('Project.Nickname')}</div>
                 <div>0x183F09C3cE99C02118c570e03808476b22d63191</div>
               </div>
             </ItemBox>
           ))}
         </CardBody>
         <CardFooter>
-          <Button appearance="outline" className="btn" onClick={() => closeRemove()}>
-            取消
+          <Button appearance="outline" className="btnBtm" onClick={() => closeRemove()}>
+            {t('general.cancel')}
           </Button>
-          <Button>确定</Button>
+          <Button> {t('general.confirm')}</Button>
         </CardFooter>
       </Card>
     </Mask>

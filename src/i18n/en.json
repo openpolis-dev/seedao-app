@@ -32,6 +32,15 @@
     "CloseProject": "Close Project",
     "HasBeenUsedAndRemains": "{used} has been used and {remain} remains",
     "closeTips": "Have applied for the closure of the project, the project will be closed after the review and approval",
-    "confirmClose":"Confirm close project？"
+    "confirmClose":"Confirm close project？",
+    "Others": "Others",
+    "RemoveMember": "Remove Member",
+    "AddMember": "Add Member",
+    "Nickname": "Name",
+    "changeBudgetSuccess": "Change Budget Successful",
+    "changeProName": "Change Project Name Successful",
+    "addMemberSuccess": "Add Members Successful",
+    "addAdminSuccess": "Add Dominator Successful",
+    "ConfirmationPopup": "Confirm remove the following members?"
   }
 }

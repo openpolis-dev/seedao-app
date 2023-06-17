@@ -11,7 +11,8 @@
     "cancel": "取消",
     "confirm": "确定",
     "Change": "修改",
-    "ok": "好的"
+    "ok": "好的",
+    "Success": "Success"
   },
   "Project": {
     "create": "创建项目",
@@ -32,6 +33,15 @@
     "CloseProject": "关闭项目",
     "HasBeenUsedAndRemains": "已使用{used}，剩余{remain}",
     "closeTips": "已申请关闭项目，审核通过后项目将被关闭",
-    "confirmClose":"确定要关闭项目吗"
+    "confirmClose":"确定要关闭项目吗",
+    "Others": "其他成员",
+    "RemoveMember": "移除成员",
+    "AddMember": "添加成员",
+    "Nickname": "昵称",
+    "changeBudgetSuccess": "修改预算成功",
+    "changeProName": "修改项目名称成功",
+    "addMemberSuccess": "添加成员成功",
+    "addAdminSuccess": "添加负责人成功",
+    "ConfirmationPopup": "确定要移除以下成员？"
   }
 }

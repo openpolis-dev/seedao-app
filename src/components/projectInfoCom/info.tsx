@@ -10,7 +10,7 @@ import { useRouter } from 'next/router';
 import { closeProjectById, UpdateBudget, UpdateInfo } from 'requests/project';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import { InputGroup } from '@paljs/ui/Input';
-import { Toastr, ToastrRef, ToastrProps } from '@paljs/ui/Toastr';
+import { Toastr, ToastrRef } from '@paljs/ui/Toastr';
 
 const Box = styled.div`
   margin-top: 50px;
@@ -90,7 +90,7 @@ export default function Info(props: Iprops) {
     getDetail();
   }, [id, detail]);
 
-  const getDetail = async () => {
+  const getDetail = () => {
     setEditName(detail?.name as string);
     const tokenArr = detail?.budgets?.filter((item) => item.name === 'USDT');
     const rt = tokenArr?.length ? tokenArr[0] : null;
@@ -108,10 +108,6 @@ export default function Info(props: Iprops) {
   const handleShow = () => {
     setShow(true);
   };
-
-  // const handleShow = () => {
-  //   setShow(true);
-  // };
 
   const handleClosePro = async () => {
     setShow(false);
@@ -152,7 +148,7 @@ export default function Info(props: Iprops) {
     try {
       await UpdateBudget(id as string, obj);
       dispatch({ type: AppActionType.SET_LOADING, payload: null });
-      showToastr('Change Budget Successful', 'Success', 'Primary');
+      showToastr(t('Project.changeBudgetSuccess'), t('general.Success'), 'Primary');
     } catch (e) {
       console.error(e);
       showToastr(JSON.stringify(e), 'Failed', 'Danger');
@@ -168,7 +164,7 @@ export default function Info(props: Iprops) {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
       await UpdateInfo(id as string, obj);
-      showToastr('Change Project Name Successful', 'Success', 'Primary');
+      showToastr(t('Project.changeProName'), t('general.Success'), 'Primary');
       setShowName(false);
       dispatch({ type: AppActionType.SET_LOADING, payload: null });
     } catch (e) {

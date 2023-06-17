@@ -32,7 +32,6 @@ instance.interceptors.request.use(
       config.headers = {};
     }
     config.headers['Authorization'] = `Bearer ${tokenData?.token || ''}`;
-    console.log(config);
     return config;
   },
   (error) => {
