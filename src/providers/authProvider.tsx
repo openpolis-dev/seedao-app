@@ -1,6 +1,7 @@
 import React, { useReducer, createContext, useContext, useEffect, useCallback } from 'react';
 import { IUser } from 'type/user.type';
 import { ICategory } from 'type/proposal.type';
+import { Authorizer } from 'casbin.js';
 import { SEEDAO_USER } from 'utils/constant';
 
 interface IState {
@@ -10,6 +11,7 @@ interface IState {
   proposal_categories: ICategory[];
   language: string | null;
   loading: boolean | null;
+  authorizer?: Authorizer;
 }
 
 export enum AppActionType {
@@ -20,6 +22,7 @@ export enum AppActionType {
   SET_PROPOSAL_CATEGORIES = 'set_proposal_categories',
   SET_LAN = 'SET_LAN',
   SET_LOADING = 'SET_LOADING',
+  SET_AUTHORIZER = 'SET_AUTHORIZER',
 }
 
 interface IAction {
@@ -53,6 +56,8 @@ const reducer = (state: IState, action: IAction): IState => {
       return { ...state, proposal_categories: action.payload };
     case AppActionType.SET_LOADING:
       return { ...state, loading: action.payload };
+    case AppActionType.SET_AUTHORIZER:
+      return { ...state, authorizer: action.payload };
 
     case AppActionType.SET_LAN:
       return { ...state, language: action.payload };

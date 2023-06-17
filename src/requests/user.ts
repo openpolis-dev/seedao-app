@@ -1,5 +1,5 @@
 // Project Module API
-import request, { ResponseData } from './http';
+import request, { API_VERSION, BASE_URL, ResponseData } from './http';
 import { IUser, IUserInfo } from 'type/user.type';
 
 const PATH_PREFIX = '/user';
@@ -35,3 +35,5 @@ export const updateUser = (data: IUserInfo) => {
 export const getUsers = (wallets: string[]): Promise<ResponseData<IUser[]>> => {
   return request.get(`${PATH_PREFIX}/users`, { wallets });
 };
+
+export const readPermissionUrl = `${BASE_URL}/${API_VERSION}${PATH_PREFIX}/casbin`;

@@ -2,8 +2,8 @@ import axios from 'axios';
 import { SEEDAO_USER } from 'utils/constant';
 import { parseToken, checkTokenValid, clearStorage } from 'utils/auth';
 
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_ENDPOINT;
-const API_VERSION = process.env.NEXT_PUBLIC_API_VERSION;
+export const BASE_URL = process.env.NEXT_PUBLIC_BASE_ENDPOINT;
+export const API_VERSION = process.env.NEXT_PUBLIC_API_VERSION;
 
 const instance = axios.create({
   baseURL: `${BASE_URL}/${API_VERSION}`,
