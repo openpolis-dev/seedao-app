@@ -117,7 +117,7 @@ export default function Index() {
                   {current === 0 && <Info detail={detail} />}
                   {current === 1 && <Members detail={detail} />}
                   {current === 2 && <Assets />}
-                  {current === 3 && <ProjectProposal />}
+                  {current === 3 && <ProjectProposal detail={detail} />}
                   {current === 4 && <Reg />}
                 </BtmBox>
               </TopBox>

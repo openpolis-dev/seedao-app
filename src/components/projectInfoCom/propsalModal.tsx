@@ -4,6 +4,7 @@ import { Button } from '@paljs/ui/Button';
 import React, { ChangeEvent, useState } from 'react';
 import { InputGroup } from '@paljs/ui/Input';
 import { EvaIcon } from '@paljs/ui/Icon';
+import useTranslation from 'hooks/useTranslation';
 
 const Mask = styled.div`
   background: rgba(0, 0, 0, 0.3);
@@ -16,7 +17,7 @@ const Mask = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  .btn {
+  .btnBtm {
     margin-right: 20px;
   }
 `;
@@ -44,6 +45,7 @@ interface Iprops {
 }
 export default function PropsalModal(props: Iprops) {
   const { closeModal } = props;
+  const { t } = useTranslation();
   const [list, setList] = useState(['']);
   const handleInput = (e: ChangeEvent, index: number) => {
     const { value } = e.target as HTMLInputElement;
@@ -68,18 +70,26 @@ export default function PropsalModal(props: Iprops) {
   return (
     <Mask>
       <Card>
-        <CardHeader>关联提案</CardHeader>
+        <CardHeader>{t('Project.AssociatedProposal')}</CardHeader>
         <CardBody>
           <Box>
             <ul>
               {list.map((item, index) => (
                 <li key={index}>
                   <InputGroup fullWidth>
-                    <input type="text" placeholder="Size small" value={item} onChange={(e) => handleInput(e, index)} />
+                    <input
+                      type="text"
+                      placeholder={t('Project.AssociatedProposal')}
+                      value={item}
+                      onChange={(e) => handleInput(e, index)}
+                    />
                   </InputGroup>
-                  <span onClick={() => handleAdd()}>
-                    <EvaIcon name="plus-outline" status="Primary" />
-                  </span>
+                  {index === list.length - 1 && (
+                    <span onClick={() => handleAdd()}>
+                      <EvaIcon name="plus-outline" status="Primary" />
+                    </span>
+                  )}
+
                   {!(!index && index === list.length - 1) && (
                     <span onClick={() => removeList(index)}>
                       <EvaIcon name="minus-outline" status="Primary" />
@@ -91,10 +101,10 @@ export default function PropsalModal(props: Iprops) {
           </Box>
         </CardBody>
         <CardFooter>
-          <Button appearance="outline" className="btn" onClick={() => closeModal()}>
-            取消
+          <Button appearance="outline" className="btnBtm" onClick={() => closeModal()}>
+            {t('general.cancel')}
           </Button>
-          <Button>确定</Button>
+          <Button> {t('general.confirm')}</Button>
         </CardFooter>
       </Card>
     </Mask>

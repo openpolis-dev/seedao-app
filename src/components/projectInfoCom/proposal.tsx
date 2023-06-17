@@ -1,7 +1,11 @@
 import styled from 'styled-components';
 import { Button } from '@paljs/ui/Button';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropsalModal from 'components/projectInfoCom/propsalModal';
+import { ReTurnProject } from 'type/project.type';
+import { useRouter } from 'next/router';
+import useTranslation from 'hooks/useTranslation';
+import NoItem from 'components/noItem';
 
 const Box = styled.div`
   padding: 20px 0;
@@ -56,8 +60,27 @@ const TopBox = styled.div`
 const DescBox = styled.div`
   font-size: 12px;
 `;
-export default function ProjectProposal() {
+
+interface Iprops {
+  detail: ReTurnProject | undefined;
+}
+export default function ProjectProposal(props: Iprops) {
+  const { detail } = props;
+  const router = useRouter();
+  const { id } = router.query;
   const [show, setShow] = useState(false);
+  const [list, setList] = useState([]);
+  const { t } = useTranslation();
+
+  useEffect(() => {
+    if (!id || !detail) return;
+    getDetail();
+  }, [id, detail]);
+
+  const getDetail = async () => {
+    const { proposals } = detail!;
+    setList(proposals);
+  };
 
   const handleModal = () => {
     setShow(true);
@@ -71,13 +94,13 @@ export default function ProjectProposal() {
       {show && <PropsalModal closeModal={closeModal} />}
 
       <TopBox>
-        <Button>创建提案</Button>
+        <Button> {t('Project.createProposal')}</Button>
         <Button appearance="outline" onClick={() => handleModal()}>
-          关联提案
+          {t('Project.AssociatedProposal')}
         </Button>
       </TopBox>
       <UlBox>
-        {[...Array(5)].map((item, index) => (
+        {list.map((item, index) => (
           <li key={index}>
             <div className="fst">
               <div>
@@ -95,6 +118,7 @@ export default function ProjectProposal() {
           </li>
         ))}
       </UlBox>
+      {!list.length && <NoItem />}
     </Box>
   );
 }

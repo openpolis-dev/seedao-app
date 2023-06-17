@@ -53,6 +53,7 @@
     "SubmitForReview": "Submit For Review",
     "DownloadForm": "Download Form",
     "ImportForm": "Import Form",
-    "Tips": "Download the form,fill in the information and import the form"
+    "Tips": "Download the form,fill in the information and import the form",
+    "createProposal": "Create Proposal"
   }
 }
