@@ -37,12 +37,20 @@
     "RemoveMember": "Remove Member",
     "AddMember": "Add Member",
     "Nickname": "Name",
-    "changeBudgetSuccess": "Change Budget Successful",
-    "changeProName": "Change Project Name Successful",
-    "addMemberSuccess": "Add Members Successful",
-    "addAdminSuccess": "Add Dominator Successful",
+    "changeBudgetSuccess": "Change Budget Successfully",
+    "changeProName": "Change Project Name Successfully",
+    "addMemberSuccess": "Add Members Successfully",
+    "addAdminSuccess": "Add Dominator Successfully",
     "ConfirmationPopup": "Confirm remove the following members?",
-    "RemoveMemSuccess": "移除成员成功",
-    "RemoveSPSuccess": "移除负责人成功"
+    "RemoveMemSuccess": "Remove Members successfully",
+    "RemoveSPSuccess": "Remove Dominator successfully",
+    "Address": "Address",
+    "AddPoints": "Add Points",
+    "AddToken": "Add Token",
+    "Content": "Content",
+    "Note": "Note",
+    "SubmitForReview": "Submit For Review",
+    "DownloadForm": "Download Form",
+    "ImportForm": "Import Form"
   }
 }

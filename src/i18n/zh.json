@@ -44,6 +44,14 @@
     "addAdminSuccess": "添加负责人成功",
     "ConfirmationPopup": "确定要移除以下成员？",
     "RemoveMemSuccess": "移除成员成功",
-    "RemoveSPSuccess": "移除负责人成功"
+    "RemoveSPSuccess": "移除负责人成功",
+    "Address": "钱包地址",
+    "AddPoints": "登记积分",
+    "AddToken": "登记Token",
+    "Content": "事项内容",
+    "Note": "备注",
+    "SubmitForReview": "提交审核",
+    "DownloadForm": "下载模版",
+    "ImportForm": "导入表格"
   }
 }

@@ -38,3 +38,11 @@ export interface InfoObj {
   logo: string;
   name: string;
 }
+
+export interface ExcelObj {
+  address: string;
+  points: string;
+  token: string;
+  content: string;
+  note: string;
+}
