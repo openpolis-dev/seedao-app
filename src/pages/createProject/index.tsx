@@ -207,7 +207,7 @@ export default function CreateProject() {
           totalAmount: token,
         },
         {
-          name: 'SCORE',
+          name: 'Points',
           totalAmount: credit,
         },
       ],
@@ -226,12 +226,9 @@ export default function CreateProject() {
     xhr.onload = function () {
       if (this.status == 200) {
         const blob = this.response;
-        console.log('blob', blob);
-
         const oFileReader = new FileReader();
         oFileReader.onloadend = function (e) {
           const { result } = e.target as any;
-          console.log(result);
           setUrl(result);
         };
         oFileReader.readAsDataURL(blob);
@@ -399,7 +396,20 @@ export default function CreateProject() {
               <Button appearance="outline" className="btnBtm">
                 {t('general.cancel')}
               </Button>
-              <Button onClick={() => handleSubmit()}> {t('general.confirm')}</Button>
+              <Button
+                onClick={() => handleSubmit()}
+                disabled={
+                  proName?.length === 0 ||
+                  url?.length === 0 ||
+                  (credit as string)?.length === 0 ||
+                  (token as string)?.length === 0 ||
+                  (adminList?.length === 1 && adminList[0]?.length === 0) ||
+                  (proList?.length === 1 && proList[0]?.length === 0) ||
+                  (memberList?.length === 1 && memberList[0]?.length === 0)
+                }
+              >
+                {t('general.confirm')}
+              </Button>
             </BtmBox>
           </CardBody>
         </CardBox>

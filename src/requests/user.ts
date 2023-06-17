@@ -24,16 +24,20 @@ export const logout = () => {
   return request.post(`${PATH_PREFIX}/logout`);
 };
 
-export const getUser = (): Promise<ResponseData<IUserInfo & { id: string }>> => {
+export const getUser = (): Promise<ResponseData<IUser>> => {
   return request.get(`${PATH_PREFIX}/me`);
 };
 
 export const updateUser = (data: IUserInfo) => {
-  return request.post(`${PATH_PREFIX}/me`, data);
+  return request.put(`${PATH_PREFIX}/me`, data);
 };
 
 export const getUsers = (wallets: string[]): Promise<ResponseData<IUser[]>> => {
-  return request.get(`${PATH_PREFIX}/users`, { wallets });
+  const data: string[] = [];
+  wallets.map((item, index) => {
+    data.push(`wallets=${item}`);
+  });
+  return request.get(`${PATH_PREFIX}/users?${data.join('&')}`);
 };
 
 export const readPermissionUrl = `${BASE_URL}/${API_VERSION}${PATH_PREFIX}/casbin`;

@@ -1,9 +1,11 @@
 import Layout from 'Layouts';
 import { Card } from '@paljs/ui/Card';
 import styled from 'styled-components';
-import React, { ChangeEvent, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import { InputGroup } from '@paljs/ui/Input';
 import { Button } from '@paljs/ui/Button';
+import requests from 'requests';
+import { useAuthContext, AppActionType } from 'providers/authProvider';
 
 const Box = styled.div`
   padding: 40px 20px;
@@ -49,6 +51,10 @@ const MidBox = styled.div`
 `;
 
 export default function Profile() {
+  const {
+    state: { userData },
+    dispatch,
+  } = useAuthContext();
   const [userName, setUserName] = useState('');
   const [email, setEmail] = useState('');
   const [discord, setDiscord] = useState('');
@@ -56,6 +62,7 @@ export default function Profile() {
   const [wechat, setWechat] = useState('');
   const [mirror, setMirror] = useState('');
   const [google, setGoogle] = useState('');
+  const [avatar, setAvatar] = useState('');
   const handleInput = (e: ChangeEvent, type: string) => {
     const { value } = e.target as HTMLInputElement;
     switch (type) {
@@ -82,6 +89,30 @@ export default function Profile() {
         break;
     }
   };
+  const saveProfile = async () => {
+    const data = {
+      name: userName,
+      avatar: '',
+      email,
+      discord_profile: discord,
+      twitter_profile: twitter,
+      google_profile: google,
+    };
+    await requests.user.updateUser(data);
+    // TODO updata global data
+    dispatch({ type: AppActionType.SET_USER_DATA, payload: { ...userData, ...data } });
+  };
+
+  useEffect(() => {
+    if (userData) {
+      setUserName(userData.name);
+      setAvatar(userData.avatar);
+      setEmail(userData.email);
+      setDiscord(userData.discord_profile);
+      setTwitter(userData.twitter_profile);
+      setGoogle(userData.google_profile);
+    }
+  }, [userData]);
   return (
     <Layout title="Profile">
       <CardBox>
@@ -165,7 +196,7 @@ export default function Profile() {
               </li>
             </UlBox>
             <div>
-              <Button>确定</Button>
+              <Button onClick={saveProfile}>确定</Button>
             </div>
           </MidBox>
         </Box>

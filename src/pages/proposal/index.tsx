@@ -43,10 +43,6 @@ export default function Index() {
     setOrderType(index === 0 ? 'latest' : 'old');
   };
 
-  useEffect(() => {
-    getCategories();
-  }, []);
-
   const handleSelectTab = (index: number) => {
     setActiveTab(index);
   };
@@ -69,20 +65,28 @@ export default function Index() {
         {activeTab === 1 && <ProposalSubNav onSelect={handleChangeOrder} />}
         {activeTab === 0 ? (
           <div>
-            {categories.map((category) => (
-              <CategoryCard key={category.id}>
-                <AccordionItem uniqueKey={1} title={category.name} key={category.id}>
-                  <SubCategoryCard>
-                    {category.children.map((subCategory) => (
-                      <SubCategoryItem key={subCategory.category_id}>
-                        <SubCategoryIcon src="/images/proposal/message.png" alt="" />
-                        <Link href={`/proposal/category/${subCategory.category_id}`}>{subCategory.name}</Link>
-                      </SubCategoryItem>
-                    ))}
-                  </SubCategoryCard>
-                </AccordionItem>
-              </CategoryCard>
-            ))}
+            {categories.map((category) => {
+              return category.children?.length ? (
+                <CategoryCard key={category.id}>
+                  <AccordionItem uniqueKey={1} title={category.name} key={category.id}>
+                    <SubCategoryCard>
+                      {category.children.map((subCategory) => (
+                        <SubCategoryItem key={subCategory.category_id}>
+                          <SubCategoryIcon src="/images/proposal/message.png" alt="" />
+                          <Link href={`/proposal/category/${subCategory.category_id}`}>{subCategory.name}</Link>
+                        </SubCategoryItem>
+                      ))}
+                    </SubCategoryCard>
+                  </AccordionItem>
+                </CategoryCard>
+              ) : (
+                <CategoryCard key={category.id}>
+                  <Link href={`/proposal/category/${category.category_id}`}>
+                    <SingleHeader>{category.name}</SingleHeader>
+                  </Link>
+                </CategoryCard>
+              );
+            })}
           </div>
         ) : (
           <div>
@@ -123,4 +127,12 @@ const SubCategoryItem = styled.div`
 const SubCategoryIcon = styled.img`
   width: 24px;
   height: 24px;
+`;
+
+const SingleHeader = styled.header`
+  padding: 1.25rem;
+  color: #222b45;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  cursor: pointer;
 `;

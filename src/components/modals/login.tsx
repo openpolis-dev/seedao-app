@@ -47,7 +47,8 @@ export default function LoginModal() {
     });
     dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: false });
     res.data.token_exp = now + res.data.token_exp * 1000;
-    dispatch({ type: AppActionType.SET_USER_DATA, payload: res.data });
+    dispatch({ type: AppActionType.SET_LOGIN_DATA, payload: res.data });
+
     // config permission authorizer
     const authorizer = new Authorizer('auto', { endpoint: readPermissionUrl });
     await authorizer.setUser(account.toLowerCase());

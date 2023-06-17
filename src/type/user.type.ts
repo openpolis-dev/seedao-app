@@ -2,18 +2,25 @@ export interface IUser {
   id: string;
   name: string;
   avatar: string;
-  email: string;
-
-  discordProfile: string;
-  twitterProfile: string;
-  googleProfile: string;
+  email?: string;
+  created_at?: string;
+  updated_at?: string;
+  wallet?: string;
+  discord_profile: string;
+  twitter_profile: string;
+  google_profile: string;
 }
 
 export interface IUserInfo {
   name: string;
   avatar: string;
   email: string;
-  discordProfile: string;
-  twitterProfile: string;
-  googleProfile: string;
+  discord_profile: string;
+  twitter_profile: string;
+  google_profile: string;
+}
+
+export interface ITokenType {
+  token: string;
+  token_exp: number;
 }

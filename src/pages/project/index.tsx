@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Layout from 'Layouts';
 import Row from '@paljs/ui/Row';
 import Col from '@paljs/ui/Col';
@@ -8,8 +8,12 @@ import styled from 'styled-components';
 import { ButtonLink } from '@paljs/ui/Button';
 import { useRouter } from 'next/router';
 import { Card, CardHeader } from '@paljs/ui/Card';
-import { EvaIcon } from '@paljs/ui/Icon';
 import useTranslation from 'hooks/useTranslation';
+import { getMyProjects, getProjects } from 'requests/project';
+import { AppActionType, useAuthContext } from 'providers/authProvider';
+import Page from 'components/pagination';
+import { ReTurnProject } from 'type/project.type';
+import NoItem from 'components/noItem';
 
 const Box = styled.div`
   position: relative;
@@ -32,28 +36,94 @@ const TopLine = styled.div`
 
 const CardBox = styled(Card)``;
 
+export interface listObj {
+  name: string;
+  id: number;
+}
+
 export default function Index() {
   const { t } = useTranslation();
+  const {
+    state: { language },
+    dispatch,
+  } = useAuthContext();
   const router = useRouter();
-  const [current, setCurrent] = useState<number>(0);
-  const [list] = useState([
-    {
-      name: t('Project.AllProjects'),
-      id: 0,
-    },
-    {
-      name: t('Project.Closed'),
-      id: 1,
-    },
-    {
-      name: t('Project.Joined'),
-      id: 2,
-    },
-  ]);
 
+  const [pageCur, setPageCur] = useState(1);
+  const [pageSize, setPageSize] = useState(20);
+  const [total, setTotal] = useState(1);
+
+  const [current, setCurrent] = useState<number>(0);
+  const [list, setList] = useState<listObj[]>([]);
+  const [proList, setProList] = useState<ReTurnProject[]>([]);
+
+  useEffect(() => {
+    if (current < 2) {
+      getList();
+    } else {
+      getMyList();
+    }
+  }, [pageCur, current]);
+
+  useEffect(() => {
+    setList([
+      {
+        name: t('Project.AllProjects'),
+        id: 0,
+      },
+      {
+        name: t('Project.Closed'),
+        id: 1,
+      },
+      {
+        name: t('Project.Joined'),
+        id: 2,
+      },
+    ]);
+  }, [language]);
+
+  const getList = async () => {
+    if (current > 2) return;
+    const stt = current === 1 ? 'closed' : '';
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    const obj: IPageParams = {
+      status: stt,
+      page: pageCur,
+      size: pageSize,
+      sort_order: 'desc',
+      sort_field: 'created_at',
+    };
+    const rt = await getProjects(obj);
+    dispatch({ type: AppActionType.SET_LOADING, payload: null });
+    const { rows, page, size, total } = rt.data;
+    setProList(rows);
+    setPageSize(size);
+    setTotal(total);
+    setPageCur(page);
+  };
+
+  const getMyList = async () => {
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    const obj: IPageParams = {
+      page: pageCur,
+      size: pageSize,
+      sort_order: 'desc',
+      sort_field: 'created_at',
+    };
+    const rt = await getMyProjects(obj);
+    dispatch({ type: AppActionType.SET_LOADING, payload: null });
+    const { rows, page, size, total } = rt.data;
+    setProList(rows);
+    setPageSize(size);
+    setTotal(total);
+    setPageCur(page);
+  };
   const selectCurrent = (e: number) => {
     setCurrent(e);
-    console.log(current);
+    setPageCur(1);
+  };
+  const handlePage = (num: number) => {
+    setPageCur(num + 1);
   };
 
   return (
@@ -70,11 +140,19 @@ export default function Index() {
               <CardHeader>
                 <Tabs activeIndex={0} onSelect={(e) => selectCurrent(e)}>
                   {list.map((item) => (
-                    <Tab key={item.id} title={item.name} responsive>
-                      <ProjectAllList />
-                    </Tab>
+                    <Tab key={item.id} title={item.name} responsive />
                   ))}
                 </Tabs>
+
+                <div>
+                  <ProjectAllList list={proList} />
+                  {!proList.length && <NoItem />}
+                  {total > pageSize && (
+                    <div>
+                      <Page itemsPerPage={pageSize} total={total} current={pageCur - 1} handleToPage={handlePage} />
+                    </div>
+                  )}
+                </div>
               </CardHeader>
             </Col>
           </Row>

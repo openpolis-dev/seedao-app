@@ -25,11 +25,10 @@ const InnerBox = styled.div`
 
 interface Iprops {
   closeModal: () => void;
-  handleClosePro: () => void;
 }
 
-export default function CloseTips(props: Iprops) {
-  const { closeModal, handleClosePro } = props;
+export default function CloseSuccess(props: Iprops) {
+  const { closeModal } = props;
   const { t } = useTranslation();
 
   return (
@@ -37,13 +36,10 @@ export default function CloseTips(props: Iprops) {
       <Card>
         <CardHeader> {t('Project.CloseProject')}</CardHeader>
         <CardBody>
-          <InnerBox>{t('Project.confirmClose')}</InnerBox>
+          <InnerBox>{t('Project.closeTips')}</InnerBox>
         </CardBody>
         <CardFooter>
-          <Button appearance="outline" className="btnBtmAll" onClick={() => closeModal()}>
-            {t('general.cancel')}
-          </Button>
-          <Button onClick={() => handleClosePro()}>{t('general.confirm')}</Button>
+          <Button onClick={() => closeModal()}>{t('general.ok')}</Button>
         </CardFooter>
       </Card>
     </Mask>

@@ -1,6 +1,7 @@
 export const SELECT_WALLET = 'SEEDAO_WALLET';
 
 export const SEEDAO_USER = 'SEEDAO_USER';
+export const SEEDAO_USER_DATA = 'SEEDAO_USER_DATA';
 
 // ------ ------ ------ ------ ------ ------ ------ ------ ------
 
