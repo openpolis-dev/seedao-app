@@ -207,7 +207,7 @@ export default function CreateProject() {
           totalAmount: token,
         },
         {
-          name: 'SCORE',
+          name: 'Points',
           totalAmount: credit,
         },
       ],

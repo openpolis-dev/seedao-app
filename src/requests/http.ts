@@ -14,7 +14,6 @@ const instance = axios.create({
 instance.interceptors.request.use(
   (config: any) => {
     const method = config.method?.toLowerCase();
-    console.log(config.url);
     if (!['post', 'put', 'delete'].includes(method) && !config.url.includes('my') && !config.url.includes('user')) {
       return config;
     }

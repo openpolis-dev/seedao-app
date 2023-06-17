@@ -57,7 +57,7 @@ export default function Index() {
 
   const getDetail = async () => {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
-    const dt = await getProjectById(id as any);
+    const dt = await getProjectById(id as string);
     dispatch({ type: AppActionType.SET_LOADING, payload: null });
     setDetail(dt.data);
   };

@@ -39,10 +39,7 @@ export default function CloseSuccess(props: Iprops) {
           <InnerBox>{t('Project.closeTips')}</InnerBox>
         </CardBody>
         <CardFooter>
-          <Button appearance="outline" className="btnBtmAll" onClick={() => closeModal()}>
-            {t('general.cancel')}
-          </Button>
-          <Button>{t('general.confirm')}</Button>
+          <Button onClick={() => closeModal()}>{t('general.ok')}</Button>
         </CardFooter>
       </Card>
     </Mask>

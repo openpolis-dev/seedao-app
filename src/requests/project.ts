@@ -1,6 +1,6 @@
 // Project Module API
 import request from './http';
-import { IBaseProject } from 'type/project.type';
+import { BudgetObj, IBaseProject, InfoObj } from 'type/project.type';
 
 const PATH_PREFIX = '/projects/';
 
@@ -20,4 +20,10 @@ export const getProjectById = (projectId: string) => {
 };
 export const closeProjectById = (projectId: string) => {
   return request.post(`${PATH_PREFIX}${projectId}/close`);
+};
+export const UpdateBudget = (projectId: string, data: BudgetObj) => {
+  return request.post(`${PATH_PREFIX}${projectId}/update_budget`, data);
+};
+export const UpdateInfo = (projectId: string, data: InfoObj) => {
+  return request.put(`${PATH_PREFIX}${projectId}`, data);
 };

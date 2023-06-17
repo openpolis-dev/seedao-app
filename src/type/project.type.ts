@@ -29,3 +29,12 @@ export interface ReTurnProject {
   updated_at: string;
   budgets?: budgetObj[];
 }
+
+export interface BudgetObj {
+  id: number;
+  totalAmount: number;
+}
+export interface InfoObj {
+  logo: string;
+  name: string;
+}

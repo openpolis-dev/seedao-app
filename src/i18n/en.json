@@ -10,7 +10,8 @@
     "back": "Back",
     "cancel": "Cancel",
     "confirm": "Confirm",
-    "Change": "Change"
+    "Change": "Change",
+    "ok": "OK"
   },
   "Project": {
     "create": "Create Project",
