@@ -7,6 +7,10 @@ module.exports = {
     // ssr and displayName are configured by default
     styledComponents: true,
   },
-
-  // assetPrefix: isProd ? '/os-frondend-preview' : '',
+  images: {
+    unoptimized: true,
+  },
+  assetPrefix: isProd ? '/os-frondend-preview' : '',
 };
+
+// please refer https://github.com/gregrickaby/nextjs-github-pages for github pages deployment
