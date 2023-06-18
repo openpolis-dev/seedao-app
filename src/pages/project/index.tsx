@@ -14,6 +14,7 @@ import { AppActionType, useAuthContext } from 'providers/authProvider';
 import Page from 'components/pagination';
 import { ReTurnProject } from 'type/project.type';
 import NoItem from 'components/noItem';
+import usePermission from 'hooks/usePermission';
 
 const Box = styled.div`
   position: relative;
@@ -43,6 +44,7 @@ export interface listObj {
 
 export default function Index() {
   const { t } = useTranslation();
+  const canCreateProj = usePermission('proj', 'create');
   const {
     state: { language },
     dispatch,
@@ -131,9 +133,11 @@ export default function Index() {
       <Card>
         <Box>
           <TopLine>
-            <ButtonLink onClick={() => router.push('/createProject')} fullWidth shape="Rectangle">
-              {t('Project.create')}
-            </ButtonLink>
+            {canCreateProj && (
+              <ButtonLink onClick={() => router.push('/createProject')} fullWidth shape="Rectangle">
+                {t('Project.create')}
+              </ButtonLink>
+            )}
           </TopLine>
           <Row>
             <Col breakPoint={{ xs: 12 }}>
