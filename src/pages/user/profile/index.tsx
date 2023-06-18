@@ -107,7 +107,7 @@ export default function Profile() {
     if (userData) {
       setUserName(userData.name);
       setAvatar(userData.avatar);
-      setEmail(userData.email);
+      setEmail(userData.email || '');
       setDiscord(userData.discord_profile);
       setTwitter(userData.twitter_profile);
       setGoogle(userData.google_profile);

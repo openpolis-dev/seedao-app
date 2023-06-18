@@ -135,9 +135,10 @@ interface Props {
   total: number;
   current: number;
   handleToPage: (a: number) => void;
+  handlePageSize?: (a: number) => void;
 }
 
-const Page: FC<Props> = ({ itemsPerPage, total, handleToPage }) => {
+const Page: FC<Props> = ({ itemsPerPage, total, handleToPage, handlePageSize }) => {
   const [pageCount, setPageCount] = useState(0);
   const [current, setCurrent] = useState(0);
   const [pageToGo, setPageToGo] = useState('');

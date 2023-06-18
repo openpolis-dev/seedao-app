@@ -69,7 +69,7 @@ export default function ProjectProposal(props: Iprops) {
   const router = useRouter();
   const { id } = router.query;
   const [show, setShow] = useState(false);
-  const [list, setList] = useState([]);
+  const [list, setList] = useState<string[]>([]);
   const { t } = useTranslation();
 
   useEffect(() => {
