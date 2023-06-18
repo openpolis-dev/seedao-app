@@ -15,6 +15,7 @@ import Page from 'components/pagination';
 import { ReTurnProject } from 'type/project.type';
 import NoItem from 'components/noItem';
 import usePermission from 'hooks/usePermission';
+import { PermissionObject, PermissionAction } from 'utils/constant';
 
 const Box = styled.div`
   position: relative;
@@ -44,7 +45,7 @@ export interface listObj {
 
 export default function Index() {
   const { t } = useTranslation();
-  const canCreateProj = usePermission('proj', 'create');
+  const canCreateProj = usePermission(PermissionAction.Create, PermissionObject.Project);
   const {
     state: { language },
     dispatch,
