@@ -18,6 +18,8 @@ import { parseToken, checkTokenValid, clearStorage } from 'utils/auth';
 import { SEEDAO_USER, SEEDAO_USER_DATA } from 'utils/constant';
 import Loading from 'components/loading';
 import requests from 'requests';
+import { Authorizer } from 'casbin.js';
+import { readPermissionUrl } from 'requests/user';
 
 interface HeaderProps {
   toggleSidebar: () => void;
@@ -77,6 +79,16 @@ const Header: React.FC<HeaderProps> = (props) => {
   //   }
   // }, []);
 
+  const initAuth = async () => {
+    if (!account) {
+      return;
+    }
+    // config permission authorizer
+    const authorizer = new Authorizer('auto', { endpoint: readPermissionUrl });
+    await authorizer.setUser(account.toLowerCase());
+    dispatch({ type: AppActionType.SET_AUTHORIZER, payload: authorizer });
+  };
+
   useEffect(() => {
     dispatch({ type: AppActionType.SET_ACCOUNT, payload: account });
   }, [account]);
@@ -84,6 +96,7 @@ const Header: React.FC<HeaderProps> = (props) => {
   const getUser = async () => {
     const res = await requests.user.getUser();
     dispatch({ type: AppActionType.SET_USER_DATA, payload: res.data });
+    initAuth();
   };
 
   useEffect(() => {
