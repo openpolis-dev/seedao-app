@@ -1,15 +1,64 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardBody } from '@paljs/ui/Card';
 import { IBaseProposal } from 'type/proposal.type';
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
 
-import QuillViewer from 'components/proposal/quillViewer';
-import useLoadQuill from 'hooks/useLoadQuill';
-
 export default function ProposalCard({ data }: { data: IBaseProposal }) {
   const router = useRouter();
-  const enableQuill = useLoadQuill();
+  const [content, setContent] = useState('');
+  const handleContent = async () => {
+    let delta: any[] = [];
+    try {
+      delta = JSON.parse(data.first_post.content);
+    } catch (e) {
+      console.info('illegal json:' + data.first_post.content);
+    }
+
+    const text: any[] = [];
+    let totalTextLength = 0;
+
+    for (let i = 0; i < delta.length; i++) {
+      // for videos and images
+      if (delta[i] && delta[i].insert && typeof delta[i].insert === 'object') {
+        // delta.splice(i, 1)
+        // for text
+      } else if (delta[i] && delta[i].insert && typeof delta[i].insert === 'string') {
+        // if we already have 6 lines or 200 characters. that's enough for preview
+        if (text.length >= 6 || totalTextLength > 200) {
+          continue;
+        }
+
+        // it's just newline and space.
+        if (delta[i].insert.match(/^[\n\s]+$/)) {
+          // if the previous line doesn't end with newline mark, we can add one newline mark
+          // otherwise just ignore it
+          if (!text[i - 1] || (typeof text[i - 1].insert === 'string' && !text[i - 1].insert.match(/\n$/))) {
+            text.push({ insert: '\n' });
+          }
+        } else {
+          // if text end with multiple newline mark, leave only one
+          if (delta[i].insert.match(/\n+$/)) {
+            delta[i].insert = delta[i].insert.replace(/\n+$/, '\n');
+          }
+          text.push(delta[i]);
+          totalTextLength = totalTextLength + delta[i].insert.length;
+        }
+      }
+    }
+    // post content is always a json string of Delta, we need to convert it html
+    const QuillDeltaToHtmlConverter = await require('quill-delta-to-html');
+    const converter: any = new QuillDeltaToHtmlConverter.QuillDeltaToHtmlConverter(text, {});
+    let textContent = converter.convert();
+    if (textContent == '<p><br/></p>') {
+      textContent = '';
+    }
+    setContent(textContent);
+  };
+
+  useEffect(() => {
+    data?.first_post.content && handleContent();
+  }, [data?.first_post.content]);
 
   const openProposal = () => {
     router.push(`/proposal/thread/${data.id}`);
@@ -28,9 +77,7 @@ export default function ProposalCard({ data }: { data: IBaseProposal }) {
         </CardHeaderStyled>
         <CardBody>
           <Title>{data.title}</Title>
-          <ProposalContent>
-            {enableQuill && data?.first_post.content && <QuillViewer content={data?.first_post.content} />}
-          </ProposalContent>
+          <ProposalContent dangerouslySetInnerHTML={{ __html: content }}></ProposalContent>
         </CardBody>
       </div>
     </Card>
@@ -51,15 +98,15 @@ const UserAvatar = styled.img`
 
 const Title = styled.div`
   font-weight: 600;
-  font-size: 16px;
+  font-size: 18px;
+  margin-bottom: 10px;
 `;
 
 const ProposalContent = styled.div`
   -webkit-box-orient: vertical;
   display: -webkit-box;
-  -webit-line-clamp: 2;
+  -webkit-line-clamp: 2;
   overflow: hidden;
-  height: 52px;
   .ql-editor p {
     line-height: 24px;
   }
