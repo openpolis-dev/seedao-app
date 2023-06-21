@@ -21,6 +21,7 @@ jobs:
      - name: Compile
        env:
          CI: false
+         NODE_ENV: production
        run: |
          npm install;
          npm run build;
