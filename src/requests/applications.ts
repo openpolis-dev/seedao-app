@@ -37,30 +37,18 @@ export const createCloseProjectApplication = (project_id: number, detailed_type 
   ]);
 };
 
-export const createTokenBudgetApplication = (project_id: number, amount: number, detailed_type = '', comment = '') => {
-  return request.post(`${PATH_PREFIX}`, [
-    {
-      type: ApplicationType.NewReward,
-      entity: 'project',
-      entity_id: project_id,
-      token_amount: amount,
-      detailed_type,
-      comment,
-    },
-  ]);
-};
+export interface ICreateBudgeApplicationRequest {
+  type: ApplicationType;
+  entity: 'project';
+  entity_id: number;
+  credit_amount: number;
+  token_amount: number;
+  detailed_type: string;
+  comment: string;
+}
 
-export const createCreditBudgetApplication = (project_id: number, amount: number, detailed_type = '', comment = '') => {
-  return request.post(`${PATH_PREFIX}`, [
-    {
-      type: ApplicationType.NewReward,
-      entity: 'project',
-      entity_id: project_id,
-      credit_amount: amount,
-      detailed_type,
-      comment,
-    },
-  ]);
+export const createBudgetApplications = (data: ICreateBudgeApplicationRequest[]) => {
+  return request.post(`${PATH_PREFIX}`, data);
 };
 
 // approve
@@ -84,4 +72,9 @@ export const compeleteApplications = (msg: string) => {
   return request.post(`${PATH_PREFIX}complete`, {
     message: msg,
   });
+};
+
+// download
+export const getTemplateFile = () => {
+  return request.post(`${PATH_PREFIX}download`, []);
 };

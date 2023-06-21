@@ -6,6 +6,11 @@ import React, { ChangeEvent, FormEvent, useState } from 'react';
 import useTranslation from 'hooks/useTranslation';
 import * as XLSX from 'xlsx';
 import { ExcelObj } from 'type/project.type';
+import requests from 'requests';
+import { useCSVReader } from 'react-papaparse';
+import { ApplicationType } from 'type/application.type';
+import { ICreateBudgeApplicationRequest } from 'requests/applications';
+import Loading from 'components/loading';
 
 const Box = styled.div`
   padding: 20px;
@@ -51,8 +56,11 @@ const BtnBox = styled.label`
     margin-right: 10px;
   }
 `;
-export default function Reg() {
+export default function Reg({ id }) {
   const { t } = useTranslation();
+  // const { CSVReader } = useCSVReader();
+  const [loading, setLoading] = useState(false);
+
   const [list, setList] = useState<ExcelObj[]>([]);
 
   const Clear = () => {
@@ -98,23 +106,68 @@ export default function Reg() {
         setList(data);
 
         console.log('Upload file successful!');
-        // props.getChildrenMsg(data);
       } catch (e) {
         console.error('Unsupported file type!');
       }
     };
   };
 
+  const handleCreate = async () => {
+    setLoading(true);
+    try {
+      const data: ICreateBudgeApplicationRequest[] = list.map((item) => ({
+        type: ApplicationType.NewReward,
+        entity: 'project',
+        entity_id: id,
+        credit_amount: Number(item.points) || 0,
+        token_amount: Number(item.points) || 0,
+        detailed_type: item.content || '',
+        comment: item.note || '',
+      }));
+      await requests.application.createBudgetApplications(data);
+      Clear();
+      // TODO alert success
+    } catch (error) {
+      console.error('createBudgetApplications failed:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const downloadFile = async () => {
+    const res = await requests.application.getTemplateFile();
+    console.log('~', res);
+  };
+
   return (
     <Box>
+      {loading && <Loading />}
       <FirstBox>
-        <Button disabled={!list.length}>{t('Project.SubmitForReview')}</Button>
-
+        <Button disabled={!list.length} onClick={handleCreate}>
+          {t('Project.SubmitForReview')}
+        </Button>
         <RhtBox>
-          <ButtonLink className="rhtBtn" appearance="outline">
+          <ButtonLink className="rhtBtn" appearance="outline" onClick={downloadFile}>
             <EvaIcon name="cloud-download-outline" />
             <span>{t('Project.DownloadForm')}</span>
           </ButtonLink>
+
+          {/* <CSVReader
+            onUploadAccepted={(results: { data: any[] }) => {
+              handleCSVfile(results.data);
+            }}
+          >
+            {({ getRootProps }) => (
+              <>
+                <div {...getRootProps()}>
+                  <BtnBox>
+                    <EvaIcon name="cloud-upload-outline" className="iconRht" />
+                    <span>{t('Project.ImportForm')}</span>
+                  </BtnBox>
+                </div>
+              </>
+            )}
+          </CSVReader> */}
 
           <BtnBox htmlFor="fileUpload" onChange={(e) => updateLogo(e)}>
             <input

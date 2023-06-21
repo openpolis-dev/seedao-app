@@ -43,3 +43,7 @@ export interface IApplication {
   // detailed_data?: string;
   // logs: IApplicationLog[];
 }
+
+export interface IApplicationDisplay extends IApplication {
+  created_date: string;
+}
