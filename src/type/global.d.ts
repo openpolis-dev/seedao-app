@@ -12,3 +12,8 @@ declare interface IPageResponse<T> {
   total: number;
   rows: T[];
 }
+
+declare interface ISelectItem {
+  value: any;
+  label: string;
+}
