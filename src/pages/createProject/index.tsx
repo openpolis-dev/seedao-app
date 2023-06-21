@@ -195,12 +195,20 @@ export default function CreateProject() {
     }
   };
   const handleSubmit = async () => {
+    const ids: string[] = [];
+    proList.forEach((l) => {
+      if (l && l.startsWith('https://forum.seedao.xyz/thread/')) {
+        const _last = l.split('/').reverse()[0];
+        const _id = _last.split('-').reverse()[0];
+        ids.push(_id);
+      }
+    });
     const obj: IBaseProject = {
       logo: url,
       name: proName,
       sponsors: adminList,
       members: memberList,
-      proposals: proList,
+      proposals: ids,
       budgets: [
         {
           name: 'USDT',

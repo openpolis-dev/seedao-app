@@ -5,6 +5,9 @@ import React, { ChangeEvent, useState } from 'react';
 import { InputGroup } from '@paljs/ui/Input';
 import { EvaIcon } from '@paljs/ui/Icon';
 import useTranslation from 'hooks/useTranslation';
+import requests from 'requests';
+import { useRouter } from 'next/router';
+import Loading from 'components/loading';
 
 const Mask = styled.div`
   background: rgba(0, 0, 0, 0.3);
@@ -41,12 +44,15 @@ const Box = styled.div`
 `;
 
 interface Iprops {
-  closeModal: () => void;
+  closeModal: (ifRefresh: boolean) => void;
 }
 export default function PropsalModal(props: Iprops) {
   const { closeModal } = props;
   const { t } = useTranslation();
+  const router = useRouter();
+  const { id } = router.query;
   const [list, setList] = useState(['']);
+  const [loading, setLoading] = useState(false);
   const handleInput = (e: ChangeEvent, index: number) => {
     const { value } = e.target as HTMLInputElement;
     let arr: string[] = [];
@@ -67,8 +73,30 @@ export default function PropsalModal(props: Iprops) {
     setList(arr);
   };
 
+  const handleProposal = async () => {
+    const ids: string[] = [];
+    list.forEach((l) => {
+      if (l && l.startsWith('https://forum.seedao.xyz/thread/')) {
+        const _last = l.split('/').reverse()[0];
+        const _id = _last.split('-').reverse()[0];
+        ids.push(_id);
+      }
+    });
+    const reqs = ids.map((pid) => requests.project.addRelatedProposal(id as string, pid));
+    try {
+      setLoading(true);
+      await Promise.allSettled(reqs);
+    } catch (error) {
+      console.error('handle related proposals failed: ', error);
+    } finally {
+      setLoading(false);
+      closeModal(true);
+    }
+  };
+
   return (
     <Mask>
+      {loading && <Loading />}
       <Card>
         <CardHeader>{t('Project.AssociatedProposal')}</CardHeader>
         <CardBody>
@@ -101,10 +129,12 @@ export default function PropsalModal(props: Iprops) {
           </Box>
         </CardBody>
         <CardFooter>
-          <Button appearance="outline" className="btnBtm" onClick={() => closeModal()}>
+          <Button appearance="outline" className="btnBtm" onClick={() => closeModal(false)}>
             {t('general.cancel')}
           </Button>
-          <Button> {t('general.confirm')}</Button>
+          <Button disabled={!list.length} onClick={handleProposal}>
+            {t('general.confirm')}
+          </Button>
         </CardFooter>
       </Card>
     </Mask>

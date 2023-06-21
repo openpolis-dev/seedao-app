@@ -33,3 +33,7 @@ export const updateMembers = (projectId: string, data: any) => {
 export const updateSponsors = (projectId: string, data: any) => {
   return request.post(`${PATH_PREFIX}${projectId}/update_sponsors`, data);
 };
+
+export const addRelatedProposal = (projectId: string, proposalId: string) => {
+  return request.post(`${PATH_PREFIX}${projectId}/add_related_proposal/${proposalId}`);
+};

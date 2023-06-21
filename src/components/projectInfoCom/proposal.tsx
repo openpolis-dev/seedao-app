@@ -6,41 +6,15 @@ import { ReTurnProject } from 'type/project.type';
 import { useRouter } from 'next/router';
 import useTranslation from 'hooks/useTranslation';
 import NoItem from 'components/noItem';
+import ProposalCard from 'components/proposal/proposalCard';
+import requests from 'requests';
+import { IBaseProposal } from 'type/proposal.type';
 
 const Box = styled.div`
   padding: 20px 0;
 `;
 
-const UlBox = styled.ul`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  li {
-    border: 1px solid #eee;
-    width: 49%;
-    border-radius: 10px;
-    padding: 20px;
-    margin-bottom: 20px;
-  }
-  .fst {
-    display: flex;
-    align-items: center;
-    img {
-      width: 50px;
-      height: 50px;
-      border-radius: 50px;
-      margin-right: 10px;
-    }
-    .tit {
-      font-weight: bold;
-      font-size: 16px;
-    }
-    .date {
-      font-size: 12px;
-    }
-  }
-`;
+const UlBox = styled.div``;
 const TitleBox = styled.div`
   font-size: 16px;
   font-weight: bold;
@@ -62,31 +36,50 @@ const DescBox = styled.div`
 `;
 
 interface Iprops {
-  detail: ReTurnProject | undefined;
+  detail?: ReTurnProject;
+  refreshProject: () => any;
 }
 export default function ProjectProposal(props: Iprops) {
-  const { detail } = props;
+  const { detail, refreshProject } = props;
   const router = useRouter();
   const { id } = router.query;
   const [show, setShow] = useState(false);
-  const [list, setList] = useState<string[]>([]);
+  const [list, setList] = useState<IBaseProposal[]>([]);
   const { t } = useTranslation();
+  const [loading, setLoading] = useState(false);
+
+  const getProposals = async (ids: string[]) => {
+    const reqs = ids.map((pid) => requests.proposal.getProposalDetail(Number(pid)));
+    setLoading(true);
+    try {
+      const resList = await Promise.allSettled(reqs);
+      const _list: IBaseProposal[] = [];
+      resList.forEach((res) => {
+        if (res.status === 'fulfilled') {
+          const thread = res.value.data.thread;
+          _list.push(thread);
+        }
+      });
+      setList(_list);
+    } catch (error) {
+      console.error('get proposals error: ', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    if (!id || !detail) return;
-    getDetail();
+    if (detail?.proposals) {
+      getProposals(detail?.proposals);
+    }
   }, [id, detail]);
-
-  const getDetail = async () => {
-    const { proposals } = detail!;
-    setList(proposals);
-  };
 
   const handleModal = () => {
     setShow(true);
   };
-  const closeModal = () => {
+  const closeModal = (ifRefresh: boolean) => {
     setShow(false);
+    ifRefresh && refreshProject();
   };
 
   return (
@@ -100,7 +93,10 @@ export default function ProjectProposal(props: Iprops) {
         </Button>
       </TopBox>
       <UlBox>
-        {list.map((item, index) => (
+        {list.map((item) => (
+          <ProposalCard key={item.id} data={item} />
+        ))}
+        {/* {list.map((item, index) => (
           <li key={index}>
             <div className="fst">
               <div>
@@ -116,7 +112,7 @@ export default function ProjectProposal(props: Iprops) {
               展示正文内容中前两行的内容展示正文内容中前两行的内容展示正文内容中前两行的内容展示正文内容中前两行的内容展示正文内容中前两行的内容展示正文内容中前两行的内容
             </DescBox>
           </li>
-        ))}
+        ))} */}
       </UlBox>
       {!list.length && <NoItem />}
     </Box>
