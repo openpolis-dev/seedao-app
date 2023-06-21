@@ -56,7 +56,7 @@ const BtnBox = styled.label`
     margin-right: 10px;
   }
 `;
-export default function Reg({ id }) {
+export default function Reg({ id }: { id: number }) {
   const { t } = useTranslation();
   // const { CSVReader } = useCSVReader();
   const [loading, setLoading] = useState(false);
