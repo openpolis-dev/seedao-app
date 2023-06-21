@@ -33,6 +33,7 @@ jobs:
          git config --global user.name bot;
          git config --global user.email bot@theseedlabs.io;
          cp -R ../out/* .;
+         touch .nojekyll
          git add .;
          git status;
          git commit -m "deploy";
