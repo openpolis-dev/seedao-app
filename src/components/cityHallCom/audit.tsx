@@ -6,7 +6,8 @@ import Page from 'components/pagination';
 import DatePickerStyle from 'components/datePicker';
 import { Checkbox } from '@paljs/ui/Checkbox';
 import requests from 'requests';
-import { IApplicationDisplay } from 'type/application.type';
+import { IApplicationDisplay, ApplicationStatus } from 'type/application.type';
+import Loading from 'components/loading';
 
 const Box = styled.div``;
 const FirstLine = styled.div`
@@ -79,13 +80,19 @@ export default function Audit() {
   const [show, setShow] = useState(false);
   const [dateTime, setDateTime] = useState<Date | null>(null);
   const [list, setList] = useState<IApplicationDisplay[]>([]);
+  const [selectMap, setSelectMap] = useState<{ [id: number]: boolean }>({});
   const [loading, setLoading] = useState(false);
 
-  const statusOption: { value: any; label: any }[] = [
-    { label: '待审核', value: '待审核' },
-    { value: '被驳回', label: '被驳回' },
-    { value: '待发放', label: '待发放' },
-    { value: '已发放', label: '已发放' },
+  const [projects, setProjects] = useState<ISelectItem[]>([]);
+  const [selectProject, setSelectProject] = useState<number>();
+  const [selectStatus, setSelectStatus] = useState<ApplicationStatus>();
+
+  const statusOption: ISelectItem[] = [
+    { label: '待审核', value: ApplicationStatus.Open },
+    { label: '被驳回', value: ApplicationStatus.Rejected },
+    { label: '已通过', value: ApplicationStatus.Approved },
+    { label: '待发放', value: ApplicationStatus.Processing },
+    { label: '已发放', value: ApplicationStatus.Completed },
   ];
 
   const handlePage = (num: number) => {
@@ -94,22 +101,39 @@ export default function Audit() {
   const handlePageSize = (num: number) => {
     setPageSize(num);
   };
-  const handleShow = (num: number) => {
-    setShow(true);
-    console.log(num);
-  };
-  const closeShow = () => {
-    setShow(false);
-  };
 
   const changeDate = (time: Date) => {
     console.log(time?.getTime());
     const str = new Date(time?.getTime());
     setDateTime(str);
   };
-  const onChangeCheckbox = (value: boolean, key: number) => {
-    // setCheckbox({ ...checkbox, [key]: value });
+  const onChangeCheckbox = (value: boolean, id: number) => {
+    setSelectMap({ ...selectMap, [id]: value });
   };
+
+  const getProjects = async () => {
+    try {
+      const res = await requests.project.getProjects({
+        page: 1,
+        size: 20,
+        sort_order: 'desc',
+        sort_field: 'created_at',
+      });
+      setProjects(
+        res.data.rows.map((item) => ({
+          label: item.name,
+          value: item.id,
+        })),
+      );
+    } catch (error) {
+      console.error('getProjects in city-hall failed: ', error);
+    }
+  };
+
+  useEffect(() => {
+    getProjects();
+  }, []);
+
   const getRecords = async () => {
     setLoading(true);
     try {
@@ -135,23 +159,70 @@ export default function Audit() {
 
   useEffect(() => {
     getRecords();
-  }, []);
+  }, [selectStatus, selectProject, page, pageSize]);
 
   const handleApprove = async () => {
-    await requests.application.approveApplications([10]);
+    setLoading(true);
+    try {
+      const ids = Object.keys(selectMap);
+      const select_ids: number[] = [];
+      for (const id of ids) {
+        if (selectMap[id]) {
+          select_ids.push(Number(id));
+        }
+      }
+      await requests.application.approveApplications(select_ids);
+      getRecords();
+      // TODO alert success
+    } catch (error) {
+      console.error('handle approve failed', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleReject = async () => {
+    setLoading(true);
+    try {
+      const ids = Object.keys(selectMap);
+      const select_ids: number[] = [];
+      for (const id of ids) {
+        if (selectMap[id]) {
+          select_ids.push(Number(id));
+        }
+      }
+      await requests.application.rejectApplications(select_ids);
+      getRecords();
+      // TODO alert success
+    } catch (error) {
+      console.error('handle reject failed', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <Box>
+      {loading && <Loading />}
       <FirstLine>
         <TopLine>
           <li>
             <span className="tit">状态</span>
-            <Select className="sel" options={statusOption} placeholder="Status" />
+            <Select
+              className="sel"
+              options={statusOption}
+              placeholder="Status"
+              onChange={(value) => setSelectStatus(value.value)}
+            />
           </li>
           <li>
             <span className="tit">治理公会</span>
-            <Select className="sel" options={statusOption} placeholder="Status" />
+            <Select
+              className="sel"
+              options={projects}
+              placeholder="Status"
+              onChange={(value) => setSelectProject(value.value)}
+            />
           </li>
           <li>
             <span className="tit">登记人</span>
@@ -173,7 +244,9 @@ export default function Audit() {
       </FirstLine>
       <TopBox>
         <Button onClick={handleApprove}>通过</Button>
-        <Button appearance="outline">驳回</Button>
+        <Button appearance="outline" onClick={handleReject}>
+          驳回
+        </Button>
       </TopBox>
       <table className="table" cellPadding="0" cellSpacing="0">
         <thead>
@@ -196,7 +269,7 @@ export default function Audit() {
               <td>
                 <Checkbox
                   status="Primary"
-                  checked={false}
+                  checked={selectMap[item.application_id]}
                   onChange={(value) => onChangeCheckbox(value, item.application_id)}
                 ></Checkbox>
               </td>

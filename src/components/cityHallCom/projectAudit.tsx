@@ -7,7 +7,7 @@ import DatePickerStyle from 'components/datePicker';
 import { Checkbox } from '@paljs/ui/Checkbox';
 import requests from 'requests';
 import Loading from 'components/loading';
-import { IApplicationDisplay } from 'type/application.type';
+import { IApplicationDisplay, ApplicationStatus } from 'type/application.type';
 
 const Box = styled.div``;
 const FirstLine = styled.div`
@@ -81,12 +81,14 @@ export default function ProjectAudit() {
   const [dateTime, setDateTime] = useState<Date | null>(null);
   const [list, setList] = useState<IApplicationDisplay[]>([]);
   const [loading, setLoading] = useState(false);
+  const [selectStatus, setSelectStatus] = useState<ApplicationStatus>();
 
   const statusOption: { value: any; label: any }[] = [
-    { label: '待审核', value: '待审核' },
-    { value: '被驳回', label: '被驳回' },
-    { value: '待发放', label: '待发放' },
-    { value: '已发放', label: '已发放' },
+    { label: '待审核', value: ApplicationStatus.Open },
+    { label: '被驳回', value: ApplicationStatus.Rejected },
+    { label: '已通过', value: ApplicationStatus.Approved },
+    { label: '待发放', value: ApplicationStatus.Processing },
+    { label: '已发放', value: ApplicationStatus.Completed },
   ];
 
   const handlePage = (num: number) => {
@@ -131,7 +133,7 @@ export default function ProjectAudit() {
 
   useEffect(() => {
     getRecords();
-  }, []);
+  }, [selectStatus, page, pageSize]);
 
   const handleApprove = async () => {
     await requests.application.approveApplications([1]);
@@ -143,11 +145,17 @@ export default function ProjectAudit() {
 
   return (
     <Box>
+      {loading && <Loading />}
       <FirstLine>
         <TopLine>
           <li>
             <span className="tit">状态</span>
-            <Select className="sel" options={statusOption} placeholder="Status" />
+            <Select
+              className="sel"
+              options={statusOption}
+              placeholder="Status"
+              onChange={(value) => setSelectStatus(value.value)}
+            />
           </li>
         </TopLine>
         <TimeLine>

@@ -1,11 +1,14 @@
 import styled from 'styled-components';
 import { Button } from '@paljs/ui/Button';
 import Select from '@paljs/ui/Select';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Page from 'components/pagination';
 import DatePickerStyle from 'components/datePicker';
 import { Checkbox } from '@paljs/ui/Checkbox';
 import IssuedModal from 'components/cityHallCom/issuedModal';
+import { IApplicationDisplay, ApplicationStatus } from 'type/application.type';
+import Loading from 'components/loading';
+import requests from 'requests';
 
 const Box = styled.div``;
 const FirstLine = styled.div`
@@ -74,15 +77,17 @@ const TopBox = styled.div`
 export default function Issued() {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-  const [total, setTotal] = useState(100);
+  const [total, setTotal] = useState(0);
   const [show, setShow] = useState(false);
   const [dateTime, setDateTime] = useState<Date | null>(null);
+  const [list, setList] = useState<IApplicationDisplay[]>([]);
+  const [selectMap, setSelectMap] = useState<{ [id: number]: boolean }>({});
+  const [loading, setLoading] = useState(false);
+  const [selectStatus, setSelectStatus] = useState<ApplicationStatus>();
 
-  const statusOption: { value: any; label: any }[] = [
-    { label: '待审核', value: '待审核' },
-    { value: '被驳回', label: '被驳回' },
-    { value: '待发放', label: '待发放' },
-    { value: '已发放', label: '已发放' },
+  const statusOption: ISelectItem[] = [
+    { label: '已通过', value: ApplicationStatus.Approved },
+    { label: '待发放', value: ApplicationStatus.Processing },
   ];
 
   const handlePage = (num: number) => {
@@ -103,18 +108,52 @@ export default function Issued() {
     const str = new Date(time?.getTime());
     setDateTime(str);
   };
-  const onChangeCheckbox = (value: boolean, key: number) => {
-    // setCheckbox({ ...checkbox, [key]: value });
+  const onChangeCheckbox = (value: boolean, id: number) => {
+    setSelectMap({ ...selectMap, [id]: value });
   };
+
+  const getRecords = async () => {
+    setLoading(true);
+    try {
+      const res = await requests.application.getProjectApplications({
+        page,
+        size: pageSize,
+        sort_field: 'created_at',
+        sort_order: 'desc',
+      });
+      setTotal(res.data.total);
+      setList(
+        res.data.rows.map((item) => ({
+          ...item,
+          created_date: '',
+        })),
+      );
+    } catch (error) {
+      console.error('getProjectApplications failed', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getRecords();
+  }, [selectStatus, page, pageSize]);
+
   return (
     <Box>
+      {loading && <Loading />}
       {show && <IssuedModal closeShow={closeShow} />}
 
       <FirstLine>
         <TopLine>
           <li>
             <span className="tit">状态</span>
-            <Select className="sel" options={statusOption} placeholder="Status" />
+            <Select
+              className="sel"
+              options={statusOption}
+              placeholder="Status"
+              onChange={(value) => setSelectStatus(value.value)}
+            />
           </li>
         </TopLine>
         <TimeLine>
@@ -134,38 +173,43 @@ export default function Issued() {
         <Button onClick={() => handleShow()}>发放完成</Button>
       </TopBox>
       <table className="table" cellPadding="0" cellSpacing="0">
-        <tr>
-          <th>&nbsp;</th>
-          <th>时间</th>
-          <th>钱包地址</th>
-          <th>登记积分</th>
-          <th>登记Token</th>
-          <th>事项内容</th>
-          <th>备注</th>
-          <th>状态</th>
-          <th>登记人</th>
-          <th>审核人</th>
-        </tr>
-        {[...Array(20)].map((item, index) => (
-          <tr key={index}>
-            <td>
-              <Checkbox
-                status="Primary"
-                checked={false}
-                onChange={(value) => onChangeCheckbox(value, index)}
-              ></Checkbox>
-            </td>
-            <td>2023/06/13</td>
-            <td>0Xfds...sdf</td>
-            <td>d</td>
-            <td>100USD</td>
-            <td>酬劳</td>
-            <td>--</td>
-            <td>待审核</td>
-            <td>WD</td>
-            <td>WD</td>
+        <thead>
+          <tr>
+            <th>&nbsp;</th>
+            <th>时间</th>
+            <th>钱包地址</th>
+            <th>登记积分</th>
+            <th>登记Token</th>
+            <th>事项内容</th>
+            <th>备注</th>
+            <th>状态</th>
+            <th>登记人</th>
+            <th>审核人</th>
           </tr>
-        ))}
+        </thead>
+
+        <tbody>
+          {list.map((item, index) => (
+            <tr key={item.application_id}>
+              <td>
+                <Checkbox
+                  status="Primary"
+                  checked={false}
+                  onChange={(value) => onChangeCheckbox(value, item.application_id)}
+                ></Checkbox>
+              </td>
+              <td>{item.created_date}</td>
+              <td>{item.target_user_wallet}</td>
+              <td>{item.creadit_amount}</td>
+              <td>{item.token_amount}</td>
+              <td>{item.budget_source}</td>
+              <td>--</td>
+              <td>{item.status}</td>
+              <td>{item.submitter_name || item.submitter_wallet}</td>
+              <td>{item.reviewer_name || item.reviewer_wallet}</td>
+            </tr>
+          ))}
+        </tbody>
       </table>
       <Page
         itemsPerPage={pageSize}
