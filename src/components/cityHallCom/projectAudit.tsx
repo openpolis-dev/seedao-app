@@ -1,10 +1,13 @@
 import styled from 'styled-components';
 import { Button } from '@paljs/ui/Button';
 import Select from '@paljs/ui/Select';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Page from 'components/pagination';
 import DatePickerStyle from 'components/datePicker';
 import { Checkbox } from '@paljs/ui/Checkbox';
+import requests from 'requests';
+import Loading from 'components/loading';
+import { IApplicationDisplay } from 'type/application.type';
 
 const Box = styled.div``;
 const FirstLine = styled.div`
@@ -73,9 +76,11 @@ const TopBox = styled.div`
 export default function ProjectAudit() {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-  const [total, setTotal] = useState(100);
+  const [total, setTotal] = useState(0);
   const [show, setShow] = useState(false);
   const [dateTime, setDateTime] = useState<Date | null>(null);
+  const [list, setList] = useState<IApplicationDisplay[]>([]);
+  const [loading, setLoading] = useState(false);
 
   const statusOption: { value: any; label: any }[] = [
     { label: '待审核', value: '待审核' },
@@ -106,6 +111,36 @@ export default function ProjectAudit() {
   const onChangeCheckbox = (value: boolean, key: number) => {
     // setCheckbox({ ...checkbox, [key]: value });
   };
+
+  const getRecords = async () => {
+    setLoading(true);
+    try {
+      const res = await requests.application.getCloseProjectApplications({
+        page,
+        size: pageSize,
+        sort_field: 'created_at',
+        sort_order: 'desc',
+      });
+      setTotal(res.data.total);
+    } catch (error) {
+      console.error('getCloseProjectApplications failed:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getRecords();
+  }, []);
+
+  const handleApprove = async () => {
+    await requests.application.approveApplications([1]);
+  };
+
+  const handleReject = async () => {
+    await requests.application.rejectApplications([8]);
+  };
+
   return (
     <Box>
       <FirstLine>
@@ -129,8 +164,10 @@ export default function ProjectAudit() {
         </TimeLine>
       </FirstLine>
       <TopBox>
-        <Button>通过</Button>
-        <Button appearance="outline">驳回</Button>
+        <Button onClick={handleApprove}>通过</Button>
+        <Button appearance="outline" onClick={handleReject}>
+          驳回
+        </Button>
       </TopBox>
       <table className="table" cellPadding="0" cellSpacing="0">
         <tr>
@@ -142,17 +179,17 @@ export default function ProjectAudit() {
           <th>状态</th>
           <th>申请人</th>
         </tr>
-        {[...Array(20)].map((item, index) => (
+        {list.map((item, index) => (
           <tr key={index}>
             <td>
               <Checkbox status="Primary" checked={true} onChange={(value) => onChangeCheckbox(value, index)}></Checkbox>
             </td>
             <td></td>
-            <td>全球DAO场战略项目</td>
+            <td>{item.budget_source}</td>
             <td>关闭项目</td>
             <td>--</td>
-            <td>待审核</td>
-            <td>WD</td>
+            <td>{item.status}</td>
+            <td>{item.submitter_name || item.submitter_wallet}</td>
           </tr>
         ))}
       </table>
