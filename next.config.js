@@ -10,7 +10,7 @@ module.exports = {
   images: {
     unoptimized: true,
   },
-  assetPrefix: isProd ? '/os-frondend-preview' : '',
+  assetPrefix: isProd ? '/os-frontend-preview' : '',
 };
 
 // please refer https://github.com/gregrickaby/nextjs-github-pages for github pages deployment
