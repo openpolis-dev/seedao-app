@@ -113,6 +113,7 @@ export default function Reg({ id }) {
   };
 
   const handleCreate = async () => {
+    // TODO check invalid data
     setLoading(true);
     try {
       const data: ICreateBudgeApplicationRequest[] = list.map((item) => ({
@@ -120,9 +121,10 @@ export default function Reg({ id }) {
         entity: 'project',
         entity_id: id,
         credit_amount: Number(item.points) || 0,
-        token_amount: Number(item.points) || 0,
+        token_amount: Number(item.token) || 0,
         detailed_type: item.content || '',
         comment: item.note || '',
+        target_user_wallet: item.address,
       }));
       await requests.application.createBudgetApplications(data);
       Clear();

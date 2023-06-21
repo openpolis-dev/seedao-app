@@ -1,10 +1,12 @@
 import styled from 'styled-components';
 import { Button } from '@paljs/ui/Button';
 import Select from '@paljs/ui/Select';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Page from 'components/pagination';
 import DatePickerStyle from 'components/datePicker';
 import { Checkbox } from '@paljs/ui/Checkbox';
+import requests from 'requests';
+import { IApplicationDisplay } from 'type/application.type';
 
 const Box = styled.div``;
 const FirstLine = styled.div`
@@ -76,6 +78,8 @@ export default function Audit() {
   const [total, setTotal] = useState(100);
   const [show, setShow] = useState(false);
   const [dateTime, setDateTime] = useState<Date | null>(null);
+  const [list, setList] = useState<IApplicationDisplay[]>([]);
+  const [loading, setLoading] = useState(false);
 
   const statusOption: { value: any; label: any }[] = [
     { label: '待审核', value: '待审核' },
@@ -106,6 +110,37 @@ export default function Audit() {
   const onChangeCheckbox = (value: boolean, key: number) => {
     // setCheckbox({ ...checkbox, [key]: value });
   };
+  const getRecords = async () => {
+    setLoading(true);
+    try {
+      const res = await requests.application.getProjectApplications({
+        page,
+        size: pageSize,
+        sort_field: 'created_at',
+        sort_order: 'desc',
+      });
+      setTotal(res.data.total);
+      setList(
+        res.data.rows.map((item) => ({
+          ...item,
+          created_date: '',
+        })),
+      );
+    } catch (error) {
+      console.error('getProjectApplications failed', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getRecords();
+  }, []);
+
+  const handleApprove = async () => {
+    await requests.application.approveApplications([10]);
+  };
+
   return (
     <Box>
       <FirstLine>
@@ -137,42 +172,46 @@ export default function Audit() {
         </TimeLine>
       </FirstLine>
       <TopBox>
-        <Button>通过</Button>
+        <Button onClick={handleApprove}>通过</Button>
         <Button appearance="outline">驳回</Button>
       </TopBox>
       <table className="table" cellPadding="0" cellSpacing="0">
-        <tr>
-          <th>&nbsp;</th>
-          <th>时间</th>
-          <th>钱包地址</th>
-          <th>登记积分</th>
-          <th>登记Token</th>
-          <th>事项内容</th>
-          <th>备注</th>
-          <th>状态</th>
-          <th>登记人</th>
-          <th>审核人</th>
-        </tr>
-        {[...Array(20)].map((item, index) => (
-          <tr key={index}>
-            <td>
-              <Checkbox
-                status="Primary"
-                checked={false}
-                onChange={(value) => onChangeCheckbox(value, index)}
-              ></Checkbox>
-            </td>
-            <td>2023/06/13</td>
-            <td>0Xfds...sdf</td>
-            <td>d</td>
-            <td>100USD</td>
-            <td>酬劳</td>
-            <td>--</td>
-            <td>待审核</td>
-            <td>WD</td>
-            <td>WD</td>
+        <thead>
+          <tr>
+            <th>&nbsp;</th>
+            <th>时间</th>
+            <th>钱包地址</th>
+            <th>登记积分</th>
+            <th>登记Token</th>
+            <th>事项内容</th>
+            <th>备注</th>
+            <th>状态</th>
+            <th>登记人</th>
+            <th>审核人</th>
           </tr>
-        ))}
+        </thead>
+        <tbody>
+          {list.map((item) => (
+            <tr key={item.application_id}>
+              <td>
+                <Checkbox
+                  status="Primary"
+                  checked={false}
+                  onChange={(value) => onChangeCheckbox(value, item.application_id)}
+                ></Checkbox>
+              </td>
+              <td>{item.created_date}</td>
+              <td>{item.target_user_wallet}</td>
+              <td>{item.creadit_amount}</td>
+              <td>{item.token_amount}</td>
+              <td>{item.budget_source}</td>
+              <td>--</td>
+              <td>{item.status}</td>
+              <td>{item.submitter_name || item.submitter_wallet}</td>
+              <td>{item.reviewer_name || item.reviewer_wallet}</td>
+            </tr>
+          ))}
+        </tbody>
       </table>
       <Page
         itemsPerPage={pageSize}

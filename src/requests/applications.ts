@@ -41,6 +41,7 @@ export interface ICreateBudgeApplicationRequest {
   type: ApplicationType;
   entity: 'project';
   entity_id: number;
+  target_user_wallet: string;
   credit_amount: number;
   token_amount: number;
   detailed_type: string;
