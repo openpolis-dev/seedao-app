@@ -160,10 +160,8 @@ const Header: React.FC<HeaderProps> = (props) => {
             },
             {
               content: (
-                <Link href="/">
-                  <a className="logo">
-                    <LogoIcon src="/logo.png" alt="" />
-                  </a>
+                <Link href="/" className="logo">
+                  <LogoIcon src="/logo.png" alt="" />
                 </Link>
               ),
             },
