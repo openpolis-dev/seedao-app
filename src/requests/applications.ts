@@ -6,7 +6,7 @@ const PATH_PREFIX = '/applications/';
 
 export const getProjectApplications = (
   data: IPageParams,
-  project_id = '',
+  project_id?: number,
 ): Promise<ResponseData<IPageResponse<IApplication>>> => {
   return request.get(`${PATH_PREFIX}`, {
     ...data,

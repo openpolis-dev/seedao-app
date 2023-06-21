@@ -65,7 +65,7 @@ const MidBox = styled.div`
   margin: 0 20px;
 `;
 
-export default function AssetList({ id }) {
+export default function AssetList({ id }: { id: number }) {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [total, setTotal] = useState(100);
