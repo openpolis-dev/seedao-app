@@ -20,7 +20,11 @@ export default function LoginModal() {
   const [loginStatus, setLoginStatus] = useState<LoginStatus>(LoginStatus.Default);
   const connect = async () => {
     setLoginStatus(LoginStatus.Pending);
-    await connector.activate();
+    try {
+      await connector.activate();
+    } catch (error) {
+      setLoginStatus(LoginStatus.Default);
+    }
   };
 
   const handleLoginSys = async () => {
@@ -34,6 +38,7 @@ export default function LoginModal() {
       signData = await provider.send('personal_sign', [signMessage(account, now), account]);
     } catch (error) {
       console.error('sign failed', error);
+      setLoginStatus(LoginStatus.Default);
     }
     if (!signData) {
       return;
