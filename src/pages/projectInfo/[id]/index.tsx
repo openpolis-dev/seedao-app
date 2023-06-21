@@ -53,6 +53,7 @@ export default function Index() {
     dispatch,
   } = useAuthContext();
   const { id } = router.query;
+  const projectId = Number(id);
   const [detail, setDetail] = useState<ReTurnProject | undefined>();
   const [current, setCurrent] = useState<number>(0);
   const [list, setList] = useState<listObj[]>([]);
@@ -116,9 +117,9 @@ export default function Index() {
                 <BtmBox>
                   {current === 0 && <Info detail={detail} />}
                   {current === 1 && <Members detail={detail} />}
-                  {current === 2 && <Assets />}
+                  {current === 2 && <Assets id={projectId} detail={detail} />}
                   {current === 3 && <ProjectProposal detail={detail} />}
-                  {current === 4 && <Reg />}
+                  {current === 4 && <Reg id={projectId} />}
                 </BtmBox>
               </TopBox>
             </Col>

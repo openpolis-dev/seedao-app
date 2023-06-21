@@ -1,11 +1,12 @@
 import styled from 'styled-components';
 import { Button } from '@paljs/ui/Button';
 import Select from '@paljs/ui/Select';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Page from 'components/pagination';
 import ViewHash from './viewHash';
 import DatePickerStyle from 'components/datePicker';
 import { Checkbox } from '@paljs/ui/Checkbox';
+import requests from 'requests';
 
 const Box = styled.div``;
 const TitBox = styled.div`
@@ -63,7 +64,7 @@ const MidBox = styled.div`
   margin: 0 20px;
 `;
 
-export default function AssetList() {
+export default function AssetList({ id }) {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [total, setTotal] = useState(100);
@@ -99,6 +100,23 @@ export default function AssetList() {
   const onChangeCheckbox = (value: boolean, key: number) => {
     // setCheckbox({ ...checkbox, [key]: value });
   };
+
+  const getRecords = async () => {
+    await requests.application.getProjectApplications(
+      {
+        page,
+        size: pageSize,
+        sort_field: 'created_at',
+        sort_order: 'desc',
+      },
+      id,
+    );
+  };
+
+  useEffect(() => {
+    console.log('id: ', id);
+    id && getRecords();
+  }, [id]);
   return (
     <Box>
       {show && <ViewHash closeShow={closeShow} />}

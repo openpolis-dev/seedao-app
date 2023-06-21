@@ -5,3 +5,10 @@ declare interface IPageParams {
   sort_field: string;
   status?: string;
 }
+
+declare interface IPageResponse<T> {
+  page: number;
+  size: number;
+  total: number;
+  rows: T[];
+}

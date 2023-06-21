@@ -27,13 +27,19 @@ export interface IApplicationLog {
 }
 
 export interface IApplication {
-  id: string;
-  action: ApplicationType;
-  requester: string;
-  state: ApplicationStatus;
-  rejected_reason: string;
+  application_id: number;
+  entity_name: ApplicationEntity;
+  target_user_wallet: string;
+  token_amount: number;
+  creadit_amount: number;
+  budget_source: string;
+  status: ApplicationStatus;
+  submitter_wallet: string;
+  submitter_name: string;
+  reviewer_wallet: string;
+  reviewer_name: string;
+  transaction_ids: string;
   created_at: number;
-  updated_at: number;
-  detailed_data?: string;
-  logs: IApplicationLog[];
+  // detailed_data?: string;
+  // logs: IApplicationLog[];
 }
