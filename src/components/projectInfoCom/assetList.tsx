@@ -1,11 +1,13 @@
 import styled from 'styled-components';
 import { Button } from '@paljs/ui/Button';
 import Select from '@paljs/ui/Select';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Page from 'components/pagination';
 import ViewHash from './viewHash';
 import DatePickerStyle from 'components/datePicker';
 import { Checkbox } from '@paljs/ui/Checkbox';
+import requests from 'requests';
+import { IApplicationDisplay } from 'type/application.type';
 
 const Box = styled.div``;
 const TitBox = styled.div`
@@ -63,12 +65,13 @@ const MidBox = styled.div`
   margin: 0 20px;
 `;
 
-export default function AssetList() {
+export default function AssetList({ id }) {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [total, setTotal] = useState(100);
   const [show, setShow] = useState(false);
   const [dateTime, setDateTime] = useState<Date | null>(null);
+  const [list, setList] = useState<IApplicationDisplay[]>([]);
 
   const statusOption: { value: any; label: any }[] = [
     { label: '待审核', value: '待审核' },
@@ -99,6 +102,29 @@ export default function AssetList() {
   const onChangeCheckbox = (value: boolean, key: number) => {
     // setCheckbox({ ...checkbox, [key]: value });
   };
+
+  const getRecords = async () => {
+    const res = await requests.application.getProjectApplications(
+      {
+        page,
+        size: pageSize,
+        sort_field: 'created_at',
+        sort_order: 'desc',
+      },
+      id,
+    );
+    setTotal(res.data.total);
+    const _list = res.data.rows.map((item) => ({
+      ...item,
+      created_date: '',
+    }));
+    setList(_list);
+  };
+
+  useEffect(() => {
+    console.log('id: ', id);
+    id && getRecords();
+  }, [id]);
   return (
     <Box>
       {show && <ViewHash closeShow={closeShow} />}
@@ -108,10 +134,6 @@ export default function AssetList() {
         <TopLine>
           <li>
             <span className="tit">状态</span>
-            <Select className="sel" options={statusOption} placeholder="Status" />
-          </li>
-          <li>
-            <span className="tit">预算来源</span>
             <Select className="sel" options={statusOption} placeholder="Status" />
           </li>
           <li>
@@ -147,44 +169,27 @@ export default function AssetList() {
           <th>审核人</th>
           <th>交易ID</th>
         </tr>
-        <tr>
-          <td>
-            <Checkbox status="Primary" checked={false} onChange={(value) => onChangeCheckbox(value, 0)}></Checkbox>
-          </td>
-          <td>2023/06/13</td>
-          <td>0Xfds...sdf</td>
-          <td>d</td>
-          <td>100USD</td>
-          <td>酬劳</td>
-          <td>--</td>
-          <td>待审核</td>
-          <td>WD</td>
-          <td>WD</td>
-          <td>
-            <Button appearance="outline" size="Tiny" onClick={() => handleShow(0)}>
-              查看
-            </Button>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <Checkbox status="Primary" checked={false} onChange={(value) => onChangeCheckbox(value, 0)}></Checkbox>
-          </td>
-          <td>2023/06/13</td>
-          <td>0Xfds...sdf</td>
-          <td>d</td>
-          <td>100USD</td>
-          <td>酬劳</td>
-          <td>--</td>
-          <td>待审核</td>
-          <td>WD</td>
-          <td>WD</td>
-          <td>
-            <Button appearance="outline" size="Tiny" onClick={() => handleShow(0)}>
-              查看
-            </Button>
-          </td>
-        </tr>
+        {list.map((item) => (
+          <tr key={item.application_id}>
+            <td>
+              <Checkbox status="Primary" checked={false} onChange={(value) => onChangeCheckbox(value, 0)}></Checkbox>
+            </td>
+            <td>{item.created_date}</td>
+            <td>{item.target_user_wallet}</td>
+            <td>{item.creadit_amount}</td>
+            <td>{item.token_amount}</td>
+            <td></td>
+            <td>--</td>
+            <td>{item.status}</td>
+            <td>{item.submitter_name || item.submitter_wallet}</td>
+            <td>{item.reviewer_name || item.reviewer_wallet}</td>
+            <td>
+              <Button appearance="outline" size="Tiny" onClick={() => handleShow(0)}>
+                查看
+              </Button>
+            </td>
+          </tr>
+        ))}
       </table>
       <Page
         itemsPerPage={pageSize}

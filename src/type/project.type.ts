@@ -8,13 +8,33 @@ export interface budgetObj {
   id?: number;
   project_id?: number;
 }
+
+export enum BudgetType {
+  Credit = 'credit',
+  Token = 'token',
+}
+
+export interface IBaseBudgetItem {
+  name: 'USDT' | 'Points';
+  total_amount: number;
+  budget_type: BudgetType;
+}
+
+export interface IBudgetItem extends IBaseBudgetItem {
+  id: number;
+  remain_amount: number;
+  created_at: number;
+  updated_at: number;
+  type: BudgetType;
+}
+
 export interface IBaseProject {
   logo: string;
   name: string;
   sponsors: string[];
   members: string[];
   proposals: string[];
-  budgets: budgetObj[];
+  budgets: IBaseBudgetItem[];
 }
 
 export interface ReTurnProject {
@@ -27,7 +47,7 @@ export interface ReTurnProject {
   sponsors: string[];
   status: string;
   updated_at: string;
-  budgets?: budgetObj[];
+  budgets: IBudgetItem[];
 }
 
 export interface BudgetObj {

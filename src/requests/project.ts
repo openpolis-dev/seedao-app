@@ -1,6 +1,6 @@
 // Project Module API
-import request from './http';
-import { BudgetObj, IBaseProject, InfoObj } from 'type/project.type';
+import request, { ResponseData } from './http';
+import { BudgetObj, IBaseProject, InfoObj, ReTurnProject } from 'type/project.type';
 
 const PATH_PREFIX = '/projects/';
 
@@ -8,7 +8,7 @@ export const createProjects = (data: IBaseProject) => {
   return request.post(PATH_PREFIX, data);
 };
 
-export const getProjects = (data: IPageParams) => {
+export const getProjects = (data: IPageParams): Promise<ResponseData<IPageResponse<ReTurnProject>>> => {
   return request.get(PATH_PREFIX, data);
 };
 export const getMyProjects = (data: IPageParams) => {

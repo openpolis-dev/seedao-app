@@ -8,6 +8,7 @@ import useTranslation from 'hooks/useTranslation';
 import { BudgetObj, budgetObj, InfoObj, ReTurnProject } from 'type/project.type';
 import { useRouter } from 'next/router';
 import { closeProjectById, UpdateBudget, UpdateInfo } from 'requests/project';
+import requests from 'requests';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import { InputGroup } from '@paljs/ui/Input';
 import { Toastr, ToastrRef } from '@paljs/ui/Toastr';
@@ -86,20 +87,17 @@ export default function Info(props: Iprops) {
   const [editName, setEditName] = useState('');
 
   useEffect(() => {
-    if (!id || !detail) return;
     getDetail();
   }, [id, detail]);
 
   const getDetail = () => {
     setEditName(detail?.name as string);
-    const tokenArr = detail?.budgets?.filter((item) => item.name === 'USDT');
-    const rt = tokenArr?.length ? tokenArr[0] : null;
-    setToken(rt);
-    setEditToken(rt?.total_amount as string);
-    const pArr = detail?.budgets?.filter((item) => item.name === 'Points');
-    const rt2 = pArr?.length ? pArr[0] : null;
-    setPoints(rt2);
-    setEditPoint(rt2?.total_amount as string);
+    const _token = detail?.budgets?.find((item) => item.name === 'USDT');
+    setToken(_token);
+    setEditToken(_token?.total_amount as string);
+    const _point = detail?.budgets?.find((item) => item.name === 'Points');
+    setPoints(_point);
+    setEditPoint(_point?.total_amount as string);
   };
 
   const closeModal = () => {
@@ -113,7 +111,7 @@ export default function Info(props: Iprops) {
     setShow(false);
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
-      await closeProjectById(id as string);
+      await requests.application.createCloseProjectApplication(Number(id as string));
       dispatch({ type: AppActionType.SET_LOADING, payload: null });
       setShowSuccess(true);
     } catch (e) {

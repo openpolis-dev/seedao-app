@@ -1,10 +1,13 @@
 import styled from 'styled-components';
 import { Button } from '@paljs/ui/Button';
 import Select from '@paljs/ui/Select';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Page from 'components/pagination';
 import DatePickerStyle from 'components/datePicker';
 import { Checkbox } from '@paljs/ui/Checkbox';
+import requests from 'requests';
+import { IApplicationDisplay, ApplicationStatus } from 'type/application.type';
+import Loading from 'components/loading';
 
 const Box = styled.div``;
 const FirstLine = styled.div`
@@ -76,12 +79,20 @@ export default function Audit() {
   const [total, setTotal] = useState(100);
   const [show, setShow] = useState(false);
   const [dateTime, setDateTime] = useState<Date | null>(null);
+  const [list, setList] = useState<IApplicationDisplay[]>([]);
+  const [selectMap, setSelectMap] = useState<{ [id: number]: boolean }>({});
+  const [loading, setLoading] = useState(false);
 
-  const statusOption: { value: any; label: any }[] = [
-    { label: '待审核', value: '待审核' },
-    { value: '被驳回', label: '被驳回' },
-    { value: '待发放', label: '待发放' },
-    { value: '已发放', label: '已发放' },
+  const [projects, setProjects] = useState<ISelectItem[]>([]);
+  const [selectProject, setSelectProject] = useState<number>();
+  const [selectStatus, setSelectStatus] = useState<ApplicationStatus>();
+
+  const statusOption: ISelectItem[] = [
+    { label: '待审核', value: ApplicationStatus.Open },
+    { label: '被驳回', value: ApplicationStatus.Rejected },
+    { label: '已通过', value: ApplicationStatus.Approved },
+    { label: '待发放', value: ApplicationStatus.Processing },
+    { label: '已发放', value: ApplicationStatus.Completed },
   ];
 
   const handlePage = (num: number) => {
@@ -90,33 +101,128 @@ export default function Audit() {
   const handlePageSize = (num: number) => {
     setPageSize(num);
   };
-  const handleShow = (num: number) => {
-    setShow(true);
-    console.log(num);
-  };
-  const closeShow = () => {
-    setShow(false);
-  };
 
   const changeDate = (time: Date) => {
     console.log(time?.getTime());
     const str = new Date(time?.getTime());
     setDateTime(str);
   };
-  const onChangeCheckbox = (value: boolean, key: number) => {
-    // setCheckbox({ ...checkbox, [key]: value });
+  const onChangeCheckbox = (value: boolean, id: number) => {
+    setSelectMap({ ...selectMap, [id]: value });
   };
+
+  const getProjects = async () => {
+    try {
+      const res = await requests.project.getProjects({
+        page: 1,
+        size: 20,
+        sort_order: 'desc',
+        sort_field: 'created_at',
+      });
+      setProjects(
+        res.data.rows.map((item) => ({
+          label: item.name,
+          value: item.id,
+        })),
+      );
+    } catch (error) {
+      console.error('getProjects in city-hall failed: ', error);
+    }
+  };
+
+  useEffect(() => {
+    getProjects();
+  }, []);
+
+  const getRecords = async () => {
+    setLoading(true);
+    try {
+      const res = await requests.application.getProjectApplications({
+        page,
+        size: pageSize,
+        sort_field: 'created_at',
+        sort_order: 'desc',
+      });
+      setTotal(res.data.total);
+      setList(
+        res.data.rows.map((item) => ({
+          ...item,
+          created_date: '',
+        })),
+      );
+    } catch (error) {
+      console.error('getProjectApplications failed', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getRecords();
+  }, [selectStatus, selectProject, page, pageSize]);
+
+  const handleApprove = async () => {
+    setLoading(true);
+    try {
+      const ids = Object.keys(selectMap);
+      const select_ids: number[] = [];
+      for (const id of ids) {
+        if (selectMap[id]) {
+          select_ids.push(Number(id));
+        }
+      }
+      await requests.application.approveApplications(select_ids);
+      getRecords();
+      // TODO alert success
+    } catch (error) {
+      console.error('handle approve failed', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleReject = async () => {
+    setLoading(true);
+    try {
+      const ids = Object.keys(selectMap);
+      const select_ids: number[] = [];
+      for (const id of ids) {
+        if (selectMap[id]) {
+          select_ids.push(Number(id));
+        }
+      }
+      await requests.application.rejectApplications(select_ids);
+      getRecords();
+      // TODO alert success
+    } catch (error) {
+      console.error('handle reject failed', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <Box>
+      {loading && <Loading />}
       <FirstLine>
         <TopLine>
           <li>
             <span className="tit">状态</span>
-            <Select className="sel" options={statusOption} placeholder="Status" />
+            <Select
+              className="sel"
+              options={statusOption}
+              placeholder="Status"
+              onChange={(value) => setSelectStatus(value.value)}
+            />
           </li>
           <li>
             <span className="tit">治理公会</span>
-            <Select className="sel" options={statusOption} placeholder="Status" />
+            <Select
+              className="sel"
+              options={projects}
+              placeholder="Status"
+              onChange={(value) => setSelectProject(value.value)}
+            />
           </li>
           <li>
             <span className="tit">登记人</span>
@@ -137,42 +243,48 @@ export default function Audit() {
         </TimeLine>
       </FirstLine>
       <TopBox>
-        <Button>通过</Button>
-        <Button appearance="outline">驳回</Button>
+        <Button onClick={handleApprove}>通过</Button>
+        <Button appearance="outline" onClick={handleReject}>
+          驳回
+        </Button>
       </TopBox>
       <table className="table" cellPadding="0" cellSpacing="0">
-        <tr>
-          <th>&nbsp;</th>
-          <th>时间</th>
-          <th>钱包地址</th>
-          <th>登记积分</th>
-          <th>登记Token</th>
-          <th>事项内容</th>
-          <th>备注</th>
-          <th>状态</th>
-          <th>登记人</th>
-          <th>审核人</th>
-        </tr>
-        {[...Array(20)].map((item, index) => (
-          <tr key={index}>
-            <td>
-              <Checkbox
-                status="Primary"
-                checked={false}
-                onChange={(value) => onChangeCheckbox(value, index)}
-              ></Checkbox>
-            </td>
-            <td>2023/06/13</td>
-            <td>0Xfds...sdf</td>
-            <td>d</td>
-            <td>100USD</td>
-            <td>酬劳</td>
-            <td>--</td>
-            <td>待审核</td>
-            <td>WD</td>
-            <td>WD</td>
+        <thead>
+          <tr>
+            <th>&nbsp;</th>
+            <th>时间</th>
+            <th>钱包地址</th>
+            <th>登记积分</th>
+            <th>登记Token</th>
+            <th>事项内容</th>
+            <th>备注</th>
+            <th>状态</th>
+            <th>登记人</th>
+            <th>审核人</th>
           </tr>
-        ))}
+        </thead>
+        <tbody>
+          {list.map((item) => (
+            <tr key={item.application_id}>
+              <td>
+                <Checkbox
+                  status="Primary"
+                  checked={selectMap[item.application_id]}
+                  onChange={(value) => onChangeCheckbox(value, item.application_id)}
+                ></Checkbox>
+              </td>
+              <td>{item.created_date}</td>
+              <td>{item.target_user_wallet}</td>
+              <td>{item.creadit_amount}</td>
+              <td>{item.token_amount}</td>
+              <td>{item.budget_source}</td>
+              <td>--</td>
+              <td>{item.status}</td>
+              <td>{item.submitter_name || item.submitter_wallet}</td>
+              <td>{item.reviewer_name || item.reviewer_wallet}</td>
+            </tr>
+          ))}
+        </tbody>
       </table>
       <Page
         itemsPerPage={pageSize}
