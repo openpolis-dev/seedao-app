@@ -5,7 +5,7 @@ import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import CloseTips from 'components/projectInfoCom/closeTips';
 import CloseSuccess from 'components/projectInfoCom/closeSuccess';
 import useTranslation from 'hooks/useTranslation';
-import { BudgetObj, budgetObj, InfoObj, ReTurnProject } from 'type/project.type';
+import { BudgetObj, budgetObj, IBudgetItem, InfoObj, ReTurnProject } from 'type/project.type';
 import { useRouter } from 'next/router';
 import { closeProjectById, UpdateBudget, UpdateInfo } from 'requests/project';
 import requests from 'requests';
@@ -77,13 +77,13 @@ export default function Info(props: Iprops) {
   const { dispatch } = useAuthContext();
   const toastrRef = useRef<ToastrRef>(null);
 
-  const [token, setToken] = useState<budgetObj | null>();
-  const [points, setPoints] = useState<budgetObj | null>();
+  const [token, setToken] = useState<IBudgetItem>();
+  const [points, setPoints] = useState<IBudgetItem>();
   const [showEditPoints, setShowEditPoints] = useState(false);
   const [showEditToken, setShowEditToken] = useState(false);
   const [showName, setShowName] = useState(false);
-  const [editPoint, setEditPoint] = useState('');
-  const [editToken, setEditToken] = useState('');
+  const [editPoint, setEditPoint] = useState<number>();
+  const [editToken, setEditToken] = useState<number>();
   const [editName, setEditName] = useState('');
 
   useEffect(() => {
@@ -94,10 +94,10 @@ export default function Info(props: Iprops) {
     setEditName(detail?.name as string);
     const _token = detail?.budgets?.find((item) => item.name === 'USDT');
     setToken(_token);
-    setEditToken(_token?.total_amount as string);
+    setEditToken(_token?.total_amount);
     const _point = detail?.budgets?.find((item) => item.name === 'Points');
     setPoints(_point);
-    setEditPoint(_point?.total_amount as string);
+    setEditPoint(_point?.total_amount);
   };
 
   const closeModal = () => {
@@ -191,10 +191,10 @@ export default function Info(props: Iprops) {
     const { value } = e.target as HTMLInputElement;
     switch (type) {
       case 'points':
-        setEditPoint(value);
+        setEditPoint(Number(value) || 0);
         break;
       case 'token':
-        setEditToken(value);
+        setEditToken(Number(value) || 0);
         break;
       case 'name':
         setEditName(value);
