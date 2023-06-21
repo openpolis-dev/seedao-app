@@ -8,7 +8,7 @@ import { EvaIcon } from '@paljs/ui/Icon';
 import { useRouter } from 'next/router';
 import useTranslation from 'hooks/useTranslation';
 import { createProjects } from 'requests/project';
-import { IBaseProject } from 'type/project.type';
+import { BudgetType, IBaseProject } from 'type/project.type';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 const Box = styled.div`
   .btnBtm {
@@ -116,9 +116,9 @@ export default function CreateProject() {
   const [adminList, setAdminList] = useState(['']);
   const [memberList, setMemberList] = useState(['']);
   const [proList, setProList] = useState(['']);
-  const [token, setToken] = useState<string | number>('');
+  const [token, setToken] = useState<number>();
 
-  const [credit, setCredit] = useState<string | number>('');
+  const [credit, setCredit] = useState<number>();
 
   const [proName, setProName] = useState('');
   const [url, setUrl] = useState('');
@@ -146,10 +146,10 @@ export default function CreateProject() {
         setProName(value);
         break;
       case 'credit':
-        setCredit(value);
+        setCredit(Number(value));
         break;
       case 'token':
-        setToken(value);
+        setToken(Number(value));
         break;
     }
   };
@@ -204,11 +204,13 @@ export default function CreateProject() {
       budgets: [
         {
           name: 'USDT',
-          totalAmount: token,
+          total_amount: token,
+          budget_type: BudgetType.Token,
         },
         {
           name: 'Points',
-          totalAmount: credit,
+          total_amount: credit,
+          budget_type: BudgetType.Credit,
         },
       ],
     };
@@ -348,7 +350,7 @@ export default function CreateProject() {
                     <span className="titleLft">{t('Project.Points')}</span>
                     <InputGroup fullWidth>
                       <input
-                        type="text"
+                        type="number"
                         placeholder={t('Project.Points')}
                         value={credit}
                         onChange={(e) => handleInput(e, 0, 'credit')}
@@ -358,7 +360,12 @@ export default function CreateProject() {
                   <ItemBox>
                     <span className="titleLft">USD</span>
                     <InputGroup fullWidth>
-                      <input type="text" placeholder="USD" value={token} onChange={(e) => handleInput(e, 0, 'token')} />
+                      <input
+                        type="number"
+                        placeholder="USD"
+                        value={token}
+                        onChange={(e) => handleInput(e, 0, 'token')}
+                      />
                     </InputGroup>
                   </ItemBox>
                 </div>
@@ -401,8 +408,10 @@ export default function CreateProject() {
                 disabled={
                   proName?.length === 0 ||
                   url?.length === 0 ||
-                  (credit as string)?.length === 0 ||
-                  (token as string)?.length === 0 ||
+                  !credit ||
+                  credit < 0 ||
+                  !token ||
+                  token < 0 ||
                   (adminList?.length === 1 && adminList[0]?.length === 0) ||
                   (proList?.length === 1 && proList[0]?.length === 0) ||
                   (memberList?.length === 1 && memberList[0]?.length === 0)
