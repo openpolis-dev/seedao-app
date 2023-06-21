@@ -37,7 +37,7 @@ const FirstLine = styled.ul`
 
 interface IProps {
   id: number;
-  detail: ReTurnProject;
+  detail?: ReTurnProject;
 }
 
 export default function Assets({ id, detail }: IProps) {
