@@ -154,7 +154,7 @@ export default function ProjectAudit() {
               className="sel"
               options={statusOption}
               placeholder="Status"
-              onChange={(value) => setSelectStatus(value.value)}
+              onChange={(value) => setSelectStatus(value?.value)}
             />
           </li>
         </TopLine>

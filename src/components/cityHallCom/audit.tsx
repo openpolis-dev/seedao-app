@@ -167,8 +167,9 @@ export default function Audit() {
       const ids = Object.keys(selectMap);
       const select_ids: number[] = [];
       for (const id of ids) {
-        if (selectMap[id]) {
-          select_ids.push(Number(id));
+        const _id = Number(id);
+        if (selectMap[_id]) {
+          select_ids.push(_id);
         }
       }
       await requests.application.approveApplications(select_ids);
@@ -187,8 +188,9 @@ export default function Audit() {
       const ids = Object.keys(selectMap);
       const select_ids: number[] = [];
       for (const id of ids) {
-        if (selectMap[id]) {
-          select_ids.push(Number(id));
+        const _id = Number(id);
+        if (selectMap[_id]) {
+          select_ids.push(_id);
         }
       }
       await requests.application.rejectApplications(select_ids);
@@ -212,7 +214,7 @@ export default function Audit() {
               className="sel"
               options={statusOption}
               placeholder="Status"
-              onChange={(value) => setSelectStatus(value.value)}
+              onChange={(value) => setSelectStatus(value?.value)}
             />
           </li>
           <li>
@@ -221,7 +223,7 @@ export default function Audit() {
               className="sel"
               options={projects}
               placeholder="Status"
-              onChange={(value) => setSelectProject(value.value)}
+              onChange={(value) => setSelectProject(value?.value)}
             />
           </li>
           <li>

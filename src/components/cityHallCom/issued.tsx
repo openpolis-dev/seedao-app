@@ -152,7 +152,7 @@ export default function Issued() {
               className="sel"
               options={statusOption}
               placeholder="Status"
-              onChange={(value) => setSelectStatus(value.value)}
+              onChange={(value) => setSelectStatus(value?.value)}
             />
           </li>
         </TopLine>
