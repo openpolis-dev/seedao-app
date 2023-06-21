@@ -204,12 +204,12 @@ export default function CreateProject() {
       budgets: [
         {
           name: 'USDT',
-          total_amount: token,
+          total_amount: token || 0,
           budget_type: BudgetType.Token,
         },
         {
           name: 'Points',
-          total_amount: credit,
+          total_amount: credit || 0,
           budget_type: BudgetType.Credit,
         },
       ],
