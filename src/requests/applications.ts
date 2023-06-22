@@ -1,14 +1,15 @@
 // City Hall Module API
 import request, { ResponseData } from './http';
-import { ApplicationType, IApplication } from 'type/application.type';
+import { ApplicationStatus, ApplicationType, IApplication } from 'type/application.type';
 
 const PATH_PREFIX = '/applications/';
 
-interface IQueryApplicationsParams {
+export interface IQueryApplicationsParams {
   start_date?: string;
   end_date?: string;
   applicant?: string;
   user_wallet?: string;
+  state?: ApplicationStatus;
 }
 
 export const getProjectApplications = (
@@ -87,4 +88,19 @@ export const compeleteApplications = (msg: string) => {
 // download
 export const getTemplateFile = () => {
   return request.post(`${PATH_PREFIX}download`, []);
+};
+
+interface IApplicantRequest {
+  entity: 'project' | 'guild';
+  entity_id: number;
+}
+
+interface IApplicant {
+  applicant: string;
+  name: string;
+}
+
+// applicants
+export const getApplicants = (data?: IApplicantRequest): Promise<ResponseData<IApplicant[]>> => {
+  return request.get(`${PATH_PREFIX}applicants`, data);
 };
