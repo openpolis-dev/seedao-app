@@ -51,9 +51,10 @@ interface obj {
 }
 interface Iprops {
   closeShow: () => void;
+  handleConfirm: (data: string[]) => void;
 }
 export default function IssuedModal(props: Iprops) {
-  const { closeShow } = props;
+  const { closeShow, handleConfirm } = props;
 
   const [adminList, setAdminList] = useState<obj[]>([
     {
@@ -140,7 +141,7 @@ export default function IssuedModal(props: Iprops) {
           <Button appearance="outline" className="btn" onClick={() => closeShow()}>
             取消
           </Button>
-          <Button>确定</Button>
+          <Button onClick={handleConfirm}>确定</Button>
         </CardFooter>
       </Card>
     </Mask>

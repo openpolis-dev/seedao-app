@@ -82,9 +82,15 @@ export const rejectApplicationByID = (application_id: number) => {
 };
 
 // complete
-export const compeleteApplications = (msg: string) => {
+export const compeleteApplications = (data: string[]) => {
   return request.post(`${PATH_PREFIX}complete`, {
-    message: msg,
+    message: data,
+  });
+};
+// process
+export const processApplications = (data: number[]) => {
+  return request.post(`${PATH_PREFIX}process`, {
+    message: data,
   });
 };
 
