@@ -113,6 +113,10 @@ export default function AssetList({ id }: { id: number }) {
   const changeDate = (rg: Date[]) => {
     setStartDate(rg[0]);
     setEndData(rg[1]);
+    if ((rg[0] && rg[1]) || (!rg[0] && !rg[1])) {
+      setSelectMap({});
+      setPage(1);
+    }
   };
   const onChangeCheckbox = (value: boolean, id: number) => {
     setSelectMap({ ...selectMap, [id]: value });
@@ -190,7 +194,11 @@ export default function AssetList({ id }: { id: number }) {
               className="sel"
               options={statusOption}
               placeholder="Status"
-              onChange={(value) => setSelectStatus(value?.value)}
+              onChange={(value) => {
+                setSelectStatus(value?.value);
+                setSelectMap({});
+                setPage(1);
+              }}
             />
           </li>
           <li>
@@ -199,7 +207,11 @@ export default function AssetList({ id }: { id: number }) {
               className="sel"
               options={applicants}
               placeholder="applicant"
-              onChange={(value) => setSelectApplicant(value?.value)}
+              onChange={(value) => {
+                setSelectApplicant(value?.value);
+                setSelectMap({});
+                setPage(1);
+              }}
             />
           </li>
         </TopLine>

@@ -1,13 +1,17 @@
 import styled from 'styled-components';
 import { Button } from '@paljs/ui/Button';
 import Select from '@paljs/ui/Select';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import Page from 'components/pagination';
-import DatePickerStyle from 'components/datePicker';
+import RangeDatePickerStyle from 'components/rangeDatePicker';
 import { Checkbox } from '@paljs/ui/Checkbox';
 import requests from 'requests';
 import { IApplicationDisplay, ApplicationStatus } from 'type/application.type';
 import Loading from 'components/loading';
+import { formatDate, formatTime } from 'utils/time';
+import utils from 'utils/publicJs';
+import { IQueryApplicationsParams } from 'requests/applications';
+import NoItem from 'components/noItem';
 
 const Box = styled.div``;
 const FirstLine = styled.div`
@@ -78,7 +82,8 @@ export default function Audit() {
   const [pageSize, setPageSize] = useState(10);
   const [total, setTotal] = useState(100);
   const [show, setShow] = useState(false);
-  const [dateTime, setDateTime] = useState<Date | null>(null);
+  const [startDate, setStartDate] = useState<Date>();
+  const [endDate, setEndData] = useState<Date>();
   const [list, setList] = useState<IApplicationDisplay[]>([]);
   const [selectMap, setSelectMap] = useState<{ [id: number]: boolean }>({});
   const [loading, setLoading] = useState(false);
@@ -86,6 +91,8 @@ export default function Audit() {
   const [projects, setProjects] = useState<ISelectItem[]>([]);
   const [selectProject, setSelectProject] = useState<number>();
   const [selectStatus, setSelectStatus] = useState<ApplicationStatus>();
+  const [applicants, setApplicants] = useState<ISelectItem[]>([]);
+  const [selectApplicant, setSelectApplicant] = useState<string>();
 
   const statusOption: ISelectItem[] = [
     { label: '待审核', value: ApplicationStatus.Open },
@@ -102,10 +109,13 @@ export default function Audit() {
     setPageSize(num);
   };
 
-  const changeDate = (time: Date) => {
-    console.log(time?.getTime());
-    const str = new Date(time?.getTime());
-    setDateTime(str);
+  const changeDate = (rg: Date[]) => {
+    setStartDate(rg[0]);
+    setEndData(rg[1]);
+    if ((rg[0] && rg[1]) || (!rg[0] && !rg[1])) {
+      setSelectMap({});
+      setPage(1);
+    }
   };
   const onChangeCheckbox = (value: boolean, id: number) => {
     setSelectMap({ ...selectMap, [id]: value });
@@ -130,12 +140,36 @@ export default function Audit() {
     }
   };
 
+  const getApplicants = async () => {
+    try {
+      const res = await requests.application.getApplicants();
+      const options = res.data.map((item) => ({
+        label: item.name || utils.AddressToShow(item.applicant),
+        value: item.applicant,
+      }));
+      setApplicants(options);
+    } catch (error) {
+      console.error('getApplicants error', error);
+    }
+  };
+
+  useEffect(() => {
+    getApplicants();
+  }, []);
+
   useEffect(() => {
     getProjects();
   }, []);
 
   const getRecords = async () => {
     setLoading(true);
+    const queryData: IQueryApplicationsParams = {};
+    if (selectStatus) queryData.state = selectStatus;
+    if (selectApplicant) queryData.applicant = selectApplicant;
+    if (startDate && endDate) {
+      queryData.start_date = formatDate(startDate);
+      queryData.end_date = formatDate(endDate);
+    }
     try {
       const res = await requests.application.getProjectApplications(
         {
@@ -144,14 +178,14 @@ export default function Audit() {
           sort_field: 'created_at',
           sort_order: 'desc',
         },
-        {},
-        undefined,
+        queryData,
+        selectProject,
       );
       setTotal(res.data.total);
       setList(
         res.data.rows.map((item) => ({
           ...item,
-          created_date: '',
+          created_date: formatTime(item.created_at),
         })),
       );
     } catch (error) {
@@ -162,8 +196,9 @@ export default function Audit() {
   };
 
   useEffect(() => {
-    getRecords();
-  }, [selectStatus, selectProject, page, pageSize]);
+    const selectOrClearDate = (startDate && endDate) || (!startDate && !endDate);
+    selectOrClearDate && getRecords();
+  }, [selectStatus, selectApplicant, page, pageSize, startDate, endDate]);
 
   const handleApprove = async () => {
     setLoading(true);
@@ -218,31 +253,49 @@ export default function Audit() {
               className="sel"
               options={statusOption}
               placeholder="Status"
-              onChange={(value) => setSelectStatus(value?.value)}
+              onChange={(value) => {
+                setSelectStatus(value?.value);
+                setSelectMap({});
+                setPage(1);
+              }}
             />
           </li>
           <li>
-            <span className="tit">治理公会</span>
+            <span className="tit">预算涞源</span>
             <Select
               className="sel"
               options={projects}
-              placeholder="Status"
-              onChange={(value) => setSelectProject(value?.value)}
+              placeholder="Source"
+              onChange={(value) => {
+                setSelectProject(value?.value);
+                setSelectMap({});
+                setPage(1);
+              }}
             />
           </li>
           <li>
             <span className="tit">登记人</span>
-            <Select className="sel" options={statusOption} placeholder="Status" />
+            <Select
+              className="sel"
+              options={applicants}
+              placeholder="Applicants"
+              onChange={(value) => {
+                setSelectApplicant(value?.value);
+                setSelectMap({});
+                setPage(1);
+              }}
+            />
           </li>
         </TopLine>
         <TimeLine>
           <TimeBox>
             <BorderBox>
-              <DatePickerStyle placeholder="开始时间" onChange={changeDate} dateTime={dateTime} />
-            </BorderBox>
-            <MidBox>~</MidBox>
-            <BorderBox>
-              <DatePickerStyle placeholder="开始时间" onChange={changeDate} dateTime={dateTime} />
+              <RangeDatePickerStyle
+                placeholder="开始时间-结束时间"
+                onChange={changeDate}
+                startDate={startDate}
+                endDate={endDate}
+              />
             </BorderBox>
           </TimeBox>
           <Button size="Medium">导出</Button>
@@ -254,51 +307,57 @@ export default function Audit() {
           驳回
         </Button>
       </TopBox>
-      <table className="table" cellPadding="0" cellSpacing="0">
-        <thead>
-          <tr>
-            <th>&nbsp;</th>
-            <th>时间</th>
-            <th>钱包地址</th>
-            <th>登记积分</th>
-            <th>登记Token</th>
-            <th>事项内容</th>
-            <th>备注</th>
-            <th>状态</th>
-            <th>登记人</th>
-            <th>审核人</th>
-          </tr>
-        </thead>
-        <tbody>
-          {list.map((item) => (
-            <tr key={item.application_id}>
-              <td>
-                <Checkbox
-                  status="Primary"
-                  checked={selectMap[item.application_id]}
-                  onChange={(value) => onChangeCheckbox(value, item.application_id)}
-                ></Checkbox>
-              </td>
-              <td>{item.created_date}</td>
-              <td>{item.target_user_wallet}</td>
-              <td>{item.creadit_amount}</td>
-              <td>{item.token_amount}</td>
-              <td>{item.budget_source}</td>
-              <td>--</td>
-              <td>{item.status}</td>
-              <td>{item.submitter_name || item.submitter_wallet}</td>
-              <td>{item.reviewer_name || item.reviewer_wallet}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      <Page
-        itemsPerPage={pageSize}
-        total={total}
-        current={page - 1}
-        handleToPage={handlePage}
-        handlePageSize={handlePageSize}
-      />
+      {list.length ? (
+        <>
+          <table className="table" cellPadding="0" cellSpacing="0">
+            <thead>
+              <tr>
+                <th>&nbsp;</th>
+                <th>时间</th>
+                <th>钱包地址</th>
+                <th>登记积分</th>
+                <th>登记Token</th>
+                <th>事项内容</th>
+                <th>备注</th>
+                <th>状态</th>
+                <th>登记人</th>
+                <th>审核人</th>
+              </tr>
+            </thead>
+            <tbody>
+              {list.map((item) => (
+                <tr key={item.application_id}>
+                  <td>
+                    <Checkbox
+                      status="Primary"
+                      checked={selectMap[item.application_id]}
+                      onChange={(value) => onChangeCheckbox(value, item.application_id)}
+                    ></Checkbox>
+                  </td>
+                  <td>{item.created_date}</td>
+                  <td>{item.target_user_wallet}</td>
+                  <td>{item.creadit_amount}</td>
+                  <td>{item.token_amount}</td>
+                  <td>{item.budget_source}</td>
+                  <td>--</td>
+                  <td>{item.status}</td>
+                  <td>{item.submitter_name || item.submitter_wallet}</td>
+                  <td>{item.reviewer_name || item.reviewer_wallet}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <Page
+            itemsPerPage={pageSize}
+            total={total}
+            current={page - 1}
+            handleToPage={handlePage}
+            handlePageSize={handlePageSize}
+          />
+        </>
+      ) : (
+        <NoItem />
+      )}
     </Box>
   );
 }
