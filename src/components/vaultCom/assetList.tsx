@@ -199,7 +199,7 @@ export default function AssetList() {
 
   return (
     <Box>
-      {show && <ViewHash closeShow={closeShow} />}
+      {show && <ViewHash closeShow={closeShow} txs={show} />}
       {loading && <Loading />}
 
       <TitBox>记录</TitBox>
