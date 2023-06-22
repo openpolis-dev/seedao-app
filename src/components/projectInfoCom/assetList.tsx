@@ -241,7 +241,7 @@ export default function AssetList({ id }: { id: number }) {
                   <td>
                     <Checkbox
                       status="Primary"
-                      checked={false}
+                      checked={selectMap[item.application_id]}
                       onChange={(value) => onChangeCheckbox(value, item.application_id)}
                     ></Checkbox>
                   </td>
@@ -255,9 +255,11 @@ export default function AssetList({ id }: { id: number }) {
                   <td>{item.submitter_name || item.submitter_wallet}</td>
                   <td>{item.reviewer_name || item.reviewer_wallet}</td>
                   <td>
-                    <Button appearance="outline" size="Tiny" onClick={() => handleShow(0)}>
-                      查看
-                    </Button>
+                    {item.status === ApplicationStatus.Completed && (
+                      <Button appearance="outline" size="Tiny" onClick={() => handleShow(0)}>
+                        查看
+                      </Button>
+                    )}
                   </td>
                 </tr>
               ))}
