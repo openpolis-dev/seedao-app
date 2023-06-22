@@ -3,7 +3,7 @@ import { Button } from '@paljs/ui/Button';
 import Select from '@paljs/ui/Select';
 import React, { useState, useEffect } from 'react';
 import Page from 'components/pagination';
-import ViewHash from './viewHash';
+import ViewHash from '../projectInfoCom/viewHash';
 import RangeDatePickerStyle from 'components/rangeDatePicker';
 import { Checkbox } from '@paljs/ui/Checkbox';
 import requests from 'requests';
