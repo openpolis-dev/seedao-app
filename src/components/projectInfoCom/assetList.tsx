@@ -15,6 +15,7 @@ import { AppActionType, useAuthContext } from 'providers/authProvider';
 import Loading from 'components/loading';
 import { formatDate, formatTime } from 'utils/time';
 import publicJs from 'utils/publicJs';
+import CopyBox from 'components/copy';
 
 const Box = styled.div``;
 const TitBox = styled.div`
@@ -258,7 +259,14 @@ export default function AssetList({ id }: { id: number }) {
                     ></Checkbox>
                   </td>
                   <td>{item.created_date}</td>
-                  <td>{item.target_user_wallet}</td>
+                  <td>
+                    <div>
+                      <span>{publicJs.AddressToShow(item.target_user_wallet)}</span>
+                      <CopyBox text={item.target_user_wallet}>
+                        <>复制</>
+                      </CopyBox>
+                    </div>
+                  </td>
                   <td>{item.credit_amount}</td>
                   <td>{item.token_amount}</td>
                   <td>{item.detailed_type}</td>

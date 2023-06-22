@@ -12,6 +12,8 @@ import { formatDate, formatTime } from 'utils/time';
 import utils from 'utils/publicJs';
 import { IQueryApplicationsParams } from 'requests/applications';
 import NoItem from 'components/noItem';
+import publicJs from 'utils/publicJs';
+import CopyBox from 'components/copy';
 
 const Box = styled.div``;
 const FirstLine = styled.div`
@@ -336,7 +338,14 @@ export default function Audit() {
                     ></Checkbox>
                   </td>
                   <td>{item.created_date}</td>
-                  <td>{item.target_user_wallet}</td>
+                  <td>
+                    <div>
+                      <span>{publicJs.AddressToShow(item.target_user_wallet)}</span>
+                      <CopyBox text={item.target_user_wallet}>
+                        <>复制</>
+                      </CopyBox>
+                    </div>
+                  </td>
                   <td>{item.credit_amount}</td>
                   <td>{item.token_amount}</td>
                   <td>{item.detailed_type}</td>
