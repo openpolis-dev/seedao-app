@@ -41,12 +41,12 @@ const HeaderBox = styled(CardHeader)`
   }
 `;
 interface Iprops {
+  txs: string[];
   closeShow: () => void;
 }
 
 export default function ViewHash(props: Iprops) {
-  const [show, setShow] = useState(false);
-  const { closeShow } = props;
+  const { closeShow, txs } = props;
 
   return (
     <Mask>
@@ -59,9 +59,9 @@ export default function ViewHash(props: Iprops) {
         </HeaderBox>
         <CardBody>
           <UlBox id="scrollTriggerId">
-            {[...Array(8)].map((item, index) => (
+            {txs.map((item, index) => (
               <li key={index}>
-                <span>0x183F09C3cE99C02118c570e03808476b22d63191</span>
+                <span>{item}</span>
                 <EvaIcon name="clipboard-outline" />
               </li>
             ))}

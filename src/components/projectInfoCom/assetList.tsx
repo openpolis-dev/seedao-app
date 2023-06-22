@@ -80,7 +80,7 @@ export default function AssetList({ id }: { id: number }) {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [total, setTotal] = useState(100);
-  const [show, setShow] = useState(false);
+  const [show, setShow] = useState<string[]>();
   const [startDate, setStartDate] = useState<Date>();
   const [endDate, setEndData] = useState<Date>();
   const [list, setList] = useState<IApplicationDisplay[]>([]);
@@ -103,12 +103,11 @@ export default function AssetList({ id }: { id: number }) {
   const handlePageSize = (num: number) => {
     setPageSize(num);
   };
-  const handleShow = (num: number) => {
-    setShow(true);
-    console.log(num);
+  const handleShow = async (ids: string[]) => {
+    setShow(ids);
   };
   const closeShow = () => {
-    setShow(false);
+    setShow(undefined);
   };
 
   const changeDate = (rg: Date[]) => {
@@ -183,7 +182,7 @@ export default function AssetList({ id }: { id: number }) {
   }, [id, selectStatus, selectApplicant, page, pageSize, startDate, endDate]);
   return (
     <Box>
-      {show && <ViewHash closeShow={closeShow} />}
+      {show && <ViewHash closeShow={closeShow} txs={show} />}
       {loading && <Loading />}
 
       <TitBox>记录</TitBox>
@@ -269,7 +268,7 @@ export default function AssetList({ id }: { id: number }) {
                   <td>{item.reviewer_name || publicJs.AddressToShow(item.reviewer_wallet)}</td>
                   <td>
                     {item.status === ApplicationStatus.Completed && (
-                      <Button appearance="outline" size="Tiny" onClick={() => handleShow(0)}>
+                      <Button appearance="outline" size="Tiny" onClick={() => handleShow(item.transaction_ids || [])}>
                         查看
                       </Button>
                     )}

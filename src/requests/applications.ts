@@ -4,6 +4,10 @@ import { ApplicationStatus, ApplicationType, IApplication } from 'type/applicati
 
 const PATH_PREFIX = '/applications/';
 
+export const getApplicationById = (application_id: number): Promise<ResponseData<IApplication>> => {
+  return request.get(`${PATH_PREFIX}${application_id}`);
+};
+
 export interface IQueryApplicationsParams {
   start_date?: string;
   end_date?: string;

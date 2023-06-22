@@ -38,7 +38,7 @@ export interface IApplication {
   submitter_name: string;
   reviewer_wallet: string;
   reviewer_name: string;
-  transaction_ids: string;
+  transaction_ids: string[];
   created_at: number;
   detailed_type: string;
   comment: string;
