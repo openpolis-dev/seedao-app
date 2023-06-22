@@ -76,7 +76,7 @@ export default function AssetList() {
   } = useAuthContext();
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-  const [total, setTotal] = useState(100);
+  const [total, setTotal] = useState(0);
   const [show, setShow] = useState<string[]>();
   const [startDate, setStartDate] = useState<Date>();
   const [endDate, setEndData] = useState<Date>();
@@ -177,7 +177,7 @@ export default function AssetList() {
           sort_order: 'desc',
         },
         queryData,
-        undefined,
+        selectProject,
       );
       setTotal(res.data.total);
       const _list = res.data.rows.map((item) => ({
