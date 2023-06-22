@@ -117,12 +117,15 @@ export default function ProjectAudit() {
   const getRecords = async () => {
     setLoading(true);
     try {
-      const res = await requests.application.getCloseProjectApplications({
-        page,
-        size: pageSize,
-        sort_field: 'created_at',
-        sort_order: 'desc',
-      });
+      const res = await requests.application.getCloseProjectApplications(
+        {
+          page,
+          size: pageSize,
+          sort_field: 'created_at',
+          sort_order: 'desc',
+        },
+        {},
+      );
       setTotal(res.data.total);
     } catch (error) {
       console.error('getCloseProjectApplications failed:', error);

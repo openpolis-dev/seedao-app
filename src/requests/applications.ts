@@ -4,8 +4,16 @@ import { ApplicationType, IApplication } from 'type/application.type';
 
 const PATH_PREFIX = '/applications/';
 
+interface IQueryApplicationsParams {
+  start_date?: string;
+  end_date?: string;
+  applicant?: string;
+  user_wallet?: string;
+}
+
 export const getProjectApplications = (
   data: IPageParams,
+  queryData: IQueryApplicationsParams,
   project_id?: number,
 ): Promise<ResponseData<IPageResponse<IApplication>>> => {
   return request.get(`${PATH_PREFIX}`, {
@@ -13,15 +21,16 @@ export const getProjectApplications = (
     type: ApplicationType.NewReward,
     entity: 'project',
     entity_id: project_id,
+    ...queryData,
   });
 };
 
-export const getCloseProjectApplications = (data: IPageParams, project_id = '') => {
+export const getCloseProjectApplications = (data: IPageParams, queryData: IQueryApplicationsParams) => {
   return request.get(`${PATH_PREFIX}`, {
     ...data,
     type: ApplicationType.CloseProject,
     entity: 'project',
-    entity_id: project_id,
+    ...queryData,
   });
 };
 

@@ -137,12 +137,16 @@ export default function Audit() {
   const getRecords = async () => {
     setLoading(true);
     try {
-      const res = await requests.application.getProjectApplications({
-        page,
-        size: pageSize,
-        sort_field: 'created_at',
-        sort_order: 'desc',
-      });
+      const res = await requests.application.getProjectApplications(
+        {
+          page,
+          size: pageSize,
+          sort_field: 'created_at',
+          sort_order: 'desc',
+        },
+        {},
+        undefined,
+      );
       setTotal(res.data.total);
       setList(
         res.data.rows.map((item) => ({

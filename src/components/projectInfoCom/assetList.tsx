@@ -111,6 +111,7 @@ export default function AssetList({ id }: { id: number }) {
         sort_field: 'created_at',
         sort_order: 'desc',
       },
+      {},
       id,
     );
     setTotal(res.data.total);
