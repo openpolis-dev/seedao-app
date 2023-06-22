@@ -1,5 +1,5 @@
 // City Hall Module API
-import request, { ResponseData } from './http';
+import request, { ResponseData, getBaseURL } from './http';
 import { ApplicationStatus, ApplicationType, IApplication } from 'type/application.type';
 
 const PATH_PREFIX = '/applications/';
@@ -86,6 +86,9 @@ export const compeleteApplications = (msg: string) => {
 };
 
 // download
+export const getTemplateFileUrl = () => {
+  return `${getBaseURL()}${PATH_PREFIX}get_upload_template`;
+};
 export const getTemplateFile = () => {
   return request.post(`${PATH_PREFIX}download`, []);
 };

@@ -137,8 +137,7 @@ export default function Reg({ id }: { id: number }) {
   };
 
   const downloadFile = async () => {
-    const res = await requests.application.getTemplateFile();
-    console.log('~', res);
+    window.open(requests.application.getTemplateFileUrl(), '_blank');
   };
 
   return (

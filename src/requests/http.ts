@@ -14,6 +14,8 @@ const instance = axios.create({
   headers: { 'content-type': 'application/json' },
 });
 
+export const getBaseURL = instance.getUri;
+
 instance.interceptors.request.use(
   (config: any) => {
     const method = config.method?.toLowerCase();
