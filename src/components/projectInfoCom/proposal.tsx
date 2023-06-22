@@ -96,23 +96,6 @@ export default function ProjectProposal(props: Iprops) {
         {list.map((item) => (
           <ProposalCard key={item.id} data={item} />
         ))}
-        {/* {list.map((item, index) => (
-          <li key={index}>
-            <div className="fst">
-              <div>
-                <img src="" alt="" />
-              </div>
-              <div>
-                <div className="tit">dfafd</div>
-                <div className="date">May 19,2024</div>
-              </div>
-            </div>
-            <TitleBox> SIP-79：共同打造中文web3媒体</TitleBox>
-            <DescBox>
-              展示正文内容中前两行的内容展示正文内容中前两行的内容展示正文内容中前两行的内容展示正文内容中前两行的内容展示正文内容中前两行的内容展示正文内容中前两行的内容
-            </DescBox>
-          </li>
-        ))} */}
       </UlBox>
       {!list.length && <NoItem />}
     </Box>
