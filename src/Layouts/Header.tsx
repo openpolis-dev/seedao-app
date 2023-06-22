@@ -5,7 +5,6 @@ import styled, { DefaultTheme } from 'styled-components';
 import { LayoutHeader } from '@paljs/ui/Layout';
 import { Actions } from '@paljs/ui/Actions';
 import ContextMenu from '@paljs/ui/ContextMenu';
-import User from '@paljs/ui/User';
 import { breakpointDown } from '@paljs/ui/breakpoints';
 import Select from '@paljs/ui/Select';
 import { useAuthContext, AppActionType } from 'providers/authProvider';
@@ -38,7 +37,7 @@ const Header: React.FC<HeaderProps> = (props) => {
   const [lan, setLan] = useState('en');
 
   const {
-    state: { show_login_modal, language, loading },
+    state: { show_login_modal, language, loading, userData },
     dispatch,
   } = useAuthContext();
 
@@ -198,8 +197,13 @@ const Header: React.FC<HeaderProps> = (props) => {
                   ]}
                   Link={Link}
                 >
-                  {isLogin && account ? (
-                    <User image="url('/icons/avatar')" name={PublicJs.AddressToShow(account)} size="Medium" />
+                  {isLogin && userData ? (
+                    <User>
+                      <div>
+                        <img src={userData?.avatar} alt="" />
+                      </div>
+                      <span>{userData?.name || PublicJs.AddressToShow(userData?.wallet || '')}</span>
+                    </User>
                   ) : (
                     <Button onClick={showWalletLogin}>Connect Wallet</Button>
                   )}
@@ -252,4 +256,16 @@ const LogoIcon = styled.img`
   //width: 70px;
   height: 65px;
   margin-top: -16px;
+`;
+
+const User = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid #edf1f7;
+  }
 `;
