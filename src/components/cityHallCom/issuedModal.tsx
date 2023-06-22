@@ -46,9 +46,7 @@ const ItemBox = styled.div`
     }
   }
 `;
-interface obj {
-  address: string;
-}
+
 interface Iprops {
   closeShow: () => void;
   handleConfirm: (data: string[]) => void;
@@ -56,54 +54,24 @@ interface Iprops {
 export default function IssuedModal(props: Iprops) {
   const { closeShow, handleConfirm } = props;
 
-  const [adminList, setAdminList] = useState<obj[]>([
-    {
-      address: '0x183F09C3cE99C02118c570e03808476b22d63191',
-    },
-  ]);
-  const [memberList, setMemberList] = useState<obj[]>([
-    {
-      address: '0x183F09C3cE99C02118c570e03808476b22d63191',
-    },
-  ]);
+  const [memberList, setMemberList] = useState<string[]>([]);
 
-  const handleInput = (e: ChangeEvent, index: number, type: string) => {
+  const handleInput = (e: ChangeEvent, index: number) => {
     const { value } = e.target as HTMLInputElement;
-    let arr: obj[] = [];
-    if (type === 'member') {
-      arr = [...memberList];
-      arr[index].address = value;
-      setMemberList(arr);
-    } else {
-      arr = [...adminList];
-      arr[index].address = value;
-      setAdminList(arr);
-    }
+    let arr: string[] = [];
+    arr = [...memberList];
+    arr[index] = value;
+    setMemberList(arr);
   };
 
   const handleAddMember = () => {
-    const arr = [...memberList];
-    arr.push({
-      address: '',
-    });
-    setMemberList(arr);
+    setMemberList([...memberList, '']);
   };
-  const handleAddAdmin = () => {
-    const arr = [...adminList];
-    arr.push({
-      address: '',
-    });
-    setAdminList(arr);
-  };
+
   const removeMember = (index: number) => {
     const arr = [...memberList];
     arr.splice(index, 1);
     setMemberList(arr);
-  };
-  const removeAdmin = (index: number) => {
-    const arr = [...adminList];
-    arr.splice(index, 1);
-    setAdminList(arr);
   };
 
   return (
@@ -117,12 +85,7 @@ export default function IssuedModal(props: Iprops) {
               {memberList.map((item, index) => (
                 <li key={`member_${index}`}>
                   <InputGroup fullWidth>
-                    <input
-                      type="text"
-                      placeholder="Size small"
-                      value={item.address}
-                      onChange={(e) => handleInput(e, index, 'member')}
-                    />
+                    <input type="text" placeholder="Size small" value={item} onChange={(e) => handleInput(e, index)} />
                   </InputGroup>
                   <span onClick={() => handleAddMember()}>
                     <EvaIcon name="plus-outline" status="Primary" />
@@ -141,7 +104,7 @@ export default function IssuedModal(props: Iprops) {
           <Button appearance="outline" className="btn" onClick={() => closeShow()}>
             取消
           </Button>
-          <Button onClick={handleConfirm}>确定</Button>
+          <Button onClick={() => handleConfirm(memberList)}>确定</Button>
         </CardFooter>
       </Card>
     </Mask>
