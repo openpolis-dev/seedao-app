@@ -93,8 +93,8 @@ export default function AssetList({ id }: { id: number }) {
   const statusOption: ISelectItem[] = [
     { label: '待审核', value: ApplicationStatus.Open },
     { label: '被驳回', value: ApplicationStatus.Rejected },
-    { label: '已通过', value: ApplicationStatus.Approved },
-    { label: '待发放', value: ApplicationStatus.Processing },
+    { label: '待发放', value: ApplicationStatus.Approved },
+    { label: '发放中', value: ApplicationStatus.Processing },
     { label: '已发放', value: ApplicationStatus.Completed },
   ];
 
