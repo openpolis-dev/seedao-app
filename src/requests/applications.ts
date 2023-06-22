@@ -26,7 +26,10 @@ export const getProjectApplications = (
   });
 };
 
-export const getCloseProjectApplications = (data: IPageParams, queryData: IQueryApplicationsParams) => {
+export const getCloseProjectApplications = (
+  data: IPageParams,
+  queryData: IQueryApplicationsParams,
+): Promise<ResponseData<IPageResponse<IApplication>>> => {
   return request.get(`${PATH_PREFIX}`, {
     ...data,
     type: ApplicationType.CloseProject,

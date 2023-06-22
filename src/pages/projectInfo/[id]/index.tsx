@@ -13,9 +13,8 @@ import ProjectProposal from 'components/projectInfoCom/proposal';
 import Reg from 'components/projectInfoCom/reg';
 import { EvaIcon } from '@paljs/ui/Icon';
 import { getProjectById } from 'requests/project';
-import { ReTurnProject } from 'type/project.type';
+import { ProjectStatus, ReTurnProject } from 'type/project.type';
 import useTranslation from 'hooks/useTranslation';
-import { de } from 'date-fns/locale';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import { listObj } from 'pages/project';
 
@@ -99,6 +98,12 @@ export default function Index() {
     ]);
   }, [language]);
 
+  const updateProjectStatus = (status: ProjectStatus) => {
+    if (detail) {
+      setDetail({ ...detail, status });
+    }
+  };
+
   return (
     <Layout title="SeeDAO Project">
       <CardBox>
@@ -115,7 +120,7 @@ export default function Index() {
                   ))}
                 </Tabs>
                 <BtmBox>
-                  {current === 0 && <Info detail={detail} />}
+                  {current === 0 && <Info detail={detail} updateProjectStatus={updateProjectStatus} />}
                   {current === 1 && <Members detail={detail} />}
                   {current === 2 && <Assets id={projectId} detail={detail} />}
                   {current === 3 && <ProjectProposal detail={detail} refreshProject={getDetail} />}

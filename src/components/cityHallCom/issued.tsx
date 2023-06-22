@@ -204,7 +204,7 @@ export default function Issued() {
               </td>
               <td>{item.created_date}</td>
               <td>{item.target_user_wallet}</td>
-              <td>{item.creadit_amount}</td>
+              <td>{item.credit_amount}</td>
               <td>{item.token_amount}</td>
               <td>{item.budget_source}</td>
               <td>--</td>

@@ -318,6 +318,7 @@ export default function Audit() {
                 <th>登记积分</th>
                 <th>登记Token</th>
                 <th>事项内容</th>
+                <th>预算来源</th>
                 <th>备注</th>
                 <th>状态</th>
                 <th>登记人</th>
@@ -336,10 +337,11 @@ export default function Audit() {
                   </td>
                   <td>{item.created_date}</td>
                   <td>{item.target_user_wallet}</td>
-                  <td>{item.creadit_amount}</td>
+                  <td>{item.credit_amount}</td>
                   <td>{item.token_amount}</td>
+                  <td>{item.detailed_type}</td>
                   <td>{item.budget_source}</td>
-                  <td>--</td>
+                  <td>{item.comment}</td>
                   <td>{item.status}</td>
                   <td>{item.submitter_name || item.submitter_wallet}</td>
                   <td>{item.reviewer_name || item.reviewer_wallet}</td>

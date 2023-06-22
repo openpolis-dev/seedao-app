@@ -31,7 +31,7 @@ export interface IApplication {
   entity_name: ApplicationEntity;
   target_user_wallet: string;
   token_amount: number;
-  creadit_amount: number;
+  credit_amount: number;
   budget_source: string;
   status: ApplicationStatus;
   submitter_wallet: string;
@@ -40,8 +40,8 @@ export interface IApplication {
   reviewer_name: string;
   transaction_ids: string;
   created_at: number;
-  // detailed_data?: string;
-  // logs: IApplicationLog[];
+  detailed_type: string;
+  comment: string;
 }
 
 export interface IApplicationDisplay extends IApplication {

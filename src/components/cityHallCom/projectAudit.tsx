@@ -3,11 +3,15 @@ import { Button } from '@paljs/ui/Button';
 import Select from '@paljs/ui/Select';
 import React, { useState, useEffect } from 'react';
 import Page from 'components/pagination';
-import DatePickerStyle from 'components/datePicker';
+import RangeDatePickerStyle from 'components/rangeDatePicker';
 import { Checkbox } from '@paljs/ui/Checkbox';
 import requests from 'requests';
 import Loading from 'components/loading';
 import { IApplicationDisplay, ApplicationStatus } from 'type/application.type';
+import { formatDate, formatTime } from 'utils/time';
+import { IQueryApplicationsParams } from 'requests/applications';
+import publicJs from 'utils/publicJs';
+import NoItem from 'components/noItem';
 
 const Box = styled.div``;
 const FirstLine = styled.div`
@@ -78,17 +82,17 @@ export default function ProjectAudit() {
   const [pageSize, setPageSize] = useState(10);
   const [total, setTotal] = useState(0);
   const [show, setShow] = useState(false);
-  const [dateTime, setDateTime] = useState<Date | null>(null);
+  const [startDate, setStartDate] = useState<Date>();
+  const [endDate, setEndData] = useState<Date>();
   const [list, setList] = useState<IApplicationDisplay[]>([]);
   const [loading, setLoading] = useState(false);
   const [selectStatus, setSelectStatus] = useState<ApplicationStatus>();
+  const [selectMap, setSelectMap] = useState<{ [id: number]: boolean }>({});
 
   const statusOption: { value: any; label: any }[] = [
     { label: '待审核', value: ApplicationStatus.Open },
     { label: '被驳回', value: ApplicationStatus.Rejected },
-    { label: '已通过', value: ApplicationStatus.Approved },
-    { label: '待发放', value: ApplicationStatus.Processing },
-    { label: '已发放', value: ApplicationStatus.Completed },
+    { label: '已通过', value: ApplicationStatus.Completed },
   ];
 
   const handlePage = (num: number) => {
@@ -105,18 +109,27 @@ export default function ProjectAudit() {
     setShow(false);
   };
 
-  const changeDate = (time: Date) => {
-    console.log(time?.getTime());
-    const str = new Date(time?.getTime());
-    setDateTime(str);
+  const changeDate = (rg: Date[]) => {
+    setStartDate(rg[0]);
+    setEndData(rg[1]);
+    if ((rg[0] && rg[1]) || (!rg[0] && !rg[1])) {
+      setSelectMap({});
+      setPage(1);
+    }
   };
-  const onChangeCheckbox = (value: boolean, key: number) => {
-    // setCheckbox({ ...checkbox, [key]: value });
+  const onChangeCheckbox = (value: boolean, id: number) => {
+    setSelectMap({ ...selectMap, [id]: value });
   };
 
   const getRecords = async () => {
     setLoading(true);
     try {
+      const queryData: IQueryApplicationsParams = {};
+      if (selectStatus) queryData.state = selectStatus;
+      if (startDate && endDate) {
+        queryData.start_date = formatDate(startDate);
+        queryData.end_date = formatDate(endDate);
+      }
       const res = await requests.application.getCloseProjectApplications(
         {
           page,
@@ -124,9 +137,14 @@ export default function ProjectAudit() {
           sort_field: 'created_at',
           sort_order: 'desc',
         },
-        {},
+        queryData,
       );
       setTotal(res.data.total);
+      const _list = res.data.rows.map((item) => ({
+        ...item,
+        created_date: formatTime(item.created_at),
+      }));
+      setList(_list);
     } catch (error) {
       console.error('getCloseProjectApplications failed:', error);
     } finally {
@@ -135,15 +153,50 @@ export default function ProjectAudit() {
   };
 
   useEffect(() => {
-    getRecords();
-  }, [selectStatus, page, pageSize]);
+    const selectOrClearDate = (startDate && endDate) || (!startDate && !endDate);
+    selectOrClearDate && getRecords();
+  }, [selectStatus, page, pageSize, startDate, endDate]);
 
   const handleApprove = async () => {
-    await requests.application.approveApplications([1]);
+    setLoading(true);
+    try {
+      const ids = Object.keys(selectMap);
+      const select_ids: number[] = [];
+      for (const id of ids) {
+        const _id = Number(id);
+        if (selectMap[_id]) {
+          select_ids.push(_id);
+        }
+      }
+      await requests.application.approveApplications(select_ids);
+      setSelectMap({});
+      getRecords();
+    } catch (error) {
+      console.error('handle approve failed', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleReject = async () => {
-    await requests.application.rejectApplications([8]);
+    setLoading(true);
+    try {
+      const ids = Object.keys(selectMap);
+      const select_ids: number[] = [];
+      for (const id of ids) {
+        const _id = Number(id);
+        if (selectMap[_id]) {
+          select_ids.push(_id);
+        }
+      }
+      await requests.application.rejectApplications(select_ids);
+      setSelectMap({});
+      getRecords();
+    } catch (error) {
+      console.error('handle reject failed', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -157,18 +210,22 @@ export default function ProjectAudit() {
               className="sel"
               options={statusOption}
               placeholder="Status"
-              onChange={(value) => setSelectStatus(value?.value)}
+              onChange={(value) => {
+                setSelectStatus(value?.value);
+                setSelectMap({});
+              }}
             />
           </li>
         </TopLine>
         <TimeLine>
           <TimeBox>
             <BorderBox>
-              <DatePickerStyle placeholder="开始时间" onChange={changeDate} dateTime={dateTime} />
-            </BorderBox>
-            <MidBox>~</MidBox>
-            <BorderBox>
-              <DatePickerStyle placeholder="开始时间" onChange={changeDate} dateTime={dateTime} />
+              <RangeDatePickerStyle
+                placeholder="开始时间-结束时间"
+                onChange={changeDate}
+                startDate={startDate}
+                endDate={endDate}
+              />
             </BorderBox>
           </TimeBox>
           <Button size="Medium">导出</Button>
@@ -180,37 +237,47 @@ export default function ProjectAudit() {
           驳回
         </Button>
       </TopBox>
-      <table className="table" cellPadding="0" cellSpacing="0">
-        <tr>
-          <th>&nbsp;</th>
-          <th>时间</th>
-          <th>项目</th>
-          <th>申请内容</th>
-          <th>备注</th>
-          <th>状态</th>
-          <th>申请人</th>
-        </tr>
-        {list.map((item, index) => (
-          <tr key={index}>
-            <td>
-              <Checkbox status="Primary" checked={true} onChange={(value) => onChangeCheckbox(value, index)}></Checkbox>
-            </td>
-            <td></td>
-            <td>{item.budget_source}</td>
-            <td>关闭项目</td>
-            <td>--</td>
-            <td>{item.status}</td>
-            <td>{item.submitter_name || item.submitter_wallet}</td>
-          </tr>
-        ))}
-      </table>
-      <Page
-        itemsPerPage={pageSize}
-        total={total}
-        current={page - 1}
-        handleToPage={handlePage}
-        handlePageSize={handlePageSize}
-      />
+      {list.length ? (
+        <>
+          <table className="table" cellPadding="0" cellSpacing="0">
+            <tr>
+              <th>&nbsp;</th>
+              <th>时间</th>
+              <th>项目</th>
+              <th>申请内容</th>
+              <th>备注</th>
+              <th>状态</th>
+              <th>申请人</th>
+            </tr>
+            {list.map((item, index) => (
+              <tr key={index}>
+                <td>
+                  <Checkbox
+                    status="Primary"
+                    checked={selectMap[item.application_id]}
+                    onChange={(value) => onChangeCheckbox(value, item.application_id)}
+                  ></Checkbox>
+                </td>
+                <td>{item.created_date}</td>
+                <td>{item.budget_source}</td>
+                <td>关闭项目</td>
+                <td>--</td>
+                <td>{item.status}</td>
+                <td>{item.submitter_name || publicJs.AddressToShow(item.submitter_wallet)}</td>
+              </tr>
+            ))}
+          </table>
+          <Page
+            itemsPerPage={pageSize}
+            total={total}
+            current={page - 1}
+            handleToPage={handlePage}
+            handlePageSize={handlePageSize}
+          />
+        </>
+      ) : (
+        <NoItem />
+      )}
     </Box>
   );
 }

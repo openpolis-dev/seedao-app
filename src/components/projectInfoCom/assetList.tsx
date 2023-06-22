@@ -14,6 +14,7 @@ import NoItem from 'components/noItem';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import Loading from 'components/loading';
 import { formatDate, formatTime } from 'utils/time';
+import publicJs from 'utils/publicJs';
 
 const Box = styled.div``;
 const TitBox = styled.div`
@@ -259,13 +260,13 @@ export default function AssetList({ id }: { id: number }) {
                   </td>
                   <td>{item.created_date}</td>
                   <td>{item.target_user_wallet}</td>
-                  <td>{item.creadit_amount}</td>
+                  <td>{item.credit_amount}</td>
                   <td>{item.token_amount}</td>
-                  <td></td>
-                  <td>--</td>
+                  <td>{item.detailed_type}</td>
+                  <td>{item.comment}</td>
                   <td>{item.status}</td>
-                  <td>{item.submitter_name || item.submitter_wallet}</td>
-                  <td>{item.reviewer_name || item.reviewer_wallet}</td>
+                  <td>{item.submitter_name || publicJs.AddressToShow(item.submitter_wallet)}</td>
+                  <td>{item.reviewer_name || publicJs.AddressToShow(item.reviewer_wallet)}</td>
                   <td>
                     {item.status === ApplicationStatus.Completed && (
                       <Button appearance="outline" size="Tiny" onClick={() => handleShow(0)}>

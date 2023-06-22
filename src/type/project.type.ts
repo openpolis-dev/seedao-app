@@ -28,6 +28,12 @@ export interface IBudgetItem extends IBaseBudgetItem {
   type: BudgetType;
 }
 
+export enum ProjectStatus {
+  Open = 'open',
+  Pending = 'pending_close',
+  Closed = 'closed',
+}
+
 export interface IBaseProject {
   logo: string;
   name: string;
@@ -45,7 +51,7 @@ export interface ReTurnProject {
   name: string;
   proposals: string[];
   sponsors: string[];
-  status: string;
+  status: ProjectStatus;
   updated_at: string;
   budgets: IBudgetItem[];
 }

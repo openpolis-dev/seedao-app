@@ -5,7 +5,7 @@ import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import CloseTips from 'components/projectInfoCom/closeTips';
 import CloseSuccess from 'components/projectInfoCom/closeSuccess';
 import useTranslation from 'hooks/useTranslation';
-import { BudgetObj, budgetObj, IBudgetItem, InfoObj, ReTurnProject } from 'type/project.type';
+import { BudgetObj, IBudgetItem, InfoObj, ProjectStatus, ReTurnProject } from 'type/project.type';
 import { useRouter } from 'next/router';
 import { closeProjectById, UpdateBudget, UpdateInfo } from 'requests/project';
 import requests from 'requests';
@@ -66,9 +66,10 @@ const InputBox = styled(InputGroup)`
 
 interface Iprops {
   detail: ReTurnProject | undefined;
+  updateProjectStatus: (status: ProjectStatus) => void;
 }
 export default function Info(props: Iprops) {
-  const { detail } = props;
+  const { detail, updateProjectStatus } = props;
   const [show, setShow] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const { t } = useTranslation();
@@ -114,6 +115,8 @@ export default function Info(props: Iprops) {
       await requests.application.createCloseProjectApplication(Number(id as string));
       dispatch({ type: AppActionType.SET_LOADING, payload: null });
       setShowSuccess(true);
+      // reset project status
+      updateProjectStatus(ProjectStatus.Pending);
     } catch (e) {
       console.error(e);
       showToastr(JSON.stringify(e), 'Failed', 'Danger');
@@ -212,6 +215,24 @@ export default function Info(props: Iprops) {
     toastrRef.current?.add(message, title, { status: type });
   };
 
+  const showProjectStatusComponent = () => {
+    if (showName) {
+      return <></>;
+    }
+    switch (detail?.status) {
+      case ProjectStatus.Pending:
+        return 'pending close';
+      case ProjectStatus.Closed:
+        return 'closed';
+      default:
+        return (
+          <Button shape="Rectangle" size="Medium" onClick={() => handleShow()}>
+            {t('Project.CloseProject')}
+          </Button>
+        );
+    }
+  };
+
   return (
     <Box>
       {show && <CloseTips closeModal={closeModal} handleClosePro={handleClosePro} />}
@@ -282,12 +303,7 @@ export default function Info(props: Iprops) {
                   </Button>
                 </>
               )}
-
-              {!showName && (
-                <Button shape="Rectangle" size="Medium" onClick={() => handleShow()}>
-                  {t('Project.CloseProject')}
-                </Button>
-              )}
+              {showProjectStatusComponent()}
             </dd>
           </dl>
           <Title>{t('Project.Budget')}</Title>
