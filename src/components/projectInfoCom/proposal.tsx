@@ -57,7 +57,7 @@ export default function ProjectProposal(props: Iprops) {
       resList.forEach((res) => {
         if (res.status === 'fulfilled') {
           const thread = res.value.data.thread;
-          _list.push(thread);
+          thread && _list.push(thread);
         }
       });
       setList(_list);

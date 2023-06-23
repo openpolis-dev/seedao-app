@@ -35,7 +35,9 @@ export const updateSponsors = (projectId: string, data: any) => {
 };
 
 export const addRelatedProposal = (projectId: string, proposalIds: string[]) => {
-  return request.post(`${PATH_PREFIX}${projectId}/add_related_proposal?${proposalIds.map((p) => `proposalIDs=${p}`)}`);
+  return request.post(
+    `${PATH_PREFIX}${projectId}/add_related_proposal?${proposalIds.map((p) => `proposalIDs=${p}`).join('&')}`,
+  );
 };
 
 export interface IUpdateStaffsParams {

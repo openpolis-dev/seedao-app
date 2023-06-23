@@ -82,10 +82,9 @@ export default function PropsalModal(props: Iprops) {
         ids.push(_id);
       }
     });
-    const reqs = ids.map((pid) => requests.project.addRelatedProposal(id as string, pid));
     try {
       setLoading(true);
-      await Promise.allSettled(reqs);
+      await requests.project.addRelatedProposal(id as string, ids);
     } catch (error) {
       console.error('handle related proposals failed: ', error);
     } finally {
