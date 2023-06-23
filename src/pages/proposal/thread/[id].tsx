@@ -11,6 +11,7 @@ import QuillViewer from 'components/proposal/quillViewer';
 import useLoadQuill from 'hooks/useLoadQuill';
 
 import useProposalCategory from 'hooks/useProposalCategory';
+import { formatDate } from 'utils/time';
 
 export default function Proposal() {
   const router = useRouter();
@@ -48,7 +49,7 @@ export default function Proposal() {
           </div>
           <div className="right">
             <div className="name">{data?.user.username}</div>
-            <div className="date">{data?.updated_at}</div>
+            <div className="date">{formatDate(new Date(data?.updated_at || ''))}</div>
           </div>
         </User>
         <MoreButton shape="Rectangle" appearance="outline" size="Tiny" onClick={lookMore}>
@@ -67,10 +68,22 @@ const ProposalContainer = styled(Card)`
   position: relative;
 `;
 
-const ProposalTitle = styled.div``;
+const ProposalTitle = styled.div`
+  font-size: 30px;
+  font-weight: 600;
+  line-height: 50px;
+`;
 const User = styled.div`
   display: flex;
   gap: 10px;
+  margin-block: 16px;
+  .name {
+    font-weight: 500;
+  }
+  .date {
+    font-size: 13px;
+    color: #999;
+  }
 `;
 
 const UserAvatar = styled.img`

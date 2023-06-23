@@ -3,6 +3,7 @@ import { Card, CardBody } from '@paljs/ui/Card';
 import { IBaseProposal } from 'type/proposal.type';
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
+import { formatDate } from 'utils/time';
 
 export default function ProposalCard({ data }: { data: IBaseProposal }) {
   const router = useRouter();
@@ -72,7 +73,7 @@ export default function ProposalCard({ data }: { data: IBaseProposal }) {
           </div>
           <div className="right">
             <div className="name">{data.user.username}</div>
-            <div className="date">{data.updated_at}</div>
+            <div className="date">{formatDate(new Date(data.updated_at))}</div>
           </div>
         </CardHeaderStyled>
         <CardBody>
@@ -88,6 +89,13 @@ const CardHeaderStyled = styled.div`
   display: flex;
   gap: 10px;
   padding: 1rem 1.25rem;
+  .name {
+    font-weight: 500;
+  }
+  .date {
+    font-size: 13px;
+    color: #999;
+  }
 `;
 
 const UserAvatar = styled.img`
