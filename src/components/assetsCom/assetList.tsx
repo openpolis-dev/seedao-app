@@ -186,6 +186,7 @@ export default function AssetList() {
       const _list = res.data.rows.map((item) => ({
         ...item,
         created_date: formatTime(item.created_at),
+        transactions: item.transaction_ids.split(','),
       }));
       setList(_list);
     } catch (error) {
@@ -310,7 +311,7 @@ export default function AssetList() {
                     <td>{item.reviewer_name || publicJs.AddressToShow(item.reviewer_wallet)}</td>
                     <td>
                       {item.status === ApplicationStatus.Completed && (
-                        <Button appearance="outline" size="Tiny" onClick={() => handleShow(item.transaction_ids || [])}>
+                        <Button appearance="outline" size="Tiny" onClick={() => handleShow(item.transactions || [])}>
                           查看
                         </Button>
                       )}
