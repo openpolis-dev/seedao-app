@@ -88,14 +88,12 @@ export const rejectApplicationByID = (application_id: number) => {
 // complete
 export const compeleteApplications = (data: string[]) => {
   return request.post(`${PATH_PREFIX}complete`, {
-    message: data,
+    message: data.join(','),
   });
 };
 // process
 export const processApplications = (data: number[]) => {
-  return request.post(`${PATH_PREFIX}process`, {
-    message: data,
-  });
+  return request.post(`${PATH_PREFIX}process`, data);
 };
 
 // download
@@ -112,8 +110,8 @@ interface IApplicantRequest {
 }
 
 interface IApplicant {
-  applicant: string;
-  name: string;
+  Applicant: string;
+  Name: string;
 }
 
 // applicants

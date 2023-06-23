@@ -147,8 +147,8 @@ export default function AssetList() {
     try {
       const res = await requests.application.getApplicants();
       const options = res.data.map((item) => ({
-        label: item.name || utils.AddressToShow(item.applicant),
-        value: item.applicant,
+        label: item.Name || utils.AddressToShow(item.Applicant),
+        value: item.Applicant,
       }));
       setApplicants(options);
     } catch (error) {

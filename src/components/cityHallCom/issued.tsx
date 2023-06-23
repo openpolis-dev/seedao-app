@@ -139,7 +139,7 @@ export default function Issued() {
           sort_field: 'created_at',
           sort_order: 'desc',
         },
-        {},
+        queryData,
         undefined,
       );
       setTotal(res.data.total);
@@ -166,6 +166,8 @@ export default function Issued() {
     try {
       await requests.application.compeleteApplications(data);
       closeShow();
+      getRecords();
+      // TODO alert
     } catch (error) {
       console.error('compeleteApplications failed', error);
     } finally {
@@ -174,18 +176,24 @@ export default function Issued() {
   };
 
   const handleProcess = async () => {
+    const ids = Object.keys(selectMap);
+    const select_ids: number[] = [];
+    for (const id of ids) {
+      const _id = Number(id);
+      if (selectMap[_id]) {
+        select_ids.push(_id);
+      }
+    }
+    if (!select_ids.length) {
+      return;
+    }
     setLoading(true);
     try {
-      const ids = Object.keys(selectMap);
-      const select_ids: number[] = [];
-      for (const id of ids) {
-        const _id = Number(id);
-        if (selectMap[_id]) {
-          select_ids.push(_id);
-        }
-      }
       await requests.application.processApplications(select_ids);
       getRecords();
+      setSelectMap({});
+      setIsProcessing(true);
+      // TODO alert
     } catch (error) {
       console.error('processApplications failed', error);
     } finally {
@@ -196,7 +204,7 @@ export default function Issued() {
   const showProcessButton = () => {
     if (isProcessing) {
       return <Button onClick={() => handleShow()}>发放完成</Button>;
-    } else if (selectStatus === ApplicationStatus.Processing) {
+    } else if (selectStatus === ApplicationStatus.Approved) {
       return <Button onClick={handleProcess}>发放</Button>;
     }
   };

@@ -146,8 +146,8 @@ export default function Audit() {
     try {
       const res = await requests.application.getApplicants();
       const options = res.data.map((item) => ({
-        label: item.name || utils.AddressToShow(item.applicant),
-        value: item.applicant,
+        label: item.Name || utils.AddressToShow(item.Applicant),
+        value: item.Applicant,
       }));
       setApplicants(options);
     } catch (error) {
@@ -216,6 +216,7 @@ export default function Audit() {
       await requests.application.approveApplications(select_ids);
       getRecords();
       // TODO alert success
+      setSelectMap({});
     } catch (error) {
       console.error('handle approve failed', error);
     } finally {
@@ -236,6 +237,7 @@ export default function Audit() {
       }
       await requests.application.rejectApplications(select_ids);
       getRecords();
+      setSelectMap({});
       // TODO alert success
     } catch (error) {
       console.error('handle reject failed', error);

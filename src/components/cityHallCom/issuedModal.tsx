@@ -54,7 +54,7 @@ interface Iprops {
 export default function IssuedModal(props: Iprops) {
   const { closeShow, handleConfirm } = props;
 
-  const [memberList, setMemberList] = useState<string[]>([]);
+  const [memberList, setMemberList] = useState<string[]>(['']);
 
   const handleInput = (e: ChangeEvent, index: number) => {
     const { value } = e.target as HTMLInputElement;
