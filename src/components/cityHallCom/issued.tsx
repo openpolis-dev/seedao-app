@@ -297,9 +297,9 @@ export default function Issued() {
                   <td>
                     <div>
                       <span>{publicJs.AddressToShow(item.target_user_wallet)}</span>
-                      <CopyBox text={item.target_user_wallet}>
+                      {/* <CopyBox text={item.target_user_wallet}>
                         <>复制</>
-                      </CopyBox>
+                      </CopyBox> */}
                     </div>
                   </td>
                   <td>{item.credit_amount}</td>

@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
+import styled from 'styled-components';
 
 interface ICopyProps {
   children: React.ReactElement;
@@ -17,10 +18,14 @@ const CopyBox: React.FC<ICopyProps> = ({ children, text, onCopy }) => {
   return (
     <>
       <CopyToClipboard text={text} onCopy={handleCopy}>
-        <div ref={target}>{children}</div>
+        <CopyContent ref={target}>{children}</CopyContent>
       </CopyToClipboard>
     </>
   );
 };
 
 export default CopyBox;
+
+const CopyContent = styled.div`
+  cursor: pointer;
+`;

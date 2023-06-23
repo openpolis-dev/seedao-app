@@ -16,6 +16,7 @@ import Loading from 'components/loading';
 import { formatDate, formatTime } from 'utils/time';
 import publicJs from 'utils/publicJs';
 import CopyBox from 'components/copy';
+import { EvaIcon } from '@paljs/ui/Icon';
 
 const Box = styled.div``;
 const TitBox = styled.div`
@@ -263,9 +264,9 @@ export default function AssetList({ id }: { id: number }) {
                   <td>
                     <div>
                       <span>{publicJs.AddressToShow(item.target_user_wallet)}</span>
-                      <CopyBox text={item.target_user_wallet}>
-                        <>复制</>
-                      </CopyBox>
+                      {/* <CopyBox text={item.target_user_wallet}>
+                        <EvaIcon name="clipboard-outline" />
+                      </CopyBox> */}
                     </div>
                   </td>
                   <td>{item.credit_amount}</td>

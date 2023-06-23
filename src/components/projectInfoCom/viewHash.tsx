@@ -1,7 +1,9 @@
 import styled from 'styled-components';
-import { Card, CardHeader, CardBody, CardFooter } from '@paljs/ui/Card';
+import { Card, CardHeader, CardBody } from '@paljs/ui/Card';
 import { EvaIcon } from '@paljs/ui/Icon';
-import React, { useState } from 'react';
+import React from 'react';
+import publicJs from 'utils/publicJs';
+import CopyBox from 'components/copy';
 
 const Mask = styled.div`
   background: rgba(0, 0, 0, 0.3);
@@ -61,8 +63,10 @@ export default function ViewHash(props: Iprops) {
           <UlBox id="scrollTriggerId">
             {txs.map((item, index) => (
               <li key={index}>
-                <span>{item}</span>
-                <EvaIcon name="clipboard-outline" />
+                <span>{publicJs.AddressToShow(item, 8)}</span>
+                <CopyBox text={item}>
+                  <EvaIcon name="clipboard-outline" />
+                </CopyBox>
               </li>
             ))}
           </UlBox>

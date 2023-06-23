@@ -14,6 +14,7 @@ import { IQueryApplicationsParams } from 'requests/applications';
 import NoItem from 'components/noItem';
 import publicJs from 'utils/publicJs';
 import CopyBox from 'components/copy';
+import { EvaIcon } from '@paljs/ui/Icon';
 
 const Box = styled.div``;
 const FirstLine = styled.div`
@@ -343,9 +344,9 @@ export default function Audit() {
                   <td>
                     <div>
                       <span>{publicJs.AddressToShow(item.target_user_wallet)}</span>
-                      <CopyBox text={item.target_user_wallet}>
-                        <>复制</>
-                      </CopyBox>
+                      {/* <CopyBox text={item.target_user_wallet}>
+                        <EvaIcon name="clipboard-outline" />
+                      </CopyBox> */}
                     </div>
                   </td>
                   <td>{item.credit_amount}</td>
