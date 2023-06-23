@@ -24,7 +24,6 @@ export default function useProposalCategory(proposal_category_id?: number) {
       if (subCategory) {
         return [
           HomeNav,
-          { name: category.name, category_id: category.category_id, to: '/proposal' },
           {
             name: subCategory.name,
             category_id: subCategory.category_id,
