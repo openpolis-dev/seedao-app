@@ -2,10 +2,9 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Layout from 'Layouts';
 import requests from 'requests';
-import { ICategory, IBaseProposal } from 'type/proposal.type';
+import { IBaseProposal } from 'type/proposal.type';
 import { Tabs, Tab } from '@paljs/ui/Tabs';
 import { useAuthContext, AppActionType } from 'providers/authProvider';
-import { Accordion, AccordionItem } from '@paljs/ui/Accordion';
 import styled from 'styled-components';
 import { Card } from '@paljs/ui/Card';
 import ProposalCard from 'components/proposal/proposalCard';
@@ -23,6 +22,7 @@ export default function Index() {
   const [activeTab, setActiveTab] = useState(0);
 
   const getCategories = async () => {
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
       const resp = await requests.proposal.getCategories();
       dispatch({
@@ -31,15 +31,20 @@ export default function Index() {
       });
     } catch (error) {
       console.error('getCategories failed', error);
+    } finally {
+      dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }
   };
 
   const getAllProposals = async () => {
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
       const resp = await requests.proposal.getAllProposals({ page, per_page: pageSize, sort: orderType });
       setProposals(resp.data.threads);
     } catch (error) {
       console.error('getAllProposals failed', error);
+    } finally {
+      dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }
   };
 

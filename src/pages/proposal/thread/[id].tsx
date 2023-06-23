@@ -12,10 +12,12 @@ import useLoadQuill from 'hooks/useLoadQuill';
 
 import useProposalCategory from 'hooks/useProposalCategory';
 import { formatDate } from 'utils/time';
+import { AppActionType, useAuthContext } from 'providers/authProvider';
 
 export default function Proposal() {
   const router = useRouter();
   const enableQuill = useLoadQuill();
+  const { dispatch } = useAuthContext();
 
   const [data, setData] = useState<IBaseProposal>();
 
@@ -26,8 +28,15 @@ export default function Proposal() {
     if (!id) {
       return;
     }
-    const res = await requests.proposal.getProposalDetail(id);
-    setData(res.data.thread);
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    try {
+      const res = await requests.proposal.getProposalDetail(id);
+      setData(res.data.thread);
+    } catch (error) {
+      console.error('get proposal detail error:', error);
+    } finally {
+      dispatch({ type: AppActionType.SET_LOADING, payload: false });
+    }
   };
 
   useEffect(() => {
