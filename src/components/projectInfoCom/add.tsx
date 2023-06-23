@@ -5,15 +5,16 @@ import { EvaIcon } from '@paljs/ui/Icon';
 import React, { ChangeEvent, useState } from 'react';
 import { Button } from '@paljs/ui/Button';
 import useTranslation from 'hooks/useTranslation';
-import { updateMembers, updateSponsors } from 'requests/project';
+import { updateStaffs, IUpdateStaffsParams } from 'requests/project';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
+import { ethers } from 'ethers';
 
 const Mask = styled.div`
   background: rgba(0, 0, 0, 0.3);
   width: 100vw;
   height: 100vh;
   position: fixed;
-  z-index: 999999999999999999;
+  z-index: 99;
   left: 0;
   top: 0;
   display: flex;
@@ -56,14 +57,14 @@ const InnerBox = styled.div`
 `;
 
 interface Iprops {
-  closeAdd: () => void;
+  closeAdd: (refresh?: boolean) => void;
   showToastr: (a: string, b: string, c: string) => void;
-  oldMemberList: string[];
-  oldAdminList: string[];
   id: string;
+  canUpdateMember: boolean;
+  canUpdateSponsor: boolean;
 }
 export default function Add(props: Iprops) {
-  const { closeAdd, oldMemberList, oldAdminList, id, showToastr } = props;
+  const { closeAdd, id, showToastr, canUpdateMember, canUpdateSponsor } = props;
   const { t } = useTranslation();
   const { dispatch } = useAuthContext();
 
@@ -106,38 +107,32 @@ export default function Add(props: Iprops) {
   };
 
   const submitObject = async () => {
-    const newAdd = oldAdminList.concat(adminList);
-    const newM = oldMemberList.concat(memberList);
-    const uniqueAdd = [...new Set(newAdd)];
-    const uniqueM = [...new Set(newM)];
-
-    // showToastr('Add Successful', 'Success', 'Primary');
-
-    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    const _adminList = adminList.filter((item) => item && ethers.isAddress(item));
+    const _memberList = memberList.filter((item) => item && ethers.isAddress(item));
     try {
-      await updateMembers(id as string, { members: uniqueM });
-      closeAdd();
+      const params: IUpdateStaffsParams = {
+        action: 'add',
+      };
+      if (!!_adminList.length) {
+        params['sponsors'] = _adminList;
+      }
+      if (!!_memberList.length) {
+        params['members'] = _memberList;
+      }
+      if (!_adminList && !_memberList) {
+        showToastr('fill the correct address', 'Failed', 'Danger');
+        return;
+      }
+      dispatch({ type: AppActionType.SET_LOADING, payload: true });
+      await updateStaffs(id as string, params);
       showToastr(t('Project.addMemberSuccess'), 'Success', 'Primary');
-      window.location.reload();
       dispatch({ type: AppActionType.SET_LOADING, payload: null });
+      closeAdd(true);
     } catch (e) {
       console.error(e);
-      closeAdd();
       showToastr(JSON.stringify(e), 'Failed', 'Danger');
-      dispatch({ type: AppActionType.SET_LOADING, payload: null });
-    }
-
-    dispatch({ type: AppActionType.SET_LOADING, payload: true });
-    try {
-      await updateSponsors(id as string, { sponsors: uniqueAdd });
       closeAdd();
-      window.location.reload();
-      showToastr(t('Project.addAdminSuccess'), 'Success', 'Primary');
-      dispatch({ type: AppActionType.SET_LOADING, payload: null });
-    } catch (e) {
-      console.error(e);
-      closeAdd();
-      showToastr(JSON.stringify(e), 'Failed', 'Danger');
+    } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: null });
     }
   };
@@ -148,77 +143,73 @@ export default function Add(props: Iprops) {
         <CardHeader>{t('Project.AddMember')}</CardHeader>
         <CardBody>
           <InnerBox>
-            <ItemBox>
-              <div className="title">{t('Project.Dominator')}</div>
-              <ul>
-                {adminList.map((item, index) => (
-                  <li key={`admin_${index}`}>
-                    <InputGroup fullWidth>
-                      <input
-                        type="text"
-                        placeholder={t('Project.Dominator')}
-                        value={item}
-                        onChange={(e) => handleInput(e, index, 'admin')}
-                      />
-                    </InputGroup>
-                    {index === adminList.length - 1 && (
-                      <span onClick={() => handleAddAdmin()}>
-                        <EvaIcon name="plus-outline" status="Primary" />
-                      </span>
-                    )}
+            {canUpdateSponsor && (
+              <ItemBox>
+                <div className="title">{t('Project.Dominator')}</div>
+                <ul>
+                  {adminList.map((item, index) => (
+                    <li key={`admin_${index}`}>
+                      <InputGroup fullWidth>
+                        <input
+                          type="text"
+                          placeholder={t('Project.Dominator')}
+                          value={item}
+                          onChange={(e) => handleInput(e, index, 'admin')}
+                        />
+                      </InputGroup>
+                      {index === adminList.length - 1 && (
+                        <span onClick={() => handleAddAdmin()}>
+                          <EvaIcon name="plus-outline" status="Primary" />
+                        </span>
+                      )}
 
-                    {!(!index && index === adminList.length - 1) && (
-                      <span onClick={() => removeAdmin(index)}>
-                        <EvaIcon name="minus-outline" status="Primary" />
-                      </span>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            </ItemBox>
-            <ItemBox>
-              <div className="title">{t('Project.Others')}</div>
-              <ul>
-                {memberList.map((item, index) => (
-                  <li key={`member_${index}`}>
-                    <InputGroup fullWidth>
-                      <input
-                        type="text"
-                        placeholder={t('Project.Members')}
-                        value={item}
-                        onChange={(e) => handleInput(e, index, 'member')}
-                      />
-                    </InputGroup>
-                    {index === memberList.length - 1 && (
-                      <span onClick={() => handleAddMember()}>
-                        <EvaIcon name="plus-outline" status="Primary" />
-                      </span>
-                    )}
+                      {!(!index && index === adminList.length - 1) && (
+                        <span onClick={() => removeAdmin(index)}>
+                          <EvaIcon name="minus-outline" status="Primary" />
+                        </span>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </ItemBox>
+            )}
+            {canUpdateMember && (
+              <ItemBox>
+                <div className="title">{t('Project.Others')}</div>
+                <ul>
+                  {memberList.map((item, index) => (
+                    <li key={`member_${index}`}>
+                      <InputGroup fullWidth>
+                        <input
+                          type="text"
+                          placeholder={t('Project.Members')}
+                          value={item}
+                          onChange={(e) => handleInput(e, index, 'member')}
+                        />
+                      </InputGroup>
+                      {index === memberList.length - 1 && (
+                        <span onClick={() => handleAddMember()}>
+                          <EvaIcon name="plus-outline" status="Primary" />
+                        </span>
+                      )}
 
-                    {!(!index && index === memberList.length - 1) && (
-                      <span onClick={() => removeMember(index)}>
-                        <EvaIcon name="minus-outline" status="Primary" />
-                      </span>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            </ItemBox>
+                      {!(!index && index === memberList.length - 1) && (
+                        <span onClick={() => removeMember(index)}>
+                          <EvaIcon name="minus-outline" status="Primary" />
+                        </span>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </ItemBox>
+            )}
           </InnerBox>
         </CardBody>
         <CardFooter>
           <Button appearance="outline" className="btnBtm" onClick={() => closeAdd()}>
             {t('general.cancel')}
           </Button>
-          <Button
-            onClick={() => submitObject()}
-            disabled={
-              adminList.length === 1 &&
-              adminList[0].length === 0 &&
-              memberList.length === 1 &&
-              memberList[0].length === 0
-            }
-          >
+          <Button onClick={() => submitObject()} disabled={!adminList.length && !memberList.length}>
             {t('general.confirm')}
           </Button>
         </CardFooter>

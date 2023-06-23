@@ -8,12 +8,14 @@ import useTranslation from 'hooks/useTranslation';
 import { ReTurnProject } from 'type/project.type';
 import { getUsers } from 'requests/user';
 import { IUser } from 'type/user.type';
-import Link from 'next/link';
 import PublicJs from 'utils/publicJs';
 import { useRouter } from 'next/router';
 import { Toastr, ToastrRef } from '@paljs/ui/Toastr';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import NoItem from 'components/noItem';
+import { PermissionObject, PermissionAction } from 'utils/constant';
+import usePermission from 'hooks/usePermission';
+import CopyBox from 'components/copy';
 
 const Box = styled.div`
   padding: 20px;
@@ -49,10 +51,11 @@ const UlBox = styled.ul`
       align-items: center;
       position: relative;
     }
-    img {
+    img.avatar {
       width: 50px;
       height: 50px;
-      border-radius: 50px;
+      border-radius: 50%;
+      border: 1px solid #edf1f7;
       margin-right: 20px;
     }
     .topRht {
@@ -88,8 +91,8 @@ const UlBox = styled.ul`
 const LinkBox = styled.div`
   margin-top: 20px;
   img {
-    width: 35px !important;
-    height: 35px !important;
+    width: 20px;
+    height: 20px;
     margin-right: 20px;
   }
 `;
@@ -106,9 +109,16 @@ const TopBox = styled.div`
 
 interface Iprops {
   detail: ReTurnProject | undefined;
+  updateProject: () => void;
 }
+
+type UserMap = { [w: string]: IUser };
+
 export default function Members(props: Iprops) {
-  const { detail } = props;
+  const { detail, updateProject } = props;
+  const canUpdateMember = usePermission(PermissionAction.UpdateMember, PermissionObject.Project);
+  const canUpdateSponsor = usePermission(PermissionAction.UpdateSponsor, PermissionObject.Project);
+
   const router = useRouter();
   const { id } = router.query;
   const toastrRef = useRef<ToastrRef>(null);
@@ -120,27 +130,37 @@ export default function Members(props: Iprops) {
   const [showDel, setShowDel] = useState(false);
   const [selectAdminArr, setSelectAdminArr] = useState<IUser[]>([]);
   const [selectMemArr, setSelectMemArr] = useState<IUser[]>([]);
-  const [adminList, setAdminList] = useState<IUser[]>([]);
-  const [memberList, setMemberList] = useState<IUser[]>([]);
   const [memberArr, setMemberArr] = useState<string[]>([]);
   const [adminArr, setAdminArr] = useState<string[]>([]);
+
+  const [userMap, setUserMap] = useState<UserMap>({});
 
   useEffect(() => {
     if (!id || !detail) return;
     getDetail();
   }, [id, detail]);
 
+  const getUsersInfo = async (wallets: string[]) => {
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    try {
+      const res = await getUsers(wallets);
+      const userData: UserMap = {};
+      res.data.forEach((r) => {
+        userData[r.wallet] = r;
+      });
+      setUserMap(userData);
+    } catch (error) {
+      console.error('getUsersInfo error:', error);
+    } finally {
+      dispatch({ type: AppActionType.SET_LOADING, payload: null });
+    }
+  };
+
   const getDetail = async () => {
     const { members, sponsors } = detail!;
-    setMemberArr(members);
-    setAdminArr(sponsors);
-    dispatch({ type: AppActionType.SET_LOADING, payload: true });
-    const aL = await getUsers(sponsors);
-    setAdminList(aL.data);
-
-    const mL = await getUsers(members);
-    setMemberList(mL.data);
-    dispatch({ type: AppActionType.SET_LOADING, payload: null });
+    setMemberArr(members.map((m) => m.toLowerCase()));
+    setAdminArr(sponsors.map((m) => m.toLowerCase()));
+    getUsersInfo(Array.from(new Set([...members, ...sponsors])));
   };
 
   const handleDel = () => {
@@ -150,22 +170,23 @@ export default function Members(props: Iprops) {
     setEdit(false);
     setShowDel(true);
   };
-  const closeAdd = () => {
+  const closeAdd = (refresh?: boolean) => {
     setShow(false);
+    refresh && updateProject();
   };
   const handleAdd = () => {
     setShow(true);
   };
-  const closeRemove = () => {
+  const closeRemove = (refresh?: boolean) => {
     setShowDel(false);
     setEdit(false);
     setSelectAdminArr([]);
     setSelectMemArr([]);
+    refresh && updateProject();
   };
 
   const handleAdminSelect = (selItem: IUser) => {
     const selectHas = selectAdminArr.findIndex((item) => item?.wallet === selItem.wallet);
-
     const arr = [...selectAdminArr];
     if (selectHas > 0) {
       arr.splice(selectHas, 1);
@@ -197,15 +218,31 @@ export default function Members(props: Iprops) {
     toastrRef.current?.add(message, title, { status: type });
   };
 
+  const getUser = (wallet: string): IUser => {
+    const user = userMap[wallet];
+    if (!user) {
+      return {
+        id: '',
+        name: '',
+        avatar: '',
+        discord_profile: '',
+        twitter_profile: '',
+        google_profile: '',
+        assets: [],
+      };
+    }
+    return user;
+  };
+
   return (
     <Box>
       {show && (
         <Add
           closeAdd={closeAdd}
-          oldMemberList={memberArr}
-          oldAdminList={adminArr}
           id={id as string}
           showToastr={showToastr}
+          canUpdateMember={canUpdateMember}
+          canUpdateSponsor={canUpdateSponsor}
         />
       )}
       {showDel && (
@@ -236,96 +273,112 @@ export default function Members(props: Iprops) {
         preventDuplicates={false}
       />
       <TopBox>
-        <Button onClick={() => handleAdd()} disabled={edit}>
-          {t('Project.AddMember')}
-        </Button>
-        {!edit && (
-          <Button appearance="outline" onClick={() => handleDel()}>
-            {t('Project.RemoveMember')}
-          </Button>
-        )}
-        {edit && (
+        {(canUpdateMember || canUpdateSponsor) && (
           <>
-            <Button onClick={() => closeDel()}>{t('general.confirm')}</Button>
-            <Button appearance="outline" onClick={() => closeRemove()}>
-              {t('general.cancel')}
+            <Button onClick={() => handleAdd()} disabled={edit}>
+              {t('Project.AddMember')}
             </Button>
+            {!edit && (
+              <Button appearance="outline" onClick={() => handleDel()}>
+                {t('Project.RemoveMember')}
+              </Button>
+            )}
+            {edit && (
+              <>
+                <Button onClick={() => closeDel()}>{t('general.confirm')}</Button>
+                <Button appearance="outline" onClick={() => closeRemove()}>
+                  {t('general.cancel')}
+                </Button>
+              </>
+            )}
           </>
         )}
       </TopBox>
       <ItemBox>
         <TitleBox>{t('Project.Dominator')}</TitleBox>
         <UlBox>
-          {adminList.map((item, index) => (
+          {adminArr.map((item, index) => (
             <li key={index}>
               <div className="fst">
-                <img src={item.avatar} alt="" />
+                <img className="avatar" src={getUser(item).avatar} alt="" />
                 <div>
-                  <div>{t('Project.Nickname')}</div>
-                  <div>
-                    <span>{PublicJs.AddressToShow(item.wallet!)}</span>
-                    <EvaIcon name="clipboard-outline" />
+                  <div>{getUser(item).name}</div>
+                  <div style={{ display: 'flex', gap: '5px' }}>
+                    <span>{PublicJs.AddressToShow(getUser(item).wallet)}</span>
+                    <CopyBox text={getUser(item).wallet}>
+                      <EvaIcon name="clipboard-outline" options={{ width: '18px', height: '18px' }} />
+                    </CopyBox>
                   </div>
                 </div>
-                {edit && (
+                {edit && canUpdateSponsor && (
                   <div
-                    className={formatAdminActive(item.wallet!) ? 'topRht active' : 'topRht'}
-                    onClick={() => handleAdminSelect(item)}
+                    className={formatAdminActive(getUser(item).wallet) ? 'topRht active' : 'topRht'}
+                    onClick={() => handleAdminSelect(getUser(item))}
                   >
                     <div className="inner" />
                   </div>
                 )}
               </div>
               <LinkBox>
-                <Link href={item.twitter_profile}>
-                  <img src="/images/twitterNor.svg" alt="" />
-                </Link>
-                <Link href={item.discord_profile}>
-                  <img src="/images/discordNor.svg" alt="" />
-                </Link>
+                {getUser(item).twitter_profile && (
+                  <a href={getUser(item).twitter_profile} target="_blank" rel="noreferrer">
+                    <img src="/images/twitterNor.svg" alt="" className="icon" />
+                  </a>
+                )}
+                {getUser(item).discord_profile && (
+                  <a href={getUser(item).discord_profile} target="_blank" rel="noreferrer">
+                    <img src="/images/discordNor.svg" alt="" className="icon" />
+                  </a>
+                )}
               </LinkBox>
             </li>
           ))}
         </UlBox>
       </ItemBox>
-      {!adminList.length && <NoItem />}
+      {!adminArr.length && <NoItem />}
 
       <ItemBox>
         <TitleBox>{t('Project.Others')}</TitleBox>
         <UlBox>
-          {memberList.map((item, index) => (
+          {memberArr.map((item, index) => (
             <li key={index}>
               <div className="fst">
-                <img src="" alt="" />
+                <img className="avatar" src={getUser(item).avatar} alt="" />
                 <div>
-                  <div>{t('Project.Nickname')}</div>
-                  <div>
-                    <span>{PublicJs.AddressToShow(item.wallet!)}</span>
-                    <EvaIcon name="clipboard-outline" />
+                  <div>{getUser(item).name}</div>
+                  <div style={{ display: 'flex', gap: '5px' }}>
+                    <span>{PublicJs.AddressToShow(getUser(item).wallet)}</span>
+                    <CopyBox text={getUser(item).wallet}>
+                      <EvaIcon name="clipboard-outline" options={{ width: '18px', height: '18px' }} />
+                    </CopyBox>
                   </div>
                 </div>
-                {edit && (
+                {edit && canUpdateMember && (
                   <div
-                    className={formatMemActive(item.wallet!) ? 'topRht active' : 'topRht'}
-                    onClick={() => handleMemSelect(item)}
+                    className={formatMemActive(getUser(item).wallet) ? 'topRht active' : 'topRht'}
+                    onClick={() => handleMemSelect(getUser(item))}
                   >
                     <div className="inner" />
                   </div>
                 )}
               </div>
               <LinkBox>
-                <Link href={item.twitter_profile}>
-                  <img src="/images/twitterNor.svg" alt="" />
-                </Link>
-                <Link href={item.discord_profile}>
-                  <img src="/images/discordNor.svg" alt="" />
-                </Link>
+                {getUser(item).twitter_profile && (
+                  <a href={getUser(item).twitter_profile} target="_blank" rel="noreferrer">
+                    <img src="/images/twitterNor.svg" alt="" className="icon" />
+                  </a>
+                )}
+                {getUser(item).discord_profile && (
+                  <a href={getUser(item).discord_profile} target="_blank" rel="noreferrer">
+                    <img src="/images/discordNor.svg" alt="" className="icon" />
+                  </a>
+                )}
               </LinkBox>
             </li>
           ))}
         </UlBox>
       </ItemBox>
-      {!memberList.length && <NoItem />}
+      {!memberArr.length && <NoItem />}
     </Box>
   );
 }

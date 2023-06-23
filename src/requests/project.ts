@@ -34,6 +34,16 @@ export const updateSponsors = (projectId: string, data: any) => {
   return request.post(`${PATH_PREFIX}${projectId}/update_sponsors`, data);
 };
 
-export const addRelatedProposal = (projectId: string, proposalId: string) => {
-  return request.post(`${PATH_PREFIX}${projectId}/add_related_proposal/${proposalId}`);
+export const addRelatedProposal = (projectId: string, proposalIds: string[]) => {
+  return request.post(`${PATH_PREFIX}${projectId}/add_related_proposal?${proposalIds.map((p) => `proposalIDs=${p}`)}`);
+};
+
+export interface IUpdateStaffsParams {
+  action: 'add' | 'remove';
+  sponsors?: string[];
+  members?: string[];
+}
+
+export const updateStaffs = (projectId: string, data: IUpdateStaffsParams) => {
+  return request.post(`${PATH_PREFIX}${projectId}/update_staffs`, data);
 };

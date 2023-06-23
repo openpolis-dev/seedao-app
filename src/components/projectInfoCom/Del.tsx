@@ -1,31 +1,33 @@
 import styled from 'styled-components';
 import { Card, CardHeader, CardBody, CardFooter } from '@paljs/ui/Card';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Button } from '@paljs/ui/Button';
 import useTranslation from 'hooks/useTranslation';
 import { IUser } from 'type/user.type';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
-import { updateMembers, updateSponsors } from 'requests/project';
+import { updateStaffs, IUpdateStaffsParams } from 'requests/project';
 
 const Mask = styled.div`
-    background: rgba(0,0,0,0.3);
+  background: rgba(0, 0, 0, 0.3);
   width: 100vw;
   height: 100vh;
   position: fixed;
-  z-index: 999999999999999999;
+  z-index: 99;
   left: 0;
   top: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  
-  .btnBtm{
-    margin-right: 20px;
 
+  .btnBtm {
+    margin-right: 20px;
   }
-  dl,dt,dd{
+  dl,
+  dt,
+  dd {
     padding: 0;
     margin: 0;
+  }
 `;
 
 const ItemBox = styled.div`
@@ -37,13 +39,14 @@ const ItemBox = styled.div`
   img {
     width: 40px;
     height: 40px;
-    border-radius: 40px;
+    border-radius: 50%;
+    border: 1px solid #edf1f7;
     margin-right: 20px;
   }
 `;
 
 interface Iprops {
-  closeRemove: () => void;
+  closeRemove: (refresh?: boolean) => void;
   selectAdminArr: IUser[];
   selectMemArr: IUser[];
   showToastr: (a: string, b: string, c: string) => void;
@@ -55,40 +58,25 @@ export default function Del(props: Iprops) {
   const { dispatch } = useAuthContext();
 
   const submitUpdate = async () => {
-    const uniqueM: string[] = [];
-    const uniqueAdd: string[] = [];
-    selectMemArr.map((item) => {
-      uniqueM.push(item.wallet!);
-    });
-    selectAdminArr.map((item) => {
-      uniqueAdd.push(item.wallet!);
-    });
-
-    dispatch({ type: AppActionType.SET_LOADING, payload: true });
-    try {
-      await updateMembers(id as string, { members: uniqueM });
-      closeRemove();
-      showToastr(t('Project.RemoveMemSuccess'), 'Success', 'Primary');
-      window.location.reload();
-      dispatch({ type: AppActionType.SET_LOADING, payload: null });
-    } catch (e) {
-      console.error(e);
-      closeRemove();
-      showToastr(JSON.stringify(e), 'Failed', 'Danger');
-      dispatch({ type: AppActionType.SET_LOADING, payload: null });
+    const params: IUpdateStaffsParams = {
+      action: 'remove',
+    };
+    if (!!selectAdminArr.length) {
+      params['sponsors'] = selectAdminArr.map((item) => item.wallet);
     }
-
+    if (!!selectMemArr.length) {
+      params['members'] = selectMemArr.map((item) => item.wallet);
+    }
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
-      await updateSponsors(id as string, { sponsors: uniqueAdd });
-      closeRemove();
-      window.location.reload();
-      showToastr(t('Project.RemoveSPSuccess'), 'Success', 'Primary');
-      dispatch({ type: AppActionType.SET_LOADING, payload: null });
+      await updateStaffs(id as string, params);
+      closeRemove(true);
+      showToastr(t('Project.RemoveMemSuccess'), 'Success', 'Primary');
     } catch (e) {
       console.error(e);
       closeRemove();
       showToastr(JSON.stringify(e), 'Failed', 'Danger');
+    } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: null });
     }
   };
@@ -100,7 +88,7 @@ export default function Del(props: Iprops) {
         <CardBody>
           <div className="tips">{t('Project.ConfirmationPopup')}</div>
           {selectAdminArr.map((item, index) => (
-            <ItemBox key={item.wallet}>
+            <ItemBox key={index}>
               <div>
                 <img src={item.avatar} alt="" />
               </div>
@@ -111,7 +99,7 @@ export default function Del(props: Iprops) {
             </ItemBox>
           ))}
           {selectMemArr.map((item, index) => (
-            <ItemBox key={item.wallet}>
+            <ItemBox key={index}>
               <div>
                 <img src={item.avatar} alt="" />
               </div>

@@ -121,7 +121,7 @@ export default function Index() {
                 </Tabs>
                 <BtmBox>
                   {current === 0 && <Info detail={detail} updateProjectStatus={updateProjectStatus} />}
-                  {current === 1 && <Members detail={detail} />}
+                  {current === 1 && <Members detail={detail} updateProject={getDetail} />}
                   {current === 2 && <Assets id={projectId} detail={detail} />}
                   {current === 3 && <ProjectProposal detail={detail} refreshProject={getDetail} />}
                   {current === 4 && <Reg id={projectId} />}
