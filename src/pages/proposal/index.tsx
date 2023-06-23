@@ -12,8 +12,10 @@ import ProposalCard from 'components/proposal/proposalCard';
 import ProposalSubNav from 'components/proposal/proposalSubNav';
 
 export default function Index() {
-  const { dispatch } = useAuthContext();
-  const [categories, setCategories] = useState<ICategory[]>([]);
+  const {
+    state: { proposal_categories },
+    dispatch,
+  } = useAuthContext();
   const [page] = useState(1);
   const [pageSize] = useState(10);
   const [proposals, setProposals] = useState<IBaseProposal[]>([]);
@@ -23,8 +25,10 @@ export default function Index() {
   const getCategories = async () => {
     try {
       const resp = await requests.proposal.getCategories();
-      setCategories(resp.data.group.categories);
-      dispatch({ type: AppActionType.SET_PROPOSAL_CATEGORIES, payload: resp.data.group.categories });
+      dispatch({
+        type: AppActionType.SET_PROPOSAL_CATEGORIES,
+        payload: resp.data.group.categories.filter((category) => category.category_id === 19),
+      });
     } catch (error) {
       console.error('getCategories failed', error);
     }
@@ -65,28 +69,21 @@ export default function Index() {
         {activeTab === 1 && <ProposalSubNav onSelect={handleChangeOrder} />}
         {activeTab === 0 ? (
           <div>
-            {categories.map((category) => {
-              return category.children?.length ? (
-                <CategoryCard key={category.id}>
-                  <AccordionItem uniqueKey={1} title={category.name} key={category.id}>
-                    <SubCategoryCard>
-                      {category.children.map((subCategory) => (
-                        <SubCategoryItem key={subCategory.category_id}>
-                          <SubCategoryIcon src="/images/proposal/message.png" alt="" />
-                          <Link href={`/proposal/category/${subCategory.category_id}`}>{subCategory.name}</Link>
-                        </SubCategoryItem>
-                      ))}
-                    </SubCategoryCard>
-                  </AccordionItem>
-                </CategoryCard>
-              ) : (
-                <CategoryCard key={category.id}>
-                  <Link href={`/proposal/category/${category.category_id}`}>
-                    <SingleHeader>{category.name}</SingleHeader>
-                  </Link>
-                </CategoryCard>
-              );
-            })}
+            <SubCategoryCard>
+              {proposal_categories[0].children.map((subCategory) => (
+                <Link href={`/proposal/category/${subCategory.category_id}`} key={subCategory.category_id}>
+                  <SubCategoryItem>
+                    <SubCategoryIcon src="/images/proposal/message.png" alt="" />
+                    <div>
+                      <div className="name">{subCategory.name}</div>
+                      <div>
+                        <span>{subCategory.thread_count} topics</span>
+                      </div>
+                    </div>
+                  </SubCategoryItem>
+                </Link>
+              ))}
+            </SubCategoryCard>
           </div>
         ) : (
           <div>
@@ -106,33 +103,30 @@ const ProposalContainer = styled(Card)`
   min-height: 85vh;
 `;
 
-const CategoryCard = styled(Accordion)`
-  margin-bottom: 20px;
-`;
-
 const SubCategoryCard = styled.div`
   display: flex;
-  gap: 20px;
+  flex-direction: column;
+  gap: 40px;
   justify-content: space-between;
   flex-wrap: wrap;
+  padding: 10px;
 `;
 
 const SubCategoryItem = styled.div`
-  width: 30%;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 12px;
+  padding: 16px;
+  cursor: pointer;
+  &:hover {
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.15);
+  }
+  .name {
+    color: #a16eff;
+  }
 `;
 
 const SubCategoryIcon = styled.img`
   width: 24px;
   height: 24px;
-`;
-
-const SingleHeader = styled.header`
-  padding: 1.25rem;
-  color: #222b45;
-  font-size: 0.9375rem;
-  font-weight: 600;
-  cursor: pointer;
 `;
