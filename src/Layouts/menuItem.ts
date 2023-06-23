@@ -17,6 +17,11 @@ const items: MenuItemType[] = [
     link: { href: '/guild' },
   },
   {
+    title: 'menus.Chat',
+    icon: { name: 'browser-outline' },
+    link: { href: '/chat' },
+  },
+  {
     title: 'menus.city-hall',
     icon: { name: 'shield-outline' },
     link: { href: '/city-hall' },
