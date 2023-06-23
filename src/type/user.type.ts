@@ -9,6 +9,7 @@ export interface IUser {
   discord_profile: string;
   twitter_profile: string;
   google_profile: string;
+  assets: any[];
 }
 
 export interface IUserInfo {
@@ -24,3 +25,9 @@ export interface ITokenType {
   token: string;
   token_exp: number;
 }
+
+export type Asset = {
+  dealt_amount: number;
+  processing_amount: number;
+  total_amount: number;
+};
