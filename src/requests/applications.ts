@@ -71,7 +71,7 @@ export const createBudgetApplications = (data: ICreateBudgeApplicationRequest[])
 
 // approve
 export const approveApplications = (application_ids: number[]) => {
-  return request.post(`${PATH_PREFIX}approve`, application_ids);
+  return request.post(`/apps_approve`, application_ids);
 };
 export const approveApplicationByID = (application_id: number) => {
   return request.post(`${PATH_PREFIX}${application_id}/approve`);
@@ -79,7 +79,7 @@ export const approveApplicationByID = (application_id: number) => {
 
 // reject
 export const rejectApplications = (application_ids: number[]) => {
-  return request.post(`${PATH_PREFIX}reject`, application_ids);
+  return request.post(`/apps_reject`, application_ids);
 };
 export const rejectApplicationByID = (application_id: number) => {
   return request.post(`${PATH_PREFIX}${application_id}/reject`);
@@ -87,21 +87,21 @@ export const rejectApplicationByID = (application_id: number) => {
 
 // complete
 export const compeleteApplications = (data: string[]) => {
-  return request.post(`${PATH_PREFIX}complete`, {
+  return request.post(`/apps_complete`, {
     message: data.join(','),
   });
 };
 // process
 export const processApplications = (data: number[]) => {
-  return request.post(`${PATH_PREFIX}process`, data);
+  return request.post(`/apps_process`, data);
 };
 
 // download
 export const getTemplateFileUrl = () => {
-  return `${getBaseURL()}${PATH_PREFIX}get_upload_template`;
+  return `${getBaseURL()}/get_applications_upload_template`;
 };
 export const getExportFileUrl = (ids: number[]) => {
-  return `${getBaseURL()}${PATH_PREFIX}download?ids=${ids.join(',')}`;
+  return `${getBaseURL()}/download_applications?ids=${ids.join(',')}`;
 };
 
 interface IApplicantRequest {
@@ -116,5 +116,5 @@ interface IApplicant {
 
 // applicants
 export const getApplicants = (data?: IApplicantRequest): Promise<ResponseData<IApplicant[]>> => {
-  return request.get(`${PATH_PREFIX}applicants`, data);
+  return request.get(`/apps_applicants`, data);
 };
