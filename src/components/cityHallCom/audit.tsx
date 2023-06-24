@@ -96,6 +96,7 @@ export default function Audit() {
   const [selectStatus, setSelectStatus] = useState<ApplicationStatus>();
   const [applicants, setApplicants] = useState<ISelectItem[]>([]);
   const [selectApplicant, setSelectApplicant] = useState<string>();
+  const [selectAll, setSelectAll] = useState(false);
 
   const statusOption: ISelectItem[] = [
     { label: '待审核', value: ApplicationStatus.Open },
@@ -258,6 +259,15 @@ export default function Audit() {
     }
     window.open(requests.application.getExportFileUrl(select_ids), '_blank');
   };
+
+  const onSelectAll = (v: boolean) => {
+    setSelectAll(v);
+    const newMap = { ...selectMap };
+    list.forEach((item) => {
+      newMap[item.application_id] = v;
+    });
+    setSelectMap(newMap);
+  };
   return (
     <Box>
       {loading && <Loading />}
@@ -277,7 +287,7 @@ export default function Audit() {
             />
           </li>
           <li>
-            <span className="tit">预算涞源</span>
+            <span className="tit">预算来源</span>
             <Select
               className="sel"
               options={projects}
@@ -330,7 +340,9 @@ export default function Audit() {
           <table className="table" cellPadding="0" cellSpacing="0">
             <thead>
               <tr>
-                <th>&nbsp;</th>
+                <th>
+                  <Checkbox status="Primary" checked={selectAll} onChange={(value) => onSelectAll(value)}></Checkbox>
+                </th>
                 <th>时间</th>
                 <th>钱包地址</th>
                 <th>登记积分</th>
