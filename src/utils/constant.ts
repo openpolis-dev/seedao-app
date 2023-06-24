@@ -40,3 +40,5 @@ export enum PermissionAction {
 }
 
 // ------ ------ ------ ------ ------ ------ ------ ------ ------
+
+export const DefaultAvatar = '/icons/avatar.jpg';

@@ -14,7 +14,7 @@ import LoginModal from 'components/modals/login';
 import PublicJs from 'utils/publicJs';
 import useCheckLogin from 'hooks/useCheckLogin';
 import { parseToken, checkTokenValid, clearStorage } from 'utils/auth';
-import { SEEDAO_USER, SEEDAO_USER_DATA } from 'utils/constant';
+import { DefaultAvatar, SEEDAO_USER, SEEDAO_USER_DATA } from 'utils/constant';
 import Loading from 'components/loading';
 import requests from 'requests';
 import { Authorizer } from 'casbin.js';
@@ -185,30 +185,29 @@ const Header: React.FC<HeaderProps> = (props) => {
               ),
             },
             {
-              content: (
-                <ContextMenu
-                  nextJs
-                  style={{ cursor: 'pointer' }}
-                  placement="bottom"
-                  currentPath={router.pathname}
-                  items={[
-                    { title: 'Profile', link: { href: '/user/profile' } },
-                    { title: 'Vault', link: { href: '/user/vault' } },
-                  ]}
-                  Link={Link}
-                >
-                  {isLogin && userData ? (
+              content:
+                isLogin && userData ? (
+                  <ContextMenu
+                    nextJs
+                    style={{ cursor: 'pointer' }}
+                    placement="bottom"
+                    currentPath={router.pathname}
+                    items={[
+                      { title: 'Profile', link: { href: '/user/profile' } },
+                      { title: 'Vault', link: { href: '/user/vault' } },
+                    ]}
+                    Link={Link}
+                  >
                     <User>
                       <div>
-                        <img src={userData?.avatar} alt="" />
+                        <img src={userData?.avatar || DefaultAvatar} alt="" />
                       </div>
                       <span>{userData?.name || PublicJs.AddressToShow(userData?.wallet || '')}</span>
                     </User>
-                  ) : (
-                    <Button onClick={showWalletLogin}>Connect Wallet</Button>
-                  )}
-                </ContextMenu>
-              ),
+                  </ContextMenu>
+                ) : (
+                  <Button onClick={showWalletLogin}>Connect Wallet</Button>
+                ),
             },
           ]}
         />
