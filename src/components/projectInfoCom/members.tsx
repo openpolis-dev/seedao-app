@@ -16,6 +16,7 @@ import NoItem from 'components/noItem';
 import { PermissionObject, PermissionAction } from 'utils/constant';
 import usePermission from 'hooks/usePermission';
 import CopyBox from 'components/copy';
+import { DefaultAvatar } from 'utils/constant';
 
 const Box = styled.div`
   padding: 20px;
@@ -300,7 +301,7 @@ export default function Members(props: Iprops) {
           {adminArr.map((item, index) => (
             <li key={index}>
               <div className="fst">
-                <img className="avatar" src={getUser(item).avatar} alt="" />
+                <img className="avatar" src={getUser(item).avatar || DefaultAvatar} alt="" />
                 <div>
                   <div>{getUser(item).name}</div>
                   <div style={{ display: 'flex', gap: '5px' }}>
@@ -343,7 +344,7 @@ export default function Members(props: Iprops) {
           {memberArr.map((item, index) => (
             <li key={index}>
               <div className="fst">
-                <img className="avatar" src={getUser(item).avatar} alt="" />
+                <img className="avatar" src={getUser(item).avatar || DefaultAvatar} alt="" />
                 <div>
                   <div>{getUser(item).name}</div>
                   <div style={{ display: 'flex', gap: '5px' }}>

@@ -6,6 +6,7 @@ import useTranslation from 'hooks/useTranslation';
 import { IUser } from 'type/user.type';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import { updateStaffs, IUpdateStaffsParams } from 'requests/project';
+import { DefaultAvatar } from 'utils/constant';
 
 const Mask = styled.div`
   background: rgba(0, 0, 0, 0.3);
@@ -90,7 +91,7 @@ export default function Del(props: Iprops) {
           {selectAdminArr.map((item, index) => (
             <ItemBox key={index}>
               <div>
-                <img src={item.avatar} alt="" />
+                <img src={item.avatar || DefaultAvatar} alt="" />
               </div>
               <div>
                 <div>{item.name}</div>
@@ -101,7 +102,7 @@ export default function Del(props: Iprops) {
           {selectMemArr.map((item, index) => (
             <ItemBox key={index}>
               <div>
-                <img src={item.avatar} alt="" />
+                <img src={item.avatar || DefaultAvatar} alt="" />
               </div>
               <div>
                 <div>{item.name}</div>
