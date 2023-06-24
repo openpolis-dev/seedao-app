@@ -16,6 +16,7 @@ import { ReTurnProject } from 'type/project.type';
 import NoItem from 'components/noItem';
 import usePermission from 'hooks/usePermission';
 import { PermissionObject, PermissionAction } from 'utils/constant';
+import useCheckLogin from 'hooks/useCheckLogin';
 
 const Box = styled.div`
   position: relative;
@@ -50,6 +51,7 @@ export default function Index() {
     state: { language },
     dispatch,
   } = useAuthContext();
+  const isLogin = useCheckLogin();
   const router = useRouter();
 
   const [pageCur, setPageCur] = useState(1);
@@ -69,21 +71,20 @@ export default function Index() {
   }, [pageCur, current]);
 
   useEffect(() => {
-    setList([
+    const _list = [
       {
         name: t('Project.AllProjects'),
         id: 0,
       },
-      {
-        name: t('Project.Closed'),
-        id: 1,
-      },
-      {
+    ];
+    if (isLogin) {
+      _list.push({
         name: t('Project.Joined'),
         id: 2,
-      },
-    ]);
-  }, [language]);
+      });
+    }
+    setList(_list);
+  }, [language, isLogin]);
 
   const getList = async () => {
     if (current > 2) return;

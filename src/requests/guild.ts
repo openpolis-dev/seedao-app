@@ -2,7 +2,7 @@
 import request, { ResponseData } from './http';
 import { BudgetObj, IBaseProject, InfoObj, ReTurnProject } from 'type/project.type';
 
-const PATH_PREFIX = '/guild/';
+const PATH_PREFIX = '/guilds/';
 
 export const createProjects = (data: IBaseProject) => {
   return request.post(PATH_PREFIX, data);

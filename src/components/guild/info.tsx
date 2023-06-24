@@ -221,25 +221,6 @@ export default function Info(props: Iprops) {
     toastrRef.current?.add(message, title, { status: type });
   };
 
-  const showProjectStatusComponent = () => {
-    if (showName) {
-      return <></>;
-    }
-    switch (detail?.status) {
-      case ProjectStatus.Pending:
-        return 'pending close';
-      case ProjectStatus.Closed:
-        return 'closed';
-    }
-    if (canCloseProject) {
-      return (
-        <Button shape="Rectangle" size="Medium" onClick={() => handleShow()}>
-          {t('Project.CloseProject')}
-        </Button>
-      );
-    }
-  };
-
   return (
     <Box>
       {show && <CloseTips closeModal={closeModal} handleClosePro={handleClosePro} />}
@@ -312,7 +293,6 @@ export default function Info(props: Iprops) {
                   </Button>
                 </>
               )}
-              {showProjectStatusComponent()}
             </dd>
           </dl>
           <Title>{t('Project.Budget')}</Title>
