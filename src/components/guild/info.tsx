@@ -89,9 +89,9 @@ export default function Info(props: Iprops) {
   const [editToken, setEditToken] = useState<number>();
   const [editName, setEditName] = useState('');
 
-  const canUpdateInfo = usePermission(PermissionAction.Modify, PermissionObject.Project);
-  const canUpdateBudget = usePermission(PermissionAction.UpdateBudget, PermissionObject.Project);
-  const canCloseProject = usePermission(PermissionAction.Close, PermissionObject.Project);
+  const canUpdateInfo = usePermission(PermissionAction.Modify, PermissionObject.GuildPrefix + id);
+  const canUpdateBudget = usePermission(PermissionAction.UpdateBudget, PermissionObject.GuildPrefix + id);
+  const canCloseProject = usePermission(PermissionAction.Close, PermissionObject.GuildPrefix + id);
 
   useEffect(() => {
     getDetail();

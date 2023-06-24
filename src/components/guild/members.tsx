@@ -117,11 +117,13 @@ type UserMap = { [w: string]: IUser };
 
 export default function Members(props: Iprops) {
   const { detail, updateProject } = props;
-  const canUpdateMember = usePermission(PermissionAction.UpdateMember, PermissionObject.Project);
-  const canUpdateSponsor = usePermission(PermissionAction.UpdateSponsor, PermissionObject.Project);
 
   const router = useRouter();
   const { id } = router.query;
+
+  const canUpdateMember = usePermission(PermissionAction.UpdateMember, PermissionObject.GuildPrefix + id);
+  const canUpdateSponsor = usePermission(PermissionAction.UpdateSponsor, PermissionObject.GuildPrefix + id);
+
   const toastrRef = useRef<ToastrRef>(null);
   const { t } = useTranslation();
   const { dispatch } = useAuthContext();

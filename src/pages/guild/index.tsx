@@ -45,7 +45,7 @@ export interface listObj {
 
 export default function Index() {
   const { t } = useTranslation();
-  const canCreateProj = usePermission(PermissionAction.Create, PermissionObject.Project);
+  const canCreateProj = usePermission(PermissionAction.Create, PermissionObject.Guild);
   const {
     state: { language },
     dispatch,
