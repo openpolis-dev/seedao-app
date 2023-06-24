@@ -107,8 +107,8 @@ export default function Add(props: Iprops) {
   };
 
   const submitObject = async () => {
-    const _adminList = adminList.filter((item) => item && ethers.isAddress(item));
-    const _memberList = memberList.filter((item) => item && ethers.isAddress(item));
+    const _adminList = adminList.filter((item) => item && ethers.utils.isAddress(item));
+    const _memberList = memberList.filter((item) => item && ethers.utils.isAddress(item));
     try {
       const params: IUpdateStaffsParams = {
         action: 'add',
