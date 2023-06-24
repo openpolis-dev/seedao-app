@@ -12,6 +12,8 @@ import requests from 'requests';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import { InputGroup } from '@paljs/ui/Input';
 import { Toastr, ToastrRef } from '@paljs/ui/Toastr';
+import usePermission from 'hooks/usePermission';
+import { PermissionObject, PermissionAction } from 'utils/constant';
 
 const Box = styled.div`
   margin-top: 50px;
@@ -86,6 +88,10 @@ export default function Info(props: Iprops) {
   const [editPoint, setEditPoint] = useState<number>();
   const [editToken, setEditToken] = useState<number>();
   const [editName, setEditName] = useState('');
+
+  const canUpdateInfo = usePermission(PermissionAction.Modify, PermissionObject.Project);
+  const canUpdateBudget = usePermission(PermissionAction.UpdateBudget, PermissionObject.Project);
+  const canCloseProject = usePermission(PermissionAction.Close, PermissionObject.Project);
 
   useEffect(() => {
     getDetail();
@@ -224,12 +230,13 @@ export default function Info(props: Iprops) {
         return 'pending close';
       case ProjectStatus.Closed:
         return 'closed';
-      default:
-        return (
-          <Button shape="Rectangle" size="Medium" onClick={() => handleShow()}>
-            {t('Project.CloseProject')}
-          </Button>
-        );
+    }
+    if (canCloseProject) {
+      return (
+        <Button shape="Rectangle" size="Medium" onClick={() => handleShow()}>
+          {t('Project.CloseProject')}
+        </Button>
+      );
     }
   };
 
@@ -267,15 +274,17 @@ export default function Info(props: Iprops) {
               {!showName && (
                 <>
                   <div className="info">{detail?.name}</div>
-                  <Button
-                    shape="Rectangle"
-                    appearance="outline"
-                    size="Medium"
-                    onClick={() => handleShowName()}
-                    className="rht10"
-                  >
-                    {t('general.Change')}
-                  </Button>
+                  {canUpdateInfo && (
+                    <Button
+                      shape="Rectangle"
+                      appearance="outline"
+                      size="Medium"
+                      onClick={() => handleShowName()}
+                      className="rht10"
+                    >
+                      {t('general.Change')}
+                    </Button>
+                  )}
                 </>
               )}
 
@@ -356,17 +365,19 @@ export default function Info(props: Iprops) {
                   <div className="info">
                     <span>{token?.total_amount}</span>
                     <span>
-                      （
+                      (
                       {t('Project.HasBeenUsedAndRemains', {
                         used: Number(token?.total_amount) - Number(token?.remain_amount),
                         remain: token?.remain_amount,
                       })}
-                      ）
+                      )
                     </span>
                   </div>
-                  <Button shape="Rectangle" appearance="outline" size="Medium" onClick={() => handleShowEditToken()}>
-                    {t('general.Change')}
-                  </Button>
+                  {canUpdateBudget && (
+                    <Button shape="Rectangle" appearance="outline" size="Medium" onClick={() => handleShowEditToken()}>
+                      {t('general.Change')}
+                    </Button>
+                  )}
                 </>
               )}
               {showEditToken && (
