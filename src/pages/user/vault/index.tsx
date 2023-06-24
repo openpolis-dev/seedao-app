@@ -22,6 +22,7 @@ const FirstLine = styled.ul`
   li {
     border: 1px solid #f1f1f1;
     margin-bottom: 40px;
+    height: 152px;
     box-sizing: border-box;
     border-radius: 10px;
     overflow: hidden;
