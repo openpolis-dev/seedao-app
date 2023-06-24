@@ -63,10 +63,10 @@ export default function Del(props: Iprops) {
       action: 'remove',
     };
     if (!!selectAdminArr.length) {
-      params['sponsors'] = selectAdminArr.map((item) => item.wallet);
+      params['sponsors'] = selectAdminArr.map((item) => item.wallet || '');
     }
     if (!!selectMemArr.length) {
-      params['members'] = selectMemArr.map((item) => item.wallet);
+      params['members'] = selectMemArr.map((item) => item.wallet || '');
     }
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
