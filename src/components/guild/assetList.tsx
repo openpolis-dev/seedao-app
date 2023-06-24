@@ -183,6 +183,18 @@ export default function AssetList({ id }: { id: number }) {
     const selectOrClearDate = (startDate && endDate) || (!startDate && !endDate);
     id && selectOrClearDate && getRecords();
   }, [id, selectStatus, selectApplicant, page, pageSize, startDate, endDate]);
+
+  const handleExport = async () => {
+    const ids = Object.keys(selectMap);
+    const select_ids: number[] = [];
+    for (const id of ids) {
+      const _id = Number(id);
+      if (selectMap[_id]) {
+        select_ids.push(_id);
+      }
+    }
+    window.open(requests.application.getExportFileUrl(select_ids), '_blank');
+  };
   return (
     <Box>
       {show && <ViewHash closeShow={closeShow} txs={show} />}
@@ -229,7 +241,9 @@ export default function AssetList({ id }: { id: number }) {
               />
             </BorderBox>
           </TimeBox>
-          <Button size="Medium">导出</Button>
+          <Button size="Medium" onClick={handleExport}>
+            导出
+          </Button>
         </TimeLine>
       </FirstLine>
       {list.length ? (
