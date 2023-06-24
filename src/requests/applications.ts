@@ -100,8 +100,8 @@ export const processApplications = (data: number[]) => {
 export const getTemplateFileUrl = () => {
   return `${getBaseURL()}${PATH_PREFIX}get_upload_template`;
 };
-export const getTemplateFile = () => {
-  return request.post(`${PATH_PREFIX}download`, []);
+export const getExportFileUrl = (ids: number[]) => {
+  return `${getBaseURL()}${PATH_PREFIX}download?ids=${ids.join(',')}`;
 };
 
 interface IApplicantRequest {

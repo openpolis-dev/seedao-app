@@ -247,6 +247,17 @@ export default function Audit() {
     }
   };
 
+  const handleExport = async () => {
+    const ids = Object.keys(selectMap);
+    const select_ids: number[] = [];
+    for (const id of ids) {
+      const _id = Number(id);
+      if (selectMap[_id]) {
+        select_ids.push(_id);
+      }
+    }
+    window.open(requests.application.getExportFileUrl(select_ids), '_blank');
+  };
   return (
     <Box>
       {loading && <Loading />}
@@ -303,7 +314,9 @@ export default function Audit() {
               />
             </BorderBox>
           </TimeBox>
-          <Button size="Medium">导出</Button>
+          <Button size="Medium" onClick={handleExport}>
+            导出
+          </Button>
         </TimeLine>
       </FirstLine>
       <TopBox>
