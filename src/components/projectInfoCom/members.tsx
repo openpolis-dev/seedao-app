@@ -147,7 +147,7 @@ export default function Members(props: Iprops) {
       const res = await getUsers(wallets);
       const userData: UserMap = {};
       res.data.forEach((r) => {
-        userData[r.wallet] = r;
+        userData[r.wallet || ''] = r;
       });
       setUserMap(userData);
     } catch (error) {
