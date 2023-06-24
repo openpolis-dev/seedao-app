@@ -307,15 +307,15 @@ export default function Members(props: Iprops) {
                 <div>
                   <div>{getUser(item).name}</div>
                   <div style={{ display: 'flex', gap: '5px' }}>
-                    <span>{PublicJs.AddressToShow(getUser(item).wallet)}</span>
-                    <CopyBox text={getUser(item).wallet}>
+                    <span>{PublicJs.AddressToShow(getUser(item).wallet || '')}</span>
+                    <CopyBox text={getUser(item).wallet || ''}>
                       <EvaIcon name="clipboard-outline" options={{ width: '18px', height: '18px' }} />
                     </CopyBox>
                   </div>
                 </div>
                 {edit && canUpdateSponsor && (
                   <div
-                    className={formatAdminActive(getUser(item).wallet) ? 'topRht active' : 'topRht'}
+                    className={formatAdminActive(getUser(item).wallet || '') ? 'topRht active' : 'topRht'}
                     onClick={() => handleAdminSelect(getUser(item))}
                   >
                     <div className="inner" />
@@ -350,15 +350,15 @@ export default function Members(props: Iprops) {
                 <div>
                   <div>{getUser(item).name}</div>
                   <div style={{ display: 'flex', gap: '5px' }}>
-                    <span>{PublicJs.AddressToShow(getUser(item).wallet)}</span>
-                    <CopyBox text={getUser(item).wallet}>
+                    <span>{PublicJs.AddressToShow(getUser(item).wallet || '')}</span>
+                    <CopyBox text={getUser(item).wallet || ''}>
                       <EvaIcon name="clipboard-outline" options={{ width: '18px', height: '18px' }} />
                     </CopyBox>
                   </div>
                 </div>
                 {edit && canUpdateMember && (
                   <div
-                    className={formatMemActive(getUser(item).wallet) ? 'topRht active' : 'topRht'}
+                    className={formatMemActive(getUser(item).wallet || '') ? 'topRht active' : 'topRht'}
                     onClick={() => handleMemSelect(getUser(item))}
                   >
                     <div className="inner" />

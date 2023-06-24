@@ -1,6 +1,8 @@
 import { MenuItemType } from '@paljs/ui/types';
 
-const items: MenuItemType[] = [
+export type CMenuItemType = MenuItemType & { value?: string };
+
+const items: CMenuItemType[] = [
   {
     title: 'menus.Proposal',
     icon: { name: 'browser-outline' },
@@ -20,11 +22,13 @@ const items: MenuItemType[] = [
     title: 'menus.Chat',
     icon: { name: 'browser-outline' },
     link: { href: '/chat' },
+    value: 'chat',
   },
   {
     title: 'menus.city-hall',
     icon: { name: 'shield-outline' },
     link: { href: '/city-hall' },
+    value: 'city-hall',
   },
   {
     title: 'menus.assets',
