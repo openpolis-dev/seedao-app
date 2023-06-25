@@ -20,6 +20,20 @@ export const login = (data: LoginParams): Promise<ResponseData<ILogininRespons>>
   return request.post(`${PATH_PREFIX}/login`, data);
 };
 
+export const getNonce = (wallet: string): Promise<ResponseData<{ nonce: string }>> => {
+  return request.post(`${PATH_PREFIX}/refresh_nonce`, { wallet });
+};
+
+export const loginNew = (data: {
+  wallet: string;
+  message: string;
+  signature: string;
+  domain: string;
+  nonce: string;
+}): Promise<ResponseData<ILogininRespons>> => {
+  return request.post(`${PATH_PREFIX}/login2`, data);
+};
+
 export const logout = () => {
   return request.post(`${PATH_PREFIX}/logout`);
 };

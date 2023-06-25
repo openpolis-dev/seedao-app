@@ -4,7 +4,7 @@ import styled, { css } from 'styled-components';
 import { injected, uniPassWallet } from 'wallet/connector';
 import requests from 'requests';
 import { useWeb3React } from '@web3-react/core';
-import { signMessage } from 'utils/sign';
+import { createSiweMessage } from 'utils/sign';
 import { Authorizer } from 'casbin.js';
 import { readPermissionUrl } from 'requests/user';
 import { Wallet } from 'wallet/wallet';
@@ -37,7 +37,7 @@ const LOGIN_WALLETS = [
 
 export default function LoginModal() {
   const { dispatch } = useAuthContext();
-  const { account, provider } = useWeb3React();
+  const { account, provider, chainId } = useWeb3React();
   const [loginStatus, setLoginStatus] = useState<LoginStatus>(LoginStatus.Default);
 
   const connect = async (w: { value: Wallet; connector: Connector }) => {
@@ -52,14 +52,30 @@ export default function LoginModal() {
   };
 
   const handleLoginSys = async () => {
-    if (!account || !provider) {
+    if (!account || !provider || !chainId) {
+      return;
+    }
+    let newNonce: string;
+    try {
+      const res = await requests.user.getNonce(account);
+      newNonce = res.data.nonce;
+    } catch (error) {
+      console.error('get nonce failed', error);
+      dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: false });
+      return;
+    }
+    if (!newNonce) {
       return;
     }
     // sign
     let signData = '';
     const now = Date.now();
+    const siweMessage = createSiweMessage(account, chainId, newNonce, 'Welcom to the The Seed Labs');
+    console.log('siweMessage:', siweMessage);
+    const signMsg = siweMessage.prepareMessage();
     try {
-      signData = await provider.send('personal_sign', [signMessage(account, now), account]);
+      signData = await provider.send('personal_sign', [signMsg, account]);
+      console.log('signData:', signData);
     } catch (error) {
       console.error('sign failed', error);
       setLoginStatus(LoginStatus.Default);
@@ -68,11 +84,12 @@ export default function LoginModal() {
       return;
     }
 
-    // login
-    const res = await requests.user.login({
+    const res = await requests.user.loginNew({
+      signature: signData,
+      nonce: siweMessage.nonce,
+      message: signMsg,
+      domain: siweMessage.domain,
       wallet: account,
-      timestamp: now,
-      sign: signData,
     });
     dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: false });
     res.data.token_exp = now + res.data.token_exp * 1000;

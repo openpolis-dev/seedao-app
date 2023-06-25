@@ -1,4 +1,5 @@
 import { ethers } from 'ethers';
+import { SiweMessage } from 'siwe';
 
 export const signMessage = (account: string, timestamp: number) => {
   const msg = `rfa#${account}#${timestamp}`;
@@ -11,4 +12,18 @@ export const signMessage = (account: string, timestamp: number) => {
   } catch (err) {
     console.error(err);
   }
+};
+
+export const createSiweMessage = (address: string, chainId: number, nonce: string, statement: string) => {
+  const { host, origin } = window.location;
+  const siweMessage = new SiweMessage({
+    domain: host,
+    address,
+    statement,
+    uri: origin,
+    version: '1',
+    chainId: chainId,
+    nonce,
+  });
+  return siweMessage;
 };
