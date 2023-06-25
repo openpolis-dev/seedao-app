@@ -2,6 +2,7 @@ import { MetaMask } from '@web3-react/metamask';
 import { initializeConnector } from '@web3-react/core';
 import { useMemo } from 'react';
 import { Wallet } from './wallet';
+import { UniPass } from '@unipasswallet/web3-react';
 
 function onError(error: Error) {
   console.debug(`web3-react error: ${error}`);
@@ -10,6 +11,21 @@ function onError(error: Error) {
 export const [injected, injectedHooks] = initializeConnector<MetaMask>((actions) => new MetaMask({ actions, onError }));
 
 export const connectors = [[injected, injectedHooks]];
+
+export const [uniPassWallet, uniPassHooks] = initializeConnector<UniPass>(
+  (actions) =>
+    new UniPass({
+      actions,
+      options: {
+        chainId: 137,
+        returnEmail: true,
+        rpcUrls: {
+          mainnet: 'https://eth-mainnet.g.alchemy.com/v2/YuNeXto27ejHnOIGOwxl2N_cHCfyLyLE',
+          polygon: 'https://polygon.llamarpc.com',
+        },
+      },
+    }),
+);
 
 export const getConnectorForWallet = (wallet: Wallet) => {
   switch (wallet) {
@@ -38,16 +54,9 @@ function getConnectorListItemForWallet(wallet: Wallet) {
 }
 export const SELECTABLE_WALLETS = [Wallet.METAMASK];
 
-export const useConnectors = (selectedWallet: Wallet | null) => {
-  return useMemo(() => {
-    const connectors = [];
-    if (selectedWallet) {
-      connectors.push(getConnectorListItemForWallet(selectedWallet));
-    }
-    connectors.push(
-      ...SELECTABLE_WALLETS.filter((wallet) => wallet !== selectedWallet).map(getConnectorListItemForWallet),
-    );
-    const web3ReactConnectors = connectors.map(({ connector, hooks }) => [connector, hooks]);
-    return web3ReactConnectors;
-  }, [selectedWallet]);
+export const useConnectors = () => {
+  return [
+    [injected, injectedHooks],
+    [uniPassWallet, uniPassHooks],
+  ];
 };
