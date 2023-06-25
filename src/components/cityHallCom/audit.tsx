@@ -80,6 +80,12 @@ const TopBox = styled.div`
   }
 `;
 
+const TableBox = styled.div`
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+`;
+
 export default function Audit() {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -335,68 +341,71 @@ export default function Audit() {
           驳回
         </Button>
       </TopBox>
-      {list.length ? (
-        <>
-          <table className="table" cellPadding="0" cellSpacing="0">
-            <thead>
-              <tr>
-                <th>
+      <TableBox>
+        {list.length ? (
+          <>
+            <table className="table" cellPadding="0" cellSpacing="0">
+              <thead>
+                <tr>
+                  <th>&nbsp;</th>
+                  {/* <th>
                   <Checkbox status="Primary" checked={selectAll} onChange={(value) => onSelectAll(value)}></Checkbox>
-                </th>
-                <th>时间</th>
-                <th>钱包地址</th>
-                <th>登记积分</th>
-                <th>登记Token</th>
-                <th>事项内容</th>
-                <th>预算来源</th>
-                <th>备注</th>
-                <th>状态</th>
-                <th>登记人</th>
-                <th>审核人</th>
-              </tr>
-            </thead>
-            <tbody>
-              {list.map((item) => (
-                <tr key={item.application_id}>
-                  <td>
-                    <Checkbox
-                      status="Primary"
-                      checked={selectMap[item.application_id]}
-                      onChange={(value) => onChangeCheckbox(value, item.application_id)}
-                    ></Checkbox>
-                  </td>
-                  <td>{item.created_date}</td>
-                  <td>
-                    <div>
-                      <span>{publicJs.AddressToShow(item.target_user_wallet)}</span>
-                      {/* <CopyBox text={item.target_user_wallet}>
+                </th> */}
+                  <th>时间</th>
+                  <th>钱包地址</th>
+                  <th>登记积分</th>
+                  <th>登记Token</th>
+                  <th>事项内容</th>
+                  <th>预算来源</th>
+                  <th>备注</th>
+                  <th>状态</th>
+                  <th>登记人</th>
+                  <th>审核人</th>
+                </tr>
+              </thead>
+              <tbody>
+                {list.map((item) => (
+                  <tr key={item.application_id}>
+                    <td>
+                      <Checkbox
+                        status="Primary"
+                        checked={selectMap[item.application_id]}
+                        onChange={(value) => onChangeCheckbox(value, item.application_id)}
+                      ></Checkbox>
+                    </td>
+                    <td>{item.created_date}</td>
+                    <td>
+                      <div>
+                        <span>{publicJs.AddressToShow(item.target_user_wallet)}</span>
+                        {/* <CopyBox text={item.target_user_wallet}>
                         <EvaIcon name="clipboard-outline" />
                       </CopyBox> */}
-                    </div>
-                  </td>
-                  <td>{item.credit_amount}</td>
-                  <td>{item.token_amount}</td>
-                  <td>{item.detailed_type}</td>
-                  <td>{item.budget_source}</td>
-                  <td>{item.comment}</td>
-                  <td>{item.status}</td>
-                  <td>{item.submitter_name || item.submitter_wallet}</td>
-                  <td>{item.reviewer_name || item.reviewer_wallet}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <Page
-            itemsPerPage={pageSize}
-            total={total}
-            current={page - 1}
-            handleToPage={handlePage}
-            handlePageSize={handlePageSize}
-          />
-        </>
-      ) : (
-        <NoItem />
-      )}
+                      </div>
+                    </td>
+                    <td>{item.credit_amount}</td>
+                    <td>{item.token_amount}</td>
+                    <td>{item.detailed_type}</td>
+                    <td>{item.budget_source}</td>
+                    <td>{item.comment}</td>
+                    <td>{item.status}</td>
+                    <td>{item.submitter_name || item.submitter_wallet}</td>
+                    <td>{item.reviewer_name || item.reviewer_wallet}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <Page
+              itemsPerPage={pageSize}
+              total={total}
+              current={page - 1}
+              handleToPage={handlePage}
+              handlePageSize={handlePageSize}
+            />
+          </>
+        ) : (
+          <NoItem />
+        )}
+      </TableBox>
     </Box>
   );
 }
