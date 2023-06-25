@@ -76,23 +76,23 @@ export default function Index() {
   useEffect(() => {
     setList([
       {
-        name: t('Project.ProjectInformation'),
+        name: t('Guild.ProjectInformation'),
         id: 0,
       },
       {
-        name: t('Project.Members'),
+        name: t('Guild.Members'),
         id: 1,
       },
       {
-        name: t('Project.Asset'),
+        name: t('Guild.Asset'),
         id: 2,
       },
       {
-        name: t('Project.ProjectProposal'),
+        name: t('Guild.ProjectProposal'),
         id: 3,
       },
       {
-        name: t('Project.Add'),
+        name: t('Guild.Add'),
         id: 4,
       },
     ]);

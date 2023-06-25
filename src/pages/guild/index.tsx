@@ -73,13 +73,13 @@ export default function Index() {
   useEffect(() => {
     const _list = [
       {
-        name: t('Project.AllProjects'),
+        name: t('Guild.AllProjects'),
         id: 0,
       },
     ];
     if (isLogin) {
       _list.push({
-        name: t('Project.Joined'),
+        name: t('Guild.Joined'),
         id: 2,
       });
     }
@@ -134,8 +134,8 @@ export default function Index() {
         <Box>
           <TopLine>
             {canCreateProj && (
-              <ButtonLink onClick={() => router.push('/createProject')} fullWidth shape="Rectangle">
-                {t('Project.create')}
+              <ButtonLink onClick={() => router.push('/create-guild')} fullWidth shape="Rectangle">
+                {t('Guild.create')}
               </ButtonLink>
             )}
           </TopLine>
