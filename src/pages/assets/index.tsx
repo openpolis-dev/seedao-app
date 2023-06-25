@@ -5,6 +5,12 @@ import styled from 'styled-components';
 import { Card } from '@paljs/ui/Card';
 import requests from 'requests';
 import { EvaIcon } from '@paljs/ui';
+import { Button } from '@paljs/ui/Button';
+import useTranslation from 'hooks/useTranslation';
+import { AppActionType, useAuthContext } from 'providers/authProvider';
+import useToast, { ToastType } from 'hooks/useToast';
+import usePermission from 'hooks/usePermission';
+import { PermissionAction, PermissionObject } from 'utils/constant';
 
 const Box = styled.div`
   padding: 40px 20px;
@@ -47,7 +53,26 @@ const FirstLine = styled.ul`
     font-size: 12px;
   }
 `;
+
+const InputBox = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 5px;
+  input {
+    padding-left: 5px;
+  }
+  .btn-ok {
+    cursor: pointer;
+  }
+`;
 export default function Index() {
+  const { t } = useTranslation();
+  const { dispatch } = useAuthContext();
+  const { Toast, showToast } = useToast();
+  const canUseCityhall = usePermission(PermissionAction.AuditApplication, PermissionObject.ProjectAndGuild);
+
+  const [tokenNum, setTokenNum] = useState<number>();
   const [asset, setAsset] = useState({
     token_remain_amount: 0,
     token_total_amount: 0,
@@ -70,8 +95,25 @@ export default function Index() {
   useEffect(() => {
     getAssets();
   }, []);
+
+  const handleEdit = async () => {
+    if (!tokenNum || tokenNum < 0) return;
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    try {
+      await requests.treasury.updateTokenBudget(tokenNum);
+      setIsEdit(false);
+      getAssets();
+      showToast('success', ToastType.Success);
+    } catch (error: any) {
+      console.error('updateTokenBudget error', error);
+      showToast(error?.data?.msg || 'failed', ToastType.Danger);
+    } finally {
+      dispatch({ type: AppActionType.SET_LOADING, payload: false });
+    }
+  };
   return (
     <Layout title="SeeDAO Assets">
+      {Toast}
       <CardBox>
         <Box>
           <FirstLine>
@@ -82,12 +124,28 @@ export default function Index() {
               </div>
               <div>
                 <div>本季度USD资产</div>
-                <AssetBox className="num">
-                  <span>{asset.token_total_amount}</span>
-                  <span className="btn-edit" onClick={() => setIsEdit(true)}>
-                    <EvaIcon name="edit-2-outline" />
-                  </span>
-                </AssetBox>
+                {isEdit ? (
+                  <InputBox>
+                    <input
+                      type="number"
+                      placeholder={'please input'}
+                      value={tokenNum}
+                      onChange={(e) => setTokenNum(e.target.valueAsNumber)}
+                    />
+                    <span className="btn-ok" onClick={handleEdit}>
+                      <EvaIcon name="checkmark-outline" />
+                    </span>
+                  </InputBox>
+                ) : (
+                  <AssetBox className="num">
+                    <span>{asset.token_total_amount}</span>
+                    {canUseCityhall && (
+                      <span className="btn-edit" onClick={() => setIsEdit(true)}>
+                        <EvaIcon name="edit-2-outline" />
+                      </span>
+                    )}
+                  </AssetBox>
+                )}
               </div>
             </li>
             <li className="center">
