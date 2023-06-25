@@ -1,8 +1,8 @@
-import React, { useReducer, createContext, useContext, useEffect, useCallback } from 'react';
+import React, { useReducer, createContext, useContext } from 'react';
 import { IUser, ITokenType } from 'type/user.type';
 import { ICategory } from 'type/proposal.type';
 import { Authorizer } from 'casbin.js';
-import { SEEDAO_USER, SEEDAO_USER_DATA } from 'utils/constant';
+import { SEEDAO_USER, SEEDAO_USER_DATA, SENDING_ME_USER } from 'utils/constant';
 
 interface IState {
   account?: string;
@@ -82,6 +82,7 @@ const reducer = (state: IState, action: IAction): IState => {
       };
     case AppActionType.CLEAR_AUTH:
       localStorage.removeItem(SEEDAO_USER);
+      localStorage.removeItem(SENDING_ME_USER);
       return { ...state, account: undefined, userData: undefined };
     case AppActionType.SET_PROPOSAL_CATEGORIES:
       return { ...state, proposal_categories: action.payload };

@@ -46,7 +46,7 @@ export default function Index() {
         baseUrl="https://sdktest.sending.me"
         useThirdLogin={true}
         widgetWidth="100%"
-        widgetHeight="100%"
+        widgetHeight="600px"
       />
     </Layout>
   );
