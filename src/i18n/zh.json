@@ -18,6 +18,8 @@
   },
   "Project": {
     "create": "创建项目",
+    "createSuccess": "创建成功",
+    "createFailed": "创建失败",
     "AllProjects": "所有项目",
     "Closed": "已关闭",
     "Joined": "已加入",
@@ -60,6 +62,8 @@
   },
   "Guild": {
     "create": "创建公会",
+    "createSuccess": "创建成功",
+    "createFailed": "创建失败",
     "AllProjects": "所有公会",
     "Closed": "已关闭",
     "Joined": "已加入",

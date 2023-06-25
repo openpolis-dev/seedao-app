@@ -10,6 +10,8 @@ import useTranslation from 'hooks/useTranslation';
 import { createProjects } from 'requests/project';
 import { BudgetType, IBaseProject } from 'type/project.type';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
+import useToast, { ToastType } from 'hooks/useToast';
+
 const Box = styled.div`
   .btnBtm {
     margin-right: 20px;
@@ -112,6 +114,7 @@ const ImgBox = styled.div`
 export default function CreateProject() {
   const router = useRouter();
   const { t } = useTranslation();
+  const { Toast, showToast } = useToast();
   const { dispatch } = useAuthContext();
   const [adminList, setAdminList] = useState(['']);
   const [memberList, setMemberList] = useState(['']);
@@ -223,9 +226,15 @@ export default function CreateProject() {
       ],
     };
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
-    await createProjects(obj);
-    dispatch({ type: AppActionType.SET_LOADING, payload: null });
-    router.push('/project');
+    try {
+      await createProjects(obj);
+      showToast(t('Project.createSuccess'), ToastType.Success);
+      router.push('/project');
+    } catch (error) {
+      showToast('Project.createFailed', ToastType.Danger);
+    } finally {
+      dispatch({ type: AppActionType.SET_LOADING, payload: null });
+    }
   };
 
   const getBase64 = (imgUrl: string) => {
@@ -260,6 +269,7 @@ export default function CreateProject() {
   return (
     <Layout title="">
       <Box>
+        {Toast}
         <CardBox>
           <BackBox onClick={() => router.back()}>
             <EvaIcon name="chevron-left-outline" className="icon" /> <span>{t('general.back')}</span>

@@ -17,6 +17,8 @@
   },
   "Project": {
     "create": "Create Project",
+    "createSuccess": "Create Successfully",
+    "createFailed": "Create Failed",
     "AllProjects": "All Projects",
     "Closed": "Closed",
     "Joined": "Joined",
@@ -59,6 +61,8 @@
   },
   "Guild": {
     "create": "Create Guild",
+    "createSuccess": "Create Successfully",
+    "createFailed": "Create Failed",
     "AllProjects": "All Guilds",
     "Closed": "Closed",
     "Joined": "Joined",
