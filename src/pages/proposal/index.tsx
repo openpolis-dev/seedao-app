@@ -9,7 +9,6 @@ import styled from 'styled-components';
 import { Card } from '@paljs/ui/Card';
 import ProposalCard from 'components/proposal/proposalCard';
 import ProposalSubNav from 'components/proposal/proposalSubNav';
-import Image from 'next/image';
 
 export default function Index() {
   const {
@@ -132,7 +131,7 @@ const SubCategoryItem = styled.div`
   }
 `;
 
-const SubCategoryIcon = styled(Image)`
+const SubCategoryIcon = styled.img`
   width: 24px;
   height: 24px;
 `;
