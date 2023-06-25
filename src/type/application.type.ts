@@ -9,6 +9,7 @@ export enum ApplicationEntity {
 }
 
 export enum ApplicationStatus {
+  All = '',
   Open = 'open',
   Approved = 'approved',
   Rejected = 'rejected',
