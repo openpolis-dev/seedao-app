@@ -12,12 +12,12 @@ export default function App({ Component, pageProps }: AppProps<CustomPageProps>)
 
   return (
     <>
+      <Script src="sdnChatWidget.js" type="text/javascript" />
       <AuthProvider>
         <Web3Provider>
           <AnyComponent {...pageProps} />
         </Web3Provider>
       </AuthProvider>
-      <Script src="/sdnChatWidget.js" type="text/javascript" />
     </>
   );
 }
