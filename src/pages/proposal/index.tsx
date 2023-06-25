@@ -9,6 +9,7 @@ import styled from 'styled-components';
 import { Card } from '@paljs/ui/Card';
 import ProposalCard from 'components/proposal/proposalCard';
 import ProposalSubNav from 'components/proposal/proposalSubNav';
+import Image from 'next/image';
 
 export default function Index() {
   const {
@@ -78,7 +79,7 @@ export default function Index() {
               {proposal_categories[0].children.map((subCategory) => (
                 <Link href={`/proposal/category/${subCategory.category_id}`} key={subCategory.category_id}>
                   <SubCategoryItem>
-                    <SubCategoryIcon src="/images/proposal/message.png" alt="" />
+                    <Image src="/images/proposal/message.png" alt="" width="24px" height="24px" />
                     <div>
                       <div className="name">{subCategory.name}</div>
                       <div>
