@@ -87,7 +87,7 @@ const post = function (url: string, data: any = {}): Promise<ResponseData> {
         resolve(res.data);
       })
       .catch((err) => {
-        reject(err);
+        reject(err?.response);
       });
   });
 };

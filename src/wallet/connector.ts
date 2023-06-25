@@ -17,7 +17,7 @@ export const [uniPassWallet, uniPassHooks] = initializeConnector<UniPass>(
     new UniPass({
       actions,
       options: {
-        chainId: 137,
+        chainId: 1,
         returnEmail: true,
         rpcUrls: {
           mainnet: 'https://eth-mainnet.g.alchemy.com/v2/YuNeXto27ejHnOIGOwxl2N_cHCfyLyLE',
@@ -31,6 +31,8 @@ export const getConnectorForWallet = (wallet: Wallet) => {
   switch (wallet) {
     case Wallet.METAMASK:
       return injected;
+    case Wallet.UNIPASS:
+      return uniPassWallet;
     default:
       return;
   }
@@ -40,7 +42,8 @@ function getHooksForWallet(wallet: Wallet) {
   switch (wallet) {
     case Wallet.METAMASK:
       return injectedHooks;
-
+    case Wallet.UNIPASS:
+      return uniPassHooks;
     default:
       return;
   }

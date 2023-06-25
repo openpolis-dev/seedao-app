@@ -2,6 +2,8 @@ import React, { useEffect } from 'react';
 import { Web3ReactProvider, Web3ReactHooks } from '@web3-react/core';
 import { getConnectorForWallet, useConnectors } from 'wallet/connector';
 import type { Connector } from '@web3-react/types';
+import { SELECT_WALLET } from 'utils/constant';
+import { Wallet } from 'wallet/wallet';
 
 const connect = async (connector: any) => {
   try {
@@ -18,9 +20,11 @@ const connect = async (connector: any) => {
 const Web3Provider: React.FC<{ children: React.ReactNode }> = (props) => {
   const connectors = useConnectors();
 
-  // useEffect(() => {
-  //   connect(getConnectorForWallet(Wallet.METAMASK));
-  // }, []);
+  useEffect(() => {
+    const selectWallet = localStorage.getItem(SELECT_WALLET) as Wallet;
+
+    selectWallet && connect(getConnectorForWallet(selectWallet));
+  }, []);
 
   return (
     <Web3ReactProvider connectors={[...(connectors as [Connector, Web3ReactHooks][])]}>

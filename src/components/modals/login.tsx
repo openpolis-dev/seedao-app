@@ -7,11 +7,12 @@ import { useWeb3React } from '@web3-react/core';
 import { createSiweMessage } from 'utils/sign';
 import { Authorizer } from 'casbin.js';
 import { readPermissionUrl } from 'requests/user';
-import { Wallet } from 'wallet/wallet';
+import { Wallet, WalletType } from 'wallet/wallet';
 import { SELECT_WALLET } from 'utils/constant';
 import { MetaMask } from '@web3-react/metamask';
 import { UniPass } from '@unipasswallet/web3-react';
 import { EvaIcon } from '@paljs/ui/Icon';
+import useToast, { ToastType } from 'hooks/useToast';
 
 enum LoginStatus {
   Default = 0,
@@ -20,39 +21,58 @@ enum LoginStatus {
 
 type Connector = MetaMask | UniPass;
 
-const LOGIN_WALLETS = [
+type LoginWallet = {
+  name: string;
+  value: Wallet;
+  connector: Connector;
+  iconURL: string;
+  type: WalletType;
+};
+
+const LOGIN_WALLETS: LoginWallet[] = [
   {
     name: 'MetaMask',
     value: Wallet.METAMASK,
     connector: injected,
     iconURL: '/icons/metamask.png',
+    type: WalletType.EOA,
   },
   {
     name: 'Unipass',
     value: Wallet.UNIPASS,
     connector: uniPassWallet,
     iconURL: '/icons/unipass.svg',
+    type: WalletType.AA,
   },
 ];
 
 export default function LoginModal() {
   const { dispatch } = useAuthContext();
+  const { Toast, showToast } = useToast();
   const { account, provider, chainId } = useWeb3React();
   const [loginStatus, setLoginStatus] = useState<LoginStatus>(LoginStatus.Default);
+  const [chooseWallet, setChooseWallet] = useState<LoginWallet>();
 
-  const connect = async (w: { value: Wallet; connector: Connector }) => {
+  const handleFailed = () => {
+    setLoginStatus(LoginStatus.Default);
+    setChooseWallet(undefined);
+    localStorage.removeItem(SELECT_WALLET);
+  };
+
+  const connect = async (w: LoginWallet) => {
+    setChooseWallet(w);
     const connector = w.connector;
     setLoginStatus(LoginStatus.Pending);
     try {
       await connector.activate();
       localStorage.setItem(SELECT_WALLET, w.value);
     } catch (error) {
-      setLoginStatus(LoginStatus.Default);
+      handleFailed();
     }
   };
 
   const handleLoginSys = async () => {
-    if (!account || !provider || !chainId) {
+    if (!account || !provider || !chainId || !chooseWallet) {
       return;
     }
     let newNonce: string;
@@ -61,7 +81,8 @@ export default function LoginModal() {
       newNonce = res.data.nonce;
     } catch (error) {
       console.error('get nonce failed', error);
-      dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: false });
+      handleFailed();
+
       return;
     }
     if (!newNonce) {
@@ -70,42 +91,52 @@ export default function LoginModal() {
     // sign
     let signData = '';
     const now = Date.now();
-    const siweMessage = createSiweMessage(account, chainId, newNonce, 'Welcom to the The Seed Labs');
+    const siweMessage = createSiweMessage(account, chainId, newNonce, 'Welcome to the The Seed Labs');
     console.log('siweMessage:', siweMessage);
     const signMsg = siweMessage.prepareMessage();
+
     try {
       signData = await provider.send('personal_sign', [signMsg, account]);
       console.log('signData:', signData);
     } catch (error) {
       console.error('sign failed', error);
-      setLoginStatus(LoginStatus.Default);
+      handleFailed();
     }
     if (!signData) {
       return;
     }
+    try {
+      const res = await requests.user.loginNew({
+        signature: signData,
+        nonce: siweMessage.nonce,
+        message: signMsg,
+        domain: siweMessage.domain,
+        wallet: account,
+        wallet_type: chooseWallet.type,
+      });
+      res.data.token_exp = now + res.data.token_exp * 1000;
+      dispatch({ type: AppActionType.SET_LOGIN_DATA, payload: res.data });
 
-    const res = await requests.user.loginNew({
-      signature: signData,
-      nonce: siweMessage.nonce,
-      message: signMsg,
-      domain: siweMessage.domain,
-      wallet: account,
-    });
-    dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: false });
-    res.data.token_exp = now + res.data.token_exp * 1000;
-    dispatch({ type: AppActionType.SET_LOGIN_DATA, payload: res.data });
-
-    // config permission authorizer
-    const authorizer = new Authorizer('auto', { endpoint: readPermissionUrl });
-    await authorizer.setUser(account.toLowerCase());
-    dispatch({ type: AppActionType.SET_AUTHORIZER, payload: authorizer });
+      // config permission authorizer
+      const authorizer = new Authorizer('auto', { endpoint: readPermissionUrl });
+      await authorizer.setUser(account.toLowerCase());
+      dispatch({ type: AppActionType.SET_AUTHORIZER, payload: authorizer });
+    } catch (error: any) {
+      console.error(error?.data);
+      const msg = error?.data?.msg || 'Login failed';
+      console.error('error?.data', msg);
+      showToast(msg, ToastType.Danger);
+      handleFailed();
+    } finally {
+      dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: false });
+    }
   };
 
   useEffect(() => {
-    if (account && loginStatus) {
+    if (account && loginStatus && chooseWallet) {
       handleLoginSys();
     }
-  }, [account, loginStatus]);
+  }, [account, loginStatus, chooseWallet]);
 
   const closeModal = () => {
     dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: false });
@@ -113,6 +144,7 @@ export default function LoginModal() {
 
   return (
     <Mask>
+      {Toast}
       <Modal>
         <span className="icon-close" onClick={closeModal}>
           <EvaIcon name="close-outline" />
@@ -147,6 +179,7 @@ const Mask = styled.div`
 
 const Modal = styled.div`
   width: 400px;
+  height: 300px;
   opacity: 1;
   border-radius: 8px;
   background: #fff linear-gradient(90deg, rgba(235, 255, 255, 0.6) 0%, rgba(230, 255, 255, 0) 100%);
@@ -189,4 +222,9 @@ const WalletOption = styled.div`
       height: 28px;
     }
   `}
+`;
+
+const Loading = styled.div`
+  width: 100px;
+  height: 100px;
 `;
