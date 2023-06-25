@@ -3,7 +3,8 @@ import { Web3ReactProvider, Web3ReactHooks } from '@web3-react/core';
 import { getConnectorForWallet, useConnectors } from 'wallet/connector';
 import type { Connector } from '@web3-react/types';
 import { SELECT_WALLET } from 'utils/constant';
-import { Wallet } from 'wallet/wallet';
+import { Wallet, WalletType } from 'wallet/wallet';
+import { AppActionType, useAuthContext } from './authProvider';
 
 const connect = async (connector: any) => {
   try {
@@ -19,10 +20,20 @@ const connect = async (connector: any) => {
 
 const Web3Provider: React.FC<{ children: React.ReactNode }> = (props) => {
   const connectors = useConnectors();
+  const { dispatch } = useAuthContext();
 
   useEffect(() => {
     const selectWallet = localStorage.getItem(SELECT_WALLET) as Wallet;
-
+    let wallet_type: WalletType;
+    switch (selectWallet) {
+      case Wallet.METAMASK:
+        wallet_type = WalletType.EOA;
+        break;
+      case Wallet.UNIPASS:
+        wallet_type = WalletType.AA;
+        break;
+    }
+    dispatch({ type: AppActionType.SET_WALLET_TYPE, payload: wallet_type });
     selectWallet && connect(getConnectorForWallet(selectWallet));
   }, []);
 

@@ -3,6 +3,7 @@ import { IUser, ITokenType } from 'type/user.type';
 import { ICategory } from 'type/proposal.type';
 import { Authorizer } from 'casbin.js';
 import { SEEDAO_USER, SEEDAO_USER_DATA, SENDING_ME_USER } from 'utils/constant';
+import { WalletType } from 'wallet/wallet';
 
 interface IState {
   account?: string;
@@ -13,6 +14,7 @@ interface IState {
   language: string | null;
   loading: boolean | null;
   authorizer?: Authorizer;
+  wallet_type?: WalletType;
 }
 
 export enum AppActionType {
@@ -25,6 +27,7 @@ export enum AppActionType {
   SET_LAN = 'SET_LAN',
   SET_LOADING = 'SET_LOADING',
   SET_AUTHORIZER = 'SET_AUTHORIZER',
+  SET_WALLET_TYPE = 'set_wallet_type',
 }
 
 interface IAction {
@@ -83,7 +86,7 @@ const reducer = (state: IState, action: IAction): IState => {
     case AppActionType.CLEAR_AUTH:
       localStorage.removeItem(SEEDAO_USER);
       localStorage.removeItem(SENDING_ME_USER);
-      return { ...state, account: undefined, userData: undefined };
+      return { ...state, account: undefined, userData: undefined, wallet_type: undefined };
     case AppActionType.SET_PROPOSAL_CATEGORIES:
       return { ...state, proposal_categories: action.payload };
     case AppActionType.SET_LOADING:
@@ -93,6 +96,8 @@ const reducer = (state: IState, action: IAction): IState => {
 
     case AppActionType.SET_LAN:
       return { ...state, language: action.payload };
+    case AppActionType.SET_WALLET_TYPE:
+      return { ...state, wallet_type: action.payload };
     default:
       throw new Error(`Unknown type: ${action.type}`);
   }

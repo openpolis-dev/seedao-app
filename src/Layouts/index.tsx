@@ -17,6 +17,8 @@ import useTranslation from 'hooks/useTranslation';
 import usePermission from 'hooks/usePermission';
 import { PermissionAction, PermissionObject } from 'utils/constant';
 import useCheckLogin from 'hooks/useCheckLogin';
+import { useAuthContext } from 'providers/authProvider';
+import { WalletType } from 'wallet/wallet';
 
 const getDefaultTheme = (): DefaultTheme['name'] => {
   if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
@@ -32,6 +34,9 @@ const LayoutPage: React.FC<SEOProps> = ({ children, ...rest }) => {
   const [theme, setTheme] = useState<DefaultTheme['name']>('default');
   const { t } = useTranslation();
   const isLogin = useCheckLogin();
+  const {
+    state: { wallet_type },
+  } = useAuthContext();
   const [dir, setDir] = useState<'ltr' | 'rtl'>('ltr');
   const sidebarRef = useRef<SidebarRefObject>(null);
   const router = useRouter();
@@ -71,13 +76,13 @@ const LayoutPage: React.FC<SEOProps> = ({ children, ...rest }) => {
       if (d.value === 'city-hall') {
         canUseCityhall && items.push(item);
       } else if (d.value === 'chat') {
-        isLogin && items.push(item);
+        isLogin && wallet_type === WalletType.EOA && items.push(item);
       } else {
         items.push(item);
       }
     });
     return items;
-  }, [t, canUseCityhall, isLogin]);
+  }, [t, canUseCityhall, isLogin, wallet_type]);
 
   return (
     <Fragment>

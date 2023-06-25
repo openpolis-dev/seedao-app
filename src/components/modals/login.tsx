@@ -121,6 +121,7 @@ export default function LoginModal() {
       const authorizer = new Authorizer('auto', { endpoint: readPermissionUrl });
       await authorizer.setUser(account.toLowerCase());
       dispatch({ type: AppActionType.SET_AUTHORIZER, payload: authorizer });
+      dispatch({ type: AppActionType.SET_WALLET_TYPE, payload: chooseWallet.type });
     } catch (error: any) {
       console.error(error?.data);
       const msg = error?.data?.msg || 'Login failed';
