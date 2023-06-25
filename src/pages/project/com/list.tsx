@@ -87,7 +87,7 @@ export default function ProjectAllList(props: Iprops) {
   const router = useRouter();
 
   const toGo = (num: number) => {
-    router.push(`/projectInfo/${num}`);
+    router.push(`/project-info/${num}`);
   };
   return (
     <Box>

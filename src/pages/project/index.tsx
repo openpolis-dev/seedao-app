@@ -76,6 +76,10 @@ export default function Index() {
         name: t('Project.AllProjects'),
         id: 0,
       },
+      {
+        name: t('Project.Closed'),
+        id: 1,
+      },
     ];
     if (isLogin) {
       _list.push({

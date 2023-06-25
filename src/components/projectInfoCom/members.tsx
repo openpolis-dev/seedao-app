@@ -1,11 +1,11 @@
 import styled from 'styled-components';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useMemo } from 'react';
 import { EvaIcon } from '@paljs/ui/Icon';
 import { Button } from '@paljs/ui/Button';
 import Add from './add';
 import Del from './Del';
 import useTranslation from 'hooks/useTranslation';
-import { ReTurnProject } from 'type/project.type';
+import { ReTurnProject, ProjectStatus } from 'type/project.type';
 import { getUsers } from 'requests/user';
 import { IUser } from 'type/user.type';
 import PublicJs from 'utils/publicJs';
@@ -237,6 +237,10 @@ export default function Members(props: Iprops) {
     return user;
   };
 
+  const isProjectOpen = useMemo(() => {
+    return detail?.status === ProjectStatus.Open;
+  }, [detail?.status]);
+
   return (
     <Box>
       {show && (
@@ -275,28 +279,27 @@ export default function Members(props: Iprops) {
         destroyByClick={false}
         preventDuplicates={false}
       />
-      <TopBox>
-        {(canUpdateMember || canUpdateSponsor) && (
-          <>
-            <Button onClick={() => handleAdd()} disabled={edit}>
-              {t('Project.AddMember')}
+      {isProjectOpen && (canUpdateMember || canUpdateSponsor) && (
+        <TopBox>
+          <Button onClick={() => handleAdd()} disabled={edit}>
+            {t('Project.AddMember')}
+          </Button>
+          {!edit && (
+            <Button appearance="outline" onClick={() => handleDel()}>
+              {t('Project.RemoveMember')}
             </Button>
-            {!edit && (
-              <Button appearance="outline" onClick={() => handleDel()}>
-                {t('Project.RemoveMember')}
+          )}
+          {edit && (
+            <>
+              <Button onClick={() => closeDel()}>{t('general.confirm')}</Button>
+              <Button appearance="outline" onClick={() => closeRemove()}>
+                {t('general.cancel')}
               </Button>
-            )}
-            {edit && (
-              <>
-                <Button onClick={() => closeDel()}>{t('general.confirm')}</Button>
-                <Button appearance="outline" onClick={() => closeRemove()}>
-                  {t('general.cancel')}
-                </Button>
-              </>
-            )}
-          </>
-        )}
-      </TopBox>
+            </>
+          )}
+        </TopBox>
+      )}
+
       <ItemBox>
         <TitleBox>{t('Project.Dominator')}</TitleBox>
         <UlBox>

@@ -80,7 +80,7 @@ export default function Index() {
     if (isLogin) {
       _list.push({
         name: t('Guild.Joined'),
-        id: 2,
+        id: 1,
       });
     }
     setList(_list);

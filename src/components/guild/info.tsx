@@ -91,7 +91,6 @@ export default function Info(props: Iprops) {
 
   const canUpdateInfo = usePermission(PermissionAction.Modify, PermissionObject.GuildPrefix + id);
   const canUpdateBudget = usePermission(PermissionAction.UpdateBudget, PermissionObject.GuildPrefix + id);
-  const canCloseProject = usePermission(PermissionAction.Close, PermissionObject.GuildPrefix + id);
 
   useEffect(() => {
     getDetail();

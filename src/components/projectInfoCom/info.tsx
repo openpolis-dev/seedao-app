@@ -1,7 +1,7 @@
 import Container from '@paljs/ui/Container';
 import styled from 'styled-components';
 import { Button } from '@paljs/ui/Button';
-import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
+import React, { ChangeEvent, useEffect, useMemo, useRef, useState } from 'react';
 import CloseTips from 'components/projectInfoCom/closeTips';
 import CloseSuccess from 'components/projectInfoCom/closeSuccess';
 import useTranslation from 'hooks/useTranslation';
@@ -240,6 +240,10 @@ export default function Info(props: Iprops) {
     }
   };
 
+  const isProjectOpen = useMemo(() => {
+    return detail?.status === ProjectStatus.Open;
+  }, [detail?.status]);
+
   return (
     <Box>
       {show && <CloseTips closeModal={closeModal} handleClosePro={handleClosePro} />}
@@ -274,7 +278,7 @@ export default function Info(props: Iprops) {
               {!showName && (
                 <>
                   <div className="info">{detail?.name}</div>
-                  {canUpdateInfo && (
+                  {isProjectOpen && canUpdateInfo && (
                     <Button
                       shape="Rectangle"
                       appearance="outline"
@@ -332,9 +336,11 @@ export default function Info(props: Iprops) {
                       ）
                     </span>
                   </div>
-                  <Button shape="Rectangle" appearance="outline" size="Medium" onClick={() => handleShowEditPoints()}>
-                    {t('general.Change')}
-                  </Button>
+                  {isProjectOpen && canUpdateBudget && (
+                    <Button shape="Rectangle" appearance="outline" size="Medium" onClick={() => handleShowEditPoints()}>
+                      {t('general.Change')}
+                    </Button>
+                  )}
                 </>
               )}
               {showEditPoints && (
@@ -373,7 +379,7 @@ export default function Info(props: Iprops) {
                       )
                     </span>
                   </div>
-                  {canUpdateBudget && (
+                  {isProjectOpen && canUpdateBudget && (
                     <Button shape="Rectangle" appearance="outline" size="Medium" onClick={() => handleShowEditToken()}>
                       {t('general.Change')}
                     </Button>
