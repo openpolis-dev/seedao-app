@@ -13,6 +13,7 @@ import { MetaMask } from '@web3-react/metamask';
 import { UniPass } from '@unipasswallet/web3-react';
 import { EvaIcon } from '@paljs/ui/Icon';
 import useToast, { ToastType } from 'hooks/useToast';
+import Image from 'next/image';
 
 enum LoginStatus {
   Default = 0,
@@ -156,7 +157,7 @@ export default function LoginModal() {
           <WalletOption key={w.value} onClick={() => connect(w)}>
             <span>{w.name}</span>
             <span>
-              <img src={w.iconURL} alt="" />
+              <Image src={w.iconURL} alt="" width="28px" height="28px" />
             </span>
           </WalletOption>
         ))}
