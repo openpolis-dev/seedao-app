@@ -20,7 +20,6 @@ const SEO: React.FC<SEOProps> = ({ description, keywords, title }) => (
     <meta property="og:image" content="" />
     <link rel="icon" type="image/png" href="/favicon.ico" />
     <link rel="apple-touch-icon" type="image/png" href="/icons/icon-72x72.png" />
-    <script src="/sdnChatWidget.js" type="text/javascript"></script>
   </Head>
 );
 

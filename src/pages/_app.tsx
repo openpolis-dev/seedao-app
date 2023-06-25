@@ -3,6 +3,7 @@ import Web3Provider from 'providers/web3Provider';
 import AuthProvider from 'providers/authProvider';
 import React from 'react';
 import 'styles/quill.css';
+import Script from 'next/script';
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface CustomPageProps {}
 
@@ -10,10 +11,13 @@ export default function App({ Component, pageProps }: AppProps<CustomPageProps>)
   const AnyComponent = Component as any;
 
   return (
-    <AuthProvider>
-      <Web3Provider>
-        <AnyComponent {...pageProps} />
-      </Web3Provider>
-    </AuthProvider>
+    <>
+      <AuthProvider>
+        <Web3Provider>
+          <AnyComponent {...pageProps} />
+        </Web3Provider>
+      </AuthProvider>
+      <Script src="/sdnChatWidget.js" type="text/javascript" />
+    </>
   );
 }
