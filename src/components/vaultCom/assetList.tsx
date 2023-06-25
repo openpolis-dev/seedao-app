@@ -69,6 +69,12 @@ const BorderBox = styled.div`
   border-radius: 5px;
 `;
 
+const TableBox = styled.div`
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+`;
+
 export default function AssetList() {
   const {
     state: { loading },
@@ -274,75 +280,76 @@ export default function AssetList() {
           </Button>
         </TimeLine>
       </FirstLine>
-
-      <table className="table" cellPadding="0" cellSpacing="0">
-        {list.length ? (
-          <>
-            <table className="table" cellPadding="0" cellSpacing="0">
-              <thead>
-                <tr>
-                  <th>&nbsp;</th>
-                  <th>时间</th>
-                  <th>钱包地址</th>
-                  <th>登记积分</th>
-                  <th>登记Token</th>
-                  <th>事项内容</th>
-                  <th>备注</th>
-                  <th>状态</th>
-                  <th>登记人</th>
-                  <th>审核人</th>
-                  <th>交易ID</th>
-                </tr>
-              </thead>
-              <tbody>
-                {list.map((item) => (
-                  <tr key={item.application_id}>
-                    <td>
-                      <Checkbox
-                        status="Primary"
-                        checked={selectMap[item.application_id]}
-                        onChange={(value) => onChangeCheckbox(value, item.application_id)}
-                      ></Checkbox>
-                    </td>
-                    <td>{item.created_date}</td>
-                    <td>
-                      <div>
-                        <span>{publicJs.AddressToShow(item.target_user_wallet)}</span>
-                        {/* <CopyBox text={item.target_user_wallet}>
+      <TableBox>
+        <table className="table" cellPadding="0" cellSpacing="0">
+          {list.length ? (
+            <>
+              <table className="table" cellPadding="0" cellSpacing="0">
+                <thead>
+                  <tr>
+                    <th>&nbsp;</th>
+                    <th>时间</th>
+                    <th>钱包地址</th>
+                    <th>登记积分</th>
+                    <th>登记Token</th>
+                    <th>事项内容</th>
+                    <th>备注</th>
+                    <th>状态</th>
+                    <th>登记人</th>
+                    <th>审核人</th>
+                    <th>交易ID</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {list.map((item) => (
+                    <tr key={item.application_id}>
+                      <td>
+                        <Checkbox
+                          status="Primary"
+                          checked={selectMap[item.application_id]}
+                          onChange={(value) => onChangeCheckbox(value, item.application_id)}
+                        ></Checkbox>
+                      </td>
+                      <td>{item.created_date}</td>
+                      <td>
+                        <div>
+                          <span>{publicJs.AddressToShow(item.target_user_wallet)}</span>
+                          {/* <CopyBox text={item.target_user_wallet}>
                           <>复制</>
                         </CopyBox> */}
-                      </div>
-                    </td>
-                    <td>{item.credit_amount}</td>
-                    <td>{item.token_amount}</td>
-                    <td>{item.detailed_type}</td>
-                    <td>{item.comment}</td>
-                    <td>{item.status}</td>
-                    <td>{item.submitter_name || publicJs.AddressToShow(item.submitter_wallet)}</td>
-                    <td>{item.reviewer_name || publicJs.AddressToShow(item.reviewer_wallet)}</td>
-                    <td>
-                      {item.status === ApplicationStatus.Completed && (
-                        <Button appearance="outline" size="Tiny" onClick={() => handleShow(item.transactions || [])}>
-                          查看
-                        </Button>
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            <Page
-              itemsPerPage={pageSize}
-              total={total}
-              current={page - 1}
-              handleToPage={handlePage}
-              handlePageSize={handlePageSize}
-            />
-          </>
-        ) : (
-          <NoItem />
-        )}
-      </table>
+                        </div>
+                      </td>
+                      <td>{item.credit_amount}</td>
+                      <td>{item.token_amount}</td>
+                      <td>{item.detailed_type}</td>
+                      <td>{item.comment}</td>
+                      <td>{item.status}</td>
+                      <td>{item.submitter_name || publicJs.AddressToShow(item.submitter_wallet)}</td>
+                      <td>{item.reviewer_name || publicJs.AddressToShow(item.reviewer_wallet)}</td>
+                      <td>
+                        {item.status === ApplicationStatus.Completed && (
+                          <Button appearance="outline" size="Tiny" onClick={() => handleShow(item.transactions || [])}>
+                            查看
+                          </Button>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <Page
+                itemsPerPage={pageSize}
+                total={total}
+                current={page - 1}
+                handleToPage={handlePage}
+                handlePageSize={handlePageSize}
+              />
+            </>
+          ) : (
+            <NoItem />
+          )}
+        </table>
+      </TableBox>
     </Box>
   );
 }
