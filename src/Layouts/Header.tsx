@@ -19,6 +19,7 @@ import Loading from 'components/loading';
 import requests from 'requests';
 import { Authorizer } from 'casbin.js';
 import { readPermissionUrl } from 'requests/user';
+import Image from 'next/image';
 
 interface HeaderProps {
   toggleSidebar: () => void;
@@ -200,7 +201,7 @@ const Header: React.FC<HeaderProps> = (props) => {
                   >
                     <User>
                       <div>
-                        <img src={userData?.avatar || DefaultAvatar} alt="" />
+                        <Image src={userData?.avatar || DefaultAvatar} alt="" width="40px" height="40px" />
                       </div>
                       <span>{userData?.name || PublicJs.AddressToShow(userData?.wallet || '')}</span>
                     </User>

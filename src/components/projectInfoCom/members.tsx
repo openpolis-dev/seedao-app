@@ -17,6 +17,7 @@ import { PermissionObject, PermissionAction } from 'utils/constant';
 import usePermission from 'hooks/usePermission';
 import CopyBox from 'components/copy';
 import { DefaultAvatar } from 'utils/constant';
+import Image from 'next/image';
 
 const Box = styled.div`
   padding: 20px;
@@ -306,7 +307,13 @@ export default function Members(props: Iprops) {
           {adminArr.map((item, index) => (
             <li key={index}>
               <div className="fst">
-                <img className="avatar" src={getUser(item).avatar || DefaultAvatar} alt="" />
+                <Image
+                  className="avatar"
+                  src={getUser(item).avatar || DefaultAvatar}
+                  alt=""
+                  width="50px"
+                  height="50px"
+                />
                 <div>
                   <div>{getUser(item).name}</div>
                   <div style={{ display: 'flex', gap: '5px' }}>
@@ -328,12 +335,12 @@ export default function Members(props: Iprops) {
               <LinkBox>
                 {getUser(item).twitter_profile && (
                   <a href={getUser(item).twitter_profile} target="_blank" rel="noreferrer">
-                    <img src="/images/twitterNor.svg" alt="" className="icon" />
+                    <Image src="/images/twitterNor.svg" alt="" className="icon" />
                   </a>
                 )}
                 {getUser(item).discord_profile && (
                   <a href={getUser(item).discord_profile} target="_blank" rel="noreferrer">
-                    <img src="/images/discordNor.svg" alt="" className="icon" />
+                    <Image src="/images/discordNor.svg" alt="" className="icon" />
                   </a>
                 )}
               </LinkBox>
@@ -349,7 +356,13 @@ export default function Members(props: Iprops) {
           {memberArr.map((item, index) => (
             <li key={index}>
               <div className="fst">
-                <img className="avatar" src={getUser(item).avatar || DefaultAvatar} alt="" />
+                <Image
+                  className="avatar"
+                  src={getUser(item).avatar || DefaultAvatar}
+                  alt=""
+                  width="40px"
+                  height="40px"
+                />
                 <div>
                   <div>{getUser(item).name}</div>
                   <div style={{ display: 'flex', gap: '5px' }}>
@@ -371,12 +384,12 @@ export default function Members(props: Iprops) {
               <LinkBox>
                 {getUser(item).twitter_profile && (
                   <a href={getUser(item).twitter_profile} target="_blank" rel="noreferrer">
-                    <img src="/images/twitterNor.svg" alt="" className="icon" />
+                    <Image src="/images/twitterNor.svg" alt="" className="icon" width="20px" height="20px" />
                   </a>
                 )}
                 {getUser(item).discord_profile && (
                   <a href={getUser(item).discord_profile} target="_blank" rel="noreferrer">
-                    <img src="/images/discordNor.svg" alt="" className="icon" />
+                    <Image src="/images/discordNor.svg" alt="" className="icon" width="20px" height="20px" />
                   </a>
                 )}
               </LinkBox>

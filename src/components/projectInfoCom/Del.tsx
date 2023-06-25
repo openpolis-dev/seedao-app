@@ -7,6 +7,7 @@ import { IUser } from 'type/user.type';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import { updateStaffs, IUpdateStaffsParams } from 'requests/project';
 import { DefaultAvatar } from 'utils/constant';
+import Image from 'next/image';
 
 const Mask = styled.div`
   background: rgba(0, 0, 0, 0.3);
@@ -91,7 +92,7 @@ export default function Del(props: Iprops) {
           {selectAdminArr.map((item, index) => (
             <ItemBox key={index}>
               <div>
-                <img src={item.avatar || DefaultAvatar} alt="" />
+                <Image src={item.avatar || DefaultAvatar} alt="" width="40px" height="40px" />
               </div>
               <div>
                 <div>{item.name}</div>
@@ -102,7 +103,7 @@ export default function Del(props: Iprops) {
           {selectMemArr.map((item, index) => (
             <ItemBox key={index}>
               <div>
-                <img src={item.avatar || DefaultAvatar} alt="" />
+                <Image src={item.avatar || DefaultAvatar} alt="" width="40px" height="40px" />
               </div>
               <div>
                 <div>{item.name}</div>
