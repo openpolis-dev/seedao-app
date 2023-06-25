@@ -16,6 +16,7 @@ import Loading from 'components/loading';
 import { formatDate, formatTime } from 'utils/time';
 import publicJs from 'utils/publicJs';
 import CopyBox from 'components/copy';
+import { useWeb3React } from '@web3-react/core';
 
 const Box = styled.div``;
 const TitBox = styled.div`
@@ -80,6 +81,7 @@ export default function AssetList() {
     state: { loading },
     dispatch,
   } = useAuthContext();
+  const { account } = useWeb3React();
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [total, setTotal] = useState(0);
@@ -167,7 +169,9 @@ export default function AssetList() {
   const getRecords = async () => {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
-      const queryData: IQueryApplicationsParams = {};
+      const queryData: IQueryApplicationsParams = {
+        user_wallet: account,
+      };
       if (selectStatus) queryData.state = selectStatus;
       if (selectApplicant) queryData.applicant = selectApplicant;
       if (startDate && endDate) {
@@ -201,8 +205,8 @@ export default function AssetList() {
 
   useEffect(() => {
     const selectOrClearDate = (startDate && endDate) || (!startDate && !endDate);
-    selectOrClearDate && getRecords();
-  }, [selectStatus, selectApplicant, page, pageSize, startDate, endDate]);
+    account && selectOrClearDate && getRecords();
+  }, [selectStatus, selectApplicant, page, pageSize, startDate, endDate, account]);
 
   const handleExport = async () => {
     const ids = Object.keys(selectMap);
