@@ -10,12 +10,14 @@ import { Card } from '@paljs/ui/Card';
 import ProposalCard from 'components/proposal/proposalCard';
 import ProposalSubNav from 'components/proposal/proposalSubNav';
 import Image from 'next/image';
+import useTranslation from 'hooks/useTranslation';
 
 export default function Index() {
   const {
     state: { proposal_categories },
     dispatch,
   } = useAuthContext();
+  const { t } = useTranslation();
   const [page] = useState(1);
   const [pageSize] = useState(10);
   const [proposals, setProposals] = useState<IBaseProposal[]>([]);
@@ -69,8 +71,8 @@ export default function Index() {
     <Layout title="SeeDAO Proposal">
       <ProposalContainer>
         <Tabs activeIndex={activeTab} onSelect={handleSelectTab}>
-          <Tab title="Categories" responsive></Tab>
-          <Tab title="Latest" responsive></Tab>
+          <Tab title={t('Proposal.AllCategories')} responsive></Tab>
+          <Tab title={t('Proposal.TheNeweset')} responsive></Tab>
         </Tabs>
         {activeTab === 1 && <ProposalSubNav onSelect={handleChangeOrder} />}
         {activeTab === 0 ? (

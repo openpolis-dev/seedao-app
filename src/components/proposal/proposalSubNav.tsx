@@ -2,12 +2,14 @@ import React from 'react';
 import styled from 'styled-components';
 import { Button } from '@paljs/ui';
 import { Tabs, Tab } from '@paljs/ui/Tabs';
+import useTranslation from 'hooks/useTranslation';
 
 interface IProps {
   onSelect(index: number): void;
 }
 
 export default function ProposalSubNav({ onSelect }: IProps) {
+  const { t } = useTranslation();
   return (
     <SubNav>
       <Button
@@ -20,8 +22,8 @@ export default function ProposalSubNav({ onSelect }: IProps) {
       </Button>
       <div>
         <Tabs activeIndex={0} onSelect={onSelect}>
-          <Tab title="Latest" responsive></Tab>
-          <Tab title="Oldest" responsive></Tab>
+          <Tab title={t('Proposal.TheNeweset')} responsive></Tab>
+          <Tab title={t('Proposal.TheOldest')} responsive></Tab>
         </Tabs>
       </div>
     </SubNav>

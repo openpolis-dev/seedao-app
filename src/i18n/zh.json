@@ -16,6 +16,12 @@
     "Success": "成功",
     "Clear": "清空"
   },
+  "Proposal": {
+    "AllCategories": "分类",
+    "TheNeweset": "最新的",
+    "CreateProposal": "创建提案",
+    "TheOldest": "最早的"
+  },
   "Project": {
     "create": "创建项目",
     "createSuccess": "创建成功",

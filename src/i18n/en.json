@@ -15,6 +15,12 @@
     "ok": "OK",
     "Clear": "Clear"
   },
+  "Proposal": {
+    "AllCategories": "All Categories",
+    "TheNeweset": "The Neweset",
+    "CreateProposal": "Create Proposal",
+    "TheOldest": "The Oldest"
+  },
   "Project": {
     "create": "Create Project",
     "createSuccess": "Create Successfully",
