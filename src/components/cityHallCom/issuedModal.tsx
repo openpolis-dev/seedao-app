@@ -4,6 +4,7 @@ import { InputGroup } from '@paljs/ui/Input';
 import { EvaIcon } from '@paljs/ui/Icon';
 import React, { ChangeEvent, useState } from 'react';
 import { Button } from '@paljs/ui/Button';
+import useTranslation from 'hooks/useTranslation';
 
 const Mask = styled.div`
   background: rgba(0, 0, 0, 0.3);
@@ -52,6 +53,7 @@ interface Iprops {
   handleConfirm: (data: string[]) => void;
 }
 export default function IssuedModal(props: Iprops) {
+  const { t } = useTranslation();
   const { closeShow, handleConfirm } = props;
 
   const [memberList, setMemberList] = useState<string[]>(['']);
@@ -77,10 +79,10 @@ export default function IssuedModal(props: Iprops) {
   return (
     <Mask>
       <Card>
-        <CardHeader>发放完成</CardHeader>
+        <CardHeader>{t('city-hall.SendCompleted')}</CardHeader>
         <CardBody>
           <ItemBox>
-            <div className="title">请填入发放记录的交易ID</div>
+            <div className="title">{t('city-hall.FillInId')}</div>
             <ul>
               {memberList.map((item, index) => (
                 <li key={`member_${index}`}>
@@ -102,9 +104,9 @@ export default function IssuedModal(props: Iprops) {
         </CardBody>
         <CardFooter>
           <Button appearance="outline" className="btn" onClick={() => closeShow()}>
-            取消
+            {t('general.cancel')}
           </Button>
-          <Button onClick={() => handleConfirm(memberList)}>确定</Button>
+          <Button onClick={() => handleConfirm(memberList)}>{t('general.confirm')}</Button>
         </CardFooter>
       </Card>
     </Mask>

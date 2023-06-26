@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { Button } from '@paljs/ui/Button';
 import Select from '@paljs/ui/Select';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import Page from 'components/pagination';
 import RangeDatePickerStyle from 'components/rangeDatePicker';
 import { Checkbox } from '@paljs/ui/Checkbox';
@@ -12,6 +12,7 @@ import { formatDate, formatTime } from 'utils/time';
 import { IQueryApplicationsParams } from 'requests/applications';
 import publicJs from 'utils/publicJs';
 import NoItem from 'components/noItem';
+import useTranslation from 'hooks/useTranslation';
 
 const Box = styled.div``;
 const FirstLine = styled.div`
@@ -78,6 +79,7 @@ const TopBox = styled.div`
 `;
 
 export default function ProjectAudit() {
+  const { t } = useTranslation();
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [total, setTotal] = useState(0);
@@ -89,11 +91,13 @@ export default function ProjectAudit() {
   const [selectStatus, setSelectStatus] = useState<ApplicationStatus>();
   const [selectMap, setSelectMap] = useState<{ [id: number]: boolean }>({});
 
-  const statusOption: { value: any; label: any }[] = [
-    { label: '待审核', value: ApplicationStatus.Open },
-    { label: '被驳回', value: ApplicationStatus.Rejected },
-    { label: '已通过', value: ApplicationStatus.Completed },
-  ];
+  const statusOption = useMemo(() => {
+    return [
+      { label: t('Project.ToBeReviewed'), value: ApplicationStatus.Open },
+      { label: t('Project.Rejected'), value: ApplicationStatus.Rejected },
+      { label: t('Project.Sended'), value: ApplicationStatus.Completed },
+    ];
+  }, [t]);
 
   const handlePage = (num: number) => {
     setPage(num + 1);
@@ -217,11 +221,11 @@ export default function ProjectAudit() {
       <FirstLine>
         <TopLine>
           <li>
-            <span className="tit">状态</span>
+            <span className="tit">{t('Project.State')}</span>
             <Select
               className="sel"
               options={statusOption}
-              placeholder="Status"
+              placeholder=""
               onChange={(value) => {
                 setSelectStatus(value?.value);
                 setSelectMap({});
@@ -233,7 +237,7 @@ export default function ProjectAudit() {
           <TimeBox>
             <BorderBox>
               <RangeDatePickerStyle
-                placeholder="开始时间-结束时间"
+                placeholder={t('Project.RangeTime')}
                 onChange={changeDate}
                 startDate={startDate}
                 endDate={endDate}
@@ -241,14 +245,14 @@ export default function ProjectAudit() {
             </BorderBox>
           </TimeBox>
           <Button size="Medium" onClick={handleExport}>
-            导出
+            {t('Project.Export')}
           </Button>
         </TimeLine>
       </FirstLine>
       <TopBox>
-        <Button onClick={handleApprove}>通过</Button>
+        <Button onClick={handleApprove}>{t('city-hall.Pass')}</Button>
         <Button appearance="outline" onClick={handleReject}>
-          驳回
+          {t('city-hall.Reject')}
         </Button>
       </TopBox>
       {list.length ? (
@@ -256,12 +260,12 @@ export default function ProjectAudit() {
           <table className="table" cellPadding="0" cellSpacing="0">
             <tr>
               <th>&nbsp;</th>
-              <th>时间</th>
-              <th>项目</th>
-              <th>申请内容</th>
-              <th>备注</th>
-              <th>状态</th>
-              <th>申请人</th>
+              <th>{t('Project.Time')}</th>
+              <th>{t('city-hall.ProjectName')}</th>
+              <th>{t('city-hall.Content')}</th>
+              <th>{t('Project.Note')}</th>
+              <th>{t('Project.State')}</th>
+              <th>{t('city-hall.Applicant')}</th>
             </tr>
             {list.map((item, index) => (
               <tr key={index}>
@@ -274,7 +278,7 @@ export default function ProjectAudit() {
                 </td>
                 <td>{item.created_date}</td>
                 <td>{item.budget_source}</td>
-                <td>关闭项目</td>
+                <td>{t('city-hall.CloseProject')}</td>
                 <td>--</td>
                 <td>{item.status}</td>
                 <td>{item.submitter_name || publicJs.AddressToShow(item.submitter_wallet)}</td>

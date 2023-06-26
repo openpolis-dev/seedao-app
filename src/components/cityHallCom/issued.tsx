@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { Button } from '@paljs/ui/Button';
 import Select from '@paljs/ui/Select';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import Page from 'components/pagination';
 import RangeDatePickerStyle from 'components/rangeDatePicker';
 import { Checkbox } from '@paljs/ui/Checkbox';
@@ -14,6 +14,7 @@ import publicJs from 'utils/publicJs';
 import NoItem from 'components/noItem';
 import { IQueryApplicationsParams } from 'requests/applications';
 import CopyBox from 'components/copy';
+import useTranslation from 'hooks/useTranslation';
 
 const Box = styled.div``;
 const FirstLine = styled.div`
@@ -86,6 +87,7 @@ const TableBox = styled.div`
 `;
 
 export default function Issued() {
+  const { t } = useTranslation();
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [total, setTotal] = useState(0);
@@ -98,11 +100,13 @@ export default function Issued() {
   const [selectStatus, setSelectStatus] = useState<ApplicationStatus>();
   const [isProcessing, setIsProcessing] = useState(false);
 
-  const statusOption: ISelectItem[] = [
-    { label: '待发放', value: ApplicationStatus.Approved },
-    { label: '发放中', value: ApplicationStatus.Processing },
-    { label: '已发放', value: ApplicationStatus.Completed },
-  ];
+  const statusOption = useMemo(() => {
+    return [
+      { label: t('Project.ToBeIssued'), value: ApplicationStatus.Approved },
+      { label: t('Project.Sending'), value: ApplicationStatus.Processing },
+      { label: t('Project.Sended'), value: ApplicationStatus.Completed },
+    ];
+  }, [t]);
 
   const handlePage = (num: number) => {
     setPage(num + 1);
@@ -173,6 +177,7 @@ export default function Issued() {
       await requests.application.compeleteApplications(data);
       closeShow();
       getRecords();
+      setIsProcessing(false);
       // TODO alert
     } catch (error) {
       console.error('compeleteApplications failed', error);
@@ -211,13 +216,13 @@ export default function Issued() {
     if (isProcessing) {
       return (
         <TopBox>
-          <Button onClick={() => handleShow()}>发放完成</Button>
+          <Button onClick={() => handleShow()}>{t('city-hall.SendCompleted')}</Button>
         </TopBox>
       );
     } else if (selectStatus === ApplicationStatus.Approved) {
       return (
         <TopBox>
-          <Button onClick={handleProcess}>发放</Button>
+          <Button onClick={handleProcess}>{t('city-hall.Send')}</Button>
         </TopBox>
       );
     }
@@ -264,11 +269,11 @@ export default function Issued() {
       <FirstLine>
         <TopLine>
           <li>
-            <span className="tit">状态</span>
+            <span className="tit">{t('Project.State')}</span>
             <Select
               className="sel"
               options={statusOption}
-              placeholder="Status"
+              placeholder=""
               onChange={(value) => {
                 setSelectStatus(value?.value);
                 setSelectMap({});
@@ -280,7 +285,7 @@ export default function Issued() {
           <TimeBox>
             <BorderBox>
               <RangeDatePickerStyle
-                placeholder="开始时间-结束时间"
+                placeholder={t('Project.RangeTime')}
                 onChange={changeDate}
                 startDate={startDate}
                 endDate={endDate}
@@ -288,7 +293,7 @@ export default function Issued() {
             </BorderBox>
           </TimeBox>
           <Button size="Medium" onClick={handleExport}>
-            导出
+            {t('Project.Export')}
           </Button>
         </TimeLine>
       </FirstLine>
@@ -300,15 +305,15 @@ export default function Issued() {
               <thead>
                 <tr>
                   <th>&nbsp;</th>
-                  <th>时间</th>
-                  <th>钱包地址</th>
-                  <th>登记积分</th>
-                  <th>登记Token</th>
-                  <th>事项内容</th>
-                  <th>备注</th>
-                  <th>状态</th>
-                  <th>登记人</th>
-                  <th>审核人</th>
+                  <th>{t('Project.Time')}</th>
+                  <th>{t('Project.Address')}</th>
+                  <th>{t('Project.AddPoints')}</th>
+                  <th>{t('Project.AddToken')}</th>
+                  <th>{t('Project.Content')}</th>
+                  <th>{t('Project.Note')}</th>
+                  <th>{t('Project.State')}</th>
+                  <th>{t('Project.Operator')}</th>
+                  <th>{t('Project.Auditor')}</th>
                 </tr>
               </thead>
 

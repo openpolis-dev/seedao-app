@@ -126,5 +126,19 @@
     "ImportForm": "导入表格",
     "Tips": "下载模板填写信息后导入",
     "createProposal": "创建提案"
+  },
+  "city-hall": {
+    "PointsAndTokenAudit": "积分及token审核",
+    "Pass": "通过",
+    "Reject": "驳回",
+    "ProjectAudit": "项目审核",
+    "ProjectName": "项目名称",
+    "Content": "申请内容",
+    "CloseProject": "关闭项目",
+    "Applicant": "申请人",
+    "Send": "发放",
+    "Tips": "点击发放按钮后所选中的用户状态变更为【发放中】，发放完成后才能进行其他用户的发放",
+    "SendCompleted": "发放完成",
+    "FillInId": "请填入发放记录的交易ID"
   }
 }

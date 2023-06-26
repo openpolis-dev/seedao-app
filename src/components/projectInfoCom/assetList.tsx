@@ -215,7 +215,7 @@ export default function AssetList({ id }: { id: number }) {
               options={statusOption}
               placeholder=""
               onChange={(value) => {
-                setSelectStatus(value?.value);
+                setSelectStatus(value?.value as ApplicationStatus);
                 setSelectMap({});
                 setPage(1);
               }}

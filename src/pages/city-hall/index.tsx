@@ -6,6 +6,7 @@ import { Tab, Tabs } from '@paljs/ui/Tabs';
 import Audit from 'components/cityHallCom/audit';
 import ProjectAudit from 'components/cityHallCom/projectAudit';
 import Issued from 'components/cityHallCom/issued';
+import useTranslation from 'hooks/useTranslation';
 
 const Box = styled.div`
   //position: relative;
@@ -36,19 +37,20 @@ const TabsBox = styled(Tabs)`
   }
 `;
 export default function Index() {
+  const { t } = useTranslation();
   return (
     <Layout title="SeeDAO City Hall">
       <Box>
         <CardBox>
           <TopBox>
             <TabsBox>
-              <Tab key="0" title="积分及token审核" responsive>
+              <Tab key="0" title={t('city-hall.PointsAndTokenAudit')} responsive>
                 <Audit />
               </Tab>
-              <Tab key="1" title="项目审核" responsive>
+              <Tab key="1" title={t('city-hall.ProjectAudit')} responsive>
                 <ProjectAudit />
               </Tab>
-              <Tab key="2" title="发放" responsive>
+              <Tab key="2" title={t('city-hall.Send')} responsive>
                 <Issued />
               </Tab>
             </TabsBox>
