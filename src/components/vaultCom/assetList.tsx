@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { Button } from '@paljs/ui/Button';
 import Select from '@paljs/ui/Select';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import Page from 'components/pagination';
 import ViewHash from '../projectInfoCom/viewHash';
 import RangeDatePickerStyle from 'components/rangeDatePicker';
@@ -17,6 +17,7 @@ import { formatDate, formatTime } from 'utils/time';
 import publicJs from 'utils/publicJs';
 import CopyBox from 'components/copy';
 import { useWeb3React } from '@web3-react/core';
+import useTranslation from 'hooks/useTranslation';
 
 const Box = styled.div``;
 const TitBox = styled.div`
@@ -81,6 +82,7 @@ export default function AssetList() {
     state: { loading },
     dispatch,
   } = useAuthContext();
+  const { t } = useTranslation();
   const { account } = useWeb3React();
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -89,20 +91,23 @@ export default function AssetList() {
   const [startDate, setStartDate] = useState<Date>();
   const [endDate, setEndData] = useState<Date>();
   const [list, setList] = useState<IApplicationDisplay[]>([]);
-  const [selectStatus, setSelectStatus] = useState<ApplicationStatus>();
+  const [selectStatus, setSelectStatus] = useState<ApplicationStatus>(ApplicationStatus.All);
   const [selectMap, setSelectMap] = useState<{ [id: number]: boolean }>({});
   const [applicants, setApplicants] = useState<ISelectItem[]>([]);
   const [selectApplicant, setSelectApplicant] = useState<string>();
   const [projects, setProjects] = useState<ISelectItem[]>([]);
   const [selectProject, setSelectProject] = useState<number>();
 
-  const statusOption: ISelectItem[] = [
-    { label: '待审核', value: ApplicationStatus.Open },
-    { label: '被驳回', value: ApplicationStatus.Rejected },
-    { label: '待发放', value: ApplicationStatus.Approved },
-    { label: '发放中', value: ApplicationStatus.Processing },
-    { label: '已发放', value: ApplicationStatus.Completed },
-  ];
+  const statusOption = useMemo(() => {
+    return [
+      { label: t('Project.AllState'), value: ApplicationStatus.All },
+      { label: t('Project.ToBeReviewed'), value: ApplicationStatus.Open },
+      { label: t('Project.Rejected'), value: ApplicationStatus.Rejected },
+      { label: t('Project.ToBeIssued'), value: ApplicationStatus.Approved },
+      { label: t('Project.Sending'), value: ApplicationStatus.Processing },
+      { label: t('Project.Sended'), value: ApplicationStatus.Completed },
+    ];
+  }, [t]);
 
   const handlePage = (num: number) => {
     setPage(num + 1);
@@ -225,28 +230,28 @@ export default function AssetList() {
       {show && <ViewHash closeShow={closeShow} txs={show} />}
       {loading && <Loading />}
 
-      <TitBox>记录</TitBox>
+      <TitBox>{t('Project.Record')}</TitBox>
       <FirstLine>
         <TopLine>
           <li>
-            <span className="tit">状态</span>
+            <span className="tit">{t('Project.State')}</span>
             <Select
               className="sel"
               options={statusOption}
-              placeholder="Status"
+              placeholder=""
               onChange={(value) => {
-                setSelectStatus(value?.value);
+                setSelectStatus(value?.value as ApplicationStatus);
                 setSelectMap({});
                 setPage(1);
               }}
             />
           </li>
           <li>
-            <span className="tit">预算来源</span>
+            <span className="tit">{t('Project.BudgetSource')}</span>
             <Select
               className="sel"
               options={projects}
-              placeholder="Source"
+              placeholder=""
               onChange={(value) => {
                 setSelectProject(value?.value);
                 setSelectMap({});
@@ -255,11 +260,11 @@ export default function AssetList() {
             />
           </li>
           <li>
-            <span className="tit">操作人</span>
+            <span className="tit">{t('Project.Operator')}</span>
             <Select
               className="sel"
               options={applicants}
-              placeholder="applicant"
+              placeholder=""
               onChange={(value) => {
                 setSelectApplicant(value?.value);
                 setSelectMap({});
@@ -272,7 +277,7 @@ export default function AssetList() {
           <TimeBox>
             <BorderBox>
               <RangeDatePickerStyle
-                placeholder="开始时间-结束时间"
+                placeholder={t('Project.RangeTime')}
                 onChange={changeDate}
                 startDate={startDate}
                 endDate={endDate}
@@ -280,7 +285,7 @@ export default function AssetList() {
             </BorderBox>
           </TimeBox>
           <Button size="Medium" onClick={handleExport}>
-            导出
+            {t('Project.Export')}
           </Button>
         </TimeLine>
       </FirstLine>
@@ -292,16 +297,16 @@ export default function AssetList() {
                 <thead>
                   <tr>
                     <th>&nbsp;</th>
-                    <th>时间</th>
-                    <th>钱包地址</th>
-                    <th>登记积分</th>
-                    <th>登记Token</th>
-                    <th>事项内容</th>
-                    <th>备注</th>
-                    <th>状态</th>
-                    <th>登记人</th>
-                    <th>审核人</th>
-                    <th>交易ID</th>
+                    <th>{t('Project.Time')}</th>
+                    <th>{t('Project.Address')}</th>
+                    <th>{t('Project.AddPoints')}</th>
+                    <th>{t('Project.AddToken')}</th>
+                    <th>{t('Project.Content')}</th>
+                    <th>{t('Project.Note')}</th>
+                    <th>{t('Project.State')}</th>
+                    <th>{t('Project.Operator')}</th>
+                    <th>{t('Project.Auditor')}</th>
+                    <th>{t('Project.TransactionID')}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -333,7 +338,7 @@ export default function AssetList() {
                       <td>
                         {item.status === ApplicationStatus.Completed && (
                           <Button appearance="outline" size="Tiny" onClick={() => handleShow(item.transactions || [])}>
-                            查看
+                            {t('project.View')}
                           </Button>
                         )}
                       </td>
