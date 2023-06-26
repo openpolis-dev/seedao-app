@@ -335,12 +335,12 @@ export default function Members(props: Iprops) {
               <LinkBox>
                 {getUser(item).twitter_profile && (
                   <a href={getUser(item).twitter_profile} target="_blank" rel="noreferrer">
-                    <Image src="/images/twitterNor.svg" alt="" className="icon" />
+                    <Image src="/images/twitterNor.svg" alt="" className="icon" width="20px" height="20px" />
                   </a>
                 )}
                 {getUser(item).discord_profile && (
                   <a href={getUser(item).discord_profile} target="_blank" rel="noreferrer">
-                    <Image src="/images/discordNor.svg" alt="" className="icon" />
+                    <Image src="/images/discordNor.svg" alt="" className="icon" width="20px" height="20px" />
                   </a>
                 )}
               </LinkBox>
