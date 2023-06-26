@@ -16,7 +16,7 @@ export default function App({ Component, pageProps }: AppProps<CustomPageProps>)
 
   return (
     <>
-      <Script strategy="lazyOnload" src="https://www.googletagmanager.com/gtag/js?id=G-TLV0DRYC92" />
+      {/* <Script strategy="lazyOnload" src="https://www.googletagmanager.com/gtag/js?id=G-TLV0DRYC92" />
       <Script strategy="lazyOnload" id="dataLayer">
         {`
           window.dataLayer = window.dataLayer || [];
@@ -26,7 +26,7 @@ export default function App({ Component, pageProps }: AppProps<CustomPageProps>)
             page_path: window.location.pathname,
           });
         `}
-      </Script>
+      </Script> */}
       <Script src={`${router.basePath}/sdnChatWidget.js`} type="text/javascript" />
       <AuthProvider>
         <Web3Provider>
