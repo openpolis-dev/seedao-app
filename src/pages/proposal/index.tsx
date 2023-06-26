@@ -11,6 +11,7 @@ import ProposalCard from 'components/proposal/proposalCard';
 import ProposalSubNav from 'components/proposal/proposalSubNav';
 import Image from 'next/image';
 import useTranslation from 'hooks/useTranslation';
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 export default function Index() {
   const {
@@ -18,11 +19,12 @@ export default function Index() {
     dispatch,
   } = useAuthContext();
   const { t } = useTranslation();
-  const [page] = useState(1);
+  const [page, setPage] = useState(1);
   const [pageSize] = useState(10);
   const [proposals, setProposals] = useState<IBaseProposal[]>([]);
   const [orderType, setOrderType] = useState<'latest' | 'old'>('latest');
   const [activeTab, setActiveTab] = useState(0);
+  const [hasMore, setHasMore] = useState(false);
 
   const getCategories = async () => {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
@@ -43,7 +45,9 @@ export default function Index() {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
       const resp = await requests.proposal.getAllProposals({ page, per_page: pageSize, sort: orderType });
-      setProposals(resp.data.threads);
+      setProposals([...proposals, ...resp.data.threads]);
+      setPage(page + 1);
+      setHasMore(resp.data.threads.length >= pageSize);
     } catch (error) {
       console.error('getAllProposals failed', error);
     } finally {
@@ -52,6 +56,8 @@ export default function Index() {
   };
 
   const handleChangeOrder = (index: number) => {
+    setPage(1);
+    setProposals([]);
     setOrderType(index === 0 ? 'latest' : 'old');
   };
 
@@ -95,11 +101,13 @@ export default function Index() {
           </div>
         ) : (
           <div>
-            <ul>
-              {proposals.map((proposal) => (
-                <ProposalCard key={proposal.id} data={proposal} />
-              ))}
-            </ul>
+            <InfiniteScroll dataLength={proposals.length} next={getAllProposals} hasMore={hasMore}>
+              <ProposalBox>
+                {proposals.map((proposal) => (
+                  <ProposalCard key={proposal.id} data={proposal} />
+                ))}
+              </ProposalBox>
+            </InfiniteScroll>
           </div>
         )}
       </ProposalContainer>
@@ -137,4 +145,10 @@ const SubCategoryItem = styled.div`
 const SubCategoryIcon = styled.img`
   width: 24px;
   height: 24px;
+`;
+
+const ProposalBox = styled.div`
+  & > div {
+    margin-inline: 20px;
+  }
 `;

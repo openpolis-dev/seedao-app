@@ -35,4 +35,6 @@ const SubNav = styled.nav`
   margin-block: 20px;
   display: flex;
   justify-content: space-between;
+  padding-inline: 20px;
+  align-items: center;
 `;

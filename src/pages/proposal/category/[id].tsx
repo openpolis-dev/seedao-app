@@ -6,13 +6,16 @@ import { IBaseProposal } from 'type/proposal.type';
 import ProposalCard from 'components/proposal/proposalCard';
 import ProposalSubNav from 'components/proposal/proposalSubNav';
 import useProposalCategory from 'hooks/useProposalCategory';
+import InfiniteScroll from 'react-infinite-scroll-component';
+import styled from 'styled-components';
 
 export default function ProposalCategory() {
   const router = useRouter();
   const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+  const [pageSize] = useState(10);
   const [proposals, setProposals] = useState<IBaseProposal[]>([]);
   const [orderType, setOrderType] = useState<'new' | 'old'>('new');
+  const [hasMore, setHasMore] = useState(false);
 
   const ProposalNav = useProposalCategory(Number(router.query.id));
 
@@ -28,11 +31,15 @@ export default function ProposalCategory() {
       sort: orderType,
     });
     console.log('res:', res);
-    setProposals(res.data.threads);
+    setProposals([...proposals, ...res.data.threads]);
+    setHasMore(res.data.threads.length >= pageSize);
+    setPage(page + 1);
   };
 
   const handleChangeOrder = (index: number) => {
     setOrderType(index === 0 ? 'new' : 'old');
+    setPage(1);
+    setProposals([]);
   };
 
   useEffect(() => {
@@ -42,9 +49,19 @@ export default function ProposalCategory() {
     <Layout title="SeeDAO Proposal">
       {ProposalNav}
       <ProposalSubNav onSelect={handleChangeOrder} />
-      {proposals.map((p) => (
-        <ProposalCard key={p.id} data={p} />
-      ))}
+      <InfiniteScroll dataLength={proposals.length} next={getProposals} hasMore={hasMore}>
+        <ProposalBox>
+          {proposals.map((p) => (
+            <ProposalCard key={p.id} data={p} />
+          ))}
+        </ProposalBox>
+      </InfiniteScroll>
     </Layout>
   );
 }
+
+const ProposalBox = styled.div`
+  & > div {
+    margin-inline: 20px;
+  }
+`;
