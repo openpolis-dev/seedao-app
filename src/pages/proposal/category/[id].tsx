@@ -49,7 +49,7 @@ export default function ProposalCategory() {
     <Layout title="SeeDAO Proposal">
       {ProposalNav}
       <ProposalSubNav onSelect={handleChangeOrder} />
-      <InfiniteScroll dataLength={proposals.length} next={getProposals} hasMore={hasMore}>
+      <InfiniteScroll dataLength={proposals.length} next={getProposals} hasMore={hasMore} loader={<></>}>
         <ProposalBox>
           {proposals.map((p) => (
             <ProposalCard key={p.id} data={p} />

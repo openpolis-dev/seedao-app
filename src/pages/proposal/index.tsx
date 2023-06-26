@@ -101,7 +101,7 @@ export default function Index() {
           </div>
         ) : (
           <div>
-            <InfiniteScroll dataLength={proposals.length} next={getAllProposals} hasMore={hasMore}>
+            <InfiniteScroll dataLength={proposals.length} next={getAllProposals} hasMore={hasMore} loader={<></>}>
               <ProposalBox>
                 {proposals.map((proposal) => (
                   <ProposalCard key={proposal.id} data={proposal} />
