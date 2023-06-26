@@ -331,7 +331,7 @@ export default function Members(props: Iprops) {
                 )}
                 {getUser(item).discord_profile && (
                   <a href={getUser(item).discord_profile} target="_blank" rel="noreferrer">
-                    <Image src="/images/discordNor.svg" alt="" className="icon" />
+                    <Image src="/images/discordNor.svg" alt="" className="icon" width="20px" height="20px" />
                   </a>
                 )}
               </LinkBox>
