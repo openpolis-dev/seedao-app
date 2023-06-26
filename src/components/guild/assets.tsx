@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import AssetList from './assetList';
 import React, { useEffect, useState } from 'react';
 import { BudgetType, ReTurnProject, IBudgetItem } from 'type/project.type';
+import useTranslation from 'hooks/useTranslation';
 
 const Box = styled.div`
   padding: 40px 20px;
@@ -41,6 +42,7 @@ interface IProps {
 }
 
 export default function Assets({ id, detail }: IProps) {
+  const { t } = useTranslation();
   const [token, setToken] = useState<IBudgetItem>();
   const [point, setPoint] = useState<IBudgetItem>();
 
@@ -59,22 +61,22 @@ export default function Assets({ id, detail }: IProps) {
       <FirstLine>
         <li>
           <div className="line">
-            <div>剩余USD预算</div>
+            <div>{t('Project.RemainingUSDBudget')}</div>
             <div className="num">{token?.remain_amount}</div>
           </div>
           <div>
-            <div>USD预算</div>
-            <div className="num">{token?.remain_amount}</div>
+            <div>{t('Project.USDBudget')}</div>
+            <div className="num">{token?.total_amount}</div>
           </div>
         </li>
         <li>
           <div>
-            <div>剩余积分预算</div>
+            <div>{t('Project.RemainingPointsBudget')}</div>
             <div className="num">{point?.remain_amount}</div>
           </div>
           <div>
-            <div>积分预算</div>
-            <div className="num">{point?.remain_amount}</div>
+            <div>{t('Project.PointsBudget')}</div>
+            <div className="num">{point?.total_amount}</div>
           </div>
         </li>
       </FirstLine>

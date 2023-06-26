@@ -52,6 +52,7 @@ const UlBox = styled.ul`
       display: flex;
       align-items: center;
       position: relative;
+      gap: 10px;
     }
     img.avatar {
       width: 50px;
@@ -95,7 +96,7 @@ const LinkBox = styled.div`
   img {
     width: 20px;
     height: 20px;
-    margin-right: 20px;
+    margin-inline: 5px !important;
   }
 `;
 const TopBox = styled.div`
