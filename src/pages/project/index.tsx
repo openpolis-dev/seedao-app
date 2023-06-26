@@ -140,7 +140,7 @@ export default function Index() {
         <Box>
           <TopLine>
             {canCreateProj && (
-              <ButtonLink onClick={() => router.push('/createProject')} fullWidth shape="Rectangle">
+              <ButtonLink onClick={() => router.push('/create-project')} fullWidth shape="Rectangle">
                 {t('Project.create')}
               </ButtonLink>
             )}
