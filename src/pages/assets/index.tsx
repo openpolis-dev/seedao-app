@@ -136,11 +136,12 @@ export default function Index() {
   const { t } = useTranslation();
   const { dispatch } = useAuthContext();
   const { Toast, showToast } = useToast();
-  const canUseCityhall = usePermission(PermissionAction.AuditApplication, PermissionObject.ProjectAndGuild);
+  const canUseCityhall = usePermission(PermissionAction.AssetsBudget, PermissionObject.SeeDAO);
 
   const [asset, setAsset] = useState({
     token_remain_amount: 0,
     token_total_amount: 0,
+    credit_remain_amount: 0,
     credit_total_amount: 0,
   });
   const [showModifyModal, setshowModifyModal] = useState<BudgetType>();
@@ -160,6 +161,7 @@ export default function Index() {
       setAsset({
         token_remain_amount: res.data.token_remain_amount,
         token_total_amount: res.data.token_total_amount,
+        credit_remain_amount: res.data.credit_remain_amount,
         credit_total_amount: res.data.credit_total_amount,
       });
     } catch (error) {
@@ -399,7 +401,7 @@ export default function Index() {
               <LiHead>
                 <LiTitle>{t('Assets.SeasonUseUSD')}</LiTitle>
               </LiHead>
-              <div className="num">{asset.token_remain_amount}</div>
+              <div className="num">{asset.token_total_amount - asset.token_remain_amount}</div>
               <AssetBox className="tips">
                 <span>{t('Assets.SeasonBudget')}:</span>
                 <span>{asset.token_total_amount}</span>
@@ -415,10 +417,10 @@ export default function Index() {
                 <LiTitle>{t('Assets.SeasonUsedSCR')}</LiTitle>
                 <div className="tips">(包含待发放未上链积分)</div>
               </LiHead>
-              <div className="num">{asset.credit_total_amount}</div>
+              <div className="num">{asset.credit_total_amount - asset.credit_remain_amount}</div>
               <AssetBox className="tips">
                 <span>{t('Assets.SeasonBudget')}:</span>
-                <span>{asset.token_total_amount}</span>
+                <span>{asset.credit_total_amount}</span>
                 {canUseCityhall && (
                   <span className="btn-edit" onClick={() => setshowModifyModal(BudgetType.Credit)}>
                     <EvaIcon name="edit-2-outline" options={{ width: '16px', height: '16px' }} />

@@ -20,6 +20,7 @@ export const SENDING_ME_USER = 'sdn_user_id';
 */
 
 export enum PermissionObject {
+  SeeDAO = 'seedao',
   Project = 'proj',
   Guild = 'guild',
   ProjectAndGuild = 'proj_and_guild',
@@ -38,6 +39,8 @@ export enum PermissionAction {
   UpdateBudget = 'u_budget',
   CreateApplication = 'create_app',
   AuditApplication = 'audit_app',
+
+  AssetsBudget = 'u_assert_budget',
 }
 
 // ------ ------ ------ ------ ------ ------ ------ ------ ------
