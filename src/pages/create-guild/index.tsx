@@ -231,7 +231,7 @@ export default function CreateGuild() {
       showToast(t('Guild.createSuccess'), ToastType.Success);
       router.push('/guild');
     } catch (error) {
-      showToast('Guild.createFailed', ToastType.Danger);
+      showToast(t('Guild.createFailed'), ToastType.Danger);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: null });
     }

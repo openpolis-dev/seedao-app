@@ -231,7 +231,7 @@ export default function CreateProject() {
       showToast(t('Project.createSuccess'), ToastType.Success);
       router.push('/project');
     } catch (error) {
-      showToast('Project.createFailed', ToastType.Danger);
+      showToast(t('Project.createFailed'), ToastType.Danger);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: null });
     }
