@@ -140,5 +140,21 @@
     "Tips": "点击发放按钮后所选中的用户状态变更为【发放中】，发放完成后才能进行其他用户的发放",
     "SendCompleted": "发放完成",
     "FillInId": "请填入发放记录的交易ID"
+  },
+  "Assets": {
+    "TotalBalance": "金库余额",
+    "Wallet": "钱包",
+    "MultiSign": "多签用户",
+    "Chain": "链",
+    "Detail": "详情",
+    "SupplySCR": "已发放SCR",
+    "SupplySGN": "已发放SGN",
+    "SeasonUseUSD": "本季度已使用USD",
+    "SeasonBudget": "本季度预算",
+    "SeasonUsedSCR": "本季的已发放积分",
+    "SCRTip": "包含待发未上链积分",
+    "CommunityVault": "社区金库",
+    "CityHallVault": "市政厅金库",
+    "IncubatorVault": "孵化器金库"
   }
 }

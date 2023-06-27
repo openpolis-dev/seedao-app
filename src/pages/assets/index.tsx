@@ -1,16 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import Layout from 'Layouts';
 import AssetList from 'components/assetsCom/assetList';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { Card } from '@paljs/ui/Card';
 import requests from 'requests';
 import { EvaIcon } from '@paljs/ui';
-import { Button } from '@paljs/ui/Button';
 import useTranslation from 'hooks/useTranslation';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import useToast, { ToastType } from 'hooks/useToast';
 import usePermission from 'hooks/usePermission';
 import { PermissionAction, PermissionObject } from 'utils/constant';
+import publicJs from 'utils/publicJs';
+import axios from 'axios';
+import CopyBox from 'components/copy';
 
 const Box = styled.div`
   padding: 40px 20px;
@@ -66,6 +68,61 @@ const InputBox = styled.div`
     cursor: pointer;
   }
 `;
+
+const enum CHAINS {
+  ETH = 1,
+  Polygon = 137,
+}
+
+const SAFE_CHAIN = {
+  [CHAINS.ETH]: {
+    short: 'eth',
+    name: 'Ethereum',
+  },
+  [CHAINS.Polygon]: {
+    short: 'matic',
+    name: 'Polygon',
+  },
+};
+
+const VAULTS = [
+  {
+    name: 'Assets.CommunityVault',
+    address: '0x7FdA3253c94F09fE6950710E5273165283f8b283',
+    chainId: CHAINS.ETH,
+    id: 1,
+  },
+  {
+    name: 'Assets.CommunityVault',
+    address: '0x4876eaD85CE358133fb80276EB3631D192196e24',
+    chainId: CHAINS.Polygon,
+    id: 2,
+  },
+  {
+    name: 'Assets.CityHallVault',
+    address: '0x70F97Ad9dd7E1bFf40c3374A497a7583B0fAdd25',
+    chainId: CHAINS.ETH,
+    id: 3,
+  },
+  {
+    name: 'Assets.IncubatorVault',
+    address: '0x444C1Cf57b65C011abA9BaBEd05C6b13C11b03b5',
+    chainId: CHAINS.ETH,
+    id: 4,
+  },
+];
+
+type VaultType = {
+  name: string;
+  address: string;
+  chainId: CHAINS;
+  id: number;
+};
+
+type VaultInfoMap = {
+  [k: number]: { balance?: string; total?: number; threshold?: number };
+};
+
 export default function Index() {
   const { t } = useTranslation();
   const { dispatch } = useAuthContext();
@@ -79,6 +136,10 @@ export default function Index() {
     credit_total_amount: 0,
   });
   const [isEdit, setIsEdit] = useState(false);
+  const [showVaultDetail, setShowVaultDetail] = useState(false);
+  const [vaultsMap, setVaultsMap] = useState<VaultInfoMap>({});
+  const [totalSigner, setTotalSigner] = useState(0);
+  const [totalBalance, setTotalBalance] = useState('0.00');
 
   const getAssets = async () => {
     try {
@@ -111,11 +172,131 @@ export default function Index() {
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }
   };
+
+  const getVaultBalance = async ({ chainId, address }: VaultType) => {
+    return axios.get(`https://safe-client.safe.global/v1/chains/${chainId}/safes/${address}/balances/usd?trusted=true`);
+  };
+  const getVaultInfo = async ({ chainId, address }: VaultType) => {
+    return axios.get(`https://safe-client.safe.global/v1/chains/${chainId}/safes/${address}`);
+  };
+  const getVaultsInfo = async () => {
+    const vaults_map: VaultInfoMap = {};
+    const users: string[] = [];
+    let _total = 0;
+
+    try {
+      const reqs = VAULTS.map((item) => getVaultBalance(item));
+      const results = await Promise.allSettled(reqs);
+      results.forEach((res, index) => {
+        if (res.status === 'fulfilled') {
+          const _v = Number(res.value.data?.fiatTotal || 0);
+          vaults_map[VAULTS[index].id] = {
+            balance: _v.toFixed(2),
+          };
+          _total += _v;
+        }
+      });
+    } catch (error) {
+      console.error('getVaultBalance error', error);
+    }
+    try {
+      const reqs = VAULTS.map((item) => getVaultInfo(item));
+      const results = await Promise.allSettled(reqs);
+      results.forEach((res, index) => {
+        if (res.status === 'fulfilled') {
+          const _id = VAULTS[index].id;
+          if (!vaults_map[_id]) {
+            vaults_map[_id] = {};
+          }
+          vaults_map[_id].total = res.value.data?.owners.length || 0;
+          vaults_map[_id].threshold = res.value.data?.threshold || 0;
+          users.push(...res.value.data?.owners.map((item: any) => item.value));
+        }
+      });
+    } catch (error) {
+      console.error('getVaultInfo error', error);
+    }
+    setTotalSigner([...new Set(users)].length);
+    setTotalBalance(_total.toFixed(2));
+    setVaultsMap(vaults_map);
+  };
+
+  useEffect(() => {
+    getVaultsInfo();
+  }, []);
+
   return (
     <Layout title="SeeDAO Assets">
       {Toast}
       <CardBox>
         <Box>
+          <Vault>
+            <VaultOverview>
+              <div>
+                <TotalBalance>{t('Assets.TotalBalance')}</TotalBalance>
+                <TotalBalanceNum>${totalBalance}</TotalBalanceNum>
+              </div>
+              <div className="right">
+                <InfoItem>
+                  <span>{t('Assets.Wallet')}</span>
+                  <span>4</span>
+                </InfoItem>
+                <InfoItem>
+                  <span>{t('Assets.MultiSign')}</span>
+                  <span>{totalSigner}</span>
+                </InfoItem>
+                <InfoItem>
+                  <span>{t('Assets.Chain')}</span>
+                  <span>2</span>
+                </InfoItem>
+                <InfoItem className="detail">
+                  <div onClick={() => setShowVaultDetail(!showVaultDetail)}>
+                    <span>{t('Assets.Detail')}</span>
+                    <EvaIcon name={showVaultDetail ? 'arrow-ios-upward-outline' : 'arrow-ios-downward-outline'} />
+                  </div>
+                </InfoItem>
+              </div>
+            </VaultOverview>
+            {showVaultDetail && (
+              <VaultInfo>
+                {VAULTS.map((v) => (
+                  <VaultItem key={v.address}>
+                    <div className="left">
+                      <span className="name">{t(v.name)}</span>
+                      <div className="info">
+                        <div className="address">
+                          <span>{publicJs.AddressToShow(v.address)}</span>
+                          <div>
+                            <CopyBox text={v.address}>
+                              <EvaIcon name="clipboard-outline" options={{ width: '18px', height: '18px' }} />
+                            </CopyBox>
+                          </div>
+                          <div>
+                            <a
+                              href={`https://app.safe.global/balances?safe=${SAFE_CHAIN[v.chainId].short}:${v.address}`}
+                              target="_blank"
+                              rel="noreferrer"
+                            >
+                              <EvaIcon name="external-link-outline" options={{ width: '18px', height: '18px' }} />
+                            </a>
+                          </div>
+                        </div>
+                        <div className="tag">
+                          <Tag>
+                            {SAFE_CHAIN[v.chainId].name}
+                            <span>
+                              {vaultsMap[v.id]?.threshold || 0}/{vaultsMap[v.id]?.total || 0}
+                            </span>
+                          </Tag>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="balance">${vaultsMap[v.id]?.balance || 0.0}</div>
+                  </VaultItem>
+                ))}
+              </VaultInfo>
+            )}
+          </Vault>
           <FirstLine>
             <li>
               <div className="line">
@@ -173,4 +354,111 @@ const AssetBox = styled.div`
   .btn-edit {
     cursor: pointer;
   }
+`;
+
+const Vault = styled.div`
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 10px;
+`;
+
+const VaultOverview = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  .right {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 60px;
+  }
+`;
+
+const InfoItem = styled.li`
+  ${({ theme }) => css`
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 8px;
+    &.detail {
+      cursor: pointer;
+      div {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+    }
+    > span:first-child {
+      font-weight: ${theme.textSubtitleFontWeight};
+    }
+  `}
+`;
+
+const VaultInfo = styled.ul`
+  margin-top: 30px;
+`;
+const VaultItem = styled.li`
+  display: flex;
+  justify-content: space-between;
+  border-top: 1px solid #ddd;
+  padding-block: 20px;
+  .left {
+    display: flex;
+    gap: 60px;
+    align-items: center;
+    .name {
+      width: 160px;
+    }
+  }
+  .tag {
+    margin-left: 20px;
+  }
+  .info,
+  .address {
+    display: flex;
+    align-items: center;
+  }
+  .address {
+    gap: 5px;
+    > div {
+      height: 20px;
+      cursor: pointer;
+      a {
+        color: unset;
+      }
+    }
+  }
+  .balance {
+    font-weight: 600;
+  }
+`;
+
+const TotalBalance = styled.div`
+  ${({ theme }) => css`
+    font-weight: ${theme.textSubtitleFontWeight};
+    font-size: ${theme.textHeading6FontSize};
+  `}
+`;
+
+const TotalBalanceNum = styled.div`
+  ${({ theme }) => css`
+    font-weight: ${theme.textSubtitleFontWeight};
+    font-size: ${theme.textHeading5FontSize};
+    margin-top: 20px;
+    text-align: center;
+  `}
+`;
+
+const Tag = styled.span`
+  ${({ theme }) => css`
+    border: 1px solid ${theme.colorPrimary500};
+    border-radius: 6px;
+    color: ${theme.colorPrimary500};
+    padding: 4px 6px;
+    font-size: 12px;
+    span {
+      margin-left: 5px;
+    }
+  `}
 `;

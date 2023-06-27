@@ -139,5 +139,21 @@
     "Tips": "After clicking the [Send] button, the status of the selected user changes to [Sending], and only after the sending is completed can it be sent to other users",
     "SendCompleted": "Send Completed",
     "FillInId": "Please fill in the transaction ID of the sending record"
+  },
+  "Assets": {
+    "TotalBalance": "Vault Balance",
+    "Wallet": "Wallet",
+    "MultiSign": "Multi-Signer",
+    "Chain": "Chain",
+    "Detail": "Detail",
+    "SupplySCR": "Sent SCR",
+    "SupplySGN": "Sent SGN",
+    "SeasonUseUSD": "Season used USD",
+    "SeasonBudget": "Season budget",
+    "SeasonUsedSCR": "Season sent SCR",
+    "SCRTip": "includes off-chain SCR",
+    "CommunityVault": "Community Vault",
+    "CityHallVault": "CityHall Vault",
+    "IncubatorVault": "Incubator Vault"
   }
 }
