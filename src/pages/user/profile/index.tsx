@@ -176,80 +176,50 @@ export default function Profile() {
           <MidBox>
             <UlBox>
               <li>
-                <div className="title">名称</div>
+                <div className="title">{t('My.Name')}</div>
                 <InputBox fullWidth>
-                  <input
-                    type="text"
-                    placeholder="Size small"
-                    value={userName}
-                    onChange={(e) => handleInput(e, 'userName')}
-                  />
+                  <input type="text" placeholder="" value={userName} onChange={(e) => handleInput(e, 'userName')} />
                 </InputBox>
               </li>
               <li>
-                <div className="title">邮箱地址</div>
+                <div className="title">{t('My.Email')}</div>
                 <InputBox fullWidth>
-                  <input type="text" placeholder="Size small" value={email} onChange={(e) => handleInput(e, 'email')} />
+                  <input type="text" placeholder="" value={email} onChange={(e) => handleInput(e, 'email')} />
                 </InputBox>
               </li>
               <li>
-                <div className="title">Discord</div>
+                <div className="title">{t('My.Discord')}</div>
                 <InputBox fullWidth>
-                  <input
-                    type="text"
-                    placeholder="Size small"
-                    value={discord}
-                    onChange={(e) => handleInput(e, 'discord')}
-                  />
+                  <input type="text" placeholder="" value={discord} onChange={(e) => handleInput(e, 'discord')} />
                 </InputBox>
               </li>
               <li>
-                <div className="title">Twitter</div>
+                <div className="title">{t('My.Twitter')}</div>
                 <InputBox fullWidth>
-                  <input
-                    type="text"
-                    placeholder="Size small"
-                    value={twitter}
-                    onChange={(e) => handleInput(e, 'twitter')}
-                  />
+                  <input type="text" placeholder="" value={twitter} onChange={(e) => handleInput(e, 'twitter')} />
                 </InputBox>
               </li>
               <li>
-                <div className="title">微信号</div>
+                <div className="title">{t('My.WeChat')}</div>
                 <InputBox fullWidth>
-                  <input
-                    type="text"
-                    placeholder="Size small"
-                    value={wechat}
-                    onChange={(e) => handleInput(e, 'wechat')}
-                  />
+                  <input type="text" placeholder="" value={wechat} onChange={(e) => handleInput(e, 'wechat')} />
                 </InputBox>
               </li>
               <li>
-                <div className="title">Mirror</div>
+                <div className="title">{t('My.Mirror')}</div>
                 <InputBox fullWidth>
-                  <input
-                    type="text"
-                    placeholder="Size small"
-                    value={mirror}
-                    onChange={(e) => handleInput(e, 'mirror')}
-                  />
+                  <input type="text" placeholder="" value={mirror} onChange={(e) => handleInput(e, 'mirror')} />
                 </InputBox>
               </li>
               <li>
-                <div className="title">Google</div>
+                <div className="title">{t('My.Google')}</div>
                 <InputBox fullWidth>
-                  <input
-                    type="text"
-                    placeholder="Size small"
-                    value={google}
-                    onChange={(e) => handleInput(e, 'google')}
-                  />
+                  <input type="text" placeholder="" value={google} onChange={(e) => handleInput(e, 'google')} />
                 </InputBox>
               </li>
             </UlBox>
             <div>
-              <Button onClick={saveProfile}>确定</Button>
+              <Button onClick={saveProfile}>{t('general.confirm')}</Button>
             </div>
           </MidBox>
         </Box>

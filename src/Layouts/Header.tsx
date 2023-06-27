@@ -20,6 +20,7 @@ import requests from 'requests';
 import { Authorizer } from 'casbin.js';
 import { readPermissionUrl } from 'requests/user';
 import Image from 'next/image';
+import useTranslation from 'hooks/useTranslation';
 
 interface HeaderProps {
   toggleSidebar: () => void;
@@ -32,6 +33,7 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = (props) => {
+  const { t } = useTranslation();
   const router = useRouter();
   const { account } = useWeb3React();
   const isLogin = useCheckLogin();
@@ -194,8 +196,8 @@ const Header: React.FC<HeaderProps> = (props) => {
                     placement="bottom"
                     currentPath={router.pathname}
                     items={[
-                      { title: 'Profile', link: { href: '/user/profile' } },
-                      { title: 'Vault', link: { href: '/user/vault' } },
+                      { title: t('My.MyProfile'), link: { href: '/user/profile' } },
+                      { title: t('My.MyAccount'), link: { href: '/user/vault' } },
                     ]}
                     Link={Link}
                   >

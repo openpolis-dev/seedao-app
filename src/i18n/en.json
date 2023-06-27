@@ -157,5 +157,19 @@
     "CommunityVault": "Community Vault",
     "CityHallVault": "CityHall Vault",
     "IncubatorVault": "Incubator Vault"
-  }
+  },
+  "My": {
+    "MyProfile": "My Profile",
+    "MyAccount": "My Account",
+    "Exit": "Exit",
+    "Assets": "Assets",
+    "Points": "Points(including unchained points to be issued)",
+    "Name": "Name",
+    "Email": "Email",
+    "Discord": "Discord",
+    "Twitter": "Twitter",
+    "WeChat": "WeChat",
+    "Mirror": "Mirror",
+    "Google": "Google"
+}
 }

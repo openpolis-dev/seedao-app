@@ -6,6 +6,7 @@ import { Card } from '@paljs/ui/Card';
 import { Asset } from 'type/user.type';
 import requests from 'requests';
 import { BudgetType } from 'type/project.type';
+import useTranslation from 'hooks/useTranslation';
 
 const Box = styled.div`
   padding: 40px 20px;
@@ -47,6 +48,7 @@ const FirstLine = styled.ul`
 `;
 
 export default function Vault() {
+  const { t } = useTranslation();
   const [token, setToken] = useState<Asset>();
   const [credit, setCredit] = useState<Asset>();
 
@@ -82,15 +84,15 @@ export default function Vault() {
           <FirstLine>
             <li>
               <div className="line">
-                <div>USD资产</div>
+                <div>{t('My.Assets')}</div>
                 <div className="num">{token?.total_amount || 0}</div>
               </div>
             </li>
             <li>
               <div>
                 <div>
-                  <div>总积分</div>
-                  <div className="tips">(包含待发放未上链积分)</div>
+                  <div>{t('My.Points')}</div>
+                  {/* <div className="tips">(包含待发放未上链积分)</div> */}
                 </div>
 
                 <div className="num">{credit?.total_amount || 0}</div>

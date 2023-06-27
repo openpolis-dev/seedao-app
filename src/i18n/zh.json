@@ -158,5 +158,19 @@
     "CommunityVault": "社区金库",
     "CityHallVault": "市政厅金库",
     "IncubatorVault": "孵化器金库"
+  },
+  "My": {
+    "MyProfile": "我的信息",
+    "MyAccount": "我的账户",
+    "Exit": "退出",
+    "Assets": "USD资产",
+    "Points": "总积分(包含待发放未上链积分)",
+    "Name": "昵称",
+    "Email": "邮箱地址",
+    "Discord": "Discord",
+    "Twitter": "Twitter",
+    "WeChat": "微信号",
+    "Mirror": "Mirror",
+    "Google": "Google"
   }
 }
