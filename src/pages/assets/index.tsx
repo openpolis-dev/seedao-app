@@ -415,7 +415,7 @@ export default function Index() {
             <li className="center">
               <LiHead>
                 <LiTitle>{t('Assets.SeasonUsedSCR')}</LiTitle>
-                <div className="tips">(包含待发放未上链积分)</div>
+                <div className="tips">({t('Assets.SCRTip')})</div>
               </LiHead>
               <div className="num">{asset.credit_total_amount - asset.credit_remain_amount}</div>
               <AssetBox className="tips">
