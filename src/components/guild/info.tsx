@@ -311,9 +311,11 @@ export default function Info(props: Iprops) {
                       ）
                     </span>
                   </div>
-                  <Button shape="Rectangle" appearance="outline" size="Medium" onClick={() => handleShowEditPoints()}>
-                    {t('general.Change')}
-                  </Button>
+                  {canUpdateBudget && (
+                    <Button shape="Rectangle" appearance="outline" size="Medium" onClick={() => handleShowEditPoints()}>
+                      {t('general.Change')}
+                    </Button>
+                  )}
                 </>
               )}
               {showEditPoints && (
