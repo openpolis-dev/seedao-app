@@ -11,9 +11,9 @@ import { closeProjectById, UpdateBudget, UpdateInfo } from 'requests/project';
 import requests from 'requests';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import { InputGroup } from '@paljs/ui/Input';
-import { Toastr, ToastrRef } from '@paljs/ui/Toastr';
 import usePermission from 'hooks/usePermission';
 import { PermissionObject, PermissionAction } from 'utils/constant';
+import useToast, { ToastType } from 'hooks/useToast';
 
 const Box = styled.div`
   margin-top: 50px;
@@ -69,16 +69,18 @@ const InputBox = styled(InputGroup)`
 interface Iprops {
   detail: ReTurnProject | undefined;
   updateProjectStatus: (status: ProjectStatus) => void;
+  updateProjectName: (name: string) => void;
+  updateProject: () => void;
 }
 export default function Info(props: Iprops) {
-  const { detail, updateProjectStatus } = props;
+  const { detail, updateProjectStatus, updateProjectName, updateProject } = props;
+  const { Toast, showToast } = useToast();
   const [show, setShow] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const { t } = useTranslation();
   const router = useRouter();
   const { id } = router.query;
   const { dispatch } = useAuthContext();
-  const toastrRef = useRef<ToastrRef>(null);
 
   const [token, setToken] = useState<IBudgetItem>();
   const [points, setPoints] = useState<IBudgetItem>();
@@ -94,7 +96,7 @@ export default function Info(props: Iprops) {
   const canCloseProject = usePermission(PermissionAction.Close, PermissionObject.ProjPrefix + id);
 
   useEffect(() => {
-    getDetail();
+    id && detail && getDetail();
   }, [id, detail]);
 
   const getDetail = () => {
@@ -125,7 +127,7 @@ export default function Info(props: Iprops) {
       updateProjectStatus(ProjectStatus.Pending);
     } catch (e) {
       console.error(e);
-      showToastr(JSON.stringify(e), 'Failed', 'Danger');
+      showToast(JSON.stringify(e), ToastType.Danger);
       dispatch({ type: AppActionType.SET_LOADING, payload: null });
       closeModal();
     }
@@ -154,11 +156,12 @@ export default function Info(props: Iprops) {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
       await UpdateBudget(id as string, obj);
-      dispatch({ type: AppActionType.SET_LOADING, payload: null });
-      showToastr(t('Project.changeBudgetSuccess'), t('general.Success'), 'Primary');
+      showToast(t('Project.changeBudgetSuccess'), ToastType.Success);
+      updateProject();
     } catch (e) {
       console.error(e);
-      showToastr(JSON.stringify(e), 'Failed', 'Danger');
+      showToast(JSON.stringify(e), ToastType.Danger);
+    } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: null });
     }
   };
@@ -171,13 +174,14 @@ export default function Info(props: Iprops) {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
       await UpdateInfo(id as string, obj);
-      showToastr(t('Project.changeProName'), t('general.Success'), 'Primary');
+      showToast(t('Project.changeProName'), ToastType.Success);
       setShowName(false);
       dispatch({ type: AppActionType.SET_LOADING, payload: null });
+      updateProjectName(editName);
     } catch (e) {
       console.error(e);
       setShowEditToken(false);
-      showToastr(JSON.stringify(e), 'Failed', 'Danger');
+      showToast(JSON.stringify(e), ToastType.Danger);
       dispatch({ type: AppActionType.SET_LOADING, payload: null });
     }
   };
@@ -217,9 +221,6 @@ export default function Info(props: Iprops) {
   const closeShowName = () => {
     setShowName(false);
   };
-  const showToastr = (message: string, title: string, type: string) => {
-    toastrRef.current?.add(message, title, { status: type });
-  };
 
   const showProjectStatusComponent = () => {
     if (showName) {
@@ -246,27 +247,10 @@ export default function Info(props: Iprops) {
 
   return (
     <Box>
+      {Toast}
       {show && <CloseTips closeModal={closeModal} handleClosePro={handleClosePro} />}
       {showSuccess && <CloseSuccess closeModal={closeSuccess} />}
 
-      <Toastr
-        ref={toastrRef}
-        position="topEnd"
-        status="Primary"
-        duration={3000}
-        icons={{
-          Danger: 'flash-outline',
-          Success: 'checkmark-outline',
-          Info: 'question-mark-outline',
-          Warning: 'alert-triangle-outline',
-          Control: 'email-outline',
-          Basic: 'email-outline',
-          Primary: 'checkmark-outline',
-        }}
-        hasIcon={true}
-        destroyByClick={false}
-        preventDuplicates={false}
-      />
       <Container>
         <TopImg>
           <img src={detail?.logo} alt="" />
