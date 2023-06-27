@@ -13,6 +13,9 @@ import { PermissionAction, PermissionObject } from 'utils/constant';
 import publicJs from 'utils/publicJs';
 import axios from 'axios';
 import CopyBox from 'components/copy';
+import { ethers } from 'ethers';
+import ModifyBudgetModal from 'components/assetsCom/modifyBudget';
+import { BudgetType } from 'type/project.type';
 
 const Box = styled.div`
   padding: 40px 20px;
@@ -26,30 +29,33 @@ const FirstLine = styled.ul`
   align-items: center;
   justify-content: space-between;
   width: 100%;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 40px;
   li {
+    width: 23%;
+    height: 172px;
     border: 1px solid #f1f1f1;
-    margin-bottom: 40px;
     box-sizing: border-box;
     border-radius: 10px;
     overflow: hidden;
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-    padding: 40px;
-    width: 48%;
-    height: 152px;
+    padding: 20px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    &.center {
-      justify-content: center;
-    }
+    flex-direction: column;
     div {
       text-align: center;
+    }
+    @media screen and (max-width: 1000px) {
+      width: 48%;
     }
   }
   .num {
     font-size: 25px;
-    padding-top: 10px;
-    font-weight: bold;
+    font-weight: 600;
+    margin-bottom: 20px;
+    margin-top: 10px;
   }
   .tips {
     font-size: 12px;
@@ -112,6 +118,9 @@ const VAULTS = [
   },
 ];
 
+const SCR_CONTRACT = '0xc74dee15a4700d5df797bdd3982ee649a3bb8c6c';
+const SCR_PRICE = 3;
+
 type VaultType = {
   name: string;
   address: string;
@@ -129,17 +138,21 @@ export default function Index() {
   const { Toast, showToast } = useToast();
   const canUseCityhall = usePermission(PermissionAction.AuditApplication, PermissionObject.ProjectAndGuild);
 
-  const [tokenNum, setTokenNum] = useState<number>();
   const [asset, setAsset] = useState({
     token_remain_amount: 0,
     token_total_amount: 0,
     credit_total_amount: 0,
   });
-  const [isEdit, setIsEdit] = useState(false);
+  const [showModifyModal, setshowModifyModal] = useState<BudgetType>();
   const [showVaultDetail, setShowVaultDetail] = useState(false);
   const [vaultsMap, setVaultsMap] = useState<VaultInfoMap>({});
   const [totalSigner, setTotalSigner] = useState(0);
   const [totalBalance, setTotalBalance] = useState('0.00');
+  const [totalSCR, setTotalSCR] = useState('0');
+  const [nftData, setNftData] = useState({
+    floorPrice: 0,
+    totalSupply: 0,
+  });
 
   const getAssets = async () => {
     try {
@@ -157,19 +170,73 @@ export default function Index() {
     getAssets();
   }, []);
 
-  const handleEdit = async () => {
-    if (!tokenNum || tokenNum < 0) return;
+  const handleModifyBudget = async (budget: number) => {
+    if (!showModifyModal) {
+      return;
+    }
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
-      await requests.treasury.updateTokenBudget(tokenNum);
-      setIsEdit(false);
+      await requests.treasury.updateBudget(
+        budget,
+        showModifyModal,
+        showModifyModal === BudgetType.Token ? 'USDT' : 'SCR',
+      );
       getAssets();
       showToast('success', ToastType.Success);
+      setshowModifyModal(undefined);
     } catch (error: any) {
       console.error('updateTokenBudget error', error);
       showToast(error?.data?.msg || 'failed', ToastType.Danger);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
+    }
+  };
+
+  const getFloorPrice = async () => {
+    try {
+      const url = 'https://api.opensea.io/collection/seedaogenesis/stats';
+      const res = await axios.get(url, {
+        headers: {
+          'X-API-KEY ': 'b9d06db8f47d41e68eb867b2dca205c3',
+        },
+      });
+      setNftData({
+        floorPrice: res.data?.stats?.floor_price || 0,
+        totalSupply: res.data?.stats?.count || 0,
+      });
+    } catch (error) {
+      console.error('getFloorPrice error', error);
+    }
+  };
+
+  const getSCR = async () => {
+    const provider = new ethers.providers.StaticJsonRpcProvider(
+      'https://eth-mainnet.g.alchemy.com/v2/YuNeXto27ejHnOIGOwxl2N_cHCfyLyLE',
+    );
+    try {
+      const contract = new ethers.Contract(
+        SCR_CONTRACT,
+        [
+          {
+            inputs: [],
+            name: 'totalSupply',
+            outputs: [
+              {
+                internalType: 'uint256',
+                name: '',
+                type: 'uint256',
+              },
+            ],
+            stateMutability: 'view',
+            type: 'function',
+          },
+        ],
+        provider,
+      );
+      const supply = await contract.totalSupply();
+      setTotalSCR(ethers.utils.formatEther(supply));
+    } catch (error) {
+      console.error('getSCR error', error);
     }
   };
 
@@ -221,13 +288,22 @@ export default function Index() {
     setVaultsMap(vaults_map);
   };
 
+  const SCRValue = useMemo(() => {
+    return Number(totalSCR) * SCR_PRICE;
+  }, [totalSCR]);
+
   useEffect(() => {
+    getSCR();
+    getFloorPrice();
     getVaultsInfo();
   }, []);
 
   return (
     <Layout title="SeeDAO Assets">
       {Toast}
+      {!!showModifyModal && (
+        <ModifyBudgetModal handleClose={() => setshowModifyModal(undefined)} handleModify={handleModifyBudget} />
+      )}
       <CardBox>
         <Box>
           <Vault>
@@ -298,46 +374,57 @@ export default function Index() {
             )}
           </Vault>
           <FirstLine>
-            <li>
-              <div className="line">
-                <div>本季度USD剩余资产</div>
-                <div className="num">{asset.token_remain_amount}</div>
-              </div>
-              <div>
-                <div>本季度USD资产</div>
-                {isEdit ? (
-                  <InputBox>
-                    <input
-                      type="number"
-                      placeholder={'please input'}
-                      value={tokenNum}
-                      onChange={(e) => setTokenNum(e.target.valueAsNumber)}
-                    />
-                    <span className="btn-ok" onClick={handleEdit}>
-                      <EvaIcon name="checkmark-outline" />
-                    </span>
-                  </InputBox>
-                ) : (
-                  <AssetBox className="num">
-                    <span>{asset.token_total_amount}</span>
-                    {canUseCityhall && (
-                      <span className="btn-edit" onClick={() => setIsEdit(true)}>
-                        <EvaIcon name="edit-2-outline" />
-                      </span>
-                    )}
-                  </AssetBox>
-                )}
+            <li className="center">
+              <LiHead>
+                <LiTitle>{t('Assets.SupplySCR')}</LiTitle>
+                <div className="tips"></div>
+              </LiHead>
+              <div className="num">{totalSCR}</div>
+              <div style={{ textAlign: 'left' }}>
+                <p>≈{SCRValue.toFixed(2)}U</p>
+                <p className="tips">1SCR ≈ {SCR_PRICE}U</p>
               </div>
             </li>
             <li className="center">
-              <div>
-                <div>
-                  <div>本季度已发放积分</div>
-                  <div className="tips">(包含待发放未上链积分)</div>
-                </div>
-
-                <div className="num">{asset.credit_total_amount}</div>
+              <LiHead>
+                <LiTitle>{t('Assets.SupplySGN')}</LiTitle>
+                <div className="tips"></div>
+              </LiHead>
+              <div className="num">{nftData.totalSupply}</div>
+              <div className="tips">
+                {t('Assets.FloorPrice')}: <span>{nftData.floorPrice}ETH</span>
               </div>
+            </li>
+            <li>
+              <LiHead>
+                <LiTitle>{t('Assets.SeasonUseUSD')}</LiTitle>
+              </LiHead>
+              <div className="num">{asset.token_remain_amount}</div>
+              <AssetBox className="tips">
+                <span>{t('Assets.SeasonBudget')}:</span>
+                <span>{asset.token_total_amount}</span>
+                {canUseCityhall && (
+                  <span className="btn-edit" onClick={() => setshowModifyModal(BudgetType.Token)}>
+                    <EvaIcon name="edit-2-outline" options={{ width: '16px', height: '16px' }} />
+                  </span>
+                )}
+              </AssetBox>
+            </li>
+            <li className="center">
+              <LiHead>
+                <LiTitle>{t('Assets.SeasonUsedSCR')}</LiTitle>
+                <div className="tips">(包含待发放未上链积分)</div>
+              </LiHead>
+              <div className="num">{asset.credit_total_amount}</div>
+              <AssetBox className="tips">
+                <span>{t('Assets.SeasonBudget')}:</span>
+                <span>{asset.token_total_amount}</span>
+                {canUseCityhall && (
+                  <span className="btn-edit" onClick={() => setshowModifyModal(BudgetType.Credit)}>
+                    <EvaIcon name="edit-2-outline" options={{ width: '16px', height: '16px' }} />
+                  </span>
+                )}
+              </AssetBox>
             </li>
           </FirstLine>
 
@@ -350,9 +437,11 @@ export default function Index() {
 
 const AssetBox = styled.div`
   display: flex;
-  gap: 6px;
+  align-items: center;
+  gap: 8px;
   .btn-edit {
     cursor: pointer;
+    height: 18px;
   }
 `;
 
@@ -388,6 +477,7 @@ const InfoItem = styled.li`
         align-items: center;
         gap: 5px;
       }
+      color: ${theme.colorPrimary500};
     }
     > span:first-child {
       font-weight: ${theme.textSubtitleFontWeight};
@@ -460,5 +550,15 @@ const Tag = styled.span`
     span {
       margin-left: 5px;
     }
+  `}
+`;
+
+const LiHead = styled.div`
+  height: 40px;
+`;
+
+const LiTitle = styled.div`
+  ${({ theme }) => css`
+    font-weight: ${theme.textSubtitleFontWeight};
   `}
 `;

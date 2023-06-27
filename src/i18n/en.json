@@ -150,8 +150,10 @@
     "SupplySGN": "Sent SGN",
     "SeasonUseUSD": "Season used USD",
     "SeasonBudget": "Season budget",
+    "ModifySeasonBudget": "Modify season budget",
     "SeasonUsedSCR": "Season sent SCR",
     "SCRTip": "includes off-chain SCR",
+    "FloorPrice": "Floor price",
     "CommunityVault": "Community Vault",
     "CityHallVault": "CityHall Vault",
     "IncubatorVault": "Incubator Vault"

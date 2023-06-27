@@ -22,3 +22,9 @@ export const updateTokenBudget = (amount: number) => {
     { total_amount: amount, asset_name: 'USDT', budget_type: BudgetType.Token },
   ]);
 };
+
+export const updateBudget = (amount: number, type: BudgetType, asset_name: 'USDT' | 'SCR') => {
+  return request.post(`${PATH_PREFIX}/update_assets`, [
+    { total_amount: amount, asset_name: asset_name, budget_type: type },
+  ]);
+};
