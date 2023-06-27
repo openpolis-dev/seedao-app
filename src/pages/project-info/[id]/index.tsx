@@ -17,6 +17,7 @@ import { ProjectStatus, ReTurnProject } from 'type/project.type';
 import useTranslation from 'hooks/useTranslation';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import { listObj } from 'pages/project';
+import useCheckLogin from 'hooks/useCheckLogin';
 
 const Box = styled.div`
   position: relative;
@@ -47,6 +48,7 @@ const BtmBox = styled.div``;
 export default function Index() {
   const router = useRouter();
   const { t } = useTranslation();
+  const isLogin = useCheckLogin();
   const {
     state: { language },
     dispatch,
@@ -74,7 +76,7 @@ export default function Index() {
   };
 
   useEffect(() => {
-    setList([
+    const _list = [
       {
         name: t('Project.ProjectInformation'),
         id: 0,
@@ -91,12 +93,15 @@ export default function Index() {
         name: t('Project.ProjectProposal'),
         id: 3,
       },
-      {
+    ];
+    if (isLogin) {
+      _list.push({
         name: t('Project.Add'),
         id: 4,
-      },
-    ]);
-  }, [language]);
+      });
+    }
+    setList(_list);
+  }, [t, isLogin]);
 
   const updateProjectStatus = (status: ProjectStatus) => {
     if (detail) {
