@@ -1,14 +1,11 @@
 import Container from '@paljs/ui/Container';
 import styled from 'styled-components';
 import { Button } from '@paljs/ui/Button';
-import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
-import CloseTips from 'components/guild/closeTips';
-import CloseSuccess from 'components/guild/closeSuccess';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import useTranslation from 'hooks/useTranslation';
-import { BudgetObj, IBudgetItem, InfoObj, ProjectStatus, ReTurnProject } from 'type/project.type';
+import { BudgetObj, IBudgetItem, InfoObj, ReTurnProject } from 'type/project.type';
 import { useRouter } from 'next/router';
-import { closeProjectById, UpdateBudget, UpdateInfo } from 'requests/guild';
-import requests from 'requests';
+import { UpdateBudget, UpdateInfo } from 'requests/guild';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import { InputGroup } from '@paljs/ui/Input';
 import usePermission from 'hooks/usePermission';
@@ -200,7 +197,7 @@ export default function Info(props: Iprops) {
         </TopImg>
         <InfoBox>
           <dl>
-            <dt>{t('Project.ProjectName')}:</dt>
+            <dt>{t('Guild.ProjectName')}:</dt>
             <dd>
               {!showName && (
                 <>
@@ -224,7 +221,7 @@ export default function Info(props: Iprops) {
                   <InputBox fullWidth>
                     <input
                       type="text"
-                      placeholder={t('Project.ProjectName')}
+                      placeholder={t('Guild.ProjectName')}
                       value={editName}
                       onChange={(e) => handleInput(e, 'name')}
                     />
@@ -245,9 +242,9 @@ export default function Info(props: Iprops) {
               )}
             </dd>
           </dl>
-          <Title>{t('Project.Budget')}</Title>
+          <Title>{t('Guild.Budget')}</Title>
           <dl>
-            <dt>{t('Project.Points')}:</dt>
+            <dt>{t('Guild.Points')}:</dt>
             <dd>
               {!showEditPoints && (
                 <>
@@ -255,7 +252,7 @@ export default function Info(props: Iprops) {
                     <span>{points?.total_amount}</span>
                     <span>
                       （
-                      {t('Project.HasBeenUsedAndRemains', {
+                      {t('Guild.HasBeenUsedAndRemains', {
                         used: Number(points?.total_amount) - Number(points?.remain_amount),
                         remain: points?.remain_amount,
                       })}
@@ -274,7 +271,7 @@ export default function Info(props: Iprops) {
                   <InputBox fullWidth>
                     <input
                       type="text"
-                      placeholder={t('Project.Points')}
+                      placeholder={t('Guild.Points')}
                       value={editPoint}
                       onChange={(e) => handleInput(e, 'points')}
                     />
@@ -298,7 +295,7 @@ export default function Info(props: Iprops) {
                     <span>{token?.total_amount}</span>
                     <span>
                       (
-                      {t('Project.HasBeenUsedAndRemains', {
+                      {t('Guild.HasBeenUsedAndRemains', {
                         used: Number(token?.total_amount) - Number(token?.remain_amount),
                         remain: token?.remain_amount,
                       })}
