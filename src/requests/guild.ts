@@ -12,7 +12,7 @@ export const getProjects = (data: IPageParams): Promise<ResponseData<IPageRespon
   return request.get(PATH_PREFIX, data);
 };
 export const getMyProjects = (data: IPageParams) => {
-  return request.get(`/my_projects`, data);
+  return request.get(`/my_guilds`, data);
 };
 
 export const getProjectById = (projectId: string) => {
