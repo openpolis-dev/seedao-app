@@ -103,12 +103,11 @@ export default function Index() {
     setList(_list);
   }, [t, isLogin]);
 
-  const updateProjectStatus = (status: ProjectStatus) => {
+  const updateProjectName = (value: string) => {
     if (detail) {
-      setDetail({ ...detail, status });
+      setDetail({ ...detail, name: value });
     }
   };
-
   return (
     <Layout title="SeeDAO Project">
       <CardBox>
@@ -125,7 +124,9 @@ export default function Index() {
                   ))}
                 </Tabs>
                 <BtmBox>
-                  {current === 0 && <Info detail={detail} updateProjectStatus={updateProjectStatus} />}
+                  {current === 0 && (
+                    <Info detail={detail} updateProjectName={updateProjectName} updateProject={getDetail} />
+                  )}
                   {current === 1 && <Members detail={detail} updateProject={getDetail} />}
                   {current === 2 && <Assets id={projectId} detail={detail} />}
                   {current === 3 && <ProjectProposal detail={detail} refreshProject={getDetail} />}

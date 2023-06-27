@@ -11,9 +11,9 @@ import { closeProjectById, UpdateBudget, UpdateInfo } from 'requests/guild';
 import requests from 'requests';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import { InputGroup } from '@paljs/ui/Input';
-import { Toastr, ToastrRef } from '@paljs/ui/Toastr';
 import usePermission from 'hooks/usePermission';
 import { PermissionObject, PermissionAction } from 'utils/constant';
+import useToast, { ToastType } from 'hooks/useToast';
 
 const Box = styled.div`
   margin-top: 50px;
@@ -68,17 +68,16 @@ const InputBox = styled(InputGroup)`
 
 interface Iprops {
   detail: ReTurnProject | undefined;
-  updateProjectStatus: (status: ProjectStatus) => void;
+  updateProjectName: (name: string) => void;
+  updateProject: () => void;
 }
 export default function Info(props: Iprops) {
-  const { detail, updateProjectStatus } = props;
-  const [show, setShow] = useState(false);
-  const [showSuccess, setShowSuccess] = useState(false);
+  const { detail, updateProjectName, updateProject } = props;
+  const { Toast, showToast } = useToast();
   const { t } = useTranslation();
   const router = useRouter();
   const { id } = router.query;
   const { dispatch } = useAuthContext();
-  const toastrRef = useRef<ToastrRef>(null);
 
   const [token, setToken] = useState<IBudgetItem>();
   const [points, setPoints] = useState<IBudgetItem>();
@@ -106,34 +105,6 @@ export default function Info(props: Iprops) {
     setEditPoint(_point?.total_amount);
   };
 
-  const closeModal = () => {
-    setShow(false);
-  };
-  const handleShow = () => {
-    setShow(true);
-  };
-
-  const handleClosePro = async () => {
-    setShow(false);
-    dispatch({ type: AppActionType.SET_LOADING, payload: true });
-    try {
-      await requests.application.createCloseProjectApplication(Number(id as string));
-      dispatch({ type: AppActionType.SET_LOADING, payload: null });
-      setShowSuccess(true);
-      // reset project status
-      updateProjectStatus(ProjectStatus.Pending);
-    } catch (e) {
-      console.error(e);
-      showToastr(JSON.stringify(e), 'Failed', 'Danger');
-      dispatch({ type: AppActionType.SET_LOADING, payload: null });
-      closeModal();
-    }
-  };
-
-  const closeSuccess = () => {
-    setShowSuccess(false);
-  };
-
   const handleShowEditPoints = () => {
     setShowEditPoints(true);
   };
@@ -154,10 +125,11 @@ export default function Info(props: Iprops) {
     try {
       await UpdateBudget(id as string, obj);
       dispatch({ type: AppActionType.SET_LOADING, payload: null });
-      showToastr(t('Project.changeBudgetSuccess'), t('general.Success'), 'Primary');
+      showToast(t('Guild.changeBudgetSuccess'), ToastType.Success);
+      updateProject();
     } catch (e) {
       console.error(e);
-      showToastr(JSON.stringify(e), 'Failed', 'Danger');
+      showToast(JSON.stringify(e), ToastType.Danger);
       dispatch({ type: AppActionType.SET_LOADING, payload: null });
     }
   };
@@ -170,13 +142,15 @@ export default function Info(props: Iprops) {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
       await UpdateInfo(id as string, obj);
-      showToastr(t('Project.changeProName'), t('general.Success'), 'Primary');
+      showToast(t('Guild.changeProName'), ToastType.Success);
       setShowName(false);
+      updateProjectName(editName);
       dispatch({ type: AppActionType.SET_LOADING, payload: null });
     } catch (e) {
       console.error(e);
       setShowEditToken(false);
-      showToastr(JSON.stringify(e), 'Failed', 'Danger');
+      showToast(JSON.stringify(e), ToastType.Danger);
+
       dispatch({ type: AppActionType.SET_LOADING, payload: null });
     }
   };
@@ -216,33 +190,10 @@ export default function Info(props: Iprops) {
   const closeShowName = () => {
     setShowName(false);
   };
-  const showToastr = (message: string, title: string, type: string) => {
-    toastrRef.current?.add(message, title, { status: type });
-  };
 
   return (
     <Box>
-      {show && <CloseTips closeModal={closeModal} handleClosePro={handleClosePro} />}
-      {showSuccess && <CloseSuccess closeModal={closeSuccess} />}
-
-      <Toastr
-        ref={toastrRef}
-        position="topEnd"
-        status="Primary"
-        duration={3000}
-        icons={{
-          Danger: 'flash-outline',
-          Success: 'checkmark-outline',
-          Info: 'question-mark-outline',
-          Warning: 'alert-triangle-outline',
-          Control: 'email-outline',
-          Basic: 'email-outline',
-          Primary: 'checkmark-outline',
-        }}
-        hasIcon={true}
-        destroyByClick={false}
-        preventDuplicates={false}
-      />
+      {Toast}
       <Container>
         <TopImg>
           <img src={detail?.logo} alt="" />
