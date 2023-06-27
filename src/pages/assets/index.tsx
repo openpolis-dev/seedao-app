@@ -187,7 +187,7 @@ export default function Index() {
       showToast('success', ToastType.Success);
       setshowModifyModal(undefined);
     } catch (error: any) {
-      console.error('updateTokenBudget error', error);
+      console.error('updateBudget error', error);
       showToast(error?.data?.msg || 'failed', ToastType.Danger);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: false });

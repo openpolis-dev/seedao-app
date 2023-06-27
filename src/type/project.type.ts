@@ -15,7 +15,7 @@ export enum BudgetType {
 }
 
 export interface IBaseBudgetItem {
-  name: 'USDT' | 'Points';
+  name: 'USDT' | 'SCR';
   total_amount: number;
   budget_type: BudgetType;
 }

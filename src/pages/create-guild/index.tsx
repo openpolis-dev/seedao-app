@@ -219,7 +219,7 @@ export default function CreateGuild() {
           budget_type: BudgetType.Token,
         },
         {
-          name: 'Points',
+          name: 'SCR',
           total_amount: credit || 0,
           budget_type: BudgetType.Credit,
         },

@@ -104,7 +104,7 @@ export default function Info(props: Iprops) {
     const _token = detail?.budgets?.find((item) => item.name === 'USDT');
     setToken(_token);
     setEditToken(_token?.total_amount);
-    const _point = detail?.budgets?.find((item) => item.name === 'Points');
+    const _point = detail?.budgets?.find((item) => item.name === 'SCR');
     setPoints(_point);
     setEditPoint(_point?.total_amount);
   };
@@ -314,8 +314,8 @@ export default function Info(props: Iprops) {
                     <span>
                       （
                       {t('Project.HasBeenUsedAndRemains', {
-                        used: Number(points?.total_amount) - Number(points?.remain_amount),
-                        remain: points?.remain_amount,
+                        used: Number(points?.total_amount || 0) - Number(points?.remain_amount || 0),
+                        remain: points?.remain_amount || 0,
                       })}
                       ）
                     </span>
@@ -357,8 +357,8 @@ export default function Info(props: Iprops) {
                     <span>
                       (
                       {t('Project.HasBeenUsedAndRemains', {
-                        used: Number(token?.total_amount) - Number(token?.remain_amount),
-                        remain: token?.remain_amount,
+                        used: Number(token?.total_amount || 0) - Number(token?.remain_amount || 0),
+                        remain: token?.remain_amount || 0,
                       })}
                       )
                     </span>
