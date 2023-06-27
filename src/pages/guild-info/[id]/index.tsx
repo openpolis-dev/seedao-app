@@ -18,6 +18,8 @@ import useTranslation from 'hooks/useTranslation';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import { listObj } from 'pages/project';
 import useCheckLogin from 'hooks/useCheckLogin';
+import usePermission from 'hooks/usePermission';
+import { PermissionObject, PermissionAction } from 'utils/constant';
 
 const Box = styled.div`
   position: relative;
@@ -59,6 +61,8 @@ export default function Index() {
   const [current, setCurrent] = useState<number>(0);
   const [list, setList] = useState<listObj[]>([]);
 
+  const canAuditApplication = usePermission(PermissionAction.AuditApplication, PermissionObject.GuildPrefix + id);
+
   useEffect(() => {
     if (!id) return;
     getDetail();
@@ -94,14 +98,14 @@ export default function Index() {
         id: 3,
       },
     ];
-    if (isLogin) {
+    if (isLogin && canAuditApplication) {
       _list.push({
         name: t('Guild.Add'),
         id: 4,
       });
     }
     setList(_list);
-  }, [t, isLogin]);
+  }, [t, isLogin, canAuditApplication]);
 
   const updateProjectName = (value: string) => {
     if (detail) {
