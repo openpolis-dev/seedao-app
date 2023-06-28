@@ -65,6 +65,8 @@
     "ImportForm": "导入表格",
     "Tips": "下载模板填写信息后导入",
     "createProposal": "创建提案",
+    "SubmitSuccess": "提交成功",
+    "SubmitFailed": "提交失败",
     "Record": "记录",
     "State": "状态",
     "AllState": "所有状态",
@@ -84,7 +86,11 @@
     "RemainingUSDBudget": "剩余USD预算",
     "USDBudget": "USD预算",
     "RemainingPointsBudget": "剩余积分预算",
-    "PointsBudget": "积分预算"
+    "PointsBudget": "积分预算",
+    "ImportError": "{key}错误",
+    "PointsOrToken": "积分或Token",
+    "Credit": "积分",
+    "Token": "Token"
   },
   "Guild": {
     "create": "创建公会",

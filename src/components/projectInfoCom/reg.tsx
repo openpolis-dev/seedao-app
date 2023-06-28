@@ -11,6 +11,9 @@ import { useCSVReader } from 'react-papaparse';
 import { ApplicationType } from 'type/application.type';
 import { ICreateBudgeApplicationRequest } from 'requests/applications';
 import Loading from 'components/loading';
+import { ethers } from 'ethers';
+import useToast, { ToastType } from 'hooks/useToast';
+import { AssetName } from 'utils/constant';
 
 const Box = styled.div`
   padding: 20px;
@@ -56,20 +59,29 @@ const BtnBox = styled.label`
     margin-right: 10px;
   }
 `;
+
+type ErrorDataType = {
+  line: number;
+  errorKeys: string[];
+};
 export default function Reg({ id }: { id: number }) {
   const { t } = useTranslation();
+  const { Toast, showToast } = useToast();
   // const { CSVReader } = useCSVReader();
   const [loading, setLoading] = useState(false);
 
   const [list, setList] = useState<ExcelObj[]>([]);
+  const [errList, setErrList] = useState<ErrorDataType[]>([]);
 
   const Clear = () => {
     setList([]);
+    setErrList([]);
   };
   const updateLogo = (e: FormEvent) => {
     const { files } = e.target as any;
     const fileReader = new FileReader();
     fileReader.readAsBinaryString(files[0]);
+    const _errs: ErrorDataType[] = [];
 
     (fileReader as any).onload = (event: ChangeEvent) => {
       try {
@@ -84,26 +96,48 @@ export default function Reg({ id }: { id: number }) {
             });
 
             const arrs = csvData.split('\n');
-            const objs = [];
+            const objs: any = [];
 
-            for (const item of arrs) {
-              const vals = item.split(',');
-              const [address, points, token, content, note] = vals;
-              objs.push({
-                address,
-                points,
-                token,
-                content,
-                note,
-              });
-            }
+            arrs.forEach((item, index) => {
+              console.log(index, item);
+              if (index !== 0) {
+                const vals = item.split(',');
+                const [address, points, token, content, note] = vals;
+                objs.push({
+                  address,
+                  points,
+                  token,
+                  content,
+                  note,
+                });
+                const _is_valid_address = ethers.utils.isAddress(address);
+                const _token_val = Number(token);
+                const _is_valid_token = !!_token_val && _token_val > 0;
+                const _credit_val = Number(points);
+                const _is_valid_credit = !!_credit_val && _credit_val > 0;
+                const e: ErrorDataType = { line: index, errorKeys: [] };
+
+                if (!_is_valid_address) {
+                  e.errorKeys.push('Address');
+                }
+                if (!_is_valid_token && !_is_valid_credit) {
+                  e.errorKeys.push('PointsOrToken');
+                } else if (!_is_valid_token && (isNaN(_token_val) || _token_val < 0)) {
+                  e.errorKeys.push('Token');
+                } else if (!_is_valid_credit && (isNaN(_credit_val) || _credit_val < 0)) {
+                  e.errorKeys.push('Credit');
+                }
+                if (e.errorKeys.length) {
+                  _errs.push(e);
+                }
+              }
+            });
 
             data = objs;
           }
         }
-
-        data.splice(0, 1);
         setList(data);
+        setErrList(_errs);
 
         console.log('Upload file successful!');
       } catch (e) {
@@ -113,24 +147,33 @@ export default function Reg({ id }: { id: number }) {
   };
 
   const handleCreate = async () => {
-    // TODO check invalid data
     setLoading(true);
     try {
-      const data: ICreateBudgeApplicationRequest[] = list.map((item) => ({
-        type: ApplicationType.NewReward,
-        entity: 'project',
-        entity_id: id,
-        credit_amount: Number(item.points) || 0,
-        token_amount: Number(item.token) || 0,
-        detailed_type: item.content || '',
-        comment: item.note || '',
-        target_user_wallet: item.address,
-      }));
+      const data: ICreateBudgeApplicationRequest[] = list.map((item) => {
+        const d: ICreateBudgeApplicationRequest = {
+          type: ApplicationType.NewReward,
+          entity: 'project',
+          entity_id: id,
+          detailed_type: item.content || '',
+          comment: item.note || '',
+          target_user_wallet: item.address,
+        };
+        if (Number(item.points)) {
+          d.credit_amount = Number(item.points);
+          d.credit_asset_name = AssetName.Credit;
+        }
+        if (Number(item.token)) {
+          d.token_amount = Number(item.token);
+          d.token_asset_name = AssetName.Token;
+        }
+        return d;
+      });
       await requests.application.createBudgetApplications(data);
       Clear();
-      // TODO alert success
+      showToast(t('Project.SubmitSuccess'), ToastType.Success);
     } catch (error) {
       console.error('createBudgetApplications failed:', error);
+      showToast(t('Project.SubmitFailed'), ToastType.Danger);
     } finally {
       setLoading(false);
     }
@@ -143,8 +186,9 @@ export default function Reg({ id }: { id: number }) {
   return (
     <Box>
       {loading && <Loading />}
+      {Toast}
       <FirstBox>
-        <Button disabled={!list.length} onClick={handleCreate}>
+        <Button disabled={!list.length || !!errList.length} onClick={handleCreate}>
           {t('Project.SubmitForReview')}
         </Button>
         <RhtBox>
@@ -190,7 +234,31 @@ export default function Reg({ id }: { id: number }) {
           )}
         </RhtBox>
       </FirstBox>
+      {!!errList.length && (
+        <ErrorBox>
+          <li>Import failed:</li>
+          {errList.map((item) => (
+            <li key={item.line}>
+              #{item.line}{' '}
+              {item.errorKeys.map((ekey) => (
+                <span key={ekey}>{t('Project.ImportError', { key: t(`Project.${ekey}`) })}</span>
+              ))}
+            </li>
+          ))}
+        </ErrorBox>
+      )}
+
       <RegList uploadList={list} />
     </Box>
   );
 }
+
+const ErrorBox = styled.ul`
+  li {
+    color: red;
+    line-height: 24px;
+    span {
+      margin-inline: 5px;
+    }
+  }
+`;
