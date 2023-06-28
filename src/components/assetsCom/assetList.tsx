@@ -334,7 +334,7 @@ export default function AssetList() {
                       <td>
                         {item.status === ApplicationStatus.Completed && (
                           <Button appearance="outline" size="Tiny" onClick={() => handleShow(item.transactions || [])}>
-                            {t('project.View')}
+                            {t('Project.View')}
                           </Button>
                         )}
                       </td>
