@@ -1,6 +1,7 @@
 // City Hall Module API
 import request, { ResponseData, getBaseURL } from './http';
 import { ApplicationStatus, ApplicationType, IApplication } from 'type/application.type';
+import { AssetName } from 'utils/constant';
 
 const PATH_PREFIX = '/applications/';
 
