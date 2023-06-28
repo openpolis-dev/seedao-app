@@ -21,7 +21,13 @@ export const getProjectById = (projectId: string) => {
 export const closeProjectById = (projectId: string) => {
   return request.post(`${PATH_PREFIX}${projectId}/close`);
 };
-export const UpdateBudget = (projectId: string, data: BudgetObj) => {
+
+export interface IUpdateBudgetParams {
+  id: number;
+  asset_name: string;
+  total_amount: number;
+}
+export const UpdateBudget = (projectId: string, data: IUpdateBudgetParams) => {
   return request.post(`${PATH_PREFIX}${projectId}/update_budget`, data);
 };
 export const UpdateInfo = (projectId: string, data: InfoObj) => {

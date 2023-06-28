@@ -5,7 +5,7 @@ import React, { ChangeEvent, useEffect, useState } from 'react';
 import useTranslation from 'hooks/useTranslation';
 import { BudgetObj, IBudgetItem, InfoObj, ReTurnProject } from 'type/project.type';
 import { useRouter } from 'next/router';
-import { UpdateBudget, UpdateInfo } from 'requests/guild';
+import { IUpdateBudgetParams, UpdateBudget, UpdateInfo } from 'requests/guild';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import { InputGroup } from '@paljs/ui/Input';
 import usePermission from 'hooks/usePermission';
@@ -107,9 +107,13 @@ export default function Info(props: Iprops) {
   };
   const handlecloseEditP = () => {
     setShowEditPoints(false);
-    const obj: BudgetObj = {
-      id: Number(points!.id!),
-      totalAmount: Number(editPoint),
+    if (!points || !editPoint || editPoint < 0) {
+      return;
+    }
+    const obj: IUpdateBudgetParams = {
+      id: points.id,
+      total_amount: editPoint,
+      asset_name: points.name,
     };
     submitEditPT(obj);
   };
@@ -117,7 +121,7 @@ export default function Info(props: Iprops) {
     setShowEditPoints(false);
   };
 
-  const submitEditPT = async (obj: BudgetObj) => {
+  const submitEditPT = async (obj: IUpdateBudgetParams) => {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
       await UpdateBudget(id as string, obj);
@@ -155,11 +159,15 @@ export default function Info(props: Iprops) {
     setShowEditToken(true);
   };
   const handlecloseEditT = () => {
-    setShowEditToken(false);
-    const obj: BudgetObj = {
-      id: Number(token!.id!),
-      totalAmount: Number(editToken),
+    if (!token || !editToken || editToken < 0) {
+      return;
+    }
+    const obj: IUpdateBudgetParams = {
+      id: token.id,
+      total_amount: editToken,
+      asset_name: token.name,
     };
+    setShowEditToken(false);
     submitEditPT(obj);
   };
   const closeEditT = () => {
