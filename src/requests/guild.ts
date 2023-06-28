@@ -1,6 +1,6 @@
 // Guild Module API
 import request, { ResponseData } from './http';
-import { BudgetObj, IBaseProject, InfoObj, ReTurnProject } from 'type/project.type';
+import { IBaseProject, InfoObj, ReTurnProject } from 'type/project.type';
 
 const PATH_PREFIX = '/guilds/';
 

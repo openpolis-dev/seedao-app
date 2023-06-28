@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Button } from '@paljs/ui/Button';
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import useTranslation from 'hooks/useTranslation';
-import { BudgetObj, IBudgetItem, InfoObj, ReTurnProject } from 'type/project.type';
+import { IBudgetItem, InfoObj, ReTurnProject } from 'type/project.type';
 import { useRouter } from 'next/router';
 import { IUpdateBudgetParams, UpdateBudget, UpdateInfo } from 'requests/guild';
 import { AppActionType, useAuthContext } from 'providers/authProvider';

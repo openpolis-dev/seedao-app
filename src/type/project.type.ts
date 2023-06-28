@@ -56,10 +56,6 @@ export interface ReTurnProject {
   budgets: IBudgetItem[];
 }
 
-export interface BudgetObj {
-  id: number;
-  totalAmount: number;
-}
 export interface InfoObj {
   logo: string;
   name: string;
