@@ -281,11 +281,11 @@ export default function Members(props: Iprops) {
         {(canUpdateMember || canUpdateSponsor) && (
           <>
             <Button onClick={() => handleAdd()} disabled={edit}>
-              {t('Project.AddMember')}
+              {t('Guild.AddMember')}
             </Button>
             {!edit && (
               <Button appearance="outline" onClick={() => handleDel()}>
-                {t('Project.RemoveMember')}
+                {t('Guild.RemoveMember')}
               </Button>
             )}
             {edit && (
@@ -300,7 +300,7 @@ export default function Members(props: Iprops) {
         )}
       </TopBox>
       <ItemBox>
-        <TitleBox>{t('Project.Dominator')}</TitleBox>
+        <TitleBox>{t('Guild.Dominator')}</TitleBox>
         <UlBox>
           {adminArr.map((item, index) => (
             <li key={index}>
@@ -343,7 +343,7 @@ export default function Members(props: Iprops) {
       {!adminArr.length && <NoItem />}
 
       <ItemBox>
-        <TitleBox>{t('Project.Others')}</TitleBox>
+        <TitleBox>{t('Guild.Others')}</TitleBox>
         <UlBox>
           {memberArr.map((item, index) => (
             <li key={index}>
