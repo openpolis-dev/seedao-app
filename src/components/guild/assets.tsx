@@ -61,21 +61,21 @@ export default function Assets({ id, detail }: IProps) {
       <FirstLine>
         <li>
           <div className="line">
-            <div>{t('Project.RemainingUSDBudget')}</div>
+            <div>{t('Guild.RemainingUSDBudget')}</div>
             <div className="num">{token?.remain_amount}</div>
           </div>
           <div>
-            <div>{t('Project.USDBudget')}</div>
+            <div>{t('Guild.USDBudget')}</div>
             <div className="num">{token?.total_amount}</div>
           </div>
         </li>
         <li>
           <div>
-            <div>{t('Project.RemainingPointsBudget')}</div>
+            <div>{t('Guild.RemainingPointsBudget')}</div>
             <div className="num">{point?.remain_amount}</div>
           </div>
           <div>
-            <div>{t('Project.PointsBudget')}</div>
+            <div>{t('Guild.PointsBudget')}</div>
             <div className="num">{point?.total_amount}</div>
           </div>
         </li>
