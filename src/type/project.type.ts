@@ -23,6 +23,7 @@ export interface IBaseBudgetItem {
 export interface IBudgetItem extends IBaseBudgetItem {
   id: number;
   remain_amount: number;
+  used_amount: number;
   created_at: number;
   updated_at: number;
   type: BudgetType;

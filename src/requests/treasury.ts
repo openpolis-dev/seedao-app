@@ -8,9 +8,9 @@ interface ITreasuryResponse {
   id: number;
   quarter_num: number;
   credit_total_amount: number;
-  credit_remain_amount: number;
+  credit_used_amount: number;
   token_total_amount: number;
-  token_remain_amount: number;
+  token_used_amount: number;
 }
 
 export const getTreasury = (): Promise<ResponseData<ITreasuryResponse>> => {

@@ -139,9 +139,9 @@ export default function Index() {
   const canUseCityhall = usePermission(PermissionAction.AssetsBudget, PermissionObject.SeeDAO);
 
   const [asset, setAsset] = useState({
-    token_remain_amount: 0,
+    token_used_amount: 0,
     token_total_amount: 0,
-    credit_remain_amount: 0,
+    credit_used_amount: 0,
     credit_total_amount: 0,
   });
   const [showModifyModal, setshowModifyModal] = useState<BudgetType>();
@@ -159,10 +159,10 @@ export default function Index() {
     try {
       const res = await requests.treasury.getTreasury();
       setAsset({
-        token_remain_amount: res.data.token_remain_amount,
-        token_total_amount: res.data.token_total_amount,
-        credit_remain_amount: res.data.credit_remain_amount,
-        credit_total_amount: res.data.credit_total_amount,
+        token_used_amount: Number(res.data.token_used_amount),
+        token_total_amount: Number(res.data.token_total_amount),
+        credit_used_amount: Number(res.data.credit_used_amount),
+        credit_total_amount: Number(res.data.credit_total_amount),
       });
     } catch (error) {
       console.error('getTreasury error', error);
@@ -401,7 +401,7 @@ export default function Index() {
               <LiHead>
                 <LiTitle>{t('Assets.SeasonUseUSD')}</LiTitle>
               </LiHead>
-              <div className="num">{asset.token_total_amount - asset.token_remain_amount}</div>
+              <div className="num">{asset.token_used_amount}</div>
               <AssetBox className="tips">
                 <span>{t('Assets.SeasonBudget')}:</span>
                 <span>{asset.token_total_amount}</span>
@@ -417,7 +417,7 @@ export default function Index() {
                 <LiTitle>{t('Assets.SeasonUsedSCR')}</LiTitle>
                 <div className="tips">({t('Assets.SCRTip')})</div>
               </LiHead>
-              <div className="num">{asset.credit_total_amount - asset.credit_remain_amount}</div>
+              <div className="num">{asset.credit_used_amount}</div>
               <AssetBox className="tips">
                 <span>{t('Assets.SeasonBudget')}:</span>
                 <span>{asset.credit_total_amount}</span>

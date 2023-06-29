@@ -260,7 +260,7 @@ export default function Info(props: Iprops) {
                     <span>
                       （
                       {t('Guild.HasBeenUsedAndRemains', {
-                        used: Number(points?.total_amount || 0) - Number(points?.remain_amount || 0),
+                        used: points?.used_amount || 0,
                         remain: points?.remain_amount || 0,
                       })}
                       ）
@@ -303,7 +303,7 @@ export default function Info(props: Iprops) {
                     <span>
                       (
                       {t('Guild.HasBeenUsedAndRemains', {
-                        used: Number(token?.total_amount || 0) - Number(token?.remain_amount || 0),
+                        used: token?.used_amount || 0,
                         remain: token?.remain_amount || 0,
                       })}
                       )
