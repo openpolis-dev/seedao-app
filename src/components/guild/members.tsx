@@ -277,28 +277,26 @@ export default function Members(props: Iprops) {
         destroyByClick={false}
         preventDuplicates={false}
       />
-      <TopBox>
-        {(canUpdateMember || canUpdateSponsor) && (
-          <>
-            <Button onClick={() => handleAdd()} disabled={edit}>
-              {t('Guild.AddMember')}
+      {(canUpdateMember || canUpdateSponsor) && (
+        <TopBox>
+          <Button onClick={() => handleAdd()} disabled={edit}>
+            {t('Guild.AddMember')}
+          </Button>
+          {!edit && (
+            <Button appearance="outline" onClick={() => handleDel()}>
+              {t('Guild.RemoveMember')}
             </Button>
-            {!edit && (
-              <Button appearance="outline" onClick={() => handleDel()}>
-                {t('Guild.RemoveMember')}
+          )}
+          {edit && (
+            <>
+              <Button onClick={() => closeDel()}>{t('general.confirm')}</Button>
+              <Button appearance="outline" onClick={() => closeRemove()}>
+                {t('general.cancel')}
               </Button>
-            )}
-            {edit && (
-              <>
-                <Button onClick={() => closeDel()}>{t('general.confirm')}</Button>
-                <Button appearance="outline" onClick={() => closeRemove()}>
-                  {t('general.cancel')}
-                </Button>
-              </>
-            )}
-          </>
-        )}
-      </TopBox>
+            </>
+          )}
+        </TopBox>
+      )}
       <ItemBox>
         <TitleBox>{t('Guild.Dominator')}</TitleBox>
         <UlBox>
