@@ -161,17 +161,22 @@ export default function ProjectAudit() {
     selectOrClearDate && getRecords();
   }, [selectStatus, page, pageSize, startDate, endDate]);
 
+  const getSelectIds = (): number[] => {
+    const ids = Object.keys(selectMap);
+    const select_ids: number[] = [];
+    for (const id of ids) {
+      const _id = Number(id);
+      if (selectMap[_id]) {
+        select_ids.push(_id);
+      }
+    }
+    return select_ids;
+  };
+
   const handleApprove = async () => {
     setLoading(true);
     try {
-      const ids = Object.keys(selectMap);
-      const select_ids: number[] = [];
-      for (const id of ids) {
-        const _id = Number(id);
-        if (selectMap[_id]) {
-          select_ids.push(_id);
-        }
-      }
+      const select_ids = getSelectIds();
       await requests.application.approveApplications(select_ids);
       setSelectMap({});
       getRecords();
@@ -185,14 +190,7 @@ export default function ProjectAudit() {
   const handleReject = async () => {
     setLoading(true);
     try {
-      const ids = Object.keys(selectMap);
-      const select_ids: number[] = [];
-      for (const id of ids) {
-        const _id = Number(id);
-        if (selectMap[_id]) {
-          select_ids.push(_id);
-        }
-      }
+      const select_ids = getSelectIds();
       await requests.application.rejectApplications(select_ids);
       setSelectMap({});
       getRecords();
@@ -214,6 +212,11 @@ export default function ProjectAudit() {
     }
     window.open(requests.application.getExportFileUrl(select_ids), '_blank');
   };
+
+  const canExport = useMemo(() => {
+    const select_ids = getSelectIds();
+    return select_ids.length > 0;
+  }, [selectMap]);
 
   return (
     <Box>
@@ -244,7 +247,7 @@ export default function ProjectAudit() {
               />
             </BorderBox>
           </TimeBox>
-          <Button size="Medium" onClick={handleExport}>
+          <Button size="Medium" onClick={handleExport} disabled={!canExport}>
             {t('Project.Export')}
           </Button>
         </TimeLine>

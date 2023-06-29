@@ -249,7 +249,7 @@ export default function Issued() {
     handleStatus();
   }, []);
 
-  const handleExport = async () => {
+  const getSelectIds = (): number[] => {
     const ids = Object.keys(selectMap);
     const select_ids: number[] = [];
     for (const id of ids) {
@@ -258,8 +258,18 @@ export default function Issued() {
         select_ids.push(_id);
       }
     }
+    return select_ids;
+  };
+
+  const handleExport = async () => {
+    const select_ids = getSelectIds();
     window.open(requests.application.getExportFileUrl(select_ids), '_blank');
   };
+
+  const canExport = useMemo(() => {
+    const select_ids = getSelectIds();
+    return select_ids.length > 0;
+  }, [selectMap]);
 
   return (
     <Box>
@@ -292,7 +302,7 @@ export default function Issued() {
               />
             </BorderBox>
           </TimeBox>
-          <Button size="Medium" onClick={handleExport}>
+          <Button size="Medium" onClick={handleExport} disabled={!canExport}>
             {t('Project.Export')}
           </Button>
         </TimeLine>

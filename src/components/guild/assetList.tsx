@@ -160,7 +160,7 @@ export default function AssetList({ id }: { id: number }) {
         queryData.end_date = formatDate(endDate);
       }
 
-      const res = await requests.application.getProjectApplications(
+      const res = await requests.application.getGuildApplications(
         {
           page,
           size: pageSize,
@@ -189,7 +189,7 @@ export default function AssetList({ id }: { id: number }) {
     id && selectOrClearDate && getRecords();
   }, [id, selectStatus, selectApplicant, page, pageSize, startDate, endDate]);
 
-  const handleExport = async () => {
+  const getSelectIds = (): number[] => {
     const ids = Object.keys(selectMap);
     const select_ids: number[] = [];
     for (const id of ids) {
@@ -198,8 +198,19 @@ export default function AssetList({ id }: { id: number }) {
         select_ids.push(_id);
       }
     }
+    return select_ids;
+  };
+
+  const handleExport = async () => {
+    const select_ids = getSelectIds();
     window.open(requests.application.getExportFileUrl(select_ids), '_blank');
   };
+
+  const canExport = useMemo(() => {
+    const select_ids = getSelectIds();
+    return select_ids.length > 0;
+  }, [selectMap]);
+
   return (
     <Box>
       {show && <ViewHash closeShow={closeShow} txs={show} />}
@@ -246,7 +257,7 @@ export default function AssetList({ id }: { id: number }) {
               />
             </BorderBox>
           </TimeBox>
-          <Button size="Medium" onClick={handleExport}>
+          <Button size="Medium" onClick={handleExport} disabled={!canExport}>
             {t('Project.Export')}
           </Button>
         </TimeLine>

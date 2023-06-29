@@ -31,6 +31,20 @@ export const getProjectApplications = (
   });
 };
 
+export const getGuildApplications = (
+  data: IPageParams,
+  queryData: IQueryApplicationsParams,
+  guild_id?: number,
+): Promise<ResponseData<IPageResponse<IApplication>>> => {
+  return request.get(`${PATH_PREFIX}`, {
+    ...data,
+    type: ApplicationType.NewReward,
+    entity: 'guild',
+    entity_id: guild_id,
+    ...queryData,
+  });
+};
+
 export const getCloseProjectApplications = (
   data: IPageParams,
   queryData: IQueryApplicationsParams,
