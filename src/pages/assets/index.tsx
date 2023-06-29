@@ -199,7 +199,7 @@ export default function Index() {
       const url = 'https://api.opensea.io/collection/seedaogenesis/stats';
       const res = await axios.get(url, {
         headers: {
-          'X-API-KEY ': 'b9d06db8f47d41e68eb867b2dca205c3',
+          'X-API-KEY ': '9652e22437aa4b6d9def8fe398dcc4f6',
         },
       });
       setNftData({
