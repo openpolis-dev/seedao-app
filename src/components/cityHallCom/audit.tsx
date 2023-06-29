@@ -215,17 +215,22 @@ export default function Audit() {
     selectOrClearDate && getRecords();
   }, [selectStatus, selectApplicant, page, pageSize, startDate, endDate]);
 
+  const getSelectIds = (): number[] => {
+    const ids = Object.keys(selectMap);
+    const select_ids: number[] = [];
+    for (const id of ids) {
+      const _id = Number(id);
+      if (selectMap[_id]) {
+        select_ids.push(_id);
+      }
+    }
+    return select_ids;
+  };
+
   const handleApprove = async () => {
     setLoading(true);
     try {
-      const ids = Object.keys(selectMap);
-      const select_ids: number[] = [];
-      for (const id of ids) {
-        const _id = Number(id);
-        if (selectMap[_id]) {
-          select_ids.push(_id);
-        }
-      }
+      const select_ids = getSelectIds();
       await requests.application.approveApplications(select_ids);
       getRecords();
       // TODO alert success
@@ -240,14 +245,7 @@ export default function Audit() {
   const handleReject = async () => {
     setLoading(true);
     try {
-      const ids = Object.keys(selectMap);
-      const select_ids: number[] = [];
-      for (const id of ids) {
-        const _id = Number(id);
-        if (selectMap[_id]) {
-          select_ids.push(_id);
-        }
-      }
+      const select_ids = getSelectIds();
       await requests.application.rejectApplications(select_ids);
       getRecords();
       setSelectMap({});
@@ -279,6 +277,12 @@ export default function Audit() {
     });
     setSelectMap(newMap);
   };
+
+  const canExport = useMemo(() => {
+    const select_ids = getSelectIds();
+    return select_ids.length > 0;
+  }, [selectMap]);
+
   return (
     <Box>
       {loading && <Loading />}
@@ -335,7 +339,7 @@ export default function Audit() {
               />
             </BorderBox>
           </TimeBox>
-          <Button size="Medium" onClick={handleExport}>
+          <Button size="Medium" onClick={handleExport} disabled={!canExport}>
             {t('Project.Export')}
           </Button>
         </TimeLine>
