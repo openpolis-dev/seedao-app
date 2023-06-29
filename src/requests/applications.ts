@@ -57,7 +57,7 @@ export const createCloseProjectApplication = (project_id: number, detailed_type 
 
 export interface ICreateBudgeApplicationRequest {
   type: ApplicationType;
-  entity: 'project';
+  entity: 'project' | 'guild';
   entity_id: number;
   target_user_wallet: string;
   credit_amount?: number;
