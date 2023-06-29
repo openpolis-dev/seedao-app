@@ -87,9 +87,9 @@ export default function ProjectProposal(props: Iprops) {
       {show && <PropsalModal closeModal={closeModal} />}
 
       <TopBox>
-        <Button> {t('Project.createProposal')}</Button>
+        <Button onClick={() => window.open('https://forum.seedao.xyz/', '_blank')}>{t('Guild.createProposal')}</Button>
         <Button appearance="outline" onClick={() => handleModal()}>
-          {t('Project.AssociatedProposal')}
+          {t('Guild.AssociatedProposal')}
         </Button>
       </TopBox>
       <UlBox>
