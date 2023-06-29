@@ -131,7 +131,9 @@
     "DownloadForm": "下载模版",
     "ImportForm": "导入表格",
     "Tips": "下载模板填写信息后导入",
-    "createProposal": "创建提案"
+    "createProposal": "创建提案",
+    "SubmitSuccess": "提交成功",
+    "SubmitFailed": "提交失败"
   },
   "city-hall": {
     "PointsAndTokenAudit": "积分及token审核",
