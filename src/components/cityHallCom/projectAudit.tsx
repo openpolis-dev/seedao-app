@@ -78,6 +78,12 @@ const TopBox = styled.div`
   }
 `;
 
+const TableBox = styled.div`
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+`;
+
 export default function ProjectAudit() {
   const { t } = useTranslation();
   const [page, setPage] = useState(1);
@@ -258,47 +264,49 @@ export default function ProjectAudit() {
           {t('city-hall.Reject')}
         </Button>
       </TopBox>
-      {list.length ? (
-        <>
-          <table className="table" cellPadding="0" cellSpacing="0">
-            <tr>
-              <th>&nbsp;</th>
-              <th>{t('Project.Time')}</th>
-              <th>{t('city-hall.ProjectName')}</th>
-              <th>{t('city-hall.Content')}</th>
-              <th>{t('Project.Note')}</th>
-              <th>{t('Project.State')}</th>
-              <th>{t('city-hall.Applicant')}</th>
-            </tr>
-            {list.map((item, index) => (
-              <tr key={index}>
-                <td>
-                  <Checkbox
-                    status="Primary"
-                    checked={selectMap[item.application_id]}
-                    onChange={(value) => onChangeCheckbox(value, item.application_id)}
-                  ></Checkbox>
-                </td>
-                <td>{item.created_date}</td>
-                <td>{item.budget_source}</td>
-                <td>{t('city-hall.CloseProject')}</td>
-                <td>--</td>
-                <td>{item.status}</td>
-                <td>{item.submitter_name || publicJs.AddressToShow(item.submitter_wallet)}</td>
+      <TableBox>
+        {list.length ? (
+          <>
+            <table className="table" cellPadding="0" cellSpacing="0">
+              <tr>
+                <th>&nbsp;</th>
+                <th>{t('Project.Time')}</th>
+                <th>{t('city-hall.ProjectName')}</th>
+                <th>{t('city-hall.Content')}</th>
+                <th>{t('Project.Note')}</th>
+                <th>{t('Project.State')}</th>
+                <th>{t('city-hall.Applicant')}</th>
               </tr>
-            ))}
-          </table>
-          <Page
-            itemsPerPage={pageSize}
-            total={total}
-            current={page - 1}
-            handleToPage={handlePage}
-            handlePageSize={handlePageSize}
-          />
-        </>
-      ) : (
-        <NoItem />
-      )}
+              {list.map((item, index) => (
+                <tr key={index}>
+                  <td>
+                    <Checkbox
+                      status="Primary"
+                      checked={selectMap[item.application_id]}
+                      onChange={(value) => onChangeCheckbox(value, item.application_id)}
+                    ></Checkbox>
+                  </td>
+                  <td>{item.created_date}</td>
+                  <td>{item.budget_source}</td>
+                  <td>{t('city-hall.CloseProject')}</td>
+                  <td>--</td>
+                  <td>{item.status}</td>
+                  <td>{item.submitter_name || publicJs.AddressToShow(item.submitter_wallet)}</td>
+                </tr>
+              ))}
+            </table>
+            <Page
+              itemsPerPage={pageSize}
+              total={total}
+              current={page - 1}
+              handleToPage={handlePage}
+              handlePageSize={handlePageSize}
+            />
+          </>
+        ) : (
+          <NoItem />
+        )}
+      </TableBox>
     </Box>
   );
 }

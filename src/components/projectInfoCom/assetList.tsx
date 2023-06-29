@@ -75,6 +75,12 @@ const MidBox = styled.div`
   margin: 0 20px;
 `;
 
+const TableBox = styled.div`
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+`;
+
 export default function AssetList({ id }: { id: number }) {
   const {
     state: { loading },
@@ -262,72 +268,74 @@ export default function AssetList({ id }: { id: number }) {
           </Button>
         </TimeLine>
       </FirstLine>
-      {list.length ? (
-        <>
-          <table className="table" cellPadding="0" cellSpacing="0">
-            <thead>
-              <tr>
-                <th>&nbsp;</th>
-                <th>{t('Project.Time')}</th>
-                <th>{t('Project.Address')}</th>
-                <th>{t('Project.AddPoints')}</th>
-                <th>{t('Project.AddToken')}</th>
-                <th>{t('Project.Content')}</th>
-                <th>{t('Project.Note')}</th>
-                <th>{t('Project.State')}</th>
-                <th>{t('Project.Add')}</th>
-                <th>{t('Project.Auditor')}</th>
-                <th>{t('Project.TransactionID')}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {list.map((item) => (
-                <tr key={item.application_id}>
-                  <td>
-                    <Checkbox
-                      status="Primary"
-                      checked={selectMap[item.application_id]}
-                      onChange={(value) => onChangeCheckbox(value, item.application_id)}
-                    ></Checkbox>
-                  </td>
-                  <td>{item.created_date}</td>
-                  <td>
-                    <div>
-                      <span>{publicJs.AddressToShow(item.target_user_wallet)}</span>
-                      {/* <CopyBox text={item.target_user_wallet}>
+      <TableBox>
+        {list.length ? (
+          <>
+            <table className="table" cellPadding="0" cellSpacing="0">
+              <thead>
+                <tr>
+                  <th>&nbsp;</th>
+                  <th>{t('Project.Time')}</th>
+                  <th>{t('Project.Address')}</th>
+                  <th>{t('Project.AddPoints')}</th>
+                  <th>{t('Project.AddToken')}</th>
+                  <th>{t('Project.Content')}</th>
+                  <th>{t('Project.Note')}</th>
+                  <th>{t('Project.State')}</th>
+                  <th>{t('Project.Add')}</th>
+                  <th>{t('Project.Auditor')}</th>
+                  <th>{t('Project.TransactionID')}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {list.map((item) => (
+                  <tr key={item.application_id}>
+                    <td>
+                      <Checkbox
+                        status="Primary"
+                        checked={selectMap[item.application_id]}
+                        onChange={(value) => onChangeCheckbox(value, item.application_id)}
+                      ></Checkbox>
+                    </td>
+                    <td>{item.created_date}</td>
+                    <td>
+                      <div>
+                        <span>{publicJs.AddressToShow(item.target_user_wallet)}</span>
+                        {/* <CopyBox text={item.target_user_wallet}>
                         <EvaIcon name="clipboard-outline" />
                       </CopyBox> */}
-                    </div>
-                  </td>
-                  <td>{item.credit_amount}</td>
-                  <td>{item.token_amount}</td>
-                  <td>{item.detailed_type}</td>
-                  <td>{item.comment}</td>
-                  <td>{item.status}</td>
-                  <td>{item.submitter_name || publicJs.AddressToShow(item.submitter_wallet)}</td>
-                  <td>{item.reviewer_name || publicJs.AddressToShow(item.reviewer_wallet)}</td>
-                  <td>
-                    {item.status === ApplicationStatus.Completed && (
-                      <Button appearance="outline" size="Tiny" onClick={() => handleShow(item.transactions || [])}>
-                        {t('Project.View')}
-                      </Button>
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <Page
-            itemsPerPage={pageSize}
-            total={total}
-            current={page - 1}
-            handleToPage={handlePage}
-            handlePageSize={handlePageSize}
-          />
-        </>
-      ) : (
-        <NoItem />
-      )}
+                      </div>
+                    </td>
+                    <td>{item.credit_amount}</td>
+                    <td>{item.token_amount}</td>
+                    <td>{item.detailed_type}</td>
+                    <td>{item.comment}</td>
+                    <td>{item.status}</td>
+                    <td>{item.submitter_name || publicJs.AddressToShow(item.submitter_wallet)}</td>
+                    <td>{item.reviewer_name || publicJs.AddressToShow(item.reviewer_wallet)}</td>
+                    <td>
+                      {item.status === ApplicationStatus.Completed && (
+                        <Button appearance="outline" size="Tiny" onClick={() => handleShow(item.transactions || [])}>
+                          {t('Project.View')}
+                        </Button>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <Page
+              itemsPerPage={pageSize}
+              total={total}
+              current={page - 1}
+              handleToPage={handlePage}
+              handlePageSize={handlePageSize}
+            />
+          </>
+        ) : (
+          <NoItem />
+        )}
+      </TableBox>
     </Box>
   );
 }
