@@ -209,17 +209,16 @@ export default function Info(props: Iprops) {
   };
 
   const handleInput = (e: ChangeEvent, type: string) => {
-    const { value } = e.target as HTMLInputElement;
-    switch (type) {
-      case 'points':
-        setEditPoint(Number(value) || 0);
-        break;
-      case 'token':
-        setEditToken(Number(value) || 0);
-        break;
-      case 'name':
-        setEditName(value);
-        break;
+    if (type === 'name') {
+      const { value } = e.target as HTMLInputElement;
+      setEditName(value);
+    } else {
+      const { valueAsNumber } = e.target as HTMLInputElement;
+      if (type === 'points') {
+        setEditPoint(valueAsNumber);
+      } else if (type === 'token') {
+        setEditToken(valueAsNumber);
+      }
     }
   };
 
@@ -339,7 +338,7 @@ export default function Info(props: Iprops) {
                 <div className="info">
                   <InputBox fullWidth>
                     <input
-                      type="text"
+                      type="number"
                       placeholder={t('Project.Points')}
                       value={editPoint}
                       onChange={(e) => handleInput(e, 'points')}
@@ -381,7 +380,12 @@ export default function Info(props: Iprops) {
               {showEditToken && (
                 <div className="info">
                   <InputBox fullWidth>
-                    <input type="text" placeholder="USDT" value={editToken} onChange={(e) => handleInput(e, 'token')} />
+                    <input
+                      type="number"
+                      placeholder="USDT"
+                      value={editToken}
+                      onChange={(e) => handleInput(e, 'token')}
+                    />
                   </InputBox>
                   <Button shape="Rectangle" size="Medium" onClick={() => handlecloseEditT()} className="rht10">
                     {t('general.confirm')}
