@@ -305,7 +305,7 @@ export default function Audit() {
     setSelectMap(newMap);
   };
 
-  const canExport = useMemo(() => {
+  const selectOne = useMemo(() => {
     const select_ids = getSelectIds();
     return select_ids.length > 0;
   }, [selectMap]);
@@ -366,14 +366,16 @@ export default function Audit() {
               />
             </BorderBox>
           </TimeBox>
-          <Button size="Medium" onClick={handleExport} disabled={!canExport}>
+          <Button size="Medium" onClick={handleExport} disabled={!selectOne}>
             {t('Project.Export')}
           </Button>
         </TimeLine>
       </FirstLine>
       <TopBox>
-        <Button onClick={handleApprove}>{t('city-hall.Pass')}</Button>
-        <Button appearance="outline" onClick={handleReject}>
+        <Button onClick={handleApprove} disabled={!selectOne}>
+          {t('city-hall.Pass')}
+        </Button>
+        <Button appearance="outline" onClick={handleReject} disabled={!selectOne}>
           {t('city-hall.Reject')}
         </Button>
       </TopBox>
