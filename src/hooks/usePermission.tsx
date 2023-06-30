@@ -23,6 +23,11 @@ const usePermission = (action: string, object: string) => {
     checkLogic();
   }, [isLogin, authorizer]);
 
+  console.log(`==========${action}, ${object}==========`);
+  console.log('authorizer', authorizer);
+  console.log('isLogin', isLogin);
+  console.log('checkResult', checkResult);
+
   return checkResult;
 };
 
