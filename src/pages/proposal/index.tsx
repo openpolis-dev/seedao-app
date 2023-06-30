@@ -5,7 +5,7 @@ import requests from 'requests';
 import { IBaseProposal } from 'type/proposal.type';
 import { Tabs, Tab } from '@paljs/ui/Tabs';
 import { useAuthContext, AppActionType } from 'providers/authProvider';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { Card } from '@paljs/ui/Card';
 import ProposalCard from 'components/proposal/proposalCard';
 import ProposalSubNav from 'components/proposal/proposalSubNav';
@@ -129,17 +129,20 @@ const SubCategoryCard = styled.div`
 `;
 
 const SubCategoryItem = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 16px;
-  cursor: pointer;
-  &:hover {
-    box-shadow: 0 0 4px rgba(0, 0, 0, 0.15);
-  }
-  .name {
-    color: #a16eff;
-  }
+  ${({ theme }) => css`
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px;
+    cursor: pointer;
+    &:hover {
+      box-shadow: 0 0 4px rgba(0, 0, 0, 0.15);
+    }
+    .name {
+      color: ${theme.colorPrimary500};
+      font-weight: 600;
+    }
+  `}
 `;
 
 const SubCategoryIcon = styled.img`
