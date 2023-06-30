@@ -61,7 +61,7 @@ export default function Index() {
   const [current, setCurrent] = useState<number>(0);
   const [list, setList] = useState<listObj[]>([]);
 
-  const canAuditApplication = usePermission(PermissionAction.AuditApplication, PermissionObject.ProjPrefix + id);
+  const canAuditApplication = usePermission(PermissionAction.CreateApplication, PermissionObject.ProjPrefix + id);
 
   useEffect(() => {
     if (!id) return;

@@ -9,6 +9,8 @@ import NoItem from 'components/noItem';
 import ProposalCard from 'components/proposal/proposalCard';
 import requests from 'requests';
 import { IBaseProposal } from 'type/proposal.type';
+import usePermission from 'hooks/usePermission';
+import { PermissionObject, PermissionAction } from 'utils/constant';
 
 const Box = styled.div`
   padding: 20px 0;
@@ -48,6 +50,8 @@ export default function ProjectProposal(props: Iprops) {
   const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
 
+  const canUpdateInfo = usePermission(PermissionAction.Modify, PermissionObject.GuildPrefix + id);
+
   const getProposals = async (ids: string[]) => {
     const reqs = ids.map((pid) => requests.proposal.getProposalDetail(Number(pid)));
     setLoading(true);
@@ -86,12 +90,17 @@ export default function ProjectProposal(props: Iprops) {
     <Box>
       {show && <PropsalModal closeModal={closeModal} />}
 
-      <TopBox>
-        <Button onClick={() => window.open('https://forum.seedao.xyz/', '_blank')}>{t('Guild.createProposal')}</Button>
-        <Button appearance="outline" onClick={() => handleModal()}>
-          {t('Guild.AssociatedProposal')}
-        </Button>
-      </TopBox>
+      {canUpdateInfo && (
+        <TopBox>
+          <Button onClick={() => window.open('https://forum.seedao.xyz/', '_blank')}>
+            {t('Guild.createProposal')}
+          </Button>
+          <Button appearance="outline" onClick={() => handleModal()}>
+            {t('Guild.AssociatedProposal')}
+          </Button>
+        </TopBox>
+      )}
+
       <UlBox>
         {list.map((item) => (
           <ProposalCard key={item.id} data={item} />
