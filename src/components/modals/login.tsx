@@ -109,7 +109,6 @@ export default function LoginModal() {
     try {
       const res = await requests.user.loginNew({
         signature: signData,
-        nonce: siweMessage.nonce,
         message: signMsg,
         domain: siweMessage.domain,
         wallet: account,

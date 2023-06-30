@@ -29,7 +29,6 @@ export const loginNew = (data: {
   message: string;
   signature: string;
   domain: string;
-  nonce: string;
   wallet_type: 'EOA' | 'AA';
 }): Promise<ResponseData<ILogininRespons>> => {
   return request.post(`${PATH_PREFIX}/login2`, data);
