@@ -308,6 +308,7 @@ export default function AssetList() {
                     <th>{t('Project.AddPoints')}</th>
                     <th>{t('Project.AddToken')}</th>
                     <th>{t('Project.Content')}</th>
+                    <th>{t('Project.BudgetSource')}</th>
                     <th>{t('Project.Note')}</th>
                     <th>{t('Project.State')}</th>
                     <th>{t('Project.Operator')}</th>
@@ -337,6 +338,7 @@ export default function AssetList() {
                       <td>{item.credit_amount}</td>
                       <td>{item.token_amount}</td>
                       <td>{item.detailed_type}</td>
+                      <td>{item.budget_source}</td>
                       <td>{item.comment}</td>
                       <td>{item.status}</td>
                       <td>{item.submitter_name || publicJs.AddressToShow(item.submitter_wallet)}</td>
