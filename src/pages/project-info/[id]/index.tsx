@@ -98,14 +98,14 @@ export default function Index() {
         id: 3,
       },
     ];
-    if (isLogin && canAuditApplication) {
+    if (isLogin && canAuditApplication && detail?.status === ProjectStatus.Open) {
       _list.push({
         name: t('Project.Add'),
         id: 4,
       });
     }
     setList(_list);
-  }, [t, isLogin, canAuditApplication]);
+  }, [t, isLogin, canAuditApplication, detail?.status]);
 
   const updateProjectStatus = (status: ProjectStatus) => {
     if (detail) {

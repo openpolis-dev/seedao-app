@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { Button } from '@paljs/ui/Button';
 import React, { useEffect, useState } from 'react';
 import PropsalModal from 'components/projectInfoCom/propsalModal';
-import { ReTurnProject } from 'type/project.type';
+import { ProjectStatus, ReTurnProject } from 'type/project.type';
 import { useRouter } from 'next/router';
 import useTranslation from 'hooks/useTranslation';
 import NoItem from 'components/noItem';
@@ -89,7 +89,7 @@ export default function ProjectProposal(props: Iprops) {
   return (
     <Box>
       {show && <PropsalModal closeModal={closeModal} />}
-      {canUpdateInfo && (
+      {canUpdateInfo && detail?.status === ProjectStatus.Open && (
         <TopBox>
           <Button onClick={() => window.open('https://forum.seedao.xyz/', '_blank')}>
             {t('Project.createProposal')}

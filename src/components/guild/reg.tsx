@@ -150,7 +150,6 @@ export default function Reg({ id }: { id: number }) {
   };
 
   const handleCreate = async () => {
-    // TODO check invalid data
     setLoading(true);
     try {
       const data: ICreateBudgeApplicationRequest[] = list.map((item) => {
