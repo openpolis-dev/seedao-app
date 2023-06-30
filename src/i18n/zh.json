@@ -179,6 +179,9 @@
     "Twitter": "Twitter",
     "WeChat": "微信号",
     "Mirror": "Mirror",
-    "Google": "Google"
+    "Google": "Google",
+    "ModifiedSuccess": "修改成功",
+    "ModifiedFailed": "修改失败",
+    "IncorrectLink": "{media}：请填写正确的信息"
   }
 }

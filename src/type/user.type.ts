@@ -9,6 +9,8 @@ export interface IUser {
   discord_profile: string;
   twitter_profile: string;
   google_profile: string;
+  wechat: string;
+  mirror: string;
   assets: any[];
 }
 
@@ -19,6 +21,8 @@ export interface IUserInfo {
   discord_profile: string;
   twitter_profile: string;
   google_profile: string;
+  wechat: string;
+  mirror: string;
 }
 
 export interface ITokenType {

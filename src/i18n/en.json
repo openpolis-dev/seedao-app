@@ -178,6 +178,9 @@
     "Twitter": "Twitter",
     "WeChat": "WeChat",
     "Mirror": "Mirror",
-    "Google": "Google"
+    "Google": "Google",
+    "ModifiedSuccess": "Modified Successfully",
+    "ModifiedFailed": "Modified Failed",
+    "IncorrectLink": "{media}：required the correct link"
 }
 }

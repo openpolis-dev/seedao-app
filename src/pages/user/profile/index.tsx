@@ -8,6 +8,7 @@ import requests from 'requests';
 import { useAuthContext, AppActionType } from 'providers/authProvider';
 import { EvaIcon } from '@paljs/ui/Icon';
 import useTranslation from 'hooks/useTranslation';
+import useToast, { ToastType } from 'hooks/useToast';
 
 const Box = styled.div`
   padding: 40px 20px;
@@ -53,6 +54,7 @@ export default function Profile() {
     dispatch,
   } = useAuthContext();
   const { t } = useTranslation();
+  const { Toast, showToast } = useToast();
   const [userName, setUserName] = useState('');
   const [email, setEmail] = useState('');
   const [discord, setDiscord] = useState('');
@@ -89,8 +91,12 @@ export default function Profile() {
     }
   };
   const saveProfile = async () => {
-    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    if (twitter && !twitter.startsWith('https://twitter.com/')) {
+      showToast(t('My.IncorrectLink', { media: 'Twitter' }), ToastType.Danger);
+      return;
+    }
 
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
       const data = {
         name: userName,
@@ -99,12 +105,15 @@ export default function Profile() {
         discord_profile: discord,
         twitter_profile: twitter,
         google_profile: google,
+        wechat,
+        mirror,
       };
       await requests.user.updateUser(data);
-      // TODO updata global data
       dispatch({ type: AppActionType.SET_USER_DATA, payload: { ...userData, ...data } });
+      showToast(t('My.ModifiedSuccess'), ToastType.Success);
     } catch (error) {
       console.error('updateUser failed', error);
+      showToast(t('My.ModifiedFailed'), ToastType.Danger);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }
@@ -118,6 +127,8 @@ export default function Profile() {
       setDiscord(userData.discord_profile);
       setTwitter(userData.twitter_profile);
       setGoogle(userData.google_profile);
+      setWechat(userData.wechat);
+      setMirror(userData.mirror);
     }
   }, [userData]);
 
@@ -152,6 +163,7 @@ export default function Profile() {
 
   return (
     <Layout title="Profile">
+      {Toast}
       <CardBox>
         <Box>
           <AvatarBox>
@@ -196,7 +208,12 @@ export default function Profile() {
               <li>
                 <div className="title">{t('My.Twitter')}</div>
                 <InputBox fullWidth>
-                  <input type="text" placeholder="" value={twitter} onChange={(e) => handleInput(e, 'twitter')} />
+                  <input
+                    type="text"
+                    placeholder="eg, https://twitter.com/..."
+                    value={twitter}
+                    onChange={(e) => handleInput(e, 'twitter')}
+                  />
                 </InputBox>
               </li>
               <li>
