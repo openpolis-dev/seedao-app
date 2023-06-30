@@ -50,7 +50,7 @@ const LOGIN_WALLETS: LoginWallet[] = [
 export default function LoginModal() {
   const { dispatch } = useAuthContext();
   const { Toast, showToast } = useToast();
-  const { account, provider, chainId } = useWeb3React();
+  const { account, provider } = useWeb3React();
   const [loginStatus, setLoginStatus] = useState<LoginStatus>(LoginStatus.Default);
   const [chooseWallet, setChooseWallet] = useState<LoginWallet>();
 
@@ -73,7 +73,7 @@ export default function LoginModal() {
   };
 
   const handleLoginSys = async () => {
-    if (!account || !provider || !chainId || !chooseWallet) {
+    if (!account || !provider || !chooseWallet) {
       return;
     }
     let newNonce: string;
@@ -92,7 +92,7 @@ export default function LoginModal() {
     // sign
     let signData = '';
     const now = Date.now();
-    const siweMessage = createSiweMessage(account, chainId, newNonce, 'Welcome to the The Seed Labs');
+    const siweMessage = createSiweMessage(account, 1, newNonce, 'Welcome to the The Taoist Labs');
     console.log('siweMessage:', siweMessage);
     const signMsg = siweMessage.prepareMessage();
 
