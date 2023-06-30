@@ -12,7 +12,7 @@ const usePermission = (action: string, object: string) => {
 
   const checkLogic = async () => {
     if (isLogin && authorizer) {
-      const result = await authorizer.can(object, action);
+      const result = await authorizer.can(action, object);
       setCheckResult(result);
     } else {
       setCheckResult(false);
