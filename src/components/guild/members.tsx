@@ -233,6 +233,8 @@ export default function Members(props: Iprops) {
         discord_profile: '',
         twitter_profile: '',
         google_profile: '',
+        wechat: '',
+        mirror: '',
         assets: [],
       };
     }
