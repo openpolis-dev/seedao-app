@@ -52,7 +52,7 @@ const InfoBox = styled.div`
   dd {
     display: flex;
     align-items: center;
-    margin-bottom: 10px;
+    line-height: 2.5em;
   }
 `;
 
