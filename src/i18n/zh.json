@@ -90,7 +90,8 @@
     "ImportError": "{key}错误",
     "PointsOrToken": "积分或Token",
     "Credit": "积分",
-    "Token": "Token"
+    "Token": "Token",
+    "Pending": "申请关闭中"
   },
   "Guild": {
     "create": "创建公会",

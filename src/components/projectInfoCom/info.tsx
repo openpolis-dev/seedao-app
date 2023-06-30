@@ -1,5 +1,5 @@
 import Container from '@paljs/ui/Container';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { Button } from '@paljs/ui/Button';
 import React, { ChangeEvent, useEffect, useMemo, useRef, useState } from 'react';
 import CloseTips from 'components/projectInfoCom/closeTips';
@@ -235,9 +235,9 @@ export default function Info(props: Iprops) {
     }
     switch (detail?.status) {
       case ProjectStatus.Pending:
-        return 'pending close';
+        return <Tag>{t('Project.Pending')}</Tag>;
       case ProjectStatus.Closed:
-        return 'closed';
+        return <Tag>{t('Project.Closed')}</Tag>;
     }
     if (canCloseProject) {
       return (
@@ -402,3 +402,16 @@ export default function Info(props: Iprops) {
     </Box>
   );
 }
+
+const Tag = styled.span`
+  ${({ theme }) => css`
+    border: 1px solid ${theme.colorPrimary500};
+    border-radius: 6px;
+    color: ${theme.colorPrimary500};
+    padding: 4px 6px;
+    font-size: 12px;
+    span {
+      margin-left: 5px;
+    }
+  `}
+`;

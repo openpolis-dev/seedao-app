@@ -89,7 +89,8 @@
     "ImportError": "{key} error",
     "PointsOrToken": "Points or Token",
     "Credit": "Points",
-    "Token": "Token"
+    "Token": "Token",
+    "Pending": "Pending close"
   },
   "Guild": {
     "create": "Create Guild",
