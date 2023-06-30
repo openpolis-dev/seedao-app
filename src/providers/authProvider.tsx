@@ -86,7 +86,7 @@ const reducer = (state: IState, action: IAction): IState => {
     case AppActionType.CLEAR_AUTH:
       localStorage.removeItem(SEEDAO_USER);
       localStorage.removeItem(SENDING_ME_USER);
-      return { ...state, account: undefined, userData: undefined, wallet_type: undefined };
+      return { ...state, account: undefined, userData: undefined, wallet_type: undefined, authorizer: undefined };
     case AppActionType.SET_PROPOSAL_CATEGORIES:
       return { ...state, proposal_categories: action.payload };
     case AppActionType.SET_LOADING:

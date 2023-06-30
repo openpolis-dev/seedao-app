@@ -4,7 +4,6 @@ import { useRouter } from 'next/router';
 import styled, { DefaultTheme } from 'styled-components';
 import { LayoutHeader } from '@paljs/ui/Layout';
 import { Actions } from '@paljs/ui/Actions';
-import ContextMenu from '@paljs/ui/ContextMenu';
 import { breakpointDown } from '@paljs/ui/breakpoints';
 import Select from '@paljs/ui/Select';
 import { useAuthContext, AppActionType } from 'providers/authProvider';
@@ -19,8 +18,8 @@ import Loading from 'components/loading';
 import requests from 'requests';
 import { Authorizer } from 'casbin.js';
 import { readPermissionUrl } from 'requests/user';
-import Image from 'next/image';
 import useTranslation from 'hooks/useTranslation';
+import UserDropdown from './user';
 
 interface HeaderProps {
   toggleSidebar: () => void;
@@ -171,49 +170,36 @@ const Header: React.FC<HeaderProps> = (props) => {
             },
           ]}
         />
-        <Actions
-          size="Small"
-          className="right"
-          actions={[
-            {
-              content: (
-                <SelectStyled
-                  instanceId="react-select-input"
-                  isSearchable={false}
-                  shape="SemiRound"
-                  placeholder="Themes"
-                  value={getLanguages().find((item) => item.value === lan) || getLanguages()[0]}
-                  options={getLanguages()}
-                />
-              ),
-            },
-            {
-              content:
-                isLogin && userData ? (
-                  <ContextMenu
-                    nextJs
-                    style={{ cursor: 'pointer' }}
-                    placement="bottom"
-                    currentPath={router.pathname}
-                    items={[
-                      { title: t('My.MyProfile'), link: { href: '/user/profile' } },
-                      { title: t('My.MyAccount'), link: { href: '/user/vault' } },
-                    ]}
-                    Link={Link}
-                  >
-                    <User>
-                      <div>
-                        <Image src={userData?.avatar || DefaultAvatar} alt="" width="40px" height="40px" />
-                      </div>
-                      <span>{userData?.name || PublicJs.AddressToShow(userData?.wallet || '')}</span>
-                    </User>
-                  </ContextMenu>
-                ) : (
-                  <Button onClick={showWalletLogin}>Connect Wallet</Button>
+        <RightBox>
+          <Actions
+            size="Small"
+            className="right"
+            actions={[
+              {
+                content: (
+                  <SelectStyled
+                    instanceId="react-select-input"
+                    isSearchable={false}
+                    shape="SemiRound"
+                    placeholder="Themes"
+                    value={getLanguages().find((item) => item.value === lan) || getLanguages()[0]}
+                    options={getLanguages()}
+                  />
                 ),
-            },
-          ]}
-        />
+              },
+            ]}
+          />
+          {isLogin && userData ? (
+            <UserDropdown
+              user={{
+                avatar: userData?.avatar || DefaultAvatar,
+                name: userData?.name || PublicJs.AddressToShow(userData?.wallet || ''),
+              }}
+            />
+          ) : (
+            <Button onClick={showWalletLogin}>Connect Wallet</Button>
+          )}
+        </RightBox>
       </HeaderStyle>
       {show_login_modal && <LoginModal />}
     </LayoutHeader>
@@ -259,15 +245,8 @@ const LogoIcon = styled.img`
   height: 65px;
   margin-top: -16px;
 `;
-
-const User = styled.div`
+const RightBox = styled.div`
   display: flex;
   align-items: center;
-  gap: 6px;
-  img {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    border: 1px solid #edf1f7;
-  }
+  gap: 10px;
 `;
