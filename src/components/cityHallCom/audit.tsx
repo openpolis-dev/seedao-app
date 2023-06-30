@@ -10,7 +10,7 @@ import { IApplicationDisplay, ApplicationStatus } from 'type/application.type';
 import Loading from 'components/loading';
 import { formatDate, formatTime } from 'utils/time';
 import utils from 'utils/publicJs';
-import { IQueryApplicationsParams } from 'requests/applications';
+import { IQueryParams } from 'requests/applications';
 import NoItem from 'components/noItem';
 import publicJs from 'utils/publicJs';
 import CopyBox from 'components/copy';
@@ -99,8 +99,8 @@ export default function Audit() {
   const [selectMap, setSelectMap] = useState<{ [id: number]: boolean }>({});
   const [loading, setLoading] = useState(false);
 
-  const [projects, setProjects] = useState<ISelectItem[]>([]);
-  const [selectProject, setSelectProject] = useState<number>();
+  const [allSource, setAllSource] = useState<ISelectItem[]>([]);
+  const [selectSource, setSelectSource] = useState<{ id: number; type: 'project' | 'guild' }>();
   const [selectStatus, setSelectStatus] = useState<ApplicationStatus>(ApplicationStatus.All);
   const [applicants, setApplicants] = useState<ISelectItem[]>([]);
   const [selectApplicant, setSelectApplicant] = useState<string>();
@@ -140,19 +140,43 @@ export default function Audit() {
     try {
       const res = await requests.project.getProjects({
         page: 1,
-        size: 20,
+        size: 100,
         sort_order: 'desc',
         sort_field: 'created_at',
       });
-      setProjects(
-        res.data.rows.map((item) => ({
-          label: item.name,
-          value: item.id,
-        })),
-      );
+      return res.data.rows.map((item) => ({
+        label: item.name,
+        value: item.id,
+        data: 'project',
+      }));
     } catch (error) {
       console.error('getProjects in city-hall failed: ', error);
+      return [];
     }
+  };
+  const getGuilds = async () => {
+    try {
+      const res = await requests.guild.getProjects({
+        page: 1,
+        size: 100,
+        sort_order: 'desc',
+        sort_field: 'created_at',
+      });
+      return res.data.rows.map((item) => ({
+        label: item.name,
+        value: item.id,
+        data: 'guild',
+      }));
+    } catch (error) {
+      console.error('getGuilds in city-hall failed: ', error);
+      return [];
+    }
+  };
+
+  const getSources = async () => {
+    const projects = await getProjects();
+    const guilds = await getGuilds();
+    setAllSource([...projects, ...guilds]);
   };
 
   const getApplicants = async () => {
@@ -173,20 +197,24 @@ export default function Audit() {
   }, []);
 
   useEffect(() => {
-    getProjects();
+    getSources();
   }, []);
 
   const getRecords = async () => {
     setLoading(true);
-    const queryData: IQueryApplicationsParams = {};
+    const queryData: IQueryParams = {};
     if (selectStatus) queryData.state = selectStatus;
     if (selectApplicant) queryData.applicant = selectApplicant;
     if (startDate && endDate) {
       queryData.start_date = formatDate(startDate);
       queryData.end_date = formatDate(endDate);
     }
+    if (selectSource && selectSource.type) {
+      queryData.entity_id = selectSource.id;
+      queryData.entity = selectSource.type;
+    }
     try {
-      const res = await requests.application.getProjectApplications(
+      const res = await requests.application.getApplications(
         {
           page,
           size: pageSize,
@@ -194,7 +222,6 @@ export default function Audit() {
           sort_order: 'desc',
         },
         queryData,
-        selectProject,
       );
       setTotal(res.data.total);
       setList(
@@ -213,7 +240,7 @@ export default function Audit() {
   useEffect(() => {
     const selectOrClearDate = (startDate && endDate) || (!startDate && !endDate);
     selectOrClearDate && getRecords();
-  }, [selectStatus, selectApplicant, page, pageSize, startDate, endDate]);
+  }, [selectStatus, selectApplicant, selectSource, page, pageSize, startDate, endDate]);
 
   const getSelectIds = (): number[] => {
     const ids = Object.keys(selectMap);
@@ -305,10 +332,10 @@ export default function Audit() {
             <span className="tit">{t('Project.BudgetSource')}</span>
             <Select
               className="sel"
-              options={projects}
+              options={allSource}
               placeholder=""
               onChange={(value) => {
-                setSelectProject(value?.value);
+                setSelectSource({ id: value?.value as number, type: value?.data });
                 setSelectMap({});
                 setPage(1);
               }}

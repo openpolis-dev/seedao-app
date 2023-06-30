@@ -17,6 +17,22 @@ export interface IQueryApplicationsParams {
   state?: ApplicationStatus;
 }
 
+export interface IQueryParams extends IQueryApplicationsParams {
+  entity?: 'project' | 'guild';
+  entity_id?: number;
+}
+
+export const getApplications = (
+  data: IPageParams,
+  queryData: IQueryParams,
+): Promise<ResponseData<IPageResponse<IApplication>>> => {
+  return request.get(`${PATH_PREFIX}`, {
+    ...data,
+    type: ApplicationType.NewReward,
+    ...queryData,
+  });
+};
+
 export const getProjectApplications = (
   data: IPageParams,
   queryData: IQueryApplicationsParams,
