@@ -8,6 +8,7 @@ import useTranslation from 'hooks/useTranslation';
 import requests from 'requests';
 import { useRouter } from 'next/router';
 import Loading from 'components/loading';
+import useToast, { ToastType } from 'hooks/useToast';
 
 const Mask = styled.div`
   background: rgba(0, 0, 0, 0.3);
@@ -49,6 +50,7 @@ interface Iprops {
 export default function PropsalModal(props: Iprops) {
   const { closeModal } = props;
   const { t } = useTranslation();
+  const { Toast, showToast } = useToast();
   const router = useRouter();
   const { id } = router.query;
   const [list, setList] = useState(['']);
@@ -75,16 +77,19 @@ export default function PropsalModal(props: Iprops) {
 
   const handleProposal = async () => {
     const ids: string[] = [];
-    list.forEach((l) => {
-      if (l && l.startsWith('https://forum.seedao.xyz/thread/')) {
+    for (const l of list) {
+      if (l && !l.startsWith('https://forum.seedao.xyz/thread/')) {
+        showToast(t('Msg.ProposalLinkMsg'), ToastType.Danger);
+        return;
+      } else if (l) {
         const _last = l.split('/').reverse()[0];
         const _id = _last.split('-').reverse()[0];
         ids.push(_id);
       }
-    });
+    }
     try {
       setLoading(true);
-      await requests.project.addRelatedProposal(id as string, ids);
+      await requests.guild.addRelatedProposal(id as string, ids);
     } catch (error) {
       console.error('handle related proposals failed: ', error);
     } finally {
@@ -96,8 +101,9 @@ export default function PropsalModal(props: Iprops) {
   return (
     <Mask>
       {loading && <Loading />}
+      {Toast}
       <Card>
-        <CardHeader>{t('Project.AssociatedProposal')}</CardHeader>
+        <CardHeader>{t('Guild.AssociatedProposal')}</CardHeader>
         <CardBody>
           <Box>
             <ul>
@@ -106,7 +112,7 @@ export default function PropsalModal(props: Iprops) {
                   <InputGroup fullWidth>
                     <input
                       type="text"
-                      placeholder={t('Project.AssociatedProposal')}
+                      placeholder="eg, https://forum.seedao.xyz/thread/..."
                       value={item}
                       onChange={(e) => handleInput(e, index)}
                     />

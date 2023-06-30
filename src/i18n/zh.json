@@ -192,5 +192,8 @@
     "ModifiedSuccess": "修改成功",
     "ModifiedFailed": "修改失败",
     "IncorrectLink": "{media}：请填写正确的信息"
+  },
+  "Msg": {
+    "ProposalLinkMsg": "请填写正确提案链接"
   }
 }
