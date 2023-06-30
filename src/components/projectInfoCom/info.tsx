@@ -307,7 +307,7 @@ export default function Info(props: Iprops) {
                   </Button>
                 </>
               )}
-              {showProjectStatusComponent()}
+              <div>{showProjectStatusComponent()}</div>
             </dd>
           </dl>
           <Title>{t('Project.Budget')}</Title>
