@@ -63,7 +63,7 @@ export default function Index() {
   const [proList, setProList] = useState<ReTurnProject[]>([]);
 
   useEffect(() => {
-    if (current < 2) {
+    if (current === 0) {
       getList();
     } else {
       getMyList();
@@ -87,7 +87,6 @@ export default function Index() {
   }, [language, isLogin]);
 
   const getList = async () => {
-    if (current > 2) return;
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     const obj: IPageParams = {
       page: pageCur,
