@@ -174,16 +174,14 @@ export default function Info(props: Iprops) {
     setShowEditToken(false);
   };
 
-  const handleInput = (e: ChangeEvent, type: string) => {
+  const handleInput = (value: number | string, type: string) => {
     if (type === 'name') {
-      const { value } = e.target as HTMLInputElement;
-      setEditName(value);
+      setEditName(value as string);
     } else {
-      const { valueAsNumber } = e.target as HTMLInputElement;
       if (type === 'points') {
-        setEditPoint(valueAsNumber);
+        setEditPoint(value as number);
       } else if (type === 'token') {
-        setEditToken(valueAsNumber);
+        setEditToken(value as number);
       }
     }
   };
@@ -230,7 +228,7 @@ export default function Info(props: Iprops) {
                       type="text"
                       placeholder={t('Guild.ProjectName')}
                       value={editName}
-                      onChange={(e) => handleInput(e, 'name')}
+                      onChange={(e) => handleInput(e.target.value, 'name')}
                     />
                   </InputBox>
                   <Button shape="Rectangle" size="Medium" onClick={() => submitName()} className="rht10">
@@ -277,10 +275,10 @@ export default function Info(props: Iprops) {
                 <div className="info">
                   <InputBox fullWidth>
                     <input
-                      type="text"
+                      type="number"
                       placeholder={t('Guild.Points')}
                       value={editPoint}
-                      onChange={(e) => handleInput(e, 'points')}
+                      onChange={(e) => handleInput(e.target.valueAsNumber, 'points')}
                     />
                   </InputBox>
                   <Button shape="Rectangle" size="Medium" onClick={() => handlecloseEditP()} className="rht10">
@@ -319,7 +317,12 @@ export default function Info(props: Iprops) {
               {showEditToken && (
                 <div className="info">
                   <InputBox fullWidth>
-                    <input type="text" placeholder="USDT" value={editToken} onChange={(e) => handleInput(e, 'token')} />
+                    <input
+                      type="number"
+                      placeholder="USDT"
+                      value={editToken}
+                      onChange={(e) => handleInput(e.target.valueAsNumber, 'token')}
+                    />
                   </InputBox>
                   <Button shape="Rectangle" size="Medium" onClick={() => handlecloseEditT()} className="rht10">
                     {t('general.confirm')}
