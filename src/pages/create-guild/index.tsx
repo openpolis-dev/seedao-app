@@ -199,13 +199,16 @@ export default function CreateGuild() {
   };
   const handleSubmit = async () => {
     const ids: string[] = [];
-    proList.forEach((l) => {
-      if (l && l.startsWith('https://forum.seedao.xyz/thread/')) {
+    for (const l of proList) {
+      if (l && !l.startsWith('https://forum.seedao.xyz/thread/')) {
+        showToast(t('Msg.ProposalLinkMsg'), ToastType.Danger);
+        return;
+      } else if (l) {
         const _last = l.split('/').reverse()[0];
         const _id = _last.split('-').reverse()[0];
         ids.push(_id);
       }
-    });
+    }
     const obj: IBaseProject = {
       logo: url,
       name: proName,
