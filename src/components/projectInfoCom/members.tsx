@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import React, { useEffect, useRef, useState, useMemo } from 'react';
-import { EvaIcon } from '@paljs/ui/Icon';
 import { Button } from '@paljs/ui/Button';
 import Add from './add';
 import Del from './Del';
@@ -8,107 +7,13 @@ import useTranslation from 'hooks/useTranslation';
 import { ReTurnProject, ProjectStatus } from 'type/project.type';
 import { getUsers } from 'requests/user';
 import { IUser } from 'type/user.type';
-import PublicJs from 'utils/publicJs';
 import { useRouter } from 'next/router';
 import { Toastr, ToastrRef } from '@paljs/ui/Toastr';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import NoItem from 'components/noItem';
 import { PermissionObject, PermissionAction } from 'utils/constant';
 import usePermission from 'hooks/usePermission';
-import CopyBox from 'components/copy';
-import { DefaultAvatar } from 'utils/constant';
-import Image from 'next/image';
-
-const Box = styled.div`
-  padding: 20px;
-`;
-
-const ItemBox = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-const TitleBox = styled.div`
-  font-weight: bold;
-  margin-bottom: 30px;
-`;
-
-const UlBox = styled.ul`
-  display: flex;
-  flex-wrap: wrap;
-  li {
-    width: 23%;
-    margin-right: 2%;
-    border: 1px solid #f1f1f1;
-    margin-bottom: 40px;
-    box-sizing: border-box;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    &:nth-child(4n) {
-      margin-right: 0;
-    }
-    .fst {
-      display: flex;
-      align-items: center;
-      position: relative;
-      gap: 10px;
-    }
-    img.avatar {
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      border: 1px solid #edf1f7;
-      margin-right: 20px;
-    }
-    .topRht {
-      position: absolute;
-      right: 0;
-      top: 0;
-      width: 20px;
-      height: 20px;
-      background: #f8f8f8;
-      border: 1px solid #ccc;
-      border-radius: 40px;
-      cursor: pointer;
-      //.inner{
-      //  display:none;
-      //  }
-    }
-    .active {
-      border: 1px solid #a16eff;
-      background: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      .inner {
-        width: 10px;
-        height: 10px;
-        background: #a16eff;
-        border-radius: 20px;
-      }
-    }
-  }
-`;
-
-const LinkBox = styled.div`
-  margin-top: 20px;
-  img {
-    width: 20px;
-    height: 20px;
-    margin-inline: 5px !important;
-  }
-`;
-const TopBox = styled.div`
-  background: #f5f5f5;
-  display: flex;
-  justify-content: flex-end;
-  padding: 20px;
-  margin-bottom: 30px;
-  button {
-    margin-left: 20px;
-  }
-`;
+import UserCard from 'components/userCard';
 
 interface Iprops {
   detail: ReTurnProject | undefined;
@@ -193,7 +98,7 @@ export default function Members(props: Iprops) {
   const handleAdminSelect = (selItem: IUser) => {
     const selectHas = selectAdminArr.findIndex((item) => item?.wallet === selItem.wallet);
     const arr = [...selectAdminArr];
-    if (selectHas > 0) {
+    if (selectHas > -1) {
       arr.splice(selectHas, 1);
     } else {
       arr.push(selItem);
@@ -203,7 +108,7 @@ export default function Members(props: Iprops) {
   const handleMemSelect = (selItem: IUser) => {
     const selectHas = selectMemArr.findIndex((item) => item?.wallet === selItem.wallet);
     const arr = [...selectMemArr];
-    if (selectHas > 0) {
+    if (selectHas > -1) {
       arr.splice(selectHas, 1);
     } else {
       arr.push(selItem);
@@ -308,46 +213,13 @@ export default function Members(props: Iprops) {
         <TitleBox>{t('Project.Dominator')}</TitleBox>
         <UlBox>
           {adminArr.map((item, index) => (
-            <li key={index}>
-              <div className="fst">
-                <Image
-                  className="avatar"
-                  src={getUser(item).avatar || DefaultAvatar}
-                  alt=""
-                  width="50px"
-                  height="50px"
-                />
-                <div>
-                  <div>{getUser(item).name}</div>
-                  <div style={{ display: 'flex', gap: '5px' }}>
-                    <span>{PublicJs.AddressToShow(getUser(item).wallet || '')}</span>
-                    <CopyBox text={getUser(item).wallet || ''}>
-                      <EvaIcon name="clipboard-outline" options={{ width: '18px', height: '18px' }} />
-                    </CopyBox>
-                  </div>
-                </div>
-                {edit && canUpdateSponsor && (
-                  <div
-                    className={formatAdminActive(getUser(item).wallet || '') ? 'topRht active' : 'topRht'}
-                    onClick={() => handleAdminSelect(getUser(item))}
-                  >
-                    <div className="inner" />
-                  </div>
-                )}
-              </div>
-              <LinkBox>
-                {getUser(item).twitter_profile && (
-                  <a href={getUser(item).twitter_profile} target="_blank" rel="noreferrer">
-                    <Image src="/images/twitterNor.svg" alt="" className="icon" width="20px" height="20px" />
-                  </a>
-                )}
-                {getUser(item).discord_profile && (
-                  <a href={getUser(item).discord_profile} target="_blank" rel="noreferrer">
-                    <Image src="/images/discordNor.svg" alt="" className="icon" width="20px" height="20px" />
-                  </a>
-                )}
-              </LinkBox>
-            </li>
+            <UserCard
+              key={index}
+              user={getUser(item)}
+              onSelectUser={handleAdminSelect}
+              formatActive={formatAdminActive}
+              showEdit={edit && canUpdateSponsor}
+            />
           ))}
         </UlBox>
       </ItemBox>
@@ -357,46 +229,13 @@ export default function Members(props: Iprops) {
         <TitleBox>{t('Project.Others')}</TitleBox>
         <UlBox>
           {memberArr.map((item, index) => (
-            <li key={index}>
-              <div className="fst">
-                <Image
-                  className="avatar"
-                  src={getUser(item).avatar || DefaultAvatar}
-                  alt=""
-                  width="40px"
-                  height="40px"
-                />
-                <div>
-                  <div>{getUser(item).name}</div>
-                  <div style={{ display: 'flex', gap: '5px' }}>
-                    <span>{PublicJs.AddressToShow(getUser(item).wallet || '')}</span>
-                    <CopyBox text={getUser(item).wallet || ''}>
-                      <EvaIcon name="clipboard-outline" options={{ width: '18px', height: '18px' }} />
-                    </CopyBox>
-                  </div>
-                </div>
-                {edit && canUpdateMember && (
-                  <div
-                    className={formatMemActive(getUser(item).wallet || '') ? 'topRht active' : 'topRht'}
-                    onClick={() => handleMemSelect(getUser(item))}
-                  >
-                    <div className="inner" />
-                  </div>
-                )}
-              </div>
-              <LinkBox>
-                {getUser(item).twitter_profile && (
-                  <a href={getUser(item).twitter_profile} target="_blank" rel="noreferrer">
-                    <Image src="/images/twitterNor.svg" alt="" className="icon" width="20px" height="20px" />
-                  </a>
-                )}
-                {getUser(item).discord_profile && (
-                  <a href={getUser(item).discord_profile} target="_blank" rel="noreferrer">
-                    <Image src="/images/discordNor.svg" alt="" className="icon" width="20px" height="20px" />
-                  </a>
-                )}
-              </LinkBox>
-            </li>
+            <UserCard
+              key={index}
+              user={getUser(item)}
+              onSelectUser={handleMemSelect}
+              formatActive={formatMemActive}
+              showEdit={edit && canUpdateMember}
+            />
           ))}
         </UlBox>
       </ItemBox>
@@ -404,3 +243,32 @@ export default function Members(props: Iprops) {
     </Box>
   );
 }
+
+const Box = styled.div`
+  padding: 20px;
+`;
+
+const ItemBox = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+const TitleBox = styled.div`
+  font-weight: bold;
+  margin-bottom: 30px;
+`;
+
+const UlBox = styled.ul`
+  display: flex;
+  flex-wrap: wrap;
+`;
+
+const TopBox = styled.div`
+  background: #f5f5f5;
+  display: flex;
+  justify-content: flex-end;
+  padding: 20px;
+  margin-bottom: 30px;
+  button {
+    margin-left: 20px;
+  }
+`;
