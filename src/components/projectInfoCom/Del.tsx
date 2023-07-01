@@ -38,6 +38,7 @@ const ItemBox = styled.div`
   justify-content: flex-start;
   margin-top: 30px;
   width: 500px;
+  gap: 10px;
   img {
     width: 40px;
     height: 40px;
