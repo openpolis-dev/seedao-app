@@ -193,6 +193,8 @@
     "IncorrectLink": "{media}：required the correct link"
   },
   "Msg": {
-    "ProposalLinkMsg": "Require correct proposal link"
+    "ProposalLinkMsg": "Require correct proposal link",
+    "ApproveSuccess": "Operate successfully",
+    "ApproveFailed": "Operate failed"
   }
 }

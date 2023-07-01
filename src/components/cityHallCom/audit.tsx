@@ -16,6 +16,7 @@ import publicJs from 'utils/publicJs';
 import CopyBox from 'components/copy';
 import { EvaIcon } from '@paljs/ui/Icon';
 import useTranslation from 'hooks/useTranslation';
+import useToast, { ToastType } from 'hooks/useToast';
 
 const Box = styled.div``;
 const FirstLine = styled.div`
@@ -89,6 +90,7 @@ const TableBox = styled.div`
 
 export default function Audit() {
   const { t } = useTranslation();
+  const { Toast, showToast } = useToast();
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [total, setTotal] = useState(100);
@@ -260,10 +262,11 @@ export default function Audit() {
       const select_ids = getSelectIds();
       await requests.application.approveApplications(select_ids);
       getRecords();
-      // TODO alert success
+      showToast(t('Msg.ApproveSuccess'), ToastType.Success);
       setSelectMap({});
     } catch (error) {
       console.error('handle approve failed', error);
+      showToast(t('Msg.ApproveFailed'), ToastType.Danger);
     } finally {
       setLoading(false);
     }
@@ -276,9 +279,10 @@ export default function Audit() {
       await requests.application.rejectApplications(select_ids);
       getRecords();
       setSelectMap({});
-      // TODO alert success
+      showToast(t('Msg.ApproveSuccess'), ToastType.Success);
     } catch (error) {
       console.error('handle reject failed', error);
+      showToast(t('Msg.ApproveFailed'), ToastType.Danger);
     } finally {
       setLoading(false);
     }
@@ -313,6 +317,7 @@ export default function Audit() {
   return (
     <Box>
       {loading && <Loading />}
+      {Toast}
       <FirstLine>
         <TopLine>
           <li>
