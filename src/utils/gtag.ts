@@ -11,8 +11,8 @@ export const pageview = (path: string) => {
 type EventParams = {
   action: string;
   category: string;
-  label: string;
-  value: any;
+  label?: string;
+  value?: any;
 };
 export const event = ({ action, category, label, value }: EventParams) => {
   window.gtag('event', action, {
@@ -21,3 +21,7 @@ export const event = ({ action, category, label, value }: EventParams) => {
     value: value,
   });
 };
+
+export enum EVENTS {
+  LOGIN = 'login',
+}

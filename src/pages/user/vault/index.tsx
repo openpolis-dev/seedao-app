@@ -78,7 +78,7 @@ export default function Vault() {
   }, []);
 
   return (
-    <Layout title="Vault">
+    <Layout title="SeeDAO | My Vault">
       <CardBox>
         <Box>
           <FirstLine>

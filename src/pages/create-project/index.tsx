@@ -270,7 +270,7 @@ export default function CreateProject() {
   };
 
   return (
-    <Layout title="">
+    <Layout title="SeeDAO | Create Project">
       <Box>
         {Toast}
         <CardBox>

@@ -14,6 +14,7 @@ import { UniPass } from '@unipasswallet/web3-react';
 import { EvaIcon } from '@paljs/ui/Icon';
 import useToast, { ToastType } from 'hooks/useToast';
 import Image from 'next/image';
+import * as gtag from 'utils/gtag';
 
 enum LoginStatus {
   Default = 0,
@@ -122,6 +123,8 @@ export default function LoginModal() {
       await authorizer.setUser(account.toLowerCase());
       dispatch({ type: AppActionType.SET_AUTHORIZER, payload: authorizer });
       dispatch({ type: AppActionType.SET_WALLET_TYPE, payload: chooseWallet.type });
+
+      gtag.event({ action: gtag.EVENTS.LOGIN, category: chooseWallet.value, value: account });
     } catch (error: any) {
       console.error(error?.data);
       const msg = error?.data?.msg || 'Login failed';

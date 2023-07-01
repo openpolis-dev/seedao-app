@@ -39,7 +39,7 @@ export default function Index() {
   }, [isLogin]);
 
   return (
-    <Layout title="Chat">
+    <Layout title="SeeDAO Chat">
       {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
       {/* @ts-ignore */}
       <chat-component

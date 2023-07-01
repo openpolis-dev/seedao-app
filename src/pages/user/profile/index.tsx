@@ -162,7 +162,7 @@ export default function Profile() {
   };
 
   return (
-    <Layout title="Profile">
+    <Layout title="SeeDAO | My Profile">
       {Toast}
       <CardBox>
         <Box>

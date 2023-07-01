@@ -270,7 +270,7 @@ export default function CreateGuild() {
   };
 
   return (
-    <Layout title="">
+    <Layout title="SeeDAO | Create Guild">
       <Box>
         {Toast}
         <CardBox>

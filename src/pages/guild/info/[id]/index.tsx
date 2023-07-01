@@ -113,7 +113,7 @@ export default function Index() {
     }
   };
   return (
-    <Layout title="SeeDAO Project">
+    <Layout title="SeeDAO Guild">
       <CardBox>
         <Box>
           <BackBox onClick={() => router.back()}>

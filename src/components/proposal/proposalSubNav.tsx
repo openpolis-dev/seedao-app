@@ -12,17 +12,12 @@ interface IProps {
 export default function ProposalSubNav({ onSelect }: IProps) {
   const { t } = useTranslation();
 
-  const testEvent = () => {
-    window.open(`https://forum.seedao.xyz/`, '_blank');
-    gtag.event({ action: 'login', category: 'bbb', label: 'ccc', value: '123' });
-  };
   return (
     <SubNav>
       <Button
         size="Small"
         onClick={() => {
-          // window.open(`https://forum.seedao.xyz/`, '_blank');
-          testEvent();
+          window.open(`https://forum.seedao.xyz/`, '_blank');
         }}
       >
         Create Proposal
