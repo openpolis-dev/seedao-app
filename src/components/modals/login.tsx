@@ -138,10 +138,10 @@ export default function LoginModal() {
   };
 
   useEffect(() => {
-    if (account && loginStatus && chooseWallet) {
+    if (account && loginStatus && chooseWallet && provider) {
       handleLoginSys();
     }
-  }, [account, loginStatus, chooseWallet]);
+  }, [account, loginStatus, chooseWallet, provider]);
 
   const closeModal = () => {
     dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: false });
