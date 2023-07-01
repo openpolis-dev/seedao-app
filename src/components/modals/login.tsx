@@ -124,11 +124,12 @@ export default function LoginModal() {
       dispatch({ type: AppActionType.SET_AUTHORIZER, payload: authorizer });
       dispatch({ type: AppActionType.SET_WALLET_TYPE, payload: chooseWallet.type });
 
-      gtag.event({ action: gtag.EVENTS.LOGIN, category: chooseWallet.value, value: account });
+      gtag.event({ action: gtag.EVENTS.LOGIN_SUCCESS, category: chooseWallet.value, value: account });
     } catch (error: any) {
       console.error(error?.data);
       const msg = error?.data?.msg || 'Login failed';
       console.error('error?.data', msg);
+      gtag.event({ action: gtag.EVENTS.LOGIN_FAILED, category: chooseWallet.value, value: account });
       showToast(msg, ToastType.Danger);
       handleFailed();
     } finally {
