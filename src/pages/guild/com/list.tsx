@@ -23,7 +23,7 @@ const Item = styled.div`
   .title {
     font-size: 14px;
     line-height: 1.5em;
-    height: 42px;
+    height: 20px;
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;

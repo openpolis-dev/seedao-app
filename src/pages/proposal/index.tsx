@@ -122,7 +122,7 @@ const ProposalContainer = styled(Card)`
 const SubCategoryCard = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 40px;
+  gap: 8px;
   justify-content: space-between;
   flex-wrap: wrap;
   padding: 10px;
