@@ -1,86 +1,88 @@
 import React, { ChangeEvent, FC, useEffect, useState } from 'react';
 import ReactPaginate from 'react-paginate';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { Button } from '@paljs/ui/Button';
 
 const Box = styled.div`
   //display: flex;
   //justify-content: space-between;
   //align-items: center;
-  margin-top: 40px;
-  width: 100%;
-  a {
-    text-decoration: none;
-    //color: #616666;
-    width: 32px;
-    height: 32px;
-    display: inline-block;
-    margin: 0 4px;
-  }
-  .pagination {
-    display: flex;
-    align-items: center;
-  }
-
-  .page-break {
-    width: 32px;
-    height: 32px;
-    text-align: center;
-    line-height: 32px;
-    margin-right: -4px;
-  }
-  .page-left {
-    background: url('/images/left.svg') no-repeat center !important;
-  }
-  .page-right {
-    background: url('/images/right.svg') no-repeat center !important;
-  }
-
-  .page-link,
-  .page-left,
-  .page-right {
-    width: 32px;
-    height: 32px;
-    background: #fff;
-    border: 0;
-    text-align: center;
-    line-height: 32px;
-    padding: 0;
-    font-size: 14px;
-    font-weight: 400;
-    cursor: pointer;
-    color: #616666;
-    border: 1px solid #a16eff;
-    border-radius: 4px;
-  }
-
-  .next {
-    display: none;
-  }
-
-  .page-link {
-    &:hover {
-      background: #a16eff;
-      color: #fff;
+  ${({ theme }) => css`
+    margin-top: 40px;
+    width: 100%;
+    a {
+      text-decoration: none;
+      //color: #616666;
+      width: 32px;
+      height: 32px;
+      display: inline-block;
+      margin: 0 4px;
+    }
+    .pagination {
+      display: flex;
+      align-items: center;
     }
 
-    &:focus {
-      box-shadow: none;
+    .page-break {
+      width: 32px;
+      height: 32px;
+      text-align: center;
+      line-height: 32px;
+      margin-right: -4px;
     }
-  }
-
-  .disabled {
-    .pageL {
-      color: #f2f2f2 !important;
+    .page-left {
+      background: url('/images/left.svg') no-repeat center !important;
     }
-  }
+    .page-right {
+      background: url('/images/right.svg') no-repeat center !important;
+    }
 
-  .active {
+    .page-link,
+    .page-left,
+    .page-right {
+      width: 32px;
+      height: 32px;
+      background: #fff;
+      border: 0;
+      text-align: center;
+      line-height: 32px;
+      padding: 0;
+      font-size: 14px;
+      font-weight: 400;
+      cursor: pointer;
+      color: #616666;
+      border: 1px solid ${theme.colorPrimary500};
+      border-radius: 4px;
+    }
+
+    .next {
+      display: none;
+    }
+
     .page-link {
-      background: #a16eff;
-      color: #fff;
+      &:hover {
+        background: ${theme.colorPrimary500};
+        color: #fff;
+      }
+
+      &:focus {
+        box-shadow: none;
+      }
     }
-  }
+
+    .disabled {
+      .pageL {
+        color: #f2f2f2 !important;
+      }
+    }
+
+    .active {
+      .page-link {
+        background: ${theme.colorPrimary500};
+        color: #fff;
+      }
+    }
+  `}
 `;
 // const NumBox = styled.div`
 //   font-size: 14px;
@@ -89,42 +91,44 @@ const Box = styled.div`
 // `;
 
 const GoToBox = styled.div`
-  display: flex;
-  align-items: center;
-  margin-left: 12px;
-  border: 1px solid #a16eff;
-  border-radius: 3px;
-  overflow: hidden;
-  height: 33px;
+  ${({ theme }) => css`
+    display: flex;
+    align-items: center;
+    margin-left: 12px;
+    border: 1px solid ${theme.colorPrimary500};
+    border-radius: 3px;
+    overflow: hidden;
+    height: 33px;
 
-  input {
-    width: 64px;
-    height: 32px;
-    background: transparent;
-    border: 0;
-    text-align: center;
-    font-size: 14px;
-    color: #000;
-    &:focus {
-      outline: none;
+    input {
+      width: 64px;
+      height: 32px;
+      background: transparent;
+      border: 0;
+      text-align: center;
+      font-size: 14px;
+      color: #000;
+      &:focus {
+        outline: none;
+      }
+
+      &::-webkit-outer-spin-button,
+      &::-webkit-inner-spin-button {
+        -webkit-appearance: none !important;
+      }
     }
 
-    &::-webkit-outer-spin-button,
-    &::-webkit-inner-spin-button {
-      -webkit-appearance: none !important;
+    .btn {
+      width: 32px;
+      height: 32px;
+      text-align: center;
+      padding: 0;
+      border-radius: 0;
+      font-size: 14px;
+      background: ${theme.colorPrimary500};
+      color: #fff;
     }
-  }
-
-  .btn {
-    width: 32px;
-    height: 32px;
-    text-align: center;
-    padding: 0;
-    border-radius: 0;
-    font-size: 14px;
-    background: #a16eff;
-    color: #fff;
-  }
+  `}
 `;
 const RhtBox = styled.div`
   display: flex;
