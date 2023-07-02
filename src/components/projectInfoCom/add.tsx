@@ -132,7 +132,7 @@ export default function Add(props: Iprops) {
       }
       dispatch({ type: AppActionType.SET_LOADING, payload: true });
       await updateStaffs(id as string, params);
-      showToast(t('Guild.addMemberSuccess'), ToastType.Success);
+      showToast(t('Project.addMemberSuccess'), ToastType.Success);
 
       dispatch({ type: AppActionType.SET_LOADING, payload: null });
       closeAdd(true);

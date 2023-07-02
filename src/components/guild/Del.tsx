@@ -8,6 +8,7 @@ import { AppActionType, useAuthContext } from 'providers/authProvider';
 import { updateStaffs, IUpdateStaffsParams } from 'requests/guild';
 import { DefaultAvatar } from 'utils/constant';
 import Image from 'next/image';
+import useToast, { ToastType } from 'hooks/useToast';
 
 const Mask = styled.div`
   background: rgba(0, 0, 0, 0.3);
@@ -30,13 +31,16 @@ const Mask = styled.div`
     padding: 0;
     margin: 0;
   }
+  .title {
+    font-weight: bold;
+    margin-block: 15px;
+  }
 `;
 
 const ItemBox = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  margin-top: 30px;
   width: 500px;
   gap: 10px;
   img {
@@ -52,13 +56,14 @@ interface Iprops {
   closeRemove: (refresh?: boolean) => void;
   selectAdminArr: IUser[];
   selectMemArr: IUser[];
-  showToastr: (a: string, b: string, c: string) => void;
   id: string;
 }
 export default function Del(props: Iprops) {
-  const { closeRemove, selectAdminArr, selectMemArr, id, showToastr } = props;
+  const { closeRemove, selectAdminArr, selectMemArr, id } = props;
   const { t } = useTranslation();
   const { dispatch } = useAuthContext();
+
+  const { Toast, showToast } = useToast();
 
   const submitUpdate = async () => {
     const params: IUpdateStaffsParams = {
@@ -74,11 +79,11 @@ export default function Del(props: Iprops) {
     try {
       await updateStaffs(id as string, params);
       closeRemove(true);
-      showToastr(t('Project.RemoveMemSuccess'), 'Success', 'Primary');
+      showToast(t('Guild.RemoveMemSuccess'), ToastType.Success);
     } catch (e) {
       console.error(e);
       closeRemove();
-      showToastr(JSON.stringify(e), 'Failed', 'Danger');
+      showToast(JSON.stringify(e), ToastType.Danger);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: null });
     }
@@ -87,9 +92,10 @@ export default function Del(props: Iprops) {
   return (
     <Mask>
       <Card>
-        <CardHeader>{t('Project.RemoveMember')}</CardHeader>
+        {Toast}
+        <CardHeader>{t('Guild.RemoveMember')}</CardHeader>
         <CardBody>
-          <div className="tips">{t('Project.ConfirmationPopup')}</div>
+          <div className="title">{t('Guild.Dominator')}</div>
           {selectAdminArr.map((item, index) => (
             <ItemBox key={index}>
               <div>
@@ -101,6 +107,7 @@ export default function Del(props: Iprops) {
               </div>
             </ItemBox>
           ))}
+          <div className="title">{t('Guild.Others')}</div>
           {selectMemArr.map((item, index) => (
             <ItemBox key={index}>
               <div>

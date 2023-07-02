@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Button } from '@paljs/ui/Button';
 import Add from './add';
 import Del from './Del';
@@ -8,7 +8,6 @@ import { ReTurnProject } from 'type/project.type';
 import { getUsers } from 'requests/user';
 import { IUser } from 'type/user.type';
 import { useRouter } from 'next/router';
-import { Toastr, ToastrRef } from '@paljs/ui/Toastr';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import NoItem from 'components/noItem';
 import { PermissionObject, PermissionAction } from 'utils/constant';
@@ -31,7 +30,6 @@ export default function Members(props: Iprops) {
   const canUpdateMember = usePermission(PermissionAction.UpdateMember, PermissionObject.GuildPrefix + id);
   const canUpdateSponsor = usePermission(PermissionAction.UpdateSponsor, PermissionObject.GuildPrefix + id);
 
-  const toastrRef = useRef<ToastrRef>(null);
   const { t } = useTranslation();
   const { dispatch } = useAuthContext();
 
@@ -124,10 +122,6 @@ export default function Members(props: Iprops) {
     return !!arr.length;
   };
 
-  const showToastr = (message: string, title: string, type: string) => {
-    toastrRef.current?.add(message, title, { status: type });
-  };
-
   const getUser = (wallet: string): IUser => {
     const user = userMap[wallet];
     if (!user) {
@@ -146,6 +140,10 @@ export default function Members(props: Iprops) {
     return user;
   };
 
+  const removeButtonDisabled = useMemo(() => {
+    return !selectAdminArr.length && !selectMemArr.length;
+  }, [selectAdminArr, selectMemArr]);
+
   return (
     <Box>
       {show && (
@@ -157,32 +155,8 @@ export default function Members(props: Iprops) {
         />
       )}
       {showDel && (
-        <Del
-          id={id as string}
-          closeRemove={closeRemove}
-          selectAdminArr={selectAdminArr}
-          selectMemArr={selectMemArr}
-          showToastr={showToastr}
-        />
+        <Del id={id as string} closeRemove={closeRemove} selectAdminArr={selectAdminArr} selectMemArr={selectMemArr} />
       )}
-      <Toastr
-        ref={toastrRef}
-        position="topEnd"
-        status="Primary"
-        duration={3000}
-        icons={{
-          Danger: 'flash-outline',
-          Success: 'checkmark-outline',
-          Info: 'question-mark-outline',
-          Warning: 'alert-triangle-outline',
-          Control: 'email-outline',
-          Basic: 'email-outline',
-          Primary: 'checkmark-outline',
-        }}
-        hasIcon={true}
-        destroyByClick={false}
-        preventDuplicates={false}
-      />
       {(canUpdateMember || canUpdateSponsor) && (
         <TopBox>
           <Button onClick={() => handleAdd()} disabled={edit}>
@@ -195,7 +169,9 @@ export default function Members(props: Iprops) {
           )}
           {edit && (
             <>
-              <Button onClick={() => closeDel()}>{t('general.confirm')}</Button>
+              <Button onClick={() => closeDel()} disabled={removeButtonDisabled}>
+                {t('general.confirm')}
+              </Button>
               <Button appearance="outline" onClick={() => closeRemove()}>
                 {t('general.cancel')}
               </Button>
