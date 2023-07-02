@@ -23,6 +23,6 @@ export const event = ({ action, category, label, value }: EventParams) => {
 };
 
 export enum EVENTS {
-  LOGIN_SUCCESS = 'login success',
-  LOGIN_FAILED = 'login failed',
+  LOGIN_SUCCESS = 'login_success',
+  LOGIN_FAILED = 'login_failed',
 }
