@@ -11,6 +11,7 @@ import { createProjects } from 'requests/project';
 import { BudgetType, IBaseProject } from 'type/project.type';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import useToast, { ToastType } from 'hooks/useToast';
+import { AssetName } from 'utils/constant';
 
 const Box = styled.div`
   .btnBtm {
@@ -217,12 +218,12 @@ export default function CreateProject() {
       proposals: ids,
       budgets: [
         {
-          name: 'USDT',
+          name: AssetName.Token,
           total_amount: token || 0,
           budget_type: BudgetType.Token,
         },
         {
-          name: 'SCR',
+          name: AssetName.Credit,
           total_amount: credit || 0,
           budget_type: BudgetType.Credit,
         },
@@ -429,10 +430,8 @@ export default function CreateProject() {
                 disabled={
                   proName?.length === 0 ||
                   url?.length === 0 ||
-                  !credit ||
-                  credit < 0 ||
-                  !token ||
-                  token < 0 ||
+                  (credit && credit < 0) ||
+                  (token && token < 0) ||
                   (adminList?.length === 1 && adminList[0]?.length === 0) ||
                   (proList?.length === 1 && proList[0]?.length === 0) ||
                   (memberList?.length === 1 && memberList[0]?.length === 0)
