@@ -17,6 +17,7 @@ import CopyBox from 'components/copy';
 import { EvaIcon } from '@paljs/ui/Icon';
 import useTranslation from 'hooks/useTranslation';
 import useToast, { ToastType } from 'hooks/useToast';
+import { formatApplicationStatus } from 'utils/index';
 
 const Box = styled.div``;
 const FirstLine = styled.div`
@@ -111,11 +112,11 @@ export default function Audit() {
   const statusOption = useMemo(() => {
     return [
       { label: t('Project.AllState'), value: ApplicationStatus.All },
-      { label: t('Project.ToBeReviewed'), value: ApplicationStatus.Open },
-      { label: t('Project.Rejected'), value: ApplicationStatus.Rejected },
-      { label: t('Project.ToBeIssued'), value: ApplicationStatus.Approved },
-      { label: t('Project.Sending'), value: ApplicationStatus.Processing },
-      { label: t('Project.Sended'), value: ApplicationStatus.Completed },
+      { label: t(formatApplicationStatus(ApplicationStatus.Open)), value: ApplicationStatus.Open },
+      { label: t(formatApplicationStatus(ApplicationStatus.Rejected)), value: ApplicationStatus.Rejected },
+      { label: t(formatApplicationStatus(ApplicationStatus.Approved)), value: ApplicationStatus.Approved },
+      { label: t(formatApplicationStatus(ApplicationStatus.Processing)), value: ApplicationStatus.Processing },
+      { label: t(formatApplicationStatus(ApplicationStatus.Completed)), value: ApplicationStatus.Completed },
     ];
   }, [t]);
 
@@ -430,7 +431,7 @@ export default function Audit() {
                     <td>{item.detailed_type}</td>
                     <td>{item.budget_source}</td>
                     <td>{item.comment}</td>
-                    <td>{item.status}</td>
+                    <td>{t(formatApplicationStatus(item.status))}</td>
                     <td>{item.submitter_name || item.submitter_wallet}</td>
                     <td>{item.reviewer_name || item.reviewer_wallet}</td>
                   </tr>

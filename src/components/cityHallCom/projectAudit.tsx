@@ -13,6 +13,7 @@ import { IQueryApplicationsParams } from 'requests/applications';
 import publicJs from 'utils/publicJs';
 import NoItem from 'components/noItem';
 import useTranslation from 'hooks/useTranslation';
+import { formatApplicationStatus } from 'utils/index';
 
 const Box = styled.div``;
 const FirstLine = styled.div`
@@ -99,9 +100,9 @@ export default function ProjectAudit() {
 
   const statusOption = useMemo(() => {
     return [
-      { label: t('Project.ToBeReviewed'), value: ApplicationStatus.Open },
-      { label: t('Project.Rejected'), value: ApplicationStatus.Rejected },
-      { label: t('Project.Sended'), value: ApplicationStatus.Completed },
+      { label: t(formatApplicationStatus(ApplicationStatus.Open)), value: ApplicationStatus.Open },
+      { label: t(formatApplicationStatus(ApplicationStatus.Rejected)), value: ApplicationStatus.Rejected },
+      { label: t(formatApplicationStatus(ApplicationStatus.Approved)), value: ApplicationStatus.Approved },
     ];
   }, [t]);
 
@@ -289,8 +290,8 @@ export default function ProjectAudit() {
                   <td>{item.created_date}</td>
                   <td>{item.budget_source}</td>
                   <td>{t('city-hall.CloseProject')}</td>
-                  <td>--</td>
-                  <td>{item.status}</td>
+                  <td>{item.comment}</td>
+                  <td>{t(formatApplicationStatus(item.status))}</td>
                   <td>{item.submitter_name || publicJs.AddressToShow(item.submitter_wallet)}</td>
                 </tr>
               ))}

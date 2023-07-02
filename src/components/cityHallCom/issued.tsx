@@ -15,6 +15,7 @@ import NoItem from 'components/noItem';
 import { IQueryApplicationsParams } from 'requests/applications';
 import CopyBox from 'components/copy';
 import useTranslation from 'hooks/useTranslation';
+import { formatApplicationStatus } from 'utils/index';
 
 const Box = styled.div``;
 const FirstLine = styled.div`
@@ -102,9 +103,9 @@ export default function Issued() {
 
   const statusOption = useMemo(() => {
     return [
-      { label: t('Project.ToBeIssued'), value: ApplicationStatus.Approved },
-      { label: t('Project.Sending'), value: ApplicationStatus.Processing },
-      { label: t('Project.Sended'), value: ApplicationStatus.Completed },
+      { label: t(formatApplicationStatus(ApplicationStatus.Approved)), value: ApplicationStatus.Approved },
+      { label: t(formatApplicationStatus(ApplicationStatus.Processing)), value: ApplicationStatus.Processing },
+      { label: t(formatApplicationStatus(ApplicationStatus.Completed)), value: ApplicationStatus.Completed },
     ];
   }, [t]);
 
@@ -352,7 +353,7 @@ export default function Issued() {
                     <td>{item.detailed_type}</td>
                     <td>{item.budget_source}</td>
                     <td>{item.comment}</td>
-                    <td>{item.status}</td>
+                    <td>{t(formatApplicationStatus(item.status))}</td>
                     <td>{item.submitter_name || publicJs.AddressToShow(item.submitter_wallet)}</td>
                     <td>{item.reviewer_name || publicJs.AddressToShow(item.reviewer_wallet)}</td>
                   </tr>
