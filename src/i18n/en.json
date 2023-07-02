@@ -195,6 +195,7 @@
   "Msg": {
     "ProposalLinkMsg": "Require correct proposal link",
     "ApproveSuccess": "Operate successfully",
-    "ApproveFailed": "Operate failed"
+    "ApproveFailed": "Operate failed",
+    "IncorrectAddress": "Invalid address: {content}"
   }
 }

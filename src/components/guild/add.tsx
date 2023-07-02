@@ -8,6 +8,7 @@ import useTranslation from 'hooks/useTranslation';
 import { updateStaffs, IUpdateStaffsParams } from 'requests/guild';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import { ethers } from 'ethers';
+import useToast, { ToastType } from 'hooks/useToast';
 
 const Mask = styled.div`
   background: rgba(0, 0, 0, 0.3);
@@ -58,15 +59,15 @@ const InnerBox = styled.div`
 
 interface Iprops {
   closeAdd: (refresh?: boolean) => void;
-  showToastr: (a: string, b: string, c: string) => void;
   id: string;
   canUpdateMember: boolean;
   canUpdateSponsor: boolean;
 }
 export default function Add(props: Iprops) {
-  const { closeAdd, id, showToastr, canUpdateMember, canUpdateSponsor } = props;
+  const { closeAdd, id, canUpdateMember, canUpdateSponsor } = props;
   const { t } = useTranslation();
   const { dispatch } = useAuthContext();
+  const { showToast, Toast } = useToast();
 
   const [adminList, setAdminList] = useState<string[]>(['']);
   const [memberList, setMemberList] = useState<string[]>(['']);
@@ -107,8 +108,18 @@ export default function Add(props: Iprops) {
   };
 
   const submitObject = async () => {
+    const _adminList_invalid = adminList.filter((item) => item && !ethers.utils.isAddress(item));
+    const _memberList_invalid = memberList.filter((item) => item && !ethers.utils.isAddress(item));
+    const _invalid_address = [..._adminList_invalid, ..._memberList_invalid];
+
+    if (_invalid_address.length) {
+      showToast(t('Msg.IncorrectAddress', { content: _invalid_address.join(', ') }), ToastType.Danger);
+      return;
+    }
+
     const _adminList = adminList.filter((item) => item && ethers.utils.isAddress(item));
     const _memberList = memberList.filter((item) => item && ethers.utils.isAddress(item));
+
     try {
       const params: IUpdateStaffsParams = {
         action: 'add',
@@ -119,18 +130,15 @@ export default function Add(props: Iprops) {
       if (!!_memberList.length) {
         params['members'] = _memberList;
       }
-      if (!_adminList && !_memberList) {
-        showToastr('fill the correct address', 'Failed', 'Danger');
-        return;
-      }
+
       dispatch({ type: AppActionType.SET_LOADING, payload: true });
       await updateStaffs(id as string, params);
-      showToastr(t('Project.addMemberSuccess'), 'Success', 'Primary');
+      showToast(t('Project.addMemberSuccess'), ToastType.Success);
       dispatch({ type: AppActionType.SET_LOADING, payload: null });
       closeAdd(true);
     } catch (e) {
       console.error(e);
-      showToastr(JSON.stringify(e), 'Failed', 'Danger');
+      showToast(JSON.stringify(e), ToastType.Danger);
       closeAdd();
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: null });
@@ -140,6 +148,7 @@ export default function Add(props: Iprops) {
   return (
     <Mask>
       <Card>
+        {Toast}
         <CardHeader>{t('Project.AddMember')}</CardHeader>
         <CardBody>
           <InnerBox>

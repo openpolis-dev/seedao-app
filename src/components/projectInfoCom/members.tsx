@@ -156,7 +156,6 @@ export default function Members(props: Iprops) {
         <Add
           closeAdd={closeAdd}
           id={id as string}
-          showToastr={showToastr}
           canUpdateMember={canUpdateMember}
           canUpdateSponsor={canUpdateSponsor}
         />
