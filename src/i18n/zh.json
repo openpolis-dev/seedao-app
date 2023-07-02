@@ -157,7 +157,7 @@
     "Send": "发放",
     "Tips": "点击发放按钮后所选中的用户状态变更为【发放中】，发放完成后才能进行其他用户的发放",
     "SendCompleted": "发放完成",
-    "FillInId": "请填入发放记录的交易ID"
+    "FillInId": "请填入发放记录的交易ID（使用;隔开）"
   },
   "Assets": {
     "TotalBalance": "金库余额",

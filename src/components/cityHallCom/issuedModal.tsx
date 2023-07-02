@@ -1,10 +1,10 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { Card, CardHeader, CardBody, CardFooter } from '@paljs/ui/Card';
-import { InputGroup } from '@paljs/ui/Input';
-import { EvaIcon } from '@paljs/ui/Icon';
 import React, { ChangeEvent, useState } from 'react';
 import { Button } from '@paljs/ui/Button';
 import useTranslation from 'hooks/useTranslation';
+import { ethers } from 'ethers';
+import { ToastType } from 'hooks/useToast';
 
 const Mask = styled.div`
   background: rgba(0, 0, 0, 0.3);
@@ -51,10 +51,13 @@ const ItemBox = styled.div`
 interface Iprops {
   closeShow: () => void;
   handleConfirm: (data: string[]) => void;
+  showToast: (msg: string, type: ToastType) => void;
 }
 export default function IssuedModal(props: Iprops) {
   const { t } = useTranslation();
-  const { closeShow, handleConfirm } = props;
+  const { closeShow, handleConfirm, showToast } = props;
+
+  const [value, setValue] = useState('');
 
   const [memberList, setMemberList] = useState<string[]>(['']);
 
@@ -76,6 +79,15 @@ export default function IssuedModal(props: Iprops) {
     setMemberList(arr);
   };
 
+  const onClickConfirm = () => {
+    const list = value.split(';');
+    const _memberList: string[] = list.filter((item) => !!item);
+    if (!_memberList.length) {
+      return;
+    }
+    handleConfirm(_memberList);
+  };
+
   return (
     <Mask>
       <Card>
@@ -83,7 +95,8 @@ export default function IssuedModal(props: Iprops) {
         <CardBody>
           <ItemBox>
             <div className="title">{t('city-hall.FillInId')}</div>
-            <ul>
+            <Textarea onChange={(e) => setValue(e.target.value)} />
+            {/* <ul>
               {memberList.map((item, index) => (
                 <li key={`member_${index}`}>
                   <InputGroup fullWidth>
@@ -99,16 +112,31 @@ export default function IssuedModal(props: Iprops) {
                   )}
                 </li>
               ))}
-            </ul>
+            </ul> */}
           </ItemBox>
         </CardBody>
         <CardFooter>
           <Button appearance="outline" className="btn" onClick={() => closeShow()}>
             {t('general.cancel')}
           </Button>
-          <Button onClick={() => handleConfirm(memberList)}>{t('general.confirm')}</Button>
+          <Button onClick={onClickConfirm}>{t('general.confirm')}</Button>
         </CardFooter>
       </Card>
     </Mask>
   );
 }
+
+const Textarea = styled.textarea`
+  ${({ theme }) => css`
+    width: 100%;
+    line-height: 22px;
+    resize: none;
+    height: 120px;
+    overflow-y: auto;
+    outline: none;
+    padding: 10px;
+    border-radius: 0.25rem;
+    border-color: ${theme.colorPrimary300};
+    background-color: ${theme.colorPrimaryTransparent100};
+  `}
+`;

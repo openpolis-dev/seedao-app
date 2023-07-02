@@ -16,6 +16,7 @@ import { IQueryApplicationsParams } from 'requests/applications';
 import CopyBox from 'components/copy';
 import useTranslation from 'hooks/useTranslation';
 import { formatApplicationStatus } from 'utils/index';
+import useToast from 'hooks/useToast';
 
 const Box = styled.div``;
 const FirstLine = styled.div`
@@ -89,6 +90,7 @@ const TableBox = styled.div`
 
 export default function Issued() {
   const { t } = useTranslation();
+  const { Toast, showToast } = useToast();
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [total, setTotal] = useState(0);
@@ -275,7 +277,8 @@ export default function Issued() {
   return (
     <Box>
       {loading && <Loading />}
-      {show && <IssuedModal closeShow={closeShow} handleConfirm={handleComplete} />}
+      {show && <IssuedModal closeShow={closeShow} handleConfirm={handleComplete} showToast={showToast} />}
+      {Toast}
 
       <FirstLine>
         <TopLine>
