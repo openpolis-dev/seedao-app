@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { Card, CardBody } from '@paljs/ui/Card';
 import Spinner from '@paljs/ui/Spinner';
+import useTranslation from 'hooks/useTranslation';
 
 const Mask = styled.div`
   background: rgba(0, 0, 0, 0.3);
@@ -26,17 +27,14 @@ const Box = styled.div`
   }
 `;
 export default function Loading() {
+  const { t } = useTranslation();
   return (
     <Mask>
-      <Card>
-        <CardBody>
-          <Box>
-            <Spinner status="Primary" size="Giant">
-              <span>Loading...</span>
-            </Spinner>
-          </Box>
-        </CardBody>
-      </Card>
+      <Box>
+        <Spinner status="Primary" size="Giant">
+          <span>{t('general.Loading')}...</span>
+        </Spinner>
+      </Box>
     </Mask>
   );
 }
