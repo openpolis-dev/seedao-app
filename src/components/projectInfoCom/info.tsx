@@ -14,6 +14,7 @@ import { InputGroup } from '@paljs/ui/Input';
 import usePermission from 'hooks/usePermission';
 import { PermissionObject, PermissionAction } from 'utils/constant';
 import useToast, { ToastType } from 'hooks/useToast';
+import InputNumber from 'components/inputNumber';
 
 const Box = styled.div`
   margin-top: 50px;
@@ -337,8 +338,7 @@ export default function Info(props: Iprops) {
               {showEditPoints && (
                 <div className="info">
                   <InputBox fullWidth>
-                    <input
-                      type="number"
+                    <InputNumber
                       placeholder={t('Project.Points')}
                       value={editPoint}
                       onChange={(e) => handleInput(e, 'points')}
@@ -380,12 +380,7 @@ export default function Info(props: Iprops) {
               {showEditToken && (
                 <div className="info">
                   <InputBox fullWidth>
-                    <input
-                      type="number"
-                      placeholder="USDT"
-                      value={editToken}
-                      onChange={(e) => handleInput(e, 'token')}
-                    />
+                    <InputNumber placeholder="USDT" value={editToken} onChange={(e) => handleInput(e, 'token')} />
                   </InputBox>
                   <Button shape="Rectangle" size="Medium" onClick={() => handlecloseEditT()} className="rht10">
                     {t('general.confirm')}

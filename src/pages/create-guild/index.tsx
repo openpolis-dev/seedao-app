@@ -12,6 +12,7 @@ import { BudgetType, IBaseProject } from 'type/project.type';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import useToast, { ToastType } from 'hooks/useToast';
 import { AssetName } from 'utils/constant';
+import InputNumber from 'components/inputNumber';
 
 const Box = styled.div`
   .btnBtm {
@@ -371,8 +372,7 @@ export default function CreateGuild() {
                   <ItemBox>
                     <span className="titleLft">{t('Guild.Points')}</span>
                     <InputGroup fullWidth>
-                      <input
-                        type="number"
+                      <InputNumber
                         placeholder={t('Guild.Points')}
                         value={credit}
                         onChange={(e) => handleInput(e, 0, 'credit')}
@@ -382,12 +382,7 @@ export default function CreateGuild() {
                   <ItemBox>
                     <span className="titleLft">USD</span>
                     <InputGroup fullWidth>
-                      <input
-                        type="number"
-                        placeholder="USD"
-                        value={token}
-                        onChange={(e) => handleInput(e, 0, 'token')}
-                      />
+                      <InputNumber placeholder="USD" value={token} onChange={(e) => handleInput(e, 0, 'token')} />
                     </InputGroup>
                   </ItemBox>
                 </div>

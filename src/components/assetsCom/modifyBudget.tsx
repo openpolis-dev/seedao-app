@@ -5,6 +5,7 @@ import React, { useState } from 'react';
 import { Button } from '@paljs/ui';
 import { InputGroup } from '@paljs/ui/Input';
 import useTranslation from 'hooks/useTranslation';
+import InputNumber from 'components/inputNumber';
 
 const Mask = styled.div`
   background: rgba(0, 0, 0, 0.3);
@@ -56,8 +57,7 @@ export default function ModifyBudgetModal(props: Iprops) {
         </HeaderBox>
         <CardBody>
           <InputGroup fullWidth>
-            <input
-              type="number"
+            <InputNumber
               placeholder=""
               autoFocus
               value={newValue}

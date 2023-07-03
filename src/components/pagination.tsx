@@ -2,6 +2,7 @@ import React, { ChangeEvent, FC, useEffect, useState } from 'react';
 import ReactPaginate from 'react-paginate';
 import styled, { css } from 'styled-components';
 import { Button } from '@paljs/ui/Button';
+import InputNumber from 'components/inputNumber';
 
 const Box = styled.div`
   //display: flex;
@@ -208,8 +209,7 @@ const Page: FC<Props> = ({ itemsPerPage, total, handleToPage, handlePageSize }) 
           forcePage={current}
         />
         <GoToBox>
-          <input
-            type="number"
+          <InputNumber
             value={pageToGo}
             onChange={handleInput}
             placeholder="Page"
