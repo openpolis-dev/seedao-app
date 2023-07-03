@@ -14,6 +14,7 @@ import publicJs from 'utils/publicJs';
 import NoItem from 'components/noItem';
 import useTranslation from 'hooks/useTranslation';
 import { formatApplicationStatus } from 'utils/index';
+import useToast, { ToastType } from 'hooks/useToast';
 
 const Box = styled.div``;
 const FirstLine = styled.div`
@@ -86,6 +87,7 @@ const TableBox = styled.div`
 `;
 
 export default function ProjectAudit() {
+  const { Toast, showToast } = useToast();
   const { t } = useTranslation();
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -186,9 +188,11 @@ export default function ProjectAudit() {
       const select_ids = getSelectIds();
       await requests.application.approveApplications(select_ids);
       setSelectMap({});
+      showToast(t('Msg.ApproveSuccess'), ToastType.Success);
       getRecords();
     } catch (error) {
       console.error('handle approve failed', error);
+      showToast(t('Msg.ApproveFailed'), ToastType.Danger);
     } finally {
       setLoading(false);
     }
@@ -200,9 +204,11 @@ export default function ProjectAudit() {
       const select_ids = getSelectIds();
       await requests.application.rejectApplications(select_ids);
       setSelectMap({});
+      showToast(t('Msg.ApproveSuccess'), ToastType.Success);
       getRecords();
     } catch (error) {
       console.error('handle reject failed', error);
+      showToast(t('Msg.ApproveFailed'), ToastType.Danger);
     } finally {
       setLoading(false);
     }
@@ -220,7 +226,7 @@ export default function ProjectAudit() {
     window.open(requests.application.getExportFileUrl(select_ids), '_blank');
   };
 
-  const canExport = useMemo(() => {
+  const selectOne = useMemo(() => {
     const select_ids = getSelectIds();
     return select_ids.length > 0;
   }, [selectMap]);
@@ -228,6 +234,7 @@ export default function ProjectAudit() {
   return (
     <Box>
       {loading && <Loading />}
+      {Toast}
       <FirstLine>
         <TopLine>
           <li>
@@ -255,14 +262,16 @@ export default function ProjectAudit() {
               />
             </BorderBox>
           </TimeBox>
-          <Button size="Medium" onClick={handleExport} disabled={!canExport}>
+          <Button size="Medium" onClick={handleExport} disabled={!selectOne}>
             {t('Project.Export')}
           </Button>
         </TimeLine>
       </FirstLine>
       <TopBox>
-        <Button onClick={handleApprove}>{t('city-hall.Pass')}</Button>
-        <Button appearance="outline" onClick={handleReject}>
+        <Button onClick={handleApprove} disabled={!selectOne}>
+          {t('city-hall.Pass')}
+        </Button>
+        <Button appearance="outline" onClick={handleReject} disabled={!selectOne}>
           {t('city-hall.Reject')}
         </Button>
       </TopBox>
