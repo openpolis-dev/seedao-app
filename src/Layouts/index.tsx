@@ -131,6 +131,7 @@ const LayoutPage: React.FC<SEOProps> = ({ children, ...rest }) => {
                     currentPath={router.pathname}
                     toggleSidebar={() => sidebarRef.current?.hide()}
                   />
+                  {seeHeader && <AppVersion />}
                 </SidebarBody>
               </Sidebar>
               <LayoutContent>
