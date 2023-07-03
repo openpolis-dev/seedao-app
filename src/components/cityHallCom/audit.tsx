@@ -18,7 +18,6 @@ import { EvaIcon } from '@paljs/ui/Icon';
 import useTranslation from 'hooks/useTranslation';
 import useToast, { ToastType } from 'hooks/useToast';
 import { formatApplicationStatus } from 'utils/index';
-import OSelect from 'components/oselect';
 
 const Box = styled.div``;
 const FirstLine = styled.div`
