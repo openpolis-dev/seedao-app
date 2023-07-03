@@ -19,6 +19,7 @@ import { PermissionAction, PermissionObject } from 'utils/constant';
 import useCheckLogin from 'hooks/useCheckLogin';
 import { useAuthContext } from 'providers/authProvider';
 import { WalletType } from 'wallet/wallet';
+import AppVersion from 'components/version';
 
 const getDefaultTheme = (): DefaultTheme['name'] => {
   if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
