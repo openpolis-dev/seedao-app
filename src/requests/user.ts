@@ -4,34 +4,25 @@ import { IUser, IUserInfo } from 'type/user.type';
 
 const PATH_PREFIX = '/user';
 
-type LoginParams = {
-  wallet: string;
-  timestamp: number;
-  sign: string;
-};
-
 interface ILogininRespons {
   token: string;
   token_exp: number;
   user: IUser & IUserInfo;
 }
 
-export const login = (data: LoginParams): Promise<ResponseData<ILogininRespons>> => {
-  return request.post(`${PATH_PREFIX}/login`, data);
-};
-
 export const getNonce = (wallet: string): Promise<ResponseData<{ nonce: string }>> => {
   return request.post(`${PATH_PREFIX}/refresh_nonce`, { wallet });
 };
 
-export const loginNew = (data: {
+export const login = (data: {
   wallet: string;
   message: string;
   signature: string;
   domain: string;
   wallet_type: 'EOA' | 'AA';
+  is_eip191_prefix: boolean;
 }): Promise<ResponseData<ILogininRespons>> => {
-  return request.post(`${PATH_PREFIX}/login2`, data);
+  return request.post(`${PATH_PREFIX}/login`, data);
 };
 
 export const logout = () => {

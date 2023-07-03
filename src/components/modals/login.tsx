@@ -108,12 +108,13 @@ export default function LoginModal() {
       return;
     }
     try {
-      const res = await requests.user.loginNew({
+      const res = await requests.user.login({
         signature: signData,
         message: signMsg,
         domain: siweMessage.domain,
         wallet: account,
         wallet_type: chooseWallet.type,
+        is_eip191_prefix: true,
       });
       res.data.token_exp = now + res.data.token_exp * 1000;
       dispatch({ type: AppActionType.SET_LOGIN_DATA, payload: res.data });
