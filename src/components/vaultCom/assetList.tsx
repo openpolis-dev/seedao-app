@@ -211,7 +211,7 @@ export default function AssetList() {
   useEffect(() => {
     const selectOrClearDate = (startDate && endDate) || (!startDate && !endDate);
     account && selectOrClearDate && getRecords();
-  }, [selectStatus, selectApplicant, page, pageSize, startDate, endDate, account]);
+  }, [selectStatus, selectApplicant, selectProject, page, pageSize, startDate, endDate, account]);
 
   const getSelectIds = (): number[] => {
     const ids = Object.keys(selectMap);
