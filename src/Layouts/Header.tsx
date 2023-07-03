@@ -132,11 +132,11 @@ const Header: React.FC<HeaderProps> = (props) => {
   const getLanguages = () => [
     {
       value: 'en',
-      label: <span onClick={() => changeLang('en')}>English</span>,
+      label: 'English',
     },
     {
       value: 'zh',
-      label: <span onClick={() => changeLang('zh')}>中文</span>,
+      label: '中文',
     },
   ];
 
@@ -171,24 +171,16 @@ const Header: React.FC<HeaderProps> = (props) => {
           ]}
         />
         <RightBox>
-          <Actions
-            size="Small"
-            className="right"
-            actions={[
-              {
-                content: (
-                  <SelectStyled
-                    instanceId="react-select-input"
-                    isSearchable={false}
-                    shape="SemiRound"
-                    placeholder="Themes"
-                    value={getLanguages().find((item) => item.value === lan) || getLanguages()[0]}
-                    options={getLanguages()}
-                  />
-                ),
-              },
-            ]}
+          <SelectStyled
+            instanceId="react-select-input"
+            isSearchable={false}
+            shape="SemiRound"
+            placeholder=""
+            value={getLanguages().find((item) => item.value === lan) || getLanguages()[0]}
+            options={getLanguages()}
+            onChange={(v?: ISelectItem) => v && changeLang(v.value)}
           />
+
           {isLogin && userData ? (
             <UserDropdown
               user={{
