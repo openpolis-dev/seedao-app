@@ -240,6 +240,7 @@ export default function ProjectAudit() {
                 setSelectStatus(value?.value);
                 setSelectMap({});
               }}
+              isClearable={true}
             />
           </li>
         </TopLine>

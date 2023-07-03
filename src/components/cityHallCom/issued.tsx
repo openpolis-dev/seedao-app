@@ -292,6 +292,7 @@ export default function Issued() {
                 setSelectStatus(value?.value);
                 setSelectMap({});
               }}
+              isClearable={true}
             />
           </li>
         </TopLine>

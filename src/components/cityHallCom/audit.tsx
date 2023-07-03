@@ -18,6 +18,7 @@ import { EvaIcon } from '@paljs/ui/Icon';
 import useTranslation from 'hooks/useTranslation';
 import useToast, { ToastType } from 'hooks/useToast';
 import { formatApplicationStatus } from 'utils/index';
+import OSelect from 'components/oselect';
 
 const Box = styled.div``;
 const FirstLine = styled.div`
@@ -104,14 +105,13 @@ export default function Audit() {
 
   const [allSource, setAllSource] = useState<ISelectItem[]>([]);
   const [selectSource, setSelectSource] = useState<{ id: number; type: 'project' | 'guild' }>();
-  const [selectStatus, setSelectStatus] = useState<ApplicationStatus>(ApplicationStatus.All);
+  const [selectStatus, setSelectStatus] = useState<ApplicationStatus>();
   const [applicants, setApplicants] = useState<ISelectItem[]>([]);
   const [selectApplicant, setSelectApplicant] = useState<string>();
   const [selectAll, setSelectAll] = useState(false);
 
   const statusOption = useMemo(() => {
     return [
-      { label: t('Project.AllState'), value: ApplicationStatus.All },
       { label: t(formatApplicationStatus(ApplicationStatus.Open)), value: ApplicationStatus.Open },
       { label: t(formatApplicationStatus(ApplicationStatus.Rejected)), value: ApplicationStatus.Rejected },
       { label: t(formatApplicationStatus(ApplicationStatus.Approved)), value: ApplicationStatus.Approved },
@@ -332,6 +332,7 @@ export default function Audit() {
                 setSelectMap({});
                 setPage(1);
               }}
+              isClearable={true}
             />
           </li>
           <li>
@@ -345,6 +346,7 @@ export default function Audit() {
                 setSelectMap({});
                 setPage(1);
               }}
+              isClearable={true}
             />
           </li>
           <li>
@@ -358,6 +360,7 @@ export default function Audit() {
                 setSelectMap({});
                 setPage(1);
               }}
+              isClearable={true}
             />
           </li>
         </TopLine>

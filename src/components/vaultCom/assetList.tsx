@@ -101,7 +101,6 @@ export default function AssetList() {
 
   const statusOption = useMemo(() => {
     return [
-      { label: t('Project.AllState'), value: ApplicationStatus.All },
       { label: t(formatApplicationStatus(ApplicationStatus.Open)), value: ApplicationStatus.Open },
       { label: t(formatApplicationStatus(ApplicationStatus.Rejected)), value: ApplicationStatus.Rejected },
       { label: t(formatApplicationStatus(ApplicationStatus.Approved)), value: ApplicationStatus.Approved },
@@ -255,6 +254,7 @@ export default function AssetList() {
                 setSelectMap({});
                 setPage(1);
               }}
+              isClearable={true}
             />
           </li>
           <li>
@@ -268,6 +268,7 @@ export default function AssetList() {
                 setSelectMap({});
                 setPage(1);
               }}
+              isClearable={true}
             />
           </li>
           <li>
@@ -281,6 +282,7 @@ export default function AssetList() {
                 setSelectMap({});
                 setPage(1);
               }}
+              isClearable={true}
             />
           </li>
         </TopLine>
