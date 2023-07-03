@@ -41,7 +41,7 @@ export const getProjectApplications = (
   return request.get(`${PATH_PREFIX}`, {
     ...data,
     type: ApplicationType.NewReward,
-    entity: 'project',
+    entity: project_id ? 'project' : '',
     entity_id: project_id,
     ...queryData,
   });
@@ -55,7 +55,7 @@ export const getGuildApplications = (
   return request.get(`${PATH_PREFIX}`, {
     ...data,
     type: ApplicationType.NewReward,
-    entity: 'guild',
+    entity: guild_id ? 'guild' : '',
     entity_id: guild_id,
     ...queryData,
   });
