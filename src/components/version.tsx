@@ -4,7 +4,7 @@ import styled from 'styled-components';
 export default function AppVersion() {
   return (
     <VersionBox>
-      {process.env.NEXT_PUBLIC_APP_VERSION}.{process.env.NEXT_PUBLIC_COMMIT_HASH}
+      {process.env.NEXT_PUBLIC_APP_VERSION}.{process.env.NEXT_PUBLIC_COMMIT_HASH?.slice(0, 7)}
     </VersionBox>
   );
 }
