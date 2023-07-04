@@ -9,6 +9,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      NEXT_PUBLIC_COMMIT_HASH: ${{ github.sha }}
+      
     steps:
      - name: Checkout
        uses: actions/checkout@v3
@@ -17,24 +20,14 @@ jobs:
        uses: actions/setup-node@v2
        with:
          node-version: '16.17.0'
-
+         
      - name: Insall dependencies
-       env:
-         CI: false
        run: npm install
-     - name: Set GitHub SHA as environment variable
-       run: echo "NEXT_PUBLIC_COMMIT_HASH=${{ github.sha }}" >> $GITHUB_ENV
      - name: Compile 
-       env:
-         CI: false
-         NEXT_PUBLIC_COMMIT_HASH: ${{ github.sha }}
        run: |
          echo "$NEXT_PUBLIC_COMMIT_HASH";
-         npm run build;
-         
+         npm run build;  
      - name: Export
-       env:
-         CI: false
        run: npm run export
 
      - name: Pushes to another repository
