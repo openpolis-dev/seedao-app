@@ -22,10 +22,11 @@ jobs:
        env:
          CI: false
        run: npm install
+     - name: Set GitHub SHA as environment variable
+       run: echo "NEXT_PUBLIC_COMMIT_HASH=${{ github.sha }}" >> $GITHUB_ENV
      - name: Compile 
        env:
          CI: false
-         NEXT_PUBLIC_COMMIT_HASH: ${{ github.sha }}
        run: |
          npm run build;
          echo "$GITHUB_SHA";
