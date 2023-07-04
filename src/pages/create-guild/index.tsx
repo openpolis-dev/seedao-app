@@ -284,7 +284,7 @@ export default function CreateGuild() {
             <BtnBox htmlFor="fileUpload" onChange={(e) => updateLogo(e)}>
               {!url && (
                 <div>
-                  <input id="fileUpload" type="file" hidden accept="image/*" />
+                  <input id="fileUpload" type="file" hidden accept=".jpg, .jpeg, .png" />
                   <EvaIcon name="cloud-upload-outline" className="iconRht" />
                   <span> {t('Guild.upload')}</span>
                 </div>

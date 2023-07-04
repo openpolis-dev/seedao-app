@@ -170,7 +170,7 @@ export default function Profile() {
             <UploadBox htmlFor="fileUpload" onChange={(e) => updateLogo(e)}>
               {!avatar && (
                 <div>
-                  <input id="fileUpload" type="file" hidden accept="image/*" />
+                  <input id="fileUpload" type="file" hidden accept=".jpg, .jpeg, .png" />
                   <EvaIcon name="cloud-upload-outline" className="iconRht" />
                 </div>
               )}
