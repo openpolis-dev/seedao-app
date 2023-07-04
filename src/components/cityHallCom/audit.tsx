@@ -93,13 +93,13 @@ export default function Audit() {
   const { t } = useTranslation();
   const { Toast, showToast } = useToast();
   const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+  const [pageSize, setPageSize] = useState(3);
   const [total, setTotal] = useState(100);
   const [show, setShow] = useState(false);
   const [startDate, setStartDate] = useState<Date>();
   const [endDate, setEndData] = useState<Date>();
   const [list, setList] = useState<IApplicationDisplay[]>([]);
-  const [selectMap, setSelectMap] = useState<{ [id: number]: boolean }>({});
+  const [selectMap, setSelectMap] = useState<{ [id: number]: ApplicationStatus | boolean }>({});
   const [loading, setLoading] = useState(false);
 
   const [allSource, setAllSource] = useState<ISelectItem[]>([]);
@@ -107,7 +107,6 @@ export default function Audit() {
   const [selectStatus, setSelectStatus] = useState<ApplicationStatus>();
   const [applicants, setApplicants] = useState<ISelectItem[]>([]);
   const [selectApplicant, setSelectApplicant] = useState<string>();
-  const [selectAll, setSelectAll] = useState(false);
 
   const statusOption = useMemo(() => {
     return [
@@ -134,8 +133,8 @@ export default function Audit() {
       setPage(1);
     }
   };
-  const onChangeCheckbox = (value: boolean, id: number) => {
-    setSelectMap({ ...selectMap, [id]: value });
+  const onChangeCheckbox = (value: boolean, id: number, status: ApplicationStatus) => {
+    setSelectMap({ ...selectMap, [id]: value && status });
   };
 
   const getProjects = async () => {
@@ -301,10 +300,9 @@ export default function Audit() {
   };
 
   const onSelectAll = (v: boolean) => {
-    setSelectAll(v);
     const newMap = { ...selectMap };
     list.forEach((item) => {
-      newMap[item.application_id] = v;
+      newMap[item.application_id] = v && item.status;
     });
     setSelectMap(newMap);
   };
@@ -313,6 +311,17 @@ export default function Audit() {
     const select_ids = getSelectIds();
     return select_ids.length > 0;
   }, [selectMap]);
+
+  const ifSelectAll = useMemo(() => {
+    let _is_select_all = true;
+    for (const item of list) {
+      if (!selectMap[item.application_id]) {
+        _is_select_all = false;
+        break;
+      }
+    }
+    return _is_select_all;
+  }, [list, selectMap]);
 
   return (
     <Box>
@@ -393,10 +402,14 @@ export default function Audit() {
             <table className="table" cellPadding="0" cellSpacing="0">
               <thead>
                 <tr>
-                  <th>&nbsp;</th>
-                  {/* <th>
-                  <Checkbox status="Primary" checked={selectAll} onChange={(value) => onSelectAll(value)}></Checkbox>
-                </th> */}
+                  {/* <th>&nbsp;</th> */}
+                  <th>
+                    <Checkbox
+                      status="Primary"
+                      checked={ifSelectAll}
+                      onChange={(value) => onSelectAll(value)}
+                    ></Checkbox>
+                  </th>
                   <th>{t('Project.Time')}</th>
                   <th>{t('Project.Address')}</th>
                   <th>{t('Project.AddPoints')}</th>
@@ -415,9 +428,9 @@ export default function Audit() {
                     <td>
                       <Checkbox
                         status="Primary"
-                        checked={selectMap[item.application_id]}
-                        onChange={(value) => onChangeCheckbox(value, item.application_id)}
-                      ></Checkbox>
+                        checked={!!selectMap[item.application_id]}
+                        onChange={(value) => onChangeCheckbox(value, item.application_id, item.status)}
+                      />
                     </td>
                     <td>{item.created_date}</td>
                     <td>
