@@ -284,7 +284,7 @@ export default function CreateProject() {
             <BtnBox htmlFor="fileUpload" onChange={(e) => updateLogo(e)}>
               {!url && (
                 <div>
-                  <input id="fileUpload" type="file" hidden accept=".jpg, .jpeg, .png" />
+                  <input id="fileUpload" type="file" hidden accept=".jpg, .jpeg, .png, .svg" />
                   <EvaIcon name="cloud-upload-outline" className="iconRht" />
                   <span> {t('Project.upload')}</span>
                 </div>
