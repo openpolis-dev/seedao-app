@@ -27,9 +27,11 @@ jobs:
      - name: Compile 
        env:
          CI: false
+         NEXT_PUBLIC_COMMIT_HASH: ${{ github.sha }}
        run: |
+         echo "$NEXT_PUBLIC_COMMIT_HASH";
          npm run build;
-         echo "$GITHUB_SHA";
+         
      - name: Export
        env:
          CI: false
