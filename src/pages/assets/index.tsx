@@ -196,15 +196,15 @@ export default function Index() {
 
   const getFloorPrice = async () => {
     try {
-      const url = 'https://api.opensea.io/collection/seedaogenesis/stats';
+      const url = 'https://restapi.nftscan.com/api/v2/statistics/collection/0x23fda8a873e9e46dbe51c78754dddccfbc41cfe1';
       const res = await axios.get(url, {
         headers: {
-          'X-API-KEY ': '9652e22437aa4b6d9def8fe398dcc4f6',
+          'X-API-KEY': '3zrxnAwBgp72veeonB8KW2fa',
         },
       });
       setNftData({
-        floorPrice: res.data?.stats?.floor_price || 0,
-        totalSupply: res.data?.stats?.count || 0,
+        floorPrice: res.data?.data?.floor_price || 0,
+        totalSupply: res.data?.data?.items_total || 0,
       });
     } catch (error) {
       console.error('getFloorPrice error', error);
