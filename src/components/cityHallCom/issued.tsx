@@ -100,7 +100,7 @@ export default function Issued() {
   const [list, setList] = useState<IApplicationDisplay[]>([]);
   const [selectMap, setSelectMap] = useState<{ [id: number]: boolean }>({});
   const [loading, setLoading] = useState(false);
-  const [selectStatus, setSelectStatus] = useState<ApplicationStatus>();
+  const [selectStatus, setSelectStatus] = useState<ApplicationStatus>(ApplicationStatus.Approved);
   const [isProcessing, setIsProcessing] = useState(false);
 
   const statusOption = useMemo(() => {
@@ -215,22 +215,6 @@ export default function Issued() {
     }
   };
 
-  const showProcessButton = () => {
-    if (isProcessing) {
-      return (
-        <TopBox>
-          <Button onClick={() => handleShow()}>{t('city-hall.SendCompleted')}</Button>
-        </TopBox>
-      );
-    } else if (selectStatus === ApplicationStatus.Approved) {
-      return (
-        <TopBox>
-          <Button onClick={handleProcess}>{t('city-hall.Send')}</Button>
-        </TopBox>
-      );
-    }
-  };
-
   const handleStatus = async () => {
     const res = await requests.application.getProjectApplications(
       {
@@ -269,10 +253,34 @@ export default function Issued() {
     window.open(requests.application.getExportFileUrl(select_ids), '_blank');
   };
 
-  const canExport = useMemo(() => {
+  const selectOne = useMemo(() => {
     const select_ids = getSelectIds();
     return select_ids.length > 0;
   }, [selectMap]);
+
+  const showProcessButton = () => {
+    if (selectStatus === ApplicationStatus.Approved) {
+      return (
+        <TopBox>
+          <SendButtonBox>
+            <Button onClick={handleProcess} disabled={isProcessing || !selectOne} className="btn-send">
+              {t('city-hall.Send')}
+            </Button>
+            <div className="tip">{t('city-hall.Tips')}</div>
+          </SendButtonBox>
+        </TopBox>
+      );
+    } else if (selectStatus === ApplicationStatus.Processing) {
+      return (
+        <TopBox>
+          <Button onClick={() => handleShow()} disabled={!isProcessing}>
+            {t('city-hall.SendCompleted')}
+          </Button>
+        </TopBox>
+      );
+    }
+    return <></>;
+  };
 
   return (
     <Box>
@@ -288,8 +296,9 @@ export default function Issued() {
               className="sel"
               options={statusOption}
               placeholder=""
+              value={statusOption.find((s) => s.value === selectStatus)}
               onChange={(value) => {
-                setSelectStatus(value?.value);
+                setSelectStatus(value?.value as ApplicationStatus);
                 setSelectMap({});
               }}
               isClearable={true}
@@ -307,7 +316,7 @@ export default function Issued() {
               />
             </BorderBox>
           </TimeBox>
-          <Button size="Medium" onClick={handleExport} disabled={!canExport}>
+          <Button size="Medium" onClick={handleExport} disabled={!selectOne}>
             {t('Project.Export')}
           </Button>
         </TimeLine>
@@ -379,3 +388,21 @@ export default function Issued() {
     </Box>
   );
 }
+
+const SendButtonBox = styled.div`
+  position: relative;
+  .tip {
+    display: none;
+    position: absolute;
+    top: 50px;
+    left: 20px;
+    width: 370px;
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 5px;
+    padding: 10px;
+  }
+  &:hover .tip {
+    display: block;
+  }
+`;
