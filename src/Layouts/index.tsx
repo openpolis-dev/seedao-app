@@ -152,7 +152,9 @@ const LayoutPage: React.FC<SEOProps> = ({ children, ...rest }) => {
               </Sidebar>
               <LayoutContent>
                 <LayoutColumns>
-                  <LayoutColumn className="main-content">{children}</LayoutColumn>
+                  <LayoutColumn className="main-content" style={{ background: '#fbf5ef' }}>
+                    {children}
+                  </LayoutColumn>
                 </LayoutColumns>
               </LayoutContent>
             </LayoutContainer>

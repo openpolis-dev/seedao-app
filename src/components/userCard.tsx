@@ -67,7 +67,7 @@ const UserCardBox = styled.li`
   border: 1px solid #f1f1f1;
   margin-bottom: 40px;
   box-sizing: border-box;
-  border-radius: 10px;
+  border-radius: 4px;
   overflow: hidden;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
   padding: 20px;
