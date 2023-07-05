@@ -459,8 +459,8 @@ export default function Audit() {
                     <td>{item.budget_source}</td>
                     <td>{item.comment}</td>
                     <td>{t(formatApplicationStatus(item.status))}</td>
-                    <td>{item.submitter_name || item.submitter_wallet}</td>
-                    <td>{item.reviewer_name || item.reviewer_wallet}</td>
+                    <td>{item.submitter_name || publicJs.AddressToShow(item.submitter_wallet)}</td>
+                    <td>{item.reviewer_name || publicJs.AddressToShow(item.reviewer_wallet)}</td>
                   </tr>
                 ))}
               </tbody>
