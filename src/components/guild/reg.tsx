@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { Button, ButtonLink } from '@paljs/ui/Button';
 import RegList from 'components/guild/regList';
 import { EvaIcon } from '@paljs/ui/Icon';
@@ -41,23 +41,28 @@ const RhtBox = styled.div`
 `;
 
 const BtnBox = styled.label`
-  background: #a16eff;
-  color: #fff;
-  height: 42px;
-  padding: 0 25px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 4px;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif,
-    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
-  font-weight: 700;
-  font-size: 14px;
-  margin-right: 20px;
-  cursor: pointer;
-  .iconRht {
-    margin-right: 10px;
-  }
+  ${({ theme }) => css`
+    background: ${theme.colorPrimary500};
+    color: #fff;
+    height: 42px;
+    padding: 0 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif,
+      'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+    font-weight: 700;
+    font-size: 14px;
+    margin-right: 20px;
+    cursor: pointer;
+    .iconRht {
+      margin-right: 10px;
+    }
+    &:hover {
+      background: ${theme.colorPrimary400};
+    }
+  `}
 `;
 
 type ErrorDataType = {

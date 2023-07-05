@@ -17,7 +17,7 @@ const Mask = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  .btn {
+  .btn-cancel {
     margin-right: 20px;
   }
 `;
@@ -116,7 +116,7 @@ export default function IssuedModal(props: Iprops) {
           </ItemBox>
         </CardBody>
         <CardFooter>
-          <Button appearance="outline" className="btn" onClick={() => closeShow()}>
+          <Button shape="Rectangle" appearance="outline" className="btn-cancel" onClick={() => closeShow()}>
             {t('general.cancel')}
           </Button>
           <Button onClick={onClickConfirm}>{t('general.confirm')}</Button>
@@ -136,7 +136,7 @@ const Textarea = styled.textarea`
     outline: none;
     padding: 10px;
     border-radius: 0.25rem;
-    border-color: ${theme.colorPrimary300};
-    background-color: ${theme.colorPrimaryTransparent100};
+    border-color: ${theme.inputBasicBorderColor};
+    background-color: ${theme.inputBasicBackgroundColor};
   `}
 `;

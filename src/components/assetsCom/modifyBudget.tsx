@@ -18,7 +18,7 @@ const Mask = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  .btn {
+  .btn-cancel {
     margin-right: 20px;
   }
 `;
@@ -66,7 +66,7 @@ export default function ModifyBudgetModal(props: Iprops) {
           </InputGroup>
         </CardBody>
         <CardFooter>
-          <Button shape="Rectangle" appearance="outline" className="btn" onClick={() => handleClose()}>
+          <Button shape="Rectangle" appearance="outline" className="btn-cancel" onClick={() => handleClose()}>
             {t('general.cancel')}
           </Button>
           <Button onClick={handleConfirm} className="rht10">

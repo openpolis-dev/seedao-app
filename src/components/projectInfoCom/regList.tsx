@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import React from 'react';
 import useTranslation from 'hooks/useTranslation';
 import { ExcelObj } from 'type/project.type';
@@ -7,15 +7,17 @@ import { EvaIcon } from '@paljs/ui/Icon';
 const Box = styled.div``;
 
 const TipsBox = styled.div`
-  padding: 80px;
-  background: rgba(161, 110, 255, 0.08);
-  margin-top: 10px;
-  text-align: center;
-  color: #a16eff;
-  .iconTop {
-    font-size: 40px;
-    margin-bottom: 10px;
-  }
+  ${({ theme }) => css`
+    padding: 80px;
+    background: ${theme.colorPrimaryTransparent300};
+    margin-top: 10px;
+    text-align: center;
+    color: ${theme.colorPrimary600};
+    .iconTop {
+      font-size: 40px;
+      margin-bottom: 10px;
+    }
+  `}
 `;
 
 interface Iprops {

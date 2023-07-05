@@ -3,22 +3,17 @@ import { DefaultTheme } from 'styled-components';
 
 // color definited by https://paljs.com/ui/themes/cosmic
 const colorTheme: Partial<DefaultTheme> = {
-  colorPrimary100: '#faf7ff',
-  colorPrimary200: '#ece3ff',
-  colorPrimary300: '#d5bfff',
-  colorPrimary400: '#b18aff',
-  colorPrimary500: '#a16eff',
-  colorPrimary600: '#7b51db',
-  colorPrimary700: '#5a37b8',
-  colorPrimary800: '#3e2494',
-  colorPrimary900: '#29157a',
+  colorPrimary300: '#C9FB30',
+  colorPrimary400: '#C9FB30',
+  colorPrimary500: '#BFEF2D',
+  colorPrimary600: '#A8E100',
 
-  colorPrimaryTransparent100: 'rgba(161, 110, 255, 0.08)',
-  colorPrimaryTransparent200: 'rgba(161, 110, 255, 0.16)',
-  colorPrimaryTransparent300: 'rgba(161, 110, 255, 0.24)',
-  colorPrimaryTransparent400: 'rgba(161, 110, 255, 0.32)',
-  colorPrimaryTransparent500: 'rgba(161, 110, 255, 0.4)',
-  colorPrimaryTransparent600: 'rgba(161, 110, 255, 0.48)',
+  colorPrimaryTransparent100: 'rgba(195, 242, 55, 0.25)',
+  colorPrimaryTransparent200: 'rgba(195, 242, 55, 0.15)',
+  colorPrimaryTransparent300: 'rgba(195, 242, 55, 0.08)',
+  colorPrimaryTransparent400: 'rgba(195, 242, 55, 0.32)',
+  colorPrimaryTransparent500: 'rgba(195, 242, 55, 0.4)',
+  colorPrimaryTransparent600: 'rgba(195, 242, 55, 0.48)',
 };
 
 const shared: Partial<DefaultTheme> = {
