@@ -60,13 +60,13 @@ export default function Vault() {
       setToken({
         dealt_amount: _token.dealt_amount || 0,
         processing_amount: _token.processing_amount || 0,
-        total_amount: (_token.dealt_amount || 0) + (_token.processing_amount || 0),
+        total_amount: (Number(_token.dealt_amount) || 0) + (Number(_token.processing_amount) || 0),
       });
       const _credit = assests.find((item) => item.asset_type === BudgetType.Credit) || {};
       setCredit({
         dealt_amount: _credit.dealt_amount || 0,
         processing_amount: _credit.processing_amount || 0,
-        total_amount: (_credit.dealt_amount || 0) + (_credit.processing_amount || 0),
+        total_amount: (Number(_credit.dealt_amount) || 0) + (Number(_credit.processing_amount) || 0),
       });
     } catch (error) {
       console.error('get user assets error', error);
