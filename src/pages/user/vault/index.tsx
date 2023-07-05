@@ -21,7 +21,6 @@ const FirstLine = styled.ul`
   justify-content: space-between;
   width: 100%;
   li {
-    border: 1px solid #f1f1f1;
     margin-bottom: 40px;
     height: 152px;
     box-sizing: border-box;
@@ -33,6 +32,8 @@ const FirstLine = styled.ul`
     display: flex;
     align-items: center;
     justify-content: center;
+    background: #bb53ff;
+    color: #fff;
     div {
       text-align: center;
     }

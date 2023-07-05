@@ -37,13 +37,15 @@ const FirstLine = styled.ul`
     height: 172px;
     border: 1px solid #f1f1f1;
     box-sizing: border-box;
-    border-radius: 10px;
+    border-radius: 4px;
     overflow: hidden;
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
     padding: 20px;
     display: flex;
     align-items: center;
     flex-direction: column;
+    background: #bb53ff;
+    color: #fff;
     div {
       text-align: center;
     }
@@ -56,9 +58,11 @@ const FirstLine = styled.ul`
     font-weight: 600;
     margin-bottom: 20px;
     margin-top: 10px;
+    color: #fff;
   }
   .tips {
     font-size: 12px;
+    color: #fff;
   }
 `;
 
@@ -383,7 +387,7 @@ export default function Index() {
               </LiHead>
               <div className="num">{totalSCR}</div>
               <div style={{ textAlign: 'left' }}>
-                <p>≈{SCRValue.toFixed(2)}U</p>
+                <p style={{ color: '#fff' }}>≈{SCRValue.toFixed(2)}U</p>
                 <p className="tips">1SCR ≈ {SCR_PRICE}U</p>
               </div>
             </li>
@@ -451,7 +455,9 @@ const Vault = styled.div`
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
   padding: 20px;
   margin-bottom: 20px;
-  border-radius: 10px;
+  border-radius: 4px;
+  background: #eecf00;
+  color: #fff;
 `;
 
 const VaultOverview = styled.div`
@@ -472,6 +478,7 @@ const InfoItem = styled.li`
     align-items: center;
     flex-direction: column;
     gap: 8px;
+    color: #fff;
     &.detail {
       cursor: pointer;
       div {
@@ -479,7 +486,6 @@ const InfoItem = styled.li`
         align-items: center;
         gap: 5px;
       }
-      color: ${theme.colorPrimary500};
     }
     > span:first-child {
       font-weight: ${theme.textSubtitleFontWeight};
@@ -493,8 +499,9 @@ const VaultInfo = styled.ul`
 const VaultItem = styled.li`
   display: flex;
   justify-content: space-between;
-  border-top: 1px solid #ddd;
+  border-top: 1px solid rgba(255, 255, 255, 0.3);
   padding-block: 20px;
+  color: #fff;
   .left {
     display: flex;
     gap: 60px;
@@ -544,10 +551,11 @@ const TotalBalanceNum = styled.div`
 
 const Tag = styled.span`
   ${({ theme }) => css`
-    border: 1px solid ${theme.colorPrimary500};
+    border: 1px solid #bb53ff;
     border-radius: 6px;
-    color: ${theme.colorPrimary500};
-    padding: 4px 6px;
+    color: #fff;
+    background: #bb53ff;
+    padding: 4px 6p#030203
     font-size: 12px;
     span {
       margin-left: 5px;

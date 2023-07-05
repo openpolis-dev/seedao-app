@@ -17,7 +17,7 @@ const FirstLine = styled.ul`
     border: 1px solid #f1f1f1;
     margin-bottom: 40px;
     box-sizing: border-box;
-    border-radius: 10px;
+    border-radius: 4px;
     overflow: hidden;
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
     padding: 40px;
@@ -25,6 +25,8 @@ const FirstLine = styled.ul`
     display: flex;
     align-items: center;
     justify-content: space-between;
+    background: #bb53ff;
+    color: #fff;
     div {
       text-align: center;
     }

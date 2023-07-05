@@ -47,6 +47,11 @@ export default function Index() {
         useThirdLogin={true}
         widgetWidth="100%"
         widgetHeight="600px"
+        colorPrimary500="#BFEF2D"
+        colorPrimary400="#C9FB30"
+        colorPrimaryTransparent100="rgba(195, 242, 55, 0.25)"
+        colorPrimaryTransparent200="rgba(195, 242, 55, 0.15)"
+        colorPrimaryTransparent300="rgba(195, 242, 55, 0.08)"
       />
     </Layout>
   );
