@@ -86,6 +86,22 @@ const TableBox = styled.div`
   width: 100%;
   overflow-x: auto;
   overflow-y: hidden;
+  table {
+    th {
+      background: transparent;
+      color: #6e6893;
+      border: 1px solid #d9d5ec;
+      border-left: none;
+      border-right: none;
+      border-radius: 0;
+    }
+    td {
+      border-bottom-color: #d9d5ec;
+    }
+    tr:hover td {
+      background: #f2f0f9;
+    }
+  }
 `;
 
 export default function Issued() {

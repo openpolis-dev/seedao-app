@@ -14,6 +14,23 @@ const colorTheme: Partial<DefaultTheme> = {
   colorPrimaryTransparent400: 'rgba(195, 242, 55, 0.32)',
   colorPrimaryTransparent500: 'rgba(195, 242, 55, 0.4)',
   colorPrimaryTransparent600: 'rgba(195, 242, 55, 0.48)',
+
+  buttonFilledPrimaryDisabledBackgroundColor: '#E6E4EB',
+  buttonOutlinePrimaryDisabledBackgroundColor: '#FFFFFF',
+  buttonOutlinePrimaryDisabledBorderColor: '#E6E4EB',
+
+  checkboxPrimaryBackgroundColor: 'transparent',
+  checkboxPrimaryCheckedBackgroundColor: '#6e6893',
+  checkboxPrimaryCheckedBorderColor: '#6e6893',
+  checkboxPrimaryBorderColor: '#6e6893',
+  checkboxPrimaryFocusCheckedBackgroundColor: '#6e6893',
+  checkboxPrimaryFocusBorderColor: '#6e6893',
+  checkboxPrimaryHoverBorderColor: '#6e6893',
+  checkboxPrimaryHoverBackgroundColor: '#6e6893',
+  checkboxPrimaryHoverCheckedBackgroundColor: '#6e6893',
+  checkboxPrimaryHoverCheckedBorderColor: '#6e6893',
+  checkboxPrimaryActiveBackgroundColor: '#6e6893',
+  checkboxPrimaryFocusBackgroundColor: '#6e6893',
 };
 
 const shared: Partial<DefaultTheme> = {
