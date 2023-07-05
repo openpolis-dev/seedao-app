@@ -184,7 +184,7 @@ export default function Issued() {
       showToast(t('city-hall.SendSuccess'), ToastType.Success);
     } catch (error) {
       console.error('compeleteApplications failed', error);
-      showToast(t('msg.ApproveFailed'), ToastType.Danger);
+      showToast(t('Msg.ApproveFailed'), ToastType.Danger);
     } finally {
       setLoading(false);
     }
