@@ -85,7 +85,7 @@ export default function Index() {
           <div>
             <SubCategoryCard>
               {proposal_categories[0].children.map((subCategory) => (
-                <Link href={`/proposal-category/${subCategory.category_id}`} key={subCategory.category_id}>
+                <Link href={`/proposal/category/${subCategory.category_id}`} key={subCategory.category_id}>
                   <SubCategoryItem>
                     <Image src="/images/proposal/message.png" alt="" width="24px" height="24px" />
                     <div>

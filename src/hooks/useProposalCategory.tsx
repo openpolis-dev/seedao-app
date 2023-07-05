@@ -16,7 +16,7 @@ export default function useProposalCategory(proposal_category_id?: number) {
     if (category) {
       return [
         HomeNav,
-        { name: category.name, category_id: category.category_id, to: `/proposal-category/${category.category_id}` },
+        { name: category.name, category_id: category.category_id, to: `/proposal/category/${category.category_id}` },
       ];
     }
     for (const category of proposal_categories) {
@@ -27,7 +27,7 @@ export default function useProposalCategory(proposal_category_id?: number) {
           {
             name: subCategory.name,
             category_id: subCategory.category_id,
-            to: `/proposal-category/${subCategory.category_id}`,
+            to: `/proposal/category/${subCategory.category_id}`,
           },
         ];
       }
