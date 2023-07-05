@@ -404,11 +404,7 @@ export default function Audit() {
                 <tr>
                   {/* <th>&nbsp;</th> */}
                   <th>
-                    <Checkbox
-                      status="Primary"
-                      checked={ifSelectAll}
-                      onChange={(value) => onSelectAll(value)}
-                    ></Checkbox>
+                    <Checkbox status="Primary" checked={ifSelectAll} onChange={(value) => onSelectAll(value)} />
                   </th>
                   <th>{t('Project.Time')}</th>
                   <th>{t('Project.Address')}</th>

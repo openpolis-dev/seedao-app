@@ -98,7 +98,7 @@ export default function ProjectAudit() {
   const [list, setList] = useState<IApplicationDisplay[]>([]);
   const [loading, setLoading] = useState(false);
   const [selectStatus, setSelectStatus] = useState<ApplicationStatus>();
-  const [selectMap, setSelectMap] = useState<{ [id: number]: boolean }>({});
+  const [selectMap, setSelectMap] = useState<{ [id: number]: ApplicationStatus | boolean }>({});
 
   const statusOption = useMemo(() => {
     return [
@@ -130,8 +130,8 @@ export default function ProjectAudit() {
       setPage(1);
     }
   };
-  const onChangeCheckbox = (value: boolean, id: number) => {
-    setSelectMap({ ...selectMap, [id]: value });
+  const onChangeCheckbox = (value: boolean, id: number, status: ApplicationStatus) => {
+    setSelectMap({ ...selectMap, [id]: value && status });
   };
 
   const getRecords = async () => {
@@ -226,10 +226,29 @@ export default function ProjectAudit() {
     window.open(requests.application.getExportFileUrl(select_ids), '_blank');
   };
 
+  const onSelectAll = (v: boolean) => {
+    const newMap = { ...selectMap };
+    list.forEach((item) => {
+      newMap[item.application_id] = v && item.status;
+    });
+    setSelectMap(newMap);
+  };
+
   const selectOne = useMemo(() => {
     const select_ids = getSelectIds();
     return select_ids.length > 0;
   }, [selectMap]);
+
+  const ifSelectAll = useMemo(() => {
+    let _is_select_all = true;
+    for (const item of list) {
+      if (!selectMap[item.application_id]) {
+        _is_select_all = false;
+        break;
+      }
+    }
+    return _is_select_all;
+  }, [list, selectMap]);
 
   return (
     <Box>
@@ -279,32 +298,42 @@ export default function ProjectAudit() {
         {list.length ? (
           <>
             <table className="table" cellPadding="0" cellSpacing="0">
-              <tr>
-                <th>&nbsp;</th>
-                <th>{t('Project.Time')}</th>
-                <th>{t('city-hall.ProjectName')}</th>
-                <th>{t('city-hall.Content')}</th>
-                <th>{t('Project.Note')}</th>
-                <th>{t('Project.State')}</th>
-                <th>{t('city-hall.Applicant')}</th>
-              </tr>
-              {list.map((item, index) => (
-                <tr key={index}>
-                  <td>
+              <thead>
+                <tr>
+                  <th>
                     <Checkbox
                       status="Primary"
-                      checked={selectMap[item.application_id]}
-                      onChange={(value) => onChangeCheckbox(value, item.application_id)}
+                      checked={ifSelectAll}
+                      onChange={(value) => onSelectAll(value)}
                     ></Checkbox>
-                  </td>
-                  <td>{item.created_date}</td>
-                  <td>{item.budget_source}</td>
-                  <td>{t('city-hall.CloseProject')}</td>
-                  <td>{item.comment}</td>
-                  <td>{t(formatApplicationStatus(item.status))}</td>
-                  <td>{item.submitter_name || publicJs.AddressToShow(item.submitter_wallet)}</td>
+                  </th>
+                  <th>{t('Project.Time')}</th>
+                  <th>{t('city-hall.ProjectName')}</th>
+                  <th>{t('city-hall.Content')}</th>
+                  <th>{t('Project.Note')}</th>
+                  <th>{t('Project.State')}</th>
+                  <th>{t('city-hall.Applicant')}</th>
                 </tr>
-              ))}
+              </thead>
+              <tbody>
+                {list.map((item, index) => (
+                  <tr key={index}>
+                    <td>
+                      <Checkbox
+                        status="Primary"
+                        checked={!!selectMap[item.application_id]}
+                        onChange={(value) => onChangeCheckbox(value, item.application_id, item.status)}
+                      ></Checkbox>
+                    </td>
+                    <td>{item.created_date}</td>
+                    <td>{item.budget_source}</td>
+                    <td>{t('city-hall.CloseProject')}</td>
+                    <td>{item.comment}</td>
+                    <td>{t(formatApplicationStatus(item.status))}</td>
+                    <td>{item.submitter_name || publicJs.AddressToShow(item.submitter_wallet)}</td>
+                  </tr>
+                ))}
+              </tbody>
             </table>
             <Page
               itemsPerPage={pageSize}

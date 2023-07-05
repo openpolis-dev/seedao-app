@@ -96,7 +96,7 @@ export default function AssetList({ id }: { id: number }) {
   const [endDate, setEndData] = useState<Date>();
   const [list, setList] = useState<IApplicationDisplay[]>([]);
   const [selectStatus, setSelectStatus] = useState<ApplicationStatus>();
-  const [selectMap, setSelectMap] = useState<{ [id: number]: boolean }>({});
+  const [selectMap, setSelectMap] = useState<{ [id: number]: ApplicationStatus | boolean }>({});
   const [applicants, setApplicants] = useState<ISelectItem[]>([]);
   const [selectApplicant, setSelectApplicant] = useState<string>();
 
@@ -131,8 +131,8 @@ export default function AssetList({ id }: { id: number }) {
       setPage(1);
     }
   };
-  const onChangeCheckbox = (value: boolean, id: number) => {
-    setSelectMap({ ...selectMap, [id]: value });
+  const onChangeCheckbox = (value: boolean, id: number, status: ApplicationStatus) => {
+    setSelectMap({ ...selectMap, [id]: value && status });
   };
 
   const getApplicants = async () => {
@@ -212,10 +212,29 @@ export default function AssetList({ id }: { id: number }) {
     window.open(requests.application.getExportFileUrl(select_ids), '_blank');
   };
 
-  const canExport = useMemo(() => {
+  const onSelectAll = (v: boolean) => {
+    const newMap = { ...selectMap };
+    list.forEach((item) => {
+      newMap[item.application_id] = v && item.status;
+    });
+    setSelectMap(newMap);
+  };
+
+  const selectOne = useMemo(() => {
     const select_ids = getSelectIds();
     return select_ids.length > 0;
   }, [selectMap]);
+
+  const ifSelectAll = useMemo(() => {
+    let _is_select_all = true;
+    for (const item of list) {
+      if (!selectMap[item.application_id]) {
+        _is_select_all = false;
+        break;
+      }
+    }
+    return _is_select_all;
+  }, [list, selectMap]);
 
   return (
     <Box>
@@ -265,7 +284,7 @@ export default function AssetList({ id }: { id: number }) {
               />
             </BorderBox>
           </TimeBox>
-          <Button size="Medium" onClick={handleExport} disabled={!canExport}>
+          <Button size="Medium" onClick={handleExport} disabled={!selectOne}>
             {t('Project.Export')}
           </Button>
         </TimeLine>
@@ -276,7 +295,9 @@ export default function AssetList({ id }: { id: number }) {
             <table className="table" cellPadding="0" cellSpacing="0">
               <thead>
                 <tr>
-                  <th>&nbsp;</th>
+                  <th>
+                    <Checkbox status="Primary" checked={ifSelectAll} onChange={(value) => onSelectAll(value)} />
+                  </th>
                   <th>{t('Project.Time')}</th>
                   <th>{t('Project.Address')}</th>
                   <th>{t('Project.AddPoints')}</th>
@@ -295,8 +316,8 @@ export default function AssetList({ id }: { id: number }) {
                     <td>
                       <Checkbox
                         status="Primary"
-                        checked={selectMap[item.application_id]}
-                        onChange={(value) => onChangeCheckbox(value, item.application_id)}
+                        checked={!!selectMap[item.application_id]}
+                        onChange={(value) => onChangeCheckbox(value, item.application_id, item.status)}
                       ></Checkbox>
                     </td>
                     <td>{item.created_date}</td>

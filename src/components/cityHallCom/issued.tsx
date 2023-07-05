@@ -16,7 +16,7 @@ import { IQueryApplicationsParams } from 'requests/applications';
 import CopyBox from 'components/copy';
 import useTranslation from 'hooks/useTranslation';
 import { formatApplicationStatus } from 'utils/index';
-import useToast from 'hooks/useToast';
+import useToast, { ToastType } from 'hooks/useToast';
 
 const Box = styled.div``;
 const FirstLine = styled.div`
@@ -98,7 +98,7 @@ export default function Issued() {
   const [startDate, setStartDate] = useState<Date>();
   const [endDate, setEndData] = useState<Date>();
   const [list, setList] = useState<IApplicationDisplay[]>([]);
-  const [selectMap, setSelectMap] = useState<{ [id: number]: boolean }>({});
+  const [selectMap, setSelectMap] = useState<{ [id: number]: ApplicationStatus | boolean }>({});
   const [loading, setLoading] = useState(false);
   const [selectStatus, setSelectStatus] = useState<ApplicationStatus>(ApplicationStatus.Approved);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -132,8 +132,8 @@ export default function Issued() {
       setPage(1);
     }
   };
-  const onChangeCheckbox = (value: boolean, id: number) => {
-    setSelectMap({ ...selectMap, [id]: value });
+  const onChangeCheckbox = (value: boolean, id: number, status: ApplicationStatus) => {
+    setSelectMap({ ...selectMap, [id]: value && status });
   };
 
   const getRecords = async () => {
@@ -181,9 +181,10 @@ export default function Issued() {
       closeShow();
       getRecords();
       setIsProcessing(false);
-      // TODO alert
+      showToast(t('city-hall.SendSuccess'), ToastType.Success);
     } catch (error) {
       console.error('compeleteApplications failed', error);
+      showToast(t('msg.ApproveFailed'), ToastType.Danger);
     } finally {
       setLoading(false);
     }
@@ -253,10 +254,29 @@ export default function Issued() {
     window.open(requests.application.getExportFileUrl(select_ids), '_blank');
   };
 
+  const onSelectAll = (v: boolean) => {
+    const newMap = { ...selectMap };
+    list.forEach((item) => {
+      newMap[item.application_id] = v && item.status;
+    });
+    setSelectMap(newMap);
+  };
+
   const selectOne = useMemo(() => {
     const select_ids = getSelectIds();
     return select_ids.length > 0;
   }, [selectMap]);
+
+  const ifSelectAll = useMemo(() => {
+    let _is_select_all = true;
+    for (const item of list) {
+      if (!selectMap[item.application_id]) {
+        _is_select_all = false;
+        break;
+      }
+    }
+    return _is_select_all;
+  }, [list, selectMap]);
 
   const showProcessButton = () => {
     if (selectStatus === ApplicationStatus.Approved) {
@@ -328,7 +348,9 @@ export default function Issued() {
             <table className="table" cellPadding="0" cellSpacing="0">
               <thead>
                 <tr>
-                  <th>&nbsp;</th>
+                  <th>
+                    <Checkbox status="Primary" checked={ifSelectAll} onChange={(value) => onSelectAll(value)} />
+                  </th>
                   <th>{t('Project.Time')}</th>
                   <th>{t('Project.Address')}</th>
                   <th>{t('Project.AddPoints')}</th>
@@ -348,8 +370,8 @@ export default function Issued() {
                     <td>
                       <Checkbox
                         status="Primary"
-                        checked={selectMap[item.application_id]}
-                        onChange={(value) => onChangeCheckbox(value, item.application_id)}
+                        checked={!!selectMap[item.application_id]}
+                        onChange={(value) => onChangeCheckbox(value, item.application_id, item.status)}
                       ></Checkbox>
                     </td>
                     <td>{item.created_date}</td>
