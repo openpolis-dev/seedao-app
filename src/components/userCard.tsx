@@ -71,6 +71,8 @@ const UserCardBox = styled.li`
   overflow: hidden;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
   padding: 20px;
+  background: #eecf00;
+  color: #fff;
   &:nth-child(4n) {
     margin-right: 0;
   }
