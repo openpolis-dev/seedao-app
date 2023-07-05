@@ -102,9 +102,9 @@ export default function ProjectAudit() {
 
   const statusOption = useMemo(() => {
     return [
-      { label: t(formatApplicationStatus(ApplicationStatus.Open)), value: ApplicationStatus.Open },
-      { label: t(formatApplicationStatus(ApplicationStatus.Rejected)), value: ApplicationStatus.Rejected },
-      { label: t(formatApplicationStatus(ApplicationStatus.Approved)), value: ApplicationStatus.Approved },
+      { label: t(formatApplicationStatus(ApplicationStatus.Open, true)), value: ApplicationStatus.Open },
+      { label: t(formatApplicationStatus(ApplicationStatus.Rejected, true)), value: ApplicationStatus.Rejected },
+      { label: t(formatApplicationStatus(ApplicationStatus.Approved, true)), value: ApplicationStatus.Approved },
     ];
   }, [t]);
 
@@ -329,7 +329,7 @@ export default function ProjectAudit() {
                     <td>{item.budget_source}</td>
                     <td>{t('city-hall.CloseProject')}</td>
                     <td>{item.comment}</td>
-                    <td>{t(formatApplicationStatus(item.status))}</td>
+                    <td>{t(formatApplicationStatus(item.status, true))}</td>
                     <td>{item.submitter_name || publicJs.AddressToShow(item.submitter_wallet)}</td>
                   </tr>
                 ))}

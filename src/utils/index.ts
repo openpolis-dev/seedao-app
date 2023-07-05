@@ -1,6 +1,11 @@
 import { ApplicationStatus } from 'type/application.type';
 
-export const formatApplicationStatus = (status: ApplicationStatus) => {
+export const formatApplicationStatus = (status: ApplicationStatus, isProj?: boolean) => {
+  if (isProj) {
+    if (status === ApplicationStatus.Approved || status === ApplicationStatus.Completed) {
+      return 'Project.Approved';
+    }
+  }
   switch (status) {
     case ApplicationStatus.Open:
       return 'Project.ToBeReviewed';

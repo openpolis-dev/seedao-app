@@ -74,6 +74,7 @@
     "ToBeReviewed": "待审核",
     "Rejected": "被驳回",
     "ToBeIssued": "待发放",
+    "Approved": "已通过",
     "Sended": "已发放",
     "Sending": "发放中",
     "BudgetSource": "预算来源",
