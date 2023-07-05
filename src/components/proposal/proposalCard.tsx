@@ -65,7 +65,7 @@ export default function ProposalCard({ data }: { data: IBaseProposal }) {
     router.push(`/proposal/thread/${data.id}`);
   };
   return (
-    <Card size="Tiny" key={data.id}>
+    <CardBox size="Tiny" key={data.id}>
       <div onClick={openProposal}>
         <CardHeaderStyled>
           <div className="left">
@@ -81,9 +81,13 @@ export default function ProposalCard({ data }: { data: IBaseProposal }) {
           <ProposalContent dangerouslySetInnerHTML={{ __html: content }}></ProposalContent>
         </CardBody>
       </div>
-    </Card>
+    </CardBox>
   );
 }
+
+const CardBox = styled(Card)`
+  border: 1px solid #f1f1f1;
+`;
 
 const CardHeaderStyled = styled.div`
   display: flex;
