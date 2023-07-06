@@ -14,7 +14,7 @@ module.exports = {
   // basePath: isProd ? '/os-frontend-preview' : '',
   images: {
     loader: 'akamai',
-    // path: isProd ? '/os-frontend-preview/' : '/',
+    path: '/',
   },
 };
 
