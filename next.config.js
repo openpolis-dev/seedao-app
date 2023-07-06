@@ -7,9 +7,9 @@ module.exports = {
     // ssr and displayName are configured by default
     styledComponents: true,
   },
-  images: {
-    unoptimized: true,
-  },
+  // images: {
+  //   unoptimized: true,
+  // },
   // assetPrefix: isProd ? '/os-frontend-preview/' : '',
   // basePath: isProd ? '/os-frontend-preview' : '',
   // images: {
