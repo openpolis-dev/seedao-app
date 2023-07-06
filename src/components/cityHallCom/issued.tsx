@@ -224,9 +224,10 @@ export default function Issued() {
       getRecords();
       setSelectMap({});
       setIsProcessing(true);
-      // TODO alert
+      showToast(t('Msg.ApproveSuccess'), ToastType.Success);
     } catch (error) {
       console.error('processApplications failed', error);
+      showToast(t('Msg.ApproveFailed'), ToastType.Danger);
     } finally {
       setLoading(false);
     }
