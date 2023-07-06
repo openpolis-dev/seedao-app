@@ -99,7 +99,11 @@ export default function Del(props: Iprops) {
           {selectAdminArr.map((item, index) => (
             <ItemBox key={index}>
               <div>
-                <Image src={item.avatar || DefaultAvatar} alt="" width="40px" height="40px" />
+                {item.avatar ? (
+                  <img src={item.avatar} style={{ width: '40px', height: '40px' }} />
+                ) : (
+                  <Image src={DefaultAvatar} alt="" width="40px" height="40px" />
+                )}
               </div>
               <div>
                 <div>{item.name}</div>
@@ -111,7 +115,11 @@ export default function Del(props: Iprops) {
           {selectMemArr.map((item, index) => (
             <ItemBox key={index}>
               <div>
-                <Image src={item.avatar || DefaultAvatar} alt="" width="40px" height="40px" />
+                {item.avatar ? (
+                  <img src={item.avatar} style={{ width: '40px', height: '40px' }} />
+                ) : (
+                  <Image src={DefaultAvatar} alt="" width="40px" height="40px" />
+                )}
               </div>
               <div>
                 <div>{item.name}</div>

@@ -13,7 +13,7 @@ import LoginModal from 'components/modals/login';
 import PublicJs from 'utils/publicJs';
 import useCheckLogin from 'hooks/useCheckLogin';
 import { parseToken, checkTokenValid, clearStorage } from 'utils/auth';
-import { DefaultAvatar, SEEDAO_USER, SEEDAO_USER_DATA } from 'utils/constant';
+import { SEEDAO_USER, SEEDAO_USER_DATA } from 'utils/constant';
 import Loading from 'components/loading';
 import requests from 'requests';
 import { Authorizer } from 'casbin.js';
@@ -184,7 +184,7 @@ const Header: React.FC<HeaderProps> = (props) => {
           {isLogin && userData ? (
             <UserDropdown
               user={{
-                avatar: userData?.avatar || DefaultAvatar,
+                avatar: userData?.avatar,
                 name: userData?.name || PublicJs.AddressToShow(userData?.wallet || ''),
               }}
             />

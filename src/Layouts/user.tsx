@@ -4,6 +4,7 @@ import Image from 'next/image';
 import useTranslation from 'hooks/useTranslation';
 import { useRouter } from 'next/router';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
+import { DefaultAvatar } from 'utils/constant';
 
 type DropdownItemType = {
   title: string;
@@ -53,10 +54,15 @@ const UserDropdown = ({ user }: IUserProps) => {
       dispatch({ type: AppActionType.CLEAR_AUTH, payload: undefined });
     }
   };
+  console.log('user.avatar:', user.avatar);
   return (
     <User>
       <div>
-        <Image src={user.avatar} alt="" width="40px" height="40px" />
+        {user.avatar ? (
+          <img src={user.avatar} alt="" className="avatar" />
+        ) : (
+          <Image src={DefaultAvatar} alt="" width="40px" height="40px" />
+        )}
       </div>
       <span>{user.name}</span>
       <Dropdown
