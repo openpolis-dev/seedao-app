@@ -87,6 +87,7 @@ export default function ProposalCard({ data }: { data: IBaseProposal }) {
 
 const CardBox = styled(Card)`
   border: 1px solid #f1f1f1;
+  cursor: pointer;
 `;
 
 const CardHeaderStyled = styled.div`

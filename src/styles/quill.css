@@ -54,4 +54,12 @@
   padding: 0;
 }
 
+.ql-editor h2 {
+  line-height: 50px;
+}
+
+.ql-editor p {
+  line-height: 24px;
+}
+
 /*# sourceMappingURL=quill.css.map */
