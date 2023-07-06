@@ -54,7 +54,6 @@ const UserDropdown = ({ user }: IUserProps) => {
       dispatch({ type: AppActionType.CLEAR_AUTH, payload: undefined });
     }
   };
-  console.log('user.avatar:', user.avatar);
   return (
     <User>
       <div>

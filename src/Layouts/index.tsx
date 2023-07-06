@@ -36,7 +36,7 @@ const LayoutPage: React.FC<SEOProps> = ({ children, ...rest }) => {
   const { t } = useTranslation();
   const isLogin = useCheckLogin();
   const {
-    state: { wallet_type },
+    state: { wallet_type, userData },
   } = useAuthContext();
   const [dir, setDir] = useState<'ltr' | 'rtl'>('ltr');
   const sidebarRef = useRef<SidebarRefObject>(null);
@@ -83,7 +83,7 @@ const LayoutPage: React.FC<SEOProps> = ({ children, ...rest }) => {
       }
     });
     return items;
-  }, [t, canUseCityhall, isLogin, wallet_type]);
+  }, [t, canUseCityhall, userData, wallet_type]);
 
   useEffect(() => {
     const pt = router.pathname;
