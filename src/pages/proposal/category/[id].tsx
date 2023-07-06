@@ -8,6 +8,7 @@ import ProposalSubNav from 'components/proposal/proposalSubNav';
 import useProposalCategory from 'hooks/useProposalCategory';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import styled from 'styled-components';
+import LoadingBox from 'components/loadingBox';
 
 export default function ProposalCategory() {
   const router = useRouter();
@@ -16,6 +17,7 @@ export default function ProposalCategory() {
   const [proposals, setProposals] = useState<IBaseProposal[]>([]);
   const [orderType, setOrderType] = useState<'new' | 'old'>('new');
   const [hasMore, setHasMore] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const ProposalNav = useProposalCategory(Number(router.query.id));
 
@@ -24,16 +26,23 @@ export default function ProposalCategory() {
     if (!id) {
       return;
     }
-    const res = await requests.proposal.getProposalsBySubCategory({
-      page,
-      per_page: pageSize,
-      category_index_id: id,
-      sort: orderType,
-    });
-    console.log('res:', res);
-    setProposals([...proposals, ...res.data.threads]);
-    setHasMore(res.data.threads.length >= pageSize);
-    setPage(page + 1);
+    setLoading(true);
+    try {
+      const res = await requests.proposal.getProposalsBySubCategory({
+        page,
+        per_page: pageSize,
+        category_index_id: id,
+        sort: orderType,
+      });
+      console.log('res:', res);
+      setProposals([...proposals, ...res.data.threads]);
+      setHasMore(res.data.threads.length >= pageSize);
+      setPage(page + 1);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleChangeOrder = (index: number) => {
@@ -56,6 +65,7 @@ export default function ProposalCategory() {
           ))}
         </ProposalBox>
       </InfiniteScroll>
+      {loading && <LoadingBox />}
     </Layout>
   );
 }
