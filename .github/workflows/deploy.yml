@@ -27,19 +27,19 @@ jobs:
        run: |
          echo "$NEXT_PUBLIC_COMMIT_HASH";
          npm run build;  
-     - name: Export
-       run: npm run export
+#      - name: Export
+#        run: npm run export
 
-     - name: Pushes to another repository
-       run: |
-         git clone --single-branch --branch "main" "https://xrdavies:${{ secrets.PERSONAL_TOKEN }}@github.com/TheSeed-Labs/os-frontend-preview.git";
-         cd os-frontend-preview;
-         git config --global user.name bot;
-         git config --global user.email bot@theseedlabs.io;
-         cp -R ../out/* .;
-         touch .nojekyll
-         git add .;
-         git status;
-         git commit -m "deploy";
-         git status;
-         git push "https://xrdavies:${{ secrets.PERSONAL_TOKEN }}@github.com/TheSeed-Labs/os-frontend-preview.git" --set-upstream main
+#      - name: Pushes to another repository
+#        run: |
+#          git clone --single-branch --branch "main" "https://xrdavies:${{ secrets.PERSONAL_TOKEN }}@github.com/TheSeed-Labs/os-frontend-preview.git";
+#          cd os-frontend-preview;
+#          git config --global user.name bot;
+#          git config --global user.email bot@theseedlabs.io;
+#          cp -R ../out/* .;
+#          touch .nojekyll
+#          git add .;
+#          git status;
+#          git commit -m "deploy";
+#          git status;
+#          git push "https://xrdavies:${{ secrets.PERSONAL_TOKEN }}@github.com/TheSeed-Labs/os-frontend-preview.git" --set-upstream main
