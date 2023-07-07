@@ -64,8 +64,9 @@ const TimeBox = styled.div`
 
 const BorderBox = styled.div`
   border: 1px solid #eee;
-  padding: 10px 20px;
+  padding: 2px 20px;
   border-radius: 5px;
+  background: #f7f9fc;
 `;
 
 const MidBox = styled.div`
