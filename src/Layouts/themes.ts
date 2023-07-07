@@ -18,6 +18,7 @@ const colorTheme: Partial<DefaultTheme> = {
   buttonFilledPrimaryDisabledBackgroundColor: '#E6E4EB',
   buttonOutlinePrimaryDisabledBackgroundColor: '#FFFFFF',
   buttonOutlinePrimaryDisabledBorderColor: '#E6E4EB',
+  buttonFilledPrimaryFocusBorderColor: '#A8E100',
 
   checkboxPrimaryBackgroundColor: 'transparent',
   checkboxPrimaryCheckedBackgroundColor: '#6e6893',
