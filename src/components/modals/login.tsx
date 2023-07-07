@@ -15,6 +15,7 @@ import { EvaIcon } from '@paljs/ui/Icon';
 import useToast, { ToastType } from 'hooks/useToast';
 import Image from 'next/image';
 import * as gtag from 'utils/gtag';
+import useTranslation from 'hooks/useTranslation';
 
 enum LoginStatus {
   Default = 0,
@@ -49,6 +50,7 @@ const LOGIN_WALLETS: LoginWallet[] = [
 ];
 
 export default function LoginModal() {
+  const { t } = useTranslation();
   const { dispatch } = useAuthContext();
   const { Toast, showToast } = useToast();
   const { account, provider } = useWeb3React();
@@ -156,7 +158,7 @@ export default function LoginModal() {
           <EvaIcon name="close-outline" />
         </span>
 
-        <Title>Connect Wallet</Title>
+        <Title>{t('general.ConnectWallet')}</Title>
         {LOGIN_WALLETS.map((w) => (
           <WalletOption key={w.value} onClick={() => connect(w)}>
             <span>{w.name}</span>
