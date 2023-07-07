@@ -11,7 +11,7 @@ module.exports = {
   //   unoptimized: true,
   // },
   // assetPrefix: isProd ? '/os-frontend-preview/' : '',
-  // basePath: isProd ? '/os-frontend-preview' : '',
+  basePath: '',
   images: {
     loader: 'akamai',
     path: '/',
