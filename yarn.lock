@@ -2328,7 +2328,7 @@
     "@web3-react/types" "^8.0.20-beta.0"
     eventemitter3 "^4.0.7"
 
-"@web3-react/core@^8.0.35-beta.0":
+"@web3-react/core@^8.2.0":
   version "8.2.0"
   resolved "https://registry.yarnpkg.com/@web3-react/core/-/core-8.2.0.tgz#95fb615bb283be520e6f61b5e48cfb0047943808"
   integrity sha512-r7dmK2E8Jrpvm/DF93hGMB+8lECHSI3Oo0NrHbhxkisK6in6rdgAXeYFhZtM48LBAm9py6fQvLzjCM6Qx9q0oQ==
@@ -2339,7 +2339,7 @@
   optionalDependencies:
     "@ethersproject/providers" "^5"
 
-"@web3-react/metamask@^8.0.28-beta.0":
+"@web3-react/metamask@^8.2.1":
   version "8.2.1"
   resolved "https://registry.yarnpkg.com/@web3-react/metamask/-/metamask-8.2.1.tgz#7ffac16e2a55ff8f1195e2831a9f9f99fa0bfba9"
   integrity sha512-JysxkAImIygkD95Bimrj7HwcTq79tq4ZSlphZt24LBMrEVY5K8k+e5mCAuJuDZ7Fu+aBxqpS0lgPjaBGKdNu/A==
