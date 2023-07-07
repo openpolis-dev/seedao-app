@@ -3,6 +3,7 @@ import Web3Provider from 'providers/web3Provider';
 import AuthProvider from 'providers/authProvider';
 import React, { useEffect } from 'react';
 import 'styles/quill.css';
+import 'styles/font.css';
 import Script from 'next/script';
 import { useRouter } from 'next/router';
 import * as gtag from 'utils/gtag';

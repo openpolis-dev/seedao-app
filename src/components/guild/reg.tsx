@@ -50,8 +50,7 @@ const BtnBox = styled.label`
     align-items: center;
     justify-content: center;
     border-radius: 4px;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif,
-      'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+    font-family: 'Inter-Regular';
     font-weight: 700;
     font-size: 14px;
     margin-right: 20px;

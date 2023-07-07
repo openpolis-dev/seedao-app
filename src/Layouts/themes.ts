@@ -35,7 +35,7 @@ const colorTheme: Partial<DefaultTheme> = {
 
 const shared: Partial<DefaultTheme> = {
   sidebarHeaderGap: '2rem',
-  fontFamilyPrimary: `-apple-system,BlinkMacSystemFont,
+  fontFamilyPrimary: `Inter-Regular,-apple-system,BlinkMacSystemFont,
           "Segoe UI",Roboto,"Helvetica Neue",
           Arial,sans-serif,"Apple Color Emoji",
           "Segoe UI Emoji","Segoe UI Symbol"`,
