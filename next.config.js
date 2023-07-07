@@ -7,10 +7,10 @@ module.exports = {
     // ssr and displayName are configured by default
     styledComponents: true,
   },
-  // images: {
-  //   unoptimized: true,
-  // },
-  // assetPrefix: isProd ? '/os-frontend-preview/' : '',
+  images: {
+    unoptimized: true,
+  },
+  assetPrefix:  '',
   basePath: '',
   images: {
     loader: 'akamai',
