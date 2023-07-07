@@ -159,14 +159,16 @@ export default function LoginModal() {
         </span>
 
         <Title>{t('general.ConnectWallet')}</Title>
-        {LOGIN_WALLETS.map((w) => (
-          <WalletOption key={w.value} onClick={() => connect(w)}>
-            <span>{w.name}</span>
-            <span>
-              <Image src={w.iconURL} alt="" width="28px" height="28px" />
-            </span>
-          </WalletOption>
-        ))}
+        <Content>
+          {LOGIN_WALLETS.map((w) => (
+            <WalletOption key={w.value} onClick={() => connect(w)}>
+              <span>{w.name}</span>
+              <span>
+                <Image src={w.iconURL} alt="" width="28px" height="28px" />
+              </span>
+            </WalletOption>
+          ))}
+        </Content>
       </Modal>
     </Mask>
   );
@@ -211,7 +213,7 @@ const Title = styled.div`
   margin-bottom: 16px;
 `;
 
-const WalletOption = styled.div`
+const WalletOption = styled.li`
   ${({ theme }) => css`
     display: flex;
     align-items: center;
@@ -221,15 +223,24 @@ const WalletOption = styled.div`
     border-radius: 8px;
     margin-block: 10px;
     cursor: pointer;
-    background: ${theme.colorPrimary100};
+    background: ${theme.colorPrimary500};
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 16px;
     &:hover {
-      background-color: #ddd;
+      background-color: ${theme.colorPrimary400};
     }
     img {
       width: 28px;
       height: 28px;
     }
   `}
+`;
+
+const Content = styled.ul`
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
 `;
 
 const Loading = styled.div`
