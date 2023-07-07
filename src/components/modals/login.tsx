@@ -1,7 +1,7 @@
 import { useAuthContext, AppActionType } from 'providers/authProvider';
 import React, { useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
-import { injected, uniPassWallet } from 'wallet/connector';
+import { injected, uniPassWallet, uniPassHooks } from 'wallet/connector';
 import requests from 'requests';
 import { useWeb3React } from '@web3-react/core';
 import { createSiweMessage } from 'utils/sign';
@@ -16,7 +16,8 @@ import useToast, { ToastType } from 'hooks/useToast';
 import Image from 'next/image';
 import * as gtag from 'utils/gtag';
 import useTranslation from 'hooks/useTranslation';
-
+import { Web3Provider } from '@ethersproject/providers';
+const { useProvider, useAccount } = uniPassHooks;
 enum LoginStatus {
   Default = 0,
   Pending,
@@ -57,6 +58,9 @@ export default function LoginModal() {
   const [loginStatus, setLoginStatus] = useState<LoginStatus>(LoginStatus.Default);
   const [chooseWallet, setChooseWallet] = useState<LoginWallet>();
 
+  const _uprovider = useProvider();
+  const _account = useAccount();
+
   const handleFailed = () => {
     setLoginStatus(LoginStatus.Default);
     setChooseWallet(undefined);
@@ -75,8 +79,8 @@ export default function LoginModal() {
     }
   };
 
-  const handleLoginSys = async () => {
-    if (!account || !provider || !chooseWallet) {
+  const handleLoginSys = async (_account: string, _provider: Web3Provider) => {
+    if (!_account || !_provider || !chooseWallet) {
       return;
     }
     let newNonce: string;
@@ -95,12 +99,12 @@ export default function LoginModal() {
     // sign
     let signData = '';
     const now = Date.now();
-    const siweMessage = createSiweMessage(account, 1, newNonce, 'Welcome to the The Taoist Labs');
+    const siweMessage = createSiweMessage(_account, 1, newNonce, 'Welcome to the The Taoist Labs');
     console.log('siweMessage:', siweMessage);
     const signMsg = siweMessage.prepareMessage();
 
     try {
-      signData = await provider.send('personal_sign', [signMsg, account]);
+      signData = await _provider.send('personal_sign', [signMsg, _account]);
       console.log('signData:', signData);
     } catch (error) {
       console.error('sign failed', error);
@@ -141,10 +145,22 @@ export default function LoginModal() {
   };
 
   useEffect(() => {
-    if (account && loginStatus && chooseWallet && provider) {
-      handleLoginSys();
+    if (chooseWallet?.value !== Wallet.METAMASK || provider?.connection?.url !== 'metamask') {
+      return;
+    }
+    if (account && loginStatus && provider) {
+      handleLoginSys(account, provider);
     }
   }, [account, loginStatus, chooseWallet, provider]);
+
+  useEffect(() => {
+    if (chooseWallet?.value !== Wallet.UNIPASS || _uprovider?.connection?.url === 'metamask') {
+      return;
+    }
+    if (_account && loginStatus && _uprovider) {
+      handleLoginSys(_account, _uprovider);
+    }
+  }, [_account, _uprovider, loginStatus, chooseWallet]);
 
   const closeModal = () => {
     dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: false });

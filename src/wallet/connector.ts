@@ -23,6 +23,9 @@ export const [uniPassWallet, uniPassHooks] = initializeConnector<UniPass>(
           mainnet: 'https://eth-mainnet.g.alchemy.com/v2/YuNeXto27ejHnOIGOwxl2N_cHCfyLyLE',
           polygon: 'https://polygon.llamarpc.com',
         },
+        appSettings: {
+          appName: 'SeeDAO',
+        },
       },
     }),
 );
