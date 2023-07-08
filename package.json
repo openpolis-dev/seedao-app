@@ -41,7 +41,7 @@
   },
   "scripts": {
     "dev": "next",
-    "build": "NEXT_PUBLIC_COMMIT_REF=$COMMIT_REF && next build",
+    "build": "next build",
     "start": "next start --port ${PORT-3000}",
     "export": "yarn build && next export",
     "prepare": "husky install"
