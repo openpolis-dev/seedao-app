@@ -21,3 +21,7 @@ export const formatApplicationStatus = (status: ApplicationStatus, isProj?: bool
       return '';
   }
 };
+
+export const isNotOnline = () => {
+  return process.env.NODE_ENV === 'development' || process.env.NEXT_PUBLIC_ENV === 'test';
+};

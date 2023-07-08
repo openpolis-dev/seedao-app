@@ -1,6 +1,7 @@
 import { useAuthContext } from 'providers/authProvider';
 import useCheckLogin from 'hooks/useCheckLogin';
 import { useEffect, useState } from 'react';
+import { isNotOnline } from 'utils/index';
 
 const usePermission = (action: string, object: string) => {
   const isLogin = useCheckLogin();
@@ -23,10 +24,12 @@ const usePermission = (action: string, object: string) => {
     checkLogic();
   }, [isLogin, authorizer]);
 
-  console.log(`==========${action}, ${object}==========`);
-  console.log('authorizer', authorizer);
-  console.log('isLogin', isLogin);
-  console.log('checkResult', checkResult);
+  if (isNotOnline()) {
+    console.log(`==========${action}, ${object}==========`);
+    console.log('authorizer', authorizer);
+    console.log('isLogin', isLogin);
+    console.log('checkResult', checkResult);
+  }
 
   return checkResult;
 };
