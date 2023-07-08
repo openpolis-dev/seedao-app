@@ -360,7 +360,7 @@ export default function CreateProject() {
                       <InputBox fullWidth>
                         <input
                           type="text"
-                          placeholder={t('Project.AssociatedProposal')}
+                          placeholder={`${t('Project.AssociatedProposal')}, eg. https://forum.seedao.xyz/thread...`}
                           value={item}
                           onChange={(e) => handleInput(e, index, 'proposal')}
                         />

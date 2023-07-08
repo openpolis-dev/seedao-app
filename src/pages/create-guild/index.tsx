@@ -360,9 +360,7 @@ export default function CreateGuild() {
                       <InputBox fullWidth>
                         <input
                           type="text"
-                          placeholder={`${t('Guild.AssociatedProposal')}, eg. https://forum.seedao.xyz/thread... or ${
-                            window.location.origin
-                          }/proposal/thread/...`}
+                          placeholder={`${t('Guild.AssociatedProposal')}, eg. https://forum.seedao.xyz/thread...`}
                           value={item}
                           onChange={(e) => handleInput(e, index, 'proposal')}
                         />
