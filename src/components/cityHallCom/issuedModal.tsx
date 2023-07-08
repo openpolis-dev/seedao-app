@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components';
 import { Card, CardHeader, CardBody, CardFooter } from '@paljs/ui/Card';
-import React, { ChangeEvent, useState } from 'react';
+import React, { useState } from 'react';
 import { Button } from '@paljs/ui/Button';
 import useTranslation from 'hooks/useTranslation';
 import { ToastType } from 'hooks/useToast';
