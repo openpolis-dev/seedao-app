@@ -99,7 +99,7 @@ export default function LoginModal() {
     // sign
     let signData = '';
     const now = Date.now();
-    const siweMessage = createSiweMessage(_account, 1, newNonce, 'Welcome to the The Taoist Labs');
+    const siweMessage = createSiweMessage(_account, 1, newNonce, 'Welcome to SeeDAO!');
     console.log('siweMessage:', siweMessage);
     const signMsg = siweMessage.prepareMessage();
 
