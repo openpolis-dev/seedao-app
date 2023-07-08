@@ -11,17 +11,14 @@ import requests from 'requests';
 import { IBaseProposal } from 'type/proposal.type';
 import usePermission from 'hooks/usePermission';
 import { PermissionObject, PermissionAction } from 'utils/constant';
+import Loading from 'components/loading';
 
 const Box = styled.div`
   padding: 20px 0;
 `;
 
 const UlBox = styled.div``;
-const TitleBox = styled.div`
-  font-size: 16px;
-  font-weight: bold;
-  padding: 10px 0;
-`;
+
 const TopBox = styled.div`
   background: #f8f8f8;
   display: flex;
@@ -31,10 +28,6 @@ const TopBox = styled.div`
   button {
     margin-left: 20px;
   }
-`;
-
-const DescBox = styled.div`
-  font-size: 12px;
 `;
 
 interface Iprops {
@@ -89,6 +82,7 @@ export default function ProjectProposal(props: Iprops) {
   return (
     <Box>
       {show && <PropsalModal closeModal={closeModal} />}
+      {loading && <Loading />}
       {canUpdateInfo && detail?.status === ProjectStatus.Open && (
         <TopBox>
           <Button onClick={() => window.open('https://forum.seedao.xyz/', '_blank')}>

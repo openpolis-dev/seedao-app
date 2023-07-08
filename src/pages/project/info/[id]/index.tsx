@@ -51,10 +51,7 @@ export default function Index() {
   const router = useRouter();
   const { t } = useTranslation();
   const isLogin = useCheckLogin();
-  const {
-    state: { language },
-    dispatch,
-  } = useAuthContext();
+  const { dispatch } = useAuthContext();
   const { id } = router.query;
   const projectId = Number(id);
   const [detail, setDetail] = useState<ReTurnProject | undefined>();

@@ -66,19 +66,6 @@ const FirstLine = styled.ul`
   }
 `;
 
-const InputBox = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  margin-top: 5px;
-  input {
-    padding-left: 5px;
-  }
-  .btn-ok {
-    cursor: pointer;
-  }
-`;
-
 const enum CHAINS {
   ETH = 1,
   Polygon = 137,
@@ -550,17 +537,15 @@ const TotalBalanceNum = styled.div`
 `;
 
 const Tag = styled.span`
-  ${({ theme }) => css`
-    border: 1px solid #eecf00;
-    border-radius: 6px;
-    color: #fff;
-    background: #eecf00;
-    padding: 4px 6px;
-    font-size: 12px;
-    span {
-      margin-left: 5px;
-    }
-  `}
+  border: 1px solid #eecf00;
+  border-radius: 6px;
+  color: #fff;
+  background: #eecf00;
+  padding: 4px 6px;
+  font-size: 12px;
+  span {
+    margin-left: 5px;
+  }
 `;
 
 const LiHead = styled.div`

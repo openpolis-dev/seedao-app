@@ -258,8 +258,3 @@ const Content = styled.ul`
   flex-direction: column;
   justify-content: flex-start;
 `;
-
-const Loading = styled.div`
-  width: 100px;
-  height: 100px;
-`;

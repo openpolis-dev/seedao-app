@@ -3,7 +3,6 @@ import { Card, CardHeader, CardBody, CardFooter } from '@paljs/ui/Card';
 import React, { ChangeEvent, useState } from 'react';
 import { Button } from '@paljs/ui/Button';
 import useTranslation from 'hooks/useTranslation';
-import { ethers } from 'ethers';
 import { ToastType } from 'hooks/useToast';
 
 const Mask = styled.div`
@@ -55,29 +54,29 @@ interface Iprops {
 }
 export default function IssuedModal(props: Iprops) {
   const { t } = useTranslation();
-  const { closeShow, handleConfirm, showToast } = props;
+  const { closeShow, handleConfirm } = props;
 
   const [value, setValue] = useState('');
 
-  const [memberList, setMemberList] = useState<string[]>(['']);
+  // const [memberList, setMemberList] = useState<string[]>(['']);
 
-  const handleInput = (e: ChangeEvent, index: number) => {
-    const { value } = e.target as HTMLInputElement;
-    let arr: string[] = [];
-    arr = [...memberList];
-    arr[index] = value;
-    setMemberList(arr);
-  };
+  // const handleInput = (e: ChangeEvent, index: number) => {
+  //   const { value } = e.target as HTMLInputElement;
+  //   let arr: string[] = [];
+  //   arr = [...memberList];
+  //   arr[index] = value;
+  //   setMemberList(arr);
+  // };
 
-  const handleAddMember = () => {
-    setMemberList([...memberList, '']);
-  };
+  // const handleAddMember = () => {
+  //   setMemberList([...memberList, '']);
+  // };
 
-  const removeMember = (index: number) => {
-    const arr = [...memberList];
-    arr.splice(index, 1);
-    setMemberList(arr);
-  };
+  // const removeMember = (index: number) => {
+  //   const arr = [...memberList];
+  //   arr.splice(index, 1);
+  //   setMemberList(arr);
+  // };
 
   const onClickConfirm = () => {
     const list = value.split(';');

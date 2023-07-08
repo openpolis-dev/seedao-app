@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import React, { useEffect, useRef, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { Button } from '@paljs/ui/Button';
 import Add from './add';
 import Del from './Del';
@@ -65,7 +65,7 @@ export default function Members(props: Iprops) {
   };
 
   const getDetail = async () => {
-    const { members, sponsors } = detail!;
+    const { members, sponsors } = detail;
     setMemberArr(members.map((m) => m.toLowerCase()));
     setAdminArr(sponsors.map((m) => m.toLowerCase()));
     getUsersInfo(Array.from(new Set([...members, ...sponsors])));
