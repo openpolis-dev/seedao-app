@@ -1,4 +1,4 @@
-export const GA_TRACKING_ID = 'G-TLV0DRYC92';
+export const GA_TRACKING_ID = process.env.NODE_ENV === 'production' ? 'G-QPVKNX8BXZ' : 'G-TLV0DRYC92';
 
 // https://developers.google.com/analytics/devguides/collection/gtagjs/pages
 export const pageview = (path: string) => {
