@@ -44,7 +44,7 @@ const FirstLine = styled.ul`
     display: flex;
     align-items: center;
     flex-direction: column;
-    background: #bb53ff;
+    background: #008800;
     color: #fff;
     div {
       text-align: center;
@@ -456,7 +456,7 @@ const Vault = styled.div`
   padding: 20px;
   margin-bottom: 20px;
   border-radius: 4px;
-  background: #eecf00;
+  background: #008800;
   color: #fff;
 `;
 
@@ -551,11 +551,11 @@ const TotalBalanceNum = styled.div`
 
 const Tag = styled.span`
   ${({ theme }) => css`
-    border: 1px solid #bb53ff;
+    border: 1px solid #eecf00;
     border-radius: 6px;
     color: #fff;
-    background: #bb53ff;
-    padding: 4px 6p#030203
+    background: #eecf00;
+    padding: 4px 6px;
     font-size: 12px;
     span {
       margin-left: 5px;
