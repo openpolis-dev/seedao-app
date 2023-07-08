@@ -1,4 +1,11 @@
-export const GA_TRACKING_ID = process.env.NODE_ENV === 'production' ? 'G-QPVKNX8BXZ' : 'G-TLV0DRYC92';
+function getGaId() {
+  if (process.env.NODE_ENV === 'development' || process.env.NEXT_PUBLIC_ENV === 'test') {
+    return 'G-TLV0DRYC92';
+  }
+  return 'G-QPVKNX8BXZ';
+}
+
+export const GA_TRACKING_ID = getGaId();
 
 // https://developers.google.com/analytics/devguides/collection/gtagjs/pages
 export const pageview = (path: string) => {
