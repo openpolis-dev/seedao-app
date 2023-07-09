@@ -1,11 +1,6 @@
-function getGaId() {
-  if (process.env.NODE_ENV === 'development' || process.env.NEXT_PUBLIC_ENV === 'test') {
-    return 'G-TLV0DRYC92';
-  }
-  return 'G-QPVKNX8BXZ';
-}
+import { isNotOnline } from './index';
 
-export const GA_TRACKING_ID = getGaId();
+export const GA_TRACKING_ID = isNotOnline() ? 'G-TLV0DRYC92' : 'G-QPVKNX8BXZ';
 
 // https://developers.google.com/analytics/devguides/collection/gtagjs/pages
 export const pageview = (path: string) => {
