@@ -85,7 +85,7 @@ export default function LoginModal() {
     }
     let newNonce: string;
     try {
-      const res = await requests.user.getNonce(account);
+      const res = await requests.user.getNonce(_account);
       newNonce = res.data.nonce;
     } catch (error) {
       console.error('get nonce failed', error);
@@ -118,7 +118,7 @@ export default function LoginModal() {
         signature: signData,
         message: signMsg,
         domain: siweMessage.domain,
-        wallet: account,
+        wallet: _account,
         wallet_type: chooseWallet.type,
         is_eip191_prefix: true,
       });
@@ -127,7 +127,7 @@ export default function LoginModal() {
 
       // config permission authorizer
       const authorizer = new Authorizer('auto', { endpoint: readPermissionUrl });
-      await authorizer.setUser(account.toLowerCase());
+      await authorizer.setUser(_account.toLowerCase());
       dispatch({ type: AppActionType.SET_AUTHORIZER, payload: authorizer });
       dispatch({ type: AppActionType.SET_WALLET_TYPE, payload: chooseWallet.type });
 
