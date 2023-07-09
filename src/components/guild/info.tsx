@@ -257,12 +257,13 @@ export default function Info(props: Iprops) {
                   <div className="info">
                     <span>{points?.total_amount}</span>
                     <span>
-                      （
+                      {' '}
+                      (
                       {t('Guild.HasBeenUsedAndRemains', {
                         used: points?.used_amount || 0,
                         remain: points?.remain_amount || 0,
                       })}
-                      ）
+                      )
                     </span>
                   </div>
                   {canUpdateBudget && (
