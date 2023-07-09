@@ -1,4 +1,3 @@
-const isProd = process.env.NODE_ENV === 'production';
 module.exports = {
   reactStrictMode: true,
   // swcMinify: false,
@@ -7,18 +6,16 @@ module.exports = {
     // ssr and displayName are configured by default
     styledComponents: true,
   },
-  images: {
-    unoptimized: true,
-  },
-  assetPrefix:  '',
+  assetPrefix: '',
   basePath: '',
   images: {
+    unoptimized: true,
     loader: 'akamai',
     path: '/',
   },
   typescript: {
-    ignoreBuildErrors: true
-  }
+    ignoreBuildErrors: true,
+  },
 };
 
 // please refer https://github.com/gregrickaby/nextjs-github-pages for github pages deployment
