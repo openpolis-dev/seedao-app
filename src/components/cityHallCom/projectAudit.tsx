@@ -66,10 +66,6 @@ const BorderBox = styled.div`
   background: #f7f9fc;
 `;
 
-const MidBox = styled.div`
-  margin: 0 20px;
-`;
-
 const TopBox = styled.div`
   background: #f5f5f5;
   display: flex;
@@ -109,7 +105,6 @@ export default function ProjectAudit() {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [total, setTotal] = useState(0);
-  const [show, setShow] = useState(false);
   const [startDate, setStartDate] = useState<Date>();
   const [endDate, setEndData] = useState<Date>();
   const [list, setList] = useState<IApplicationDisplay[]>([]);
@@ -130,13 +125,6 @@ export default function ProjectAudit() {
   };
   const handlePageSize = (num: number) => {
     setPageSize(num);
-  };
-  const handleShow = (num: number) => {
-    setShow(true);
-    console.log(num);
-  };
-  const closeShow = () => {
-    setShow(false);
   };
 
   const changeDate = (rg: Date[]) => {

@@ -15,8 +15,6 @@ import { AppActionType, useAuthContext } from 'providers/authProvider';
 import Loading from 'components/loading';
 import { formatDate, formatTime } from 'utils/time';
 import publicJs from 'utils/publicJs';
-import CopyBox from 'components/copy';
-import { EvaIcon } from '@paljs/ui/Icon';
 import useTranslation from 'hooks/useTranslation';
 import { formatApplicationStatus } from 'utils/index';
 
@@ -71,10 +69,6 @@ const BorderBox = styled.div`
   padding: 2px 20px;
   border-radius: 5px;
   background: #f7f9fc;
-`;
-
-const MidBox = styled.div`
-  margin: 0 20px;
 `;
 
 const TableBox = styled.div`

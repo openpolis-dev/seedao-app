@@ -32,7 +32,7 @@ const FirstLine = styled.ul`
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #bb53ff;
+    background: #008800;
     color: #fff;
     div {
       text-align: center;

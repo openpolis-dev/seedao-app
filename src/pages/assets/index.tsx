@@ -44,7 +44,7 @@ const FirstLine = styled.ul`
     display: flex;
     align-items: center;
     flex-direction: column;
-    background: #bb53ff;
+    background: #008800;
     color: #fff;
     div {
       text-align: center;
@@ -63,19 +63,6 @@ const FirstLine = styled.ul`
   .tips {
     font-size: 12px;
     color: #fff;
-  }
-`;
-
-const InputBox = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  margin-top: 5px;
-  input {
-    padding-left: 5px;
-  }
-  .btn-ok {
-    cursor: pointer;
   }
 `;
 
@@ -387,7 +374,7 @@ export default function Index() {
               </LiHead>
               <div className="num">{totalSCR}</div>
               <div style={{ textAlign: 'left' }}>
-                <p style={{ color: '#fff' }}>≈{SCRValue.toFixed(2)}U</p>
+                <p className="tips">≈{SCRValue.toFixed(2)}U</p>
                 <p className="tips">1SCR ≈ {SCR_PRICE}U</p>
               </div>
             </li>
@@ -456,7 +443,7 @@ const Vault = styled.div`
   padding: 20px;
   margin-bottom: 20px;
   border-radius: 4px;
-  background: #eecf00;
+  background: #008800;
   color: #fff;
 `;
 
@@ -550,17 +537,15 @@ const TotalBalanceNum = styled.div`
 `;
 
 const Tag = styled.span`
-  ${({ theme }) => css`
-    border: 1px solid #bb53ff;
-    border-radius: 6px;
-    color: #fff;
-    background: #bb53ff;
-    padding: 4px 6p#030203
-    font-size: 12px;
-    span {
-      margin-left: 5px;
-    }
-  `}
+  border: 1px solid #eecf00;
+  border-radius: 6px;
+  color: #fff;
+  background: #eecf00;
+  padding: 4px 6px;
+  font-size: 12px;
+  span {
+    margin-left: 5px;
+  }
 `;
 
 const LiHead = styled.div`

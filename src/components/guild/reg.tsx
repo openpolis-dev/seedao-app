@@ -7,7 +7,7 @@ import useTranslation from 'hooks/useTranslation';
 import * as XLSX from 'xlsx';
 import { ExcelObj } from 'type/project.type';
 import requests from 'requests';
-import { useCSVReader } from 'react-papaparse';
+// import { useCSVReader } from 'react-papaparse';
 import { ApplicationType } from 'type/application.type';
 import { ICreateBudgeApplicationRequest } from 'requests/applications';
 import Loading from 'components/loading';
@@ -52,7 +52,7 @@ const BtnBox = styled.label`
     border-radius: 4px;
     font-family: 'Inter-Regular';
     font-weight: 700;
-    font-size: 14px;
+    font-size: 0.875rem;
     margin-right: 20px;
     cursor: pointer;
     .iconRht {
@@ -233,7 +233,7 @@ export default function Reg({ id }: { id: number }) {
               }}
             />
             <EvaIcon name="cloud-upload-outline" className="iconRht" />
-            <span>{t('Project.ImportForm')}</span>
+            <span>{t('Project.ImportForm').toUpperCase()}</span>
           </BtnBox>
           {!!list.length && (
             <Button appearance="outline" disabled={!list.length} onClick={() => Clear()}>

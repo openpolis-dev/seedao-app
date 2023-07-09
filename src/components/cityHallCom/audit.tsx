@@ -13,8 +13,6 @@ import utils from 'utils/publicJs';
 import { IQueryParams } from 'requests/applications';
 import NoItem from 'components/noItem';
 import publicJs from 'utils/publicJs';
-import CopyBox from 'components/copy';
-import { EvaIcon } from '@paljs/ui/Icon';
 import useTranslation from 'hooks/useTranslation';
 import useToast, { ToastType } from 'hooks/useToast';
 import { formatApplicationStatus } from 'utils/index';
@@ -69,10 +67,6 @@ const BorderBox = styled.div`
   background: #f7f9fc;
 `;
 
-const MidBox = styled.div`
-  margin: 0 20px;
-`;
-
 const TopBox = styled.div`
   background: #f5f5f5;
   display: flex;
@@ -110,9 +104,8 @@ export default function Audit() {
   const { t } = useTranslation();
   const { Toast, showToast } = useToast();
   const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(3);
+  const [pageSize, setPageSize] = useState(10);
   const [total, setTotal] = useState(100);
-  const [show, setShow] = useState(false);
   const [startDate, setStartDate] = useState<Date>();
   const [endDate, setEndData] = useState<Date>();
   const [list, setList] = useState<IApplicationDisplay[]>([]);

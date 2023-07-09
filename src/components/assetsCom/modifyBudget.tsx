@@ -42,7 +42,9 @@ export default function ModifyBudgetModal(props: Iprops) {
   const [newValue, setNewValue] = useState<number>();
 
   const handleConfirm = () => {
-    if (!newValue || newValue < 0) return;
+    if (typeof newValue === 'undefined') return;
+    if (isNaN(newValue)) return;
+    if (newValue < 0) return;
     handleModify(newValue);
   };
 

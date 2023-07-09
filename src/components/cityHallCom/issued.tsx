@@ -13,7 +13,6 @@ import { formatDate, formatTime } from 'utils/time';
 import publicJs from 'utils/publicJs';
 import NoItem from 'components/noItem';
 import { IQueryApplicationsParams } from 'requests/applications';
-import CopyBox from 'components/copy';
 import useTranslation from 'hooks/useTranslation';
 import { formatApplicationStatus } from 'utils/index';
 import useToast, { ToastType } from 'hooks/useToast';
@@ -66,10 +65,6 @@ const BorderBox = styled.div`
   padding: 2px 20px;
   border-radius: 5px;
   background: #f7f9fc;
-`;
-
-const MidBox = styled.div`
-  margin: 0 20px;
 `;
 
 const TopBox = styled.div`
@@ -383,7 +378,7 @@ export default function Issued() {
               </thead>
 
               <tbody>
-                {list.map((item, index) => (
+                {list.map((item) => (
                   <tr key={item.application_id}>
                     <td>
                       <Checkbox
@@ -441,6 +436,7 @@ const SendButtonBox = styled.div`
     border: 1px solid #e5e5e5;
     border-radius: 5px;
     padding: 10px;
+    z-index: 99;
   }
   &:hover .tip {
     display: block;

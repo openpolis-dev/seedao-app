@@ -34,10 +34,6 @@ const Nav = styled.ul`
   margin-bottom: 20px;
 `;
 
-const Arrow = styled.span`
-  margin-inline: 10px;
-`;
-
 const NavText = styled.span`
   cursor: pointer;
 `;

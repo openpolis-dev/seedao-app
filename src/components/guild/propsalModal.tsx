@@ -78,13 +78,28 @@ export default function PropsalModal(props: Iprops) {
   const handleProposal = async () => {
     const ids: string[] = [];
     for (const l of list) {
-      if (l && !l.startsWith('https://forum.seedao.xyz/thread/')) {
-        showToast(t('Msg.ProposalLinkMsg'), ToastType.Danger);
-        return;
-      } else if (l) {
-        const _last = l.split('/').reverse()[0];
-        const _id = _last.split('-').reverse()[0];
-        ids.push(_id);
+      if (l) {
+        if (l.startsWith('https://forum.seedao.xyz/thread/')) {
+          const items = l.split('/').reverse();
+          for (const it of items) {
+            if (it) {
+              const _id = it.split('-').reverse()[0];
+              ids.push(_id);
+              break;
+            }
+          }
+        } else if (l.indexOf('/proposal/thread/') > -1) {
+          const items = l.split('/').reverse();
+          for (const it of items) {
+            if (it) {
+              ids.push(it);
+              break;
+            }
+          }
+        } else {
+          showToast(t('Msg.ProposalLinkMsg'), ToastType.Danger);
+          return;
+        }
       }
     }
     try {

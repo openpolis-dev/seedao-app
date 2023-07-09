@@ -1,7 +1,7 @@
 import Container from '@paljs/ui/Container';
 import styled, { css } from 'styled-components';
 import { Button } from '@paljs/ui/Button';
-import React, { ChangeEvent, useEffect, useMemo, useRef, useState } from 'react';
+import React, { ChangeEvent, useEffect, useMemo, useState } from 'react';
 import CloseTips from 'components/projectInfoCom/closeTips';
 import CloseSuccess from 'components/projectInfoCom/closeSuccess';
 import useTranslation from 'hooks/useTranslation';
@@ -320,12 +320,13 @@ export default function Info(props: Iprops) {
                   <div className="info">
                     <span>{points?.total_amount}</span>
                     <span>
-                      （
+                      {' '}
+                      (
                       {t('Project.HasBeenUsedAndRemains', {
                         used: points?.used_amount || 0,
                         remain: points?.remain_amount || 0,
                       })}
-                      ）
+                      )
                     </span>
                   </div>
                   {isProjectOpen && canUpdateBudget && (

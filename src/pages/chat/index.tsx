@@ -4,10 +4,16 @@ import * as user from 'requests/user';
 import Layout from 'Layouts';
 import { useWeb3React } from '@web3-react/core';
 import useCheckLogin from 'hooks/useCheckLogin';
+import { useAuthContext } from 'providers/authProvider';
+import { useRouter } from 'next/router';
 
 export default function Index() {
+  const router = useRouter();
   const { account, provider } = useWeb3React();
   const isLogin = useCheckLogin();
+  const {
+    state: { userData },
+  } = useAuthContext();
 
   useEffect(() => {
     window.seeDAOosApi = {
@@ -37,6 +43,12 @@ export default function Index() {
   useEffect(() => {
     isLogin && window && window.chatWidgetApi && handleLogin();
   }, [isLogin]);
+
+  useEffect(() => {
+    if (!userData && window?.chatWidgetApi) {
+      router.push('/proposal');
+    }
+  }, [userData]);
 
   return (
     <Layout title="SeeDAO Chat">

@@ -13,8 +13,6 @@ interface CustomPageProps {}
 export default function App({ Component, pageProps }: AppProps<CustomPageProps>) {
   const AnyComponent = Component as any;
   const router = useRouter();
-  console.log('router:', router);
-  console.log('basePath:', router.basePath);
 
   useEffect(() => {
     const handleRouteChange = (url: string) => {

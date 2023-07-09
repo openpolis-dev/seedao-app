@@ -85,7 +85,7 @@ export default function LoginModal() {
     }
     let newNonce: string;
     try {
-      const res = await requests.user.getNonce(account);
+      const res = await requests.user.getNonce(_account);
       newNonce = res.data.nonce;
     } catch (error) {
       console.error('get nonce failed', error);
@@ -99,7 +99,7 @@ export default function LoginModal() {
     // sign
     let signData = '';
     const now = Date.now();
-    const siweMessage = createSiweMessage(_account, 1, newNonce, 'Welcome to the The Taoist Labs');
+    const siweMessage = createSiweMessage(_account, 1, newNonce, 'Welcome to SeeDAO!');
     console.log('siweMessage:', siweMessage);
     const signMsg = siweMessage.prepareMessage();
 
@@ -118,7 +118,7 @@ export default function LoginModal() {
         signature: signData,
         message: signMsg,
         domain: siweMessage.domain,
-        wallet: account,
+        wallet: _account,
         wallet_type: chooseWallet.type,
         is_eip191_prefix: true,
       });
@@ -127,7 +127,7 @@ export default function LoginModal() {
 
       // config permission authorizer
       const authorizer = new Authorizer('auto', { endpoint: readPermissionUrl });
-      await authorizer.setUser(account.toLowerCase());
+      await authorizer.setUser(_account.toLowerCase());
       dispatch({ type: AppActionType.SET_AUTHORIZER, payload: authorizer });
       dispatch({ type: AppActionType.SET_WALLET_TYPE, payload: chooseWallet.type });
 
@@ -257,9 +257,4 @@ const Content = styled.ul`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-`;
-
-const Loading = styled.div`
-  width: 100px;
-  height: 100px;
 `;

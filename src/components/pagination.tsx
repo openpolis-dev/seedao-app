@@ -143,18 +143,18 @@ interface Props {
   handlePageSize?: (a: number) => void;
 }
 
-const Page: FC<Props> = ({ itemsPerPage, total, handleToPage, handlePageSize }) => {
+const Page: FC<Props> = ({ itemsPerPage, total, handleToPage }) => {
   const [pageCount, setPageCount] = useState(0);
   const [current, setCurrent] = useState(0);
   const [pageToGo, setPageToGo] = useState('');
-  const [show, setShow] = useState(false);
+  // const [show, setShow] = useState(false);
   const MyPaginate = ReactPaginate as any;
 
-  useEffect(() => {
-    document.addEventListener('click', (e) => {
-      setShow(false);
-    });
-  }, []);
+  // useEffect(() => {
+  //   document.addEventListener('click', (e) => {
+  //     setShow(false);
+  //   });
+  // }, []);
 
   useEffect(() => {
     setPageCount(Math.ceil(total / itemsPerPage));

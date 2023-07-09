@@ -13,7 +13,7 @@ import ProjectProposal from 'components/guild/proposal';
 import Reg from 'components/guild/reg';
 import { EvaIcon } from '@paljs/ui/Icon';
 import { getProjectById } from 'requests/guild';
-import { ProjectStatus, ReTurnProject } from 'type/project.type';
+import { ReTurnProject } from 'type/project.type';
 import useTranslation from 'hooks/useTranslation';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import { listObj } from 'pages/project';
@@ -51,10 +51,7 @@ export default function Index() {
   const router = useRouter();
   const { t } = useTranslation();
   const isLogin = useCheckLogin();
-  const {
-    state: { language },
-    dispatch,
-  } = useAuthContext();
+  const { dispatch } = useAuthContext();
   const { id } = router.query;
   const projectId = Number(id);
   const [detail, setDetail] = useState<ReTurnProject | undefined>();

@@ -1,7 +1,7 @@
 import Container from '@paljs/ui/Container';
 import styled from 'styled-components';
 import { Button } from '@paljs/ui/Button';
-import React, { ChangeEvent, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import useTranslation from 'hooks/useTranslation';
 import { IBudgetItem, InfoObj, ReTurnProject } from 'type/project.type';
 import { useRouter } from 'next/router';
@@ -257,12 +257,13 @@ export default function Info(props: Iprops) {
                   <div className="info">
                     <span>{points?.total_amount}</span>
                     <span>
-                      （
+                      {' '}
+                      (
                       {t('Guild.HasBeenUsedAndRemains', {
                         used: points?.used_amount || 0,
                         remain: points?.remain_amount || 0,
                       })}
-                      ）
+                      )
                     </span>
                   </div>
                   {canUpdateBudget && (

@@ -37,8 +37,6 @@ const TopLine = styled.div`
   cursor: pointer;
 `;
 
-const CardBox = styled(Card)``;
-
 export interface listObj {
   name: string;
   id: number;

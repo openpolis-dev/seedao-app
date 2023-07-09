@@ -1,4 +1,6 @@
-export const GA_TRACKING_ID = 'G-TLV0DRYC92';
+import { isNotOnline } from './index';
+
+export const GA_TRACKING_ID = isNotOnline() ? 'G-TLV0DRYC92' : 'G-QPVKNX8BXZ';
 
 // https://developers.google.com/analytics/devguides/collection/gtagjs/pages
 export const pageview = (path: string) => {

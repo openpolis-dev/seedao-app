@@ -145,11 +145,6 @@ const SubCategoryItem = styled.div`
   `}
 `;
 
-const SubCategoryIcon = styled.img`
-  width: 24px;
-  height: 24px;
-`;
-
 const ProposalBox = styled.div`
   & > div {
     margin-inline: 20px;

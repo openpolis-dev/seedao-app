@@ -65,7 +65,7 @@ export default function Members(props: Iprops) {
   };
 
   const getDetail = async () => {
-    const { members, sponsors } = detail!;
+    const { members, sponsors } = detail;
     setMemberArr(members.map((m) => m.toLowerCase()));
     setAdminArr(sponsors.map((m) => m.toLowerCase()));
     getUsersInfo(Array.from(new Set([...members, ...sponsors])));

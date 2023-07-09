@@ -15,7 +15,6 @@ import { AppActionType, useAuthContext } from 'providers/authProvider';
 import Loading from 'components/loading';
 import { formatDate, formatTime } from 'utils/time';
 import publicJs from 'utils/publicJs';
-import CopyBox from 'components/copy';
 import useTranslation from 'hooks/useTranslation';
 import { formatApplicationStatus } from 'utils/index';
 
