@@ -374,7 +374,7 @@ export default function Index() {
               </LiHead>
               <div className="num">{totalSCR}</div>
               <div style={{ textAlign: 'left' }}>
-                <p style={{ color: '#fff' }}>≈{SCRValue.toFixed(2)}U</p>
+                <p className="tips">≈{SCRValue.toFixed(2)}U</p>
                 <p className="tips">1SCR ≈ {SCR_PRICE}U</p>
               </div>
             </li>
