@@ -436,6 +436,7 @@ const SendButtonBox = styled.div`
     border: 1px solid #e5e5e5;
     border-radius: 5px;
     padding: 10px;
+    z-index: 99;
   }
   &:hover .tip {
     display: block;
