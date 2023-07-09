@@ -51,7 +51,7 @@ const BtnBox = styled.label`
     border-radius: 4px;
     font-family: 'Inter-Regular';
     font-weight: 700;
-    font-size: 14px;
+    font-size: 0.875rem;
     margin-right: 20px;
     cursor: pointer;
     .iconRht {
@@ -228,7 +228,7 @@ export default function Reg({ id }: { id: number }) {
               }}
             />
             <EvaIcon name="cloud-upload-outline" className="iconRht" />
-            <span>{t('Project.ImportForm')}</span>
+            <span>{t('Project.ImportForm').toUpperCase()}</span>
           </BtnBox>
           {!!list.length && (
             <Button appearance="outline" disabled={!list.length} onClick={() => Clear()}>
