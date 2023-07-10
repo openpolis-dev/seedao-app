@@ -1,4 +1,3 @@
-import { useRouter } from 'next/router';
 import { useCallback } from 'react';
 import EN from 'i18n/en.json';
 import ZH from '../i18n/zh.json';

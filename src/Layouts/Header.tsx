@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 import styled, { DefaultTheme } from 'styled-components';
 import { LayoutHeader } from '@paljs/ui/Layout';
 import { Actions } from '@paljs/ui/Actions';
@@ -18,7 +17,6 @@ import Loading from 'components/loading';
 import requests from 'requests';
 import { Authorizer } from 'casbin.js';
 import { readPermissionUrl } from 'requests/user';
-import useTranslation from 'hooks/useTranslation';
 import UserDropdown from './user';
 
 interface HeaderProps {

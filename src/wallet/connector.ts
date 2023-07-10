@@ -40,17 +40,6 @@ export const getConnectorForWallet = (wallet: Wallet) => {
   }
 };
 
-function getHooksForWallet(wallet: Wallet) {
-  switch (wallet) {
-    case Wallet.METAMASK:
-      return injectedHooks;
-    case Wallet.UNIPASS:
-      return uniPassHooks;
-    default:
-      return;
-  }
-}
-
 export const SELECTABLE_WALLETS = [Wallet.METAMASK];
 
 export const useConnectors = () => {
