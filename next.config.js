@@ -3,6 +3,8 @@ module.exports = {
   // swcMinify: false,
   trailingSlash: true,
   experimental: {
+    legacyBrowsers: false,
+    browsersListForSwc: true,
     // ssr and displayName are configured by default
     styledComponents: true,
   },
