@@ -6,6 +6,7 @@ import { useWeb3React } from '@web3-react/core';
 import useCheckLogin from 'hooks/useCheckLogin';
 import { useAuthContext } from 'providers/authProvider';
 import { useRouter } from 'next/router';
+import Script from 'next/script';
 
 export default function Index() {
   const router = useRouter();
@@ -51,20 +52,23 @@ export default function Index() {
   }, [userData]);
 
   return (
-    <Layout title="SeeDAO Chat">
-      {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
-      {/* @ts-ignore */}
-      <chat-component
-        baseUrl="https://sdktest.sending.me"
-        useThirdLogin={true}
-        widgetWidth="100%"
-        widgetHeight="600px"
-        colorPrimary500="#BFEF2D"
-        colorPrimary400="#C9FB30"
-        colorPrimaryTransparent100="rgba(195, 242, 55, 0.25)"
-        colorPrimaryTransparent200="rgba(195, 242, 55, 0.15)"
-        colorPrimaryTransparent300="rgba(195, 242, 55, 0.08)"
-      />
-    </Layout>
+    <>
+      <Script src="/sdnChatWidget.js" type="text/javascript" strategy="beforeInteractive" />
+      <Layout title="SeeDAO Chat">
+        {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+        {/* @ts-ignore */}
+        <chat-component
+          baseUrl="https://sdktest.sending.me"
+          useThirdLogin={true}
+          widgetWidth="100%"
+          widgetHeight="600px"
+          colorPrimary500="#BFEF2D"
+          colorPrimary400="#C9FB30"
+          colorPrimaryTransparent100="rgba(195, 242, 55, 0.25)"
+          colorPrimaryTransparent200="rgba(195, 242, 55, 0.15)"
+          colorPrimaryTransparent300="rgba(195, 242, 55, 0.08)"
+        />
+      </Layout>
+    </>
   );
 }
