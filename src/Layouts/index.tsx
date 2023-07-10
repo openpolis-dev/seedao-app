@@ -90,7 +90,7 @@ const LayoutPage: React.FC<SEOProps> = ({ children, ...rest }) => {
     const arr = ['proposal', 'project', 'guild', 'chat', 'city-hall', 'assets'];
     const arrCurrent = arr.find((item) => pt.indexOf(item) > -1);
 
-    if (pt.indexOf(arrCurrent!) > -1) {
+    if (arrCurrent) {
       const currentItem = menuItems.findIndex((item) => item.link?.href.indexOf(arrCurrent) > -1);
       menuItems.map((item) => {
         item.selected = false;

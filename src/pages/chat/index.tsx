@@ -53,7 +53,7 @@ export default function Index() {
 
   return (
     <>
-      <Script src="/sdnChatWidget.js" type="text/javascript" strategy="beforeInteractive" />
+      <Script src="/sdnChatWidget.js" type="text/javascript" />
       <Layout title="SeeDAO Chat">
         {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
         {/* @ts-ignore */}

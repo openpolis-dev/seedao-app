@@ -55,7 +55,7 @@ const Header: React.FC<HeaderProps> = (props) => {
         localStorage.setItem('language', lanInit.value);
         changeLang(lanInit.value);
       } else {
-        changeLang(myLan!);
+        changeLang(myLan);
       }
     } else {
       changeLang(language);
