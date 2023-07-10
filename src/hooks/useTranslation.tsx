@@ -14,7 +14,6 @@ const LANGUAGE_PACKAGES: { [key: string]: I18nStoreType } = {
 };
 
 const useTranslation = () => {
-  const { query } = useRouter();
   const {
     state: { language },
   } = useAuthContext();

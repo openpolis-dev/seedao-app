@@ -41,7 +41,6 @@ const LayoutPage: React.FC<SEOProps> = ({ children, ...rest }) => {
   const [dir, setDir] = useState<'ltr' | 'rtl'>('ltr');
   const sidebarRef = useRef<SidebarRefObject>(null);
   const router = useRouter();
-  const [menuState, setMenuState] = useState(false);
   const menuRef = useRef<MenuRefObject>(null);
   const [seeHeader, setSeeHeader] = useState(true);
   const AnyComponent = ThemeProvider as any;

@@ -1,6 +1,5 @@
 import { MetaMask } from '@web3-react/metamask';
 import { initializeConnector } from '@web3-react/core';
-import { useMemo } from 'react';
 import { Wallet } from './wallet';
 import { UniPass } from '@unipasswallet/web3-react';
 
@@ -52,12 +51,6 @@ function getHooksForWallet(wallet: Wallet) {
   }
 }
 
-function getConnectorListItemForWallet(wallet: Wallet) {
-  return {
-    connector: getConnectorForWallet(wallet),
-    hooks: getHooksForWallet(wallet),
-  };
-}
 export const SELECTABLE_WALLETS = [Wallet.METAMASK];
 
 export const useConnectors = () => {

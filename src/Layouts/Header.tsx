@@ -32,8 +32,6 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = (props) => {
-  const { t } = useTranslation();
-  const router = useRouter();
   const { account } = useWeb3React();
   const isLogin = useCheckLogin();
   const [lan, setLan] = useState('en');
