@@ -5,8 +5,6 @@ module.exports = {
   experimental: {
     legacyBrowsers: false,
     browsersListForSwc: true,
-    // ssr and displayName are configured by default
-    styledComponents: true,
   },
   assetPrefix: '',
   basePath: '',
