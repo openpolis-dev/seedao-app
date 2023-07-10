@@ -18,7 +18,12 @@ export default function UserCard({ user, showEdit, onSelectUser, formatActive }:
   return (
     <UserCardBox>
       <div className="fst">
-        <Image className="avatar" src={user.avatar || DefaultAvatar} alt="" width="40px" height="40px" />
+        {user.avatar ? (
+          <img className="avatar" src={user.avatar} alt="" />
+        ) : (
+          <Image className="avatar" src={DefaultAvatar} alt="" width="40px" height="40px" />
+        )}
+
         <div>
           <div>{user.name}</div>
           <div style={{ display: 'flex', gap: '5px' }}>
@@ -83,8 +88,8 @@ const UserCardBox = styled.li`
     gap: 10px;
   }
   img.avatar {
-    width: 50px;
-    height: 50px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     border: 1px solid #edf1f7;
     margin-right: 20px;
