@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 import styled, { DefaultTheme } from 'styled-components';
 import { LayoutHeader } from '@paljs/ui/Layout';
 import { Actions } from '@paljs/ui/Actions';
@@ -18,7 +17,6 @@ import Loading from 'components/loading';
 import requests from 'requests';
 import { Authorizer } from 'casbin.js';
 import { readPermissionUrl } from 'requests/user';
-import useTranslation from 'hooks/useTranslation';
 import UserDropdown from './user';
 
 interface HeaderProps {
@@ -32,8 +30,6 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = (props) => {
-  const { t } = useTranslation();
-  const router = useRouter();
   const { account } = useWeb3React();
   const isLogin = useCheckLogin();
   const [lan, setLan] = useState('en');
@@ -59,7 +55,7 @@ const Header: React.FC<HeaderProps> = (props) => {
         localStorage.setItem('language', lanInit.value);
         changeLang(lanInit.value);
       } else {
-        changeLang(myLan!);
+        changeLang(myLan);
       }
     } else {
       changeLang(language);

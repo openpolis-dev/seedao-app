@@ -37,7 +37,6 @@ export default function App({ Component, pageProps }: AppProps<CustomPageProps>)
         `,
         }}
       ></Script>
-      <Script src={`${router.basePath}/sdnChatWidget.js`} type="text/javascript" />
       <AuthProvider>
         <Web3Provider>
           <AnyComponent {...pageProps} />

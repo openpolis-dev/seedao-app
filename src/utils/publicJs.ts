@@ -1,5 +1,3 @@
-import { ethers } from 'ethers';
-
 const AddressToShow = (address: string, num?: number) => {
   if (!address) return '...';
   const n = num || 4;

@@ -1,4 +1,3 @@
-import { useRouter } from 'next/router';
 import { useCallback } from 'react';
 import EN from 'i18n/en.json';
 import ZH from '../i18n/zh.json';
@@ -14,7 +13,6 @@ const LANGUAGE_PACKAGES: { [key: string]: I18nStoreType } = {
 };
 
 const useTranslation = () => {
-  const { query } = useRouter();
   const {
     state: { language },
   } = useAuthContext();
