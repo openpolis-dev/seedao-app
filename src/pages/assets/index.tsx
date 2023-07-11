@@ -110,7 +110,7 @@ const VAULTS = [
 ];
 
 const SCR_CONTRACT = '0xc74dee15a4700d5df797bdd3982ee649a3bb8c6c';
-const SCR_PRICE = 3;
+const SCR_PRICE = 0.03;
 
 type VaultType = {
   name: string;
