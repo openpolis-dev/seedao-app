@@ -1,15 +1,6 @@
-import Row from '@paljs/ui/Row';
-import Col from '@paljs/ui/Col';
-// import { Card, CardBody} from '@paljs/ui/Card';
-import styled from 'styled-components';
-import { useRouter } from 'next/router';
 import React from 'react';
-import { ReTurnProject } from 'type/project.type';
-
-const Box = styled.div`
-  margin-top: 40px;
-  overflow-x: hidden;
-`;
+import styled from 'styled-components';
+import Col from '@paljs/ui/Col';
 
 const Item = styled.div`
   display: flex;
@@ -80,39 +71,32 @@ const Photo = styled.div`
   }
 `;
 interface Iprops {
-  list: ReTurnProject[];
+  data: {
+    id: number;
+    logo: string;
+    name: string;
+  };
+  onClickItem: (id: number) => void;
 }
 
-export default function ProjectAllList(props: Iprops) {
-  const { list } = props;
-  const router = useRouter();
-
-  const toGo = (num: number) => {
-    router.push(`/project/info/${num}`);
-  };
+export default function ProjectOrGuildItem({ data, onClickItem }: Iprops) {
   return (
-    <Box>
-      <Row>
-        {list?.map((item, index) => (
-          <Col breakPoint={{ xs: 3, sm: 3, md: 3, lg: 2.4 }} key={index}>
-            <CardBox>
-              <Item onClick={() => toGo(item.id)}>
-                <ImageBox>
-                  <Photo>
-                    <div className="aspect" />
-                    <div className="content">
-                      <div className="innerImg">
-                        <img src={item.logo} alt="" />
-                      </div>
-                    </div>
-                  </Photo>
-                </ImageBox>
-                <div className="title">{item.name}</div>
-              </Item>
-            </CardBox>
-          </Col>
-        ))}
-      </Row>
-    </Box>
+    <Col breakPoint={{ xs: 3, sm: 3, md: 3, lg: 2.4 }}>
+      <CardBox>
+        <Item onClick={() => onClickItem(data.id)}>
+          <ImageBox>
+            <Photo>
+              <div className="aspect" />
+              <div className="content">
+                <div className="innerImg">
+                  <img src={data.logo} alt="" />
+                </div>
+              </div>
+            </Photo>
+          </ImageBox>
+          <div className="title">{data.name}</div>
+        </Item>
+      </CardBox>
+    </Col>
   );
 }
