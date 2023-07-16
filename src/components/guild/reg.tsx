@@ -14,6 +14,7 @@ import Loading from 'components/loading';
 import { AssetName } from 'utils/constant';
 import useToast, { ToastType } from 'hooks/useToast';
 import { ethers } from 'ethers';
+import { useAuthContext } from 'providers/authProvider';
 
 const Box = styled.div`
   padding: 20px;
@@ -72,6 +73,9 @@ type ErrorDataType = {
 export default function Reg({ id }: { id: number }) {
   const { t } = useTranslation();
   // const { CSVReader } = useCSVReader();
+  const {
+    state: { language },
+  } = useAuthContext();
   const { Toast, showToast } = useToast();
   const [loading, setLoading] = useState(false);
 
@@ -188,7 +192,7 @@ export default function Reg({ id }: { id: number }) {
   };
 
   const downloadFile = async () => {
-    window.open(requests.application.getTemplateFileUrl(), '_blank');
+    window.open(requests.application.getTemplateFileUrl(language), '_blank');
   };
 
   return (
@@ -242,7 +246,30 @@ export default function Reg({ id }: { id: number }) {
           )}
         </RhtBox>
       </FirstBox>
+      {!!errList.length && (
+        <ErrorBox>
+          <li>{t('Msg.ImportFailed')}:</li>
+          {errList.map((item) => (
+            <li key={item.line}>
+              #{item.line}{' '}
+              {item.errorKeys.map((ekey) => (
+                <span key={ekey}>{t('Project.ImportError', { key: t(`Project.${ekey}`) })}</span>
+              ))}
+            </li>
+          ))}
+        </ErrorBox>
+      )}
       <RegList uploadList={list} />
     </Box>
   );
 }
+
+const ErrorBox = styled.ul`
+  li {
+    color: red;
+    line-height: 24px;
+    span {
+      margin-inline: 5px;
+    }
+  }
+`;
