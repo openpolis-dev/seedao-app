@@ -13,6 +13,7 @@ import Loading from 'components/loading';
 import { ethers } from 'ethers';
 import useToast, { ToastType } from 'hooks/useToast';
 import { AssetName } from 'utils/constant';
+import { useAuthContext } from 'providers/authProvider';
 
 const Box = styled.div`
   padding: 20px;
@@ -69,6 +70,9 @@ type ErrorDataType = {
 };
 export default function Reg({ id }: { id: number }) {
   const { t } = useTranslation();
+  const {
+    state: { language },
+  } = useAuthContext();
   const { Toast, showToast } = useToast();
   // const { CSVReader } = useCSVReader();
   const [loading, setLoading] = useState(false);
@@ -183,7 +187,7 @@ export default function Reg({ id }: { id: number }) {
   };
 
   const downloadFile = async () => {
-    window.open(requests.application.getTemplateFileUrl(), '_blank');
+    window.open(requests.application.getTemplateFileUrl(language), '_blank');
   };
 
   return (
