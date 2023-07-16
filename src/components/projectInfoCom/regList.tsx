@@ -31,6 +31,7 @@ export default function RegList(props: Iprops) {
     <Box>
       <table className="table" cellPadding="0" cellSpacing="0">
         <tr>
+          <th>&nbsp;</th>
           <th>{t('Project.Address')}</th>
           <th>{t('Project.AddPoints')}</th>
           <th>{t('Project.AddToken')}</th>
@@ -39,6 +40,7 @@ export default function RegList(props: Iprops) {
         </tr>
         {uploadList.map((item, index) => (
           <tr key={index}>
+            <td>{index + 1}</td>
             <td>{item.address}</td>
             <td>{item.points}</td>
             <td>{item.token}</td>
