@@ -239,7 +239,7 @@ export default function Reg({ id }: { id: number }) {
       </FirstBox>
       {!!errList.length && (
         <ErrorBox>
-          <li>Import failed:</li>
+          <li>{t('Msg.ImportFailed')}:</li>
           {errList.map((item) => (
             <li key={item.line}>
               #{item.line}{' '}

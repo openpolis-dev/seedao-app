@@ -203,6 +203,7 @@
     "ProposalLinkMsg": "Require correct proposal link",
     "ApproveSuccess": "Operate successfully",
     "ApproveFailed": "Operate failed",
-    "IncorrectAddress": "Invalid address: {content}"
+    "IncorrectAddress": "Invalid address: {content}",
+    "ImportFailed": "Import failed"
   }
 }

@@ -242,7 +242,30 @@ export default function Reg({ id }: { id: number }) {
           )}
         </RhtBox>
       </FirstBox>
+      {!!errList.length && (
+        <ErrorBox>
+          <li>{t('Msg.ImportFailed')}:</li>
+          {errList.map((item) => (
+            <li key={item.line}>
+              #{item.line}{' '}
+              {item.errorKeys.map((ekey) => (
+                <span key={ekey}>{t('Project.ImportError', { key: t(`Project.${ekey}`) })}</span>
+              ))}
+            </li>
+          ))}
+        </ErrorBox>
+      )}
       <RegList uploadList={list} />
     </Box>
   );
 }
+
+const ErrorBox = styled.ul`
+  li {
+    color: red;
+    line-height: 24px;
+    span {
+      margin-inline: 5px;
+    }
+  }
+`;
