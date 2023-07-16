@@ -130,8 +130,8 @@ export const processApplications = (data: number[]) => {
 };
 
 // download
-export const getTemplateFileUrl = () => {
-  return `${getBaseURL()}/get_applications_upload_template`;
+export const getTemplateFileUrl = (language?: string) => {
+  return `${getBaseURL()}/get_applications_upload_template?lang=${language || 'en'}`;
 };
 export const getExportFileUrl = (ids: number[]) => {
   return `${getBaseURL()}/download_applications?ids=${ids.join(',')}`;

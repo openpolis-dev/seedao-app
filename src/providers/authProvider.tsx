@@ -11,7 +11,7 @@ interface IState {
   userData?: IUser;
   tokenData?: ITokenType;
   proposal_categories: ICategory[];
-  language: string | null;
+  language: string;
   loading: boolean | null;
   authorizer?: Authorizer;
   wallet_type?: WalletType;
@@ -53,7 +53,7 @@ const INIT_STATE: IState = {
       ],
     },
   ],
-  language: null,
+  language: 'en',
   loading: null,
 };
 
