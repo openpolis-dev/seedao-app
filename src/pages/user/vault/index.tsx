@@ -7,6 +7,7 @@ import { Asset } from 'type/user.type';
 import requests from 'requests';
 import { BudgetType } from 'type/project.type';
 import useTranslation from 'hooks/useTranslation';
+import SBTCard from './sbt';
 
 const Box = styled.div`
   padding: 40px 20px;
@@ -100,7 +101,7 @@ export default function Vault() {
               </div>
             </li>
           </FirstLine>
-
+          <SBTCard />
           <AssetList />
         </Box>
       </CardBox>
