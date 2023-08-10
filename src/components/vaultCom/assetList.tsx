@@ -7,7 +7,7 @@ import ViewHash from '../projectInfoCom/viewHash';
 import RangeDatePickerStyle from 'components/rangeDatePicker';
 import { Checkbox } from '@paljs/ui/Checkbox';
 import requests from 'requests';
-import { IQueryApplicationsParams } from 'requests/applications';
+import { IQueryParams } from 'requests/applications';
 import { IApplicationDisplay, ApplicationStatus } from 'type/application.type';
 import utils from 'utils/publicJs';
 import NoItem from 'components/noItem';
@@ -112,8 +112,9 @@ export default function AssetList() {
   const [selectMap, setSelectMap] = useState<{ [id: number]: ApplicationStatus | boolean }>({});
   const [applicants, setApplicants] = useState<ISelectItem[]>([]);
   const [selectApplicant, setSelectApplicant] = useState<string>();
-  const [projects, setProjects] = useState<ISelectItem[]>([]);
-  const [selectProject, setSelectProject] = useState<number>();
+
+  const [allSource, setAllSource] = useState<ISelectItem[]>([]);
+  const [selectSource, setSelectSource] = useState<{ id: number; type: 'project' | 'guild' }>();
 
   const statusOption = useMemo(() => {
     return [
@@ -154,19 +155,43 @@ export default function AssetList() {
     try {
       const res = await requests.project.getProjects({
         page: 1,
-        size: 20,
+        size: 1000,
         sort_order: 'desc',
         sort_field: 'created_at',
       });
-      setProjects(
-        res.data.rows.map((item) => ({
-          label: item.name,
-          value: item.id,
-        })),
-      );
+      return res.data.rows.map((item) => ({
+        label: item.name,
+        value: item.id,
+        data: 'project',
+      }));
     } catch (error) {
       console.error('getProjects in city-hall failed: ', error);
+      return [];
     }
+  };
+  const getGuilds = async () => {
+    try {
+      const res = await requests.guild.getProjects({
+        page: 1,
+        size: 1000,
+        sort_order: 'desc',
+        sort_field: 'created_at',
+      });
+      return res.data.rows.map((item) => ({
+        label: item.name,
+        value: item.id,
+        data: 'guild',
+      }));
+    } catch (error) {
+      console.error('getGuilds in city-hall failed: ', error);
+      return [];
+    }
+  };
+
+  const getSources = async () => {
+    const projects = await getProjects();
+    const guilds = await getGuilds();
+    setAllSource([...projects, ...guilds]);
   };
 
   const getApplicants = async () => {
@@ -184,13 +209,16 @@ export default function AssetList() {
 
   useEffect(() => {
     getApplicants();
-    getProjects();
+  }, []);
+
+  useEffect(() => {
+    getSources();
   }, []);
 
   const getRecords = async () => {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
-      const queryData: IQueryApplicationsParams = {
+      const queryData: IQueryParams = {
         user_wallet: account,
       };
       if (selectStatus) queryData.state = selectStatus;
@@ -199,8 +227,12 @@ export default function AssetList() {
         queryData.start_date = formatDate(startDate);
         queryData.end_date = formatDate(endDate);
       }
+      if (selectSource && selectSource.type) {
+        queryData.entity_id = selectSource.id;
+        queryData.entity = selectSource.type;
+      }
 
-      const res = await requests.application.getProjectApplications(
+      const res = await requests.application.getApplications(
         {
           page,
           size: pageSize,
@@ -208,7 +240,6 @@ export default function AssetList() {
           sort_order: 'desc',
         },
         queryData,
-        selectProject,
       );
       setTotal(res.data.total);
       const _list = res.data.rows.map((item) => ({
@@ -227,7 +258,7 @@ export default function AssetList() {
   useEffect(() => {
     const selectOrClearDate = (startDate && endDate) || (!startDate && !endDate);
     account && selectOrClearDate && getRecords();
-  }, [selectStatus, selectApplicant, selectProject, page, pageSize, startDate, endDate, account]);
+  }, [selectStatus, selectApplicant, selectSource, page, pageSize, startDate, endDate, account]);
 
   const getSelectIds = (): number[] => {
     const ids = Object.keys(selectMap);
@@ -296,10 +327,10 @@ export default function AssetList() {
             <span className="tit">{t('Project.BudgetSource')}</span>
             <Select
               className="sel"
-              options={projects}
+              options={allSource}
               placeholder=""
               onChange={(value) => {
-                setSelectProject(value?.value);
+                setSelectSource({ id: value?.value as number, type: value?.data });
                 setSelectMap({});
                 setPage(1);
               }}
