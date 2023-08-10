@@ -45,7 +45,7 @@ export enum PermissionAction {
 
 // ------ ------ ------ ------ ------ ------ ------ ------ ------
 
-export const DefaultAvatar = '/icons/avatar.jpg';
+export const DefaultAvatar = '/icons/avatar.svg';
 
 export enum AssetName {
   Credit = 'SCR',
