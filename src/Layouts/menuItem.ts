@@ -4,6 +4,11 @@ export type CMenuItemType = MenuItemType & { value?: string };
 
 const items: CMenuItemType[] = [
   {
+    title: 'menus.Home',
+    icon: { name: 'home-outline' },
+    link: { href: '/home' },
+  },
+  {
     title: 'menus.Proposal',
     icon: { name: 'browser-outline' },
     link: { href: '/proposal' },

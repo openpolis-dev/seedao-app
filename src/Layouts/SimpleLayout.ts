@@ -5,6 +5,19 @@ import { breakpointDown } from '@paljs/ui/breakpoints';
 const SimpleLayout = createGlobalStyle`
 ${({ theme }) => css`
   ${GlobalStyle}
+
+  @font-face {
+    font-family: 'Jost-ExtraBold';
+    src: url('/fonts/Jost-ExtraBold.ttf');
+  }
+  @font-face {
+    font-family: 'Jost-Bold';
+    src: url('/fonts/Jost-Bold.ttf');
+  }
+  @font-face {
+    font-family: 'Jost-SemiBold';
+    src: url('/fonts/Jost-SemiBold.ttf');
+  }
   html {
     font-size: 16px;
   }

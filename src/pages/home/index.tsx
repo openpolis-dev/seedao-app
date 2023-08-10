@@ -1,0 +1,245 @@
+import React, { useEffect, useState } from 'react';
+import Layout from 'Layouts';
+import { Card } from '@paljs/ui/Card';
+import styled, { css } from 'styled-components';
+import Col from '@paljs/ui/Col';
+import Row from '@paljs/ui/Row';
+
+const Box = styled.div`
+  margin: -2.25rem -2.25rem -0.75rem;
+`;
+
+const BannerBox = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 140px 40px;
+  background: url('/images/topBg.png') no-repeat right;
+  background-size: auto 100%;
+`;
+
+const LFtBox = styled.div`
+  width: 40%;
+  .tit {
+    font-size: 3rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    line-height: 1.2em;
+    font-family: 'Jost-ExtraBold';
+  }
+  .tips {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    margin-top: 30px;
+  }
+`;
+
+const ActiveBox = styled.div`
+  margin: 0 40px;
+`;
+
+const Item = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  img {
+    width: 100%;
+  }
+  .title {
+    font-size: 14px;
+    line-height: 1.5em;
+    height: 20px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    margin: 15px;
+  }
+`;
+
+const CardBox = styled.div`
+  border: 1px solid #f1f1f1;
+  margin-bottom: 40px;
+  box-sizing: border-box;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+  background: #fff;
+`;
+const ImageBox = styled.div`
+  border-radius: 12px 12px 0 0;
+  overflow: hidden;
+  width: 100%;
+
+  img {
+    width: 100%;
+  }
+`;
+const Photo = styled.div`
+  display: flex !important;
+  overflow: hidden;
+  .aspect {
+    padding-bottom: 100%;
+    height: 0;
+    flex-grow: 1 !important;
+  }
+  .content {
+    width: 100%;
+    margin-left: -100% !important;
+    max-width: 100% !important;
+    flex-grow: 1 !important;
+    position: relative;
+  }
+  .innerImg {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #f5f5f5;
+    img {
+      width: 100%;
+    }
+  }
+`;
+
+const TitBox = styled.div`
+  font-weight: bold;
+  font-size: 24px;
+  margin-bottom: 20px;
+`;
+
+const RhtBox = styled.div``;
+
+const LineBox = styled.div`
+  background: url('/images/homebg.png') center no-repeat;
+  background-size: 100%;
+  background-attachment: fixed;
+  margin-bottom: 80px;
+  .inner {
+    background: rgba(161, 110, 255, 0.7);
+    padding: 60px 40px;
+  }
+  ul {
+    display: flex;
+    align-items: center;
+    width: 100%;
+  }
+  li {
+    width: 33.33333%;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .num {
+    font-size: 50px;
+    font-weight: bold;
+    margin-right: 20px;
+    font-family: 'Jost-Bold';
+  }
+`;
+
+const CityBox = styled.div`
+  margin: 0 40px;
+`;
+export default function Index() {
+  const [list, setList] = useState([
+    {
+      name: 'Eth Dever side event - 在数字游民的会客厅',
+      image: 'https://seedao-store.s3-us-east-2.amazonaws.com/seeu/srzzPofjFbCQ5LGzvWd9Uc.jpg',
+    },
+    {
+      name: 'Eth Dever side event - 在数字游民的会客厅',
+      image: 'https://seedao-store.s3-us-east-2.amazonaws.com/seeu/52xuUfK866XtZoFMqGYYD1.jpg',
+    },
+    {
+      name: 'Eth Dever side event - 在数字游民的会客厅',
+      image: 'https://seedao-store.s3-us-east-2.amazonaws.com/seeu/vGnVjkH6WrH1Tyg2dTs6a5.jpg',
+    },
+    {
+      name: 'Eth Dever side event - 在数字游民的会客厅',
+      image: 'https://seedao-store.s3-us-east-2.amazonaws.com/seeu/ctArrpMXr6enT1PcF8UJty.png',
+    },
+    {
+      name: 'Eth Dever side event - 在数字游民的会客厅',
+      image: 'https://seedao-store.s3-us-east-2.amazonaws.com/seeu/mf6AuWkzJr5fZPXxBbdfA7.jpg',
+    },
+  ]);
+  return (
+    <Layout title="SeeDAO Project">
+      <Box>
+        <BannerBox>
+          <LFtBox>
+            <div className="tit">SeeDAO's is a network polis to connect millions nomads in Web3.</div>
+            <div className="tips">
+              Our vision: Creating an alternative human living space in cyberspace outside the regional of nation-state.
+            </div>
+          </LFtBox>
+        </BannerBox>
+        <LineBox>
+          <div className="inner">
+            <ul>
+              <li>
+                <div className="num">520+</div>
+                <div>
+                  <div>SGN </div>
+                  <div>Holder</div>
+                </div>
+              </li>
+              <li>
+                <div className="num">57+</div>
+                <div>
+                  <div>Govern </div>
+                  <div>node</div>
+                </div>
+              </li>
+              <li>
+                <div className="num">520+</div>
+                <div>
+                  <div>SBT </div>
+                  <div>Holder</div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </LineBox>
+        <ActiveBox>
+          <TitBox>Events</TitBox>
+          <Row>
+            {list.map((item) => (
+              <Col breakPoint={{ xs: 3, sm: 3, md: 3, lg: 2.4 }}>
+                <CardBox>
+                  <Item>
+                    <ImageBox>
+                      <Photo>
+                        <div className="aspect" />
+                        <div className="content">
+                          <div className="innerImg">
+                            <img src={item.image} alt="" />
+                          </div>
+                        </div>
+                      </Photo>
+                    </ImageBox>
+                    <div className="title">{item.name}</div>
+                  </Item>
+                </CardBox>
+              </Col>
+            ))}
+          </Row>
+        </ActiveBox>
+        <CityBox>
+          <TitBox>City Hall</TitBox>
+        </CityBox>
+      </Box>
+    </Layout>
+  );
+}

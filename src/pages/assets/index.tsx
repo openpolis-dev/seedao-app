@@ -538,11 +538,14 @@ const TotalBalanceNum = styled.div`
 `;
 
 const Tag = styled.span`
+  ${({ theme }) => css`
+    border: 1px solid ${theme.colorPrimary500};
+    background: ${theme.colorPrimary500};
+  `}
   //border: 1px solid #eecf00;
-  border: 1px solid #008800;
   border-radius: 6px;
-  color: #008800;
-  background: rgba(195, 242, 55, 0.25);
+  color: #fff;
+
   padding: 4px 6px;
   font-size: 12px;
   span {

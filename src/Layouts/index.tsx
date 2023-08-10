@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, Fragment, useMemo } from 'react';
-import { DefaultTheme, ThemeProvider } from 'styled-components';
+import styled, { DefaultTheme, ThemeProvider } from 'styled-components';
 import themes from './themes';
 import { Layout, LayoutContent, LayoutContainer, LayoutColumns, LayoutColumn } from '@paljs/ui/Layout';
 import icons from '@paljs/icons';
@@ -30,6 +30,12 @@ const getDefaultTheme = (): DefaultTheme['name'] => {
     return 'default';
   }
 };
+
+const Box = styled.div`
+  //.menu-sidebar,.main-container{
+  //  width: 12rem!important;
+  //}
+`;
 
 const LayoutPage: React.FC<SEOProps> = ({ children, ...rest }) => {
   const [theme, setTheme] = useState<DefaultTheme['name']>('default');
@@ -101,65 +107,67 @@ const LayoutPage: React.FC<SEOProps> = ({ children, ...rest }) => {
 
   return (
     <Fragment>
-      <SEO {...rest} />
-      <AnyComponent theme={themes(theme, dir)}>
-        <Fragment>
-          <MyGlobalStyle />
-          <Layout evaIcons={icons} dir={dir}>
-            <Header
-              dir={dir}
-              changeDir={changeDir}
-              theme={{ set: changeTheme, value: theme }}
-              toggleSidebar={() => sidebarRef.current?.toggle()}
-            />
-            <LayoutContainer>
-              <Sidebar
-                getState={getState}
-                ref={sidebarRef}
-                property="start"
-                containerFixed
-                responsive
-                className="menu-sidebar"
-              >
-                {seeHeader && (
-                  <header>
-                    {/*<Button*/}
-                    {/*  size="Tiny"*/}
-                    {/*  status="Primary"*/}
-                    {/*  onClick={() => {*/}
-                    {/*    setMenuState(!menuState);*/}
-                    {/*    menuRef.current?.toggle();*/}
-                    {/*  }}*/}
-                    {/*  fullWidth*/}
-                    {/*>*/}
-                    {/*  {menuState ? <EvaIcon name="arrow-circle-up" /> : <EvaIcon name="arrow-circle-down" />}*/}
-                    {/*</Button>*/}
-                  </header>
-                )}
-                <SidebarBody>
-                  <Menu
-                    nextJs
-                    className="sidebar-menu"
-                    Link={Link}
-                    ref={menuRef}
-                    items={menuItemsFormat}
-                    currentPath={router.pathname}
-                    toggleSidebar={() => sidebarRef.current?.hide()}
-                  />
-                  {seeHeader && <AppVersion />}
-                </SidebarBody>
-              </Sidebar>
-              <LayoutContent>
-                <LayoutColumns>
-                  <LayoutColumn className="main-content" style={{ background: '#f5f5f5' }}>
-                    {children}
-                  </LayoutColumn>
-                </LayoutColumns>
-              </LayoutContent>
-            </LayoutContainer>
-          </Layout>
-        </Fragment>
-      </AnyComponent>
+      <Box>
+        <SEO {...rest} />
+        <AnyComponent theme={themes(theme, dir)}>
+          <Fragment>
+            <MyGlobalStyle />
+            <Layout evaIcons={icons} dir={dir}>
+              <Header
+                dir={dir}
+                changeDir={changeDir}
+                theme={{ set: changeTheme, value: theme }}
+                toggleSidebar={() => sidebarRef.current?.toggle()}
+              />
+              <LayoutContainer>
+                <Sidebar
+                  getState={getState}
+                  ref={sidebarRef}
+                  property="start"
+                  containerFixed
+                  responsive
+                  className="menu-sidebar"
+                >
+                  {seeHeader && (
+                    <header>
+                      {/*<Button*/}
+                      {/*  size="Tiny"*/}
+                      {/*  status="Primary"*/}
+                      {/*  onClick={() => {*/}
+                      {/*    setMenuState(!menuState);*/}
+                      {/*    menuRef.current?.toggle();*/}
+                      {/*  }}*/}
+                      {/*  fullWidth*/}
+                      {/*>*/}
+                      {/*  {menuState ? <EvaIcon name="arrow-circle-up" /> : <EvaIcon name="arrow-circle-down" />}*/}
+                      {/*</Button>*/}
+                    </header>
+                  )}
+                  <SidebarBody>
+                    <Menu
+                      nextJs
+                      className="sidebar-menu"
+                      Link={Link}
+                      ref={menuRef}
+                      items={menuItemsFormat}
+                      currentPath={router.pathname}
+                      toggleSidebar={() => sidebarRef.current?.hide()}
+                    />
+                    {seeHeader && <AppVersion />}
+                  </SidebarBody>
+                </Sidebar>
+                <LayoutContent>
+                  <LayoutColumns>
+                    <LayoutColumn className="main-content" style={{ background: '#f5f5f5' }}>
+                      {children}
+                    </LayoutColumn>
+                  </LayoutColumns>
+                </LayoutContent>
+              </LayoutContainer>
+            </Layout>
+          </Fragment>
+        </AnyComponent>
+      </Box>
     </Fragment>
   );
 };
