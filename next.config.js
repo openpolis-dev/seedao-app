@@ -6,8 +6,8 @@ module.exports = {
     legacyBrowsers: false,
     browsersListForSwc: true,
   },
-  assetPrefix: '',
-  basePath: '',
+  assetPrefix: undefined,
+  basePath: undefined,
   images: {
     unoptimized: true,
     loader: 'akamai',
