@@ -239,12 +239,16 @@ const WalletOption = styled.li`
     border-radius: 8px;
     margin-block: 10px;
     cursor: pointer;
-    background: ${theme.colorPrimary500};
-    color: #ffffff;
+    //background: ${theme.colorPrimary500};
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    border: 1px solid #f1f1f1;
+    background: #fff;
+    color: #000;
     font-weight: 600;
     font-size: 16px;
     &:hover {
-      background-color: ${theme.colorPrimary400};
+      //background-color: ${theme.colorPrimary400};
+      background-color: #f5f5f5;
     }
     img {
       width: 28px;

@@ -25,8 +25,8 @@ const FirstLine = styled.ul`
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: #008800;
-    color: #fff;
+    background: #fff;
+    color: #000;
     div {
       text-align: center;
     }

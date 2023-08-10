@@ -44,8 +44,9 @@ const FirstLine = styled.ul`
     display: flex;
     align-items: center;
     flex-direction: column;
-    background: #008800;
-    color: #fff;
+    //background: #008800;
+    background: #fff;
+    color: #000;
     div {
       text-align: center;
     }
@@ -58,11 +59,11 @@ const FirstLine = styled.ul`
     font-weight: 600;
     margin-bottom: 20px;
     margin-top: 10px;
-    color: #fff;
+    color: #000;
   }
   .tips {
     font-size: 12px;
-    color: #fff;
+    color: #000;
   }
 `;
 
@@ -443,8 +444,8 @@ const Vault = styled.div`
   padding: 20px;
   margin-bottom: 20px;
   border-radius: 4px;
-  background: #008800;
-  color: #fff;
+  background: #fff;
+  color: #000;
 `;
 
 const VaultOverview = styled.div`
@@ -465,7 +466,7 @@ const InfoItem = styled.li`
     align-items: center;
     flex-direction: column;
     gap: 8px;
-    color: #fff;
+    color: #000;
     &.detail {
       cursor: pointer;
       div {
@@ -488,7 +489,7 @@ const VaultItem = styled.li`
   justify-content: space-between;
   border-top: 1px solid rgba(255, 255, 255, 0.3);
   padding-block: 20px;
-  color: #fff;
+  color: #000;
   .left {
     display: flex;
     gap: 60px;
@@ -537,10 +538,11 @@ const TotalBalanceNum = styled.div`
 `;
 
 const Tag = styled.span`
-  border: 1px solid #eecf00;
+  //border: 1px solid #eecf00;
+  border: 1px solid #008800;
   border-radius: 6px;
-  color: #fff;
-  background: #eecf00;
+  color: #008800;
+  background: rgba(195, 242, 55, 0.25);
   padding: 4px 6px;
   font-size: 12px;
   span {

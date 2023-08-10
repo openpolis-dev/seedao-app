@@ -3,10 +3,10 @@ import { DefaultTheme } from 'styled-components';
 
 // color definited by https://paljs.com/ui/themes/cosmic
 const colorTheme: Partial<DefaultTheme> = {
-  colorPrimary300: '#C9FB30',
-  colorPrimary400: '#C9FB30',
-  colorPrimary500: '#BFEF2D',
-  colorPrimary600: '#A8E100',
+  colorPrimary300: '#a16eff',
+  colorPrimary400: '#a16eff',
+  colorPrimary500: '#a16eff',
+  colorPrimary600: '#a16eff',
 
   colorPrimaryTransparent100: 'rgba(195, 242, 55, 0.25)',
   colorPrimaryTransparent200: 'rgba(195, 242, 55, 0.15)',
