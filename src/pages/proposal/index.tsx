@@ -135,6 +135,7 @@ const SubCategoryItem = styled.div`
     gap: 12px;
     padding: 16px;
     cursor: pointer;
+    border-bottom: 1px solid #eee;
     &:hover {
       box-shadow: 0 0 4px rgba(0, 0, 0, 0.15);
     }

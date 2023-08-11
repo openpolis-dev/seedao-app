@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Layout from 'Layouts';
 import { Card } from '@paljs/ui/Card';
+import { EvaIcon } from '@paljs/ui/Icon';
 import styled, { css } from 'styled-components';
 import Col from '@paljs/ui/Col';
 import Row from '@paljs/ui/Row';
@@ -161,6 +162,47 @@ const LineBox = styled.div`
 const CityBox = styled.div`
   margin: 0 40px;
 `;
+
+const LinkBox = styled.ul`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 80px;
+
+  li {
+    width: 48%;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    //background: url("/images/homebg.png") left 90%;
+    background-size: 100%;
+    border-radius: 10px;
+    overflow: hidden;
+    .inner {
+      padding: 20px;
+      background: rgba(255, 255, 255, 1);
+      //backdrop-filter: blur(10px);
+      display: flex;
+      align-items: center;
+    }
+  }
+  .lft {
+    background: #eef1f7;
+    padding: 10px;
+    border-radius: 100%;
+    margin-right: 20px;
+    box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.1);
+    ${({ theme }) => css`
+      color: ${theme.colorPrimary500};
+    `}
+  }
+  .tit {
+    font-size: 1.2rem;
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+  .tBtm {
+    font-size: 0.8rem;
+  }
+`;
 export default function Index() {
   const [list, setList] = useState([
     {
@@ -249,6 +291,30 @@ export default function Index() {
         </ActiveBox>
         <CityBox>
           <TitBox>City Hall</TitBox>
+          <LinkBox>
+            <li>
+              <div className="inner">
+                <div className="lft">
+                  <EvaIcon name="shield-outline" />
+                </div>
+                <div>
+                  <div className="tit">市政厅</div>
+                  <div className="tBtm">https://seedao.notion.site/07c258913c5d4847b59271e2ae6f7c66</div>
+                </div>
+              </div>
+            </li>
+            <li>
+              <div className="inner">
+                <div className="lft">
+                  <EvaIcon name="people-outline" />
+                </div>
+                <div>
+                  <div className="tit">市政厅成员</div>
+                  <div className="tBtm">https://seedao.notion.site/07c258913c5d4847b59271e2ae6f7c66</div>
+                </div>
+              </div>
+            </li>
+          </LinkBox>
         </CityBox>
       </Box>
     </Layout>
