@@ -37,7 +37,7 @@ const TopLine = styled.ul`
   display: flex;
   align-items: center;
   margin-bottom: 20px;
-
+  flex-wrap: wrap;
   li {
     display: flex;
     align-items: center;
