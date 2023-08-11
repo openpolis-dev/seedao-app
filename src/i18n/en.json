@@ -28,7 +28,11 @@
     "Events": "Events",
     "AllEvents": "All Events",
     "Publicity": "Publicity",
-    "CityHallMembers": "City Hall Members"
+    "CityHall": "Cit Hall",
+    "CityHallMembers": "City Hall Members",
+    "SGNHolder": "SGN Holder",
+    "SBTHolder": "SBT Holder",
+    "GovernNode": "Govern Node"
   },
   "Proposal": {
     "AllCategories": "All Categories",

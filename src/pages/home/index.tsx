@@ -1,10 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Layout from 'Layouts';
 import { EvaIcon } from '@paljs/ui/Icon';
 import styled, { css } from 'styled-components';
 import Col from '@paljs/ui/Col';
 import Row from '@paljs/ui/Row';
 import useTranslation from 'hooks/useTranslation';
+import axios from 'axios';
+import * as eventsAPI from 'requests/event';
+import { Ievent } from 'type/event';
+import { formatTime } from 'utils/time';
+import { GOV_NODE_CONTRACT, SGN_CONTRACT } from 'utils/constant';
 
 const CITY_HALL = 'https://seedao.notion.site/07c258913c5d4847b59271e2ae6f7c66';
 const CITY_HALL_MEMBERS = 'https://www.notion.so/3913d631d7bc49e1a0334140e3cd84f5';
@@ -204,30 +209,59 @@ const LinkBox = styled.ul`
     font-size: 0.8rem;
   }
 `;
+
 export default function Index() {
   const { t } = useTranslation();
-  const [list, setList] = useState([
-    {
-      name: 'Eth Dever side event - 在数字游民的会客厅',
-      image: 'https://seedao-store.s3-us-east-2.amazonaws.com/seeu/srzzPofjFbCQ5LGzvWd9Uc.jpg',
-    },
-    {
-      name: 'Eth Dever side event - 在数字游民的会客厅',
-      image: 'https://seedao-store.s3-us-east-2.amazonaws.com/seeu/52xuUfK866XtZoFMqGYYD1.jpg',
-    },
-    {
-      name: 'Eth Dever side event - 在数字游民的会客厅',
-      image: 'https://seedao-store.s3-us-east-2.amazonaws.com/seeu/vGnVjkH6WrH1Tyg2dTs6a5.jpg',
-    },
-    {
-      name: 'Eth Dever side event - 在数字游民的会客厅',
-      image: 'https://seedao-store.s3-us-east-2.amazonaws.com/seeu/ctArrpMXr6enT1PcF8UJty.png',
-    },
-    {
-      name: 'Eth Dever side event - 在数字游民的会客厅',
-      image: 'https://seedao-store.s3-us-east-2.amazonaws.com/seeu/mf6AuWkzJr5fZPXxBbdfA7.jpg',
-    },
-  ]);
+  const [list, setList] = useState<{ name: string; image: string; start: string }[]>([]);
+  const [sgnHolders, setSgnHolders] = useState(0);
+  const [governNodes, setGovernNodes] = useState(0);
+  const [sbtHolders, setSbtHolders] = useState(0);
+
+  useEffect(() => {
+    const handleSgnHolders = async () => {
+      const url = `https://restapi.nftscan.com/api/v2/collections/${SGN_CONTRACT}`;
+      const res = await axios.get(url, {
+        headers: {
+          'X-API-KEY': process.env.NEXT_PUBLIC_NFTSCAN_KEY,
+        },
+      });
+      setSgnHolders(res.data?.data?.amounts_total);
+    };
+    // handleSgnHolders();
+  }, []);
+
+  useEffect(() => {
+    const handleGovNodes = async () => {
+      const url = `https://restapi.nftscan.com/api/v2/collections/${GOV_NODE_CONTRACT}`;
+      const res = await axios.get(url, {
+        headers: {
+          'X-API-KEY': process.env.NEXT_PUBLIC_NFTSCAN_KEY,
+        },
+      });
+      setGovernNodes(res.data?.data?.amounts_total);
+    };
+    // handleGovNodes();
+  }, []);
+
+  useEffect(() => {
+    const getEvents = async () => {
+      try {
+        const res = await eventsAPI.getEventList({ page: 0, size: 5, sort_order: 'desc', sort_field: 'start_at' });
+        const events = res.data.rows.map((item: Ievent) => {
+          return {
+            name: item.title,
+            image: item.cover_img,
+            start: formatTime(item.start_at),
+          };
+        });
+        setList(events);
+      } catch (error) {
+        console.error('get events failed', error);
+      }
+    };
+    getEvents();
+  }, []);
+
   return (
     <Layout title="SeeDAO Project">
       <Box>
@@ -244,16 +278,16 @@ export default function Index() {
           <div className="inner">
             <ul>
               <li>
-                <div className="num">520+</div>
-                <div>SGN Holder</div>
+                <div className="num">{sgnHolders}</div>
+                <div>{t('Home.SGNHolder')}</div>
               </li>
               <li>
-                <div className="num">57+</div>
-                <div>Govern node</div>
+                <div className="num">{governNodes}</div>
+                <div>{t('Home.GovernNode')}</div>
               </li>
               <li>
-                <div className="num">520+</div>
-                <div>SBT Holder</div>
+                <div className="num">{sbtHolders}</div>
+                <div>{t('Home.SBTHolder')}</div>
               </li>
             </ul>
           </div>

@@ -29,7 +29,10 @@
     "AllEvents": "所有活动",
     "Publicity": "公示",
     "CityHall": "市政厅",
-    "CityHallMembers": "市政厅成员"
+    "CityHallMembers": "市政厅成员",
+    "SGNHolder": "SGN 持有者",
+    "SBTHolder": "SBT 持有者",
+    "GovernNode": "治理节点"
   },
   "Proposal": {
     "AllCategories": "分类",
