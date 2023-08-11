@@ -1,10 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Layout from 'Layouts';
-import { Card } from '@paljs/ui/Card';
 import { EvaIcon } from '@paljs/ui/Icon';
 import styled, { css } from 'styled-components';
 import Col from '@paljs/ui/Col';
 import Row from '@paljs/ui/Row';
+import useTranslation from 'hooks/useTranslation';
+
+const CITY_HALL = 'https://seedao.notion.site/07c258913c5d4847b59271e2ae6f7c66';
+const CITY_HALL_MEMBERS = 'https://www.notion.so/3913d631d7bc49e1a0334140e3cd84f5';
 
 const Box = styled.div`
   margin: -2.25rem -2.25rem -0.75rem;
@@ -172,10 +175,10 @@ const LinkBox = styled.ul`
   li {
     width: 48%;
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-    //background: url("/images/homebg.png") left 90%;
     background-size: 100%;
     border-radius: 10px;
     overflow: hidden;
+    cursor: pointer;
     .inner {
       padding: 20px;
       background: rgba(255, 255, 255, 1);
@@ -204,6 +207,7 @@ const LinkBox = styled.ul`
   }
 `;
 export default function Index() {
+  const { t } = useTranslation();
   const [list, setList] = useState([
     {
       name: 'Eth Dever side event - 在数字游民的会客厅',
@@ -231,10 +235,10 @@ export default function Index() {
       <Box>
         <BannerBox>
           <LFtBox>
-            <div className="tit">SeeDAO's is a network polis to connect millions nomads in Web3.</div>
+            <div className="tit">{t('Home.Slogan')}</div>
             <div className="tips">
-              <span>Our vision</span>Creating an alternative human living space in cyberspace outside the regional of
-              nation-state.
+              <span>{t('Home.SloganVison')}</span>
+              {t('Home.SloganDesc')}
             </div>
           </LFtBox>
         </BannerBox>
@@ -266,7 +270,7 @@ export default function Index() {
           </div>
         </LineBox>
         <ActiveBox>
-          <TitBox>Events</TitBox>
+          <TitBox>{t('Home.Events')}</TitBox>
           <Row>
             {list.map((item, idx) => (
               <Col breakPoint={{ xs: 3, sm: 3, md: 3, lg: 2.4 }} key={idx}>
@@ -290,27 +294,27 @@ export default function Index() {
           </Row>
         </ActiveBox>
         <CityBox>
-          <TitBox>City Hall</TitBox>
+          <TitBox>{t('Home.Publicity')}</TitBox>
           <LinkBox>
-            <li>
+            <li onClick={() => window.open(CITY_HALL, '_blank')}>
               <div className="inner">
                 <div className="lft">
                   <EvaIcon name="shield-outline" />
                 </div>
                 <div>
-                  <div className="tit">市政厅</div>
-                  <div className="tBtm">https://seedao.notion.site/07c258913c5d4847b59271e2ae6f7c66</div>
+                  <div className="tit">{t('Home.CityHall')}</div>
+                  <div className="tBtm">{CITY_HALL}</div>
                 </div>
               </div>
             </li>
-            <li>
+            <li onClick={() => window.open(CITY_HALL_MEMBERS, '_blank')}>
               <div className="inner">
                 <div className="lft">
                   <EvaIcon name="people-outline" />
                 </div>
                 <div>
-                  <div className="tit">市政厅成员</div>
-                  <div className="tBtm">https://seedao.notion.site/07c258913c5d4847b59271e2ae6f7c66</div>
+                  <div className="tit">{t('Home.CityHallMembers')}</div>
+                  <div className="tBtm">{CITY_HALL_MEMBERS}</div>
                 </div>
               </div>
             </li>

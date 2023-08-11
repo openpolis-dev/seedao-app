@@ -21,6 +21,16 @@
     "Copied": "已复制",
     "ConnectWallet": "连接钱包"
   },
+  "Home": {
+    "Slogan": "SeeDAO 是一个致力于连接 100 万 Web3 游民的数字城邦",
+    "SloganVison": "我们的愿景",
+    "SloganDesc": "在基于地缘的民族国家之外，在赛博世界另建一片人类的生存空间",
+    "Events": "活动",
+    "AllEvents": "所有活动",
+    "Publicity": "公示",
+    "CityHall": "市政厅",
+    "CityHallMembers": "市政厅成员"
+  },
   "Proposal": {
     "AllCategories": "分类",
     "TheNeweset": "最新的",
