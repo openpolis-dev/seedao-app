@@ -226,8 +226,8 @@ export default function Index() {
         <ActiveBox>
           <TitBox>Events</TitBox>
           <Row>
-            {list.map((item) => (
-              <Col breakPoint={{ xs: 3, sm: 3, md: 3, lg: 2.4 }}>
+            {list.map((item, idx) => (
+              <Col breakPoint={{ xs: 3, sm: 3, md: 3, lg: 2.4 }} key={idx}>
                 <CardBox>
                   <Item>
                     <ImageBox>
