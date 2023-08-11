@@ -177,8 +177,12 @@ export default function Index() {
               </RhtBoxT>
             </TitBox>
             <Row>
-              {list.map((item) => (
-                <Col breakPoint={{ xs: 3, sm: 3, md: 3, lg: 2.4 }} onClick={() => router.push(`event/info/${item.id}`)}>
+              {list.map((item, idx) => (
+                <Col
+                  breakPoint={{ xs: 3, sm: 3, md: 3, lg: 2.4 }}
+                  key={idx}
+                  onClick={() => router.push(`event/info/${item.id}`)}
+                >
                   <CardBox>
                     <Item>
                       <ImageBox>
