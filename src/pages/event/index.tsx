@@ -4,6 +4,8 @@ import { Card } from '@paljs/ui/Card';
 import styled, { css } from 'styled-components';
 import Col from '@paljs/ui/Col';
 import Row from '@paljs/ui/Row';
+import { Button, ButtonLink } from '@paljs/ui/Button';
+import { useRouter } from 'next/router';
 
 const Box = styled.div`
   padding: 40px 0;
@@ -88,6 +90,9 @@ const TitBox = styled.div`
   font-weight: bold;
   font-size: 1.5rem;
   margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 `;
 
 const RhtBox = styled.div``;
@@ -124,38 +129,56 @@ const LineBox = styled.div`
 const CityBox = styled.div`
   margin: 0 40px;
 `;
+
+const RhtBoxT = styled.div``;
 export default function Index() {
+  const router = useRouter();
+
   const [list, setList] = useState([
     {
       name: 'Eth Dever side event - 在数字游民的会客厅',
       image: 'https://seedao-store.s3-us-east-2.amazonaws.com/seeu/srzzPofjFbCQ5LGzvWd9Uc.jpg',
+      id: '1',
     },
     {
       name: 'Eth Dever side event - 在数字游民的会客厅',
       image: 'https://seedao-store.s3-us-east-2.amazonaws.com/seeu/52xuUfK866XtZoFMqGYYD1.jpg',
+      id: '1',
     },
     {
       name: 'Eth Dever side event - 在数字游民的会客厅',
       image: 'https://seedao-store.s3-us-east-2.amazonaws.com/seeu/vGnVjkH6WrH1Tyg2dTs6a5.jpg',
+      id: '1',
     },
     {
       name: 'Eth Dever side event - 在数字游民的会客厅',
       image: 'https://seedao-store.s3-us-east-2.amazonaws.com/seeu/ctArrpMXr6enT1PcF8UJty.png',
+      id: '1',
     },
     {
       name: 'Eth Dever side event - 在数字游民的会客厅',
       image: 'https://seedao-store.s3-us-east-2.amazonaws.com/seeu/mf6AuWkzJr5fZPXxBbdfA7.jpg',
+      id: '1',
     },
   ]);
+
+  const toGo = () => {};
   return (
     <Layout title="SeeDAO Project">
       <Card>
         <Box>
           <ActiveBox>
-            <TitBox>Events</TitBox>
+            <TitBox>
+              <span>Events</span>
+              <RhtBoxT>
+                <ButtonLink onClick={() => router.push('/create-event')} fullWidth shape="Rectangle">
+                  Create
+                </ButtonLink>
+              </RhtBoxT>
+            </TitBox>
             <Row>
               {list.map((item) => (
-                <Col breakPoint={{ xs: 3, sm: 3, md: 3, lg: 2.4 }}>
+                <Col breakPoint={{ xs: 3, sm: 3, md: 3, lg: 2.4 }} onClick={() => router.push(`event/info/${item.id}`)}>
                   <CardBox>
                     <Item>
                       <ImageBox>
