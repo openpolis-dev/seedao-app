@@ -131,8 +131,6 @@ const TitBox = styled.div`
   margin-bottom: 20px;
 `;
 
-const RhtBox = styled.div``;
-
 const LineBox = styled.div`
   background: url('/images/homebg.png') center no-repeat;
   background-size: 100%;
@@ -247,24 +245,15 @@ export default function Index() {
             <ul>
               <li>
                 <div className="num">520+</div>
-                <div>
-                  <div>SGN </div>
-                  <div>Holder</div>
-                </div>
+                <div>SGN Holder</div>
               </li>
               <li>
                 <div className="num">57+</div>
-                <div>
-                  <div>Govern </div>
-                  <div>node</div>
-                </div>
+                <div>Govern node</div>
               </li>
               <li>
                 <div className="num">520+</div>
-                <div>
-                  <div>SBT </div>
-                  <div>Holder</div>
-                </div>
+                <div>SBT Holder</div>
               </li>
             </ul>
           </div>
