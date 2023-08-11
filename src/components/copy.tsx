@@ -25,7 +25,7 @@ const CopyBox: React.FC<ICopyProps> = ({ children, text }) => {
   return (
     <>
       <CopyToClipboard text={text} onCopy={handleCopy}>
-        <CopyContent>
+        <CopyContent className="copy-content">
           {children}
           {isCopied && <span className="tooltip-content">{t('general.Copied')}</span>}
         </CopyContent>

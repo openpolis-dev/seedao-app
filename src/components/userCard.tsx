@@ -53,6 +53,11 @@ export default function UserCard({ user, showEdit, onSelectUser, formatActive }:
             <Image src="/images/discordNor.svg" alt="" className="icon" width="20px" height="20px" />
           </a>
         )}
+        {user.email && (
+          <CopyBox text={user.email || ''}>
+            <Image src="/images/email.svg" alt="" className="icon" width="20px" height="20px" />
+          </CopyBox>
+        )}
       </LinkBox>
     </UserCardBox>
   );
@@ -65,19 +70,19 @@ const LinkBox = styled.div`
     height: 20px;
     margin-inline: 5px !important;
   }
+  .copy-content {
+    display: inline-block;
+  }
 `;
 const UserCardBox = styled.li`
   width: 23%;
   margin-right: 2%;
-  border: 1px solid #f1f1f1;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
   margin-bottom: 40px;
   box-sizing: border-box;
   border-radius: 4px;
   overflow: hidden;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
   padding: 20px;
-  background: #008800;
-  color: #fff;
   &:nth-child(4n) {
     margin-right: 0;
   }
