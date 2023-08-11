@@ -17,7 +17,7 @@ const FirstLine = styled.ul`
     border: 1px solid #f1f1f1;
     margin-bottom: 40px;
     box-sizing: border-box;
-    border-radius: 4px;
+    border-radius: 10px;
     overflow: hidden;
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
     padding: 40px;
@@ -25,10 +25,16 @@ const FirstLine = styled.ul`
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: #fff;
-    color: #000;
+    //background: #fff;
+    color: #fff;
     div {
       text-align: center;
+    }
+    &:nth-child(1) {
+      background: linear-gradient(to right, #f1a6b6, #8f69d2);
+    }
+    &:nth-child(2) {
+      background: linear-gradient(to right, #3bdabe, #44b5f4);
     }
   }
   .num {

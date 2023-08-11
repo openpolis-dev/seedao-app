@@ -13,31 +13,41 @@ const BannerBox = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 140px 40px;
+  padding: 6rem 2.5rem;
   background: url('/images/topBg.png') no-repeat right;
   background-size: auto 100%;
 `;
 
 const LFtBox = styled.div`
-  width: 40%;
+  width: 59%;
   .tit {
-    font-size: 3rem;
+    font-size: 3.5rem;
     font-weight: bold;
     text-transform: uppercase;
     line-height: 1.2em;
     font-family: 'Jost-ExtraBold';
+    text-shadow: 5px 5px #f5f5f5;
   }
   .tips {
     background: #fff;
-    padding: 20px;
+    padding: 2rem 1.5rem;
     border-radius: 10px;
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-    margin-top: 30px;
+    margin-top: 2rem;
+    width: 80%;
+    font-size: 1.2rem;
+    line-height: 1.4em;
+    span {
+      padding: 2px 5px;
+      font-weight: bold;
+      margin-right: 5px;
+      background: #f1f1f1;
+    }
   }
 `;
 
 const ActiveBox = styled.div`
-  margin: 0 40px;
+  margin: 0 2rem;
 `;
 
 const Item = styled.div`
@@ -50,15 +60,15 @@ const Item = styled.div`
     width: 100%;
   }
   .title {
-    font-size: 14px;
+    font-size: 1rem;
     line-height: 1.5em;
-    height: 20px;
+    height: 1.5rem;
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
-    margin: 15px;
+    margin: 1rem;
   }
 `;
 
@@ -113,7 +123,7 @@ const Photo = styled.div`
 
 const TitBox = styled.div`
   font-weight: bold;
-  font-size: 24px;
+  font-size: 1.5rem;
   margin-bottom: 20px;
 `;
 
@@ -126,7 +136,7 @@ const LineBox = styled.div`
   margin-bottom: 80px;
   .inner {
     background: rgba(161, 110, 255, 0.7);
-    padding: 60px 40px;
+    padding: 2.2rem;
   }
   ul {
     display: flex;
@@ -141,9 +151,9 @@ const LineBox = styled.div`
     justify-content: center;
   }
   .num {
-    font-size: 50px;
+    font-size: 3rem;
     font-weight: bold;
-    margin-right: 20px;
+    margin-right: 1.5rem;
     font-family: 'Jost-Bold';
   }
 `;
@@ -181,7 +191,8 @@ export default function Index() {
           <LFtBox>
             <div className="tit">SeeDAO's is a network polis to connect millions nomads in Web3.</div>
             <div className="tips">
-              Our vision: Creating an alternative human living space in cyberspace outside the regional of nation-state.
+              <span>Our vision</span>Creating an alternative human living space in cyberspace outside the regional of
+              nation-state.
             </div>
           </LFtBox>
         </BannerBox>

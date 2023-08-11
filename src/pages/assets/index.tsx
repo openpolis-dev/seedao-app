@@ -35,18 +35,48 @@ const FirstLine = styled.ul`
   li {
     width: 23%;
     height: 172px;
-    border: 1px solid #f1f1f1;
-    box-sizing: border-box;
-    border-radius: 4px;
+    //border: 1px solid #f1f1f1;
+    border-radius: 10px;
     overflow: hidden;
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    //background: #008800;
+    position: relative;
     background: #fff;
-    color: #000;
+    color: #fff;
+    &:first-child {
+      background: linear-gradient(to right, #9d72fa, #6961fa);
+    }
+    &:nth-child(2) {
+      background: linear-gradient(to right, #f9a488, #fe7c7c);
+    }
+    &:nth-child(3) {
+      background: linear-gradient(to right, #f1a6b6, #8f69d2);
+    }
+    &:nth-child(4) {
+      background: linear-gradient(to right, #3bdabe, #44b5f4);
+    }
+    .inner {
+      box-sizing: border-box;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      position: relative;
+      z-index: 99;
+      //background: #008800;
+      color: #000;
+    }
+
+    .decorBg {
+      position: absolute;
+      right: 0;
+      bottom: 1rem;
+      font-size: 5.5rem;
+      font-family: 'Jost-Bold';
+      opacity: 0.04;
+      transform: scale(1, 1.5);
+      transform-origin: 0 0;
+      color: #000;
+    }
     div {
       text-align: center;
     }
@@ -59,11 +89,11 @@ const FirstLine = styled.ul`
     font-weight: 600;
     margin-bottom: 20px;
     margin-top: 10px;
-    color: #000;
+    color: #fff;
   }
   .tips {
     font-size: 12px;
-    color: #000;
+    color: #fff;
   }
 `;
 
@@ -302,29 +332,31 @@ export default function Index() {
         <Box>
           <Vault>
             <VaultOverview>
-              <div>
-                <TotalBalance>{t('Assets.TotalBalance')}</TotalBalance>
-                <TotalBalanceNum>${totalBalance}</TotalBalanceNum>
-              </div>
-              <div className="right">
-                <InfoItem>
-                  <span>{t('Assets.Wallet')}</span>
-                  <span>4</span>
-                </InfoItem>
-                <InfoItem>
-                  <span>{t('Assets.MultiSign')}</span>
-                  <span>{totalSigner}</span>
-                </InfoItem>
-                <InfoItem>
-                  <span>{t('Assets.Chain')}</span>
-                  <span>2</span>
-                </InfoItem>
-                <InfoItem className="detail">
-                  <div onClick={() => setShowVaultDetail(!showVaultDetail)}>
-                    <span>{t('Assets.Detail')}</span>
-                    <EvaIcon name={showVaultDetail ? 'arrow-ios-upward-outline' : 'arrow-ios-downward-outline'} />
-                  </div>
-                </InfoItem>
+              <div className="vaultInner">
+                <div>
+                  <TotalBalance>{t('Assets.TotalBalance')}</TotalBalance>
+                  <TotalBalanceNum>${totalBalance}</TotalBalanceNum>
+                </div>
+                <div className="right">
+                  <InfoItem>
+                    <span>{t('Assets.Wallet')}</span>
+                    <span>4</span>
+                  </InfoItem>
+                  <InfoItem>
+                    <span>{t('Assets.MultiSign')}</span>
+                    <span>{totalSigner}</span>
+                  </InfoItem>
+                  <InfoItem>
+                    <span>{t('Assets.Chain')}</span>
+                    <span>2</span>
+                  </InfoItem>
+                  <InfoItem className="detail">
+                    <div onClick={() => setShowVaultDetail(!showVaultDetail)}>
+                      <span>{t('Assets.Detail')}</span>
+                      <EvaIcon name={showVaultDetail ? 'arrow-ios-upward-outline' : 'arrow-ios-downward-outline'} />
+                    </div>
+                  </InfoItem>
+                </div>
               </div>
             </VaultOverview>
             {showVaultDetail && (
@@ -368,57 +400,69 @@ export default function Index() {
             )}
           </Vault>
           <FirstLine>
-            <li className="center">
-              <LiHead>
-                <LiTitle>{t('Assets.SupplySCR')}</LiTitle>
-                <div className="tips"></div>
-              </LiHead>
-              <div className="num">{totalSCR}</div>
-              <div style={{ textAlign: 'left' }}>
-                <p className="tips">≈{SCRValue.toFixed(2)}U</p>
-                <p className="tips">1SCR ≈ {SCR_PRICE}U</p>
+            <li>
+              <div className="inner">
+                <LiHead>
+                  <LiTitle>{t('Assets.SupplySCR')}</LiTitle>
+                  <div className="tips"></div>
+                </LiHead>
+                <div className="num">{totalSCR}</div>
+                <div style={{ textAlign: 'left' }}>
+                  <p className="tips">≈{SCRValue.toFixed(2)}U</p>
+                  <p className="tips">1SCR ≈ {SCR_PRICE}U</p>
+                </div>
               </div>
+              <div className="decorBg">SeeDAO</div>
             </li>
             <li className="center">
-              <LiHead>
-                <LiTitle>{t('Assets.SupplySGN')}</LiTitle>
-                <div className="tips"></div>
-              </LiHead>
-              <div className="num">{nftData.totalSupply}</div>
-              <div className="tips">
-                {t('Assets.FloorPrice')}: <span>{nftData.floorPrice}ETH</span>
+              <div className="inner">
+                <LiHead>
+                  <LiTitle>{t('Assets.SupplySGN')}</LiTitle>
+                  <div className="tips"></div>
+                </LiHead>
+                <div className="num">{nftData.totalSupply}</div>
+                <div className="tips">
+                  {t('Assets.FloorPrice')}: <span>{nftData.floorPrice}ETH</span>
+                </div>
               </div>
+              <div className="decorBg">SeeDAO</div>
             </li>
             <li>
-              <LiHead>
-                <LiTitle>{t('Assets.SeasonUseUSD')}</LiTitle>
-              </LiHead>
-              <div className="num">{asset.token_used_amount}</div>
-              <AssetBox className="tips">
-                <span>{t('Assets.SeasonBudget')}:</span>
-                <span>{asset.token_total_amount}</span>
-                {canUseCityhall && (
-                  <span className="btn-edit" onClick={() => setshowModifyModal(BudgetType.Token)}>
-                    <EvaIcon name="edit-2-outline" options={{ width: '16px', height: '16px' }} />
-                  </span>
-                )}
-              </AssetBox>
+              <div className="inner">
+                <LiHead>
+                  <LiTitle>{t('Assets.SeasonUseUSD')}</LiTitle>
+                </LiHead>
+                <div className="num">{asset.token_used_amount}</div>
+                <AssetBox className="tips">
+                  <span>{t('Assets.SeasonBudget')}:</span>
+                  <span>{asset.token_total_amount}</span>
+                  {canUseCityhall && (
+                    <span className="btn-edit" onClick={() => setshowModifyModal(BudgetType.Token)}>
+                      <EvaIcon name="edit-2-outline" options={{ width: '16px', height: '16px' }} />
+                    </span>
+                  )}
+                </AssetBox>
+              </div>
+              <div className="decorBg">SeeDAO</div>
             </li>
             <li className="center">
-              <LiHead>
-                <LiTitle>{t('Assets.SeasonUsedSCR')}</LiTitle>
-                <div className="tips">({t('Assets.SCRTip')})</div>
-              </LiHead>
-              <div className="num">{asset.credit_used_amount}</div>
-              <AssetBox className="tips">
-                <span>{t('Assets.SeasonBudget')}:</span>
-                <span>{asset.credit_total_amount}</span>
-                {canUseCityhall && (
-                  <span className="btn-edit" onClick={() => setshowModifyModal(BudgetType.Credit)}>
-                    <EvaIcon name="edit-2-outline" options={{ width: '16px', height: '16px' }} />
-                  </span>
-                )}
-              </AssetBox>
+              <div className="inner">
+                <LiHead>
+                  <LiTitle>{t('Assets.SeasonUsedSCR')}</LiTitle>
+                  <div className="tips">({t('Assets.SCRTip')})</div>
+                </LiHead>
+                <div className="num">{asset.credit_used_amount}</div>
+                <AssetBox className="tips">
+                  <span>{t('Assets.SeasonBudget')}:</span>
+                  <span>{asset.credit_total_amount}</span>
+                  {canUseCityhall && (
+                    <span className="btn-edit" onClick={() => setshowModifyModal(BudgetType.Credit)}>
+                      <EvaIcon name="edit-2-outline" options={{ width: '16px', height: '16px' }} />
+                    </span>
+                  )}
+                </AssetBox>
+              </div>
+              <div className="decorBg">SeeDAO</div>
             </li>
           </FirstLine>
 
@@ -440,18 +484,30 @@ const AssetBox = styled.div`
 `;
 
 const Vault = styled.div`
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-  padding: 20px;
+  //padding: 20px;
   margin-bottom: 20px;
   border-radius: 4px;
-  background: #fff;
+  //background: #fff;
   color: #000;
 `;
 
 const VaultOverview = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  //background: linear-gradient(to right, #9d72fa, #6961fa);
+  background: url('/images/homebg.png') top no-repeat;
+  background-size: 100%;
+  background-attachment: fixed;
+  //background: #f8f8f8;
+  border-radius: 10px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  .vaultInner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(161, 110, 255, 0.2);
+    padding: 30px 40px;
+    backdrop-filter: blur(5px);
+  }
   .right {
     display: flex;
     justify-content: space-between;
@@ -466,9 +522,14 @@ const InfoItem = styled.li`
     align-items: center;
     flex-direction: column;
     gap: 8px;
-    color: #000;
+    color: #fff;
     &.detail {
       cursor: pointer;
+      background: rgba(255, 255, 255, 0.4);
+      color: #000;
+      padding: 10px 20px;
+      border-radius: 10px;
+
       div {
         display: flex;
         align-items: center;
@@ -482,14 +543,21 @@ const InfoItem = styled.li`
 `;
 
 const VaultInfo = styled.ul`
-  margin-top: 30px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+  margin: 0 20px;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  padding: 30px 20px 20px;
 `;
 const VaultItem = styled.li`
   display: flex;
   justify-content: space-between;
-  border-top: 1px solid rgba(255, 255, 255, 0.3);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   padding-block: 20px;
   color: #000;
+  &:last-child {
+    border-bottom: 0;
+  }
   .left {
     display: flex;
     gap: 60px;
@@ -554,10 +622,15 @@ const Tag = styled.span`
 `;
 
 const LiHead = styled.div`
-  height: 40px;
+  //height: 40px;
+  width: 100%;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+  padding-bottom: 10px;
+  margin-bottom: 10px;
 `;
 
 const LiTitle = styled.div`
+  color: #fff;
   ${({ theme }) => css`
     font-weight: ${theme.textSubtitleFontWeight};
   `}

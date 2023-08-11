@@ -18,8 +18,13 @@ ${({ theme }) => css`
     font-family: 'Jost-SemiBold';
     src: url('/fonts/Jost-SemiBold.ttf');
   }
+  @font-face {
+    font-family: 'Barlow-Regular';
+    src: url('/fonts/Barlow-Regular.ttf');
+  }
   html {
     font-size: 16px;
+    font-family: 'Barlow-Regular';
   }
 
   html,

@@ -32,9 +32,13 @@ const getDefaultTheme = (): DefaultTheme['name'] => {
 };
 
 const Box = styled.div`
-  //.menu-sidebar,.main-container{
-  //  width: 12rem!important;
-  //}
+  .menu-title {
+    font-family: 'Barlow-Regular';
+  }
+  .expanded.menu-sidebar,
+  .expanded .main-container {
+    width: 12rem;
+  }
 `;
 
 const LayoutPage: React.FC<SEOProps> = ({ children, ...rest }) => {
@@ -93,7 +97,7 @@ const LayoutPage: React.FC<SEOProps> = ({ children, ...rest }) => {
   useEffect(() => {
     const pt = router.pathname;
 
-    const arr = ['proposal', 'project', 'guild', 'chat', 'city-hall', 'assets'];
+    const arr = ['proposal', 'project', 'guild', 'chat', 'city-hall', 'assets', 'home'];
     const arrCurrent = arr.find((item) => pt.indexOf(item) > -1);
 
     if (arrCurrent) {
@@ -119,7 +123,7 @@ const LayoutPage: React.FC<SEOProps> = ({ children, ...rest }) => {
                 theme={{ set: changeTheme, value: theme }}
                 toggleSidebar={() => sidebarRef.current?.toggle()}
               />
-              <LayoutContainer>
+              <LayoutContainer style={{ background: '#F0F3F8' }}>
                 <Sidebar
                   getState={getState}
                   ref={sidebarRef}
@@ -158,9 +162,7 @@ const LayoutPage: React.FC<SEOProps> = ({ children, ...rest }) => {
                 </Sidebar>
                 <LayoutContent>
                   <LayoutColumns>
-                    <LayoutColumn className="main-content" style={{ background: '#f5f5f5' }}>
-                      {children}
-                    </LayoutColumn>
+                    <LayoutColumn className="main-content">{children}</LayoutColumn>
                   </LayoutColumns>
                 </LayoutContent>
               </LayoutContainer>
