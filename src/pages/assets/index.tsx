@@ -318,7 +318,7 @@ export default function Index() {
 
   useEffect(() => {
     getSCR();
-    getFloorPrice();
+    process.env.NODE_ENV === 'production' && process.env.NEXT_PUBLIC_ENV !== 'test' && getFloorPrice();
     getVaultsInfo();
   }, []);
 
