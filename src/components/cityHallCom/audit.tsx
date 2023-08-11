@@ -68,7 +68,7 @@ const BorderBox = styled.div`
 `;
 
 const TopBox = styled.div`
-  background: #f5f5f5;
+  background: #f0f3f8;
   display: flex;
   justify-content: flex-start;
   padding: 10px;

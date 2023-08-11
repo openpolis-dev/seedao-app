@@ -15,7 +15,7 @@ const items: CMenuItemType[] = [
   },
   {
     title: 'menus.Project',
-    icon: { name: 'layout-outline' },
+    icon: { name: 'pie-chart-outline' },
     link: { href: '/project' },
   },
   {
@@ -24,8 +24,13 @@ const items: CMenuItemType[] = [
     link: { href: '/guild' },
   },
   {
+    title: 'menus.Event',
+    icon: { name: 'checkmark-square-2-outline' },
+    link: { href: '/event' },
+  },
+  {
     title: 'menus.Chat',
-    icon: { name: 'browser-outline' },
+    icon: { name: 'message-circle-outline' },
     link: { href: '/chat' },
     value: 'chat',
   },
