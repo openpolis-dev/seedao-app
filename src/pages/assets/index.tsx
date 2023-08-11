@@ -221,7 +221,7 @@ export default function Index() {
       const url = 'https://restapi.nftscan.com/api/v2/statistics/collection/0x23fda8a873e9e46dbe51c78754dddccfbc41cfe1';
       const res = await axios.get(url, {
         headers: {
-          'X-API-KEY': '3zrxnAwBgp72veeonB8KW2fa',
+          'X-API-KEY': 'laP3Go52WW4oBXdt7zhJ7aoj',
         },
       });
       setNftData({
@@ -318,7 +318,7 @@ export default function Index() {
 
   useEffect(() => {
     getSCR();
-    getFloorPrice();
+    process.env.NODE_ENV === 'production' && process.env.NEXT_PUBLIC_ENV !== 'test' && getFloorPrice();
     getVaultsInfo();
   }, []);
 
