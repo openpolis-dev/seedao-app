@@ -162,7 +162,9 @@ export default function Index() {
     },
   ]);
 
-  const toGo = () => {};
+  const toGo = () => {
+    // TODO
+  };
   return (
     <Layout title="SeeDAO Project">
       <Card>

@@ -148,7 +148,9 @@ export default function CreateGuild() {
     }
   };
 
-  const handleSubmit = async () => {};
+  const handleSubmit = async () => {
+    // TODO
+  };
 
   const getBase64 = (imgUrl: string) => {
     window.URL = window.URL || window.webkitURL;
