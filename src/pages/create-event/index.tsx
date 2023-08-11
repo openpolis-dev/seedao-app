@@ -7,14 +7,8 @@ import { Button } from '@paljs/ui/Button';
 import { EvaIcon } from '@paljs/ui/Icon';
 import { useRouter } from 'next/router';
 import useTranslation from 'hooks/useTranslation';
-import { createProjects } from 'requests/guild';
-import { BudgetType, IBaseProject } from 'type/project.type';
-import { AppActionType, useAuthContext } from 'providers/authProvider';
-import useToast, { ToastType } from 'hooks/useToast';
-import { AssetName } from 'utils/constant';
-import InputNumber from 'components/inputNumber';
-import Col from '@paljs/ui/Col';
-import Row from '@paljs/ui/Row';
+import { useAuthContext } from 'providers/authProvider';
+import useToast from 'hooks/useToast';
 
 const Box = styled.div`
   .btnBtm {
@@ -27,10 +21,12 @@ const CardBox = styled(Card)`
 `;
 
 const BtmBox = styled.div`
-  margin-top: 50px;
+  margin: 50px 0;
+  padding-left: 440px;
 `;
 
 const UlBox = styled.ul`
+  width: 100%;
   li {
     display: flex;
     align-items: flex-start;
@@ -41,25 +37,16 @@ const UlBox = styled.ul`
       margin-right: 20px;
       line-height: 2.5em;
       min-width: 180px;
-      background: #f8f8f8;
+      background: #f7f9fc;
       padding: 0 20px;
+      text-align: right;
     }
   }
 `;
 
 const InputBox = styled(InputGroup)`
-  width: 600px;
   margin-right: 20px;
-`;
-
-const ItemBox = styled.div`
-  margin-bottom: 10px;
-  display: flex;
-  align-items: center;
-  .titleLft {
-    margin-right: 10px;
-    width: 50px;
-  }
+  width: 100%;
 `;
 
 const BackBox = styled.div`
@@ -73,18 +60,19 @@ const BackBox = styled.div`
 `;
 
 const BtnBox = styled.label`
-  background: #f8f8f8;
-  height: 200px;
-  width: 200px;
+  background: #f7f9fc;
+  height: 566px;
+  width: 400px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 4px;
-  margin-top: 20px;
   font-family: 'Inter-Regular';
   font-weight: 700;
   font-size: 14px;
   margin-bottom: 40px;
+  margin-right: 40px;
+  flex-shrink: 0;
   .iconRht {
     margin-right: 10px;
   }
@@ -114,149 +102,53 @@ const ImgBox = styled.div`
   }
 `;
 
+const InnerBox = styled.div`
+  display: flex;
+  align-content: flex-start;
+`;
+
 export default function CreateGuild() {
   const router = useRouter();
   const { t } = useTranslation();
   const { Toast, showToast } = useToast();
-  const { dispatch } = useAuthContext();
-  const [adminList, setAdminList] = useState(['']);
-  const [memberList, setMemberList] = useState(['']);
-  const [proList, setProList] = useState(['']);
-  const [token, setToken] = useState<number>();
 
-  const [credit, setCredit] = useState<number>();
-
-  const [proName, setProName] = useState('');
+  const [title, setTitle] = useState('');
+  const [startAt, setStartAt] = useState('');
+  const [endAt, setEndAt] = useState('');
+  const [sponsor, setSponsor] = useState('');
+  const [moderator, setmoderator] = useState('');
+  const [guest, setGuest] = useState('');
+  const [volunteer, setVolunteer] = useState('');
   const [url, setUrl] = useState('');
 
-  const handleInput = (e: ChangeEvent, index: number, type: string) => {
+  const handleInput = (e: ChangeEvent, type: string) => {
     const { value } = e.target as HTMLInputElement;
-    let arr: any[] = [];
     switch (type) {
-      case 'member':
-        arr = [...memberList];
-        arr[index] = value;
-        setMemberList(arr);
+      case 'title':
+        setTitle(value);
         break;
-      case 'admin':
-        arr = [...adminList];
-        arr[index] = value;
-        setAdminList(arr);
+      case 'startAt':
+        setStartAt(value);
         break;
-      case 'proposal':
-        arr = [...proList];
-        arr[index] = value;
-        setProList(arr);
+      case 'endAt':
+        setEndAt(value);
         break;
-      case 'proName':
-        setProName(value);
+      case 'sponsor':
+        setSponsor(value);
         break;
-      case 'credit':
-        setCredit(Number(value));
+      case 'moderator':
+        setmoderator(value);
         break;
-      case 'token':
-        setToken(Number(value));
+      case 'guest':
+        setGuest(value);
+        break;
+      case 'volunteer':
+        setVolunteer(value);
         break;
     }
   };
 
-  const handleAdd = (type: string) => {
-    let arr: any[] = [];
-    switch (type) {
-      case 'member':
-        arr = [...memberList];
-        arr.push('');
-        setMemberList(arr);
-        break;
-      case 'admin':
-        arr = [...adminList];
-        arr.push('');
-        setAdminList(arr);
-        break;
-      case 'proposal':
-        arr = [...proList];
-        arr.push('');
-        setProList(arr);
-        break;
-    }
-  };
-  const removeItem = (index: number, type: string) => {
-    let arr: any[] = [];
-    switch (type) {
-      case 'member':
-        arr = [...memberList];
-        arr.splice(index, 1);
-        setMemberList(arr);
-        break;
-      case 'admin':
-        arr = [...adminList];
-        arr.splice(index, 1);
-        setAdminList(arr);
-        break;
-      case 'proposal':
-        arr = [...proList];
-        arr.splice(index, 1);
-        setProList(arr);
-        break;
-    }
-  };
-  const handleSubmit = async () => {
-    const ids: string[] = [];
-    for (const l of proList) {
-      if (l) {
-        if (l.startsWith('https://forum.seedao.xyz/thread/')) {
-          const items = l.split('/').reverse();
-          for (const it of items) {
-            if (it) {
-              const _id = it.split('-').reverse()[0];
-              ids.push(_id);
-              break;
-            }
-          }
-        } else if (l.indexOf('/proposal/thread/') > -1) {
-          const items = l.split('/').reverse();
-          for (const it of items) {
-            if (it) {
-              ids.push(it);
-              break;
-            }
-          }
-        } else {
-          showToast(t('Msg.ProposalLinkMsg'), ToastType.Danger);
-          return;
-        }
-      }
-    }
-    const obj: IBaseProject = {
-      logo: url,
-      name: proName,
-      sponsors: adminList,
-      members: memberList,
-      proposals: ids,
-      budgets: [
-        {
-          name: AssetName.Token,
-          total_amount: token || 0,
-          budget_type: BudgetType.Token,
-        },
-        {
-          name: AssetName.Credit,
-          total_amount: credit || 0,
-          budget_type: BudgetType.Credit,
-        },
-      ],
-    };
-    dispatch({ type: AppActionType.SET_LOADING, payload: true });
-    try {
-      await createProjects(obj);
-      showToast(t('Guild.createSuccess'), ToastType.Success);
-      router.push('/guild');
-    } catch (error) {
-      showToast(t('Guild.createFailed'), ToastType.Danger);
-    } finally {
-      dispatch({ type: AppActionType.SET_LOADING, payload: null });
-    }
-  };
+  const handleSubmit = async () => {};
 
   const getBase64 = (imgUrl: string) => {
     window.URL = window.URL || window.webkitURL;
@@ -297,159 +189,80 @@ export default function CreateGuild() {
           </BackBox>
           <CardHeader> Create Event</CardHeader>
           <CardBody>
-            <BtnBox htmlFor="fileUpload" onChange={(e) => updateLogo(e)}>
-              {!url && (
-                <div>
-                  <input id="fileUpload" type="file" hidden accept=".jpg, .jpeg, .png, .svg" />
-                  <EvaIcon name="cloud-upload-outline" className="iconRht" />
-                  <span> {t('Guild.upload')}</span>
-                </div>
-              )}
-              {!!url && (
-                <ImgBox>
-                  <div className="del" onClick={() => removeUrl()}>
-                    <EvaIcon name="close-outline" status="Control" />
+            <InnerBox>
+              <BtnBox htmlFor="fileUpload" onChange={(e) => updateLogo(e)}>
+                {!url && (
+                  <div>
+                    <input id="fileUpload" type="file" hidden accept=".jpg, .jpeg, .png, .svg" />
+                    <EvaIcon name="cloud-upload-outline" className="iconRht" />
+                    <span> Upload Image</span>
                   </div>
-                  <img src={url} alt="" />
-                </ImgBox>
-              )}
-            </BtnBox>
-            <UlBox>
-              <li>
-                <div className="title">{t('Guild.ProjectName')}</div>
-                <InputBox fullWidth>
-                  <input
-                    type="text"
-                    placeholder={t('Guild.ProjectName')}
-                    value={proName}
-                    onChange={(e) => handleInput(e, 0, 'proName')}
-                  />
-                </InputBox>
-              </li>
-              <li>
-                <div className="title">{t('Guild.Dominator')}</div>
-                <div>
-                  {adminList.map((item, index) => (
-                    <ItemBox key={`mem_${index}`}>
-                      <InputBox fullWidth>
-                        <input
-                          type="text"
-                          placeholder={t('Guild.Dominator')}
-                          value={item}
-                          onChange={(e) => handleInput(e, index, 'admin')}
-                        />
-                      </InputBox>
-                      {index === adminList.length - 1 && (
-                        <span onClick={() => handleAdd('admin')}>
-                          <EvaIcon name="plus-outline" status="Primary" />
-                        </span>
-                      )}
-
-                      {!(!index && index === adminList.length - 1) && (
-                        <span onClick={() => removeItem(index, 'admin')}>
-                          <EvaIcon name="minus-outline" status="Primary" />
-                        </span>
-                      )}
-                    </ItemBox>
-                  ))}
-                </div>
-              </li>
-              <li>
-                <div className="title">{t('Guild.AssociatedProposal')}</div>
-                <div>
-                  {proList.map((item, index) => (
-                    <ItemBox key={`mem_${index}`}>
-                      <InputBox fullWidth>
-                        <input
-                          type="text"
-                          placeholder={`${t('Guild.AssociatedProposal')}, eg. https://forum.seedao.xyz/thread...`}
-                          value={item}
-                          onChange={(e) => handleInput(e, index, 'proposal')}
-                        />
-                      </InputBox>
-                      {index === proList.length - 1 && (
-                        <span onClick={() => handleAdd('proposal')}>
-                          <EvaIcon name="plus-outline" status="Primary" />
-                        </span>
-                      )}
-
-                      {!(!index && index === proList.length - 1) && (
-                        <span onClick={() => removeItem(index, 'proposal')}>
-                          <EvaIcon name="minus-outline" status="Primary" />
-                        </span>
-                      )}
-                    </ItemBox>
-                  ))}
-                </div>
-              </li>
-              <li>
-                <div className="title">{t('Guild.Budget')}</div>
-                <div>
-                  <ItemBox>
-                    <span className="titleLft">{t('Guild.Points')}</span>
-                    <InputGroup fullWidth>
-                      <InputNumber
-                        placeholder={t('Guild.Points')}
-                        value={credit}
-                        onChange={(e) => handleInput(e, 0, 'credit')}
-                      />
-                    </InputGroup>
-                  </ItemBox>
-                  <ItemBox>
-                    <span className="titleLft">USD</span>
-                    <InputGroup fullWidth>
-                      <InputNumber placeholder="USD" value={token} onChange={(e) => handleInput(e, 0, 'token')} />
-                    </InputGroup>
-                  </ItemBox>
-                </div>
-              </li>
-              <li>
-                <div className="title">{t('Guild.Members')}</div>
-                <div>
-                  {memberList.map((item, index) => (
-                    <ItemBox key={`mem_${index}`}>
-                      <InputBox fullWidth>
-                        <input
-                          type="text"
-                          placeholder={t('Guild.Members')}
-                          value={item}
-                          onChange={(e) => handleInput(e, index, 'member')}
-                        />
-                      </InputBox>
-                      {index === memberList.length - 1 && (
-                        <span onClick={() => handleAdd('member')}>
-                          <EvaIcon name="plus-outline" status="Primary" />
-                        </span>
-                      )}
-
-                      {!(!index && index === memberList.length - 1) && (
-                        <span onClick={() => removeItem(index, 'member')}>
-                          <EvaIcon name="minus-outline" status="Primary" />
-                        </span>
-                      )}
-                    </ItemBox>
-                  ))}
-                </div>
-              </li>
-            </UlBox>
+                )}
+                {!!url && (
+                  <ImgBox>
+                    <div className="del" onClick={() => removeUrl()}>
+                      <EvaIcon name="close-outline" status="Control" />
+                    </div>
+                    <img src={url} alt="" />
+                  </ImgBox>
+                )}
+              </BtnBox>
+              <UlBox>
+                <li>
+                  <div className="title">活动名称</div>
+                  <InputBox fullWidth>
+                    <input type="text" placeholder="项目名称" value={title} onChange={(e) => handleInput(e, 'title')} />
+                  </InputBox>
+                </li>
+                <li>
+                  <div className="title">开始时间</div>
+                  <InputBox fullWidth>
+                    <input type="text" value={startAt} onChange={(e) => handleInput(e, 'startAt')} />
+                  </InputBox>
+                </li>
+                <li>
+                  <div className="title">结束时间</div>
+                  <InputBox fullWidth>
+                    <input type="text" value={endAt} onChange={(e) => handleInput(e, 'endAt')} />
+                  </InputBox>
+                </li>
+                <li>
+                  <div className="title">主办</div>
+                  <InputBox fullWidth>
+                    <input type="text" value={sponsor} onChange={(e) => handleInput(e, 'sponsor')} />
+                  </InputBox>
+                </li>
+                <li>
+                  <div className="title">主持人</div>
+                  <InputBox fullWidth>
+                    <input type="text" value={moderator} onChange={(e) => handleInput(e, 'moderator')} />
+                  </InputBox>
+                </li>
+                <li>
+                  <div className="title">嘉宾</div>
+                  <InputBox fullWidth>
+                    <input type="text" value={guest} onChange={(e) => handleInput(e, 'guest')} />
+                  </InputBox>
+                </li>
+                <li>
+                  <div className="title">志愿者</div>
+                  <InputBox fullWidth>
+                    <input type="text" value={volunteer} onChange={(e) => handleInput(e, 'volunteer')} />
+                  </InputBox>
+                </li>
+                <li>
+                  <div className="title">内容</div>
+                  <InputBox fullWidth>
+                    <textarea name="d" id=""></textarea>
+                  </InputBox>
+                </li>
+              </UlBox>
+            </InnerBox>
             <BtmBox>
               <Button appearance="outline" className="btnBtm">
                 {t('general.cancel')}
               </Button>
-              <Button
-                onClick={() => handleSubmit()}
-                disabled={
-                  proName?.length === 0 ||
-                  url?.length === 0 ||
-                  (credit && credit < 0) ||
-                  (token && token < 0) ||
-                  (adminList?.length === 1 && adminList[0]?.length === 0) ||
-                  (proList?.length === 1 && proList[0]?.length === 0) ||
-                  (memberList?.length === 1 && memberList[0]?.length === 0)
-                }
-              >
-                {t('general.confirm')}
-              </Button>
+              <Button onClick={() => handleSubmit()}>{t('general.confirm')}</Button>
             </BtmBox>
           </CardBody>
         </CardBox>

@@ -4,6 +4,7 @@ import * as user from './user';
 import * as application from './applications';
 import * as guild from './guild';
 import * as treasury from './treasury';
+import * as event from './event';
 
 export default {
   project,
@@ -12,4 +13,5 @@ export default {
   application,
   guild,
   treasury,
+  event,
 };
