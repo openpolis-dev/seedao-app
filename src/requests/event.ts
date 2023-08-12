@@ -35,3 +35,7 @@ export const getEventById = (id: string) => {
 export const editEventById = (id: string, data: Ievent) => {
   return request.put(`${PATH_PREFIX}/${id}`, data);
 };
+
+export const getMyEvent = (data: IPageParams) => {
+  return request.get(`my_events`, data);
+};

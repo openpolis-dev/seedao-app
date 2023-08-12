@@ -23,55 +23,64 @@ export default function SBTCard() {
   }, [polygonProvider]);
 
   return (
-    <SBTCardBox>
+    <Box>
       <div className="title">SBT</div>
-      <SBTList>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-      </SBTList>
-    </SBTCardBox>
+      <SBTCardBox>
+        <SBTList>
+          {[...Array(5)].map((item, index) => (
+            <li key={index}>
+              <img
+                src="https://seedao-os-superapp.s3.ap-northeast-2.amazonaws.com/user_avatars/0x183f09c3ce99c02118c570e03808476b22d63191.jpg"
+                alt=""
+              />
+            </li>
+          ))}
+        </SBTList>
+      </SBTCardBox>
+    </Box>
   );
 }
 
-const SBTCardBox = styled.div`
-  border-radius: 20px;
-  background: #fff;
-  box-shadow: 0px 0px 6px 0px rgba(0, 0, 0, 0.18);
-  height: 160px;
+const Box = styled.div`
   .title {
-    font-size: 36px;
+    font-size: 15px;
     font-style: normal;
     font-weight: 700;
-    width: 150px;
     text-align: center;
     display: inline-block;
-    line-height: 160px;
   }
 `;
 
+const SBTCardBox = styled.div`
+  //border-radius: 20px;
+  //box-shadow: 0px 0px 6px 0px rgba(0, 0, 0, 0.18);
+  //height: 160px;
+  //background: #f00;
+`;
+
 const SBTList = styled.ul`
-  width: calc(100% - 150px);
+  //width: calc(100% - 150px);
+  width: 100%;
   float: right;
-  overflow-x: auto;
+  //overflow-x: auto;
   display: flex;
+  flex-wrap: wrap;
   gap: 20px;
   align-items: center;
-  margin-top: 32px;
+  margin: 20px 0 40px;
+
   li {
     width: 96px;
     height: 96px;
+    flex-shrink: 0;
     border-radius: 50%;
     background-color: #d9d9d9;
     img {
-      width: 80px;
-      height: 80px;
+      width: 88px;
+      height: 88px;
       border-radius: 50%;
-      margin-top: 8px;
-      margin-left: 8px;
+      margin-top: 4px;
+      margin-left: 4px;
     }
   }
 `;

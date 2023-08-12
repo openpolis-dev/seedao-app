@@ -6,8 +6,10 @@ import Col from '@paljs/ui/Col';
 import Row from '@paljs/ui/Row';
 import { ButtonLink } from '@paljs/ui/Button';
 import { useRouter } from 'next/router';
-import { getEventList } from 'requests/event';
+import { getEventList, getMyEvent } from 'requests/event';
 import Page from 'components/pagination';
+import { Tab, Tabs } from '@paljs/ui/Tabs';
+import { AppActionType, useAuthContext } from 'providers/authProvider';
 
 const Box = styled.div`
   padding: 40px 0;
@@ -99,6 +101,10 @@ const TitBox = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  position: relative;
+  .titLft {
+    width: 100%;
+  }
 `;
 
 const RhtBox = styled.div``;
@@ -136,20 +142,31 @@ const PageBox = styled.div`
   margin: 0 40px;
 `;
 
-const RhtBoxT = styled.div``;
+const RhtBoxT = styled.div`
+  position: absolute;
+  right: 0;
+  top: 0;
+`;
 export default function Index() {
   const router = useRouter();
+
+  const { dispatch } = useAuthContext();
   const [pageCur, setPageCur] = useState(1);
   const [pageSize, setPageSize] = useState(20);
   const [total, setTotal] = useState(1);
-
+  const [current, setCurrent] = useState<number>(0);
   const [list, setList] = useState([]);
 
   useEffect(() => {
-    getList();
-  }, [pageCur]);
+    if (!current) {
+      getList();
+    } else {
+      getMyList();
+    }
+  }, [pageCur, current]);
 
   const getList = async () => {
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
     const rt = await getEventList({
       page: pageCur,
       size: pageSize,
@@ -157,7 +174,7 @@ export default function Index() {
       sort_field: 'start_at',
       state: '',
     });
-
+    dispatch({ type: AppActionType.SET_LOADING, payload: null });
     const { rows, total, size, page } = rt.data;
     setList(rows);
     setPageCur(page);
@@ -166,8 +183,30 @@ export default function Index() {
     // setList(rt.data)
   };
 
+  const getMyList = async () => {
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    const rt = await getMyEvent({
+      page: pageCur,
+      size: pageSize,
+      sort_order: 'desc',
+      sort_field: 'start_at',
+      state: '',
+    });
+    dispatch({ type: AppActionType.SET_LOADING, payload: null });
+    const { rows, total, size, page } = rt.data;
+    setList(rows);
+    setPageCur(page);
+    setPageSize(size);
+    setTotal(total);
+  };
+
   const handlePage = (num: number) => {
     setPageCur(num + 1);
+  };
+
+  const selectCurrent = (e: number) => {
+    setCurrent(e);
+    setPageCur(1);
   };
 
   return (
@@ -176,10 +215,17 @@ export default function Index() {
         <Box>
           <ActiveBox>
             <TitBox>
-              <span>Events</span>
+              <div className="titLft">
+                <Tabs activeIndex={0} onSelect={(e) => selectCurrent(e)}>
+                  <Tab title="Events" responsive />
+                  <Tab title="My Events" responsive />
+                </Tabs>
+              </div>
+
+              {/*<span>Events</span>*/}
               <RhtBoxT>
-                <ButtonLink onClick={() => router.push('/create-event/')} fullWidth shape="Rectangle">
-                  Create
+                <ButtonLink onClick={() => router.push('/event/info')} fullWidth shape="Rectangle">
+                  Create Event
                 </ButtonLink>
               </RhtBoxT>
             </TitBox>
@@ -188,7 +234,7 @@ export default function Index() {
                 <Col
                   breakPoint={{ xs: 3, sm: 3, md: 3, lg: 2.4 }}
                   key={idx}
-                  onClick={() => router.push(`event/info/${item.id}`)}
+                  onClick={() => router.push(`event/info?id=${item.id}`)}
                 >
                   <CardBox>
                     <Item>

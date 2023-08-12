@@ -10,6 +10,8 @@ import * as eventsAPI from 'requests/event';
 import { Ievent } from 'type/event';
 import { formatTime } from 'utils/time';
 import { GOV_NODE_CONTRACT, SGN_CONTRACT } from 'utils/constant';
+import { useRouter } from 'next/router';
+import { AppActionType, useAuthContext } from 'providers/authProvider';
 
 const CITY_HALL = 'https://seedao.notion.site/07c258913c5d4847b59271e2ae6f7c66';
 const CITY_HALL_MEMBERS = 'https://www.notion.so/3913d631d7bc49e1a0334140e3cd84f5';
@@ -212,6 +214,8 @@ const LinkBox = styled.ul`
 
 export default function Index() {
   const { t } = useTranslation();
+  const router = useRouter();
+  const { dispatch } = useAuthContext();
   const [list, setList] = useState<{ name: string; image: string; start: string }[]>([]);
   const [sgnHolders, setSgnHolders] = useState(0);
   const [governNodes, setGovernNodes] = useState(0);
@@ -245,10 +249,13 @@ export default function Index() {
 
   useEffect(() => {
     const getEvents = async () => {
+      dispatch({ type: AppActionType.SET_LOADING, payload: true });
       try {
         const res = await eventsAPI.getEventList({ page: 0, size: 5, sort_order: 'desc', sort_field: 'start_at' });
+        dispatch({ type: AppActionType.SET_LOADING, payload: false });
         const events = res.data.rows.map((item: Ievent) => {
           return {
+            id: item.id,
             name: item.title,
             image: item.cover_img,
             start: formatTime(item.start_at),
@@ -296,7 +303,11 @@ export default function Index() {
           <TitBox>{t('Home.Events')}</TitBox>
           <Row>
             {list.map((item, idx) => (
-              <Col breakPoint={{ xs: 3, sm: 3, md: 3, lg: 2.4 }} key={idx}>
+              <Col
+                breakPoint={{ xs: 3, sm: 3, md: 3, lg: 2.4 }}
+                key={idx}
+                onClick={() => router.push(`event/info?id=${item.id}`)}
+              >
                 <CardBox>
                   <Item>
                     <ImageBox>

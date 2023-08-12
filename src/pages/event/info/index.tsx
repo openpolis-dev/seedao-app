@@ -7,20 +7,13 @@ import { Button } from '@paljs/ui/Button';
 import { EvaIcon } from '@paljs/ui/Icon';
 import { useRouter } from 'next/router';
 import useTranslation from 'hooks/useTranslation';
-import { useAuthContext } from 'providers/authProvider';
-import useToast from 'hooks/useToast';
+import { AppActionType, useAuthContext } from 'providers/authProvider';
+import useToast, { ToastType } from 'hooks/useToast';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { MdEditor } from 'md-editor-rt';
 import 'md-editor-rt/lib/style.css';
 import { createEvent, editEventById, getEventById, uplodaEventImage } from 'requests/event';
-// import dynamic from 'next/dynamic';
-// dynamic(
-//   import('/font_2605852_u82y61ve02.js'),
-//   {
-//     ssr: false
-//   }
-// )
 
 const Box = styled.div`
   .btnBtm {
@@ -159,6 +152,8 @@ export default function CreateGuild() {
 
   const { id } = router.query;
 
+  const { dispatch } = useAuthContext();
+
   const [title, setTitle] = useState('');
   const [startAt, setStartAt] = useState<number>();
   const [endAt, setEndAt] = useState<number>();
@@ -208,27 +203,32 @@ export default function CreateGuild() {
   }, [id]);
 
   const getDetail = async () => {
-    // dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
     const dt = await getEventById(id as string);
+    dispatch({ type: AppActionType.SET_LOADING, payload: false });
     const { metadata, title, start_at, end_at, content, cover_img } = dt.data;
-    console.log(metadata);
-
-    const { sponsor, moderator, media, guest, volunteer } = JSON.parse(metadata);
-    console.log(sponsor);
 
     setTitle(title);
     const st = new Date(start_at);
     setStartAt(st.valueOf());
     const et = new Date(end_at);
     setEndAt(et.valueOf());
-
-    setSponsor(sponsor);
-    setmoderator(moderator);
-    setMedia(media);
-    setGuest(guest);
-    setVolunteer(volunteer);
-    setContent(content);
     setUrl(cover_img);
+    setContent(content);
+    if (metadata) {
+      const { sponsor, moderator, media, guest, volunteer } = JSON.parse(metadata);
+      setSponsor(sponsor);
+      setmoderator(moderator);
+      setMedia(media);
+      setGuest(guest);
+      setVolunteer(volunteer);
+    } else {
+      setSponsor('');
+      setmoderator('');
+      setMedia('');
+      setGuest('');
+      setVolunteer('');
+    }
 
     // setMeta(JSON.parse(meta))
 
@@ -278,6 +278,7 @@ export default function CreateGuild() {
       moderator,
       volunteer,
       media,
+      guest,
     };
 
     const start_at = Math.floor(startAt! / 1000).toString();
@@ -291,12 +292,20 @@ export default function CreateGuild() {
       end_at,
       metadata: JSON.stringify(itemObj),
     };
-    console.log(obj);
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
-      const rt = await editEventById(id, obj);
-      console.log(rt);
+      let rt;
+      if (id) {
+        rt = await editEventById(id, obj);
+      } else {
+        rt = await createEvent(obj);
+      }
+
+      showToast('Success', ToastType.Success);
     } catch (e) {
       console.error('create event error:', e);
+    } finally {
+      dispatch({ type: AppActionType.SET_LOADING, payload: null });
     }
   };
 
@@ -325,7 +334,7 @@ export default function CreateGuild() {
             </BackBox>
           </div>
 
-          <CardHeader> Create Event</CardHeader>
+          <CardHeader> {id ? 'Edit Event' : 'Create Event'}</CardHeader>
           <CardBody>
             <InnerBox>
               <BtnBox htmlFor="fileUpload" onChange={(e) => updateLogo(e)}>
