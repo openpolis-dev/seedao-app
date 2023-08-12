@@ -269,7 +269,7 @@ export default function Index() {
             id: item.id,
             name: item.title,
             image: item.cover_img,
-            start: formatTime(item.start_at),
+            start: formatTime(new Date(item.start_at).valueOf()),
           };
         });
         setList(events);
