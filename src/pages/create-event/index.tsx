@@ -86,7 +86,7 @@ const InputBox = styled(InputGroup)`
 
 const BackBox = styled.div`
   padding: 30px 20px;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   cursor: pointer;
   .icon {
@@ -270,7 +270,7 @@ export default function CreateGuild() {
       content,
       start_at,
       end_at,
-      meta: JSON.stringify(itemObj),
+      metadata: JSON.stringify(itemObj),
     };
     console.log(obj);
     try {
@@ -300,9 +300,12 @@ export default function CreateGuild() {
       <Box>
         {Toast}
         <CardBox>
-          <BackBox onClick={() => router.back()}>
-            <EvaIcon name="chevron-left-outline" className="icon" /> <span>{t('general.back')}</span>
-          </BackBox>
+          <div>
+            <BackBox onClick={() => router.back()}>
+              <EvaIcon name="chevron-left-outline" className="icon" /> <span>{t('general.back')}</span>
+            </BackBox>
+          </div>
+
           <CardHeader> Create Event</CardHeader>
           <CardBody>
             <InnerBox>

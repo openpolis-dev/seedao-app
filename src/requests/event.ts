@@ -28,3 +28,6 @@ export const uplodaEventImage = async (filename: string, type: string, fileData:
 export const getEventList = (data: IPageParams) => {
   return request.get(`${PATH_PREFIX}/`, data);
 };
+export const getEventById = (id: string) => {
+  return request.get(`${PATH_PREFIX}/${id}`);
+};
