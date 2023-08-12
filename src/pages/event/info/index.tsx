@@ -3,7 +3,7 @@ import { Card, CardHeader, CardBody } from '@paljs/ui/Card';
 import styled from 'styled-components';
 import { InputGroup } from '@paljs/ui/Input';
 import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react';
-import { Button } from '@paljs/ui/Button';
+import { Button, ButtonLink } from '@paljs/ui/Button';
 import { EvaIcon } from '@paljs/ui/Icon';
 import { useRouter } from 'next/router';
 import useTranslation from 'hooks/useTranslation';
@@ -433,9 +433,9 @@ export default function CreateGuild() {
               />
             </ContentBox>
             <BtmBox>
-              <Button appearance="outline" className="btnBtm">
+              <ButtonLink appearance="outline" className="btnBtm" onClick={() => router.push('/event')}>
                 {t('general.cancel')}
-              </Button>
+              </ButtonLink>
               <Button onClick={() => handleSubmit()}>{t('general.confirm')}</Button>
             </BtmBox>
           </CardBody>

@@ -29,10 +29,10 @@ export default function SBTCard() {
         <SBTList>
           {[...Array(5)].map((item, index) => (
             <li key={index}>
-              <img
-                src="https://seedao-os-superapp.s3.ap-northeast-2.amazonaws.com/user_avatars/0x183f09c3ce99c02118c570e03808476b22d63191.jpg"
-                alt=""
-              />
+              {/*<img*/}
+              {/*  src="https://seedao-os-superapp.s3.ap-northeast-2.amazonaws.com/user_avatars/0x183f09c3ce99c02118c570e03808476b22d63191.jpg"*/}
+              {/*  alt=""*/}
+              {/*/>*/}
             </li>
           ))}
         </SBTList>

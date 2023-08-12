@@ -168,7 +168,7 @@ const LineBox = styled.div`
 `;
 
 const CityBox = styled.div`
-  margin: 0 40px;
+  margin: 0 2rem;
 `;
 
 const LinkBox = styled.ul`
