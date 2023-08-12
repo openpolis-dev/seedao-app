@@ -6,6 +6,8 @@ import Col from '@paljs/ui/Col';
 import Row from '@paljs/ui/Row';
 import { Button, ButtonLink } from '@paljs/ui/Button';
 import { useRouter } from 'next/router';
+import { getEventList } from 'requests/event';
+import Page from 'components/pagination';
 
 const Box = styled.div`
   padding: 40px 0;
@@ -27,7 +29,7 @@ const Item = styled.div`
   .title {
     font-size: 1rem;
     line-height: 1.5em;
-    height: 1.5rem;
+    height: 3rem;
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
@@ -126,45 +128,44 @@ const LineBox = styled.div`
   }
 `;
 
-const CityBox = styled.div`
+const PageBox = styled.div`
   margin: 0 40px;
 `;
 
 const RhtBoxT = styled.div``;
 export default function Index() {
   const router = useRouter();
+  const [pageCur, setPageCur] = useState(1);
+  const [pageSize, setPageSize] = useState(20);
+  const [total, setTotal] = useState(1);
 
-  const [list, setList] = useState([
-    {
-      name: 'Eth Dever side event - 在数字游民的会客厅',
-      image: 'https://seedao-store.s3-us-east-2.amazonaws.com/seeu/srzzPofjFbCQ5LGzvWd9Uc.jpg',
-      id: '1',
-    },
-    {
-      name: 'Eth Dever side event - 在数字游民的会客厅',
-      image: 'https://seedao-store.s3-us-east-2.amazonaws.com/seeu/52xuUfK866XtZoFMqGYYD1.jpg',
-      id: '1',
-    },
-    {
-      name: 'Eth Dever side event - 在数字游民的会客厅',
-      image: 'https://seedao-store.s3-us-east-2.amazonaws.com/seeu/vGnVjkH6WrH1Tyg2dTs6a5.jpg',
-      id: '1',
-    },
-    {
-      name: 'Eth Dever side event - 在数字游民的会客厅',
-      image: 'https://seedao-store.s3-us-east-2.amazonaws.com/seeu/ctArrpMXr6enT1PcF8UJty.png',
-      id: '1',
-    },
-    {
-      name: 'Eth Dever side event - 在数字游民的会客厅',
-      image: 'https://seedao-store.s3-us-east-2.amazonaws.com/seeu/mf6AuWkzJr5fZPXxBbdfA7.jpg',
-      id: '1',
-    },
-  ]);
+  const [list, setList] = useState([]);
 
-  const toGo = () => {
-    // TODO
+  useEffect(() => {
+    getList();
+  }, [pageCur]);
+
+  const getList = async () => {
+    const rt = await getEventList({
+      page: pageCur,
+      size: pageSize,
+      sort_order: 'desc',
+      sort_field: 'start_at',
+      state: '',
+    });
+
+    const { rows, total, size, page } = rt.data;
+    setList(rows);
+    setPageCur(page);
+    setPageSize(size);
+    setTotal(total);
+    // setList(rt.data)
   };
+
+  const handlePage = (num: number) => {
+    setPageCur(num + 1);
+  };
+
   return (
     <Layout title="SeeDAO Project">
       <Card>
@@ -179,7 +180,7 @@ export default function Index() {
               </RhtBoxT>
             </TitBox>
             <Row>
-              {list.map((item, idx) => (
+              {list?.map((item, idx) => (
                 <Col
                   breakPoint={{ xs: 3, sm: 3, md: 3, lg: 2.4 }}
                   key={idx}
@@ -192,18 +193,23 @@ export default function Index() {
                           <div className="aspect" />
                           <div className="content">
                             <div className="innerImg">
-                              <img src={item.image} alt="" />
+                              <img src={item.cover_img} alt="" />
                             </div>
                           </div>
                         </Photo>
                       </ImageBox>
-                      <div className="title">{item.name}</div>
+                      <div className="title">{item.title}</div>
                     </Item>
                   </CardBox>
                 </Col>
               ))}
             </Row>
           </ActiveBox>
+          {total > pageSize && (
+            <PageBox>
+              <Page itemsPerPage={pageSize} total={total} current={pageCur - 1} handleToPage={handlePage} />
+            </PageBox>
+          )}
         </Box>
       </Card>
     </Layout>

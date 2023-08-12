@@ -27,6 +27,7 @@ export default function App({ Component, pageProps }: AppProps<CustomPageProps>)
   return (
     <>
       <Script async src={`https://www.googletagmanager.com/gtag/js?id=${gtag.GA_TRACKING_ID}`} />
+      <Script src="/font_2605852_u82y61ve02.js" />
       <Script
         id="google-analytics"
         dangerouslySetInnerHTML={{

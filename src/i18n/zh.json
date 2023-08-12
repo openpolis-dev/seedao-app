@@ -220,5 +220,8 @@
     "ApproveFailed": "操作失败",
     "IncorrectAddress": "无效的钱包地址：{content}",
     "ImportFailed": "导入失败"
+  },
+  "event": {
+    "title": "活动名称"
   }
 }

@@ -71,7 +71,7 @@ const Item = styled.div`
   .title {
     font-size: 1rem;
     line-height: 1.5em;
-    height: 1.5rem;
+    height: 3rem;
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
