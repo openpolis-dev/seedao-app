@@ -1,25 +1,87 @@
-import React, { useEffect, useState } from 'react';
 import Layout from 'Layouts';
+import { Card, CardHeader, CardBody } from '@paljs/ui/Card';
 import styled from 'styled-components';
-import { useRouter } from 'next/router';
-import { Card } from '@paljs/ui/Card';
+import { InputGroup } from '@paljs/ui/Input';
+import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react';
+import { Button } from '@paljs/ui/Button';
 import { EvaIcon } from '@paljs/ui/Icon';
-
+import { useRouter } from 'next/router';
 import useTranslation from 'hooks/useTranslation';
-
-import { Ievent } from 'type/event';
-import ReactMarkdown from 'react-markdown';
-import { getEventById } from 'requests/event';
+import { useAuthContext } from 'providers/authProvider';
+import useToast from 'hooks/useToast';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import { MdEditor } from 'md-editor-rt';
+import 'md-editor-rt/lib/style.css';
+import { createEvent, editEventById, getEventById, uplodaEventImage } from 'requests/event';
+// import dynamic from 'next/dynamic';
+// dynamic(
+//   import('/font_2605852_u82y61ve02.js'),
+//   {
+//     ssr: false
+//   }
+// )
 
 const Box = styled.div`
-  position: relative;
-  .tab-content {
-    padding: 0 !important;
+  .btnBtm {
+    margin-right: 20px;
   }
 `;
 
 const CardBox = styled(Card)`
-  min-height: 85vh;
+  min-height: 80vh;
+`;
+
+const BtmBox = styled.div`
+  margin: 50px 0;
+  padding-left: 440px;
+`;
+
+const UlBox = styled.ul`
+  width: 100%;
+  li {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    margin-bottom: 22px;
+
+    .title {
+      margin-right: 20px;
+      line-height: 2.5em;
+      min-width: 180px;
+      background: #f7f9fc;
+      padding: 0 20px;
+      text-align: right;
+    }
+  }
+`;
+
+const InputBox = styled(InputGroup)`
+  margin-right: 20px;
+  width: 100%;
+  display: flex;
+  .react-datepicker {
+    display: flex;
+    border: 0;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  }
+  .react-datepicker__navigation--next--with-time:not(.react-datepicker__navigation--next--with-today-button) {
+    right: 120px;
+  }
+  .react-datepicker__time-container {
+    width: 120px;
+    border-left: 1px solid #eee;
+  }
+  .react-datepicker__header {
+    background: #fff;
+    border-bottom: 1px solid #eee;
+  }
+  .react-datepicker__time-box {
+    width: 120px !important;
+  }
+  .react-datepicker-wrapper {
+    width: 100%;
+  }
 `;
 
 const BackBox = styled.div`
@@ -32,70 +94,113 @@ const BackBox = styled.div`
   }
 `;
 
-const ContentBox = styled.div`
+const BtnBox = styled.label`
+  background: #f7f9fc;
+  height: 480px;
+  width: 340px;
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  padding: 0 40px 20px;
-  border-bottom: 1px solid #eee;
-`;
-
-const LftBox = styled.div`
-  width: 30%;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  font-family: 'Barlow-Regular';
+  font-weight: 700;
+  font-size: 14px;
+  margin-bottom: 40px;
+  margin-right: 40px;
   flex-shrink: 0;
-  img {
-    width: 100%;
-  }
-`;
-const RhtBox = styled.div`
-  width: 69%;
-  padding: 10px 0;
-`;
-const TitBox = styled.div`
-  font-size: 2rem;
-  line-height: 1.2em;
-  border-bottom: 1px solid #eee;
-  padding-bottom: 20px;
-`;
-const RhtCenter = styled.ul`
-  border-bottom: 1px solid #eee;
-  padding: 20px 0;
-  .icon {
+  .iconRht {
     margin-right: 10px;
   }
-  li {
-    display: flex;
-    align-content: center;
-    padding: 5px 10px;
+  img {
+    max-width: 100%;
+    max-height: 100%;
   }
 `;
 
-const Btm = styled.div`
-  dl {
-    margin-top: 20px;
-    display: flex;
-    align-content: center;
-    line-height: 2em;
-  }
-  dt {
-    font-weight: bold;
-    width: 150px;
-    background: #f5f5f5;
-    padding: 0 10px;
-    margin-right: 20px;
-    text-align: center;
+const ImgBox = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  .del {
+    position: absolute;
+    right: -15px;
+    top: -15px;
+    z-index: 999;
+    padding: 6px;
+    border-radius: 100%;
+    background: #a16eff;
+    color: #fff;
+    cursor: pointer;
   }
 `;
 
-const MainContent = styled.div`
-  padding: 40px;
+const InnerBox = styled.div`
+  display: flex;
+  align-content: center;
 `;
-export default function Index() {
+
+const ContentBox = styled.div`
+  .cm-scroller {
+    background: #f7f9fc;
+  }
+`;
+
+export default function CreateGuild() {
   const router = useRouter();
   const { t } = useTranslation();
+  const { Toast, showToast } = useToast();
+
+  const {
+    state: { language },
+  } = useAuthContext();
+
   const { id } = router.query;
-  const [detail, setDetail] = useState<Ievent | undefined>();
-  const [meta, setMeta] = useState();
+
+  const [title, setTitle] = useState('');
+  const [startAt, setStartAt] = useState<number>();
+  const [endAt, setEndAt] = useState<number>();
+  const [sponsor, setSponsor] = useState('');
+  const [moderator, setmoderator] = useState('');
+  const [guest, setGuest] = useState('');
+  const [volunteer, setVolunteer] = useState('');
+  const [content, setContent] = useState('');
+  const [media, setMedia] = useState('');
+  const [url, setUrl] = useState('');
+  const [lan, setLan] = useState('');
+
+  const [data] = useState({
+    toobars: [
+      'bold',
+      'underline',
+      'italic',
+      'strikeThrough',
+      'sub',
+      'sup',
+      'quote',
+      'unorderedList',
+      'orderedList',
+      'codeRow',
+      'code',
+      'link',
+      'image',
+      'table',
+      'revoke',
+      'next',
+      'pageFullscreen',
+      'fullscreen',
+      'preview',
+      'htmlPreview',
+    ],
+    toolbarsExclude: ['github'],
+  });
+
+  useEffect(() => {
+    const localLan = language === 'zh' ? 'zh-CN' : 'en-US';
+    setLan(localLan);
+  }, [language]);
 
   useEffect(() => {
     if (!id) return;
@@ -105,61 +210,228 @@ export default function Index() {
   const getDetail = async () => {
     // dispatch({ type: AppActionType.SET_LOADING, payload: true });
     const dt = await getEventById(id as string);
-    const { metadata } = dt.data;
+    const { metadata, title, start_at, end_at, content, cover_img } = dt.data;
     console.log(metadata);
+
+    const { sponsor, moderator, media, guest, volunteer } = JSON.parse(metadata);
+    console.log(sponsor);
+
+    setTitle(title);
+    const st = new Date(start_at);
+    setStartAt(st.valueOf());
+    const et = new Date(end_at);
+    setEndAt(et.valueOf());
+
+    setSponsor(sponsor);
+    setmoderator(moderator);
+    setMedia(media);
+    setGuest(guest);
+    setVolunteer(volunteer);
+    setContent(content);
+    setUrl(cover_img);
+
     // setMeta(JSON.parse(meta))
 
-    setDetail(dt.data);
+    // setDetail(dt.data);
+  };
+
+  // useEffect(() => {
+  //   window && require('./font_2605852_u82y61ve02');
+  // }, [window]);
+
+  const handleInput = (e: ChangeEvent, type: string) => {
+    const { value } = e.target as HTMLInputElement;
+    switch (type) {
+      case 'title':
+        setTitle(value);
+        break;
+      case 'startAt':
+        setStartAt(Number(value));
+        break;
+      case 'endAt':
+        setEndAt(Number(value));
+        break;
+      case 'sponsor':
+        setSponsor(value);
+        break;
+      case 'moderator':
+        setmoderator(value);
+        break;
+      case 'media':
+        setMedia(value);
+        break;
+      case 'guest':
+        setGuest(value);
+        break;
+      case 'volunteer':
+        setVolunteer(value);
+        break;
+      case 'content':
+        setContent(value);
+        break;
+    }
+  };
+
+  const handleSubmit = async () => {
+    const itemObj = {
+      sponsor,
+      moderator,
+      volunteer,
+      media,
+    };
+
+    const start_at = Math.floor(startAt! / 1000).toString();
+    const end_at = Math.floor(endAt! / 1000).toString();
+
+    const obj = {
+      title,
+      cover_img: url,
+      content,
+      start_at,
+      end_at,
+      metadata: JSON.stringify(itemObj),
+    };
+    console.log(obj);
+    try {
+      const rt = await editEventById(id, obj);
+      console.log(rt);
+    } catch (e) {
+      console.error('create event error:', e);
+    }
+  };
+
+  const updateLogo = async (e: FormEvent) => {
+    const { files } = e.target as any;
+    // const url = window.URL.createObjectURL(files[0]);
+    const { name, type } = files[0];
+
+    const urlObj = await uplodaEventImage(name, type, files[0]);
+    console.log(urlObj);
+    setUrl(urlObj);
+  };
+
+  const removeUrl = () => {
+    setUrl('');
   };
 
   return (
-    <Layout title="SeeDAO Project">
-      <CardBox>
-        <Box>
+    <Layout title="SeeDAO | Create Guild">
+      <Box>
+        {Toast}
+        <CardBox>
           <div>
             <BackBox onClick={() => router.back()}>
-              <EvaIcon name="chevron-left-outline" className="icon" /> <span> {t('general.back')}</span>
+              <EvaIcon name="chevron-left-outline" className="icon" /> <span>{t('general.back')}</span>
             </BackBox>
           </div>
 
-          <ContentBox>
-            <LftBox>
-              <img src={detail?.cover_img} alt="" />
-            </LftBox>
-            <RhtBox>
-              <TitBox>{detail?.title}</TitBox>
-              <RhtCenter>
+          <CardHeader> Create Event</CardHeader>
+          <CardBody>
+            <InnerBox>
+              <BtnBox htmlFor="fileUpload" onChange={(e) => updateLogo(e)}>
+                {!url && (
+                  <div>
+                    <input id="fileUpload" type="file" hidden accept=".jpg, .jpeg, .png, .svg" />
+                    <EvaIcon name="cloud-upload-outline" className="iconRht" />
+                    <span> Upload Image</span>
+                  </div>
+                )}
+                {!!url && (
+                  <ImgBox>
+                    <div className="del" onClick={() => removeUrl()}>
+                      <EvaIcon name="close-outline" status="Control" />
+                    </div>
+                    <img src={url} alt="" />
+                  </ImgBox>
+                )}
+              </BtnBox>
+              <UlBox>
                 <li>
-                  <EvaIcon name="clock-outline" className="icon" /> <span>Sat, Aug 12, 2023, 3:00 PM</span>
+                  <div className="title">活动名称</div>
+                  <InputBox fullWidth>
+                    <input type="text" placeholder="项目名称" value={title} onChange={(e) => handleInput(e, 'title')} />
+                  </InputBox>
                 </li>
-              </RhtCenter>
-
-              <Btm>
-                <dl>
-                  <dt>主持人</dt>
-                  <dd>Tong Wang</dd>
-                </dl>
-                <dl>
-                  <dt>主持人</dt>
-                  <dd>Tong Wang</dd>
-                </dl>
-                <dl>
-                  <dt>主持人</dt>
-                  <dd>Tong Wang</dd>
-                </dl>
-                <dl>
-                  <dt>主持人</dt>
-                  <dd>Tong Wang</dd>
-                </dl>
-              </Btm>
-            </RhtBox>
-          </ContentBox>
-
-          <MainContent>
-            <ReactMarkdown>{detail?.content}</ReactMarkdown>
-          </MainContent>
-        </Box>
-      </CardBox>
+                <li>
+                  <div className="title">开始时间</div>
+                  <InputBox fullWidth>
+                    <DatePicker
+                      showTimeSelect
+                      minDate={new Date()}
+                      selected={startAt}
+                      dateFormat="yyyy-MM-dd HH:mm aa"
+                      onChange={(date) => setStartAt(date!.valueOf())}
+                      className="dateBox"
+                    />
+                    {/*<input type="text" value={startAt} onChange={(e) => handleInput(e, 'startAt')} />*/}
+                  </InputBox>
+                </li>
+                <li>
+                  <div className="title">结束时间</div>
+                  <InputBox fullWidth>
+                    <DatePicker
+                      showTimeSelect
+                      selected={endAt}
+                      minDate={new Date(startAt!)}
+                      onChange={(date) => setEndAt(date!.valueOf())}
+                      dateFormat="yyyy-MM-dd HH:mm aa"
+                    />
+                    {/*<input type="text" value={endAt} onChange={(e) => handleInput(e, 'endAt')} />*/}
+                  </InputBox>
+                </li>
+                <li>
+                  <div className="title">主办</div>
+                  <InputBox fullWidth>
+                    <input type="text" value={sponsor} onChange={(e) => handleInput(e, 'sponsor')} />
+                  </InputBox>
+                </li>
+                <li>
+                  <div className="title">媒体支持</div>
+                  <InputBox fullWidth>
+                    <input type="text" value={media} onChange={(e) => handleInput(e, 'media')} />
+                  </InputBox>
+                </li>
+                <li>
+                  <div className="title">主持人</div>
+                  <InputBox fullWidth>
+                    <input type="text" value={moderator} onChange={(e) => handleInput(e, 'moderator')} />
+                  </InputBox>
+                </li>
+                <li>
+                  <div className="title">嘉宾</div>
+                  <InputBox fullWidth>
+                    <input type="text" value={guest} onChange={(e) => handleInput(e, 'guest')} />
+                  </InputBox>
+                </li>
+                <li>
+                  <div className="title">志愿者</div>
+                  <InputBox fullWidth>
+                    <input type="text" value={volunteer} onChange={(e) => handleInput(e, 'volunteer')} />
+                  </InputBox>
+                </li>
+              </UlBox>
+            </InnerBox>
+            <ContentBox>
+              <MdEditor
+                modelValue={content}
+                onChange={(val) => {
+                  setContent(val);
+                }}
+                toolbars={data.toobars as any}
+                language={lan}
+                codeStyleReverse={false}
+                noUploadImg
+              />
+            </ContentBox>
+            <BtmBox>
+              <Button appearance="outline" className="btnBtm">
+                {t('general.cancel')}
+              </Button>
+              <Button onClick={() => handleSubmit()}>{t('general.confirm')}</Button>
+            </BtmBox>
+          </CardBody>
+        </CardBox>
+      </Box>
     </Layout>
   );
 }

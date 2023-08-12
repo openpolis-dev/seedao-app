@@ -1,16 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import Layout from 'Layouts';
 import { Card } from '@paljs/ui/Card';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import Col from '@paljs/ui/Col';
 import Row from '@paljs/ui/Row';
-import { Button, ButtonLink } from '@paljs/ui/Button';
+import { ButtonLink } from '@paljs/ui/Button';
 import { useRouter } from 'next/router';
 import { getEventList } from 'requests/event';
 import Page from 'components/pagination';
 
 const Box = styled.div`
   padding: 40px 0;
+  a:hover {
+    color: #fff;
+    opacity: 0.8;
+  }
 `;
 
 const ActiveBox = styled.div`

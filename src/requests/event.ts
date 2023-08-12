@@ -31,3 +31,7 @@ export const getEventList = (data: IPageParams) => {
 export const getEventById = (id: string) => {
   return request.get(`${PATH_PREFIX}/${id}`);
 };
+
+export const editEventById = (id: string, data: Ievent) => {
+  return request.put(`${PATH_PREFIX}/${id}`, data);
+};
