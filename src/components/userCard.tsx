@@ -49,9 +49,9 @@ export default function UserCard({ user, showEdit, onSelectUser, formatActive }:
           </a>
         )}
         {user.discord_profile && (
-          <a href={user.discord_profile} target="_blank" rel="noreferrer">
+          <CopyBox text={user.discord_profile || ''} dir="right">
             <Image src="/images/discordNor.svg" alt="" className="icon" width="20px" height="20px" />
-          </a>
+          </CopyBox>
         )}
         {user.email && (
           <CopyBox text={user.email || ''}>
