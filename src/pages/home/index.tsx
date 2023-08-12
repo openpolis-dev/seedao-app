@@ -7,11 +7,11 @@ import Row from '@paljs/ui/Row';
 import useTranslation from 'hooks/useTranslation';
 import axios from 'axios';
 import * as eventsAPI from 'requests/event';
-import { Ievent } from 'type/event';
 import { formatTime } from 'utils/time';
 import { GOV_NODE_CONTRACT, SGN_CONTRACT } from 'utils/constant';
 import { useRouter } from 'next/router';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
+import Link from 'next/link';
 
 const CITY_HALL = 'https://seedao.notion.site/07c258913c5d4847b59271e2ae6f7c66';
 const CITY_HALL_MEMBERS = 'https://www.notion.so/3913d631d7bc49e1a0334140e3cd84f5';
@@ -136,6 +136,13 @@ const TitBox = styled.div`
   font-weight: bold;
   font-size: 1.5rem;
   margin-bottom: 20px;
+  a {
+    float: right;
+    font-weight: normal;
+    font-size: 14px;
+    text-decoration: underline;
+    cursor: pointer;
+  }
 `;
 
 const LineBox = styled.div`
@@ -248,12 +255,16 @@ export default function Index() {
   }, []);
 
   useEffect(() => {
+    // todo
+  }, []);
+
+  useEffect(() => {
     const getEvents = async () => {
       dispatch({ type: AppActionType.SET_LOADING, payload: true });
       try {
         const res = await eventsAPI.getEventList({ page: 0, size: 5, sort_order: 'desc', sort_field: 'start_at' });
         dispatch({ type: AppActionType.SET_LOADING, payload: false });
-        const events = res.data.rows.map((item: Ievent) => {
+        const events = res.data.rows.map((item: any) => {
           return {
             id: item.id,
             name: item.title,
@@ -300,7 +311,14 @@ export default function Index() {
           </div>
         </LineBox>
         <ActiveBox>
-          <TitBox>{t('Home.Events')}</TitBox>
+          <TitBox>
+            {t('Home.Events')}{' '}
+            {!!list.length && (
+              <Link className="all" href={`/event/`}>
+                {t('Home.AllEvents')}
+              </Link>
+            )}
+          </TitBox>
           <Row>
             {list.map((item, idx) => (
               <Col
