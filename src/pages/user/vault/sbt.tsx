@@ -57,6 +57,7 @@ type SBTtype = {
   name?: string;
   image?: string;
   tokenId?: number | string;
+  href?: string;
 };
 
 export default function SBTCard() {
@@ -78,68 +79,94 @@ export default function SBTCard() {
   useEffect(() => {
     // msc
     const getOnBoarding = async () => {
-      // SBT: onboarding tokenID=157
+      // SBT: onboarding
+      const address = '0x0D9ea891B4C30e17437D00151399990ED7965F00';
+      const token = 157;
       try {
-        const contract = new ethers.Contract('0x0D9ea891B4C30e17437D00151399990ED7965F00', NFT_ABI, polygonProvider);
-        const balance = await contract.balanceOf(account, 157);
+        const contract = new ethers.Contract(address, NFT_ABI, polygonProvider);
+        const balance = await contract.balanceOf(account, token);
         console.log('onboarding balance: ', balance);
         const _balance_num = balance.toNumber();
         if (_balance_num > 0) {
-          setOnBoardingSBT({ name: '', tokenId: 157 });
+          setOnBoardingSBT({
+            name: '',
+            tokenId: token,
+            href: `https://polygonscan.com/token/${address}?a=${token}`,
+          });
         }
       } catch (error) {
         console.error('[SBT] onboarding balance failed', error);
       }
     };
     const getMSC = async () => {
-      // SBT: MSC tokenID=155
+      // SBT: MSC
+      const address = '0x2C436d61C5Af62bcbfeE40B1f0BE5B483DfA0E11';
+      const token = 155;
       try {
-        const contract = new ethers.Contract('0x2C436d61C5Af62bcbfeE40B1f0BE5B483DfA0E11', NFT_ABI, polygonProvider);
-        const balance = await contract.balanceOf(account, 155);
+        const contract = new ethers.Contract(address, NFT_ABI, polygonProvider);
+        const balance = await contract.balanceOf(account, token);
         console.log('MSC balance: ', balance);
         const _balance = balance.toNumber();
         if (_balance > 0) {
-          setMscSBT({ name: '', tokenId: 155 });
+          setMscSBT({
+            name: '',
+            tokenId: token,
+            href: `https://polygonscan.com/token/${address}?a=${token}`,
+          });
         }
       } catch (error) {
         console.error('[SBT] MSC balance failed', error);
       }
     };
-    if (polygonProvider) {
+    if (polygonProvider && account) {
       getOnBoarding();
       getMSC();
     }
-  }, [polygonProvider]);
+  }, [polygonProvider, account]);
 
   useEffect(() => {
     const getSBTs = async (account: string) => {
       setLoading(true);
       // Governance Node
-      getNftsByContract(account, '0x9d34D407D8586478b3e4c39BE633ED3D7be1c80c', 1)
+      const g_address = '0x9d34D407D8586478b3e4c39BE633ED3D7be1c80c';
+      getNftsByContract(account, g_address, 1)
         .then((res) => {
           console.log('res', res);
           setLoading(false);
-          setGovSBTs(res.data.data.content.map((item: any) => ({ name: item.name, image: item.image_uri })));
+          setGovSBTs(
+            res.data.data.content.map((item: any) => ({
+              name: item.name,
+              image: item.image_uri,
+              tokenId: item.token_id,
+              href: `https://etherscan.io/token/${g_address}?a=${item.token_id}`,
+            })),
+          );
         })
         .catch((err) => {
           console.error('[SBT] gov failed', err);
         });
       // new SBT
-      getNftsByContract(account, '0x2C436d61C5Af62bcbfeE40B1f0BE5B483DfA0E11', 137)
+      const n_address = '0x2C436d61C5Af62bcbfeE40B1f0BE5B483DfA0E11';
+      getNftsByContract(account, n_address, 137)
         .then((res) => {
           setLoading(false);
           console.log('res', res);
           setNewSBTs(
             res.data.data.content
               .filter((c: any) => !!c.image_uri)
-              .map((item: any) => ({ name: item.name, image: item.image_uri })),
+              .map((item: any) => ({
+                name: item.name,
+                image: item.image_uri,
+                tokenId: item.token_id,
+                href: `https://polygonscan.com/token/${n_address}?a=${item.token_id}`,
+              })),
           );
         })
         .catch((err) => {
           console.error('[SBT] new failed', err);
         });
     };
-    // account && getSBTs('0x7EA1EaA27b313D04D359bF3e654FE927376e31Bb');
+    account && getSBTs(account);
   }, [account]);
 
   const sbtList = useMemo(() => {
@@ -174,7 +201,18 @@ export default function SBTCard() {
           ) : (
             <SBTList>
               {sbtList.map((item, index) => (
-                <li key={index}>{item.image ? <img src={item.image} alt={item.name} /> : <div>{item.tokenId}</div>}</li>
+                <li
+                  className="sbt"
+                  key={index}
+                  onClick={() => {
+                    console.log('>> ', item);
+                    if (item.href) {
+                      window.open(item.href, '_blank');
+                    }
+                  }}
+                >
+                  {item.image ? <img src={item.image} alt={item.name} /> : <div>{`SBT ${item.tokenId}`}</div>}
+                </li>
               ))}
             </SBTList>
           )}
@@ -236,6 +274,9 @@ const SBTList = styled.ul`
       text-align: center;
       line-height: 84px;
       color: #fff;
+    }
+    &.sbt {
+      cursor: pointer;
     }
   }
   .empty {
