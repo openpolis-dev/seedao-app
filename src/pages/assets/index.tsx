@@ -158,7 +158,7 @@ export default function Index() {
   const { t } = useTranslation();
   const { dispatch } = useAuthContext();
   const { Toast, showToast } = useToast();
-  const canUseCityhall = usePermission(PermissionAction.AssetsBudget, PermissionObject.SeeDAO);
+  const canUseCityhall = usePermission(PermissionAction.AssetsBudget, PermissionObject.Treasury);
 
   const [asset, setAsset] = useState({
     token_used_amount: 0,
