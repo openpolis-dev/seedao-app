@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import Layout from 'Layouts';
 import { EvaIcon } from '@paljs/ui/Icon';
 import styled, { css } from 'styled-components';
@@ -219,6 +219,14 @@ const LinkBox = styled.ul`
   }
 `;
 
+const getDatafromNftscan = (contract: string, base?: string) => {
+  return axios.get(`${base || 'https://polygonapi.nftscan.com'}/api/v2/statistics/collection/${contract}`, {
+    headers: {
+      'X-API-KEY': process.env.NEXT_PUBLIC_NFTSCAN_KEY,
+    },
+  });
+};
+
 export default function Index() {
   const { t } = useTranslation();
   const router = useRouter();
@@ -226,36 +234,57 @@ export default function Index() {
   const [list, setList] = useState<{ name: string; image: string; start: string }[]>([]);
   const [sgnHolders, setSgnHolders] = useState(0);
   const [governNodes, setGovernNodes] = useState(0);
-  const [sbtHolders, setSbtHolders] = useState(0);
+  const [onboardingHolders, setOnboardingHolders] = useState(0);
+  const [onNewHolders, setNewHolders] = useState(0);
 
   useEffect(() => {
     const handleSgnHolders = async () => {
-      const url = `https://restapi.nftscan.com/api/v2/collections/${SGN_CONTRACT}`;
-      const res = await axios.get(url, {
-        headers: {
-          'X-API-KEY': process.env.NEXT_PUBLIC_NFTSCAN_KEY,
-        },
-      });
-      setSgnHolders(res.data?.data?.amounts_total);
+      try {
+        const res = await getDatafromNftscan(SGN_CONTRACT, 'https://restapi.nftscan.com');
+        setSgnHolders(res.data?.data?.owners_total || 0);
+      } catch (error) {
+        console.error('[SBT] get sgn owners failed', error);
+      }
     };
-    // handleSgnHolders();
+    handleSgnHolders();
   }, []);
 
   useEffect(() => {
     const handleGovNodes = async () => {
-      const url = `https://restapi.nftscan.com/api/v2/collections/${GOV_NODE_CONTRACT}`;
-      const res = await axios.get(url, {
-        headers: {
-          'X-API-KEY': process.env.NEXT_PUBLIC_NFTSCAN_KEY,
-        },
-      });
-      setGovernNodes(res.data?.data?.amounts_total);
+      try {
+        const res = await getDatafromNftscan(GOV_NODE_CONTRACT, 'https://restapi.nftscan.com');
+        setGovernNodes(res.data?.data?.owners_total || 0);
+      } catch (error) {
+        console.error('[SBT] get gov nodes failed', error);
+      }
     };
-    // handleGovNodes();
+    handleGovNodes();
   }, []);
 
+  const sbtHolders = useMemo(() => {
+    const SBT_155 = 9;
+    return governNodes + onboardingHolders + onNewHolders + SBT_155;
+  }, [governNodes, onboardingHolders, onNewHolders]);
+
   useEffect(() => {
-    // todo
+    const getOnboardingHolders = async () => {
+      try {
+        const res = await getDatafromNftscan('0x0D9ea891B4C30e17437D00151399990ED7965F00');
+        setOnboardingHolders(res.data?.data?.owners_total || 0);
+      } catch (error) {
+        console.error('[SBT] get onboading holders failed', error);
+      }
+    };
+    const getNewHolders = async () => {
+      try {
+        const res = await getDatafromNftscan('0x2221F5d189c611B09D7f7382Ce557ec66365C8fc');
+        setNewHolders(res.data?.data?.owners_total || 0);
+      } catch (error) {
+        console.error('[SBT] get new-sbt holders failed', error);
+      }
+    };
+    getOnboardingHolders();
+    getNewHolders();
   }, []);
 
   useEffect(() => {
