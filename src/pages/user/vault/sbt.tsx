@@ -1,14 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { ethers } from 'ethers';
 import axios from 'axios';
 import { useWeb3React } from '@web3-react/core';
+import useTranslation from 'hooks/useTranslation';
+import Image from 'next/image';
 
 const getNftsByContract = (account: string, contract: string, chain: number) => {
   let base = '';
   switch (chain) {
     case 1:
-      base = 'https://api.nftscan.com';
+      base = 'https://restapi.nftscan.com';
       break;
     case 137:
       base = 'https://polygonapi.nftscan.com';
@@ -24,17 +26,49 @@ const getNftsByContract = (account: string, contract: string, chain: number) => 
   );
 };
 
+const NFT_ABI = [
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'account',
+        type: 'address',
+      },
+      {
+        internalType: 'uint256',
+        name: 'id',
+        type: 'uint256',
+      },
+    ],
+    name: 'balanceOf',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+];
+
 type SBTtype = {
-  name: string;
-  image: string;
+  name?: string;
+  image?: string;
+  tokenId?: number | string;
 };
 
 export default function SBTCard() {
+  const { t } = useTranslation();
   const { account } = useWeb3React();
   const [polygonProvider, setPolygonProvider] = useState<any>(null);
 
   const [govSBTs, setGovSBTs] = useState<SBTtype[]>([]);
   const [newSBTs, setNewSBTs] = useState<SBTtype[]>([]);
+  const [mscSBT, setMscSBT] = useState<SBTtype>();
+  const [onBoardingSBT, setOnBoardingSBT] = useState<SBTtype>();
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     const _polygon_provider = new ethers.providers.StaticJsonRpcProvider('https://poly-rpc.gateway.pokt.network');
@@ -42,49 +76,50 @@ export default function SBTCard() {
   }, []);
 
   useEffect(() => {
-    // TODO
     // msc
-    const getMSC = async () => {
-      const contract = new ethers.Contract(
-        '0x2C436d61C5Af62bcbfeE40B1f0BE5B483DfA0E11',
-        [
-          {
-            inputs: [
-              {
-                internalType: 'address',
-                name: 'account',
-                type: 'address',
-              },
-              {
-                internalType: 'uint256',
-                name: 'id',
-                type: 'uint256',
-              },
-            ],
-            name: 'balanceOf',
-            outputs: [
-              {
-                internalType: 'uint256',
-                name: '',
-                type: 'uint256',
-              },
-            ],
-            stateMutability: 'view',
-            type: 'function',
-          },
-        ],
-        polygonProvider,
-      );
+    const getOnBoarding = async () => {
+      // SBT: onboarding tokenID=157
+      try {
+        const contract = new ethers.Contract('0x0D9ea891B4C30e17437D00151399990ED7965F00', NFT_ABI, polygonProvider);
+        const balance = await contract.balanceOf(account, 157);
+        console.log('onboarding balance: ', balance);
+        const _balance_num = balance.toNumber();
+        if (_balance_num > 0) {
+          setOnBoardingSBT({ name: '', tokenId: 157 });
+        }
+      } catch (error) {
+        console.error('[SBT] onboarding balance failed', error);
+      }
     };
-    // getMSC();
+    const getMSC = async () => {
+      // SBT: MSC tokenID=155
+      try {
+        const contract = new ethers.Contract('0x2C436d61C5Af62bcbfeE40B1f0BE5B483DfA0E11', NFT_ABI, polygonProvider);
+        const balance = await contract.balanceOf(account, 155);
+        console.log('MSC balance: ', balance);
+        const _balance = balance.toNumber();
+        if (_balance > 0) {
+          setMscSBT({ name: '', tokenId: 155 });
+        }
+      } catch (error) {
+        console.error('[SBT] MSC balance failed', error);
+      }
+    };
+    if (polygonProvider) {
+      getOnBoarding();
+      getMSC();
+    }
   }, [polygonProvider]);
 
   useEffect(() => {
     const getSBTs = async (account: string) => {
+      setLoading(true);
       // Governance Node
       getNftsByContract(account, '0x9d34D407D8586478b3e4c39BE633ED3D7be1c80c', 1)
         .then((res) => {
-          setGovSBTs(res.data.content.map((item: any) => ({ name: item.name, image: item.image_uri })));
+          console.log('res', res);
+          setLoading(false);
+          setGovSBTs(res.data.data.content.map((item: any) => ({ name: item.name, image: item.image_uri })));
         })
         .catch((err) => {
           console.error('[SBT] gov failed', err);
@@ -92,8 +127,10 @@ export default function SBTCard() {
       // new SBT
       getNftsByContract(account, '0x2C436d61C5Af62bcbfeE40B1f0BE5B483DfA0E11', 137)
         .then((res) => {
+          setLoading(false);
+          console.log('res', res);
           setNewSBTs(
-            res.data.content
+            res.data.data.content
               .filter((c: any) => !!c.image_uri)
               .map((item: any) => ({ name: item.name, image: item.image_uri })),
           );
@@ -102,21 +139,47 @@ export default function SBTCard() {
           console.error('[SBT] new failed', err);
         });
     };
-    // account && getSBTs(account);
+    // account && getSBTs('0x7EA1EaA27b313D04D359bF3e654FE927376e31Bb');
   }, [account]);
+
+  const sbtList = useMemo(() => {
+    const lst = [...govSBTs, ...newSBTs];
+    if (mscSBT) lst.push(mscSBT);
+    if (onBoardingSBT) lst.push(onBoardingSBT);
+    return lst;
+  }, [govSBTs, newSBTs, mscSBT, onBoardingSBT]);
 
   return (
     <Box>
       <div className="title">SBT</div>
-      <SBTCardBox>
-        <SBTList>
-          {[...govSBTs, ...newSBTs].map((item, index) => (
-            <li key={index}>
-              <img src={item.image} alt={item.name} />
-            </li>
-          ))}
-        </SBTList>
-      </SBTCardBox>
+      {loading ? (
+        <LoadingStyled>
+          <Image src="/images/loader.svg" alt="" className="icon" width="20px" height="20px" />
+        </LoadingStyled>
+      ) : (
+        <SBTCardBox>
+          {sbtList.length === 0 ? (
+            <SBTList>
+              <li>
+                <div />
+              </li>
+              <li>
+                <div />
+              </li>
+              <li>
+                <div />
+              </li>
+              <div className="empty">{t('My.EmptySBT')}</div>
+            </SBTList>
+          ) : (
+            <SBTList>
+              {sbtList.map((item, index) => (
+                <li key={index}>{item.image ? <img src={item.image} alt={item.name} /> : <div>{item.tokenId}</div>}</li>
+              ))}
+            </SBTList>
+          )}
+        </SBTCardBox>
+      )}
     </Box>
   );
 }
@@ -148,6 +211,7 @@ const SBTList = styled.ul`
   gap: 20px;
   align-items: center;
   margin: 20px 0 40px;
+  height: 96px;
 
   li {
     width: 96px;
@@ -156,11 +220,43 @@ const SBTList = styled.ul`
     border-radius: 50%;
     background-color: #d9d9d9;
     img {
-      width: 88px;
-      height: 88px;
+      width: 84px;
+      height: 84px;
       border-radius: 50%;
-      margin-top: 4px;
-      margin-left: 4px;
+      margin-top: 6px;
+      margin-left: 6px;
+    }
+    div {
+      width: 84px;
+      height: 84px;
+      border-radius: 50%;
+      background-color: #c6c6c6;
+      margin-top: 6px;
+      margin-left: 6px;
+      text-align: center;
+      line-height: 84px;
+      color: #fff;
+    }
+  }
+  .empty {
+    color: #929191;
+  }
+`;
+
+const LoadingStyled = styled.div`
+  height: 96px;
+  margin: 20px 0 40px;
+  padding-top: 40px;
+  .icon {
+    animation: spin 2.5s linear infinite;
+    margin-top: 40px;
+  }
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
     }
   }
 `;

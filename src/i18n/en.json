@@ -212,7 +212,8 @@
     "Google": "Google",
     "ModifiedSuccess": "Modified Successfully",
     "ModifiedFailed": "Modified Failed",
-    "IncorrectLink": "{media}：required the correct link"
+    "IncorrectLink": "{media}：required the correct link",
+    "EmptySBT": "Not Owning SBT"
   },
   "Msg": {
     "ProposalLinkMsg": "Require correct proposal link",
