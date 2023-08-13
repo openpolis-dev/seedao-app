@@ -187,15 +187,6 @@ export default function SBTCard() {
         <SBTCardBox>
           {sbtList.length === 0 ? (
             <SBTList>
-              <li>
-                <div />
-              </li>
-              <li>
-                <div />
-              </li>
-              <li>
-                <div />
-              </li>
               <div className="empty">{t('My.EmptySBT')}</div>
             </SBTList>
           ) : (
