@@ -246,7 +246,7 @@ export default function Index() {
         console.error('[SBT] get sgn owners failed', error);
       }
     };
-    handleSgnHolders();
+    if (process.env.NODE_ENV !== 'development') handleSgnHolders();
   }, []);
 
   useEffect(() => {
@@ -258,7 +258,7 @@ export default function Index() {
         console.error('[SBT] get gov nodes failed', error);
       }
     };
-    handleGovNodes();
+    if (process.env.NODE_ENV !== 'development') handleGovNodes();
   }, []);
 
   const sbtHolders = useMemo(() => {
@@ -283,8 +283,10 @@ export default function Index() {
         console.error('[SBT] get new-sbt holders failed', error);
       }
     };
-    getOnboardingHolders();
-    getNewHolders();
+    if (process.env.NODE_ENV !== 'development') {
+      getOnboardingHolders();
+      getNewHolders();
+    }
   }, []);
 
   useEffect(() => {

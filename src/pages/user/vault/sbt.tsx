@@ -166,7 +166,7 @@ export default function SBTCard() {
           console.error('[SBT] new failed', err);
         });
     };
-    account && getSBTs(account);
+    if (account && process.env.NODE_ENV !== 'development') getSBTs(account);
   }, [account]);
 
   const sbtList = useMemo(() => {
