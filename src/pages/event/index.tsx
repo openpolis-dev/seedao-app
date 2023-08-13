@@ -10,6 +10,7 @@ import { getEventList, getMyEvent } from 'requests/event';
 import Page from 'components/pagination';
 import { Tab, Tabs } from '@paljs/ui/Tabs';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
+import useTranslation from 'hooks/useTranslation';
 
 const Box = styled.div`
   padding: 40px 0;
@@ -149,7 +150,7 @@ const RhtBoxT = styled.div`
 `;
 export default function Index() {
   const router = useRouter();
-
+  const { t } = useTranslation();
   const { dispatch } = useAuthContext();
   const [pageCur, setPageCur] = useState(1);
   const [pageSize, setPageSize] = useState(20);
@@ -217,15 +218,15 @@ export default function Index() {
             <TitBox>
               <div className="titLft">
                 <Tabs activeIndex={0} onSelect={(e) => selectCurrent(e)}>
-                  <Tab title="Events" responsive />
-                  <Tab title="My Events" responsive />
+                  <Tab title={t('event.events')} responsive />
+                  <Tab title={t('event.MyEvents')} responsive />
                 </Tabs>
               </div>
 
               {/*<span>Events</span>*/}
               <RhtBoxT>
                 <ButtonLink onClick={() => router.push('/event/info')} fullWidth shape="Rectangle">
-                  Create Event
+                  {t('event.create')}
                 </ButtonLink>
               </RhtBoxT>
             </TitBox>

@@ -221,5 +221,20 @@
     "ApproveFailed": "Operate failed",
     "IncorrectAddress": "Invalid address: {content}",
     "ImportFailed": "Import failed"
+  },
+  "event": {
+    "events": "Events",
+    "MyEvents": "My Events",
+    "create": "Create Event",
+    "edit": "Edit Event",
+    "title": "Event name",
+    "startTime": "Starting time",
+    "endTime": "End Time",
+    "sponsor": "Hosted By",
+    "media": "Media Support",
+    "host": "Host",
+    "guest": "Guests",
+    "volunteer": "Volunteers",
+    "upload": "Upload Image"
   }
 }

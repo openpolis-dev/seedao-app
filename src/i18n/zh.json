@@ -223,6 +223,18 @@
     "ImportFailed": "导入失败"
   },
   "event": {
-    "title": "活动名称"
+    "events": "活动",
+    "MyEvents": "我的活动",
+    "create": "创建活动",
+    "edit": "编辑活动",
+    "title": "活动名称",
+    "startTime": "开始时间",
+    "endTime": "结束时间",
+    "sponsor": "主办",
+    "media": "媒体支持",
+    "host": "主持人",
+    "guest": "嘉宾",
+    "volunteer": "志愿者",
+    "upload": "上传图片"
   }
 }

@@ -334,7 +334,7 @@ export default function CreateGuild() {
             </BackBox>
           </div>
 
-          <CardHeader> {id ? 'Edit Event' : 'Create Event'}</CardHeader>
+          <CardHeader> {id ? t('event.edit') : t('event.create')}</CardHeader>
           <CardBody>
             <InnerBox>
               <BtnBox htmlFor="fileUpload" onChange={(e) => updateLogo(e)}>
@@ -342,7 +342,7 @@ export default function CreateGuild() {
                   <div>
                     <input id="fileUpload" type="file" hidden accept=".jpg, .jpeg, .png, .svg" />
                     <EvaIcon name="cloud-upload-outline" className="iconRht" />
-                    <span> Upload Image</span>
+                    <span>{t('event.upload')}</span>
                   </div>
                 )}
                 {!!url && (
@@ -356,13 +356,13 @@ export default function CreateGuild() {
               </BtnBox>
               <UlBox>
                 <li>
-                  <div className="title">活动名称</div>
+                  <div className="title">{t('event.title')}</div>
                   <InputBox fullWidth>
-                    <input type="text" placeholder="项目名称" value={title} onChange={(e) => handleInput(e, 'title')} />
+                    <input type="text" value={title} onChange={(e) => handleInput(e, 'title')} />
                   </InputBox>
                 </li>
                 <li>
-                  <div className="title">开始时间</div>
+                  <div className="title">{t('event.startTime')}</div>
                   <InputBox fullWidth>
                     <DatePicker
                       showTimeSelect
@@ -376,7 +376,7 @@ export default function CreateGuild() {
                   </InputBox>
                 </li>
                 <li>
-                  <div className="title">结束时间</div>
+                  <div className="title">{t('event.endTime')}</div>
                   <InputBox fullWidth>
                     <DatePicker
                       showTimeSelect
@@ -389,31 +389,31 @@ export default function CreateGuild() {
                   </InputBox>
                 </li>
                 <li>
-                  <div className="title">主办</div>
+                  <div className="title">{t('event.sponsor')}</div>
                   <InputBox fullWidth>
                     <input type="text" value={sponsor} onChange={(e) => handleInput(e, 'sponsor')} />
                   </InputBox>
                 </li>
                 <li>
-                  <div className="title">媒体支持</div>
+                  <div className="title">{t('event.media')}</div>
                   <InputBox fullWidth>
                     <input type="text" value={media} onChange={(e) => handleInput(e, 'media')} />
                   </InputBox>
                 </li>
                 <li>
-                  <div className="title">主持人</div>
+                  <div className="title">{t('event.host')}</div>
                   <InputBox fullWidth>
                     <input type="text" value={moderator} onChange={(e) => handleInput(e, 'moderator')} />
                   </InputBox>
                 </li>
                 <li>
-                  <div className="title">嘉宾</div>
+                  <div className="title">{t('event.guest')}</div>
                   <InputBox fullWidth>
                     <input type="text" value={guest} onChange={(e) => handleInput(e, 'guest')} />
                   </InputBox>
                 </li>
                 <li>
-                  <div className="title">志愿者</div>
+                  <div className="title">{t('event.volunteer')}</div>
                   <InputBox fullWidth>
                     <input type="text" value={volunteer} onChange={(e) => handleInput(e, 'volunteer')} />
                   </InputBox>
