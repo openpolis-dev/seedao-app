@@ -11,6 +11,8 @@ import Page from 'components/pagination';
 import { Tab, Tabs } from '@paljs/ui/Tabs';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import useTranslation from 'hooks/useTranslation';
+import usePermission from 'hooks/usePermission';
+import { PermissionObject, PermissionAction } from 'utils/constant';
 
 const Box = styled.div`
   padding: 40px 0;
@@ -158,6 +160,8 @@ export default function Index() {
   const [current, setCurrent] = useState<number>(0);
   const [list, setList] = useState([]);
 
+  const canCreateEvent = usePermission(PermissionAction.ActCreateEvent, PermissionObject.ObjEvent);
+
   useEffect(() => {
     if (!current) {
       getList();
@@ -173,7 +177,6 @@ export default function Index() {
       size: pageSize,
       sort_order: 'desc',
       sort_field: 'start_at',
-      state: '',
     });
     dispatch({ type: AppActionType.SET_LOADING, payload: null });
     const { rows, total, size, page } = rt.data;
@@ -224,11 +227,13 @@ export default function Index() {
               </div>
 
               {/*<span>Events</span>*/}
-              <RhtBoxT>
-                <ButtonLink onClick={() => router.push('/event/info')} fullWidth shape="Rectangle">
-                  {t('event.create')}
-                </ButtonLink>
-              </RhtBoxT>
+              {canCreateEvent && (
+                <RhtBoxT>
+                  <ButtonLink onClick={() => router.push('/event/info')} fullWidth shape="Rectangle">
+                    {t('event.create')}
+                  </ButtonLink>
+                </RhtBoxT>
+              )}
             </TitBox>
             <Row>
               {list?.map((item, idx) => (
