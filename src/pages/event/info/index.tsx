@@ -78,7 +78,7 @@ const InputBox = styled(InputGroup)`
 `;
 
 const BackBox = styled.div`
-  padding: 30px 20px;
+  padding: 30px 20px 0;
   display: inline-flex;
   align-items: center;
   cursor: pointer;
