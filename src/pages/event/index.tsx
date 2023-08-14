@@ -45,8 +45,6 @@ const Item = styled.div`
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     margin: 1rem;
-    display: flex;
-    align-items: center;
     font-weight: bold;
   }
 `;
@@ -96,6 +94,8 @@ const Photo = styled.div`
     background: #f5f5f5;
     img {
       width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
   }
 `;
