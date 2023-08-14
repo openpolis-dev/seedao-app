@@ -94,6 +94,7 @@ export default function Assets({ detail, refreshProject }: IProps) {
     if (!detail) {
       return;
     }
+    console.log(detail.id);
     const _token = detail?.budgets.find((b) => b.type === BudgetType.Token);
     const _point = detail?.budgets.find((b) => b.type === BudgetType.Credit);
     setToken(_token);
@@ -208,7 +209,7 @@ export default function Assets({ detail, refreshProject }: IProps) {
         </li>
       </FirstLine>
 
-      {/*<AssetList id={id} />*/}
+      <AssetList id={detail.id} />
     </Box>
   );
 }

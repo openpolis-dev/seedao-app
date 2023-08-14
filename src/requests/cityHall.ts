@@ -1,5 +1,4 @@
-import request, { ResponseData } from './http';
-import { IBaseProject, InfoObj, ReTurnProject } from 'type/project.type';
+import request from './http';
 import { IUpdateStaffsParams } from 'requests/guild';
 
 const PATH_PREFIX = '/cityhall';
