@@ -105,7 +105,9 @@ export default function Info(props: Iprops) {
     const _token = detail?.budgets?.find((item) => item.name === 'USDT');
     setToken(_token);
     setEditToken(_token?.total_amount);
+    console.error(_token);
     const _point = detail?.budgets?.find((item) => item.name === 'SCR');
+    console.log(_point);
     setPoints(_point);
     setEditPoint(_point?.total_amount);
   };

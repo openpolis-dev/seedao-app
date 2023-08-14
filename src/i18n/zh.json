@@ -165,6 +165,9 @@
     "Token": "Token"
   },
   "city-hall": {
+    "Members": "成员",
+    "Asset": "资产",
+    "Proposal": "提案",
     "PointsAndTokenAudit": "积分及token审核",
     "Pass": "通过",
     "Reject": "驳回",

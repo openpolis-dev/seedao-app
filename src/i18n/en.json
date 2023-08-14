@@ -165,6 +165,9 @@
     "Token": "Token"
   },
   "city-hall": {
+    "Members": "Members",
+    "Asset": "Asset",
+    "Proposal": "Proposal",
     "PointsAndTokenAudit": "Reward Audit",
     "Pass": "Pass",
     "Reject": "Reject",
