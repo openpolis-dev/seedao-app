@@ -9,10 +9,8 @@ import { useRouter } from 'next/router';
 import useTranslation from 'hooks/useTranslation';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import useToast, { ToastType } from 'hooks/useToast';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
-import { MdEditor } from 'md-editor-rt';
-import 'md-editor-rt/lib/style.css';
+import ReactMarkdown from 'react-markdown';
+
 import { createEvent, editEventById, getEventById, uplodaEventImage } from 'requests/event';
 
 const Box = styled.div`
@@ -141,7 +139,7 @@ const ContentBox = styled.div`
   }
 `;
 
-export default function CreateGuild() {
+export default function ViewEvent() {
   const router = useRouter();
   const { t } = useTranslation();
   const { Toast, showToast } = useToast();
@@ -347,97 +345,39 @@ export default function CreateGuild() {
                 )}
                 {!!url && (
                   <ImgBox>
-                    <div className="del" onClick={() => removeUrl()}>
-                      <EvaIcon name="close-outline" status="Control" />
-                    </div>
                     <img src={url} alt="" />
                   </ImgBox>
                 )}
               </BtnBox>
               <UlBox>
-                <li>
-                  <div className="title">{t('event.title')}</div>
-                  <InputBox fullWidth>
-                    <input type="text" value={title} onChange={(e) => handleInput(e, 'title')} />
-                  </InputBox>
-                </li>
-                <li>
-                  <div className="title">{t('event.startTime')}</div>
-                  <InputBox fullWidth>
-                    <DatePicker
-                      showTimeSelect
-                      minDate={new Date()}
-                      selected={startAt}
-                      dateFormat="yyyy-MM-dd HH:mm aa"
-                      onChange={(date) => setStartAt(date!.valueOf())}
-                      className="dateBox"
-                    />
-                    {/*<input type="text" value={startAt} onChange={(e) => handleInput(e, 'startAt')} />*/}
-                  </InputBox>
-                </li>
-                <li>
-                  <div className="title">{t('event.endTime')}</div>
-                  <InputBox fullWidth>
-                    <DatePicker
-                      showTimeSelect
-                      selected={endAt}
-                      minDate={new Date(startAt!)}
-                      onChange={(date) => setEndAt(date!.valueOf())}
-                      dateFormat="yyyy-MM-dd HH:mm aa"
-                    />
-                    {/*<input type="text" value={endAt} onChange={(e) => handleInput(e, 'endAt')} />*/}
-                  </InputBox>
-                </li>
+                <li>{title}</li>
+                <li>{startAt}</li>
+                <li>{endAt}</li>
                 <li>
                   <div className="title">{t('event.sponsor')}</div>
-                  <InputBox fullWidth>
-                    <input type="text" value={sponsor} onChange={(e) => handleInput(e, 'sponsor')} />
-                  </InputBox>
+                  <div>{sponsor}</div>
                 </li>
                 <li>
                   <div className="title">{t('event.media')}</div>
-                  <InputBox fullWidth>
-                    <input type="text" value={media} onChange={(e) => handleInput(e, 'media')} />
-                  </InputBox>
+                  <div>{media}</div>
                 </li>
                 <li>
                   <div className="title">{t('event.host')}</div>
-                  <InputBox fullWidth>
-                    <input type="text" value={moderator} onChange={(e) => handleInput(e, 'moderator')} />
-                  </InputBox>
+                  <div>{moderator}</div>
                 </li>
                 <li>
                   <div className="title">{t('event.guest')}</div>
-                  <InputBox fullWidth>
-                    <input type="text" value={guest} onChange={(e) => handleInput(e, 'guest')} />
-                  </InputBox>
+                  <div>{guest}</div>
                 </li>
                 <li>
                   <div className="title">{t('event.volunteer')}</div>
-                  <InputBox fullWidth>
-                    <input type="text" value={volunteer} onChange={(e) => handleInput(e, 'volunteer')} />
-                  </InputBox>
+                  <div>{volunteer}</div>
                 </li>
               </UlBox>
             </InnerBox>
             <ContentBox>
-              <MdEditor
-                modelValue={content}
-                onChange={(val) => {
-                  setContent(val);
-                }}
-                toolbars={data.toobars as any}
-                language={lan}
-                codeStyleReverse={false}
-                noUploadImg
-              />
+              <ReactMarkdown>{content}</ReactMarkdown>
             </ContentBox>
-            <BtmBox>
-              <ButtonLink appearance="outline" className="btnBtm" onClick={() => router.push('/event')}>
-                {t('general.cancel')}
-              </ButtonLink>
-              <Button onClick={() => handleSubmit()}>{t('general.confirm')}</Button>
-            </BtmBox>
           </CardBody>
         </CardBox>
       </Box>
