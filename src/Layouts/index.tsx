@@ -98,7 +98,7 @@ const LayoutPage: React.FC<SEOProps> = ({ children, ...rest }) => {
   useEffect(() => {
     const pt = router.pathname;
 
-    const arr = ['proposal', 'project', 'guild', 'chat', 'city-hall', 'assets', 'home'];
+    const arr = ['proposal', 'project', 'guild', 'chat', 'city-hall', 'assets', 'home', 'event'];
     const arrCurrent = arr.find((item) => pt.indexOf(item) > -1);
 
     if (arrCurrent) {
