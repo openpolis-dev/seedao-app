@@ -155,8 +155,8 @@ export default function CreateGuild() {
   const { dispatch } = useAuthContext();
 
   const [title, setTitle] = useState('');
-  const [startAt, setStartAt] = useState<number>();
-  const [endAt, setEndAt] = useState<number>();
+  const [startAt, setStartAt] = useState<number>(0);
+  const [endAt, setEndAt] = useState<number>(0);
   const [sponsor, setSponsor] = useState('');
   const [moderator, setmoderator] = useState('');
   const [guest, setGuest] = useState('');
