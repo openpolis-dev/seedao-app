@@ -8,6 +8,9 @@ module.exports = {
   },
   assetPrefix: undefined,
   basePath: undefined,
+  compiler: {
+    styledComponents: true
+  },
   images: {
     unoptimized: true,
     loader: 'akamai',
