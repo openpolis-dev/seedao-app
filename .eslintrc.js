@@ -21,6 +21,7 @@ module.exports = {
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/ban-ts-comment': 'off',
     'prettier/prettier': 'off',
+    '@typescript-eslint/no-non-null-assertion': 'off',
     'react/prop-types': 0,
     'no-empty-function': 'off',
     'react/no-unescaped-entities': 'off',

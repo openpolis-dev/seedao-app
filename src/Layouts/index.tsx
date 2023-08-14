@@ -36,6 +36,10 @@ const Box = styled.div`
   .expanded .main-container {
     width: 12rem;
   }
+  .main-container header {
+    height: 0;
+    padding: 0;
+  }
 `;
 
 const LayoutPage: React.FC<SEOProps> = ({ children, ...rest }) => {
