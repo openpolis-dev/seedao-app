@@ -239,10 +239,6 @@ export default function CreateGuild() {
     // setDetail(dt.data);
   };
 
-  // useEffect(() => {
-  //   window && require('./font_2605852_u82y61ve02');
-  // }, [window]);
-
   const handleInput = (e: ChangeEvent, type: string) => {
     const { value } = e.target as HTMLInputElement;
     switch (type) {
@@ -327,6 +323,20 @@ export default function CreateGuild() {
     setUrl('');
   };
 
+  const changeEnd = (time: number) => {
+    if (startAt > time) {
+      setEndAt(0);
+    } else {
+      setEndAt(time);
+    }
+  };
+  const ChangeStart = (time: number) => {
+    setStartAt(time);
+    if (time > endAt) {
+      setEndAt(0);
+    }
+  };
+
   if (account && creator && account.toLocaleLowerCase() !== creator) {
     router.push('/');
   }
@@ -376,7 +386,7 @@ export default function CreateGuild() {
                       minDate={new Date()}
                       selected={startAt}
                       dateFormat="yyyy-MM-dd HH:mm aa"
-                      onChange={(date) => setStartAt(date!.valueOf())}
+                      onChange={(date) => ChangeStart(date!.valueOf())}
                       className="dateBox"
                     />
                     {/*<input type="text" value={startAt} onChange={(e) => handleInput(e, 'startAt')} />*/}
@@ -389,7 +399,7 @@ export default function CreateGuild() {
                       showTimeSelect
                       selected={endAt}
                       minDate={new Date(startAt!)}
-                      onChange={(date) => setEndAt(date!.valueOf())}
+                      onChange={(date) => changeEnd(date!.valueOf())}
                       dateFormat="yyyy-MM-dd HH:mm aa"
                     />
                     {/*<input type="text" value={endAt} onChange={(e) => handleInput(e, 'endAt')} />*/}
