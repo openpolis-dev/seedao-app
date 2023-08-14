@@ -24,7 +24,6 @@ ${({ theme }) => css`
   }
   html {
     font-size: 16px;
-    font-family: 'Barlow-Regular';
   }
 
   html,

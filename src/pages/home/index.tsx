@@ -24,7 +24,7 @@ const BannerBox = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 6rem 2.5rem;
+  padding: 6rem 2.5rem 4rem;
   background: url('/images/topBg.png') no-repeat right;
   background-size: auto 100%;
 `;
@@ -32,7 +32,7 @@ const BannerBox = styled.div`
 const LFtBox = styled.div`
   width: 59%;
   .tit {
-    font-size: 3.5rem;
+    font-size: 2.5rem;
     font-weight: bold;
     text-transform: uppercase;
     line-height: 1.2em;
@@ -53,6 +53,11 @@ const LFtBox = styled.div`
       font-weight: bold;
       margin-right: 5px;
       background: #f1f1f1;
+    }
+  }
+  @media (min-width: 1780px) {
+    .tit {
+      font-size: 3.5rem;
     }
   }
 `;
@@ -149,7 +154,7 @@ const LineBox = styled.div`
   background: url('/images/homebg.png') center no-repeat;
   background-size: 100%;
   background-attachment: fixed;
-  margin-bottom: 80px;
+  margin-bottom: 40px;
   .inner {
     background: rgba(161, 110, 255, 0.7);
     padding: 2.2rem;

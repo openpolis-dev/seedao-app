@@ -38,7 +38,6 @@ const Box = styled.div`
     .react-datepicker__current-month,
     .react-datepicker-time__header,
     .react-datepicker-year-header {
-      font-family: 'Inter-Regular';
       color: #000;
     }
 
@@ -110,7 +109,7 @@ const Box = styled.div`
       background: transparent;
     }
     .react-datepicker__input-container input.borderLess {
-      font-family: 'Inter-Regular' !important;
+      font-size: 1rem;
       background: transparent;
     }
   `}

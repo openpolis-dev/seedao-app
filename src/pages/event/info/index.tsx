@@ -300,10 +300,10 @@ export default function CreateGuild() {
       } else {
         rt = await createEvent(obj);
       }
-
       showToast('Success', ToastType.Success);
     } catch (e) {
       console.error('create event error:', e);
+      showToast('e', ToastType.Danger);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: null });
     }
@@ -313,9 +313,9 @@ export default function CreateGuild() {
     const { files } = e.target as any;
     // const url = window.URL.createObjectURL(files[0]);
     const { name, type } = files[0];
-
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
     const urlObj = await uplodaEventImage(name, type, files[0]);
-    console.log(urlObj);
+    dispatch({ type: AppActionType.SET_LOADING, payload: null });
     setUrl(urlObj);
   };
 

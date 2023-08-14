@@ -32,9 +32,6 @@ const getDefaultTheme = (): DefaultTheme['name'] => {
 };
 
 const Box = styled.div`
-  .menu-title {
-    font-family: 'Barlow-Regular';
-  }
   .expanded.menu-sidebar,
   .expanded .main-container {
     width: 12rem;
