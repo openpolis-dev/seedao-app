@@ -120,6 +120,8 @@ const Box = styled.div`
       font-size: 1rem;
       background: transparent;
       min-width: 200px;
+      font-family: Inter-Regular, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
+        sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
     }
   `}
 `;
