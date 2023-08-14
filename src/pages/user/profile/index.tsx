@@ -39,6 +39,15 @@ const UlBox = styled.ul`
 const InputBox = styled(InputGroup)`
   width: 600px;
   margin-right: 20px;
+  .wallet {
+    border: 1px solid #eee;
+    width: 100%;
+    border-radius: 0.25rem;
+    height: 40px;
+    padding: 0 1.125rem;
+    display: flex;
+    align-items: center;
+  }
 `;
 const MidBox = styled.div`
   display: flex;
@@ -196,6 +205,12 @@ export default function Profile() {
                 <div className="title">{t('My.Name')}</div>
                 <InputBox fullWidth>
                   <input type="text" placeholder="" value={userName} onChange={(e) => handleInput(e, 'userName')} />
+                </InputBox>
+              </li>
+              <li>
+                <div className="title">{t('My.wallet')}</div>
+                <InputBox fullWidth>
+                  <div className="wallet">{userData?.wallet}</div>
                 </InputBox>
               </li>
               <li>
