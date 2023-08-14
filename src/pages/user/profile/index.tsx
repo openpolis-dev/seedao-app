@@ -91,6 +91,11 @@ export default function Profile() {
     }
   };
   const saveProfile = async () => {
+    const reg = /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
+    if (!reg.test(email)) {
+      showToast(t('My.IncorrectEmail'), ToastType.Danger);
+      return;
+    }
     if (twitter && !twitter.startsWith('https://twitter.com/')) {
       showToast(t('My.IncorrectLink', { media: 'Twitter' }), ToastType.Danger);
       return;

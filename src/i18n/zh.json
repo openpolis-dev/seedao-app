@@ -213,6 +213,7 @@
     "ModifiedSuccess": "修改成功",
     "ModifiedFailed": "修改失败",
     "IncorrectLink": "{media}：请填写正确的信息",
+    "IncorrectEmail": "请填写正确的Email信息",
     "EmptySBT": "您还未拥有SBT"
   },
   "Msg": {

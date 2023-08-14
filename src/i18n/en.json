@@ -213,6 +213,7 @@
     "ModifiedSuccess": "Modified Successfully",
     "ModifiedFailed": "Modified Failed",
     "IncorrectLink": "{media}：required the correct link",
+    "IncorrectEmail": "Please enter the correct email information",
     "EmptySBT": "Not Owning SBT"
   },
   "Msg": {
