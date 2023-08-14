@@ -13,6 +13,7 @@ import NoItem from 'components/noItem';
 import { PermissionObject, PermissionAction } from 'utils/constant';
 import usePermission from 'hooks/usePermission';
 import UserCard from 'components/userCard';
+import { useWeb3React } from '@web3-react/core';
 
 interface Iprops {
   detail: ReTurnProject | undefined;
@@ -23,12 +24,7 @@ type UserMap = { [w: string]: IUser };
 
 export default function Members(props: Iprops) {
   const { detail, updateProject } = props;
-
-  const router = useRouter();
-  const { id } = router.query;
-
-  const canUpdateMember = usePermission(PermissionAction.UpdateMember, PermissionObject.GuildPrefix + id);
-  const canUpdateSponsor = usePermission(PermissionAction.UpdateSponsor, PermissionObject.GuildPrefix + id);
+  const canUpdateSponsor = usePermission(PermissionAction.UpdateSponsor, PermissionObject.GuildPrefix + detail?.id);
 
   const { t } = useTranslation();
   const { dispatch } = useAuthContext();
@@ -37,16 +33,14 @@ export default function Members(props: Iprops) {
   const [show, setShow] = useState(false);
   const [showDel, setShowDel] = useState(false);
   const [selectAdminArr, setSelectAdminArr] = useState<IUser[]>([]);
-  const [selectMemArr, setSelectMemArr] = useState<IUser[]>([]);
-  const [memberArr, setMemberArr] = useState<string[]>([]);
   const [adminArr, setAdminArr] = useState<string[]>([]);
 
   const [userMap, setUserMap] = useState<UserMap>({});
 
   useEffect(() => {
-    if (!id || !detail) return;
+    if (!detail) return;
     getDetail();
-  }, [id, detail]);
+  }, [detail]);
 
   const getUsersInfo = async (wallets: string[]) => {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
@@ -54,7 +48,7 @@ export default function Members(props: Iprops) {
       const res = await getUsers(wallets);
       const userData: UserMap = {};
       res.data.forEach((r) => {
-        userData[r.wallet || ''] = r;
+        userData[(r.wallet || '').toLowerCase()] = r;
       });
       setUserMap(userData);
     } catch (error) {
@@ -64,12 +58,10 @@ export default function Members(props: Iprops) {
     }
   };
 
-  const getDetail = async () => {
-    const members = detail?.members || [];
+  const getDetail = () => {
     const sponsors = detail?.sponsors || [];
-    setMemberArr(members.map((m) => m.toLowerCase()));
     setAdminArr(sponsors.map((m) => m.toLowerCase()));
-    getUsersInfo(Array.from(new Set([...members, ...sponsors])));
+    getUsersInfo(Array.from(new Set([...sponsors])));
   };
 
   const handleDel = () => {
@@ -79,19 +71,18 @@ export default function Members(props: Iprops) {
     setEdit(false);
     setShowDel(true);
   };
-  const closeAdd = (refresh?: boolean) => {
+  const closeAdd = () => {
     setShow(false);
-    refresh && updateProject();
+    updateProject();
   };
   const handleAdd = () => {
     setShow(true);
   };
-  const closeRemove = (refresh?: boolean) => {
+  const closeRemove = () => {
     setShowDel(false);
     setEdit(false);
     setSelectAdminArr([]);
-    setSelectMemArr([]);
-    refresh && updateProject();
+    updateProject();
   };
 
   const handleAdminSelect = (selItem: IUser) => {
@@ -104,27 +95,14 @@ export default function Members(props: Iprops) {
     }
     setSelectAdminArr(arr);
   };
-  const handleMemSelect = (selItem: IUser) => {
-    const selectHas = selectMemArr.findIndex((item) => item?.wallet === selItem.wallet);
-    const arr = [...selectMemArr];
-    if (selectHas > -1) {
-      arr.splice(selectHas, 1);
-    } else {
-      arr.push(selItem);
-    }
-    setSelectMemArr(arr);
-  };
   const formatAdminActive = (num: string) => {
     const arr = selectAdminArr.filter((item) => item.wallet === num);
     return !!arr.length;
   };
-  const formatMemActive = (num: string) => {
-    const arr = selectMemArr.filter((item) => item.wallet === num);
-    return !!arr.length;
-  };
 
   const getUser = (wallet: string): IUser => {
-    const user = userMap[wallet];
+    const user = userMap[wallet.toLowerCase()];
+    console.log(userMap, wallet, user);
     if (!user) {
       return {
         id: '',
@@ -141,24 +119,11 @@ export default function Members(props: Iprops) {
     return user;
   };
 
-  const removeButtonDisabled = useMemo(() => {
-    return !selectAdminArr.length && !selectMemArr.length;
-  }, [selectAdminArr, selectMemArr]);
-
   return (
     <Box>
-      {show && (
-        <Add
-          closeAdd={closeAdd}
-          id={id as string}
-          canUpdateMember={canUpdateMember}
-          canUpdateSponsor={canUpdateSponsor}
-        />
-      )}
-      {showDel && (
-        <Del id={id as string} closeRemove={closeRemove} selectAdminArr={selectAdminArr} selectMemArr={selectMemArr} />
-      )}
-      {(canUpdateMember || canUpdateSponsor) && (
+      {show && <Add closeAdd={closeAdd} canUpdateSponsor={canUpdateSponsor} />}
+      {showDel && <Del closeRemove={closeRemove} selectAdminArr={selectAdminArr} />}
+      {canUpdateSponsor && (
         <TopBox>
           <Button onClick={() => handleAdd()} disabled={edit}>
             {t('Guild.AddMember')}
@@ -170,7 +135,7 @@ export default function Members(props: Iprops) {
           )}
           {edit && (
             <>
-              <Button onClick={() => closeDel()} disabled={removeButtonDisabled}>
+              <Button onClick={() => closeDel()} disabled={!selectAdminArr.length}>
                 {t('general.confirm')}
               </Button>
               <Button appearance="outline" onClick={() => closeRemove()}>
@@ -195,22 +160,6 @@ export default function Members(props: Iprops) {
         </UlBox>
       </ItemBox>
       {!adminArr.length && <NoItem />}
-
-      <ItemBox>
-        <TitleBox>{t('Guild.Others')}</TitleBox>
-        <UlBox>
-          {memberArr.map((item, index) => (
-            <UserCard
-              key={index}
-              user={getUser(item)}
-              onSelectUser={handleMemSelect}
-              formatActive={formatMemActive}
-              showEdit={edit && canUpdateMember}
-            />
-          ))}
-        </UlBox>
-      </ItemBox>
-      {!memberArr.length && <NoItem />}
     </Box>
   );
 }

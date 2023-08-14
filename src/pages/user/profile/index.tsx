@@ -92,7 +92,7 @@ export default function Profile() {
   };
   const saveProfile = async () => {
     const reg = /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
-    if (!reg.test(email)) {
+    if (email && !reg.test(email)) {
       showToast(t('My.IncorrectEmail'), ToastType.Danger);
       return;
     }

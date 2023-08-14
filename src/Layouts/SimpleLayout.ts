@@ -122,7 +122,7 @@ ${({ theme }) => css`
     }
   }
   .sidebar-menu .menu-title {
-    font-size: 1rem !important;
+    font-size: 0.9rem !important;
   }
 
   ${breakpointDown('xs')`

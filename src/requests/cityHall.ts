@@ -7,7 +7,11 @@ export const getCityHallDetail = () => {
   return request.get(`${PATH_PREFIX}/info`);
 };
 
-export const updateMembers = (projectId: string, data: IUpdateStaffsParams) => {
+export interface MemberObj {
+  add?: string[];
+  remove?: string[];
+}
+export const updateMembers = (data: MemberObj) => {
   return request.post(`${PATH_PREFIX}/update_members`, data);
 };
 

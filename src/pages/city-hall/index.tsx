@@ -14,6 +14,7 @@ import { AppActionType, useAuthContext } from 'providers/authProvider';
 import { getProjectById } from 'requests/guild';
 import { getCityHallDetail } from 'requests/cityHall';
 import { ReTurnProject } from 'type/project.type';
+import { useWeb3React } from '@web3-react/core';
 
 const Box = styled.div`
   //position: relative;
@@ -75,7 +76,7 @@ export default function Index() {
                 <Issued />
               </Tab>
               <Tab key="3" title={t('city-hall.Members')} responsive>
-                <Members detail={detail} />
+                <Members detail={detail} updateProject={getDetail} />
               </Tab>
               <Tab key="4" title={t('city-hall.Asset')} responsive>
                 <Assets detail={detail} refreshProject={getDetail} />

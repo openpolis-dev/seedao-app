@@ -59,13 +59,11 @@ const InnerBox = styled.div`
 `;
 
 interface Iprops {
-  closeAdd: (refresh?: boolean) => void;
-  id: string;
-  canUpdateMember: boolean;
+  closeAdd: () => void;
   canUpdateSponsor: boolean;
 }
 export default function Add(props: Iprops) {
-  const { closeAdd, id, canUpdateMember, canUpdateSponsor } = props;
+  const { closeAdd, canUpdateSponsor } = props;
   const { t } = useTranslation();
   const { dispatch } = useAuthContext();
   const { showToast, Toast } = useToast();
@@ -73,35 +71,20 @@ export default function Add(props: Iprops) {
   const [adminList, setAdminList] = useState<string[]>(['']);
   const [memberList, setMemberList] = useState<string[]>(['']);
 
-  const handleInput = (e: ChangeEvent, index: number, type: string) => {
+  const handleInput = (e: ChangeEvent, index: number) => {
     const { value } = e.target as HTMLInputElement;
     let arr: string[] = [];
-    if (type === 'member') {
-      arr = [...memberList];
-      arr[index] = value;
-      setMemberList(arr);
-    } else {
-      arr = [...adminList];
-      arr[index] = value;
-      setAdminList(arr);
-    }
+    arr = [...adminList];
+    arr[index] = value;
+    setAdminList(arr);
   };
 
-  const handleAddMember = () => {
-    const arr = [...memberList];
-    arr.push('');
-    setMemberList(arr);
-  };
   const handleAddAdmin = () => {
     const arr = [...adminList];
     arr.push('');
     setAdminList(arr);
   };
-  const removeMember = (index: number) => {
-    const arr = [...memberList];
-    arr.splice(index, 1);
-    setMemberList(arr);
-  };
+
   const removeAdmin = (index: number) => {
     const arr = [...adminList];
     arr.splice(index, 1);
@@ -110,8 +93,7 @@ export default function Add(props: Iprops) {
 
   const submitObject = async () => {
     const _adminList_invalid = adminList.filter((item) => item && !ethers.utils.isAddress(item));
-    const _memberList_invalid = memberList.filter((item) => item && !ethers.utils.isAddress(item));
-    const _invalid_address = [..._adminList_invalid, ..._memberList_invalid];
+    const _invalid_address = [..._adminList_invalid];
 
     if (_invalid_address.length) {
       showToast(t('Msg.IncorrectAddress', { content: _invalid_address.join(', ') }), ToastType.Danger);
@@ -119,30 +101,21 @@ export default function Add(props: Iprops) {
     }
 
     const _adminList = adminList.filter((item) => item && ethers.utils.isAddress(item));
-    const _memberList = memberList.filter((item) => item && ethers.utils.isAddress(item));
 
     try {
-      const params: IUpdateStaffsParams = {
-        action: 'add',
+      const params = {
+        add: _adminList,
       };
-      if (!!_adminList.length) {
-        params['sponsors'] = _adminList;
-      }
-      if (!!_memberList.length) {
-        params['members'] = _memberList;
-      }
-      console.log('=====', params);
-      // dispatch({ type: AppActionType.SET_LOADING, payload: true });
-      // await updateMembers(id as string, params);
-      // showToast(t('Guild.addMemberSuccess'), ToastType.Success);
-      // dispatch({ type: AppActionType.SET_LOADING, payload: null });
-      // closeAdd(true);
+      dispatch({ type: AppActionType.SET_LOADING, payload: true });
+      await updateMembers(params);
+      showToast(t('Guild.addMemberSuccess'), ToastType.Success);
+      dispatch({ type: AppActionType.SET_LOADING, payload: null });
     } catch (e) {
       console.error(e);
       showToast(JSON.stringify(e), ToastType.Danger);
-      closeAdd();
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: null });
+      closeAdd();
     }
   };
 
@@ -175,36 +148,6 @@ export default function Add(props: Iprops) {
 
                       {!(!index && index === adminList.length - 1) && (
                         <span onClick={() => removeAdmin(index)}>
-                          <EvaIcon name="minus-outline" status="Primary" />
-                        </span>
-                      )}
-                    </li>
-                  ))}
-                </ul>
-              </ItemBox>
-            )}
-            {canUpdateMember && (
-              <ItemBox>
-                <div className="title">{t('Project.Others')}</div>
-                <ul>
-                  {memberList.map((item, index) => (
-                    <li key={`member_${index}`}>
-                      <InputGroup fullWidth>
-                        <input
-                          type="text"
-                          placeholder={t('Project.Members')}
-                          value={item}
-                          onChange={(e) => handleInput(e, index, 'member')}
-                        />
-                      </InputGroup>
-                      {index === memberList.length - 1 && (
-                        <span onClick={() => handleAddMember()}>
-                          <EvaIcon name="plus-outline" status="Primary" />
-                        </span>
-                      )}
-
-                      {!(!index && index === memberList.length - 1) && (
-                        <span onClick={() => removeMember(index)}>
                           <EvaIcon name="minus-outline" status="Primary" />
                         </span>
                       )}

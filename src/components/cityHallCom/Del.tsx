@@ -9,6 +9,7 @@ import { updateStaffs, IUpdateStaffsParams } from 'requests/guild';
 import { DefaultAvatar } from 'utils/constant';
 import Image from 'next/image';
 import useToast, { ToastType } from 'hooks/useToast';
+import { updateMembers } from 'requests/cityHall';
 
 const Mask = styled.div`
   background: rgba(0, 0, 0, 0.3);
@@ -53,38 +54,31 @@ const ItemBox = styled.div`
 `;
 
 interface Iprops {
-  closeRemove: (refresh?: boolean) => void;
+  closeRemove: () => void;
   selectAdminArr: IUser[];
   selectMemArr: IUser[];
-  id: string;
 }
 export default function Del(props: Iprops) {
-  const { closeRemove, selectAdminArr, selectMemArr, id } = props;
+  const { closeRemove, selectAdminArr, selectMemArr } = props;
   const { t } = useTranslation();
   const { dispatch } = useAuthContext();
 
   const { Toast, showToast } = useToast();
 
   const submitUpdate = async () => {
-    const params: IUpdateStaffsParams = {
-      action: 'remove',
+    const params = {
+      remove: selectAdminArr.map((item) => item.wallet || ''),
     };
-    if (!!selectAdminArr.length) {
-      params['sponsors'] = selectAdminArr.map((item) => item.wallet || '');
-    }
-    if (!!selectMemArr.length) {
-      params['members'] = selectMemArr.map((item) => item.wallet || '');
-    }
+
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
-      await updateStaffs(id as string, params);
-      closeRemove(true);
+      await updateMembers(params);
       showToast(t('Guild.RemoveMemSuccess'), ToastType.Success);
     } catch (e) {
       console.error(e);
-      closeRemove();
       showToast(JSON.stringify(e), ToastType.Danger);
     } finally {
+      closeRemove();
       dispatch({ type: AppActionType.SET_LOADING, payload: null });
     }
   };
@@ -97,22 +91,6 @@ export default function Del(props: Iprops) {
         <CardBody>
           {!!selectAdminArr.length && <div className="title">{t('Guild.Dominator')}</div>}
           {selectAdminArr.map((item, index) => (
-            <ItemBox key={index}>
-              <div>
-                {item.avatar ? (
-                  <img src={item.avatar} style={{ width: '40px', height: '40px' }} />
-                ) : (
-                  <Image src={DefaultAvatar} alt="" width="40px" height="40px" />
-                )}
-              </div>
-              <div>
-                <div>{item.name}</div>
-                <div>{item.wallet}</div>
-              </div>
-            </ItemBox>
-          ))}
-          {!!selectMemArr.length && <div className="title">{t('Guild.Others')}</div>}
-          {selectMemArr.map((item, index) => (
             <ItemBox key={index}>
               <div>
                 {item.avatar ? (

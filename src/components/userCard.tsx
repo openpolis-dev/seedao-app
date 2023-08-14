@@ -6,6 +6,7 @@ import { DefaultAvatar } from 'utils/constant';
 import PublicJs from 'utils/publicJs';
 import { EvaIcon } from '@paljs/ui/Icon';
 import styled from 'styled-components';
+import { useWeb3React } from '@web3-react/core';
 
 interface IUserProps {
   user: IUser;
@@ -15,6 +16,7 @@ interface IUserProps {
 }
 
 export default function UserCard({ user, showEdit, onSelectUser, formatActive }: IUserProps) {
+  const { account } = useWeb3React();
   return (
     <UserCardBox>
       <div className="fst">
@@ -28,12 +30,12 @@ export default function UserCard({ user, showEdit, onSelectUser, formatActive }:
           <div>{user.name}</div>
           <div style={{ display: 'flex', gap: '5px' }}>
             <span>{PublicJs.AddressToShow(user.wallet || '')}</span>
-            <CopyBox text={user.wallet || ''}>
+            <CopyBox text={user.wallet || ''} dir="left">
               <EvaIcon name="clipboard-outline" options={{ width: '18px', height: '18px' }} />
             </CopyBox>
           </div>
         </div>
-        {showEdit && (
+        {showEdit && account?.toLowerCase() !== user.wallet?.toLowerCase() && (
           <div
             className={formatActive && formatActive(user.wallet || '') ? 'topRht active' : 'topRht'}
             onClick={() => onSelectUser && onSelectUser(user)}
