@@ -9,6 +9,8 @@ import { AppActionType, useAuthContext } from 'providers/authProvider';
 import ReactMarkdown from 'react-markdown';
 import { getEventById, uplodaEventImage } from 'requests/event';
 import { formatTime } from 'utils/time';
+import { ButtonLink } from '@paljs/ui/Button';
+import { useWeb3React } from '@web3-react/core';
 
 const Box = styled.div`
   .btnBtm {
@@ -39,10 +41,16 @@ const UlBox = styled.div`
 `;
 
 const BackBox = styled.div`
+  width: 100%;
   padding: 30px 20px 0;
   display: inline-flex;
   align-items: center;
-  cursor: pointer;
+  justify-content: space-between;
+  .back {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+  }
   .icon {
     font-size: 24px;
   }
@@ -129,6 +137,7 @@ export default function ViewEvent() {
   const { id } = router.query;
 
   const { dispatch } = useAuthContext();
+  const { account } = useWeb3React();
 
   const [title, setTitle] = useState('');
   const [startAt, setStartAt] = useState<number>();
@@ -140,6 +149,7 @@ export default function ViewEvent() {
   const [content, setContent] = useState('');
   const [media, setMedia] = useState('');
   const [url, setUrl] = useState('');
+  const [creator, setCreator] = useState('');
 
   useEffect(() => {
     if (!id) return;
@@ -150,9 +160,10 @@ export default function ViewEvent() {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     const dt = await getEventById(id as string);
     dispatch({ type: AppActionType.SET_LOADING, payload: false });
-    const { metadata, title, start_at, end_at, content, cover_img } = dt.data;
+    const { metadata, title, start_at, end_at, content, cover_img, initiator } = dt.data;
 
     setTitle(title);
+    setCreator(initiator);
     const st = new Date(start_at);
     setStartAt(st.valueOf());
     const et = new Date(end_at);
@@ -176,12 +187,22 @@ export default function ViewEvent() {
   };
 
   return (
-    <Layout title="SeeDAO | Create Guild">
+    <Layout title="SeeDAO Event">
       <Box>
         <CardBox>
           <div>
-            <BackBox onClick={() => router.back()}>
-              <EvaIcon name="chevron-left-outline" className="icon" /> <span>{t('general.back')}</span>
+            <BackBox>
+              <div className="back" onClick={() => router.back()}>
+                <EvaIcon name="chevron-left-outline" className="icon" />
+                <span>{t('general.back')}</span>
+              </div>
+              <div>
+                {account && account.toLocaleLowerCase() === creator && (
+                  <EditButton onClick={() => router.push(`/event/info?id=${id}`)} fullWidth shape="Rectangle">
+                    {t('event.edit')}
+                  </EditButton>
+                )}
+              </div>
             </BackBox>
           </div>
 
@@ -243,3 +264,9 @@ export default function ViewEvent() {
     </Layout>
   );
 }
+
+const EditButton = styled(ButtonLink)`
+  &:hover {
+    color: #fff;
+  }
+`;
