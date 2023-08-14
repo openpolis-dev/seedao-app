@@ -13,6 +13,9 @@ const FirstLine = styled.ul`
   align-items: center;
   justify-content: space-between;
   width: 100%;
+  .tit {
+    font-size: 1rem;
+  }
   li {
     border: 1px solid #f1f1f1;
     margin-bottom: 40px;
@@ -69,21 +72,21 @@ export default function Assets({ id, detail }: IProps) {
       <FirstLine>
         <li>
           <div className="line">
-            <div>{t('Project.RemainingUSDBudget')}</div>
+            <div className="tit">{t('Project.RemainingUSDBudget')}</div>
             <div className="num">{token?.remain_amount || 0}</div>
           </div>
           <div>
-            <div>{t('Project.USDBudget')}</div>
+            <div className="tit">{t('Project.USDBudget')}</div>
             <div className="num">{token?.total_amount || 0}</div>
           </div>
         </li>
         <li>
           <div>
-            <div>{t('Project.RemainingPointsBudget')}</div>
+            <div className="tit">{t('Project.RemainingPointsBudget')}</div>
             <div className="num">{point?.remain_amount || 0}</div>
           </div>
           <div>
-            <div>{t('Project.PointsBudget')}</div>
+            <div className="tit">{t('Project.PointsBudget')}</div>
             <div className="num">{point?.total_amount || 0}</div>
           </div>
         </li>

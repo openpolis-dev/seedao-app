@@ -64,7 +64,7 @@ export default function Proposal() {
                 <div className="date">{formatDate(new Date(data?.updated_at || ''))}</div>
               </div>
             </User>
-            <MoreButton shape="Rectangle" appearance="outline" size="Tiny" onClick={lookMore}>
+            <MoreButton shape="Rectangle" appearance="outline" onClick={lookMore}>
               查看更多
             </MoreButton>
             {/* <div style={{ overflow: 'hidden' }}>{data?.first_post.content}</div> */}

@@ -92,7 +92,7 @@ const FirstLine = styled.ul`
     color: #fff;
   }
   .tips {
-    font-size: 12px;
+    font-size: 0.9rem;
     color: #fff;
   }
 `;
@@ -323,7 +323,7 @@ export default function Index() {
   }, []);
 
   return (
-    <Layout title="SeeDAO Assets">
+    <Layout title="SEEDAO Assets">
       {Toast}
       {!!showModifyModal && (
         <ModifyBudgetModal handleClose={() => setshowModifyModal(undefined)} handleModify={handleModifyBudget} />
@@ -412,7 +412,7 @@ export default function Index() {
                   <p className="tips">1SCR ≈ {SCR_PRICE}U</p>
                 </div>
               </div>
-              <div className="decorBg">SeeDAO</div>
+              <div className="decorBg">SEEDAO</div>
             </li>
             <li className="center">
               <div className="inner">
@@ -425,7 +425,7 @@ export default function Index() {
                   {t('Assets.FloorPrice')}: <span>{nftData.floorPrice}ETH</span>
                 </div>
               </div>
-              <div className="decorBg">SeeDAO</div>
+              <div className="decorBg">SEEDAO</div>
             </li>
             <li>
               <div className="inner">
@@ -443,7 +443,7 @@ export default function Index() {
                   )}
                 </AssetBox>
               </div>
-              <div className="decorBg">SeeDAO</div>
+              <div className="decorBg">SEEDAO</div>
             </li>
             <li className="center">
               <div className="inner">
@@ -462,7 +462,7 @@ export default function Index() {
                   )}
                 </AssetBox>
               </div>
-              <div className="decorBg">SeeDAO</div>
+              <div className="decorBg">SEEDAO</div>
             </li>
           </FirstLine>
 
@@ -477,6 +477,7 @@ const AssetBox = styled.div`
   display: flex;
   align-items: center;
   gap: 8px;
+  font-size: 0.9rem !important;
   .btn-edit {
     cursor: pointer;
     height: 18px;
@@ -631,6 +632,7 @@ const LiHead = styled.div`
 
 const LiTitle = styled.div`
   color: #fff;
+  font-size: 1.2rem;
   ${({ theme }) => css`
     font-weight: ${theme.textSubtitleFontWeight};
   `}

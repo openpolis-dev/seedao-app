@@ -63,6 +63,8 @@ const FirstLine = styled.ul`
     border-bottom: 1px solid rgba(255, 255, 255, 0.4);
     margin-bottom: 20px;
     width: 100%;
+    font-weight: bold;
+    font-size: 1.2rem;
   }
   .num {
     font-size: 30px;
@@ -112,7 +114,7 @@ export default function Vault() {
             <li>
               <div className="topBox">{t('My.Assets')}</div>
               <div className="num">{token?.total_amount || 0}</div>
-              <div className="decorBg">SeeDAO</div>
+              <div className="decorBg">SEEDAO</div>
             </li>
             <li>
               <div className="topBox">
@@ -121,7 +123,7 @@ export default function Vault() {
               </div>
 
               <div className="num">{credit?.total_amount || 0}</div>
-              <div className="decorBg">SeeDAO</div>
+              <div className="decorBg">SEEDAO</div>
             </li>
           </FirstLine>
           <SBTCard />

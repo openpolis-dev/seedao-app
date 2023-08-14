@@ -52,7 +52,7 @@ const LFtBox = styled.div`
       padding: 2px 5px;
       font-weight: bold;
       margin-right: 5px;
-      background: #f1f1f1;
+      //background: #f1f1f1;
     }
   }
   @media (min-width: 1780px) {
@@ -87,6 +87,7 @@ const Item = styled.div`
     margin: 1rem;
     display: flex;
     align-items: center;
+    font-weight: bold;
   }
 `;
 
@@ -146,7 +147,7 @@ const TitBox = styled.div`
   a {
     float: right;
     font-weight: normal;
-    font-size: 14px;
+    font-size: 1rem;
     text-decoration: underline;
     cursor: pointer;
   }
@@ -172,6 +173,7 @@ const LineBox = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
+    font-size: 1.2rem;
   }
   .num {
     font-size: 3rem;
@@ -182,7 +184,7 @@ const LineBox = styled.div`
 `;
 
 const CityBox = styled.div`
-  margin: 0 2rem;
+  margin: 1rem 2rem;
 `;
 
 const LinkBox = styled.ul`
@@ -325,7 +327,7 @@ export default function Index() {
           <LFtBox>
             <div className="tit">{t('Home.Slogan')}</div>
             <div className="tips">
-              <span>{t('Home.SloganVison')}</span>
+              <span>{t('Home.SloganVison')}:</span>
               {t('Home.SloganDesc')}
             </div>
           </LFtBox>

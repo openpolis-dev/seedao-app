@@ -47,6 +47,7 @@ const Item = styled.div`
     margin: 1rem;
     display: flex;
     align-items: center;
+    font-weight: bold;
   }
 `;
 

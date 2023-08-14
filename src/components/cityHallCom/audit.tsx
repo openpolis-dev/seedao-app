@@ -82,6 +82,7 @@ const TableBox = styled.div`
   width: 100%;
   overflow-x: auto;
   overflow-y: hidden;
+  padding-bottom: 3rem;
   table {
     th {
       background: transparent;

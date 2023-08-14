@@ -96,8 +96,11 @@ const InnerBox = styled.div`
 
 const ContentBox = styled.div`
   line-height: 1.2em;
+  h2 {
+    padding: 1rem 0;
+  }
   p {
-    padding: 1rem -0px;
+    padding: 0 -0px 1rem;
   }
 `;
 
