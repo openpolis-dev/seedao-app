@@ -81,7 +81,7 @@ export default function ProjectProposal(props: Iprops) {
 
   return (
     <Box>
-      {show && <PropsalModal closeModal={closeModal} />}
+      {show && <PropsalModal closeModal={closeModal} id={detail.id} />}
       {loading && <Loading />}
 
       {canUpdateInfo && (
