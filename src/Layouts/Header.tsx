@@ -97,6 +97,20 @@ const Header: React.FC<HeaderProps> = (props) => {
   };
 
   useEffect(() => {
+    const initProvider = async () => {
+      const { ethereum } = window as any;
+      ethereum.on('chainChanged', () => {
+        window.location.reload();
+      });
+      ethereum.on('accountsChanged', function () {
+        window.location.reload();
+      });
+    };
+
+    initProvider();
+  }, []);
+
+  useEffect(() => {
     isLogin && getUser();
   }, [isLogin]);
 
