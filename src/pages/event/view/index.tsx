@@ -1,17 +1,14 @@
 import Layout from 'Layouts';
-import { Card, CardHeader, CardBody } from '@paljs/ui/Card';
+import { Card, CardBody } from '@paljs/ui/Card';
 import styled from 'styled-components';
-import { InputGroup } from '@paljs/ui/Input';
-import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react';
-import { Button, ButtonLink } from '@paljs/ui/Button';
+import React, { FormEvent, useEffect, useState } from 'react';
 import { EvaIcon } from '@paljs/ui/Icon';
 import { useRouter } from 'next/router';
 import useTranslation from 'hooks/useTranslation';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
-import useToast, { ToastType } from 'hooks/useToast';
 import ReactMarkdown from 'react-markdown';
-
-import { createEvent, editEventById, getEventById, uplodaEventImage } from 'requests/event';
+import { getEventById, uplodaEventImage } from 'requests/event';
+import { formatTime } from 'utils/time';
 
 const Box = styled.div`
   .btnBtm {
@@ -22,56 +19,22 @@ const Box = styled.div`
 const CardBox = styled(Card)`
   min-height: 80vh;
 `;
-
-const BtmBox = styled.div`
-  margin: 50px 0;
-  padding-left: 440px;
-`;
-
-const UlBox = styled.ul`
+const UlBox = styled.div`
   width: 100%;
+
   li {
     display: flex;
     align-items: flex-start;
-    justify-content: flex-start;
-    margin-bottom: 22px;
-
-    .title {
-      margin-right: 20px;
-      line-height: 2.5em;
-      min-width: 180px;
-      background: #f7f9fc;
-      padding: 0 20px;
-      text-align: right;
-    }
+    margin-top: 1rem;
+    line-height: 2.5em;
   }
-`;
-
-const InputBox = styled(InputGroup)`
-  margin-right: 20px;
-  width: 100%;
-  display: flex;
-  .react-datepicker {
-    display: flex;
-    border: 0;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-  }
-  .react-datepicker__navigation--next--with-time:not(.react-datepicker__navigation--next--with-today-button) {
-    right: 120px;
-  }
-  .react-datepicker__time-container {
-    width: 120px;
-    border-left: 1px solid #eee;
-  }
-  .react-datepicker__header {
-    background: #fff;
-    border-bottom: 1px solid #eee;
-  }
-  .react-datepicker__time-box {
-    width: 120px !important;
-  }
-  .react-datepicker-wrapper {
-    width: 100%;
+  .title {
+    margin-right: 20px;
+    line-height: 2.5em;
+    min-width: 180px;
+    background: #f7f9fc;
+    padding: 0 20px;
+    text-align: right;
   }
 `;
 
@@ -86,9 +49,7 @@ const BackBox = styled.div`
 `;
 
 const BtnBox = styled.label`
-  background: #f7f9fc;
-  height: 480px;
-  width: 340px;
+  width: 35%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -134,20 +95,34 @@ const InnerBox = styled.div`
 `;
 
 const ContentBox = styled.div`
-  .cm-scroller {
-    background: #f7f9fc;
+  line-height: 1.2em;
+  p {
+    padding: 1rem -0px;
+  }
+`;
+
+const TitleTop = styled.div`
+  font-size: 2.5rem;
+  line-height: 1.2em;
+  font-weight: bold;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  padding-bottom: 0.5rem;
+  margin-bottom: 0.5rem;
+`;
+
+const TimeBox = styled.div`
+  border-bottom: 1px solid #eee;
+  padding: 1rem 0;
+  font-size: 1.1rem;
+  .iconRht {
+    margin-right: 1rem;
   }
 `;
 
 export default function ViewEvent() {
   const router = useRouter();
   const { t } = useTranslation();
-  const { Toast, showToast } = useToast();
-
-  const {
-    state: { language },
-  } = useAuthContext();
-
   const { id } = router.query;
 
   const { dispatch } = useAuthContext();
@@ -162,38 +137,6 @@ export default function ViewEvent() {
   const [content, setContent] = useState('');
   const [media, setMedia] = useState('');
   const [url, setUrl] = useState('');
-  const [lan, setLan] = useState('');
-
-  const [data] = useState({
-    toobars: [
-      'bold',
-      'underline',
-      'italic',
-      'strikeThrough',
-      'sub',
-      'sup',
-      'quote',
-      'unorderedList',
-      'orderedList',
-      'codeRow',
-      'code',
-      'link',
-      'image',
-      'table',
-      'revoke',
-      'next',
-      'pageFullscreen',
-      'fullscreen',
-      'preview',
-      'htmlPreview',
-    ],
-    toolbarsExclude: ['github'],
-  });
-
-  useEffect(() => {
-    const localLan = language === 'zh' ? 'zh-CN' : 'en-US';
-    setLan(localLan);
-  }, [language]);
 
   useEffect(() => {
     if (!id) return;
@@ -227,104 +170,11 @@ export default function ViewEvent() {
       setGuest('');
       setVolunteer('');
     }
-
-    // setMeta(JSON.parse(meta))
-
-    // setDetail(dt.data);
-  };
-
-  // useEffect(() => {
-  //   window && require('./font_2605852_u82y61ve02');
-  // }, [window]);
-
-  const handleInput = (e: ChangeEvent, type: string) => {
-    const { value } = e.target as HTMLInputElement;
-    switch (type) {
-      case 'title':
-        setTitle(value);
-        break;
-      case 'startAt':
-        setStartAt(Number(value));
-        break;
-      case 'endAt':
-        setEndAt(Number(value));
-        break;
-      case 'sponsor':
-        setSponsor(value);
-        break;
-      case 'moderator':
-        setmoderator(value);
-        break;
-      case 'media':
-        setMedia(value);
-        break;
-      case 'guest':
-        setGuest(value);
-        break;
-      case 'volunteer':
-        setVolunteer(value);
-        break;
-      case 'content':
-        setContent(value);
-        break;
-    }
-  };
-
-  const handleSubmit = async () => {
-    const itemObj = {
-      sponsor,
-      moderator,
-      volunteer,
-      media,
-      guest,
-    };
-
-    const start_at = Math.floor(startAt! / 1000).toString();
-    const end_at = Math.floor(endAt! / 1000).toString();
-
-    const obj = {
-      title,
-      cover_img: url,
-      content,
-      start_at,
-      end_at,
-      metadata: JSON.stringify(itemObj),
-    };
-    dispatch({ type: AppActionType.SET_LOADING, payload: true });
-    try {
-      let rt;
-      if (id) {
-        rt = await editEventById(id, obj);
-      } else {
-        rt = await createEvent(obj);
-      }
-      showToast('Success', ToastType.Success);
-    } catch (e) {
-      console.error('create event error:', e);
-      showToast(e.data?.msg, ToastType.Danger);
-    } finally {
-      dispatch({ type: AppActionType.SET_LOADING, payload: null });
-    }
-  };
-
-  const updateLogo = async (e: FormEvent) => {
-    const { files } = e.target as any;
-    // const url = window.URL.createObjectURL(files[0]);
-    const { name, type } = files[0];
-    dispatch({ type: AppActionType.SET_LOADING, payload: true });
-    const urlObj = await uplodaEventImage(name, type, files[0]);
-    dispatch({ type: AppActionType.SET_LOADING, payload: null });
-    setUrl(urlObj);
-  };
-
-  const removeUrl = () => {
-    setUrl('');
   };
 
   return (
     <Layout title="SeeDAO | Create Guild">
       <Box>
-        {Toast}
         <CardBox>
           <div>
             <BackBox onClick={() => router.back()}>
@@ -335,14 +185,7 @@ export default function ViewEvent() {
           {/*<CardHeader> {id ? t('event.edit') : t('event.create')}</CardHeader>*/}
           <CardBody>
             <InnerBox>
-              <BtnBox htmlFor="fileUpload" onChange={(e) => updateLogo(e)}>
-                {!url && (
-                  <div>
-                    <input id="fileUpload" type="file" hidden accept=".jpg, .jpeg, .png, .svg" />
-                    <EvaIcon name="cloud-upload-outline" className="iconRht" />
-                    <span>{t('event.upload')}</span>
-                  </div>
-                )}
+              <BtnBox>
                 {!!url && (
                   <ImgBox>
                     <img src={url} alt="" />
@@ -350,29 +193,42 @@ export default function ViewEvent() {
                 )}
               </BtnBox>
               <UlBox>
-                <li>{title}</li>
-                <li>{startAt}</li>
-                <li>{endAt}</li>
-                <li>
-                  <div className="title">{t('event.sponsor')}</div>
-                  <div>{sponsor}</div>
-                </li>
-                <li>
-                  <div className="title">{t('event.media')}</div>
-                  <div>{media}</div>
-                </li>
-                <li>
-                  <div className="title">{t('event.host')}</div>
-                  <div>{moderator}</div>
-                </li>
-                <li>
-                  <div className="title">{t('event.guest')}</div>
-                  <div>{guest}</div>
-                </li>
-                <li>
-                  <div className="title">{t('event.volunteer')}</div>
-                  <div>{volunteer}</div>
-                </li>
+                <TitleTop>{title}</TitleTop>
+                <TimeBox>
+                  <EvaIcon name="clock-outline" className="iconRht" />
+                  <span>{formatTime(startAt)}</span> ~ <span>{formatTime(endAt)}</span>
+                </TimeBox>
+
+                {!!sponsor && (
+                  <li>
+                    <div className="title">{t('event.sponsor')}</div>
+                    <div>{sponsor}</div>
+                  </li>
+                )}
+                {!!media && (
+                  <li>
+                    <div className="title">{t('event.media')}</div>
+                    <div>{media}</div>
+                  </li>
+                )}
+                {!!moderator && (
+                  <li>
+                    <div className="title">{t('event.host')}</div>
+                    <div>{moderator}</div>
+                  </li>
+                )}
+                {!!guest && (
+                  <li>
+                    <div className="title">{t('event.guest')}</div>
+                    <div>{guest}</div>
+                  </li>
+                )}
+                {!!volunteer && (
+                  <li>
+                    <div className="title">{t('event.volunteer')}</div>
+                    <div>{volunteer}</div>
+                  </li>
+                )}
               </UlBox>
             </InnerBox>
             <ContentBox>
