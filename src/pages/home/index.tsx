@@ -85,6 +85,8 @@ const Item = styled.div`
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     margin: 1rem;
+    display: flex;
+    align-items: center;
   }
 `;
 

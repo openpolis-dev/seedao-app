@@ -45,6 +45,8 @@ const Item = styled.div`
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     margin: 1rem;
+    display: flex;
+    align-items: center;
   }
 `;
 
@@ -107,37 +109,6 @@ const TitBox = styled.div`
   position: relative;
   .titLft {
     width: 100%;
-  }
-`;
-
-const RhtBox = styled.div``;
-
-const LineBox = styled.div`
-  background: url('/images/homebg.png') center no-repeat;
-  background-size: 100%;
-  background-attachment: fixed;
-  margin-bottom: 80px;
-  .inner {
-    background: rgba(161, 110, 255, 0.7);
-    padding: 2.2rem;
-  }
-  ul {
-    display: flex;
-    align-items: center;
-    width: 100%;
-  }
-  li {
-    width: 33.33333%;
-    color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .num {
-    font-size: 3rem;
-    font-weight: bold;
-    margin-right: 1.5rem;
-    font-family: 'Jost-Bold';
   }
 `;
 

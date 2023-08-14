@@ -30,24 +30,28 @@ export default function RegList(props: Iprops) {
   return (
     <Box>
       <table className="table" cellPadding="0" cellSpacing="0">
-        <tr>
-          <th>&nbsp;</th>
-          <th>{t('Project.Address')}</th>
-          <th>{t('Project.AddPoints')}</th>
-          <th>{t('Project.AddToken')}</th>
-          <th>{t('Project.Content')}</th>
-          <th>{t('Project.Note')}</th>
-        </tr>
-        {uploadList.map((item, index) => (
-          <tr key={index}>
-            <td>{index + 1}</td>
-            <td>{item.address}</td>
-            <td>{item.points}</td>
-            <td>{item.token}</td>
-            <td>{item.content}</td>
-            <td>{item.note}</td>
+        <thead>
+          <tr>
+            <th>&nbsp;</th>
+            <th>{t('Project.Address')}</th>
+            <th>{t('Project.AddPoints')}</th>
+            <th>{t('Project.AddToken')}</th>
+            <th>{t('Project.Content')}</th>
+            <th>{t('Project.Note')}</th>
           </tr>
-        ))}
+        </thead>
+        <tbody>
+          {uploadList.map((item, index) => (
+            <tr key={index}>
+              <td>{index + 1}</td>
+              <td>{item.address}</td>
+              <td>{item.points}</td>
+              <td>{item.token}</td>
+              <td>{item.content}</td>
+              <td>{item.note}</td>
+            </tr>
+          ))}
+        </tbody>
       </table>
 
       {!uploadList?.length && (
