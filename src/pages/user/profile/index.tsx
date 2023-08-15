@@ -100,13 +100,13 @@ export default function Profile() {
     }
   };
   const saveProfile = async () => {
-    const reg = /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
+    const reg = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (email && !reg.test(email)) {
       showToast(t('My.IncorrectEmail'), ToastType.Danger);
       return;
     }
 
-    if (google && !reg.test(email)) {
+    if (google && !reg.test(google)) {
       showToast(t('My.IncorrectGoogle'), ToastType.Danger);
       return;
     }
