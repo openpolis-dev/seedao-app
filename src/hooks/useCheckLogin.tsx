@@ -9,8 +9,6 @@ const useCheckLogin = () => {
     dispatch,
   } = useAuthContext();
 
-  console.log(tokenData, account, userData);
-
   if (tokenData?.token && account && tokenAccount && account.toLocaleLowerCase() !== tokenAccount.toLocaleLowerCase()) {
     dispatch({ type: AppActionType.CLEAR_AUTH, payload: undefined });
     return false;
