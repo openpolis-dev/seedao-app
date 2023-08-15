@@ -384,6 +384,7 @@ export default function CreateGuild() {
                     <DatePicker
                       showTimeSelect
                       minDate={new Date()}
+                      timeFormat="HH:mm aa"
                       selected={startAt}
                       dateFormat="yyyy-MM-dd HH:mm aa"
                       onChange={(date) => ChangeStart(date!.valueOf())}
@@ -398,6 +399,7 @@ export default function CreateGuild() {
                     <DatePicker
                       showTimeSelect
                       selected={endAt}
+                      timeFormat="HH:mm aa"
                       minDate={new Date(startAt!)}
                       onChange={(date) => changeEnd(date!.valueOf())}
                       dateFormat="yyyy-MM-dd HH:mm aa"
