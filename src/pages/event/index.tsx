@@ -212,7 +212,7 @@ export default function Index() {
                 <Col
                   breakPoint={{ xs: 3, sm: 3, md: 3, lg: 2.4 }}
                   key={idx}
-                  onClick={() => router.push(`event/info?id=${item.id}`)}
+                  onClick={() => router.push(`event/view?id=${item.id}`)}
                 >
                   <CardBox>
                     <Item>
