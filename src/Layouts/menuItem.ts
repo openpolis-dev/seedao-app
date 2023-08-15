@@ -38,7 +38,6 @@ const items: CMenuItemType[] = [
     title: 'menus.city-hall',
     icon: { name: 'shield-outline' },
     link: { href: '/city-hall' },
-    value: 'city-hall',
   },
   {
     title: 'menus.assets',

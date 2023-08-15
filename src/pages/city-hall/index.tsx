@@ -11,10 +11,10 @@ import Assets from 'components/cityHallCom/assets';
 import Members from 'components/cityHallCom/members';
 import Proposal from 'components/cityHallCom/proposal';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
-import { getProjectById } from 'requests/guild';
 import { getCityHallDetail } from 'requests/cityHall';
 import { ReTurnProject } from 'type/project.type';
-import { useWeb3React } from '@web3-react/core';
+import usePermission from 'hooks/usePermission';
+import { PermissionAction, PermissionObject } from 'utils/constant';
 
 const Box = styled.div`
   //position: relative;
@@ -49,6 +49,8 @@ export default function Index() {
   const { dispatch } = useAuthContext();
   const [detail, setDetail] = useState<ReTurnProject | undefined>();
 
+  const canUseCityhall = usePermission(PermissionAction.AuditApplication, PermissionObject.ProjectAndGuild);
+
   useEffect(() => {
     getDetail();
   }, []);
@@ -60,7 +62,7 @@ export default function Index() {
     setDetail(dt.data);
   };
 
-  return (
+  return canUseCityhall ? (
     <Layout title="SeeDAO City Hall">
       <Box>
         <CardBox>
@@ -82,6 +84,26 @@ export default function Index() {
                 <Assets detail={detail} refreshProject={getDetail} />
               </Tab>
               <Tab key="5" title={t('city-hall.Proposal')} responsive>
+                <Proposal detail={detail} refreshProject={getDetail} />
+              </Tab>
+            </TabsBox>
+          </TopBox>
+        </CardBox>
+      </Box>
+    </Layout>
+  ) : (
+    <Layout title="SeeDAO City Hall">
+      <Box>
+        <CardBox>
+          <TopBox>
+            <TabsBox>
+              <Tab key="0" title={t('city-hall.Members')} responsive>
+                <Members detail={detail} updateProject={getDetail} />
+              </Tab>
+              <Tab key="1" title={t('city-hall.Asset')} responsive>
+                <Assets detail={detail} refreshProject={getDetail} />
+              </Tab>
+              <Tab key="2" title={t('city-hall.Proposal')} responsive>
                 <Proposal detail={detail} refreshProject={getDetail} />
               </Tab>
             </TabsBox>

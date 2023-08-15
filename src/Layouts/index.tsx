@@ -14,8 +14,6 @@ import Link from 'next/link';
 import menuItems, { CMenuItemType } from './menuItem';
 import SEO, { SEOProps } from 'components/SEO';
 import useTranslation from 'hooks/useTranslation';
-import usePermission from 'hooks/usePermission';
-import { PermissionAction, PermissionObject } from 'utils/constant';
 import useCheckLogin from 'hooks/useCheckLogin';
 import { useAuthContext } from 'providers/authProvider';
 import { WalletType } from 'wallet/wallet';
@@ -57,8 +55,6 @@ const LayoutPage: React.FC<SEOProps> = ({ children, ...rest }) => {
   const AnyComponent = ThemeProvider as any;
   const MyGlobalStyle = SimpleLayout as any;
 
-  const canUseCityhall = usePermission(PermissionAction.AuditApplication, PermissionObject.ProjectAndGuild);
-
   const getState = (state?: 'hidden' | 'visible' | 'compacted' | 'expanded') => {
     setSeeHeader(state !== 'compacted');
   };
@@ -84,16 +80,14 @@ const LayoutPage: React.FC<SEOProps> = ({ children, ...rest }) => {
     const items: CMenuItemType[] = [];
     menuItems.forEach((d) => {
       const item = { ...d, title: t(d.title) };
-      if (d.value === 'city-hall') {
-        canUseCityhall && items.push(item);
-      } else if (d.value === 'chat') {
+      if (d.value === 'chat') {
         isLogin && wallet_type === WalletType.EOA && items.push(item);
       } else {
         items.push(item);
       }
     });
     return items;
-  }, [t, canUseCityhall, userData, wallet_type]);
+  }, [t, userData, wallet_type]);
 
   useEffect(() => {
     const pt = router.pathname;
