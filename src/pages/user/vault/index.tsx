@@ -8,6 +8,7 @@ import requests from 'requests';
 import { BudgetType } from 'type/project.type';
 import useTranslation from 'hooks/useTranslation';
 import SBTCard from './sbt';
+import { formatNumber } from 'utils/number';
 
 const Box = styled.div`
   padding: 40px 20px;
@@ -113,7 +114,7 @@ export default function Vault() {
           <FirstLine>
             <li>
               <div className="topBox">{t('My.Assets')}</div>
-              <div className="num">{token?.total_amount || 0}</div>
+              <div className="num">{formatNumber(token?.total_amount || 0)}</div>
               <div className="decorBg">SEEDAO</div>
             </li>
             <li>
@@ -122,7 +123,7 @@ export default function Vault() {
                 {/* <div className="tips">(包含待发放未上链积分)</div> */}
               </div>
 
-              <div className="num">{credit?.total_amount || 0}</div>
+              <div className="num">{formatNumber(credit?.total_amount || 0)}</div>
               <div className="decorBg">SEEDAO</div>
             </li>
           </FirstLine>
