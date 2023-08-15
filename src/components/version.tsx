@@ -14,7 +14,7 @@ const VersionBox = styled.div`
   position: fixed;
   bottom: 0;
   left: 0;
-  width: 256px;
+  width: 100%;
   font-size: 12px;
   line-height: 40px;
   text-align: center;
