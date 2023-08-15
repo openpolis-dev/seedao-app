@@ -9,9 +9,9 @@ const items: CMenuItemType[] = [
     link: { href: '/home' },
   },
   {
-    title: 'menus.Proposal',
-    icon: { name: 'browser-outline' },
-    link: { href: '/proposal' },
+    title: 'menus.Event',
+    icon: { name: 'checkmark-square-2-outline' },
+    link: { href: '/event' },
   },
   {
     title: 'menus.Project',
@@ -24,15 +24,9 @@ const items: CMenuItemType[] = [
     link: { href: '/guild' },
   },
   {
-    title: 'menus.Event',
-    icon: { name: 'checkmark-square-2-outline' },
-    link: { href: '/event' },
-  },
-  {
-    title: 'menus.Chat',
-    icon: { name: 'message-circle-outline' },
-    link: { href: '/chat' },
-    value: 'chat',
+    title: 'menus.Proposal',
+    icon: { name: 'browser-outline' },
+    link: { href: '/proposal' },
   },
   {
     title: 'menus.city-hall',
@@ -43,6 +37,12 @@ const items: CMenuItemType[] = [
     title: 'menus.assets',
     icon: { name: 'cube-outline' },
     link: { href: '/assets' },
+  },
+  {
+    title: 'menus.Chat',
+    icon: { name: 'message-circle-outline' },
+    link: { href: '/chat' },
+    value: 'chat',
   },
 ];
 
