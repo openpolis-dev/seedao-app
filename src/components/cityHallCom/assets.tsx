@@ -105,7 +105,7 @@ export default function Assets({ detail, refreshProject }: IProps) {
     setShowLft(true);
   };
   const hideShow1 = () => {
-    setShowRht(false);
+    setShowLft(false);
 
     const obj: IUpdateBudgetParams = {
       total_amount: Number(editToken),
@@ -172,9 +172,11 @@ export default function Assets({ detail, refreshProject }: IProps) {
             )}
 
             {showLft && (
-              <FlexBox onClick={() => hideShow1()}>
+              <FlexBox>
                 <input type="text" className="inputBg" value={editToken} onChange={(e) => handleInput(e, 'token')} />
-                <EvaIcon name="checkmark-outline" className="iconRht" />
+                <span onClick={() => hideShow1()}>
+                  <EvaIcon name="checkmark-outline" className="iconRht" />
+                </span>
               </FlexBox>
             )}
           </div>
