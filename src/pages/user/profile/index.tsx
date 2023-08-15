@@ -198,9 +198,9 @@ export default function Profile() {
                 </div>
               )}
               {!!avatar && (
-                <ImgBox>
-                  <div className="del" onClick={() => removeUrl()}>
-                    <EvaIcon name="close-outline" status="Control" />
+                <ImgBox onClick={() => removeUrl()}>
+                  <div className="del">
+                    <EvaIcon className="iconTop" name="close-outline" status="Control" />
                   </div>
                   <img src={avatar} alt="" />
                 </ImgBox>
@@ -306,14 +306,27 @@ const ImgBox = styled.div`
   justify-content: center;
   position: relative;
   .del {
+    display: none;
     position: absolute;
-    right: -15px;
-    top: -15px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
     z-index: 999;
-    padding: 6px;
-    border-radius: 100%;
+    //display: flex;
+    align-items: center;
+    justify-content: center;
     background: #a16eff;
+    opacity: 0.8;
     color: #fff;
     cursor: pointer;
+    .iconTop {
+      font-size: 40px;
+    }
+  }
+  &:hover {
+    .del {
+      display: flex;
+    }
   }
 `;
