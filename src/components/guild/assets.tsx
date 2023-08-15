@@ -3,6 +3,7 @@ import AssetList from './assetList';
 import React, { useEffect, useState } from 'react';
 import { BudgetType, ReTurnProject, IBudgetItem } from 'type/project.type';
 import useTranslation from 'hooks/useTranslation';
+import { formatNumber } from 'utils/number';
 
 const Box = styled.div`
   padding: 40px 20px;
@@ -71,21 +72,21 @@ export default function Assets({ id, detail }: IProps) {
         <li>
           <div className="line">
             <div>{t('Guild.RemainingUSDBudget')}</div>
-            <div className="num">{token?.remain_amount || 0}</div>
+            <div className="num">{formatNumber(token?.remain_amount || 0)}</div>
           </div>
           <div>
             <div>{t('Guild.USDBudget')}</div>
-            <div className="num">{token?.total_amount || 0}</div>
+            <div className="num">{formatNumber(token?.total_amount || 0)}</div>
           </div>
         </li>
         <li>
           <div>
             <div>{t('Guild.RemainingPointsBudget')}</div>
-            <div className="num">{point?.remain_amount || 0}</div>
+            <div className="num">{formatNumber(point?.remain_amount || 0)}</div>
           </div>
           <div>
             <div>{t('Guild.PointsBudget')}</div>
-            <div className="num">{point?.total_amount || 0}</div>
+            <div className="num">{formatNumber(point?.total_amount || 0)}</div>
           </div>
         </li>
       </FirstLine>
