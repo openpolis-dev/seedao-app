@@ -13,6 +13,9 @@ import { AppActionType, useAuthContext } from 'providers/authProvider';
 import useTranslation from 'hooks/useTranslation';
 import usePermission from 'hooks/usePermission';
 import { PermissionObject, PermissionAction } from 'utils/constant';
+import { filter } from 'minimatch';
+import useToast, { ToastType } from 'hooks/useToast';
+import { useWeb3React } from '@web3-react/core';
 
 const Box = styled.div`
   padding: 40px 0;
@@ -125,6 +128,7 @@ const RhtBoxT = styled.div`
 export default function Index() {
   const router = useRouter();
   const { t } = useTranslation();
+  const { Toast, showToast } = useToast();
   const { dispatch } = useAuthContext();
   const [pageCur, setPageCur] = useState(1);
   const [pageSize, setPageSize] = useState(20);
@@ -144,36 +148,50 @@ export default function Index() {
 
   const getList = async () => {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
-    const rt = await getEventList({
-      page: pageCur,
-      size: pageSize,
-      sort_order: 'desc',
-      sort_field: 'start_at',
-    });
-    dispatch({ type: AppActionType.SET_LOADING, payload: null });
-    const { rows, total, size, page } = rt.data;
-    setList(rows);
-    setPageCur(page);
-    setPageSize(size);
-    setTotal(total);
+    try {
+      const rt = await getEventList({
+        page: pageCur,
+        size: pageSize,
+        sort_order: 'desc',
+        sort_field: 'start_at',
+      });
+
+      const { rows, total, size, page } = rt.data;
+      setList(rows);
+      setPageCur(page);
+      setPageSize(size);
+      setTotal(total);
+    } catch (e) {
+      showToast(e.message, ToastType.Danger);
+      console.error('event list', e);
+    } finally {
+      dispatch({ type: AppActionType.SET_LOADING, payload: null });
+    }
+
     // setList(rt.data)
   };
 
   const getMyList = async () => {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
-    const rt = await getMyEvent({
-      page: pageCur,
-      size: pageSize,
-      sort_order: 'desc',
-      sort_field: 'start_at',
-      state: '',
-    });
-    dispatch({ type: AppActionType.SET_LOADING, payload: null });
-    const { rows, total, size, page } = rt.data;
-    setList(rows);
-    setPageCur(page);
-    setPageSize(size);
-    setTotal(total);
+    try {
+      const rt = await getMyEvent({
+        page: pageCur,
+        size: pageSize,
+        sort_order: 'desc',
+        sort_field: 'start_at',
+        state: '',
+      });
+      const { rows, total, size, page } = rt.data;
+      setList(rows);
+      setPageCur(page);
+      setPageSize(size);
+      setTotal(total);
+    } catch (e) {
+      console.error('my event list', e);
+      showToast(e.message, ToastType.Danger);
+    } finally {
+      dispatch({ type: AppActionType.SET_LOADING, payload: null });
+    }
   };
 
   const handlePage = (num: number) => {
@@ -187,6 +205,7 @@ export default function Index() {
 
   return (
     <Layout title="SeeDAO Project">
+      {Toast}
       <Card>
         <Box>
           <ActiveBox>
@@ -194,7 +213,7 @@ export default function Index() {
               <div className="titLft">
                 <Tabs activeIndex={0} onSelect={(e) => selectCurrent(e)}>
                   <Tab title={t('event.events')} responsive />
-                  <Tab title={t('event.MyEvents')} responsive />
+                  <Tab title={t('event.MyEvents')} responsive disabled={!canCreateEvent} />
                 </Tabs>
               </div>
 

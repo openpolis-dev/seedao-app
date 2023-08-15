@@ -7,6 +7,7 @@ import { EvaIcon } from '@paljs/ui/Icon';
 import { IUpdateBudgetParams, UpdateBudget } from 'requests/cityHall';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import useToast, { ToastType } from 'hooks/useToast';
+import { useWeb3React } from '@web3-react/core';
 
 const Box = styled.div`
   padding: 40px 20px;
@@ -81,6 +82,7 @@ export default function Assets({ detail, refreshProject }: IProps) {
   const { t } = useTranslation();
   const { Toast, showToast } = useToast();
   const { dispatch } = useAuthContext();
+  const { account } = useWeb3React();
 
   const [token, setToken] = useState<IBudgetItem>();
   const [point, setPoint] = useState<IBudgetItem>();
@@ -135,8 +137,8 @@ export default function Assets({ detail, refreshProject }: IProps) {
       showToast(t('Project.changeBudgetSuccess'), ToastType.Success);
       refreshProject();
     } catch (e) {
-      console.error(e);
-      showToast(JSON.stringify(e), ToastType.Danger);
+      console.error(e.statusText);
+      showToast(e.statusText || e.message, ToastType.Danger);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: null });
     }
@@ -163,11 +165,14 @@ export default function Assets({ detail, refreshProject }: IProps) {
           </div>
           <div>
             <div>{t('Guild.USDBudget')}</div>
-
             {!showLft && (
-              <FlexBox onClick={() => handleShow1()}>
+              <FlexBox>
                 <div className="num">{token?.total_amount || 0}</div>
-                <EvaIcon name="edit-2-outline" className="iconRht" />
+                {!!account && (
+                  <span onClick={() => handleShow1()}>
+                    <EvaIcon name="edit-2-outline" className="iconRht" />
+                  </span>
+                )}
               </FlexBox>
             )}
 
@@ -192,9 +197,13 @@ export default function Assets({ detail, refreshProject }: IProps) {
             <div>{t('Guild.PointsBudget')}</div>
             <FlexBox>
               {!showRht && (
-                <FlexBox onClick={() => handleShow2()}>
+                <FlexBox>
                   <div className="num">{point?.total_amount || 0}</div>
-                  <EvaIcon name="edit-2-outline" className="iconRht" />
+                  {!!account && (
+                    <span onClick={() => handleShow2()}>
+                      <EvaIcon name="edit-2-outline" className="iconRht" />
+                    </span>
+                  )}
                 </FlexBox>
               )}
 
