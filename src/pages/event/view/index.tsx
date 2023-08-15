@@ -198,7 +198,7 @@ export default function ViewEvent() {
               </div>
               <div>
                 {account && account.toLocaleLowerCase() === creator && (
-                  <EditButton onClick={() => router.push(`/event/info?id=${id}`)} fullWidth shape="Rectangle">
+                  <EditButton onClick={() => router.push(`/event/edit?id=${id}`)} fullWidth shape="Rectangle">
                     {t('event.edit')}
                   </EditButton>
                 )}

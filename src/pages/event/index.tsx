@@ -201,7 +201,7 @@ export default function Index() {
               {/*<span>Events</span>*/}
               {canCreateEvent && (
                 <RhtBoxT>
-                  <ButtonLink onClick={() => router.push('/event/info')} fullWidth shape="Rectangle">
+                  <ButtonLink onClick={() => router.push('/event/edit')} fullWidth shape="Rectangle">
                     {t('event.create')}
                   </ButtonLink>
                 </RhtBoxT>
