@@ -250,7 +250,7 @@ export default function Index() {
     const handleSgnHolders = async () => {
       try {
         const res = await getDatafromNftscan(SGN_CONTRACT, 'https://restapi.nftscan.com');
-        setSgnHolders(res.data?.data?.owners_total || 0);
+        setSgnHolders(res.data?.data?.items_total || 0);
       } catch (error) {
         console.error('[SBT] get sgn owners failed', error);
       }
