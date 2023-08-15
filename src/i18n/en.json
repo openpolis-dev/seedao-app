@@ -93,7 +93,7 @@
     "Rejected": "Rejected",
     "ToBeIssued": "To Be Issued",
     "Approved": "Approved",
-    "Sended": "Sended",
+    "Sended": "Sent",
     "Sending": "Sending",
     "BudgetSource": "Budget Source",
     "Operator": "Operator",
@@ -180,7 +180,7 @@
     "Tips": "After clicking the [Send] button, the status of the selected user changes to [Sending], and only after the sending is completed can it be sent to other users",
     "SendCompleted": "Send Completed",
     "FillInId": "Please fill in the transaction ID of the sending record(use ; to split)",
-    "SendSuccess": "Sended"
+    "SendSuccess": "Sent"
   },
   "Assets": {
     "TotalBalance": "Vault Balance",
