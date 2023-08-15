@@ -15,6 +15,7 @@ import usePermission from 'hooks/usePermission';
 import { PermissionObject, PermissionAction } from 'utils/constant';
 import { filter } from 'minimatch';
 import useToast, { ToastType } from 'hooks/useToast';
+import { useWeb3React } from '@web3-react/core';
 
 const Box = styled.div`
   padding: 40px 0;
@@ -212,7 +213,7 @@ export default function Index() {
               <div className="titLft">
                 <Tabs activeIndex={0} onSelect={(e) => selectCurrent(e)}>
                   <Tab title={t('event.events')} responsive />
-                  <Tab title={t('event.MyEvents')} responsive />
+                  <Tab title={t('event.MyEvents')} responsive disabled={!canCreateEvent} />
                 </Tabs>
               </div>
 
