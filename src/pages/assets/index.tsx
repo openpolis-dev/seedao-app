@@ -16,6 +16,7 @@ import CopyBox from 'components/copy';
 import { ethers } from 'ethers';
 import ModifyBudgetModal from 'components/assetsCom/modifyBudget';
 import { BudgetType } from 'type/project.type';
+import { formatNumber } from 'utils/number';
 
 const Box = styled.div`
   padding: 40px 20px;
@@ -173,8 +174,8 @@ export default function Index() {
   const [totalBalance, setTotalBalance] = useState('0.00');
   const [totalSCR, setTotalSCR] = useState('0');
   const [nftData, setNftData] = useState({
-    floorPrice: 0,
-    totalSupply: 0,
+    floorPrice: '0',
+    totalSupply: '0',
   });
 
   const getAssets = async () => {
@@ -225,8 +226,8 @@ export default function Index() {
         },
       });
       setNftData({
-        floorPrice: res.data?.data?.floor_price || 0,
-        totalSupply: res.data?.data?.items_total || 0,
+        floorPrice: formatNumber(res.data?.data?.floor_price || 0),
+        totalSupply: formatNumber(res.data?.data?.items_total || 0),
       });
     } catch (error) {
       console.error('getFloorPrice error', error);
@@ -335,7 +336,7 @@ export default function Index() {
               <div className="vaultInner">
                 <div>
                   <TotalBalance>{t('Assets.TotalBalance')}</TotalBalance>
-                  <TotalBalanceNum>${totalBalance}</TotalBalanceNum>
+                  <TotalBalanceNum>${formatNumber(Number(totalBalance))}</TotalBalanceNum>
                 </div>
                 <div className="right">
                   <InfoItem>
@@ -393,7 +394,7 @@ export default function Index() {
                         </div>
                       </div>
                     </div>
-                    <div className="balance">${vaultsMap[v.id]?.balance || 0.0}</div>
+                    <div className="balance">${formatNumber(Number(vaultsMap[v.id]?.balance || 0.0))}</div>
                   </VaultItem>
                 ))}
               </VaultInfo>
@@ -406,7 +407,7 @@ export default function Index() {
                   <LiTitle>{t('Assets.SupplySCR')}</LiTitle>
                   <div className="tips"></div>
                 </LiHead>
-                <div className="num">{totalSCR}</div>
+                <div className="num">{formatNumber(Number(totalSCR))}</div>
                 <div style={{ textAlign: 'left' }}>
                   <p className="tips">≈{SCRValue.toFixed(2)}U</p>
                   <p className="tips">1SCR ≈ {SCR_PRICE}U</p>
@@ -451,10 +452,10 @@ export default function Index() {
                   <LiTitle>{t('Assets.SeasonUsedSCR')}</LiTitle>
                   <div className="tips">({t('Assets.SCRTip')})</div>
                 </LiHead>
-                <div className="num">{asset.credit_used_amount}</div>
+                <div className="num">{formatNumber(asset.credit_used_amount)}</div>
                 <AssetBox className="tips">
                   <span>{t('Assets.SeasonBudget')}:</span>
-                  <span>{asset.credit_total_amount}</span>
+                  <span>{formatNumber(asset.credit_total_amount)}</span>
                   {canUseCityhall && (
                     <span className="btn-edit" onClick={() => setshowModifyModal(BudgetType.Credit)}>
                       <EvaIcon name="edit-2-outline" options={{ width: '16px', height: '16px' }} />
