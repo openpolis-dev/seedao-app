@@ -9,7 +9,7 @@ const useCheckLogin = () => {
     dispatch,
   } = useAuthContext();
 
-  if (tokenData && account && tokenAccount && account.toLocaleLowerCase() !== tokenAccount.toLocaleLowerCase()) {
+  if (tokenData?.token && account && tokenAccount && account.toLocaleLowerCase() !== tokenAccount.toLocaleLowerCase()) {
     dispatch({ type: AppActionType.CLEAR_AUTH, payload: undefined });
     return false;
   }
@@ -17,7 +17,7 @@ const useCheckLogin = () => {
     dispatch({ type: AppActionType.CLEAR_AUTH, payload: undefined });
     return false;
   }
-  return tokenData && account && account === tokenAccount;
+  return tokenData?.token && account && account === tokenAccount;
 };
 
 export default useCheckLogin;

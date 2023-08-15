@@ -4,7 +4,7 @@ import Image from 'next/image';
 import useTranslation from 'hooks/useTranslation';
 import { useRouter } from 'next/router';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
-import { DefaultAvatar } from 'utils/constant';
+import { DefaultAvatar, SEEDAO_USER_DATA, SELECT_WALLET } from 'utils/constant';
 
 type DropdownItemType = {
   title: string;
@@ -52,6 +52,12 @@ const UserDropdown = ({ user }: IUserProps) => {
       router.push(m.link);
     } else if (m.value === 'logout') {
       dispatch({ type: AppActionType.CLEAR_AUTH, payload: undefined });
+      localStorage.removeItem(SEEDAO_USER_DATA);
+      localStorage.removeItem(SELECT_WALLET);
+      dispatch({ type: AppActionType.SET_LOGIN_DATA, payload: null });
+      dispatch({ type: AppActionType.SET_AUTHORIZER, payload: null });
+      dispatch({ type: AppActionType.SET_WALLET_TYPE, payload: null });
+      router.push('/');
     }
   };
   return (
