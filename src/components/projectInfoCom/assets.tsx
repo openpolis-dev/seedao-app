@@ -13,11 +13,14 @@ const FirstLine = styled.ul`
   align-items: center;
   justify-content: space-between;
   width: 100%;
+  .tit {
+    font-size: 1rem;
+  }
   li {
     border: 1px solid #f1f1f1;
     margin-bottom: 40px;
     box-sizing: border-box;
-    border-radius: 4px;
+    border-radius: 10px;
     overflow: hidden;
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
     padding: 40px;
@@ -25,10 +28,16 @@ const FirstLine = styled.ul`
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: #008800;
+    //background: #fff;
     color: #fff;
     div {
       text-align: center;
+    }
+    &:nth-child(1) {
+      background: linear-gradient(to right, #f1a6b6, #8f69d2);
+    }
+    &:nth-child(2) {
+      background: linear-gradient(to right, #3bdabe, #44b5f4);
     }
   }
   .num {
@@ -63,21 +72,21 @@ export default function Assets({ id, detail }: IProps) {
       <FirstLine>
         <li>
           <div className="line">
-            <div>{t('Project.RemainingUSDBudget')}</div>
+            <div className="tit">{t('Project.RemainingUSDBudget')}</div>
             <div className="num">{token?.remain_amount || 0}</div>
           </div>
           <div>
-            <div>{t('Project.USDBudget')}</div>
+            <div className="tit">{t('Project.USDBudget')}</div>
             <div className="num">{token?.total_amount || 0}</div>
           </div>
         </li>
         <li>
           <div>
-            <div>{t('Project.RemainingPointsBudget')}</div>
+            <div className="tit">{t('Project.RemainingPointsBudget')}</div>
             <div className="num">{point?.remain_amount || 0}</div>
           </div>
           <div>
-            <div>{t('Project.PointsBudget')}</div>
+            <div className="tit">{t('Project.PointsBudget')}</div>
             <div className="num">{point?.total_amount || 0}</div>
           </div>
         </li>

@@ -3,7 +3,6 @@ import Layout from 'Layouts';
 import Row from '@paljs/ui/Row';
 import Col from '@paljs/ui/Col';
 import { Tabs, Tab } from '@paljs/ui/Tabs';
-import ProjectAllList from 'pages/project/com/list';
 import styled from 'styled-components';
 import { ButtonLink } from '@paljs/ui/Button';
 import { useRouter } from 'next/router';
@@ -17,6 +16,7 @@ import NoItem from 'components/noItem';
 import usePermission from 'hooks/usePermission';
 import { PermissionObject, PermissionAction } from 'utils/constant';
 import useCheckLogin from 'hooks/useCheckLogin';
+import ProjectOrGuildItem from 'components/projectOrGuildItem';
 
 const Box = styled.div`
   position: relative;
@@ -35,6 +35,11 @@ const TopLine = styled.div`
   top: 14px;
   z-index: 9;
   cursor: pointer;
+`;
+
+const ItemBox = styled.div`
+  margin-top: 40px;
+  overflow-x: hidden;
 `;
 
 export interface listObj {
@@ -132,6 +137,10 @@ export default function Index() {
     setPageCur(num + 1);
   };
 
+  const openDetail = (id: number) => {
+    router.push(`/project/info/${id}`);
+  };
+
   return (
     <Layout title="SeeDAO Project">
       <Card>
@@ -151,9 +160,14 @@ export default function Index() {
                     <Tab key={item.id} title={item.name} responsive />
                   ))}
                 </Tabs>
-
                 <div>
-                  <ProjectAllList list={proList} />
+                  <ItemBox>
+                    <Row>
+                      {proList.map((item) => (
+                        <ProjectOrGuildItem key={item.id} data={item} onClickItem={openDetail} />
+                      ))}
+                    </Row>
+                  </ItemBox>
                   {!proList.length && <NoItem />}
                   {total > pageSize && (
                     <div>

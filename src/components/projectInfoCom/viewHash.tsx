@@ -64,7 +64,7 @@ export default function ViewHash(props: Iprops) {
             {txs.map((item, index) => (
               <li key={index}>
                 <span>{publicJs.AddressToShow(item, 8)}</span>
-                <CopyBox text={item}>
+                <CopyBox text={item} dir="left">
                   <EvaIcon name="clipboard-outline" />
                 </CopyBox>
               </li>

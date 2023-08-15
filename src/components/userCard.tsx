@@ -6,6 +6,7 @@ import { DefaultAvatar } from 'utils/constant';
 import PublicJs from 'utils/publicJs';
 import { EvaIcon } from '@paljs/ui/Icon';
 import styled from 'styled-components';
+import { useWeb3React } from '@web3-react/core';
 
 interface IUserProps {
   user: IUser;
@@ -15,6 +16,7 @@ interface IUserProps {
 }
 
 export default function UserCard({ user, showEdit, onSelectUser, formatActive }: IUserProps) {
+  const { account } = useWeb3React();
   return (
     <UserCardBox>
       <div className="fst">
@@ -28,12 +30,12 @@ export default function UserCard({ user, showEdit, onSelectUser, formatActive }:
           <div>{user.name}</div>
           <div style={{ display: 'flex', gap: '5px' }}>
             <span>{PublicJs.AddressToShow(user.wallet || '')}</span>
-            <CopyBox text={user.wallet || ''}>
+            <CopyBox text={user.wallet || ''} dir="left">
               <EvaIcon name="clipboard-outline" options={{ width: '18px', height: '18px' }} />
             </CopyBox>
           </div>
         </div>
-        {showEdit && (
+        {showEdit && account?.toLowerCase() !== user.wallet?.toLowerCase() && (
           <div
             className={formatActive && formatActive(user.wallet || '') ? 'topRht active' : 'topRht'}
             onClick={() => onSelectUser && onSelectUser(user)}
@@ -49,9 +51,14 @@ export default function UserCard({ user, showEdit, onSelectUser, formatActive }:
           </a>
         )}
         {user.discord_profile && (
-          <a href={user.discord_profile} target="_blank" rel="noreferrer">
+          <CopyBox text={user.discord_profile || ''} dir="right">
             <Image src="/images/discordNor.svg" alt="" className="icon" width="20px" height="20px" />
-          </a>
+          </CopyBox>
+        )}
+        {user.email && (
+          <CopyBox text={user.email || ''}>
+            <Image src="/images/email.svg" alt="" className="icon" width="20px" height="20px" />
+          </CopyBox>
         )}
       </LinkBox>
     </UserCardBox>
@@ -65,19 +72,19 @@ const LinkBox = styled.div`
     height: 20px;
     margin-inline: 5px !important;
   }
+  .copy-content {
+    display: inline-block;
+  }
 `;
 const UserCardBox = styled.li`
   width: 23%;
   margin-right: 2%;
-  border: 1px solid #f1f1f1;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
   margin-bottom: 40px;
   box-sizing: border-box;
   border-radius: 4px;
   overflow: hidden;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
   padding: 20px;
-  background: #008800;
-  color: #fff;
   &:nth-child(4n) {
     margin-right: 0;
   }

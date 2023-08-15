@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Layout from 'Layouts';
 import { Card } from '@paljs/ui/Card';
 import styled from 'styled-components';
@@ -7,6 +7,14 @@ import Audit from 'components/cityHallCom/audit';
 import ProjectAudit from 'components/cityHallCom/projectAudit';
 import Issued from 'components/cityHallCom/issued';
 import useTranslation from 'hooks/useTranslation';
+import Assets from 'components/cityHallCom/assets';
+import Members from 'components/cityHallCom/members';
+import Proposal from 'components/cityHallCom/proposal';
+import { AppActionType, useAuthContext } from 'providers/authProvider';
+import { getCityHallDetail } from 'requests/cityHall';
+import { ReTurnProject } from 'type/project.type';
+import usePermission from 'hooks/usePermission';
+import { PermissionAction, PermissionObject } from 'utils/constant';
 
 const Box = styled.div`
   //position: relative;
@@ -38,7 +46,23 @@ const TabsBox = styled(Tabs)`
 `;
 export default function Index() {
   const { t } = useTranslation();
-  return (
+  const { dispatch } = useAuthContext();
+  const [detail, setDetail] = useState<ReTurnProject | undefined>();
+
+  const canUseCityhall = usePermission(PermissionAction.AuditApplication, PermissionObject.ProjectAndGuild);
+
+  useEffect(() => {
+    getDetail();
+  }, []);
+
+  const getDetail = async () => {
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    const dt = await getCityHallDetail();
+    dispatch({ type: AppActionType.SET_LOADING, payload: null });
+    setDetail(dt.data);
+  };
+
+  return canUseCityhall ? (
     <Layout title="SeeDAO City Hall">
       <Box>
         <CardBox>
@@ -52,6 +76,35 @@ export default function Index() {
               </Tab>
               <Tab key="2" title={t('city-hall.Send')} responsive>
                 <Issued />
+              </Tab>
+              <Tab key="3" title={t('city-hall.Members')} responsive>
+                <Members detail={detail} updateProject={getDetail} />
+              </Tab>
+              <Tab key="4" title={t('city-hall.Asset')} responsive>
+                <Assets detail={detail} refreshProject={getDetail} />
+              </Tab>
+              <Tab key="5" title={t('city-hall.Proposal')} responsive>
+                <Proposal detail={detail} refreshProject={getDetail} />
+              </Tab>
+            </TabsBox>
+          </TopBox>
+        </CardBox>
+      </Box>
+    </Layout>
+  ) : (
+    <Layout title="SeeDAO City Hall">
+      <Box>
+        <CardBox>
+          <TopBox>
+            <TabsBox>
+              <Tab key="0" title={t('city-hall.Members')} responsive>
+                <Members detail={detail} updateProject={getDetail} />
+              </Tab>
+              <Tab key="1" title={t('city-hall.Asset')} responsive>
+                <Assets detail={detail} refreshProject={getDetail} />
+              </Tab>
+              <Tab key="2" title={t('city-hall.Proposal')} responsive>
+                <Proposal detail={detail} refreshProject={getDetail} />
               </Tab>
             </TabsBox>
           </TopBox>

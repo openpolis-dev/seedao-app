@@ -46,13 +46,13 @@ const Box = styled.div`
 
 interface Iprops {
   closeModal: (ifRefresh: boolean) => void;
+  id: number;
 }
 export default function PropsalModal(props: Iprops) {
-  const { closeModal } = props;
+  const { closeModal, id } = props;
   const { t } = useTranslation();
   const { Toast, showToast } = useToast();
   const router = useRouter();
-  const { id } = router.query;
   const [list, setList] = useState(['']);
   const [loading, setLoading] = useState(false);
   const handleInput = (e: ChangeEvent, index: number) => {
@@ -104,7 +104,7 @@ export default function PropsalModal(props: Iprops) {
     }
     try {
       setLoading(true);
-      await requests.guild.addRelatedProposal(id as string, ids);
+      await requests.project.addRelatedProposal(id as string, ids);
     } catch (error) {
       console.error('handle related proposals failed: ', error);
     } finally {

@@ -5,6 +5,23 @@ import { breakpointDown } from '@paljs/ui/breakpoints';
 const SimpleLayout = createGlobalStyle`
 ${({ theme }) => css`
   ${GlobalStyle}
+
+  @font-face {
+    font-family: 'Jost-ExtraBold';
+    src: url('/fonts/Jost-ExtraBold.ttf');
+  }
+  @font-face {
+    font-family: 'Jost-Bold';
+    src: url('/fonts/Jost-Bold.ttf');
+  }
+  @font-face {
+    font-family: 'Jost-SemiBold';
+    src: url('/fonts/Jost-SemiBold.ttf');
+  }
+  @font-face {
+    font-family: 'Barlow-Regular';
+    src: url('/fonts/Barlow-Regular.ttf');
+  }
   html {
     font-size: 16px;
   }
@@ -105,7 +122,7 @@ ${({ theme }) => css`
     }
   }
   .sidebar-menu .menu-title {
-    font-size: 14px !important;
+    font-size: 0.9rem !important;
   }
 
   ${breakpointDown('xs')`

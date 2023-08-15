@@ -1,9 +1,11 @@
 {
   "menus": {
+    "Home": "Home",
     "Proposal": "Proposal",
     "Project": "Project",
     "Guild": "Guild",
     "Chat": "Chat",
+    "Event": "Event",
     "city-hall": "City Hall",
     "assets": "Vault/Points"
   },
@@ -13,11 +15,24 @@
     "confirm": "Confirm",
     "Change": "Change",
     "ok": "OK",
-    "Success": "成功",
+    "Success": "Success",
     "Clear": "Clear",
     "Loading": "Loading",
     "Copied": "Copied",
     "ConnectWallet": "Connect Wallet"
+  },
+  "Home": {
+    "Slogan": "SeeDAO is a network polis to connect millions of nomads in Web3.",
+    "SloganVison": "Our Vision",
+    "SloganDesc": "Creating an alternative human living space in cyberspace outside the region of the nation-states.",
+    "Events": "Events",
+    "AllEvents": "All Events",
+    "Publicity": "Publicity",
+    "CityHall": "Cit Hall",
+    "CityHallMembers": "City Hall Members",
+    "SGNHolder": "SGN Holder",
+    "SBTHolder": "SBT Holder",
+    "GovernNode": "Govern Node"
   },
   "Proposal": {
     "AllCategories": "All Categories",
@@ -150,6 +165,9 @@
     "Token": "Token"
   },
   "city-hall": {
+    "Members": "Members",
+    "Asset": "Asset",
+    "Proposal": "Proposal",
     "PointsAndTokenAudit": "Reward Audit",
     "Pass": "Pass",
     "Reject": "Reject",
@@ -187,6 +205,7 @@
     "MyAccount": "My Account",
     "Exit": "Exit",
     "Assets": "Assets",
+    "wallet": "Wallet",
     "Points": "Points(Includes off-chain points to be issued)",
     "Name": "Name",
     "Email": "Email",
@@ -197,7 +216,11 @@
     "Google": "Google",
     "ModifiedSuccess": "Modified Successfully",
     "ModifiedFailed": "Modified Failed",
-    "IncorrectLink": "{media}：required the correct link"
+    "IncorrectLink": "{media}：required the correct link",
+    "IncorrectEmail": "Please enter the correct email information",
+    "IncorrectGoogle": "Please enter the correct Google email",
+    "IncorrectMirror": "Please enter the correct Mirror link",
+    "EmptySBT": "Not Owning SBT"
   },
   "Msg": {
     "ProposalLinkMsg": "Require correct proposal link",
@@ -205,5 +228,20 @@
     "ApproveFailed": "Operate failed",
     "IncorrectAddress": "Invalid address: {content}",
     "ImportFailed": "Import failed"
+  },
+  "event": {
+    "events": "Events",
+    "MyEvents": "My Events",
+    "create": "Create Event",
+    "edit": "Edit Event",
+    "title": "Event name",
+    "startTime": "Starting time",
+    "endTime": "End Time",
+    "sponsor": "Hosted By",
+    "media": "Media Support",
+    "host": "Host",
+    "guest": "Guests",
+    "volunteer": "Volunteers",
+    "upload": "Upload Image"
   }
 }

@@ -37,7 +37,7 @@ const TopLine = styled.ul`
   display: flex;
   align-items: center;
   margin-bottom: 20px;
-
+  flex-wrap: wrap;
   li {
     display: flex;
     align-items: center;
@@ -76,6 +76,7 @@ const TableBox = styled.div`
   width: 100%;
   overflow-x: auto;
   overflow-y: hidden;
+  padding-bottom: 3rem;
   table {
     th {
       background: transparent;

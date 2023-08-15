@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, Fragment, useMemo } from 'react';
-import { DefaultTheme, ThemeProvider } from 'styled-components';
+import styled, { DefaultTheme, ThemeProvider } from 'styled-components';
 import themes from './themes';
 import { Layout, LayoutContent, LayoutContainer, LayoutColumns, LayoutColumn } from '@paljs/ui/Layout';
 import icons from '@paljs/icons';
@@ -14,8 +14,6 @@ import Link from 'next/link';
 import menuItems, { CMenuItemType } from './menuItem';
 import SEO, { SEOProps } from 'components/SEO';
 import useTranslation from 'hooks/useTranslation';
-import usePermission from 'hooks/usePermission';
-import { PermissionAction, PermissionObject } from 'utils/constant';
 import useCheckLogin from 'hooks/useCheckLogin';
 import { useAuthContext } from 'providers/authProvider';
 import { WalletType } from 'wallet/wallet';
@@ -31,6 +29,17 @@ const getDefaultTheme = (): DefaultTheme['name'] => {
   }
 };
 
+const Box = styled.div`
+  .expanded.menu-sidebar,
+  .expanded .main-container {
+    width: 12rem;
+  }
+  .main-container header {
+    height: 0;
+    padding: 0;
+  }
+`;
+
 const LayoutPage: React.FC<SEOProps> = ({ children, ...rest }) => {
   const [theme, setTheme] = useState<DefaultTheme['name']>('default');
   const { t } = useTranslation();
@@ -45,8 +54,6 @@ const LayoutPage: React.FC<SEOProps> = ({ children, ...rest }) => {
   const [seeHeader, setSeeHeader] = useState(true);
   const AnyComponent = ThemeProvider as any;
   const MyGlobalStyle = SimpleLayout as any;
-
-  const canUseCityhall = usePermission(PermissionAction.AuditApplication, PermissionObject.ProjectAndGuild);
 
   const getState = (state?: 'hidden' | 'visible' | 'compacted' | 'expanded') => {
     setSeeHeader(state !== 'compacted');
@@ -73,21 +80,19 @@ const LayoutPage: React.FC<SEOProps> = ({ children, ...rest }) => {
     const items: CMenuItemType[] = [];
     menuItems.forEach((d) => {
       const item = { ...d, title: t(d.title) };
-      if (d.value === 'city-hall') {
-        canUseCityhall && items.push(item);
-      } else if (d.value === 'chat') {
+      if (d.value === 'chat') {
         isLogin && wallet_type === WalletType.EOA && items.push(item);
       } else {
         items.push(item);
       }
     });
     return items;
-  }, [t, canUseCityhall, userData, wallet_type]);
+  }, [t, userData, wallet_type]);
 
   useEffect(() => {
     const pt = router.pathname;
 
-    const arr = ['proposal', 'project', 'guild', 'chat', 'city-hall', 'assets'];
+    const arr = ['proposal', 'project', 'guild', 'chat', 'city-hall', 'assets', 'home', 'event'];
     const arrCurrent = arr.find((item) => pt.indexOf(item) > -1);
 
     if (arrCurrent) {
@@ -101,65 +106,65 @@ const LayoutPage: React.FC<SEOProps> = ({ children, ...rest }) => {
 
   return (
     <Fragment>
-      <SEO {...rest} />
-      <AnyComponent theme={themes(theme, dir)}>
-        <Fragment>
-          <MyGlobalStyle />
-          <Layout evaIcons={icons} dir={dir}>
-            <Header
-              dir={dir}
-              changeDir={changeDir}
-              theme={{ set: changeTheme, value: theme }}
-              toggleSidebar={() => sidebarRef.current?.toggle()}
-            />
-            <LayoutContainer>
-              <Sidebar
-                getState={getState}
-                ref={sidebarRef}
-                property="start"
-                containerFixed
-                responsive
-                className="menu-sidebar"
-              >
-                {seeHeader && (
-                  <header>
-                    {/*<Button*/}
-                    {/*  size="Tiny"*/}
-                    {/*  status="Primary"*/}
-                    {/*  onClick={() => {*/}
-                    {/*    setMenuState(!menuState);*/}
-                    {/*    menuRef.current?.toggle();*/}
-                    {/*  }}*/}
-                    {/*  fullWidth*/}
-                    {/*>*/}
-                    {/*  {menuState ? <EvaIcon name="arrow-circle-up" /> : <EvaIcon name="arrow-circle-down" />}*/}
-                    {/*</Button>*/}
-                  </header>
-                )}
-                <SidebarBody>
-                  <Menu
-                    nextJs
-                    className="sidebar-menu"
-                    Link={Link}
-                    ref={menuRef}
-                    items={menuItemsFormat}
-                    currentPath={router.pathname}
-                    toggleSidebar={() => sidebarRef.current?.hide()}
-                  />
-                  {seeHeader && <AppVersion />}
-                </SidebarBody>
-              </Sidebar>
-              <LayoutContent>
-                <LayoutColumns>
-                  <LayoutColumn className="main-content" style={{ background: '#fbf5ef' }}>
-                    {children}
-                  </LayoutColumn>
-                </LayoutColumns>
-              </LayoutContent>
-            </LayoutContainer>
-          </Layout>
-        </Fragment>
-      </AnyComponent>
+      <Box>
+        <SEO {...rest} />
+        <AnyComponent theme={themes(theme, dir)}>
+          <Fragment>
+            <MyGlobalStyle />
+            <Layout evaIcons={icons} dir={dir}>
+              <Header
+                dir={dir}
+                changeDir={changeDir}
+                theme={{ set: changeTheme, value: theme }}
+                toggleSidebar={() => sidebarRef.current?.toggle()}
+              />
+              <LayoutContainer style={{ background: '#F0F3F8' }}>
+                <Sidebar
+                  getState={getState}
+                  ref={sidebarRef}
+                  property="start"
+                  containerFixed
+                  responsive
+                  className="menu-sidebar"
+                >
+                  {seeHeader && (
+                    <header>
+                      {/*<Button*/}
+                      {/*  size="Tiny"*/}
+                      {/*  status="Primary"*/}
+                      {/*  onClick={() => {*/}
+                      {/*    setMenuState(!menuState);*/}
+                      {/*    menuRef.current?.toggle();*/}
+                      {/*  }}*/}
+                      {/*  fullWidth*/}
+                      {/*>*/}
+                      {/*  {menuState ? <EvaIcon name="arrow-circle-up" /> : <EvaIcon name="arrow-circle-down" />}*/}
+                      {/*</Button>*/}
+                    </header>
+                  )}
+                  <SidebarBody>
+                    <Menu
+                      nextJs
+                      className="sidebar-menu"
+                      Link={Link}
+                      ref={menuRef}
+                      items={menuItemsFormat}
+                      currentPath={router.pathname}
+                      toggleSidebar={() => sidebarRef.current?.hide()}
+                    />
+                    {seeHeader && <AppVersion />}
+                  </SidebarBody>
+                </Sidebar>
+                <LayoutContent>
+                  <LayoutColumns>
+                    <LayoutColumn className="main-content">{children}</LayoutColumn>
+                  </LayoutColumns>
+                </LayoutContent>
+              </LayoutContainer>
+            </Layout>
+          </Fragment>
+        </AnyComponent>
+      </Box>
     </Fragment>
   );
 };

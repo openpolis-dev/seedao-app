@@ -39,6 +39,15 @@ const UlBox = styled.ul`
 const InputBox = styled(InputGroup)`
   width: 600px;
   margin-right: 20px;
+  .wallet {
+    border: 1px solid #eee;
+    width: 100%;
+    border-radius: 0.25rem;
+    height: 40px;
+    padding: 0 1.125rem;
+    display: flex;
+    align-items: center;
+  }
 `;
 const MidBox = styled.div`
   display: flex;
@@ -91,6 +100,20 @@ export default function Profile() {
     }
   };
   const saveProfile = async () => {
+    const reg = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (email && !reg.test(email)) {
+      showToast(t('My.IncorrectEmail'), ToastType.Danger);
+      return;
+    }
+
+    if (google && !reg.test(google)) {
+      showToast(t('My.IncorrectGoogle'), ToastType.Danger);
+      return;
+    }
+    if (mirror && mirror.indexOf('mirror.xyz') === -1) {
+      showToast(t('My.IncorrectMirror'), ToastType.Danger);
+      return;
+    }
     if (twitter && !twitter.startsWith('https://twitter.com/')) {
       showToast(t('My.IncorrectLink', { media: 'Twitter' }), ToastType.Danger);
       return;
@@ -187,6 +210,12 @@ export default function Profile() {
 
           <MidBox>
             <UlBox>
+              <li>
+                <div className="title">{t('My.wallet')}</div>
+                <InputBox fullWidth>
+                  <div className="wallet">{userData?.wallet}</div>
+                </InputBox>
+              </li>
               <li>
                 <div className="title">{t('My.Name')}</div>
                 <InputBox fullWidth>

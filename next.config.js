@@ -1,15 +1,16 @@
 module.exports = {
   reactStrictMode: true,
-  // swcMinify: false,
+  swcMinify: true,
   trailingSlash: true,
   experimental: {
     legacyBrowsers: false,
     browsersListForSwc: true,
-    // ssr and displayName are configured by default
-    styledComponents: true,
   },
-  assetPrefix: '',
-  basePath: '',
+  assetPrefix: undefined,
+  basePath: undefined,
+  compiler: {
+    styledComponents: true
+  },
   images: {
     unoptimized: true,
     loader: 'akamai',

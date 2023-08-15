@@ -1,15 +1,16 @@
 import useTranslation from 'hooks/useTranslation';
 import React, { useState } from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 interface ICopyProps {
   children: React.ReactNode;
   text: string;
   onCopy?: (text: string, result: boolean) => void;
+  dir?: 'left' | 'right';
 }
 
-const CopyBox: React.FC<ICopyProps> = ({ children, text }) => {
+const CopyBox: React.FC<ICopyProps> = ({ children, text, dir }) => {
   const { t } = useTranslation();
   const [isCopied, setIsCopied] = useState(false);
 
@@ -18,14 +19,14 @@ const CopyBox: React.FC<ICopyProps> = ({ children, text }) => {
       setIsCopied(true);
       setTimeout(() => {
         setIsCopied(false);
-      }, 2000);
+      }, 800);
     }
   };
 
   return (
     <>
       <CopyToClipboard text={text} onCopy={handleCopy}>
-        <CopyContent>
+        <CopyContent className="copy-content" dir={dir || 'right'}>
           {children}
           {isCopied && <span className="tooltip-content">{t('general.Copied')}</span>}
         </CopyContent>
@@ -36,7 +37,18 @@ const CopyBox: React.FC<ICopyProps> = ({ children, text }) => {
 
 export default CopyBox;
 
-const CopyContent = styled.div`
+const rightStyle = css`
+  .tooltip-content {
+    right: -74px;
+  }
+  .tooltip-content::before {
+    right: unset;
+    left: -18px;
+    transform: translateX(50%) rotate(-90deg);
+  }
+`;
+
+const CopyContent = styled.div<{ dir: string }>`
   cursor: pointer;
   position: relative;
   .tooltip-content {
@@ -61,4 +73,5 @@ const CopyContent = styled.div`
     right: -6px;
     transform: translateX(50%) rotate(90deg);
   }
+  ${({ dir }) => dir === 'right' && rightStyle}
 `;

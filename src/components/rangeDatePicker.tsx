@@ -6,6 +6,7 @@ import styled, { css } from 'styled-components';
 const Box = styled.div`
   ${({ theme }) => css`
     width: 100%;
+    box-sizing: border-box;
     height: 34px;
     .borderLess {
       width: 100%;
@@ -38,7 +39,6 @@ const Box = styled.div`
     .react-datepicker__current-month,
     .react-datepicker-time__header,
     .react-datepicker-year-header {
-      font-family: 'Inter-Regular';
       color: #000;
     }
 
@@ -77,6 +77,13 @@ const Box = styled.div`
       color: #fff;
     }
 
+    .react-datepicker__close-icon {
+      right: -10px;
+      &:after {
+        background-color: #a16eff;
+      }
+    }
+
     .react-datepicker__day:hover,
     .react-datepicker__month-text:hover,
     .react-datepicker__quarter-text:hover,
@@ -110,8 +117,11 @@ const Box = styled.div`
       background: transparent;
     }
     .react-datepicker__input-container input.borderLess {
-      font-family: 'Inter-Regular' !important;
+      font-size: 1rem;
       background: transparent;
+      min-width: 200px;
+      font-family: Inter-Regular, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
+        sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
     }
   `}
 `;

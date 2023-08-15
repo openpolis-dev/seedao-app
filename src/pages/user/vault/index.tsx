@@ -7,6 +7,7 @@ import { Asset } from 'type/user.type';
 import requests from 'requests';
 import { BudgetType } from 'type/project.type';
 import useTranslation from 'hooks/useTranslation';
+import SBTCard from './sbt';
 
 const Box = styled.div`
   padding: 40px 20px;
@@ -24,22 +25,49 @@ const FirstLine = styled.ul`
     margin-bottom: 40px;
     height: 152px;
     box-sizing: border-box;
-    border-radius: 4px;
+    border-radius: 10px;
     overflow: hidden;
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
     padding: 40px;
     width: 48%;
     display: flex;
     align-items: center;
+    flex-direction: column;
     justify-content: center;
     background: #008800;
     color: #fff;
+    position: relative;
     div {
       text-align: center;
     }
+
+    &:nth-child(1) {
+      background: linear-gradient(to right, #f1a6b6, #8f69d2);
+    }
+    &:nth-child(2) {
+      background: linear-gradient(to right, #3bdabe, #44b5f4);
+    }
+  }
+  .decorBg {
+    position: absolute;
+    right: 0;
+    bottom: 1.3rem;
+    font-size: 12rem;
+    font-family: 'Jost-Bold';
+    opacity: 0.03;
+    transform-origin: 0 0;
+    color: #000;
+  }
+  .topBox {
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+    margin-bottom: 20px;
+    width: 100%;
+    font-weight: bold;
+    font-size: 1.2rem;
   }
   .num {
-    font-size: 25px;
+    font-size: 30px;
     padding-top: 10px;
     font-weight: bold;
   }
@@ -84,23 +112,21 @@ export default function Vault() {
         <Box>
           <FirstLine>
             <li>
-              <div className="line">
-                <div>{t('My.Assets')}</div>
-                <div className="num">{token?.total_amount || 0}</div>
-              </div>
+              <div className="topBox">{t('My.Assets')}</div>
+              <div className="num">{token?.total_amount || 0}</div>
+              <div className="decorBg">SEEDAO</div>
             </li>
             <li>
-              <div>
-                <div>
-                  <div>{t('My.Points')}</div>
-                  {/* <div className="tips">(包含待发放未上链积分)</div> */}
-                </div>
-
-                <div className="num">{credit?.total_amount || 0}</div>
+              <div className="topBox">
+                <div>{t('My.Points')}</div>
+                {/* <div className="tips">(包含待发放未上链积分)</div> */}
               </div>
+
+              <div className="num">{credit?.total_amount || 0}</div>
+              <div className="decorBg">SEEDAO</div>
             </li>
           </FirstLine>
-
+          <SBTCard />
           <AssetList />
         </Box>
       </CardBox>

@@ -13,10 +13,12 @@ import useLoadQuill from 'hooks/useLoadQuill';
 import useProposalCategory from 'hooks/useProposalCategory';
 import { formatDate } from 'utils/time';
 import LoadingBox from 'components/loadingBox';
+import useTranslation from 'hooks/useTranslation';
 
 export default function Proposal() {
   const router = useRouter();
   const enableQuill = useLoadQuill();
+  const { t } = useTranslation();
 
   const [data, setData] = useState<IBaseProposal>();
   const [loading, setLoading] = useState(false);
@@ -64,8 +66,8 @@ export default function Proposal() {
                 <div className="date">{formatDate(new Date(data?.updated_at || ''))}</div>
               </div>
             </User>
-            <MoreButton shape="Rectangle" appearance="outline" size="Tiny" onClick={lookMore}>
-              查看更多
+            <MoreButton shape="Rectangle" appearance="outline" onClick={lookMore}>
+              {t('Proposal.LookMore')}
             </MoreButton>
             {/* <div style={{ overflow: 'hidden' }}>{data?.first_post.content}</div> */}
             {enableQuill && data?.first_post.content && <QuillViewer content={data?.first_post.content} />}

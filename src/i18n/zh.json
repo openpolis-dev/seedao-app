@@ -1,9 +1,11 @@
 {
   "menus": {
+    "Home": "首页",
     "Proposal": "提案",
     "Project": "项目",
     "Guild": "公会",
     "Chat": "聊天",
+    "Event": "活动",
     "city-hall": "市政厅",
     "assets": "金库/积分"
   },
@@ -18,6 +20,19 @@
     "Loading": "加载中",
     "Copied": "已复制",
     "ConnectWallet": "连接钱包"
+  },
+  "Home": {
+    "Slogan": "SeeDAO 是一个致力于连接 100 万 Web3 游民的数字城邦",
+    "SloganVison": "我们的愿景",
+    "SloganDesc": "在基于地缘的民族国家之外，在赛博世界另建一片人类的生存空间",
+    "Events": "活动",
+    "AllEvents": "所有活动",
+    "Publicity": "公示",
+    "CityHall": "市政厅",
+    "CityHallMembers": "市政厅成员",
+    "SGNHolder": "SGN 持有者",
+    "SBTHolder": "SBT 持有者",
+    "GovernNode": "治理节点"
   },
   "Proposal": {
     "AllCategories": "分类",
@@ -150,6 +165,9 @@
     "Token": "Token"
   },
   "city-hall": {
+    "Members": "成员",
+    "Asset": "资产",
+    "Proposal": "提案",
     "PointsAndTokenAudit": "积分及token审核",
     "Pass": "通过",
     "Reject": "驳回",
@@ -187,6 +205,7 @@
     "MyAccount": "我的账户",
     "Exit": "退出",
     "Assets": "USD资产",
+    "wallet": "钱包",
     "Points": "总积分(包含待发放未上链积分)",
     "Name": "昵称",
     "Email": "邮箱地址",
@@ -197,7 +216,11 @@
     "Google": "Google",
     "ModifiedSuccess": "修改成功",
     "ModifiedFailed": "修改失败",
-    "IncorrectLink": "{media}：请填写正确的信息"
+    "IncorrectLink": "{media}：请填写正确的信息",
+    "IncorrectEmail": "请填写正确的Email信息",
+    "IncorrectGoogle": "请填写正确的Google email信息",
+    "IncorrectMirror": "请填写正确的Mirror链接",
+    "EmptySBT": "您还未拥有SBT"
   },
   "Msg": {
     "ProposalLinkMsg": "请填写正确提案链接",
@@ -205,5 +228,20 @@
     "ApproveFailed": "操作失败",
     "IncorrectAddress": "无效的钱包地址：{content}",
     "ImportFailed": "导入失败"
+  },
+  "event": {
+    "events": "活动",
+    "MyEvents": "我的活动",
+    "create": "创建活动",
+    "edit": "编辑活动",
+    "title": "活动名称",
+    "startTime": "开始时间",
+    "endTime": "结束时间",
+    "sponsor": "主办",
+    "media": "媒体支持",
+    "host": "主持人",
+    "guest": "嘉宾",
+    "volunteer": "志愿者",
+    "upload": "上传图片"
   }
 }

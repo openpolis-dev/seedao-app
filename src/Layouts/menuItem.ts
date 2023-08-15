@@ -4,13 +4,23 @@ export type CMenuItemType = MenuItemType & { value?: string };
 
 const items: CMenuItemType[] = [
   {
-    title: 'menus.Proposal',
-    icon: { name: 'browser-outline' },
-    link: { href: '/proposal' },
+    title: 'menus.Home',
+    icon: { name: 'home-outline' },
+    link: { href: '/home' },
+  },
+  {
+    title: 'menus.Event',
+    icon: { name: 'checkmark-square-2-outline' },
+    link: { href: '/event' },
+  },
+  {
+    title: 'menus.assets',
+    icon: { name: 'cube-outline' },
+    link: { href: '/assets' },
   },
   {
     title: 'menus.Project',
-    icon: { name: 'layout-outline' },
+    icon: { name: 'pie-chart-outline' },
     link: { href: '/project' },
   },
   {
@@ -19,21 +29,21 @@ const items: CMenuItemType[] = [
     link: { href: '/guild' },
   },
   {
-    title: 'menus.Chat',
+    title: 'menus.Proposal',
     icon: { name: 'browser-outline' },
-    link: { href: '/chat' },
-    value: 'chat',
+    link: { href: '/proposal' },
   },
   {
     title: 'menus.city-hall',
     icon: { name: 'shield-outline' },
     link: { href: '/city-hall' },
-    value: 'city-hall',
   },
+
   {
-    title: 'menus.assets',
-    icon: { name: 'cube-outline' },
-    link: { href: '/assets' },
+    title: 'menus.Chat',
+    icon: { name: 'message-circle-outline' },
+    link: { href: '/chat' },
+    value: 'chat',
   },
 ];
 

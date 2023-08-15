@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 export default function Index() {
   const router = useRouter();
   useEffect(() => {
-    router.push('/proposal');
+    router.push('/home');
   }),
     [];
   return <div />;
