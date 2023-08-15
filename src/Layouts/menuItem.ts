@@ -14,6 +14,11 @@ const items: CMenuItemType[] = [
     link: { href: '/event' },
   },
   {
+    title: 'menus.assets',
+    icon: { name: 'cube-outline' },
+    link: { href: '/assets' },
+  },
+  {
     title: 'menus.Project',
     icon: { name: 'pie-chart-outline' },
     link: { href: '/project' },
@@ -33,11 +38,7 @@ const items: CMenuItemType[] = [
     icon: { name: 'shield-outline' },
     link: { href: '/city-hall' },
   },
-  {
-    title: 'menus.assets',
-    icon: { name: 'cube-outline' },
-    link: { href: '/assets' },
-  },
+
   {
     title: 'menus.Chat',
     icon: { name: 'message-circle-outline' },
