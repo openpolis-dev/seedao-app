@@ -68,6 +68,10 @@ export default function LoginModal() {
   };
 
   const connect = async (w: LoginWallet) => {
+    if (w.value === Wallet.METAMASK && !window.ethereum) {
+      window.open('https://metamask.io/download.html', '_blank');
+      return;
+    }
     setChooseWallet(w);
     const connector = w.connector;
     setLoginStatus(LoginStatus.Pending);
