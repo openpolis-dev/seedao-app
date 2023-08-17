@@ -119,6 +119,13 @@ export default function SBTCard() {
                 image: res.image,
                 href: `https://polygonscan.com/token/${address}?a=${token}`,
               });
+            })
+            .catch((err) => {
+              setOnBoardingSBT({
+                name: '',
+                tokenId: token,
+                href: `https://polygonscan.com/token/${address}?a=${token}`,
+              });
             });
         }
       } catch (error) {
