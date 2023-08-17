@@ -142,9 +142,12 @@ export default function SBTCard() {
         console.log('MSC balance: ', balance);
         const _balance = balance.toNumber();
         if (_balance > 0) {
+          // NOTE: use hardcode uri temporarily, cause the token uri is not available
           setMscSBT({
             name: '',
             tokenId: token,
+            image:
+              'https://i.seadn.io/gae/KX5YGBwjs16hUMa-fPm7PctWEc3kMkCNz7unhTsLigsKKc7o-Pa-DkRAWgLx8GQw32jiNq12R8Xlx9iePIJl2YNdLGJrPQCrkXbi?w=500&auto=format',
             href: `https://polygonscan.com/token/${address}?a=${token}`,
           });
         }
