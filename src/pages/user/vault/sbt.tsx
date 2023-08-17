@@ -51,6 +51,25 @@ const NFT_ABI = [
     stateMutability: 'view',
     type: 'function',
   },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: 'id',
+        type: 'uint256',
+      },
+    ],
+    name: 'uri',
+    outputs: [
+      {
+        internalType: 'string',
+        name: '',
+        type: 'string',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
 ];
 
 type SBTtype = {
@@ -82,17 +101,32 @@ export default function SBTCard() {
       // SBT: onboarding
       const address = '0x0D9ea891B4C30e17437D00151399990ED7965F00';
       const token = 157;
+      const tokenHex = '000000000000000000000000000000000000000000000000000000000000009d';
       try {
         const contract = new ethers.Contract(address, NFT_ABI, polygonProvider);
         const balance = await contract.balanceOf(account, token);
         console.log('onboarding balance: ', balance);
         const _balance_num = balance.toNumber();
         if (_balance_num > 0) {
-          setOnBoardingSBT({
-            name: '',
-            tokenId: token,
-            href: `https://polygonscan.com/token/${address}?a=${token}`,
-          });
+          const uri = await contract.uri(token); // uri: https://deschool.s3.amazonaws.com/nft/proofs/{id}.json
+          const tokenUri = uri.replace('{id}', tokenHex);
+          fetch(tokenUri)
+            .then((res) => res.json())
+            .then((res) => {
+              setOnBoardingSBT({
+                name: res.name,
+                tokenId: token,
+                image: res.image,
+                href: `https://polygonscan.com/token/${address}?a=${token}`,
+              });
+            })
+            .catch((err) => {
+              setOnBoardingSBT({
+                name: '',
+                tokenId: token,
+                href: `https://polygonscan.com/token/${address}?a=${token}`,
+              });
+            });
         }
       } catch (error) {
         console.error('[SBT] onboarding balance failed', error);
@@ -108,9 +142,12 @@ export default function SBTCard() {
         console.log('MSC balance: ', balance);
         const _balance = balance.toNumber();
         if (_balance > 0) {
+          // NOTE: use hardcode uri temporarily, cause the token uri is not available
           setMscSBT({
             name: '',
             tokenId: token,
+            image:
+              'https://i.seadn.io/gae/KX5YGBwjs16hUMa-fPm7PctWEc3kMkCNz7unhTsLigsKKc7o-Pa-DkRAWgLx8GQw32jiNq12R8Xlx9iePIJl2YNdLGJrPQCrkXbi?w=500&auto=format',
             href: `https://polygonscan.com/token/${address}?a=${token}`,
           });
         }
