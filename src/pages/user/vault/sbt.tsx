@@ -146,7 +146,7 @@ export default function SBTCard() {
           console.error('[SBT] gov failed', err);
         });
       // new SBT
-      const n_address = '0x2C436d61C5Af62bcbfeE40B1f0BE5B483DfA0E11';
+      const n_address = '0x2221F5d189c611B09D7f7382Ce557ec66365C8fc';
       getNftsByContract(account, n_address, 137)
         .then((res) => {
           setLoading(false);
