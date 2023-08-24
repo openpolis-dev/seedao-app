@@ -177,7 +177,7 @@ export default function AssetList({ id }: { id: number }) {
         queryData.end_date = formatDate(endDate);
       }
 
-      const res = await requests.application.getGuildApplications(
+      const res = await requests.application.getProjectApplications(
         {
           page,
           size: pageSize,
