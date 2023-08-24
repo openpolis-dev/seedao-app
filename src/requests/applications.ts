@@ -131,7 +131,9 @@ export const processApplications = (data: number[]) => {
 
 // download
 export const getTemplateFileUrl = (language?: string) => {
-  return `${getBaseURL()}/get_applications_upload_template?lang=${language || 'en'}`;
+  return `https://superapp-backend-prod.s3.ap-northeast-1.amazonaws.com/templates/upload_template_${
+    language || 'en'
+  }.xlsx`;
 };
 export const getExportFileUrl = (ids: number[]) => {
   return `${getBaseURL()}/download_applications?ids=${ids.join(',')}`;
