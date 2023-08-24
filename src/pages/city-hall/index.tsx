@@ -15,6 +15,7 @@ import { getCityHallDetail } from 'requests/cityHall';
 import { ReTurnProject } from 'type/project.type';
 import usePermission from 'hooks/usePermission';
 import { PermissionAction, PermissionObject } from 'utils/constant';
+import Reg from 'components/cityHallCom/reg';
 
 const Box = styled.div`
   //position: relative;
@@ -85,6 +86,9 @@ export default function Index() {
               </Tab>
               <Tab key="5" title={t('city-hall.Proposal')} responsive>
                 <Proposal detail={detail} refreshProject={getDetail} />
+              </Tab>
+              <Tab key="6" title={t('city-hall.Add')} responsive>
+                <Reg id={detail?.id} />
               </Tab>
             </TabsBox>
           </TopBox>
