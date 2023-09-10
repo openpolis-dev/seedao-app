@@ -32,7 +32,10 @@
     "CityHallMembers": "City Hall Members",
     "SGNHolder": "SGN Holder",
     "SBTHolder": "SBT Holder",
-    "GovernNode": "Govern Node"
+    "GovernNode": "Govern Node",
+    "Apps": "Apps",
+    "OnlineEvent": "Online Conference",
+    "OfflineEvent": "Offline Meetup"
   },
   "Proposal": {
     "AllCategories": "All Categories",

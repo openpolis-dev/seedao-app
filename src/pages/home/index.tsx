@@ -6,12 +6,12 @@ import Col from '@paljs/ui/Col';
 import Row from '@paljs/ui/Row';
 import useTranslation from 'hooks/useTranslation';
 import axios from 'axios';
-import * as eventsAPI from 'requests/event';
-import { formatTime } from 'utils/time';
+// import * as eventsAPI from 'requests/event';
+// import { formatTime } from 'utils/time';
 import { GOV_NODE_CONTRACT, SGN_CONTRACT } from 'utils/constant';
-import { useRouter } from 'next/router';
-import { AppActionType, useAuthContext } from 'providers/authProvider';
-import Link from 'next/link';
+// import { useRouter } from 'next/router';
+// import { AppActionType, useAuthContext } from 'providers/authProvider';
+// import Link from 'next/link';
 
 const CITY_HALL = 'https://seedao.notion.site/07c258913c5d4847b59271e2ae6f7c66';
 const CITY_HALL_MEMBERS = 'https://www.notion.so/3913d631d7bc49e1a0334140e3cd84f5';
@@ -236,15 +236,39 @@ const getDatafromNftscan = (contract: string, base?: string) => {
   });
 };
 
+const EventCard = ({ icon, name, link }: { icon: React.Element; name: string; link: string }) => {
+  return (
+    <EventCardStyle onClick={() => window.open(link, '_blank')}>
+      {icon}
+      <div>{name}</div>
+    </EventCardStyle>
+  );
+};
+
 export default function Index() {
   const { t } = useTranslation();
-  const router = useRouter();
-  const { dispatch } = useAuthContext();
-  const [list, setList] = useState<{ name: string; image: string; start: string }[]>([]);
+  // const router = useRouter();
+  // const { dispatch } = useAuthContext();
+  // const [list, setList] = useState<{ name: string; image: string; start: string }[]>([]);
   const [sgnHolders, setSgnHolders] = useState(0);
   const [governNodes, setGovernNodes] = useState(0);
   const [onboardingHolders, setOnboardingHolders] = useState(0);
   const [onNewHolders, setNewHolders] = useState(0);
+
+  const events = useMemo(() => {
+    return [
+      {
+        name: t('Home.OnlineEvent'),
+        link: 'https://calendar.google.com/calendar/u/4?cid=YzcwNGNlNTA5ODUxMmIwYjBkNzA3MjJlNjQzMGFmNDIyMWUzYzllYmM2ZDFlNzJhYTcwYjgyYzgwYmI2OTk5ZkBncm91cC5jYWxlbmRhci5nb29nbGUuY29t',
+        icon: <EventIcon name="calendar-outline" />,
+      },
+      {
+        name: t('Home.OfflineEvent'),
+        link: 'https://seeu.network/',
+        icon: <EventIcon name="cube-outline" />,
+      },
+    ];
+  }, [t]);
 
   useEffect(() => {
     const handleSgnHolders = async () => {
@@ -298,27 +322,27 @@ export default function Index() {
     }
   }, []);
 
-  useEffect(() => {
-    const getEvents = async () => {
-      dispatch({ type: AppActionType.SET_LOADING, payload: true });
-      try {
-        const res = await eventsAPI.getEventList({ page: 0, size: 5, sort_order: 'desc', sort_field: 'start_at' });
-        dispatch({ type: AppActionType.SET_LOADING, payload: false });
-        const events = res.data.rows.map((item: any) => {
-          return {
-            id: item.id,
-            name: item.title,
-            image: item.cover_img,
-            start: formatTime(new Date(item.start_at).valueOf()),
-          };
-        });
-        setList(events);
-      } catch (error) {
-        console.error('get events failed', error);
-      }
-    };
-    getEvents();
-  }, []);
+  // useEffect(() => {
+  //   const getEvents = async () => {
+  //     dispatch({ type: AppActionType.SET_LOADING, payload: true });
+  //     try {
+  //       const res = await eventsAPI.getEventList({ page: 0, size: 5, sort_order: 'desc', sort_field: 'start_at' });
+  //       dispatch({ type: AppActionType.SET_LOADING, payload: false });
+  //       const events = res.data.rows.map((item: any) => {
+  //         return {
+  //           id: item.id,
+  //           name: item.title,
+  //           image: item.cover_img,
+  //           start: formatTime(new Date(item.start_at).valueOf()),
+  //         };
+  //       });
+  //       setList(events);
+  //     } catch (error) {
+  //       console.error('get events failed', error);
+  //     }
+  //   };
+  //   getEvents();
+  // }, []);
 
   return (
     <Layout title="SeeDAO Project">
@@ -352,35 +376,17 @@ export default function Index() {
         </LineBox>
         <ActiveBox>
           <TitBox>
-            {t('Home.Events')}{' '}
-            {!!list.length && (
+            {t('Home.Apps')}
+            {/* {!!list.length && (
               <Link className="all" href={`/event/`}>
                 {t('Home.AllEvents')}
               </Link>
-            )}
+            )} */}
           </TitBox>
           <Row>
-            {list.map((item, idx) => (
-              <Col
-                breakPoint={{ xs: 3, sm: 3, md: 3, lg: 2.4 }}
-                key={idx}
-                onClick={() => router.push(`event/view?id=${item.id}`)}
-              >
-                <CardBox>
-                  <Item>
-                    <ImageBox>
-                      <Photo>
-                        <div className="aspect" />
-                        <div className="content">
-                          <div className="innerImg">
-                            <img src={item.image} alt="" />
-                          </div>
-                        </div>
-                      </Photo>
-                    </ImageBox>
-                    <div className="title">{item.name}</div>
-                  </Item>
-                </CardBox>
+            {events.map((item, idx) => (
+              <Col breakPoint={{ xs: 3, sm: 3, md: 3, lg: 2.4 }} key={idx}>
+                <EventCard {...item} />
               </Col>
             ))}
           </Row>
@@ -416,3 +422,25 @@ export default function Index() {
     </Layout>
   );
 }
+
+const EventCardStyle = styled.div`
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+  background-size: 100%;
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  padding-block: 15px;
+  background-color: #fff;
+  margin-bottom: 20px;
+`;
+
+const EventIcon = styled(EvaIcon)`
+  width: 26px;
+  height: 26px;
+  color: #a16eff;
+`;
