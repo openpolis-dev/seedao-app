@@ -265,7 +265,7 @@ export default function Index() {
       {
         name: t('Home.OfflineEvent'),
         link: 'https://seeu.network/',
-        icon: <EventIcon name="cube-outline" />,
+        icon: <EventIcon name="checkmark-square-2-outline" />,
       },
     ];
   }, [t]);
