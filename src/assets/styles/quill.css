@@ -1,0 +1,65 @@
+.quill-editor .ql-container {
+  border: none;
+  font-size: 0.875em;
+}
+.quill-editor .ql-editor {
+  padding: 8px 12px;
+}
+.quill-editor ol, .quill-editor ul {
+  padding-left: 0.875em;
+}
+.quill-editor .ql-container .ql-editor {
+  min-height: 80px;
+  max-height: 360px;
+}
+.mf-ql-editor {
+  border-radius: 12px;
+}
+.mf-ql-toolbar {
+  display: flex;
+  padding: 8px 12px;
+  align-items: center;
+}
+.mf-ql-toolbar .ql-submit {
+  border-radius: 100px;
+  font-size: 0.875em;
+  padding: 0 24px;
+  height: 34px;
+  text-transform: none;
+}
+.mf-ql-toolbar .ql-toolbar.ql-snow {
+  border: none;
+}
+.mf-ql-toolbar .ql-toolbar.ql-snow button {
+  height: 24px;
+  width: 24px;
+}
+.mf-ql-toolbar .mf-ql-toolbar-close {
+  margin-left: auto;
+  height: 22px;
+  width: 22px;
+}
+.quill-viewer .ql-container {
+  font-family: 'Inter-Regular';
+  font-size: 0.875em;
+  height: 100%;
+  margin: 0;
+  position: relative;
+}
+.quill-viewer .ql-container.ql-snow {
+  border: 0;
+  font-size: 0.875em;
+}
+.quill-viewer .ql-container .ql-editor {
+  padding: 0;
+}
+
+.ql-editor h2 {
+  line-height: 50px;
+}
+
+.ql-editor p {
+  line-height: 24px;
+}
+
+/*# sourceMappingURL=quill.css.map */
