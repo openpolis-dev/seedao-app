@@ -2,8 +2,8 @@ import React, { useReducer, createContext, useContext } from 'react';
 import { IUser, ITokenType } from 'type/user.type';
 import { ICategory } from 'type/proposal.type';
 import { Authorizer } from 'casbin.js';
-import { SEEDAO_USER, SEEDAO_USER_DATA, SENDING_ME_USER } from 'utils/constant';
-import { WalletType } from 'wallet/wallet';
+import { SEEDAO_USER, SEEDAO_USER_DATA, SENDING_ME_USER } from '../utils/constant';
+import { WalletType } from '../wallet/wallet';
 
 interface IState {
   account?: string;
