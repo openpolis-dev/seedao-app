@@ -15,6 +15,7 @@ interface IState {
   loading: boolean | null;
   authorizer?: Authorizer;
   wallet_type?: WalletType;
+  expandMenu: boolean;
 }
 
 export enum AppActionType {
@@ -28,6 +29,7 @@ export enum AppActionType {
   SET_LOADING = 'SET_LOADING',
   SET_AUTHORIZER = 'SET_AUTHORIZER',
   SET_WALLET_TYPE = 'set_wallet_type',
+  SET_EXPAND_MENU = 'set_expand_menu',
 }
 
 interface IAction {
@@ -36,6 +38,7 @@ interface IAction {
 }
 
 const INIT_STATE: IState = {
+  expandMenu: true,
   show_login_modal: false,
   proposal_categories: [
     {
@@ -67,6 +70,8 @@ const AuthContext = createContext<{
 
 const reducer = (state: IState, action: IAction): IState => {
   switch (action.type) {
+    case AppActionType.SET_EXPAND_MENU:
+      return { ...state, expandMenu: action.payload };
     case AppActionType.SET_ACCOUNT:
       return { ...state, account: action.payload };
     case AppActionType.SET_LOGIN_MODAL:
