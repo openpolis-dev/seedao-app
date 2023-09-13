@@ -4,8 +4,6 @@
   "private": true,
   "homepage": ".",
   "dependencies": {
-    "@mui/material": "^5.14.8",
-    "@mui/styled-engine-sc": "^5.14.8",
     "@unipasswallet/popup-types": "^1.1.11",
     "@unipasswallet/web3-react": "^1.1.9",
     "@web3-react/core": "^8.2.0",

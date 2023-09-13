@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useMemo } from 'react';
-// import { EvaIcon } from '@paljs/ui/Icon';
 import styled, { css } from 'styled-components';
 import { Row, Col } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
@@ -7,16 +6,16 @@ import axios from 'axios';
 import * as eventsAPI from 'requests/event';
 import { formatTime } from 'utils/time';
 import { GOV_NODE_CONTRACT, SGN_CONTRACT } from 'utils/constant';
-// import { useRouter } from 'next/router';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import { useNavigate } from 'react-router-dom';
-// import Link from 'next/link';
+import BgImg from '../../assets/images/topBg.png';
+import HomeBg from '../../assets/images/homebg.png';
 
 const CITY_HALL = 'https://seedao.notion.site/07c258913c5d4847b59271e2ae6f7c66';
 const CITY_HALL_MEMBERS = 'https://www.notion.so/3913d631d7bc49e1a0334140e3cd84f5';
 
 const Box = styled.div`
-  margin: -2.25rem -2.25rem -0.75rem;
+  background: #f0f3f8;
 `;
 
 const BannerBox = styled.div`
@@ -24,7 +23,7 @@ const BannerBox = styled.div`
   align-items: center;
   justify-content: space-between;
   padding: 6rem 2.5rem 4rem;
-  background: url('/images/topBg.png') no-repeat right;
+  background: url(${BgImg}) no-repeat right;
   background-size: auto 100%;
 `;
 
@@ -153,13 +152,13 @@ const TitBox = styled.div`
 `;
 
 const LineBox = styled.div`
-  background: url('/images/homebg.png') center no-repeat;
+  background: url(${HomeBg}) center no-repeat;
   background-size: 100%;
   background-attachment: fixed;
   margin-bottom: 40px;
   .inner {
     background: rgba(161, 110, 255, 0.7);
-    padding: 2.2rem;
+    padding: 20px;
   }
   ul {
     display: flex;
@@ -191,18 +190,20 @@ const LinkBox = styled.ul`
   align-items: center;
   justify-content: space-between;
   margin-bottom: 80px;
+  padding-left: 0;
 
   li {
     width: 48%;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
     background-size: 100%;
     border-radius: 10px;
     overflow: hidden;
     cursor: pointer;
     .inner {
+      box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
       padding: 20px;
       background: rgba(255, 255, 255, 1);
       //backdrop-filter: blur(10px);
+      box-sizing: border-box;
       display: flex;
       align-items: center;
     }
@@ -351,11 +352,10 @@ export default function Home() {
       <ActiveBox>
         <TitBox>
           {t('Home.Events')}{' '}
-          {!!list.length &&
-            // <Link className="all" href={`/event/`}>
-            t(
-              'Home.AllEvents',
-            )
+          {
+            !!list.length &&
+              // <Link className="all" href={`/event/`}>
+              t('Home.AllEvents')
             // </Link>
           }
         </TitBox>

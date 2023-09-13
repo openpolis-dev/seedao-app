@@ -9,9 +9,7 @@ import { readPermissionUrl } from '../requests/user';
 import requests from '../requests';
 import { SEEDAO_USER, SEEDAO_USER_DATA } from '../utils/constant';
 import Avatar from 'components/common/avatar';
-import Button from '@mui/material/Button';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
+import { Button, Form } from 'react-bootstrap';
 import LoginModal from 'components/modals/login';
 
 export default function Header() {
@@ -128,23 +126,22 @@ export default function Header() {
     <HeadeStyle>
       <nav>
         <RightBox>
-          <Select
-            size="small"
+          <Form.Select
             style={{ minWidth: '100px' }}
             value={getLanguages().find((item) => item.value === lan)?.value || getLanguages()[0].value}
-            onChange={(event: SelectChangeEvent) => changeLang(event.target.value)}
+            onChange={(event: any) => changeLang(event.target.value)}
           >
             {getLanguages().map((item) => (
-              <MenuItem key={item.value} value={item.value}>
+              <option key={item.value} value={item.value}>
                 {item.label}
-              </MenuItem>
+              </option>
             ))}
-          </Select>
+          </Form.Select>
 
           {isLogin && userData ? (
             <Avatar user={userData} />
           ) : (
-            <Button onClick={showWalletLogin} size="small">
+            <Button onClick={showWalletLogin} size="sm">
               Connect Wallet
             </Button>
           )}
@@ -160,9 +157,11 @@ const HeadeStyle = styled.header`
   top: 0;
   left: 0;
   right: 0;
+  z-index: 9;
   nav {
     box-shadow: rgba(44, 51, 73, 0.1) 0px 0.5rem 1rem 0px;
-    padding: 1.25rem;
+    height: 80px;
+    box-sizing: border-box;
   }
 `;
 

@@ -1,37 +1,40 @@
 import { useNavigate } from 'react-router-dom';
-import MuiDrawer from '@mui/material/Drawer';
-import List from '@mui/material/List';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import { styled } from '@mui/material/styles';
+// import MuiDrawer from '@mui/material/Drawer';
+// import { styled } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
+import { ListGroup } from 'react-bootstrap';
+import styled from 'styled-components';
 
-const drawerWidth: number = 240;
-
-const Drawer = styled(MuiDrawer)(({ theme, open }) => ({
-  '& .MuiDrawer-paper': {
-    position: 'relative',
-    whiteSpace: 'nowrap',
-    width: drawerWidth,
-    transition: theme.transitions.create('width', {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-    boxSizing: 'border-box',
-    ...(!open && {
-      overflowX: 'hidden',
-      transition: theme.transitions.create('width', {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.leavingScreen,
-      }),
-      width: theme.spacing(7),
-      [theme.breakpoints.up('sm')]: {
-        width: theme.spacing(9),
-      },
-    }),
-  },
-}));
+const Box = styled.div`
+  background: #fff;
+  width: 240px;
+  box-sizing: border-box;
+  padding: 20px;
+`;
+//
+// const Drawer = styled(MuiDrawer)(({ theme, open }) => ({
+//   '& .MuiDrawer-paper': {
+//     position: 'relative',
+//     whiteSpace: 'nowrap',
+//     width: drawerWidth,
+//     transition: theme.transitions.create('width', {
+//       easing: theme.transitions.easing.sharp,
+//       duration: theme.transitions.duration.enteringScreen,
+//     }),
+//     boxSizing: 'border-box',
+//     ...(!open && {
+//       overflowX: 'hidden',
+//       transition: theme.transitions.create('width', {
+//         easing: theme.transitions.easing.sharp,
+//         duration: theme.transitions.duration.leavingScreen,
+//       }),
+//       width: theme.spacing(7),
+//       [theme.breakpoints.up('sm')]: {
+//         width: theme.spacing(9),
+//       },
+//     }),
+//   },
+// }));
 
 type MenuItemType = {
   title: string;
@@ -88,10 +91,14 @@ const items: MenuItemType[] = [
 const MenuItem = ({ data, onSelectMenu }: { data: MenuItemType; onSelectMenu: (m: MenuItemType) => void }) => {
   const { t } = useTranslation();
   return (
-    <ListItemButton onClick={() => onSelectMenu(data)}>
-      <ListItemIcon>{/* todo icon */}</ListItemIcon>
-      <ListItemText primary={t(data.title as any)} />
-    </ListItemButton>
+    // <ListItemButton onClick={() => onSelectMenu(data)}>
+    //   <ListItemIcon>{/* todo icon */}</ListItemIcon>
+    //   <ListItemText primary={t(data.title as any)} />
+    // </ListItemButton>
+
+    <ListGroup onClick={() => onSelectMenu(data)}>
+      <ListGroup.Item>{t(data.title as any)}</ListGroup.Item>
+    </ListGroup>
   );
 };
 
@@ -102,12 +109,11 @@ export default function Menu({ open }: { open: boolean }) {
     navigate(m.link.href);
   };
   return (
-    <Drawer variant="permanent" open={open}>
-      <List component="nav">
-        {items.map((item) => (
-          <MenuItem key={item.title} data={item} onSelectMenu={onSelectMenu} />
-        ))}
-      </List>
-    </Drawer>
+    // <div open={open}>
+    <Box>
+      {items.map((item) => (
+        <MenuItem key={item.title} data={item} onSelectMenu={onSelectMenu} />
+      ))}
+    </Box>
   );
 }
