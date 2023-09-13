@@ -1,15 +1,29 @@
 import { useNavigate } from 'react-router-dom';
 // import MuiDrawer from '@mui/material/Drawer';
-// import { styled } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
-import { ListGroup } from 'react-bootstrap';
 import styled from 'styled-components';
+import { House, Grid1x2, CashCoin, PieChart, People, Box2Heart, ShieldCheck, Envelope } from 'react-bootstrap-icons';
+import React from 'react';
 
 const Box = styled.div`
   background: #fff;
   width: 240px;
   box-sizing: border-box;
   padding: 20px;
+`;
+
+const LftLi = styled.div`
+  padding: 20px 0;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px dashed #eee;
+  .name {
+    padding-left: 10px;
+    padding-top: 3px;
+  }
+  .icon {
+    font-size: 20px;
+  }
 `;
 //
 // const Drawer = styled(MuiDrawer)(({ theme, open }) => ({
@@ -38,7 +52,7 @@ const Box = styled.div`
 
 type MenuItemType = {
   title: string;
-  icon: { name: string };
+  icon: { name: React.ReactNode };
   link: { href: string };
   value?: string;
 };
@@ -46,43 +60,43 @@ type MenuItemType = {
 const items: MenuItemType[] = [
   {
     title: 'menus.Home',
-    icon: { name: 'home-outline' },
+    icon: { name: <House /> },
     link: { href: '/home' },
   },
   {
     title: 'menus.Event',
-    icon: { name: 'checkmark-square-2-outline' },
+    icon: { name: <Grid1x2 /> },
     link: { href: '/event' },
   },
   {
     title: 'menus.assets',
-    icon: { name: 'cube-outline' },
+    icon: { name: <CashCoin /> },
     link: { href: '/assets' },
   },
   {
     title: 'menus.Project',
-    icon: { name: 'pie-chart-outline' },
+    icon: { name: <PieChart /> },
     link: { href: '/project' },
   },
   {
     title: 'menus.Guild',
-    icon: { name: 'people-outline' },
+    icon: { name: <People /> },
     link: { href: '/guild' },
   },
   {
     title: 'menus.Proposal',
-    icon: { name: 'browser-outline' },
+    icon: { name: <Box2Heart /> },
     link: { href: '/proposal' },
   },
   {
     title: 'menus.city-hall',
-    icon: { name: 'shield-outline' },
+    icon: { name: <ShieldCheck /> },
     link: { href: '/city-hall' },
   },
 
   {
     title: 'menus.Chat',
-    icon: { name: 'message-circle-outline' },
+    icon: { name: <Envelope /> },
     link: { href: '/chat' },
     value: 'chat',
   },
@@ -91,14 +105,10 @@ const items: MenuItemType[] = [
 const MenuItem = ({ data, onSelectMenu }: { data: MenuItemType; onSelectMenu: (m: MenuItemType) => void }) => {
   const { t } = useTranslation();
   return (
-    // <ListItemButton onClick={() => onSelectMenu(data)}>
-    //   <ListItemIcon>{/* todo icon */}</ListItemIcon>
-    //   <ListItemText primary={t(data.title as any)} />
-    // </ListItemButton>
-
-    <ListGroup onClick={() => onSelectMenu(data)}>
-      <ListGroup.Item>{t(data.title as any)}</ListGroup.Item>
-    </ListGroup>
+    <LftLi onClick={() => onSelectMenu(data)}>
+      <span className="icon">{data.icon.name}</span>
+      <span className="name">{t(data.title as any)}</span>
+    </LftLi>
   );
 };
 

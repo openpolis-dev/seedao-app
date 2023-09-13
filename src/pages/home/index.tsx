@@ -10,6 +10,7 @@ import { AppActionType, useAuthContext } from 'providers/authProvider';
 import { useNavigate } from 'react-router-dom';
 import BgImg from '../../assets/images/topBg.png';
 import HomeBg from '../../assets/images/homebg.png';
+import { People, ShieldCheck } from 'react-bootstrap-icons';
 
 const CITY_HALL = 'https://seedao.notion.site/07c258913c5d4847b59271e2ae6f7c66';
 const CITY_HALL_MEMBERS = 'https://www.notion.so/3913d631d7bc49e1a0334140e3cd84f5';
@@ -210,10 +211,16 @@ const LinkBox = styled.ul`
   }
   .lft {
     background: #eef1f7;
-    padding: 10px;
     border-radius: 100%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     margin-right: 20px;
     box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.1);
+    font-size: 20px;
+    font-weight: bold;
     ${({ theme }) => css`
       color: ${theme.colorPrimary500};
     `}
@@ -390,7 +397,9 @@ export default function Home() {
         <LinkBox>
           <li onClick={() => window.open(CITY_HALL, '_blank')}>
             <div className="inner">
-              <div className="lft">{/*<EvaIcon name="shield-outline" />*/}</div>
+              <div className="lft">
+                <ShieldCheck />
+              </div>
               <div>
                 <div className="tit">{t('Home.CityHall')}</div>
                 <div className="tBtm">{CITY_HALL}</div>
@@ -399,7 +408,9 @@ export default function Home() {
           </li>
           <li onClick={() => window.open(CITY_HALL_MEMBERS, '_blank')}>
             <div className="inner">
-              <div className="lft">{/*<EvaIcon name="people-outline" />*/}</div>
+              <div className="lft">
+                <People />
+              </div>
               <div>
                 <div className="tit">{t('Home.CityHallMembers')}</div>
                 <div className="tBtm">{CITY_HALL_MEMBERS}</div>

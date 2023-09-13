@@ -1,13 +1,20 @@
 import { createGlobalStyle } from 'styled-components';
+import './font.css';
 
 const GlobalStyle = createGlobalStyle`
   * {
+    font-family: Inter-Regular,-apple-system,BlinkMacSystemFont,
+    "Segoe UI",Roboto,"Helvetica Neue",
+    Arial,sans-serif,"Apple Color Emoji",
+    "Segoe UI Emoji","Segoe UI Symbol";
     padding: 0;
     margin: 0;
   }
    
   ul, li, dl, dt, dd{
     list-style: none;
+    padding: 0;
+    margin: 0;
   }
 
   a {
@@ -16,6 +23,9 @@ const GlobalStyle = createGlobalStyle`
     &:hover {
       color: unset;
     }
+  }
+  .btn{
+    white-space: nowrap;
   }
 `;
 

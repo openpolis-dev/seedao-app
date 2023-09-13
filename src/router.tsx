@@ -11,6 +11,7 @@ export default function RouterLink() {
       <Layout>
         <Routes>
           <Route path="/" element={<Home />} index />
+          <Route path="/home" element={<Home />} />
         </Routes>
       </Layout>
       {/* <Footer /> */}

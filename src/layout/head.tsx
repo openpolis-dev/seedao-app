@@ -11,6 +11,7 @@ import { SEEDAO_USER, SEEDAO_USER_DATA } from '../utils/constant';
 import Avatar from 'components/common/avatar';
 import { Button, Form } from 'react-bootstrap';
 import LoginModal from 'components/modals/login';
+import LogoImg from '../assets/images/logo.png';
 
 export default function Header() {
   const { account } = useWeb3React();
@@ -125,6 +126,9 @@ export default function Header() {
   return (
     <HeadeStyle>
       <nav>
+        <LogoIcon>
+          <img src={LogoImg} alt="" />
+        </LogoIcon>
         <RightBox>
           <Form.Select
             style={{ minWidth: '100px' }}
@@ -138,13 +142,7 @@ export default function Header() {
             ))}
           </Form.Select>
 
-          {isLogin && userData ? (
-            <Avatar user={userData} />
-          ) : (
-            <Button onClick={showWalletLogin} size="sm">
-              Connect Wallet
-            </Button>
-          )}
+          {isLogin && userData ? <Avatar user={userData} /> : <Button onClick={showWalletLogin}>Connect Wallet</Button>}
         </RightBox>
       </nav>
       {show_login_modal && <LoginModal />}
@@ -161,14 +159,21 @@ const HeadeStyle = styled.header`
   nav {
     box-shadow: rgba(44, 51, 73, 0.1) 0px 0.5rem 1rem 0px;
     height: 80px;
+    padding: 0 20px;
     box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
   }
 `;
 
-const LogoIcon = styled.img`
+const LogoIcon = styled.div`
   //width: 70px;
-  height: 65px;
-  margin-top: -16px;
+
+  img {
+    height: 65px;
+  }
+  //margin-top: -16px;
 `;
 const RightBox = styled.div`
   display: flex;
