@@ -20,6 +20,7 @@ declare interface IPageParams {
   sort_order: string;
   sort_field: string;
   status?: string;
+  state?: string;
 }
 
 declare interface IPageResponse<T> {

@@ -4,6 +4,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
 import Layout from './layout';
 import Home from './pages/home';
+import Event from './pages/event';
+import Assets from './pages/assets';
 
 export default function RouterLink() {
   return (
@@ -12,6 +14,8 @@ export default function RouterLink() {
         <Routes>
           <Route path="/" element={<Home />} index />
           <Route path="/home" element={<Home />} />
+          <Route path="/event" element={<Event />} />
+          <Route path="/assets" element={<Assets />} />
         </Routes>
       </Layout>
       {/* <Footer /> */}

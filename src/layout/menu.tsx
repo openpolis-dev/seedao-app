@@ -7,9 +7,10 @@ import React from 'react';
 
 const Box = styled.div`
   background: #fff;
-  width: 240px;
+  width: 200px;
   box-sizing: border-box;
   padding: 20px;
+  flex-shrink: 0;
 `;
 
 const LftLi = styled.div`
@@ -17,6 +18,7 @@ const LftLi = styled.div`
   display: flex;
   align-items: center;
   border-bottom: 1px dashed #eee;
+  cursor: pointer;
   .name {
     padding-left: 10px;
     padding-top: 3px;
