@@ -6,13 +6,12 @@
   "dependencies": {
     "@mui/material": "^5.14.8",
     "@mui/styled-engine-sc": "^5.14.8",
-    "@paljs/icons": "1.0.5",
-    "@paljs/ui": "1.1.1",
     "@unipasswallet/popup-types": "^1.1.11",
     "@unipasswallet/web3-react": "^1.1.9",
     "@web3-react/core": "^8.2.0",
     "@web3-react/metamask": "^8.2.1",
     "axios": "^1.4.0",
+    "bootstrap": "^5.3.1",
     "casbin.js": "^0.5.1",
     "dayjs": "^1.11.8",
     "eslint-config-next": "^13.4.5",
@@ -24,6 +23,8 @@
     "quill-mention": "^3.1.0",
     "quilljs-markdown": "^1.2.0",
     "react": "^18.2.0",
+    "react-bootstrap": "^2.8.0",
+    "react-bootstrap-icons": "^1.10.3",
     "react-copy-to-clipboard": "^5.1.0",
     "react-datepicker": "^4.13.0",
     "react-dom": "^18.2.0",
@@ -70,7 +71,11 @@
     "extends": [
       "react-app",
       "react-app/jest"
-    ]
+    ],
+    "rules": {
+      "typescript-eslint/ban-ts-comment": "off",
+      "@typescript-eslint/no-explicit-any": "off"
+    }
   },
   "browserslist": {
     "production": [

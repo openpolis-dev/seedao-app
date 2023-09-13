@@ -11,12 +11,14 @@ import { Wallet, WalletType } from 'wallet/wallet';
 import { SELECT_WALLET } from 'utils/constant';
 import { MetaMask } from '@web3-react/metamask';
 import { UniPass } from '@unipasswallet/web3-react';
-import { EvaIcon } from '@paljs/ui/Icon';
 import useToast, { ToastType } from 'hooks/useToast';
 import * as gtag from 'utils/gtag';
 import { useTranslation } from 'react-i18next';
 import { Web3Provider } from '@ethersproject/providers';
+import { X } from 'react-bootstrap-icons';
+
 const { useProvider, useAccount } = uniPassHooks;
+
 enum LoginStatus {
   Default = 0,
   Pending,
@@ -174,7 +176,8 @@ export default function LoginModal() {
       {Toast}
       <Modal>
         <span className="icon-close" onClick={closeModal}>
-          <EvaIcon name="close-outline" />
+          {/*<EvaIcon name="close-outline" />*/}
+          <X />
         </span>
 
         <Title>{t('general.ConnectWallet')}</Title>

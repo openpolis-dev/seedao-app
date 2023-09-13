@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import Spinner from '@paljs/ui/Spinner';
+import { Spinner } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 
 const Mask = styled.div`
@@ -28,7 +28,7 @@ export default function LoadingBox() {
   return (
     <Mask>
       <Box>
-        <SpinnerStyled status="Primary" size="Giant">
+        <SpinnerStyled animation="border" variant="primary">
           {t('general.Loading')}...
         </SpinnerStyled>
       </Box>
