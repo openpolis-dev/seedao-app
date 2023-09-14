@@ -9,6 +9,7 @@ import Assets from './pages/assets';
 import Project from './pages/project';
 import Guild from './pages/guild';
 import Proposal from './pages/proposal';
+import CityHall from './pages/city-hall';
 
 export default function RouterLink() {
   return (
@@ -22,6 +23,7 @@ export default function RouterLink() {
           <Route path="/project" element={<Project />} />
           <Route path="/guild" element={<Guild />} />
           <Route path="/proposal" element={<Proposal />} />
+          <Route path="/city-hall" element={<CityHall />} />
         </Routes>
       </Layout>
       {/* <Footer /> */}
