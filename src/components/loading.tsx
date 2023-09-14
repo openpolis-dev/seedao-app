@@ -30,9 +30,10 @@ export default function Loading() {
   return (
     <Mask>
       <Box>
-        <Spinner animation="border" variant="primary">
+        <Spinner animation="border" variant="primary"></Spinner>
+        <div>
           <span>{t('general.Loading')}...</span>
-        </Spinner>
+        </div>
       </Box>
     </Mask>
   );

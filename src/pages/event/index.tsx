@@ -210,7 +210,6 @@ export default function Index() {
   };
 
   const selectCurrent = (e: any) => {
-    console.log(e);
     setCurrent(e);
     setPageCur(1);
   };

@@ -28,9 +28,8 @@ export default function LoadingBox() {
   return (
     <Mask>
       <Box>
-        <SpinnerStyled animation="border" variant="primary">
-          {t('general.Loading')}...
-        </SpinnerStyled>
+        <SpinnerStyled animation="border" variant="primary"></SpinnerStyled>
+        <div>{t('general.Loading')}...</div>
       </Box>
     </Mask>
   );

@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import AssetList from 'components/assetsCom/assetList';
 import styled, { css } from 'styled-components';
-import { Card } from 'react-bootstrap';
 import requests from 'requests';
 // import { EvaIcon } from '@paljs/ui';
 import { useTranslation } from 'react-i18next';
@@ -16,12 +15,19 @@ import { ethers } from 'ethers';
 import ModifyBudgetModal from 'components/assetsCom/modifyBudget';
 import { BudgetType } from 'type/project.type';
 import { formatNumber } from 'utils/number';
+import BgImg from '../../assets/images/homebg.png';
+
+const BoxOuter = styled.div`
+  margin: 40px;
+`;
 
 const Box = styled.div`
   padding: 40px 20px;
 `;
-const CardBox = styled(Card)`
-  min-height: 85vh;
+const CardBox = styled.div`
+  background: #fff;
+  box-shadow: rgba(44, 51, 73, 0.1) 0px 0.5rem 1rem 0px;
+  height: 100%;
 `;
 
 const FirstLine = styled.ul`
@@ -323,7 +329,7 @@ export default function Index() {
   }, []);
 
   return (
-    <div>
+    <BoxOuter>
       {Toast}
       {!!showModifyModal && (
         <ModifyBudgetModal handleClose={() => setshowModifyModal(undefined)} handleModify={handleModifyBudget} />
@@ -469,7 +475,7 @@ export default function Index() {
           <AssetList />
         </Box>
       </CardBox>
-    </div>
+    </BoxOuter>
   );
 }
 
@@ -494,7 +500,7 @@ const Vault = styled.div`
 
 const VaultOverview = styled.div`
   //background: linear-gradient(to right, #9d72fa, #6961fa);
-  background: url('/images/homebg.png') top no-repeat;
+  background: url(${BgImg}) top no-repeat;
   background-size: 100%;
   background-attachment: fixed;
   //background: #f8f8f8;
