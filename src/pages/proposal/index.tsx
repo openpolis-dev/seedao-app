@@ -8,6 +8,7 @@ import ProposalCard from 'components/proposal/proposalCard';
 import ProposalSubNav from 'components/proposal/proposalSubNav';
 import { useTranslation } from 'react-i18next';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import MsgIcon from 'assets/images/proposal/message.png';
 
 export default function Index() {
   const {
@@ -57,8 +58,8 @@ export default function Index() {
     setOrderType(index === 0 ? 'latest' : 'old');
   };
 
-  const handleSelectTab = (index: number) => {
-    setActiveTab(index);
+  const handleSelectTab = (index: string) => {
+    setActiveTab(Number(index));
   };
 
   useEffect(() => {
@@ -76,14 +77,13 @@ export default function Index() {
           <Tab title={t('Proposal.AllCategories')} eventKey={0}></Tab>
           <Tab title={t('Proposal.TheNeweset')} eventKey={1}></Tab>
         </Tabs>
-        {activeTab === 1 && <ProposalSubNav onSelect={handleChangeOrder} />}
         {activeTab === 0 ? (
           <div>
             <SubCategoryCard>
               {proposal_categories[0].children.map((subCategory) => (
                 <a href={`/proposal/category/${subCategory.category_id}`} key={subCategory.category_id}>
                   <SubCategoryItem>
-                    <img src="/images/proposal/message.png" alt="" width="24px" height="24px" />
+                    <img src={MsgIcon} alt="" width="24px" height="24px" />
                     <div>
                       <div className="name">{subCategory.name}</div>
                       <div>
@@ -96,15 +96,18 @@ export default function Index() {
             </SubCategoryCard>
           </div>
         ) : (
-          <div>
-            <InfiniteScroll dataLength={proposals.length} next={getAllProposals} hasMore={hasMore} loader={<></>}>
-              <ProposalBox>
-                {proposals.map((proposal) => (
-                  <ProposalCard key={proposal.id} data={proposal} />
-                ))}
-              </ProposalBox>
-            </InfiniteScroll>
-          </div>
+          <>
+            <ProposalSubNav onSelect={handleChangeOrder} />
+            <div>
+              <InfiniteScroll dataLength={proposals.length} next={getAllProposals} hasMore={hasMore} loader={<></>}>
+                <ProposalBox>
+                  {proposals.map((proposal) => (
+                    <ProposalCard key={proposal.id} data={proposal} />
+                  ))}
+                </ProposalBox>
+              </InfiniteScroll>
+            </div>
+          </>
         )}
       </ProposalContainer>
     </BoxOuter>
@@ -113,13 +116,13 @@ export default function Index() {
 
 const BoxOuter = styled.div`
   padding: 40px;
-  height: 100%;
+  min-height: 100%;
 `;
 
 const ProposalContainer = styled.div`
   background: #fff;
-  height: 100%;
   padding: 20px;
+  min-height: 100%;
 `;
 
 const SubCategoryCard = styled.div`
