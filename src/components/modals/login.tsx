@@ -16,6 +16,8 @@ import * as gtag from 'utils/gtag';
 import { useTranslation } from 'react-i18next';
 import { Web3Provider } from '@ethersproject/providers';
 import { X } from 'react-bootstrap-icons';
+import MetamaskIcon from 'assets/images/wallet/metamask.png';
+import UnipassIcon from 'assets/images/wallet/unipass.svg';
 
 const { useProvider, useAccount } = uniPassHooks;
 
@@ -39,14 +41,14 @@ const LOGIN_WALLETS: LoginWallet[] = [
     name: 'MetaMask',
     value: Wallet.METAMASK,
     connector: injected,
-    iconURL: '/icons/metamask.png',
+    iconURL: MetamaskIcon,
     type: WalletType.EOA,
   },
   {
     name: 'Unipass',
     value: Wallet.UNIPASS,
     connector: uniPassWallet,
-    iconURL: '/icons/unipass.svg',
+    iconURL: UnipassIcon,
     type: WalletType.AA,
   },
 ];
