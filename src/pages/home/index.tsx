@@ -3,14 +3,11 @@ import styled, { css } from 'styled-components';
 import { Row, Col } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
-import * as eventsAPI from 'requests/event';
-import { formatTime } from 'utils/time';
 import { GOV_NODE_CONTRACT, SGN_CONTRACT } from 'utils/constant';
-import { AppActionType, useAuthContext } from 'providers/authProvider';
 import { useNavigate } from 'react-router-dom';
 import BgImg from '../../assets/images/topBg.png';
 import HomeBg from '../../assets/images/homebg.png';
-import { People, ShieldCheck } from 'react-bootstrap-icons';
+import { People, ShieldCheck, Grid1x2, Calendar } from 'react-bootstrap-icons';
 
 const CITY_HALL = 'https://seedao.notion.site/07c258913c5d4847b59271e2ae6f7c66';
 const CITY_HALL_MEMBERS = 'https://www.notion.so/3913d631d7bc49e1a0334140e3cd84f5';
@@ -63,80 +60,6 @@ const LFtBox = styled.div`
 
 const ActiveBox = styled.div`
   margin: 0 2rem;
-`;
-
-const Item = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  img {
-    width: 100%;
-  }
-  .title {
-    font-size: 1rem;
-    line-height: 1.5em;
-    height: 3rem;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    margin: 1rem;
-    font-weight: bold;
-  }
-`;
-
-const CardBox = styled.div`
-  border: 1px solid #f1f1f1;
-  margin-bottom: 40px;
-  box-sizing: border-box;
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-  background: #fff;
-`;
-const ImageBox = styled.div`
-  border-radius: 12px 12px 0 0;
-  overflow: hidden;
-  width: 100%;
-
-  img {
-    width: 100%;
-  }
-`;
-const Photo = styled.div`
-  display: flex !important;
-  overflow: hidden;
-  .aspect {
-    padding-bottom: 100%;
-    height: 0;
-    flex-grow: 1 !important;
-  }
-  .content {
-    width: 100%;
-    margin-left: -100% !important;
-    max-width: 100% !important;
-    flex-grow: 1 !important;
-    position: relative;
-  }
-  .innerImg {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    left: 0;
-    top: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: #f5f5f5;
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-  }
 `;
 
 const TitBox = styled.div`
@@ -235,6 +158,22 @@ const LinkBox = styled.ul`
   }
 `;
 
+const EventCardStyle = styled.div`
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+  background-size: 100%;
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  padding-block: 15px;
+  background-color: #fff;
+  margin-bottom: 20px;
+`;
+
 const getDatafromNftscan = (contract: string, base?: string) => {
   return axios.get(`${base || 'https://polygonapi.nftscan.com'}/api/v2/statistics/collection/${contract}`, {
     headers: {
@@ -243,15 +182,36 @@ const getDatafromNftscan = (contract: string, base?: string) => {
   });
 };
 
+const EventCard = ({ icon, name, link }: { icon: React.ReactElement; name: string; link: string }) => {
+  return (
+    <EventCardStyle onClick={() => window.open(link, '_blank')}>
+      {icon}
+      <div>{name}</div>
+    </EventCardStyle>
+  );
+};
+
 export default function Home() {
   const { t } = useTranslation();
-  const navigate = useNavigate();
-  const { dispatch } = useAuthContext();
-  const [list, setList] = useState<{ name: string; image: string; start: string; id: string }[]>([]);
   const [sgnHolders, setSgnHolders] = useState(0);
   const [governNodes, setGovernNodes] = useState(0);
   const [onboardingHolders, setOnboardingHolders] = useState(0);
   const [onNewHolders, setNewHolders] = useState(0);
+
+  const events = useMemo(() => {
+    return [
+      {
+        name: t('Home.OnlineEvent'),
+        link: 'https://calendar.google.com/calendar/u/4?cid=YzcwNGNlNTA5ODUxMmIwYjBkNzA3MjJlNjQzMGFmNDIyMWUzYzllYmM2ZDFlNzJhYTcwYjgyYzgwYmI2OTk5ZkBncm91cC5jYWxlbmRhci5nb29nbGUuY29t',
+        icon: <Calendar />,
+      },
+      {
+        name: t('Home.OfflineEvent'),
+        link: 'https://seeu.network/',
+        icon: <Grid1x2 />,
+      },
+    ];
+  }, [t]);
 
   useEffect(() => {
     const handleSgnHolders = async () => {
@@ -305,28 +265,6 @@ export default function Home() {
     }
   }, []);
 
-  useEffect(() => {
-    const getEvents = async () => {
-      dispatch({ type: AppActionType.SET_LOADING, payload: true });
-      try {
-        const res = await eventsAPI.getEventList({ page: 0, size: 5, sort_order: 'desc', sort_field: 'start_at' });
-        dispatch({ type: AppActionType.SET_LOADING, payload: false });
-        const events = res.data.rows.map((item: any) => {
-          return {
-            id: item.id,
-            name: item.title,
-            image: item.cover_img,
-            start: formatTime(new Date(item.start_at).valueOf()),
-          };
-        });
-        setList(events);
-      } catch (error) {
-        console.error('get events failed', error);
-      }
-    };
-    getEvents();
-  }, []);
-
   return (
     <Box>
       <BannerBox>
@@ -357,37 +295,11 @@ export default function Home() {
         </div>
       </LineBox>
       <ActiveBox>
-        <TitBox>
-          {t('Home.Events')}{' '}
-          {
-            !!list.length &&
-              // <Link className="all" href={`/event/`}>
-              t('Home.AllEvents')
-            // </Link>
-          }
-        </TitBox>
+        <TitBox>{t('Home.Apps')}</TitBox>
         <Row>
-          {list.map((item, idx) => (
-            <Col
-              breakPoint={{ xs: 3, sm: 3, md: 3, lg: 2.4 }}
-              key={idx}
-              onClick={() => navigate(`event/view?id=${item.id}`)}
-            >
-              <CardBox>
-                <Item>
-                  <ImageBox>
-                    <Photo>
-                      <div className="aspect" />
-                      <div className="content">
-                        <div className="innerImg">
-                          <img src={item.image} alt="" />
-                        </div>
-                      </div>
-                    </Photo>
-                  </ImageBox>
-                  <div className="title">{item.name}</div>
-                </Item>
-              </CardBox>
+          {events.map((item, idx) => (
+            <Col breakPoint={{ xs: 3, sm: 3, md: 3, lg: 2.4 }} key={idx}>
+              <EventCard {...item} />
             </Col>
           ))}
         </Row>
