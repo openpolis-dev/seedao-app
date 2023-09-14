@@ -56,7 +56,7 @@ const INIT_STATE: IState = {
       ],
     },
   ],
-  language: 'en',
+  language: '',
   loading: null,
 };
 

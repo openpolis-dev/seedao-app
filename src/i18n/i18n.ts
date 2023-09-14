@@ -9,8 +9,10 @@ export const resources = {
   zh: { translation: zh },
 } as const;
 
+const localLang = localStorage.getItem('language');
+
 i18n.use(initReactI18next).init({
-  lng: 'en',
+  lng: localLang || 'en',
   resources,
   fallbackLng: 'en', // default lang
   debug: true,

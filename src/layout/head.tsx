@@ -12,8 +12,10 @@ import Avatar from 'components/common/avatar';
 import { Button, Form } from 'react-bootstrap';
 import LoginModal from 'components/modals/login';
 import LogoImg from '../assets/images/logo.png';
+import { useTranslation } from 'react-i18next';
 
 export default function Header() {
+  const { i18n } = useTranslation();
   const { account } = useWeb3React();
   const isLogin = useCheckLogin();
   const [lan, setLan] = useState('en');
@@ -24,11 +26,10 @@ export default function Header() {
   } = useAuthContext();
 
   const changeLang = (v: string) => {
-    // router.query.lang = v;
     setLan(v);
     dispatch({ type: AppActionType.SET_LAN, payload: v });
-    // router.push(router);
     localStorage.setItem('language', v);
+    i18n.changeLanguage(v);
   };
 
   useEffect(() => {
