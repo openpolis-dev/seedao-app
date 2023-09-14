@@ -241,7 +241,7 @@ export default function Index() {
                   md={2}
                   // breakPoint={{ xs: 3, sm: 3, md: 3, lg: 2.4 }}
                   key={idx}
-                  onClick={() => navigate(`event/view?id=${item?.id}`)}
+                  onClick={() => navigate(`/event/view?id=${item?.id}`)}
                 >
                   <CardBox>
                     <Item>

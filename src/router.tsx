@@ -11,6 +11,7 @@ import Guild from './pages/guild';
 import Proposal from './pages/proposal';
 import CityHall from './pages/city-hall';
 import Chat from './pages/chat';
+import EventView from './pages/event/view';
 
 export default function RouterLink() {
   return (
@@ -20,6 +21,7 @@ export default function RouterLink() {
           <Route path="/" element={<Home />} index />
           <Route path="/home" element={<Home />} />
           <Route path="/event" element={<Event />} />
+          <Route path="/event/view" element={<EventView />} />
           <Route path="/assets" element={<Assets />} />
           <Route path="/project" element={<Project />} />
           <Route path="/guild" element={<Guild />} />
