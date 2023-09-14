@@ -20,7 +20,7 @@ export default function ProposalSubNav({ onSelect }: IProps) {
         {t('Proposal.CreateProposal')}
       </Button>
       <div>
-        <Tabs defaultActiveKey={0} onSelect={(e: any) => onSelect(e)}>
+        <Tabs defaultActiveKey={0} onSelect={(e: any) => onSelect(Number(e))}>
           <Tab title={t('Proposal.TheNeweset')} eventKey={0}></Tab>
           <Tab title={t('Proposal.TheOldest')} eventKey={1}></Tab>
         </Tabs>

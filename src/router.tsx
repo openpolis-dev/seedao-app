@@ -9,6 +9,8 @@ import Assets from './pages/assets';
 import Project from './pages/project';
 import Guild from './pages/guild';
 import Proposal from './pages/proposal';
+import ProposalCategory from './pages/proposal/category';
+import ProposalThread from './pages/proposal/thread';
 import CityHall from './pages/city-hall';
 import Chat from './pages/chat';
 import EventView from './pages/event/view';
@@ -41,6 +43,8 @@ export default function RouterLink() {
           <Route path="/create-guild" element={<CreateGuild />} />
 
           <Route path="/proposal" element={<Proposal />} />
+          <Route path="/proposal/category/:id" element={<ProposalCategory />} />
+          <Route path="/proposal/thread/:id" element={<ProposalThread />} />
           <Route path="/city-hall" element={<CityHall />} />
           <Route path="/chat" element={<Chat />} />
         </Routes>
