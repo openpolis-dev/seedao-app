@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Row, Col, Tabs, Tab, Button } from 'react-bootstrap';
+import { Row, Tabs, Tab, Button } from 'react-bootstrap';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -126,7 +126,7 @@ export default function Index() {
     setPageCur(page);
   };
   const selectCurrent = (e: number) => {
-    setCurrent(e);
+    setCurrent(Number(e));
     setPageCur(1);
   };
   const handlePage = (num: number) => {

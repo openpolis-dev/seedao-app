@@ -14,6 +14,9 @@ import Chat from './pages/chat';
 import EventView from './pages/event/view';
 import EventEdit from './pages/event/edit';
 import ProjectInfo from './pages/project/info';
+import GuildInfo from './pages/guild/info';
+import CreateProject from './pages/create-project';
+import CreateGuild from './pages/create-guild';
 
 export default function RouterLink() {
   return (
@@ -31,8 +34,12 @@ export default function RouterLink() {
 
           <Route path="/project" element={<Project />} />
           <Route path="/project/info/:id" element={<ProjectInfo />} />
+          <Route path="/create-project" element={<CreateProject />} />
 
           <Route path="/guild" element={<Guild />} />
+          <Route path="/guild/info/:id" element={<GuildInfo />} />
+          <Route path="/create-guild" element={<CreateGuild />} />
+
           <Route path="/proposal" element={<Proposal />} />
           <Route path="/city-hall" element={<CityHall />} />
           <Route path="/chat" element={<Chat />} />

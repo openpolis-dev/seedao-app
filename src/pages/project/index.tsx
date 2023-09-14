@@ -134,7 +134,7 @@ export default function Index() {
     setPageCur(page);
   };
   const selectCurrent = (e: number) => {
-    setCurrent(e);
+    setCurrent(Number(e));
     setPageCur(1);
   };
   const handlePage = (num: number) => {

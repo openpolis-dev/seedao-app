@@ -2,38 +2,31 @@ import React, { useEffect, useState } from 'react';
 import { Row, Col, Tabs, Tab, Card } from 'react-bootstrap';
 import styled from 'styled-components';
 // import { useRouter } from 'next/router';
-import Info from 'components/projectInfoCom/info';
-import Members from 'components/projectInfoCom/members';
-import Assets from 'components/projectInfoCom/assets';
-import ProjectProposal from 'components/projectInfoCom/proposal';
-import Reg from 'components/projectInfoCom/reg';
+import Info from 'components/guild/info';
+import Members from 'components/guild/members';
+import Assets from 'components/guild/assets';
+import ProjectProposal from 'components/guild/proposal';
+import Reg from 'components/guild/reg';
 // import { EvaIcon } from '@paljs/ui/Icon';
-import { getProjectById } from 'requests/project';
-import { ProjectStatus, ReTurnProject } from 'type/project.type';
+import { getProjectById } from 'requests/guild';
+import { ReTurnProject } from 'type/project.type';
 import { useTranslation } from 'react-i18next';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
-import { listObj } from 'pages/project/index';
+import { listObj } from 'pages/project';
 import useCheckLogin from 'hooks/useCheckLogin';
 import usePermission from 'hooks/usePermission';
 import { PermissionObject, PermissionAction } from 'utils/constant';
 import { useNavigate, useParams } from 'react-router-dom';
-import { isNum } from 'react-toastify/dist/utils';
-
-const OuterBox = styled.div`
-  height: 100%;
-  margin: 40px;
-`;
 
 const Box = styled.div`
   position: relative;
-  height: 100%;
   .tab-content {
     padding: 0 !important;
   }
 `;
 
 const CardBox = styled(Card)`
-  height: 100%;
+  min-height: 85vh;
 `;
 
 const TopBox = styled.div`
@@ -56,21 +49,14 @@ export default function Index() {
   const { t } = useTranslation();
   const isLogin = useCheckLogin();
   const { dispatch } = useAuthContext();
-  // const { id } = router.query;
-
-  // const { search } = window.location;
-  // const id = new URLSearchParams(search).get('id');
-
   const { id } = useParams();
-
-  const navigate = useNavigate();
-
   const projectId = Number(id);
+  const navigate = useNavigate();
   const [detail, setDetail] = useState<ReTurnProject | undefined>();
   const [current, setCurrent] = useState<number>(0);
   const [list, setList] = useState<listObj[]>([]);
 
-  const canAuditApplication = usePermission(PermissionAction.CreateApplication, PermissionObject.ProjPrefix + id);
+  const canAuditApplication = usePermission(PermissionAction.CreateApplication, PermissionObject.GuildPrefix + id);
 
   useEffect(() => {
     if (!id) return;
@@ -91,49 +77,43 @@ export default function Index() {
   useEffect(() => {
     const _list = [
       {
-        name: t('Project.ProjectInformation'),
+        name: t('Guild.ProjectInformation'),
         id: 0,
       },
       {
-        name: t('Project.Members'),
+        name: t('Guild.Members'),
         id: 1,
       },
       {
-        name: t('Project.Asset'),
+        name: t('Guild.Asset'),
         id: 2,
       },
       {
-        name: t('Project.ProjectProposal'),
+        name: t('Guild.ProjectProposal'),
         id: 3,
       },
     ];
-    if (isLogin && canAuditApplication && detail?.status === ProjectStatus.Open) {
+    if (isLogin && canAuditApplication) {
       _list.push({
-        name: t('Project.Add'),
+        name: t('Guild.Add'),
         id: 4,
       });
     }
     setList(_list);
-  }, [t, isLogin, canAuditApplication, detail?.status]);
-
-  const updateProjectStatus = (status: ProjectStatus) => {
-    if (detail) {
-      setDetail({ ...detail, status });
-    }
-  };
+  }, [t, isLogin, canAuditApplication]);
 
   const updateProjectName = (value: string) => {
     if (detail) {
       setDetail({ ...detail, name: value });
     }
   };
-
   return (
-    <OuterBox>
+    <div>
       <CardBox>
         <Box>
           <BackBox onClick={() => navigate(-1)}>
-            {/*<EvaIcon name="chevron-left-outline" className="icon" /> <span> {t('general.back')}</span>*/}
+            {/*<EvaIcon name="chevron-left-outline" className="icon" /> */}
+            <span> {t('general.back')}</span>
           </BackBox>
           <Row>
             <Col breakPoint={{ xs: 12 }}>
@@ -145,12 +125,7 @@ export default function Index() {
                 </Tabs>
                 <BtmBox>
                   {current === 0 && (
-                    <Info
-                      detail={detail}
-                      updateProjectStatus={updateProjectStatus}
-                      updateProjectName={updateProjectName}
-                      updateProject={getDetail}
-                    />
+                    <Info detail={detail} updateProjectName={updateProjectName} updateProject={getDetail} />
                   )}
                   {current === 1 && <Members detail={detail} updateProject={getDetail} />}
                   {current === 2 && <Assets id={projectId} detail={detail} />}
@@ -162,6 +137,6 @@ export default function Index() {
           </Row>
         </Box>
       </CardBox>
-    </OuterBox>
+    </div>
   );
 }
