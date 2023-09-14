@@ -1,9 +1,13 @@
-import { useNavigate } from 'react-router-dom';
+import { useMemo } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 // import MuiDrawer from '@mui/material/Drawer';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { House, Grid1x2, CashCoin, PieChart, People, Box2Heart, ShieldCheck, Envelope } from 'react-bootstrap-icons';
 import React from 'react';
+import useCheckLogin from 'hooks/useCheckLogin';
+import { useAuthContext } from 'providers/authProvider';
+import { WalletType } from 'wallet/wallet';
 
 const Box = styled.div`
   background: #fff;
@@ -13,7 +17,7 @@ const Box = styled.div`
   flex-shrink: 0;
 `;
 
-const LftLi = styled.div`
+const LftLi = styled.div<{ selected?: boolean }>`
   padding: 20px 0;
   display: flex;
   align-items: center;
@@ -26,6 +30,7 @@ const LftLi = styled.div`
   .icon {
     font-size: 20px;
   }
+  ${(props) => props.selected && 'color: #a16eff;'}
 `;
 //
 // const Drawer = styled(MuiDrawer)(({ theme, open }) => ({
@@ -104,27 +109,57 @@ const items: MenuItemType[] = [
   },
 ];
 
-const MenuItem = ({ data, onSelectMenu }: { data: MenuItemType; onSelectMenu: (m: MenuItemType) => void }) => {
-  const { t } = useTranslation();
+interface IMenuItem {
+  data: MenuItemType;
+  onSelectMenu: (m: MenuItemType) => void;
+  selected?: boolean;
+}
+
+const MenuItem = ({ data, onSelectMenu, selected }: IMenuItem) => {
   return (
-    <LftLi onClick={() => onSelectMenu(data)}>
+    <LftLi onClick={() => onSelectMenu(data)} selected={selected}>
       <span className="icon">{data.icon.name}</span>
-      <span className="name">{t(data.title as any)}</span>
+      <span className="name">{data.title}</span>
     </LftLi>
   );
 };
 
 export default function Menu({ open }: { open: boolean }) {
   const navigate = useNavigate();
+  const { pathname } = useLocation();
+  const { t } = useTranslation();
+
+  const isLogin = useCheckLogin();
+  const {
+    state: { wallet_type },
+  } = useAuthContext();
 
   const onSelectMenu = (m: MenuItemType) => {
     navigate(m.link.href);
   };
+
+  const menuItemsFormat = useMemo(() => {
+    const display_items: MenuItemType[] = [];
+    items.forEach((d) => {
+      const _item = { ...d, title: t(d.title as any) };
+      if (d.value === 'chat') {
+        isLogin && wallet_type === WalletType.EOA && items.push(_item);
+      } else {
+        display_items.push(_item);
+      }
+    });
+    return display_items;
+  }, [t, isLogin, wallet_type]);
   return (
     // <div open={open}>
     <Box>
-      {items.map((item) => (
-        <MenuItem key={item.title} data={item} onSelectMenu={onSelectMenu} />
+      {menuItemsFormat.map((item) => (
+        <MenuItem
+          key={item.title}
+          data={item}
+          onSelectMenu={onSelectMenu}
+          selected={pathname.startsWith(item.link.href)}
+        />
       ))}
     </Box>
   );
