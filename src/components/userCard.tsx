@@ -7,6 +7,9 @@ import PublicJs from 'utils/publicJs';
 // import { EvaIcon } from '@paljs/ui/Icon';
 import styled from 'styled-components';
 import { useWeb3React } from '@web3-react/core';
+import TwitterIcon from 'assets/images/twitterNor.svg';
+import DiscordIcon from 'assets/images/discordNor.svg';
+import EmailIcon from 'assets/images/email.svg';
 
 interface IUserProps {
   user: IUser;
@@ -47,17 +50,17 @@ export default function UserCard({ user, showEdit, onSelectUser, formatActive }:
       <LinkBox>
         {user.twitter_profile && (
           <a href={user.twitter_profile} target="_blank" rel="noreferrer">
-            <img src="/images/twitterNor.svg" alt="" className="icon" width="20px" height="20px" />
+            <img src={TwitterIcon} alt="" className="icon" width="20px" height="20px" />
           </a>
         )}
         {user.discord_profile && (
           <CopyBox text={user.discord_profile || ''} dir="right">
-            <img src="/images/discordNor.svg" alt="" className="icon" width="20px" height="20px" />
+            <img src={DiscordIcon} alt="" className="icon" width="20px" height="20px" />
           </CopyBox>
         )}
         {user.email && (
           <CopyBox text={user.email || ''}>
-            <img src="/images/email.svg" alt="" className="icon" width="20px" height="20px" />
+            <img src={EmailIcon} alt="" className="icon" width="20px" height="20px" />
           </CopyBox>
         )}
       </LinkBox>
