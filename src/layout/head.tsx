@@ -9,7 +9,7 @@ import { readPermissionUrl } from '../requests/user';
 import requests from '../requests';
 import { SEEDAO_USER, SEEDAO_USER_DATA } from '../utils/constant';
 import Avatar from 'components/common/avatar';
-import { Button, Form } from 'react-bootstrap';
+import { Button, Form, Dropdown } from 'react-bootstrap';
 import LoginModal from 'components/modals/login';
 import LogoImg from '../assets/images/logo.png';
 import { useTranslation } from 'react-i18next';
@@ -18,6 +18,13 @@ export default function Header() {
   const { i18n } = useTranslation();
   const { account } = useWeb3React();
   const isLogin = useCheckLogin();
+  const { t } = useTranslation();
+
+  const [list] = useState([
+    { title: t('My.MyProfile'), link: '/user/profile', value: 'profile' },
+    { title: t('My.MyAccount'), link: '/user/vault', value: 'vault' },
+    { title: t('My.Exit'), value: 'logout' },
+  ]);
   const [lan, setLan] = useState('en');
 
   const {
@@ -143,7 +150,23 @@ export default function Header() {
             ))}
           </Form.Select>
 
-          {isLogin && userData ? <Avatar user={userData} /> : <Button onClick={showWalletLogin}>Connect Wallet</Button>}
+          {isLogin && userData ? (
+            <Dropdown>
+              <Dropdown.Toggle variant="success" className="dropBox">
+                <Avatar user={userData} />
+              </Dropdown.Toggle>
+
+              <Dropdown.Menu>
+                {list.map((item, index) => (
+                  <Dropdown.Item key={`userDown_${index}`} href={item.link}>
+                    {item.title}
+                  </Dropdown.Item>
+                ))}
+              </Dropdown.Menu>
+            </Dropdown>
+          ) : (
+            <Button onClick={showWalletLogin}>Connect Wallet</Button>
+          )}
         </RightBox>
       </nav>
       {show_login_modal && <LoginModal />}
@@ -166,6 +189,13 @@ const HeadeStyle = styled.header`
     align-items: center;
     justify-content: space-between;
   }
+  .dropBox {
+    display: flex;
+    align-items: center;
+  }
+  .dropdown button {
+    border-color: transparent !important;
+  }
 `;
 
 const LogoIcon = styled.div`
@@ -174,6 +204,7 @@ const LogoIcon = styled.div`
   img {
     height: 65px;
   }
+
   //margin-top: -16px;
 `;
 const RightBox = styled.div`

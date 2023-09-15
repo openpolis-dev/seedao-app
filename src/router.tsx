@@ -19,6 +19,8 @@ import ProjectInfo from './pages/project/info';
 import GuildInfo from './pages/guild/info';
 import CreateProject from './pages/create-project';
 import CreateGuild from './pages/create-guild';
+import Profile from './pages/user/profile';
+import UserVault from './pages/user/vault';
 
 export default function RouterLink() {
   return (
@@ -27,6 +29,9 @@ export default function RouterLink() {
         <Routes>
           <Route path="/" element={<Home />} index />
           <Route path="/home" element={<Home />} />
+
+          <Route path="/user/profile" element={<Profile />} />
+          <Route path="/user/vault" element={<UserVault />} />
 
           <Route path="/event" element={<Event />} />
           <Route path="/event/view" element={<EventView />} />
