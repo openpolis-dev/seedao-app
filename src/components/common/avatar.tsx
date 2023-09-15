@@ -1,11 +1,12 @@
 import styled from 'styled-components';
 import { IUser } from 'type/user.type';
 import PublicJs from 'utils/publicJs';
+import DefaultAvatar from 'assets/images/avatar.svg';
 
 export default function Avatar({ user }: { user?: IUser }) {
   return (
     <AvatarStyle>
-      <img src={user?.avatar} alt="" />
+      <img src={user?.avatar || DefaultAvatar} alt="" />
       <span>{user?.name || PublicJs.AddressToShow(user?.wallet || '')}</span>
     </AvatarStyle>
   );
@@ -19,5 +20,6 @@ const AvatarStyle = styled.div`
     width: 28px;
     height: 28px;
     border-radius: 50%;
+    border: 1px solid rgb(237, 241, 247);
   }
 `;
