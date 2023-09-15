@@ -298,7 +298,7 @@ export default function Home() {
         <TitBox>{t('Home.Apps')}</TitBox>
         <Row>
           {events.map((item, idx) => (
-            <Col breakPoint={{ xs: 3, sm: 3, md: 3, lg: 2.4 }} key={idx}>
+            <Col key={idx}>
               <EventCard {...item} />
             </Col>
           ))}

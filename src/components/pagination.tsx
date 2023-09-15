@@ -1,89 +1,91 @@
 import React, { ChangeEvent, FC, useEffect, useState } from 'react';
 import ReactPaginate from 'react-paginate';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import { Button } from 'react-bootstrap';
 import InputNumber from 'components/inputNumber';
+import LftImg from '../assets/images/left.svg';
+import RhtImg from '../assets/images/right.svg';
 
 const Box = styled.div`
-  //display: flex;
+  display: flex;
   //justify-content: space-between;
-  //align-items: center;
-  ${({ theme }) => css`
-    margin-top: 40px;
-    width: 100%;
-    a {
-      text-decoration: none;
-      //color: #616666;
-      width: 32px;
-      height: 32px;
-      display: inline-block;
-      margin: 0 4px;
-    }
-    .pagination {
-      display: flex;
-      align-items: center;
+  align-items: center;
+
+  margin-top: 40px;
+  width: 100%;
+  a {
+    text-decoration: none;
+    //color: #616666;
+    width: 32px;
+    height: 32px;
+    display: inline-block;
+    margin: 0 4px;
+  }
+  .pagination {
+    display: flex;
+    align-items: center;
+  }
+
+  .page-break {
+    width: 32px;
+    height: 32px;
+    text-align: center;
+    line-height: 32px;
+    margin-right: -4px;
+  }
+  .page-left {
+    background: url(${LftImg}) no-repeat center !important;
+    margin-right: 5px;
+  }
+  .page-right {
+    background: url(${RhtImg}) no-repeat center !important;
+  }
+
+  .page-link,
+  .page-left,
+  .page-right {
+    width: 32px;
+    height: 32px;
+    background: #fff;
+    border: 0;
+    text-align: center;
+    line-height: 32px;
+    padding: 0;
+    font-size: 14px;
+    font-weight: 400;
+    cursor: pointer;
+    color: #616666;
+    border: 1px solid var(--bs-primary);
+    border-radius: 4px;
+  }
+
+  .next {
+    display: none;
+  }
+
+  .page-link {
+    &:hover {
+      background: var(--bs-primary);
+      color: #fff;
     }
 
-    .page-break {
-      width: 32px;
-      height: 32px;
-      text-align: center;
-      line-height: 32px;
-      margin-right: -4px;
+    &:focus {
+      box-shadow: none;
     }
-    .page-left {
-      background: url('/images/left.svg') no-repeat center !important;
-    }
-    .page-right {
-      background: url('/images/right.svg') no-repeat center !important;
-    }
+  }
 
-    .page-link,
-    .page-left,
-    .page-right {
-      width: 32px;
-      height: 32px;
-      background: #fff;
-      border: 0;
-      text-align: center;
-      line-height: 32px;
-      padding: 0;
-      font-size: 14px;
-      font-weight: 400;
-      cursor: pointer;
-      color: #616666;
-      border: 1px solid ${theme.colorPrimary500};
-      border-radius: 4px;
+  .disabled {
+    .pageL {
+      color: #f2f2f2 !important;
     }
+  }
 
-    .next {
-      display: none;
-    }
-
+  .active {
     .page-link {
-      &:hover {
-        background: ${theme.colorPrimary500};
-        color: #fff;
-      }
-
-      &:focus {
-        box-shadow: none;
-      }
+      background: var(--bs-primary);
+      color: #fff;
     }
-
-    .disabled {
-      .pageL {
-        color: #f2f2f2 !important;
-      }
-    }
-
-    .active {
-      .page-link {
-        background: ${theme.colorPrimary500};
-        color: #fff;
-      }
-    }
-  `}
+  }
 `;
 // const NumBox = styled.div`
 //   font-size: 14px;
@@ -92,44 +94,45 @@ const Box = styled.div`
 // `;
 
 const GoToBox = styled.div`
-  ${({ theme }) => css`
-    display: flex;
-    align-items: center;
-    margin-left: 12px;
-    border: 1px solid ${theme.colorPrimary500};
-    border-radius: 3px;
-    overflow: hidden;
-    height: 33px;
+  display: flex;
+  align-items: center;
+  margin: 5px 12px;
+  //border: 1px solid var(--bs-primary);
 
-    input {
-      width: 64px;
-      height: 32px;
-      background: transparent;
-      border: 0;
-      text-align: center;
-      font-size: 14px;
-      color: #000;
-      &:focus {
-        outline: none;
-      }
+  padding: 0 !important;
 
-      &::-webkit-outer-spin-button,
-      &::-webkit-inner-spin-button {
-        -webkit-appearance: none !important;
-      }
+  input {
+    width: 64px;
+    height: 32px;
+    background: transparent;
+    text-align: center;
+    font-size: 14px;
+    color: #000;
+    border: 1px solid var(--bs-primary);
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+    &:focus {
+      outline: none;
     }
 
-    .btn {
-      width: 32px;
-      height: 32px;
-      text-align: center;
-      padding: 0;
-      border-radius: 0;
-      font-size: 14px;
-      background: ${theme.colorPrimary500};
-      color: #fff;
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none !important;
     }
-  `}
+  }
+
+  .btn {
+    width: 32px;
+    height: 32px;
+    text-align: center;
+    padding: 0;
+    border-radius: 0;
+    font-size: 14px;
+    background: var(--bs-primary);
+    color: #fff;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+  }
 `;
 const RhtBox = styled.div`
   display: flex;

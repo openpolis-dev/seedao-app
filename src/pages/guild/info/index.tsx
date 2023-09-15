@@ -116,7 +116,7 @@ export default function Index() {
             <span> {t('general.back')}</span>
           </BackBox>
           <Row>
-            <Col breakPoint={{ xs: 12 }}>
+            <Col>
               <TopBox>
                 <Tabs defaultActiveKey={0} onSelect={(e: any) => selectCurrent(e)}>
                   {list.map((item, index) => (
