@@ -40,6 +40,38 @@ const GlobalStyle = createGlobalStyle`
     text-transform: uppercase;
 
   }
+  .nav-tabs{
+    font-size: 14px;
+    .nav-item{
+      &:focus-visible{
+        border: 0!important;
+        outline: none;
+      }
+    }
+
+    .nav-link{
+      text-transform: uppercase;
+      color:rgb(143, 155, 179);
+      padding:16px 32px;
+      transition: none;
+      &:focus-within,&:focus,&:focus-visible,&:hover{
+        border-color: transparent;
+        outline: none;
+        box-shadow: none;
+      }
+      &.active{
+        border: 0;
+        outline: none;
+        color:var(--bs-primary);
+        border-bottom: 3px solid var(--bs-primary);
+        font-weight: bold;
+      }
+      &.disabled{
+        color:rgb(237, 241, 247);
+      }
+    }
+    
+  }
 `;
 
 export default GlobalStyle;

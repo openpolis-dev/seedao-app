@@ -14,11 +14,13 @@ import useCheckLogin from 'hooks/useCheckLogin';
 import ProjectOrGuildItem from 'components/projectOrGuildItem';
 const OuterBox = styled.div`
   margin: 40px;
+  height: 100%;
 `;
 
 const CardBox = styled.div`
   background: #fff;
-  padding: 40px;
+  padding: 10px 40px;
+  height: 100%;
 `;
 
 const Box = styled.div`

@@ -16,12 +16,11 @@ import { useWeb3React } from '@web3-react/core';
 import { useNavigate } from 'react-router-dom';
 
 const BoxOuter = styled.div`
-  padding: 40px;
+  padding: 40px 40px 40px;
   height: 100%;
 `;
 
 const Box = styled.div`
-  padding: 40px 0;
   box-sizing: border-box;
   a:hover {
     color: #fff;
@@ -33,6 +32,8 @@ const Card = styled.div`
   background: #fff;
   box-shadow: rgba(44, 51, 73, 0.1) 0px 0.5rem 1rem 0px;
   height: 100%;
+  padding-top: 10px;
+  box-sizing: border-box;
 `;
 
 const ActiveBox = styled.div`
