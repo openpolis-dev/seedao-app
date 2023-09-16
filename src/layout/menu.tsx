@@ -32,7 +32,7 @@ const LftLi = styled.div<{ selected?: boolean }>`
   .icon {
     font-size: 20px;
   }
-  ${(props) => props.selected && 'color: #a16eff;'}
+  ${(props) => props.selected && 'color: var(--bs-primary);'}
 `;
 //
 // const Drawer = styled(MuiDrawer)(({ theme, open }) => ({
