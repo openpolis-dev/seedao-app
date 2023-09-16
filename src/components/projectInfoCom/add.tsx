@@ -1,7 +1,5 @@
 import styled from 'styled-components';
-import { Card, InputGroup, Button } from 'react-bootstrap';
-// import { InputGroup } from '@paljs/ui/Input';
-// import { EvaIcon } from '@paljs/ui/Icon';
+import { InputGroup, Button, Form } from 'react-bootstrap';
 import React, { ChangeEvent, useState } from 'react';
 // import { Button } from '@paljs/ui/Button';
 import { useTranslation } from 'react-i18next';
@@ -25,13 +23,34 @@ const Mask = styled.div`
     margin-right: 20px;
   }
 `;
-const CardHeader = styled.div``;
+const CardBox = styled.div`
+  background: #fff;
+  border-radius: 0.25rem;
+  min-width: 500px;
+`;
 
-const CardBody = styled.div``;
-const CardFooter = styled.div``;
+const CardHeader = styled.div`
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid rgb(237, 241, 247);
+  border-top-left-radius: 0.25rem;
+  border-top-right-radius: 0.25rem;
+  color: rgb(34, 43, 69);
+  font-family: Inter-Regular, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.5rem;
+`;
+
+const CardBody = styled.div`
+  padding: 20px;
+`;
+const CardFooter = styled.div`
+  padding: 0 20px 20px;
+`;
 
 const ItemBox = styled.div`
-  margin-bottom: 40px;
+  margin-bottom: 20px;
   &:last-child {
     margin-bottom: 0;
   }
@@ -40,7 +59,6 @@ const ItemBox = styled.div`
     margin-bottom: 10px;
   }
   ul {
-    margin-top: 20px;
     li {
       display: flex;
       align-items: center;
@@ -152,7 +170,7 @@ export default function Add(props: Iprops) {
 
   return (
     <Mask>
-      <Card>
+      <CardBox>
         {Toast}
         <CardHeader>{t('Project.AddMember')}</CardHeader>
         <CardBody>
@@ -164,7 +182,7 @@ export default function Add(props: Iprops) {
                   {adminList.map((item, index) => (
                     <li key={`admin_${index}`}>
                       <InputGroup>
-                        <input
+                        <Form.Control
                           type="text"
                           placeholder={t('Project.Dominator')}
                           value={item}
@@ -194,7 +212,7 @@ export default function Add(props: Iprops) {
                   {memberList.map((item, index) => (
                     <li key={`member_${index}`}>
                       <InputGroup>
-                        <input
+                        <Form.Control
                           type="text"
                           placeholder={t('Project.Members')}
                           value={item}
@@ -220,14 +238,14 @@ export default function Add(props: Iprops) {
           </InnerBox>
         </CardBody>
         <CardFooter>
-          <Button className="btnBtm" onClick={() => closeAdd()}>
+          <Button variant="outline-primary" className="btnBtm" onClick={() => closeAdd()}>
             {t('general.cancel')}
           </Button>
           <Button onClick={() => submitObject()} disabled={!adminList.length && !memberList.length}>
             {t('general.confirm')}
           </Button>
         </CardFooter>
-      </Card>
+      </CardBox>
     </Mask>
   );
 }

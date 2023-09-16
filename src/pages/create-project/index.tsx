@@ -1,8 +1,6 @@
-import { InputGroup, Button } from 'react-bootstrap';
+import { InputGroup, Button, Form } from 'react-bootstrap';
 import styled from 'styled-components';
 import React, { ChangeEvent, FormEvent, useState } from 'react';
-// import { EvaIcon } from '@paljs/ui/Icon';
-// import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
 import { createProjects } from 'requests/project';
 import { BudgetType, IBaseProject } from 'type/project.type';
@@ -11,15 +9,16 @@ import useToast, { ToastType } from 'hooks/useToast';
 import { AssetName } from 'utils/constant';
 import InputNumber from 'components/inputNumber';
 import { useNavigate } from 'react-router-dom';
+import { ChevronLeft, PlusLg, DashLg, Upload } from 'react-bootstrap-icons';
 
 const OuterBox = styled.div`
   padding: 40px;
   box-sizing: border-box;
-  height: 100%;
+  min-height: 100%;
 `;
 
 const Box = styled.div`
-  height: 100%;
+  min-height: 100%;
   .btnBtm {
     margin-right: 20px;
   }
@@ -32,7 +31,18 @@ const CardBox = styled.div`
   padding: 20px;
 `;
 
-const CardHeader = styled.div``;
+const CardHeader = styled.div`
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid rgb(237, 241, 247);
+  border-top-left-radius: 0.25rem;
+  border-top-right-radius: 0.25rem;
+  color: rgb(34, 43, 69);
+  font-family: Inter-Regular, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.5rem;
+`;
 
 const CardBody = styled.div``;
 
@@ -53,6 +63,7 @@ const UlBox = styled.ul`
       min-width: 180px;
       background: #f8f8f8;
       padding: 0 20px;
+      font-size: 14px;
     }
   }
 `;
@@ -69,16 +80,29 @@ const ItemBox = styled.div`
   .titleLft {
     margin-right: 10px;
     width: 50px;
+    font-size: 14px;
+  }
+  .iconForm {
+    color: var(--bs-primary);
+    font-size: 20px;
+    margin-right: 10px;
+    cursor: pointer;
   }
 `;
 
 const BackBox = styled.div`
-  padding: 30px 20px;
-  display: flex;
+  width: 100%;
+  padding: 10px 0 20px;
+  display: inline-flex;
   align-items: center;
-  cursor: pointer;
-  .icon {
-    font-size: 24px;
+
+  .back {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+  }
+  .iconTop {
+    margin-right: 10px;
   }
 `;
 
@@ -101,6 +125,10 @@ const BtnBox = styled.label`
   img {
     max-width: 100%;
     max-height: 100%;
+  }
+  .uploadIcon {
+    font-size: 20px;
+    margin-right: 10px;
   }
 `;
 
@@ -305,8 +333,8 @@ export default function CreateProject() {
         {Toast}
         <CardBox>
           <BackBox onClick={() => navigate(-1)}>
-            {/*<EvaIcon name="chevron-left-outline" className="icon" />*/}
-            <span>{t('general.back')}</span>
+            <ChevronLeft className="iconTop" />
+            <span> {t('general.back')}</span>
           </BackBox>
           <CardHeader> {t('Project.create')}</CardHeader>
           <CardBody>
@@ -314,7 +342,7 @@ export default function CreateProject() {
               {!url && (
                 <div>
                   <input id="fileUpload" type="file" hidden accept=".jpg, .jpeg, .png, .svg" />
-                  {/*<EvaIcon name="cloud-upload-outline" className="iconRht" />*/}
+                  <Upload className="uploadIcon" />
                   <span> {t('Project.upload')}</span>
                 </div>
               )}
@@ -331,7 +359,7 @@ export default function CreateProject() {
               <li>
                 <div className="title">{t('Project.ProjectName')}</div>
                 <InputBox fullWidth>
-                  <input
+                  <Form.Control
                     type="text"
                     placeholder={t('Project.ProjectName')}
                     value={proName}
@@ -345,7 +373,7 @@ export default function CreateProject() {
                   {adminList.map((item, index) => (
                     <ItemBox key={`mem_${index}`}>
                       <InputBox fullWidth>
-                        <input
+                        <Form.Control
                           type="text"
                           placeholder={t('Project.Dominator')}
                           value={item}
@@ -353,14 +381,14 @@ export default function CreateProject() {
                         />
                       </InputBox>
                       {index === adminList.length - 1 && (
-                        <span onClick={() => handleAdd('admin')}>
-                          {/*<EvaIcon name="plus-outline" status="Primary" />*/}
+                        <span className="iconForm" onClick={() => handleAdd('admin')}>
+                          <PlusLg />
                         </span>
                       )}
 
                       {!(!index && index === adminList.length - 1) && (
-                        <span onClick={() => removeItem(index, 'admin')}>
-                          {/*<EvaIcon name="minus-outline" status="Primary" />*/}
+                        <span className="iconForm" onClick={() => removeItem(index, 'admin')}>
+                          <DashLg />
                         </span>
                       )}
                     </ItemBox>
@@ -372,8 +400,8 @@ export default function CreateProject() {
                 <div>
                   {proList.map((item, index) => (
                     <ItemBox key={`mem_${index}`}>
-                      <InputBox fullWidth>
-                        <input
+                      <InputBox>
+                        <Form.Control
                           type="text"
                           placeholder={`${t('Project.AssociatedProposal')}, eg. https://forum.seedao.xyz/thread...`}
                           value={item}
@@ -422,7 +450,7 @@ export default function CreateProject() {
                   {memberList.map((item, index) => (
                     <ItemBox key={`mem_${index}`}>
                       <InputBox fullWidth>
-                        <input
+                        <Form.Control
                           type="text"
                           placeholder={t('Project.Members')}
                           value={item}
@@ -446,7 +474,9 @@ export default function CreateProject() {
               </li>
             </UlBox>
             <BtmBox>
-              <Button className="btnBtm">{t('general.cancel')}</Button>
+              <Button variant="outline-primary" className="btnBtm">
+                {t('general.cancel')}
+              </Button>
               <Button
                 onClick={() => handleSubmit()}
                 disabled={

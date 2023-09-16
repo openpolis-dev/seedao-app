@@ -169,13 +169,19 @@ export default function Members(props: Iprops) {
           <Button onClick={() => handleAdd()} disabled={edit}>
             {t('Project.AddMember')}
           </Button>
-          {!edit && <Button onClick={() => handleDel()}>{t('Project.RemoveMember')}</Button>}
+          {!edit && (
+            <Button variant="outline-primary" onClick={() => handleDel()}>
+              {t('Project.RemoveMember')}
+            </Button>
+          )}
           {edit && (
             <>
               <Button onClick={() => closeDel()} disabled={removeButtonDisabled}>
                 {t('general.confirm')}
               </Button>
-              <Button onClick={() => closeRemove()}>{t('general.cancel')}</Button>
+              <Button variant="outline-primary" onClick={() => closeRemove()}>
+                {t('general.cancel')}
+              </Button>
             </>
           )}
         </TopBox>
