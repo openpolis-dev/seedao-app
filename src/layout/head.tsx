@@ -13,12 +13,14 @@ import { Button, Form, Dropdown } from 'react-bootstrap';
 import LoginModal from 'components/modals/login';
 import LogoImg from '../assets/images/logo.png';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
 export default function Header() {
   const { i18n } = useTranslation();
   const { account } = useWeb3React();
   const isLogin = useCheckLogin();
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   const [list] = useState([
     { title: t('My.MyProfile'), link: '/user/profile', value: 'profile' },
@@ -131,10 +133,14 @@ export default function Header() {
   const showWalletLogin = () => {
     dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: true });
   };
+  const toGo = () => {
+    navigate('/');
+  };
+
   return (
     <HeadeStyle>
       <nav>
-        <LogoIcon>
+        <LogoIcon onClick={() => toGo()}>
           <img src={LogoImg} alt="" />
         </LogoIcon>
         <RightBox>
@@ -204,6 +210,7 @@ const LogoIcon = styled.div`
 
   img {
     height: 65px;
+    cursor: pointer;
   }
 
   //margin-top: -16px;
