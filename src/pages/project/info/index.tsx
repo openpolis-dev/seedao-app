@@ -18,6 +18,7 @@ import usePermission from 'hooks/usePermission';
 import { PermissionObject, PermissionAction } from 'utils/constant';
 import { useNavigate, useParams } from 'react-router-dom';
 import { isNum } from 'react-toastify/dist/utils';
+import { ChevronLeft } from 'react-bootstrap-icons';
 
 const OuterBox = styled.div`
   min-height: 100%;
@@ -42,12 +43,12 @@ const TopBox = styled.div`
 `;
 
 const BackBox = styled.div`
-  padding: 30px 20px;
+  padding: 20px 20px 0;
   display: flex;
   align-items: center;
   cursor: pointer;
-  .icon {
-    font-size: 24px;
+  .iconTop {
+    margin-right: 10px;
   }
 `;
 
@@ -134,6 +135,7 @@ export default function Index() {
       <CardBox>
         <Box>
           <BackBox onClick={() => navigate(-1)}>
+            <ChevronLeft className="iconTop" />
             {/*<EvaIcon name="chevron-left-outline" className="icon" />*/}
             <span> {t('general.back')}</span>
           </BackBox>

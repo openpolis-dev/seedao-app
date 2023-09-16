@@ -2,7 +2,6 @@ import React, { useEffect, useMemo, useState } from 'react';
 import AssetList from 'components/assetsCom/assetList';
 import styled, { css } from 'styled-components';
 import requests from 'requests';
-// import { EvaIcon } from '@paljs/ui';
 import { useTranslation } from 'react-i18next';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import useToast, { ToastType } from 'hooks/useToast';
@@ -16,6 +15,7 @@ import ModifyBudgetModal from 'components/assetsCom/modifyBudget';
 import { BudgetType } from 'type/project.type';
 import { formatNumber } from 'utils/number';
 import BgImg from '../../assets/images/homebg.png';
+import { Clipboard, Share, ChevronDown, ChevronUp } from 'react-bootstrap-icons';
 
 const BoxOuter = styled.div`
   margin: 40px;
@@ -357,7 +357,7 @@ export default function Index() {
                   <InfoItem className="detail">
                     <div onClick={() => setShowVaultDetail(!showVaultDetail)}>
                       <span>{t('Assets.Detail')}</span>
-                      {/*<EvaIcon name={showVaultDetail ? 'arrow-ios-upward-outline' : 'arrow-ios-downward-outline'} />*/}
+                      {showVaultDetail ? <ChevronUp /> : <ChevronDown />}
                     </div>
                   </InfoItem>
                 </div>
@@ -374,6 +374,7 @@ export default function Index() {
                           <span>{publicJs.AddressToShow(v.address)}</span>
                           <div>
                             <CopyBox text={v.address}>
+                              <Clipboard className="iconBox" />
                               {/*<EvaIcon name="clipboard-outline" options={{ width: '18px', height: '18px' }} />*/}
                             </CopyBox>
                           </div>
@@ -383,6 +384,7 @@ export default function Index() {
                               target="_blank"
                               rel="noreferrer"
                             >
+                              <Share className="iconBox" />
                               {/*<EvaIcon name="external-link-outline" options={{ width: '18px', height: '18px' }} />*/}
                             </a>
                           </div>
@@ -589,32 +591,30 @@ const VaultItem = styled.li`
       }
     }
   }
+  .iconBox {
+    cursor: pointer;
+    margin: 0 0 10px 10px;
+  }
   .balance {
     font-weight: 600;
   }
 `;
 
 const TotalBalance = styled.div`
-  ${({ theme }) => css`
-    font-weight: ${theme.textSubtitleFontWeight};
-    font-size: ${theme.textHeading6FontSize};
-  `}
+  font-weight: 600;
+  font-size: 1.125rem;
 `;
 
 const TotalBalanceNum = styled.div`
-  ${({ theme }) => css`
-    font-weight: ${theme.textSubtitleFontWeight};
-    font-size: ${theme.textHeading5FontSize};
-    margin-top: 20px;
-    text-align: center;
-  `}
+  font-weight: 600;
+  font-size: 1.375rem;
+  margin-top: 20px;
+  text-align: center;
 `;
 
 const Tag = styled.span`
-  ${({ theme }) => css`
-    border: 1px solid ${theme.colorPrimary500};
-    background: ${theme.colorPrimary500};
-  `}
+  border: 1px solid var(--bs-primary);
+  background: var(--bs-primary);
   //border: 1px solid #eecf00;
   border-radius: 6px;
   color: #fff;
