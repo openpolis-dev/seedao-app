@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
@@ -27,7 +27,7 @@ export default function RouterLink() {
     <Router>
       <Layout>
         <Routes>
-          <Route path="/" element={<Home />} index />
+          <Route path="/" element={<Navigate to="/home" />} />
           <Route path="/home" element={<Home />} />
 
           <Route path="/user/profile" element={<Profile />} />
