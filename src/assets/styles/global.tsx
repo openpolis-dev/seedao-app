@@ -34,6 +34,10 @@ const GlobalStyle = createGlobalStyle`
   }
   .form-select,.btn{
     font-size: 14px;
+    
+  }
+  .btn{
+    border-radius: 0.25rem;
   }
   .btn-primary{
     color:#fff;
@@ -44,6 +48,11 @@ const GlobalStyle = createGlobalStyle`
       color: rgba(143, 155, 179, 0.48);
     }
 
+  }
+  .btn-outline-primary{
+    text-transform: uppercase;
+    background-color: rgba(161, 100, 255, 0.25);
+    font-weight: bold;
   }
   .nav-tabs{
     font-size: 14px;
