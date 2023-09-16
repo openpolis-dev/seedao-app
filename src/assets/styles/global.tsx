@@ -38,6 +38,11 @@ const GlobalStyle = createGlobalStyle`
   .btn-primary{
     color:#fff;
     text-transform: uppercase;
+    &:disabled{
+      background-color: rgb(230, 228, 235);
+      border-color: transparent;
+      color: rgba(143, 155, 179, 0.48);
+    }
 
   }
   .nav-tabs{
@@ -71,6 +76,50 @@ const GlobalStyle = createGlobalStyle`
       }
     }
     
+  }
+
+  .table {
+    th {
+      background: transparent;
+      color: #6e6893;
+      border: 1px solid #d9d5ec;
+      border-left: none;
+      border-right: none;
+      border-radius: 0;
+      white-space: nowrap;
+      padding: 20px;
+    }
+    td {
+      border-bottom-color: #d9d5ec;
+      color: rgb(34, 43, 69);
+      font-size: 14px;
+      padding: 20px;
+    }
+    tr:hover td {
+      background: #f2f0f9;
+    }
+  }
+  .form-control,.form-select{
+    background-color: rgb(247, 249, 252);
+  }
+  .dateBox{
+    position: relative;
+    flex: 1 1 auto;
+    min-width: 0;
+    display: block;
+    width: 100%;
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    
+    color: var(--bs-body-color);
+    appearance: none;
+    background-color: rgb(247, 249, 252);
+    background-clip: padding-box;
+    border: var(--bs-border-width) solid var(--bs-border-color);
+    border-radius: var(--bs-border-radius);
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
   }
 `;
 

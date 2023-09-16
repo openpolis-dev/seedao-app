@@ -75,12 +75,10 @@ const FirstLine = styled.ul`
     .decorBg {
       position: absolute;
       right: 0;
-      bottom: 1rem;
-      font-size: 5.5rem;
+      bottom: -25px;
+      font-size: 90px;
       font-family: 'Jost-Bold';
       opacity: 0.04;
-      transform: scale(1, 1.5);
-      transform-origin: 0 0;
       color: #000;
     }
     div {

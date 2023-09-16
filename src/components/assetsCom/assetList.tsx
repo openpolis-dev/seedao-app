@@ -1,6 +1,5 @@
 import styled from 'styled-components';
-import { Button, Form } from 'react-bootstrap';
-// import Select from 'react-bootstrap/Form';
+import { Button, Form, Table } from 'react-bootstrap';
 
 import React, { useState, useEffect, useMemo } from 'react';
 import Page from 'components/pagination';
@@ -77,22 +76,6 @@ const TableBox = styled.div`
   overflow-x: auto;
   overflow-y: hidden;
   padding-bottom: 3rem;
-  table {
-    th {
-      background: transparent;
-      color: #6e6893;
-      border: 1px solid #d9d5ec;
-      border-left: none;
-      border-right: none;
-      border-radius: 0;
-    }
-    td {
-      border-bottom-color: #d9d5ec;
-    }
-    tr:hover td {
-      background: #f2f0f9;
-    }
-  }
 `;
 
 export default function AssetList() {
@@ -385,76 +368,74 @@ export default function AssetList() {
       </FirstLine>
 
       <TableBox>
-        <table className="table" cellPadding="0" cellSpacing="0">
-          {list.length ? (
-            <>
-              <table className="table" cellPadding="0" cellSpacing="0">
-                <thead>
-                  <tr>
-                    <th>
-                      <Form.Check checked={ifSelectAll} onChange={(value: any) => onSelectAll(value)} />
-                    </th>
-                    <th>{t('Project.Time')}</th>
-                    <th>{t('Project.Address')}</th>
-                    <th>{t('Project.AddPoints')}</th>
-                    <th>{t('Project.AddToken')}</th>
-                    <th>{t('Project.Content')}</th>
-                    <th>{t('Project.BudgetSource')}</th>
-                    <th>{t('Project.Note')}</th>
-                    <th>{t('Project.State')}</th>
-                    <th>{t('Project.Operator')}</th>
-                    <th>{t('Project.Auditor')}</th>
-                    <th>{t('Project.TransactionID')}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {list.map((item) => (
-                    <tr key={item.application_id}>
-                      <td>
-                        <Form.Check
-                          // status="Primary"
-                          checked={!!selectMap[item.application_id]}
-                          onChange={(value: any) => onChangeCheckbox(value, item.application_id, item.status)}
-                        ></Form.Check>
-                      </td>
-                      <td>{item.created_date}</td>
-                      <td>
-                        <div>
-                          <span>{publicJs.AddressToShow(item.target_user_wallet)}</span>
-                          {/* <CopyBox text={item.target_user_wallet}>
+        {list.length ? (
+          <>
+            <Table responsive>
+              <thead>
+                <tr>
+                  <th>
+                    <Form.Check checked={ifSelectAll} onChange={(value: any) => onSelectAll(value)} />
+                  </th>
+                  <th>{t('Project.Time')}</th>
+                  <th>{t('Project.Address')}</th>
+                  <th>{t('Project.AddPoints')}</th>
+                  <th>{t('Project.AddToken')}</th>
+                  <th>{t('Project.Content')}</th>
+                  <th>{t('Project.BudgetSource')}</th>
+                  <th>{t('Project.Note')}</th>
+                  <th>{t('Project.State')}</th>
+                  <th>{t('Project.Operator')}</th>
+                  <th>{t('Project.Auditor')}</th>
+                  <th>{t('Project.TransactionID')}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {list.map((item) => (
+                  <tr key={item.application_id}>
+                    <td>
+                      <Form.Check
+                        // status="Primary"
+                        checked={!!selectMap[item.application_id]}
+                        onChange={(value: any) => onChangeCheckbox(value, item.application_id, item.status)}
+                      ></Form.Check>
+                    </td>
+                    <td>{item.created_date}</td>
+                    <td>
+                      <div>
+                        <span>{publicJs.AddressToShow(item.target_user_wallet)}</span>
+                        {/* <CopyBox text={item.target_user_wallet}>
                           <>复制</>
                         </CopyBox> */}
-                        </div>
-                      </td>
-                      <td>{item.credit_amount}</td>
-                      <td>{item.token_amount}</td>
-                      <td>{item.detailed_type}</td>
-                      <td>{item.budget_source}</td>
-                      <td>{item.comment}</td>
-                      <td>{t(formatApplicationStatus(item.status))}</td>
-                      <td>{item.submitter_name || publicJs.AddressToShow(item.submitter_wallet)}</td>
-                      <td>{item.reviewer_name || publicJs.AddressToShow(item.reviewer_wallet)}</td>
-                      <td>
-                        {item.status === ApplicationStatus.Completed && (
-                          <Button onClick={() => handleShow(item.transactions || [])}>{t('Project.View')}</Button>
-                        )}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-              <Page
-                itemsPerPage={pageSize}
-                total={total}
-                current={page - 1}
-                handleToPage={handlePage}
-                handlePageSize={handlePageSize}
-              />
-            </>
-          ) : (
-            <NoItem />
-          )}
-        </table>
+                      </div>
+                    </td>
+                    <td>{item.credit_amount}</td>
+                    <td>{item.token_amount}</td>
+                    <td>{item.detailed_type}</td>
+                    <td>{item.budget_source}</td>
+                    <td>{item.comment}</td>
+                    <td>{t(formatApplicationStatus(item.status))}</td>
+                    <td>{item.submitter_name || publicJs.AddressToShow(item.submitter_wallet)}</td>
+                    <td>{item.reviewer_name || publicJs.AddressToShow(item.reviewer_wallet)}</td>
+                    <td>
+                      {item.status === ApplicationStatus.Completed && (
+                        <Button onClick={() => handleShow(item.transactions || [])}>{t('Project.View')}</Button>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+            <Page
+              itemsPerPage={pageSize}
+              total={total}
+              current={page - 1}
+              handleToPage={handlePage}
+              handlePageSize={handlePageSize}
+            />
+          </>
+        ) : (
+          <NoItem />
+        )}
       </TableBox>
     </Box>
   );

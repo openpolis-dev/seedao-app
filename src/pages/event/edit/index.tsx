@@ -1,6 +1,5 @@
-import { Button, InputGroup } from 'react-bootstrap';
+import { Button, InputGroup, Form } from 'react-bootstrap';
 import styled from 'styled-components';
-// import { InputGroup } from '@paljs/ui/Input';
 import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 // import { Button, ButtonLink } from '@paljs/ui/Button';
 // import { EvaIcon } from '@paljs/ui/Icon';
@@ -15,7 +14,7 @@ import 'md-editor-rt/lib/style.css';
 import { createEvent, editEventById, getEventById, uplodaEventImage } from 'requests/event';
 import { useWeb3React } from '@web3-react/core';
 import { useNavigate } from 'react-router-dom';
-import { X } from 'react-bootstrap-icons';
+import { ChevronLeft, X } from 'react-bootstrap-icons';
 
 const OuterBox = styled.div`
   padding: 40px;
@@ -83,12 +82,12 @@ const InputBox = styled(InputGroup)`
 `;
 
 const BackBox = styled.div`
-  padding: 30px 20px 0;
+  padding: 10px 0 20px;
   display: inline-flex;
   align-items: center;
   cursor: pointer;
-  .icon {
-    font-size: 24px;
+  .iconTop {
+    margin-right: 10px;
   }
 `;
 
@@ -353,7 +352,7 @@ export default function CreateGuild() {
 
         <div>
           <BackBox onClick={() => navigate(-1)}>
-            {/*<EvaIcon name="chevron-left-outline" className="icon" />*/}
+            <ChevronLeft className="iconTop" />
             <span>{t('general.back')}</span>
           </BackBox>
         </div>
@@ -382,8 +381,8 @@ export default function CreateGuild() {
             <UlBox>
               <li>
                 <div className="title">{t('event.title')}</div>
-                <InputBox fullWidth>
-                  <input type="text" value={title} onChange={(e) => handleInput(e, 'title')} />
+                <InputBox>
+                  <Form.Control type="text" value={title} onChange={(e) => handleInput(e, 'title')} />
                 </InputBox>
               </li>
               <li>
@@ -411,6 +410,7 @@ export default function CreateGuild() {
                     minDate={new Date(startAt!)}
                     onChange={(date) => changeEnd(date!.valueOf())}
                     dateFormat="yyyy-MM-dd HH:mm aa"
+                    className="dateBox"
                   />
                   {/*<input type="text" value={endAt} onChange={(e) => handleInput(e, 'endAt')} />*/}
                 </InputBox>
@@ -418,31 +418,31 @@ export default function CreateGuild() {
               <li>
                 <div className="title">{t('event.sponsor')}</div>
                 <InputBox fullWidth>
-                  <input type="text" value={sponsor} onChange={(e) => handleInput(e, 'sponsor')} />
+                  <Form.Control type="text" value={sponsor} onChange={(e) => handleInput(e, 'sponsor')} />
                 </InputBox>
               </li>
               <li>
                 <div className="title">{t('event.media')}</div>
                 <InputBox fullWidth>
-                  <input type="text" value={media} onChange={(e) => handleInput(e, 'media')} />
+                  <Form.Control type="text" value={media} onChange={(e) => handleInput(e, 'media')} />
                 </InputBox>
               </li>
               <li>
                 <div className="title">{t('event.host')}</div>
                 <InputBox fullWidth>
-                  <input type="text" value={moderator} onChange={(e) => handleInput(e, 'moderator')} />
+                  <Form.Control type="text" value={moderator} onChange={(e) => handleInput(e, 'moderator')} />
                 </InputBox>
               </li>
               <li>
                 <div className="title">{t('event.guest')}</div>
                 <InputBox fullWidth>
-                  <input type="text" value={guest} onChange={(e) => handleInput(e, 'guest')} />
+                  <Form.Control type="text" value={guest} onChange={(e) => handleInput(e, 'guest')} />
                 </InputBox>
               </li>
               <li>
                 <div className="title">{t('event.volunteer')}</div>
                 <InputBox fullWidth>
-                  <input type="text" value={volunteer} onChange={(e) => handleInput(e, 'volunteer')} />
+                  <Form.Control type="text" value={volunteer} onChange={(e) => handleInput(e, 'volunteer')} />
                 </InputBox>
               </li>
             </UlBox>

@@ -13,7 +13,7 @@ import { useNavigate } from 'react-router-dom';
 import { ChevronLeft, Clock } from 'react-bootstrap-icons';
 
 const Box = styled.div`
-  height: 100%;
+  min-height: 100%;
   margin: 40px;
   .btnBtm {
     margin-right: 20px;
@@ -23,7 +23,7 @@ const Box = styled.div`
 const CardBox = styled.div`
   background: #fff;
   padding: 20px;
-  height: 100%;
+  min-height: 100%;
 `;
 const UlBox = styled.div`
   width: 100%;
@@ -200,7 +200,6 @@ export default function ViewEvent() {
         <div>
           <BackBox>
             <div className="back" onClick={() => navigate(-1)}>
-              {/*<EvaIcon name="chevron-left-outline" className="icon" />*/}
               <ChevronLeft className="iconTop" />
               <span>{t('general.back')}</span>
             </div>

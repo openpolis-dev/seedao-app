@@ -20,7 +20,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { isNum } from 'react-toastify/dist/utils';
 
 const OuterBox = styled.div`
-  height: 100%;
+  min-height: 100%;
   margin: 40px;
 `;
 
@@ -33,7 +33,7 @@ const Box = styled.div`
 `;
 
 const CardBox = styled.div`
-  height: 100%;
+  min-height: 100%;
   background: #fff;
 `;
 
@@ -134,7 +134,8 @@ export default function Index() {
       <CardBox>
         <Box>
           <BackBox onClick={() => navigate(-1)}>
-            {/*<EvaIcon name="chevron-left-outline" className="icon" /> <span> {t('general.back')}</span>*/}
+            {/*<EvaIcon name="chevron-left-outline" className="icon" />*/}
+            <span> {t('general.back')}</span>
           </BackBox>
           <Row>
             <Col breakPoint={{ xs: 12 }}>
