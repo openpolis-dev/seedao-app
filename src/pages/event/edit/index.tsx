@@ -460,7 +460,7 @@ export default function CreateGuild() {
             />
           </ContentBox>
           <BtmBox>
-            <Button className="btnBtm" onClick={() => navigate('/event')}>
+            <Button variant="outline-primary" className="btnBtm" onClick={() => navigate('/event')}>
               {t('general.cancel')}
             </Button>
             <Button onClick={() => handleSubmit()}>{t('general.confirm')}</Button>

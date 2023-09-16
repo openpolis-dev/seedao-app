@@ -69,7 +69,7 @@ export default function ProposalCard({ data }: { data: IBaseProposal }) {
     navigate(`/proposal/thread/${data.id}`);
   };
   return (
-    <CardBox size="Tiny" key={data.id}>
+    <CardBox key={data.id}>
       <div onClick={openProposal}>
         <CardHeaderStyled>
           <div className="left">
@@ -89,9 +89,13 @@ export default function ProposalCard({ data }: { data: IBaseProposal }) {
   );
 }
 
-const CardBox = styled(Card)`
-  border: 1px solid #f1f1f1;
+const CardBox = styled.div`
+  //border: 1px solid #f1f1f1;
   cursor: pointer;
+  background: #fff;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  border-radius: 0.25rem;
 `;
 
 const CardHeaderStyled = styled.div`
