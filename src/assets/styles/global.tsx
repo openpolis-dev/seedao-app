@@ -9,6 +9,9 @@ const GlobalStyle = createGlobalStyle`
     padding: 0;
     margin: 0;
   }
+  body{
+    background: #f0f3f8;
+  }
    
   ul, li, dl, dt, dd{
     list-style: none;
@@ -25,6 +28,9 @@ const GlobalStyle = createGlobalStyle`
   }
   .btn{
     white-space: nowrap;
+  }
+  .btn-primary{
+    color:#fff;
   }
 `;
 

@@ -179,7 +179,8 @@ const HeadeStyle = styled.header`
   top: 0;
   left: 0;
   right: 0;
-  z-index: 9;
+  //z-index: 9;
+  background: #fff;
   nav {
     box-shadow: rgba(44, 51, 73, 0.1) 0px 0.5rem 1rem 0px;
     height: 80px;
