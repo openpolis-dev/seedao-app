@@ -46,6 +46,7 @@ const FirstLine = styled.ul`
     overflow: hidden;
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
     position: relative;
+
     background: #fff;
     color: #fff;
     &:first-child {
@@ -66,9 +67,8 @@ const FirstLine = styled.ul`
       display: flex;
       align-items: center;
       flex-direction: column;
-      position: relative;
-      z-index: 99;
-      //background: #008800;
+      //position: relative;
+      //z-index: 9;
       color: #000;
     }
 

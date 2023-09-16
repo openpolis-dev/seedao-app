@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Row, Col, Tabs, Tab, Card } from 'react-bootstrap';
+import { Row, Col, Tabs, Tab } from 'react-bootstrap';
 import styled from 'styled-components';
 // import { useRouter } from 'next/router';
 import Info from 'components/projectInfoCom/info';
@@ -32,8 +32,9 @@ const Box = styled.div`
   }
 `;
 
-const CardBox = styled(Card)`
+const CardBox = styled.div`
   height: 100%;
+  background: #fff;
 `;
 
 const TopBox = styled.div`

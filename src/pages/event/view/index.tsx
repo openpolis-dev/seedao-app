@@ -10,7 +10,7 @@ import { getEventById, uplodaEventImage } from 'requests/event';
 import { formatTime } from 'utils/time';
 import { useWeb3React } from '@web3-react/core';
 import { useNavigate } from 'react-router-dom';
-import { BoxArrowInLeft } from 'react-bootstrap-icons';
+import { ChevronLeft, Clock } from 'react-bootstrap-icons';
 
 const Box = styled.div`
   height: 100%;
@@ -46,7 +46,7 @@ const UlBox = styled.div`
 
 const BackBox = styled.div`
   width: 100%;
-  padding: 30px 20px 0;
+  padding: 10px 0 20px;
   display: inline-flex;
   align-items: center;
   justify-content: space-between;
@@ -57,7 +57,6 @@ const BackBox = styled.div`
     cursor: pointer;
   }
   .iconTop {
-    font-size: 24px;
     margin-right: 10px;
   }
 `;
@@ -202,7 +201,7 @@ export default function ViewEvent() {
           <BackBox>
             <div className="back" onClick={() => navigate(-1)}>
               {/*<EvaIcon name="chevron-left-outline" className="icon" />*/}
-              <BoxArrowInLeft className="iconTop" />
+              <ChevronLeft className="iconTop" />
               <span>{t('general.back')}</span>
             </div>
             <div>
@@ -228,7 +227,7 @@ export default function ViewEvent() {
             <UlBox>
               <TitleTop>{title}</TitleTop>
               <TimeBox>
-                {/*<EvaIcon name="clock-outline" className="iconRht" />*/}
+                <Clock className="iconRht" />
                 <span>{formatTime(startAt!)}</span> ~ <span>{formatTime(endAt!)}</span>
               </TimeBox>
 
