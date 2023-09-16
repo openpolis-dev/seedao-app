@@ -18,11 +18,13 @@ const Box = styled.div`
 `;
 
 const LftLi = styled.div<{ selected?: boolean }>`
-  padding: 20px 0;
+  padding: 13px 0;
   display: flex;
   align-items: center;
   border-bottom: 1px dashed #eee;
   cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
   .name {
     padding-left: 10px;
     padding-top: 3px;

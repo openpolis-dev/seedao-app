@@ -109,28 +109,23 @@ const CityBox = styled.div`
   margin: 1rem 2rem;
 `;
 
-const LinkBox = styled.ul`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+const LinkBox = styled(Row)`
+  //display: flex;
+  //align-items: center;
+  //justify-content: space-between;
   margin-bottom: 80px;
   padding-left: 0;
 
-  li {
-    width: 48%;
-    background-size: 100%;
+  .inn {
     border-radius: 10px;
     overflow: hidden;
     cursor: pointer;
-    .inner {
-      box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-      padding: 20px;
-      background: rgba(255, 255, 255, 1);
-      //backdrop-filter: blur(10px);
-      box-sizing: border-box;
-      display: flex;
-      align-items: center;
-    }
+    background: #fff;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    padding: 30px 20px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
   }
   .lft {
     background: #eef1f7;
@@ -142,11 +137,9 @@ const LinkBox = styled.ul`
     justify-content: center;
     margin-right: 20px;
     box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.1);
-    font-size: 20px;
+    font-size: 22px;
     font-weight: bold;
-    ${({ theme }) => css`
-      color: ${theme.colorPrimary500};
-    `}
+    color: var(--bs-primary);
   }
   .tit {
     font-size: 1.2rem;
@@ -169,9 +162,12 @@ const EventCardStyle = styled.div`
   align-items: center;
   justify-content: center;
   gap: 15px;
-  padding-block: 15px;
+  padding-block: 30px;
   background-color: #fff;
   margin-bottom: 20px;
+  .iconBox {
+    font-size: 24px;
+  }
 `;
 
 const getDatafromNftscan = (contract: string, base?: string) => {
@@ -184,8 +180,8 @@ const getDatafromNftscan = (contract: string, base?: string) => {
 
 const EventCard = ({ icon, name, link }: { icon: React.ReactElement; name: string; link: string }) => {
   return (
-    <EventCardStyle onClick={() => window.open(link, '_blank')}>
-      {icon}
+    <EventCardStyle className="boxBg" onClick={() => window.open(link, '_blank')}>
+      <div className="iconBox">{icon}</div>
       <div>{name}</div>
     </EventCardStyle>
   );
@@ -307,8 +303,8 @@ export default function Home() {
       <CityBox>
         <TitBox>{t('Home.Publicity')}</TitBox>
         <LinkBox>
-          <li onClick={() => window.open(CITY_HALL, '_blank')}>
-            <div className="inner">
+          <Col onClick={() => window.open(CITY_HALL, '_blank')}>
+            <div className="inn fst">
               <div className="lft">
                 <ShieldCheck />
               </div>
@@ -317,9 +313,9 @@ export default function Home() {
                 <div className="tBtm">{CITY_HALL}</div>
               </div>
             </div>
-          </li>
-          <li onClick={() => window.open(CITY_HALL_MEMBERS, '_blank')}>
-            <div className="inner">
+          </Col>
+          <Col onClick={() => window.open(CITY_HALL_MEMBERS, '_blank')}>
+            <div className="inn snd">
               <div className="lft">
                 <People />
               </div>
@@ -328,7 +324,7 @@ export default function Home() {
                 <div className="tBtm">{CITY_HALL_MEMBERS}</div>
               </div>
             </div>
-          </li>
+          </Col>
         </LinkBox>
       </CityBox>
     </Box>
