@@ -40,6 +40,7 @@ const TopLine = styled.ul`
 
     .tit {
       padding-right: 20px;
+      white-space: nowrap;
     }
 
     .sel {
