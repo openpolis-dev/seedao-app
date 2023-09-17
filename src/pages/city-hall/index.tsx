@@ -18,7 +18,7 @@ import Reg from 'components/cityHallCom/reg';
 const Box = styled.div`
   //position: relative;
   padding: 40px;
-  height: 100%;
+  min-height: 100%;
   .tab-content {
     padding: 0 0 30px !important;
     box-sizing: border-box;
@@ -26,7 +26,7 @@ const Box = styled.div`
 `;
 const CardBox = styled.div`
   background: #fff;
-  height: 100%;
+  min-height: 100%;
 `;
 
 const TopBox = styled.div`
