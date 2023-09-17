@@ -15,6 +15,7 @@ import { AssetName } from 'utils/constant';
 import useToast, { ToastType } from 'hooks/useToast';
 import { ethers } from 'ethers';
 import { useAuthContext } from 'providers/authProvider';
+import { Download } from 'react-bootstrap-icons';
 
 const Box = styled.div`
   padding: 20px;
@@ -42,27 +43,25 @@ const RhtBox = styled.div`
 `;
 
 const BtnBox = styled.label`
-  ${({ theme }) => css`
-    background: ${theme.colorPrimary500};
-    color: #fff;
-    height: 42px;
-    padding: 0 25px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 4px;
-    font-family: 'Inter-Regular';
-    font-weight: 700;
-    font-size: 0.875rem;
-    margin-right: 20px;
-    cursor: pointer;
-    .iconRht {
-      margin-right: 10px;
-    }
-    &:hover {
-      background: ${theme.colorPrimary400};
-    }
-  `}
+  background: var(--bs-primary);
+  color: #fff;
+  //height: 42px;
+  padding: 8px 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  //font-family: 'Inter-Regular';
+  //font-weight: 700;
+  font-size: 0.875rem;
+  margin-right: 20px;
+  cursor: pointer;
+  .iconRht {
+    margin-right: 10px;
+  }
+  &:hover {
+    background: var(--bs-primary);
+  }
 `;
 
 type ErrorDataType = {
@@ -204,8 +203,8 @@ export default function Reg({ id }: { id: number }) {
           {t('Project.SubmitForReview')}
         </Button>
         <RhtBox>
-          <Button className="rhtBtn" onClick={downloadFile}>
-            {/*<EvaIcon name="cloud-download-outline" />*/}
+          <Button variant="outline-primary" className="rhtBtn" onClick={downloadFile}>
+            <Download />
             <span>{t('Project.DownloadForm')}</span>
           </Button>
 
@@ -236,7 +235,7 @@ export default function Reg({ id }: { id: number }) {
                 (event.target as any).value = null;
               }}
             />
-            {/*<EvaIcon name="cloud-upload-outline" className="iconRht" />*/}
+            <Download className="iconRht" />
             <span>{t('Project.ImportForm').toUpperCase()}</span>
           </BtnBox>
           {!!list.length && (

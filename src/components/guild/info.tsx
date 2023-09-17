@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Button, Container, InputGroup } from 'react-bootstrap';
+import { Button, Container, InputGroup, Form } from 'react-bootstrap';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { IBudgetItem, InfoObj, ReTurnProject } from 'type/project.type';
@@ -208,7 +208,7 @@ export default function Info(props: Iprops) {
                 <>
                   <div className="info">{detail?.name}</div>
                   {canUpdateInfo && (
-                    <Button onClick={() => handleShowName()} className="rht10">
+                    <Button variant="outline-primary" onClick={() => handleShowName()} className="rht10">
                       {t('general.Change')}
                     </Button>
                   )}
@@ -218,7 +218,7 @@ export default function Info(props: Iprops) {
               {showName && (
                 <>
                   <InputBox fullWidth>
-                    <input
+                    <Form.Control
                       type="text"
                       placeholder={t('Guild.ProjectName')}
                       value={editName}
@@ -228,7 +228,7 @@ export default function Info(props: Iprops) {
                   <Button onClick={() => submitName()} className="rht10">
                     {t('general.confirm')}
                   </Button>
-                  <Button className="rht10" onClick={() => closeShowName()}>
+                  <Button variant="outline-primary" className="rht10" onClick={() => closeShowName()}>
                     {t('general.cancel')}
                   </Button>
                 </>
@@ -253,7 +253,11 @@ export default function Info(props: Iprops) {
                       )
                     </span>
                   </div>
-                  {canUpdateBudget && <Button onClick={() => handleShowEditPoints()}>{t('general.Change')}</Button>}
+                  {canUpdateBudget && (
+                    <Button variant="outline-primary" onClick={() => handleShowEditPoints()}>
+                      {t('general.Change')}
+                    </Button>
+                  )}
                 </>
               )}
               {showEditPoints && (
@@ -268,7 +272,9 @@ export default function Info(props: Iprops) {
                   <Button onClick={() => handlecloseEditP()} className="rht10">
                     {t('general.confirm')}
                   </Button>
-                  <Button onClick={() => closeEditP()}>{t('general.cancel')}</Button>
+                  <Button variant="outline-primary" onClick={() => closeEditP()}>
+                    {t('general.cancel')}
+                  </Button>
                 </div>
               )}
             </dd>
@@ -289,7 +295,11 @@ export default function Info(props: Iprops) {
                       )
                     </span>
                   </div>
-                  {canUpdateBudget && <Button onClick={() => handleShowEditToken()}>{t('general.Change')}</Button>}
+                  {canUpdateBudget && (
+                    <Button variant="outline-primary" onClick={() => handleShowEditToken()}>
+                      {t('general.Change')}
+                    </Button>
+                  )}
                 </>
               )}
               {showEditToken && (
@@ -304,7 +314,9 @@ export default function Info(props: Iprops) {
                   <Button onClick={() => handlecloseEditT()} className="rht10">
                     {t('general.confirm')}
                   </Button>
-                  <Button onClick={() => closeEditT()}>{t('general.cancel')}</Button>
+                  <Button variant="outline-primary" onClick={() => closeEditT()}>
+                    {t('general.cancel')}
+                  </Button>
                 </div>
               )}
             </dd>

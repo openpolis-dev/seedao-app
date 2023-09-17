@@ -2,22 +2,21 @@ import styled, { css } from 'styled-components';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { ExcelObj } from 'type/project.type';
+import { ExclamationDiamond } from 'react-bootstrap-icons';
 // import { EvaIcon } from '@paljs/ui/Icon';
 
 const Box = styled.div``;
 
 const TipsBox = styled.div`
-  ${({ theme }) => css`
-    padding: 80px;
-    background: ${theme.colorPrimaryTransparent300};
-    margin-top: 10px;
-    text-align: center;
-    color: ${theme.colorPrimary600};
-    .iconTop {
-      font-size: 40px;
-      margin-bottom: 10px;
-    }
-  `}
+  padding: 80px;
+  background: rgba(161, 100, 255, 0.08);
+  margin-top: 10px;
+  text-align: center;
+  color: var(--bs-primary);
+  .iconTop {
+    font-size: 40px;
+    margin-bottom: 10px;
+  }
 `;
 
 interface Iprops {
@@ -52,7 +51,9 @@ export default function RegList(props: Iprops) {
 
       {!uploadList?.length && (
         <TipsBox>
-          <div>{/*<EvaIcon name="alert-triangle-outline" status="Primary" className="iconTop" />*/}</div>
+          <div className="iconTop">
+            <ExclamationDiamond />
+          </div>
           <div>{t('Project.Tips')}</div>
         </TipsBox>
       )}

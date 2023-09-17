@@ -24,10 +24,25 @@ const Mask = styled.div`
   }
 `;
 
-const CardHeader = styled.div``;
+const CardHeader = styled.div`
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid rgb(237, 241, 247);
+  border-top-left-radius: 0.25rem;
+  border-top-right-radius: 0.25rem;
+  color: rgb(34, 43, 69);
+  font-family: Inter-Regular, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.5rem;
+`;
 
-const CardBody = styled.div``;
-const CardFooter = styled.div``;
+const CardBody = styled.div`
+  padding: 20px;
+`;
+const CardFooter = styled.div`
+  padding: 0 20px 20px;
+`;
 
 const Box = styled.div`
   ul {
@@ -151,7 +166,7 @@ export default function PropsalModal(props: Iprops) {
           </Box>
         </CardBody>
         <CardFooter>
-          <Button className="btnBtm" onClick={() => closeModal(false)}>
+          <Button variant="outline-primary" className="btnBtm" onClick={() => closeModal(false)}>
             {t('general.cancel')}
           </Button>
           <Button disabled={!list.length} onClick={handleProposal}>
