@@ -438,10 +438,10 @@ export default function Index() {
                 <LiHead>
                   <LiTitle>{t('Assets.SeasonUseUSD')}</LiTitle>
                 </LiHead>
-                <div className="num">{asset.token_used_amount}</div>
+                <div className="num">{formatNumber(asset.token_used_amount)}</div>
                 <AssetBox className="tips">
                   <span>{t('Assets.SeasonBudget')}:</span>
-                  <span>{asset.token_total_amount}</span>
+                  <span>{formatNumber(asset.token_total_amount)}</span>
                   {canUseCityhall && (
                     <span className="btn-edit" onClick={() => setshowModifyModal(BudgetType.Token)}>
                       {/*<EvaIcon name="edit-2-outline" options={{ width: '16px', height: '16px' }} />*/}
