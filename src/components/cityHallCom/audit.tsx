@@ -434,7 +434,7 @@ export default function Audit() {
                 <tr>
                   {/* <th>&nbsp;</th> */}
                   <th>
-                    <Form.Check checked={ifSelectAll} onChange={(value: any) => onSelectAll(value)} />
+                    <Form.Check checked={ifSelectAll} onChange={(e) => onSelectAll(e.target.checked)} />
                   </th>
                   <th>{t('Project.Time')}</th>
                   <th>{t('Project.Address')}</th>

@@ -375,7 +375,7 @@ export default function AssetList() {
               <thead>
                 <tr>
                   <th>
-                    <Form.Check checked={ifSelectAll} onChange={(value: any) => onSelectAll(value)} />
+                    <Form.Check checked={ifSelectAll} onChange={(e) => onSelectAll(e.target.checked)} />
                   </th>
                   <th>{t('Project.Time')}</th>
                   <th>{t('Project.Address')}</th>
@@ -397,7 +397,7 @@ export default function AssetList() {
                       <Form.Check
                         // status="Primary"
                         checked={!!selectMap[item.application_id]}
-                        onChange={(value: any) => onChangeCheckbox(value, item.application_id, item.status)}
+                        onChange={(e) => onChangeCheckbox(e.target.checked, item.application_id, item.status)}
                       ></Form.Check>
                     </td>
                     <td>{item.created_date}</td>
