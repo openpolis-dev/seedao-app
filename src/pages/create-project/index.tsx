@@ -9,7 +9,7 @@ import useToast, { ToastType } from 'hooks/useToast';
 import { AssetName } from 'utils/constant';
 import InputNumber from 'components/inputNumber';
 import { useNavigate } from 'react-router-dom';
-import { ChevronLeft, PlusLg, DashLg, Upload } from 'react-bootstrap-icons';
+import { ChevronLeft, PlusLg, DashLg, Upload, X } from 'react-bootstrap-icons';
 
 const OuterBox = styled.div`
   padding: 40px;
@@ -144,10 +144,15 @@ const ImgBox = styled.div`
     right: -15px;
     top: -15px;
     z-index: 999;
-    padding: 6px;
     border-radius: 100%;
     background: #a16eff;
     color: #fff;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
     cursor: pointer;
   }
 `;
@@ -349,6 +354,7 @@ export default function CreateProject() {
               {!!url && (
                 <ImgBox>
                   <div className="del" onClick={() => removeUrl()}>
+                    <X />
                     {/*<EvaIcon name="close-outline" status="Control" />*/}
                   </div>
                   <img src={url} alt="" />
@@ -409,14 +415,14 @@ export default function CreateProject() {
                         />
                       </InputBox>
                       {index === proList.length - 1 && (
-                        <span onClick={() => handleAdd('proposal')}>
-                          {/*<EvaIcon name="plus-outline" status="Primary" />*/}
+                        <span className="iconForm" onClick={() => handleAdd('proposal')}>
+                          <PlusLg />
                         </span>
                       )}
 
                       {!(!index && index === proList.length - 1) && (
-                        <span onClick={() => removeItem(index, 'proposal')}>
-                          {/*<EvaIcon name="minus-outline" status="Primary" />*/}
+                        <span className="iconForm" onClick={() => removeItem(index, 'proposal')}>
+                          <DashLg />
                         </span>
                       )}
                     </ItemBox>
@@ -458,14 +464,14 @@ export default function CreateProject() {
                         />
                       </InputBox>
                       {index === memberList.length - 1 && (
-                        <span onClick={() => handleAdd('member')}>
-                          {/*<EvaIcon name="plus-outline" status="Primary" />*/}
+                        <span className="iconForm" onClick={() => handleAdd('member')}>
+                          <PlusLg />
                         </span>
                       )}
 
                       {!(!index && index === memberList.length - 1) && (
-                        <span onClick={() => removeItem(index, 'member')}>
-                          {/*<EvaIcon name="minus-outline" status="Primary" />*/}
+                        <span className="iconForm" onClick={() => removeItem(index, 'member')}>
+                          <DashLg />
                         </span>
                       )}
                     </ItemBox>

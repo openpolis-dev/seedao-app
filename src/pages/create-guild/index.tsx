@@ -1,4 +1,4 @@
-import { Card, InputGroup, Button } from 'react-bootstrap';
+import { InputGroup, Button, Form } from 'react-bootstrap';
 import styled from 'styled-components';
 import React, { ChangeEvent, FormEvent, useState } from 'react';
 // import { EvaIcon } from '@paljs/ui/Icon';
@@ -11,22 +11,33 @@ import useToast, { ToastType } from 'hooks/useToast';
 import { AssetName } from 'utils/constant';
 import InputNumber from 'components/inputNumber';
 import { useNavigate } from 'react-router-dom';
+import { ChevronLeft, DashLg, PlusLg, Upload } from 'react-bootstrap-icons';
 
 const OuterBox = styled.div`
   padding: 40px;
   box-sizing: border-box;
-  height: 100%;
+  min-height: 100%;
 `;
 
 const Box = styled.div`
-  height: 100%;
+  min-height: 100%;
   .btnBtm {
     margin-right: 20px;
   }
 `;
 
-const CardHeader = styled.div``;
-
+const CardHeader = styled.div`
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid rgb(237, 241, 247);
+  border-top-left-radius: 0.25rem;
+  border-top-right-radius: 0.25rem;
+  color: rgb(34, 43, 69);
+  font-family: Inter-Regular, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.5rem;
+`;
 const CardBody = styled.div``;
 
 const CardBox = styled.div`
@@ -53,6 +64,7 @@ const UlBox = styled.ul`
       min-width: 180px;
       background: #f8f8f8;
       padding: 0 20px;
+      font-size: 14px;
     }
   }
 `;
@@ -70,15 +82,27 @@ const ItemBox = styled.div`
     margin-right: 10px;
     width: 50px;
   }
+  .iconForm {
+    color: var(--bs-primary);
+    font-size: 20px;
+    margin-right: 10px;
+    cursor: pointer;
+  }
 `;
 
 const BackBox = styled.div`
-  padding: 30px 20px;
-  display: flex;
+  width: 100%;
+  padding: 10px 0 20px;
+  display: inline-flex;
   align-items: center;
-  cursor: pointer;
-  .icon {
-    font-size: 24px;
+
+  .back {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+  }
+  .iconTop {
+    margin-right: 10px;
   }
 `;
 
@@ -101,6 +125,10 @@ const BtnBox = styled.label`
   img {
     max-width: 100%;
     max-height: 100%;
+  }
+  .uploadIcon {
+    font-size: 20px;
+    margin-right: 10px;
   }
 `;
 
@@ -306,7 +334,7 @@ export default function CreateGuild() {
         {Toast}
         <CardBox>
           <BackBox onClick={() => navigate(-1)}>
-            {/*<EvaIcon name="chevron-left-outline" className="icon" />*/}
+            <ChevronLeft className="iconTop" />
             <span>{t('general.back')}</span>
           </BackBox>
           <CardHeader> {t('Guild.create')}</CardHeader>
@@ -315,7 +343,7 @@ export default function CreateGuild() {
               {!url && (
                 <div>
                   <input id="fileUpload" type="file" hidden accept=".jpg, .jpeg, .png, .svg" />
-                  {/*<EvaIcon name="cloud-upload-outline" className="iconRht" />*/}
+                  <Upload className="uploadIcon" />
                   <span> {t('Guild.upload')}</span>
                 </div>
               )}
@@ -332,7 +360,7 @@ export default function CreateGuild() {
               <li>
                 <div className="title">{t('Guild.ProjectName')}</div>
                 <InputBox fullWidth>
-                  <input
+                  <Form.Control
                     type="text"
                     placeholder={t('Guild.ProjectName')}
                     value={proName}
@@ -346,7 +374,7 @@ export default function CreateGuild() {
                   {adminList.map((item, index) => (
                     <ItemBox key={`mem_${index}`}>
                       <InputBox fullWidth>
-                        <input
+                        <Form.Control
                           type="text"
                           placeholder={t('Guild.Dominator')}
                           value={item}
@@ -354,14 +382,14 @@ export default function CreateGuild() {
                         />
                       </InputBox>
                       {index === adminList.length - 1 && (
-                        <span onClick={() => handleAdd('admin')}>
-                          {/*<EvaIcon name="plus-outline" status="Primary" />*/}
+                        <span className="iconForm" onClick={() => handleAdd('admin')}>
+                          <PlusLg />
                         </span>
                       )}
 
                       {!(!index && index === adminList.length - 1) && (
-                        <span onClick={() => removeItem(index, 'admin')}>
-                          {/*<EvaIcon name="minus-outline" status="Primary" />*/}
+                        <span className="iconForm" onClick={() => removeItem(index, 'admin')}>
+                          <DashLg />
                         </span>
                       )}
                     </ItemBox>
@@ -374,7 +402,7 @@ export default function CreateGuild() {
                   {proList.map((item, index) => (
                     <ItemBox key={`mem_${index}`}>
                       <InputBox fullWidth>
-                        <input
+                        <Form.Control
                           type="text"
                           placeholder={`${t('Guild.AssociatedProposal')}, eg. https://forum.seedao.xyz/thread...`}
                           value={item}
@@ -382,14 +410,14 @@ export default function CreateGuild() {
                         />
                       </InputBox>
                       {index === proList.length - 1 && (
-                        <span onClick={() => handleAdd('proposal')}>
-                          {/*<EvaIcon name="plus-outline" status="Primary" />*/}
+                        <span className="iconForm" onClick={() => handleAdd('proposal')}>
+                          <PlusLg />
                         </span>
                       )}
 
                       {!(!index && index === proList.length - 1) && (
-                        <span onClick={() => removeItem(index, 'proposal')}>
-                          {/*<EvaIcon name="minus-outline" status="Primary" />*/}
+                        <span className="iconForm" onClick={() => removeItem(index, 'proposal')}>
+                          <DashLg />
                         </span>
                       )}
                     </ItemBox>
@@ -423,7 +451,7 @@ export default function CreateGuild() {
                   {memberList.map((item, index) => (
                     <ItemBox key={`mem_${index}`}>
                       <InputBox fullWidth>
-                        <input
+                        <Form.Control
                           type="text"
                           placeholder={t('Guild.Members')}
                           value={item}
@@ -431,14 +459,14 @@ export default function CreateGuild() {
                         />
                       </InputBox>
                       {index === memberList.length - 1 && (
-                        <span onClick={() => handleAdd('member')}>
-                          {/*<EvaIcon name="plus-outline" status="Primary" />*/}
+                        <span className="iconForm" onClick={() => handleAdd('member')}>
+                          <PlusLg />
                         </span>
                       )}
 
                       {!(!index && index === memberList.length - 1) && (
-                        <span onClick={() => removeItem(index, 'member')}>
-                          {/*<EvaIcon name="minus-outline" status="Primary" />*/}
+                        <span className="iconForm" onClick={() => removeItem(index, 'member')}>
+                          <DashLg />
                         </span>
                       )}
                     </ItemBox>
@@ -447,7 +475,9 @@ export default function CreateGuild() {
               </li>
             </UlBox>
             <BtmBox>
-              <Button className="btnBtm">{t('general.cancel')}</Button>
+              <Button variant="outline-primary" className="btnBtm">
+                {t('general.cancel')}
+              </Button>
               <Button
                 onClick={() => handleSubmit()}
                 disabled={
