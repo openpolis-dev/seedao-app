@@ -118,16 +118,17 @@ export default function Menu({ open }: { open: boolean }) {
 
   const menuItemsFormat = useMemo(() => {
     const display_items: MenuItemType[] = [];
-    items.forEach((d) => {
+    items.forEach((d, i) => {
       const _item = { ...d, title: t(d.title as any) };
       if (d.value === 'chat') {
-        isLogin && wallet_type === WalletType.EOA && items.push(_item);
+        isLogin && wallet_type === WalletType.EOA && display_items.push(_item);
       } else {
         display_items.push(_item);
       }
     });
     return display_items;
   }, [t, isLogin, wallet_type]);
+
   return (
     // <div open={open}>
     <Box>
