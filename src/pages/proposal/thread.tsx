@@ -48,7 +48,7 @@ export default function Proposal() {
   };
 
   return (
-    <BoxOuter title="SeeDAO Proposal">
+    <BoxOuter>
       {ProposalNav}
       <ProposalContainer>
         {!data && loading && <LoadingBox />}
@@ -64,7 +64,7 @@ export default function Proposal() {
                 <div className="date">{formatDate(new Date(data?.updated_at || ''))}</div>
               </div>
             </User>
-            <MoreButton shape="Rectangle" appearance="outline" onClick={lookMore}>
+            <MoreButton variant="outline-primary" onClick={lookMore}>
               {t('Proposal.LookMore')}
             </MoreButton>
             {/* <div style={{ overflow: 'hidden' }}>{data?.first_post.content}</div> */}

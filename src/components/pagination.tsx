@@ -109,8 +109,10 @@ const GoToBox = styled.div`
     font-size: 14px;
     color: #000;
     border: 1px solid var(--bs-primary);
+    border-radius: 0;
     border-top-left-radius: 3px;
     border-bottom-left-radius: 3px;
+
     &:focus {
       outline: none;
     }

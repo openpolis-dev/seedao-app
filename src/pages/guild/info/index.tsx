@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Row, Col, Tabs, Tab, Card } from 'react-bootstrap';
+import { Row, Col, Tabs, Tab } from 'react-bootstrap';
 import styled from 'styled-components';
 // import { useRouter } from 'next/router';
 import Info from 'components/guild/info';
@@ -17,16 +17,24 @@ import useCheckLogin from 'hooks/useCheckLogin';
 import usePermission from 'hooks/usePermission';
 import { PermissionObject, PermissionAction } from 'utils/constant';
 import { useNavigate, useParams } from 'react-router-dom';
+import { ChevronLeft } from 'react-bootstrap-icons';
+
+const OuterBox = styled.div`
+  padding: 40px;
+  min-height: 100%;
+`;
 
 const Box = styled.div`
   position: relative;
+  min-height: 100%;
   .tab-content {
     padding: 0 !important;
   }
 `;
 
-const CardBox = styled(Card)`
-  min-height: 85vh;
+const CardBox = styled.div`
+  min-height: 100%;
+  background: #fff;
 `;
 
 const TopBox = styled.div`
@@ -34,12 +42,12 @@ const TopBox = styled.div`
 `;
 
 const BackBox = styled.div`
-  padding: 30px 20px;
+  padding: 20px 20px 0;
   display: flex;
   align-items: center;
   cursor: pointer;
-  .icon {
-    font-size: 24px;
+  .iconTop {
+    margin-right: 10px;
   }
 `;
 
@@ -108,11 +116,11 @@ export default function Index() {
     }
   };
   return (
-    <div>
+    <OuterBox>
       <CardBox>
         <Box>
           <BackBox onClick={() => navigate(-1)}>
-            {/*<EvaIcon name="chevron-left-outline" className="icon" /> */}
+            <ChevronLeft className="iconTop" />
             <span> {t('general.back')}</span>
           </BackBox>
           <Row>
@@ -137,6 +145,6 @@ export default function Index() {
           </Row>
         </Box>
       </CardBox>
-    </div>
+    </OuterBox>
   );
 }
