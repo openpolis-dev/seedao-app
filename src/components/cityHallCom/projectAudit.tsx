@@ -15,6 +15,7 @@ import NoItem from 'components/noItem';
 import { useTranslation } from 'react-i18next';
 import { formatApplicationStatus } from 'utils/index';
 import useToast, { ToastType } from 'hooks/useToast';
+import Select from 'components/common/select';
 
 const Box = styled.div``;
 const FirstLine = styled.div`
@@ -39,10 +40,6 @@ const TopLine = styled.ul`
 
     .tit {
       padding-right: 20px;
-    }
-
-    .sel {
-      min-width: 150px;
     }
   }
 `;
@@ -263,22 +260,14 @@ export default function ProjectAudit() {
         <TopLine>
           <li>
             <span className="tit">{t('Project.State')}</span>
-            <Form.Select
-              className="sel"
-              // options={statusOption}
+            <Select
+              options={statusOption}
               placeholder=""
               onChange={(value: any) => {
                 setSelectStatus(value?.value);
                 setSelectMap({});
               }}
-              // isClearable={true}
-            >
-              {statusOption.map((opItem, opKey) => (
-                <option value={opItem.value} key={`statusOption_${opKey}`}>
-                  {opItem.label}
-                </option>
-              ))}
-            </Form.Select>
+            />
           </li>
         </TopLine>
         <TimeLine>

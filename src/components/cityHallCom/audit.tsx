@@ -16,6 +16,7 @@ import publicJs from 'utils/publicJs';
 import { useTranslation } from 'react-i18next';
 import useToast, { ToastType } from 'hooks/useToast';
 import { formatApplicationStatus } from 'utils/index';
+import Select from 'components/common/select';
 
 const Box = styled.div``;
 const FirstLine = styled.div`
@@ -41,10 +42,6 @@ const TopLine = styled.ul`
     .tit {
       padding-right: 20px;
       white-space: nowrap;
-    }
-
-    .sel {
-      min-width: 150px;
     }
   }
 `;
@@ -343,63 +340,39 @@ export default function Audit() {
         <TopLine>
           <li>
             <span className="tit">{t('Project.State')}</span>
-            <Form.Select
-              className="sel"
-              // options={statusOption}
+            <Select
+              options={statusOption}
               placeholder=""
               onChange={(value: any) => {
                 setSelectStatus(value?.value as ApplicationStatus);
                 setSelectMap({});
                 setPage(1);
               }}
-              // isClearable={true}
-            >
-              {statusOption.map((opItem, opKey) => (
-                <option value={opItem.value} key={`statusOption_${opKey}`}>
-                  {opItem.label}
-                </option>
-              ))}
-            </Form.Select>
+            />
           </li>
           <li>
             <span className="tit">{t('Project.BudgetSource')}</span>
-            <Form.Select
-              className="sel"
-              // options={allSource}
+            <Select
+              options={allSource}
               placeholder=""
               onChange={(value: any) => {
                 setSelectSource({ id: value?.value as number, type: value?.data });
                 setSelectMap({});
                 setPage(1);
               }}
-              // isClearable={true}
-            >
-              {allSource.map((opItem, opKey) => (
-                <option value={opItem.value} key={`allSource_${opKey}`}>
-                  {opItem.label}
-                </option>
-              ))}
-            </Form.Select>
+            />
           </li>
           <li>
             <span className="tit">{t('Project.Operator')}</span>
-            <Form.Select
-              className="sel"
-              // options={applicants}
+            <Select
+              options={applicants}
               placeholder=""
-              onChange={(value: any) => {
+              onChange={(value: ISelectItem) => {
                 setSelectApplicant(value?.value);
                 setSelectMap({});
                 setPage(1);
               }}
-              // isClearable={true}
-            >
-              {applicants.map((opItem, opKey) => (
-                <option value={opItem.value} key={`applicants_${opKey}`}>
-                  {opItem.label}
-                </option>
-              ))}
-            </Form.Select>
+            />
           </li>
         </TopLine>
         <TimeLine>

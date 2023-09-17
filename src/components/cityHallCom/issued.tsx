@@ -15,6 +15,7 @@ import { IQueryApplicationsParams } from 'requests/applications';
 import { useTranslation } from 'react-i18next';
 import { formatApplicationStatus } from 'utils/index';
 import useToast, { ToastType } from 'hooks/useToast';
+import Select from 'components/common/select';
 
 const Box = styled.div``;
 const FirstLine = styled.div`
@@ -40,10 +41,6 @@ const TopLine = styled.ul`
     .tit {
       padding-right: 20px;
       white-space: nowrap;
-    }
-
-    .sel {
-      min-width: 150px;
     }
   }
 `;
@@ -325,23 +322,15 @@ export default function Issued() {
         <TopLine>
           <li>
             <span className="tit">{t('Project.State')}</span>
-            <Form.Select
-              className="sel"
-              // options={statusOption}
+            <Select
+              options={statusOption}
               placeholder=""
-              // value={statusOption.find((s) => s.value === selectStatus)}
+              value={statusOption.find((s) => s.value === selectStatus)}
               onChange={(value: any) => {
                 setSelectStatus(value?.value as ApplicationStatus);
                 setSelectMap({});
               }}
-              // isClearable={true}
-            >
-              {statusOption.map((opItem, opKey) => (
-                <option value={opItem.value} key={`statusOption_${opKey}`}>
-                  {opItem.label}
-                </option>
-              ))}
-            </Form.Select>
+            ></Select>
           </li>
         </TopLine>
         <TimeLine>
