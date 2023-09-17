@@ -96,6 +96,7 @@ const CardBox = styled.div`
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
   padding: 20px;
   border-radius: 0.25rem;
+  margin-bottom: 20px;
 `;
 
 const CardHeaderStyled = styled.div`

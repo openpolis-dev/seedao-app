@@ -126,11 +126,16 @@ const ImgBox = styled.div`
     right: -15px;
     top: -15px;
     z-index: 999;
-    padding: 6px;
     border-radius: 100%;
     background: #a16eff;
     color: #fff;
     cursor: pointer;
+    width: 30px;
+    height: 30px;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 `;
 
