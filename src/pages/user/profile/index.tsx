@@ -57,6 +57,7 @@ const MidBox = styled.div`
   justify-content: center;
   margin-top: 40px;
   flex-direction: column;
+  padding-bottom: 40px;
 `;
 
 export default function Profile() {
