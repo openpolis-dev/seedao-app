@@ -135,25 +135,23 @@ const SubCategoryCard = styled.div`
 `;
 
 const SubCategoryItem = styled.div`
-  ${({ theme }) => css`
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 16px;
-    cursor: pointer;
-    border-bottom: 1px solid #eee;
-    &:hover {
-      box-shadow: 0 0 4px rgba(0, 0, 0, 0.15);
-    }
-    .name {
-      color: ${theme.colorPrimary500};
-      font-weight: 600;
-    }
-  `}
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  cursor: pointer;
+  border-bottom: 1px solid #eee;
+  &:hover {
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.15);
+  }
+  .name {
+    color: var(--bs-primary);
+    font-weight: 600;
+  }
 `;
 
 const ProposalBox = styled.div`
   & > div {
-    margin-inline: 20px;
+    margin: 20px;
   }
 `;

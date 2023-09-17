@@ -9,6 +9,7 @@ import requests from 'requests';
 import { useParams } from 'react-router-dom';
 import Loading from 'components/loading';
 import useToast, { ToastType } from 'hooks/useToast';
+import { DashLg, PlusLg } from 'react-bootstrap-icons';
 
 const Mask = styled.div`
   background: rgba(0, 0, 0, 0.3);
@@ -42,6 +43,12 @@ const Box = styled.div`
     span {
       margin-left: 10px;
     }
+  }
+  .iconForm {
+    color: var(--bs-primary);
+    font-size: 20px;
+    margin-right: 10px;
+    cursor: pointer;
   }
 `;
 const CardHeader = styled.div`
@@ -152,12 +159,14 @@ export default function PropsalModal(props: Iprops) {
                     />
                   </InputGroup>
                   {index === list.length - 1 && (
-                    <span onClick={() => handleAdd()}>{/*<EvaIcon name="plus-outline" status="Primary" />*/}</span>
+                    <span className="iconForm" onClick={() => handleAdd()}>
+                      <PlusLg />
+                    </span>
                   )}
 
                   {!(!index && index === list.length - 1) && (
-                    <span onClick={() => removeList(index)}>
-                      {/*<EvaIcon name="minus-outline" status="Primary" />*/}
+                    <span className="iconForm" onClick={() => removeList(index)}>
+                      <DashLg />
                     </span>
                   )}
                 </li>

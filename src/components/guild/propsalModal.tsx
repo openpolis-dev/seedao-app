@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Button, Card, InputGroup } from 'react-bootstrap';
+import { Button, Card, InputGroup, Form } from 'react-bootstrap';
 import React, { ChangeEvent, useState } from 'react';
 // import { EvaIcon } from '@paljs/ui/Icon';
 import { useTranslation } from 'react-i18next';
@@ -7,6 +7,7 @@ import requests from 'requests';
 // import { useRouter } from 'next/router';
 import Loading from 'components/loading';
 import useToast, { ToastType } from 'hooks/useToast';
+import { DashLg, PlusLg } from 'react-bootstrap-icons';
 
 const Mask = styled.div`
   background: rgba(0, 0, 0, 0.3);
@@ -25,6 +26,7 @@ const Mask = styled.div`
 `;
 
 const CardHeader = styled.div`
+  min-width: 500px;
   padding: 1rem 1.25rem;
   border-bottom: 1px solid rgb(237, 241, 247);
   border-top-left-radius: 0.25rem;
@@ -60,6 +62,12 @@ const Box = styled.div`
     span {
       margin-left: 10px;
     }
+  }
+  .iconForm {
+    color: var(--bs-primary);
+    font-size: 20px;
+    margin-right: 10px;
+    cursor: pointer;
   }
 `;
 
@@ -144,7 +152,7 @@ export default function PropsalModal(props: Iprops) {
               {list.map((item, index) => (
                 <li key={index}>
                   <InputGroup>
-                    <input
+                    <Form.Control
                       type="text"
                       placeholder="eg, https://forum.seedao.xyz/thread/..."
                       value={item}
@@ -152,12 +160,14 @@ export default function PropsalModal(props: Iprops) {
                     />
                   </InputGroup>
                   {index === list.length - 1 && (
-                    <span onClick={() => handleAdd()}>{/*<EvaIcon name="plus-outline" status="Primary" />*/}</span>
+                    <span className="iconForm" onClick={() => handleAdd()}>
+                      <PlusLg />
+                    </span>
                   )}
 
                   {!(!index && index === list.length - 1) && (
-                    <span onClick={() => removeList(index)}>
-                      {/*<EvaIcon name="minus-outline" status="Primary" />*/}
+                    <span className="iconForm" onClick={() => removeList(index)}>
+                      <DashLg />
                     </span>
                   )}
                 </li>

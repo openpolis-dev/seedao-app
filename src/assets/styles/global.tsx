@@ -79,6 +79,7 @@ const GlobalStyle = createGlobalStyle`
         color:var(--bs-primary);
         border-bottom: 3px solid var(--bs-primary);
         font-weight: bold;
+        background: transparent;
       }
       &.disabled{
         color:rgb(237, 241, 247);

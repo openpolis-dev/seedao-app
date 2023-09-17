@@ -56,7 +56,7 @@ export default function ProposalCategory() {
   return (
     <BoxOuter>
       <CategoryPage>
-        {ProposalNav}
+        <NavBox>{ProposalNav}</NavBox>
         <ProposalSubNav onSelect={handleChangeOrder} />
         <InfiniteScroll dataLength={proposals.length} next={getProposals} hasMore={hasMore} loader={<></>}>
           <ProposalBox>
@@ -71,19 +71,23 @@ export default function ProposalCategory() {
   );
 }
 
+const NavBox = styled.div`
+  padding: 20px 20px 0;
+`;
 const BoxOuter = styled.div`
-  padding: 40px;
+  //padding: 40px;
   min-height: 100%;
 `;
 
 const CategoryPage = styled.div`
-  background: #fff;
+  //background: #fff;
   padding: 20px;
   min-height: 100%;
 `;
 
 const ProposalBox = styled.div`
   & > div {
-    margin-inline: 20px;
+    //margin-inline: 20px;
+    margin: 20px;
   }
 `;
