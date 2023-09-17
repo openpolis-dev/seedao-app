@@ -163,7 +163,7 @@ export default function Add(props: Iprops) {
           </InnerBox>
         </CardBody>
         <CardFooter>
-          <Button className="btnBtm" onClick={() => closeAdd()}>
+          <Button variant="outline-primary" className="btnBtm" onClick={() => closeAdd()}>
             {t('general.cancel')}
           </Button>
           <Button onClick={() => submitObject()} disabled={!adminList.length && !memberList.length}>

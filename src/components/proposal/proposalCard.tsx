@@ -128,6 +128,7 @@ const ProposalContent = styled.div`
   display: -webkit-box;
   -webkit-line-clamp: 2;
   overflow: hidden;
+  font-size: 14px;
   .ql-editor p {
     line-height: 24px;
   }

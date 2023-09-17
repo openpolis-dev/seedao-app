@@ -128,13 +128,19 @@ export default function Members(props: Iprops) {
           <Button onClick={() => handleAdd()} disabled={edit}>
             {t('Guild.AddMember')}
           </Button>
-          {!edit && <Button onClick={() => handleDel()}>{t('Guild.RemoveMember')}</Button>}
+          {!edit && (
+            <Button variant="outline-primary" onClick={() => handleDel()}>
+              {t('Guild.RemoveMember')}
+            </Button>
+          )}
           {edit && (
             <>
-              <Button onClick={() => closeDel()} disabled={!selectAdminArr.length}>
+              <Button variant="outline-primary" onClick={() => closeDel()} disabled={!selectAdminArr.length}>
                 {t('general.confirm')}
               </Button>
-              <Button onClick={() => closeRemove()}>{t('general.cancel')}</Button>
+              <Button variant="outline-primary" onClick={() => closeRemove()}>
+                {t('general.cancel')}
+              </Button>
             </>
           )}
         </TopBox>
