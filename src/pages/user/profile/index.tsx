@@ -1,4 +1,4 @@
-import { InputGroup, Button } from 'react-bootstrap';
+import { InputGroup, Button, Form } from 'react-bootstrap';
 import styled from 'styled-components';
 import React, { ChangeEvent, useEffect, useState, FormEvent } from 'react';
 import requests from 'requests';
@@ -6,16 +6,17 @@ import { useAuthContext, AppActionType } from 'providers/authProvider';
 // import { EvaIcon } from '@paljs/ui/Icon';
 import { useTranslation } from 'react-i18next';
 import useToast, { ToastType } from 'hooks/useToast';
+import { X } from 'react-bootstrap-icons';
 
 const OuterBox = styled.div`
   padding: 40px;
-  height: 100%;
+  min-height: 100%;
 `;
 
 const Box = styled.div``;
 const CardBox = styled.div`
   background: #fff;
-  height: 100%;
+  min-height: 100%;
 `;
 const AvatarBox = styled.div`
   display: flex;
@@ -200,7 +201,9 @@ export default function Profile() {
               )}
               {!!avatar && (
                 <ImgBox onClick={() => removeUrl()}>
-                  <div className="del">{/*<EvaIcon className="iconTop" name="close-outline" status="Control" />*/}</div>
+                  <div className="del">
+                    <X className="iconTop" />
+                  </div>
                   <img src={avatar} alt="" />
                 </ImgBox>
               )}
@@ -218,25 +221,35 @@ export default function Profile() {
               <li>
                 <div className="title">{t('My.Name')}</div>
                 <InputBox fullWidth>
-                  <input type="text" placeholder="" value={userName} onChange={(e) => handleInput(e, 'userName')} />
+                  <Form.Control
+                    type="text"
+                    placeholder=""
+                    value={userName}
+                    onChange={(e) => handleInput(e, 'userName')}
+                  />
                 </InputBox>
               </li>
               <li>
                 <div className="title">{t('My.Email')}</div>
                 <InputBox fullWidth>
-                  <input type="text" placeholder="" value={email} onChange={(e) => handleInput(e, 'email')} />
+                  <Form.Control type="text" placeholder="" value={email} onChange={(e) => handleInput(e, 'email')} />
                 </InputBox>
               </li>
               <li>
                 <div className="title">{t('My.Discord')}</div>
                 <InputBox fullWidth>
-                  <input type="text" placeholder="" value={discord} onChange={(e) => handleInput(e, 'discord')} />
+                  <Form.Control
+                    type="text"
+                    placeholder=""
+                    value={discord}
+                    onChange={(e) => handleInput(e, 'discord')}
+                  />
                 </InputBox>
               </li>
               <li>
                 <div className="title">{t('My.Twitter')}</div>
                 <InputBox fullWidth>
-                  <input
+                  <Form.Control
                     type="text"
                     placeholder="eg, https://twitter.com/..."
                     value={twitter}
@@ -247,19 +260,19 @@ export default function Profile() {
               <li>
                 <div className="title">{t('My.WeChat')}</div>
                 <InputBox fullWidth>
-                  <input type="text" placeholder="" value={wechat} onChange={(e) => handleInput(e, 'wechat')} />
+                  <Form.Control type="text" placeholder="" value={wechat} onChange={(e) => handleInput(e, 'wechat')} />
                 </InputBox>
               </li>
               <li>
                 <div className="title">{t('My.Mirror')}</div>
                 <InputBox fullWidth>
-                  <input type="text" placeholder="" value={mirror} onChange={(e) => handleInput(e, 'mirror')} />
+                  <Form.Control type="text" placeholder="" value={mirror} onChange={(e) => handleInput(e, 'mirror')} />
                 </InputBox>
               </li>
               <li>
                 <div className="title">{t('My.Google')}</div>
                 <InputBox fullWidth>
-                  <input type="text" placeholder="" value={google} onChange={(e) => handleInput(e, 'google')} />
+                  <Form.Control type="text" placeholder="" value={google} onChange={(e) => handleInput(e, 'google')} />
                 </InputBox>
               </li>
             </UlBox>
