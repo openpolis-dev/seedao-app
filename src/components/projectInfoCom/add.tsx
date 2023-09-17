@@ -7,6 +7,7 @@ import { updateStaffs, IUpdateStaffsParams } from 'requests/project';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import { ethers } from 'ethers';
 import useToast, { ToastType } from 'hooks/useToast';
+import { DashLg, PlusLg } from 'react-bootstrap-icons';
 
 const Mask = styled.div`
   background: rgba(0, 0, 0, 0.3);
@@ -72,6 +73,12 @@ const ItemBox = styled.div`
     span {
       margin-left: 10px;
     }
+  }
+  .iconForm {
+    color: var(--bs-primary);
+    font-size: 20px;
+    margin-right: 10px;
+    cursor: pointer;
   }
 `;
 
@@ -190,14 +197,14 @@ export default function Add(props: Iprops) {
                         />
                       </InputGroup>
                       {index === adminList.length - 1 && (
-                        <span onClick={() => handleAddAdmin()}>
-                          {/*<EvaIcon name="plus-outline" status="Primary" />*/}
+                        <span className="iconForm" onClick={() => handleAddAdmin()}>
+                          <PlusLg />
                         </span>
                       )}
 
                       {!(!index && index === adminList.length - 1) && (
-                        <span onClick={() => removeAdmin(index)}>
-                          {/*<EvaIcon name="minus-outline" status="Primary" />*/}
+                        <span className="iconForm" onClick={() => removeAdmin(index)}>
+                          <DashLg />
                         </span>
                       )}
                     </li>
@@ -220,14 +227,14 @@ export default function Add(props: Iprops) {
                         />
                       </InputGroup>
                       {index === memberList.length - 1 && (
-                        <span onClick={() => handleAddMember()}>
-                          {/*<EvaIcon name="plus-outline" status="Primary" />*/}
+                        <span className="iconForm" onClick={() => handleAddMember()}>
+                          <PlusLg />
                         </span>
                       )}
 
                       {!(!index && index === memberList.length - 1) && (
-                        <span onClick={() => removeMember(index)}>
-                          {/*<EvaIcon name="minus-outline" status="Primary" />*/}
+                        <span className="iconForm" onClick={() => removeMember(index)}>
+                          <DashLg />
                         </span>
                       )}
                     </li>

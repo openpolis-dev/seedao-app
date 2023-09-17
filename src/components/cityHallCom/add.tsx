@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Card, InputGroup, Button } from 'react-bootstrap';
+import { Card, InputGroup, Button, Form } from 'react-bootstrap';
 // import { EvaIcon } from '@paljs/ui/Icon';
 import React, { ChangeEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -8,6 +8,7 @@ import { AppActionType, useAuthContext } from 'providers/authProvider';
 import { ethers } from 'ethers';
 import useToast, { ToastType } from 'hooks/useToast';
 import { updateMembers } from 'requests/cityHall';
+import { DashLg, PlusLg } from 'react-bootstrap-icons';
 
 const Mask = styled.div`
   background: rgba(0, 0, 0, 0.3);
@@ -25,10 +26,26 @@ const Mask = styled.div`
   }
 `;
 
-const CardHeader = styled.div``;
+const CardHeader = styled.div`
+  min-width: 500px;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid rgb(237, 241, 247);
+  border-top-left-radius: 0.25rem;
+  border-top-right-radius: 0.25rem;
+  color: rgb(34, 43, 69);
+  font-family: Inter-Regular, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.5rem;
+`;
 
-const CardBody = styled.div``;
-const CardFooter = styled.div``;
+const CardBody = styled.div`
+  padding: 20px;
+`;
+const CardFooter = styled.div`
+  padding: 0 20px 20px;
+`;
 
 const ItemBox = styled.div`
   margin-bottom: 40px;
@@ -54,6 +71,12 @@ const ItemBox = styled.div`
     span {
       margin-left: 10px;
     }
+  }
+  .iconForm {
+    color: var(--bs-primary);
+    font-size: 20px;
+    margin-right: 10px;
+    cursor: pointer;
   }
 `;
 
@@ -137,7 +160,7 @@ export default function Add(props: Iprops) {
                   {adminList.map((item, index) => (
                     <li key={`admin_${index}`}>
                       <InputGroup>
-                        <input
+                        <Form.Control
                           type="text"
                           placeholder={t('Project.Dominator')}
                           value={item}
@@ -145,14 +168,14 @@ export default function Add(props: Iprops) {
                         />
                       </InputGroup>
                       {index === adminList.length - 1 && (
-                        <span onClick={() => handleAddAdmin()}>
-                          {/*<EvaIcon name="plus-outline" status="Primary" />*/}
+                        <span className="iconForm" onClick={() => handleAddAdmin()}>
+                          <PlusLg />
                         </span>
                       )}
 
                       {!(!index && index === adminList.length - 1) && (
-                        <span onClick={() => removeAdmin(index)}>
-                          {/*<EvaIcon name="minus-outline" status="Primary" />*/}
+                        <span className="iconForm" onClick={() => removeAdmin(index)}>
+                          <DashLg />
                         </span>
                       )}
                     </li>
