@@ -278,7 +278,7 @@ export default function AssetList({ id }: { id: number }) {
           </li>
           <li>
             <span className="tit">{t('Project.Operator')}</span>
-            <Form
+            <Form.Select
               className="sel"
               // options={applicants}
               placeholder=""
@@ -294,7 +294,7 @@ export default function AssetList({ id }: { id: number }) {
                   {opItem.label}
                 </option>
               ))}
-            </Form>
+            </Form.Select>
           </li>
         </TopLine>
         <TimeLine>
