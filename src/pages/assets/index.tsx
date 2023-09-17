@@ -368,7 +368,7 @@ export default function Index() {
                 {VAULTS.map((v) => (
                   <VaultItem key={v.address}>
                     <div className="left">
-                      <span className="name">{t(v.name)}</span>
+                      <span className="name">{t(v.name as any)}</span>
                       <div className="info">
                         <div className="address">
                           <span>{publicJs.AddressToShow(v.address)}</span>
