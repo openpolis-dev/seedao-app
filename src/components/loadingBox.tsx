@@ -14,6 +14,9 @@ const Box = styled.div`
   width: 300px;
   height: 300px;
   position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   span {
     padding-left: 10px;
   }
@@ -29,7 +32,7 @@ export default function LoadingBox() {
     <Mask>
       <Box>
         <SpinnerStyled animation="border" variant="primary"></SpinnerStyled>
-        <div>{t('general.Loading')}...</div>
+        <span>{t('general.Loading')}...</span>
       </Box>
     </Mask>
   );

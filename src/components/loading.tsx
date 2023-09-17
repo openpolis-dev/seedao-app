@@ -21,6 +21,9 @@ const Mask = styled.div`
 const Box = styled.div`
   width: 300px;
   height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   span {
     padding-left: 10px;
   }

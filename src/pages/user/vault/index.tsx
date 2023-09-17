@@ -11,7 +11,7 @@ import { formatNumber } from 'utils/number';
 
 const OuterBox = styled.div`
   margin: 40px;
-  height: 100%;
+  min-height: 100%;
 `;
 
 const Box = styled.div`
@@ -20,7 +20,8 @@ const Box = styled.div`
 const CardBox = styled.div`
   background: #fff;
   padding: 20px;
-  height: 100%;
+  min-height: 100%;
+  box-sizing: border-box;
 `;
 
 const FirstLine = styled.ul`
@@ -58,11 +59,10 @@ const FirstLine = styled.ul`
   .decorBg {
     position: absolute;
     right: 0;
-    bottom: 1.3rem;
-    font-size: 12rem;
+    bottom: -4rem;
+    font-size: 11rem;
     font-family: 'Jost-Bold';
     opacity: 0.03;
-    transform-origin: 0 0;
     color: #000;
   }
   .topBox {
