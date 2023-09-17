@@ -135,7 +135,7 @@ export default function Members(props: Iprops) {
           )}
           {edit && (
             <>
-              <Button variant="outline-primary" onClick={() => closeDel()} disabled={!selectAdminArr.length}>
+              <Button onClick={() => closeDel()} disabled={!selectAdminArr.length}>
                 {t('general.confirm')}
               </Button>
               <Button variant="outline-primary" onClick={() => closeRemove()}>

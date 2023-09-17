@@ -171,10 +171,12 @@ export default function Members(props: Iprops) {
           )}
           {edit && (
             <>
-              <Button variant="outline-primary" onClick={() => closeDel()} disabled={removeButtonDisabled}>
+              <Button onClick={() => closeDel()} disabled={removeButtonDisabled}>
                 {t('general.confirm')}
               </Button>
-              <Button onClick={() => closeRemove()}>{t('general.cancel')}</Button>
+              <Button variant="outline-primary" onClick={() => closeRemove()}>
+                {t('general.cancel')}
+              </Button>
             </>
           )}
         </TopBox>
