@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 // import { Card, CardHeader, CardBody, CardFooter } from '@paljs/ui/Card';
-import { Card, Button, InputGroup } from 'react-bootstrap';
+import { Card, Button, InputGroup, Form } from 'react-bootstrap';
 import React, { ChangeEvent, useState } from 'react';
 // import { InputGroup } from '@paljs/ui/Input';
 // import { EvaIcon } from '@paljs/ui/Icon';
@@ -26,6 +26,7 @@ const Mask = styled.div`
   }
 `;
 const Box = styled.div`
+  min-width: 500px;
   ul {
     margin-top: 20px;
     li {
@@ -43,12 +44,25 @@ const Box = styled.div`
     }
   }
 `;
+const CardHeader = styled.div`
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid rgb(237, 241, 247);
+  border-top-left-radius: 0.25rem;
+  border-top-right-radius: 0.25rem;
+  color: rgb(34, 43, 69);
+  font-family: Inter-Regular, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.5rem;
+`;
 
-const CardHeader = styled.div``;
-
-const CardBody = styled.div``;
-const CardFooter = styled.div``;
-
+const CardBody = styled.div`
+  padding: 20px;
+`;
+const CardFooter = styled.div`
+  padding: 0 20px 20px;
+`;
 interface Iprops {
   closeModal: (ifRefresh: boolean) => void;
 }
@@ -130,7 +144,7 @@ export default function PropsalModal(props: Iprops) {
               {list.map((item, index) => (
                 <li key={index}>
                   <InputGroup>
-                    <input
+                    <Form.Control
                       type="text"
                       placeholder="eg, https://forum.seedao.xyz/thread/..."
                       value={item}
@@ -152,7 +166,7 @@ export default function PropsalModal(props: Iprops) {
           </Box>
         </CardBody>
         <CardFooter>
-          <Button className="btnBtm" onClick={() => closeModal(false)}>
+          <Button variant="outline-primary" className="btnBtm" onClick={() => closeModal(false)}>
             {t('general.cancel')}
           </Button>
           <Button disabled={!list.length} onClick={handleProposal}>
