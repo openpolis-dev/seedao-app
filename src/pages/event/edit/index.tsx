@@ -397,7 +397,7 @@ export default function CreateGuild() {
                     showTimeSelect
                     minDate={new Date()}
                     timeFormat="HH:mm aa"
-                    selected={startAt as any}
+                    selected={startAt ? new Date(startAt) : null}
                     dateFormat="yyyy-MM-dd HH:mm aa"
                     onChange={(date) => ChangeStart(date!.valueOf())}
                     className="dateBox"
@@ -410,7 +410,7 @@ export default function CreateGuild() {
                 <InputBox>
                   <DatePicker
                     showTimeSelect
-                    selected={endAt as any}
+                    selected={endAt ? new Date(endAt) : null}
                     timeFormat="HH:mm aa"
                     minDate={new Date(startAt!)}
                     onChange={(date) => changeEnd(date!.valueOf())}
