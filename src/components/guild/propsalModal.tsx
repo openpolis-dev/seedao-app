@@ -8,6 +8,7 @@ import requests from 'requests';
 import Loading from 'components/loading';
 import useToast, { ToastType } from 'hooks/useToast';
 import { DashLg, PlusLg } from 'react-bootstrap-icons';
+import { useParams } from 'react-router-dom';
 
 const Mask = styled.div`
   background: rgba(0, 0, 0, 0.3);
@@ -76,8 +77,9 @@ interface Iprops {
   id?: number;
 }
 export default function PropsalModal(props: Iprops) {
-  const { closeModal, id } = props;
+  const { closeModal } = props;
   const { t } = useTranslation();
+  const { id } = useParams();
   const { Toast, showToast } = useToast();
   // const router = useRouter();
   const [list, setList] = useState(['']);
@@ -104,6 +106,7 @@ export default function PropsalModal(props: Iprops) {
 
   const handleProposal = async () => {
     const ids: string[] = [];
+
     for (const l of list) {
       if (l) {
         if (l.startsWith('https://forum.seedao.xyz/thread/')) {
@@ -131,7 +134,7 @@ export default function PropsalModal(props: Iprops) {
     }
     try {
       setLoading(true);
-      await requests.project.addRelatedProposal(id as any, ids);
+      await requests.guild.addRelatedProposal(id as any, ids);
     } catch (error) {
       console.error('handle related proposals failed: ', error);
     } finally {
