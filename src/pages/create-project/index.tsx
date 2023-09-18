@@ -364,7 +364,7 @@ export default function CreateProject() {
             <UlBox>
               <li>
                 <div className="title">{t('Project.ProjectName')}</div>
-                <InputBox fullWidth>
+                <InputBox>
                   <Form.Control
                     type="text"
                     placeholder={t('Project.ProjectName')}
@@ -378,7 +378,7 @@ export default function CreateProject() {
                 <div>
                   {adminList.map((item, index) => (
                     <ItemBox key={`mem_${index}`}>
-                      <InputBox fullWidth>
+                      <InputBox>
                         <Form.Control
                           type="text"
                           placeholder={t('Project.Dominator')}
@@ -455,7 +455,7 @@ export default function CreateProject() {
                 <div>
                   {memberList.map((item, index) => (
                     <ItemBox key={`mem_${index}`}>
-                      <InputBox fullWidth>
+                      <InputBox>
                         <Form.Control
                           type="text"
                           placeholder={t('Project.Members')}

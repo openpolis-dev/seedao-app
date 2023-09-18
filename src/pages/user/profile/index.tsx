@@ -215,13 +215,13 @@ export default function Profile() {
             <UlBox>
               <li>
                 <div className="title">{t('My.wallet')}</div>
-                <InputBox fullWidth>
+                <InputBox>
                   <div className="wallet">{userData?.wallet}</div>
                 </InputBox>
               </li>
               <li>
                 <div className="title">{t('My.Name')}</div>
-                <InputBox fullWidth>
+                <InputBox>
                   <Form.Control
                     type="text"
                     placeholder=""
@@ -232,13 +232,13 @@ export default function Profile() {
               </li>
               <li>
                 <div className="title">{t('My.Email')}</div>
-                <InputBox fullWidth>
+                <InputBox>
                   <Form.Control type="text" placeholder="" value={email} onChange={(e) => handleInput(e, 'email')} />
                 </InputBox>
               </li>
               <li>
                 <div className="title">{t('My.Discord')}</div>
-                <InputBox fullWidth>
+                <InputBox>
                   <Form.Control
                     type="text"
                     placeholder=""
@@ -249,7 +249,7 @@ export default function Profile() {
               </li>
               <li>
                 <div className="title">{t('My.Twitter')}</div>
-                <InputBox fullWidth>
+                <InputBox>
                   <Form.Control
                     type="text"
                     placeholder="eg, https://twitter.com/..."
@@ -260,19 +260,19 @@ export default function Profile() {
               </li>
               <li>
                 <div className="title">{t('My.WeChat')}</div>
-                <InputBox fullWidth>
+                <InputBox>
                   <Form.Control type="text" placeholder="" value={wechat} onChange={(e) => handleInput(e, 'wechat')} />
                 </InputBox>
               </li>
               <li>
                 <div className="title">{t('My.Mirror')}</div>
-                <InputBox fullWidth>
+                <InputBox>
                   <Form.Control type="text" placeholder="" value={mirror} onChange={(e) => handleInput(e, 'mirror')} />
                 </InputBox>
               </li>
               <li>
                 <div className="title">{t('My.Google')}</div>
-                <InputBox fullWidth>
+                <InputBox>
                   <Form.Control type="text" placeholder="" value={google} onChange={(e) => handleInput(e, 'google')} />
                 </InputBox>
               </li>

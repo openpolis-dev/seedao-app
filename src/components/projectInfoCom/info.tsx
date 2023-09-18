@@ -277,7 +277,7 @@ export default function Info(props: Iprops) {
 
               {showName && (
                 <>
-                  <InputBox fullWidth>
+                  <InputBox>
                     <Form.Control
                       type="text"
                       placeholder={t('Project.ProjectName')}
@@ -323,7 +323,7 @@ export default function Info(props: Iprops) {
               )}
               {showEditPoints && (
                 <div className="info">
-                  <InputBox fullWidth>
+                  <InputBox>
                     <InputNumber
                       placeholder={t('Project.Points')}
                       value={editPoint}
@@ -365,7 +365,7 @@ export default function Info(props: Iprops) {
               )}
               {showEditToken && (
                 <div className="info">
-                  <InputBox fullWidth>
+                  <InputBox>
                     <InputNumber placeholder="USDT" value={editToken} onChange={(e) => handleInput(e, 'token')} />
                   </InputBox>
                   <Button onClick={() => handlecloseEditT()} className="rht10">

@@ -392,7 +392,7 @@ export default function CreateGuild() {
               </li>
               <li>
                 <div className="title">{t('event.startTime')}</div>
-                <InputBox fullWidth>
+                <InputBox>
                   <DatePicker
                     showTimeSelect
                     minDate={new Date()}
@@ -407,7 +407,7 @@ export default function CreateGuild() {
               </li>
               <li>
                 <div className="title">{t('event.endTime')}</div>
-                <InputBox fullWidth>
+                <InputBox>
                   <DatePicker
                     showTimeSelect
                     selected={endAt as any}
@@ -422,31 +422,31 @@ export default function CreateGuild() {
               </li>
               <li>
                 <div className="title">{t('event.sponsor')}</div>
-                <InputBox fullWidth>
+                <InputBox>
                   <Form.Control type="text" value={sponsor} onChange={(e) => handleInput(e, 'sponsor')} />
                 </InputBox>
               </li>
               <li>
                 <div className="title">{t('event.media')}</div>
-                <InputBox fullWidth>
+                <InputBox>
                   <Form.Control type="text" value={media} onChange={(e) => handleInput(e, 'media')} />
                 </InputBox>
               </li>
               <li>
                 <div className="title">{t('event.host')}</div>
-                <InputBox fullWidth>
+                <InputBox>
                   <Form.Control type="text" value={moderator} onChange={(e) => handleInput(e, 'moderator')} />
                 </InputBox>
               </li>
               <li>
                 <div className="title">{t('event.guest')}</div>
-                <InputBox fullWidth>
+                <InputBox>
                   <Form.Control type="text" value={guest} onChange={(e) => handleInput(e, 'guest')} />
                 </InputBox>
               </li>
               <li>
                 <div className="title">{t('event.volunteer')}</div>
-                <InputBox fullWidth>
+                <InputBox>
                   <Form.Control type="text" value={volunteer} onChange={(e) => handleInput(e, 'volunteer')} />
                 </InputBox>
               </li>

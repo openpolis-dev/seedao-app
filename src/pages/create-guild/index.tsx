@@ -359,7 +359,7 @@ export default function CreateGuild() {
             <UlBox>
               <li>
                 <div className="title">{t('Guild.ProjectName')}</div>
-                <InputBox fullWidth>
+                <InputBox>
                   <Form.Control
                     type="text"
                     placeholder={t('Guild.ProjectName')}
@@ -373,7 +373,7 @@ export default function CreateGuild() {
                 <div>
                   {adminList.map((item, index) => (
                     <ItemBox key={`mem_${index}`}>
-                      <InputBox fullWidth>
+                      <InputBox>
                         <Form.Control
                           type="text"
                           placeholder={t('Guild.Dominator')}
@@ -401,7 +401,7 @@ export default function CreateGuild() {
                 <div>
                   {proList.map((item, index) => (
                     <ItemBox key={`mem_${index}`}>
-                      <InputBox fullWidth>
+                      <InputBox>
                         <Form.Control
                           type="text"
                           placeholder={`${t('Guild.AssociatedProposal')}, eg. https://forum.seedao.xyz/thread...`}
@@ -450,7 +450,7 @@ export default function CreateGuild() {
                 <div>
                   {memberList.map((item, index) => (
                     <ItemBox key={`mem_${index}`}>
-                      <InputBox fullWidth>
+                      <InputBox>
                         <Form.Control
                           type="text"
                           placeholder={t('Guild.Members')}
