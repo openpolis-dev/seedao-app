@@ -4,7 +4,7 @@ import { IUser } from 'type/user.type';
 import CopyBox from 'components/copy';
 import { DefaultAvatar } from 'utils/constant';
 import PublicJs from 'utils/publicJs';
-// import { EvaIcon } from '@paljs/ui/Icon';
+import copyIcon from 'assets/images/copy.svg';
 import styled from 'styled-components';
 import { useWeb3React } from '@web3-react/core';
 import TwitterIcon from 'assets/images/twitterNor.svg';
@@ -34,7 +34,7 @@ export default function UserCard({ user, showEdit, onSelectUser, formatActive }:
           <div style={{ display: 'flex', gap: '5px' }}>
             <span>{PublicJs.AddressToShow(user.wallet || '')}</span>
             <CopyBox text={user.wallet || ''} dir="left">
-              {/*<EvaIcon name="clipboard-outline" options={{ width: '18px', height: '18px' }} />*/}
+              <img src={copyIcon} alt="" style={{ position: 'relative', top: '-2px' }} />
             </CopyBox>
           </div>
         </div>
