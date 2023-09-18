@@ -42,8 +42,8 @@ const GlobalStyle = createGlobalStyle`
   .btn-primary{
     color:#fff;
     text-transform: uppercase;
-    &:hover {
-      color:#fff;
+    &:hover, &:focus-visible, &:active {
+      color:#fff !important;
     }
     &:disabled{
       background-color: rgb(230, 228, 235);
@@ -52,13 +52,13 @@ const GlobalStyle = createGlobalStyle`
     }
 
   }
-  .btn-outline-primary{
+  .btn-outline-primary {
     text-transform: uppercase;
     background-color: rgba(161, 100, 255, 0.25);
     font-weight: bold;
-    &:hover {
-      background-color: rgba(161, 100, 255, 0.15);
-      color: var(--bs-primary);
+    &:hover, &:focus-visible, &:active {
+      background-color: rgba(161, 100, 255, 0.15) !important;
+      color: var(--bs-primary) !important;
     }
   }
   .nav-tabs{
