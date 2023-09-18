@@ -8,6 +8,7 @@ import { IUpdateBudgetParams, UpdateBudget } from 'requests/cityHall';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import useToast, { ToastType } from 'hooks/useToast';
 import { useWeb3React } from '@web3-react/core';
+import { Pencil, CheckLg } from 'react-bootstrap-icons';
 
 const Box = styled.div`
   padding: 40px 20px;
@@ -59,6 +60,7 @@ const FlexBox = styled.div`
     margin-left: 10px;
     margin-top: 8px;
     cursor: pointer;
+    font-size: 20px;
   }
   .inputBg {
     background: transparent;
@@ -169,7 +171,9 @@ export default function Assets({ detail, refreshProject }: IProps) {
               <FlexBox>
                 <div className="num">{token?.total_amount || 0}</div>
                 {!!account && (
-                  <span onClick={() => handleShow1()}>{/*<EvaIcon name="edit-2-outline" className="iconRht" />*/}</span>
+                  <span onClick={() => handleShow1()}>
+                    <Pencil className="iconRht" />
+                  </span>
                 )}
               </FlexBox>
             )}
@@ -177,7 +181,10 @@ export default function Assets({ detail, refreshProject }: IProps) {
             {showLft && (
               <FlexBox>
                 <input type="text" className="inputBg" value={editToken} onChange={(e) => handleInput(e, 'token')} />
-                <span onClick={() => hideShow1()}>{/*<EvaIcon name="checkmark-outline" className="iconRht" />*/}</span>
+                <span onClick={() => hideShow1()}>
+                  <CheckLg className="iconRht" />
+                  {/*<EvaIcon name="checkmark-outline" />*/}
+                </span>
               </FlexBox>
             )}
           </div>
@@ -197,7 +204,8 @@ export default function Assets({ detail, refreshProject }: IProps) {
                   <div className="num">{point?.total_amount || 0}</div>
                   {!!account && (
                     <span onClick={() => handleShow2()}>
-                      {/*<EvaIcon name="edit-2-outline" className="iconRht" />*/}
+                      <Pencil className="iconRht" />
+                      {/*<EvaIcon name="edit-2-outline" />*/}
                     </span>
                   )}
                 </FlexBox>
@@ -207,6 +215,7 @@ export default function Assets({ detail, refreshProject }: IProps) {
                 <FlexBox>
                   <input type="text" className="inputBg" value={editPoint} onChange={(e) => handleInput(e, 'points')} />
                   <span onClick={() => hideShow2()}>
+                    <CheckLg className="iconRht" />
                     {/*<EvaIcon name="checkmark-outline" className="iconRht" />*/}
                   </span>
                 </FlexBox>
