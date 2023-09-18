@@ -316,6 +316,7 @@ export default function CreateGuild() {
       showToast(e.data?.msg, ToastType.Danger);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: null });
+      navigate('/event');
     }
   };
 
