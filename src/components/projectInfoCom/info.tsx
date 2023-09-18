@@ -383,14 +383,12 @@ export default function Info(props: Iprops) {
 }
 
 const Tag = styled.span`
-  ${({ theme }) => css`
-    border: 1px solid ${theme.colorPrimary500};
-    border-radius: 6px;
-    color: ${theme.colorPrimary500};
-    padding: 4px 6px;
-    font-size: 12px;
-    span {
-      margin-left: 5px;
-    }
-  `}
+  border: 1px solid var(--bs-primary);
+  border-radius: 6px;
+  color: var(--bs-primary);
+  padding: 4px 6px;
+  font-size: 12px;
+  span {
+    margin-left: 5px;
+  }
 `;
