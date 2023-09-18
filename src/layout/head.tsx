@@ -172,7 +172,7 @@ export default function Header() {
                 <Avatar user={userData} />
               </Dropdown.Toggle>
 
-              <Dropdown.Menu>
+              <Dropdown.Menu className="dropBtm">
                 {list.map((item, index) => (
                   <Dropdown.Item key={`userDown_${index}`} href={item.link}>
                     {item.title}
@@ -212,6 +212,21 @@ const HeadeStyle = styled.header`
   }
   .dropdown button {
     border-color: transparent !important;
+  }
+  .dropBtm {
+    border: 0;
+  }
+  .dropdown-item {
+    border-bottom: 1px solid #eee;
+    padding: 10px 0;
+    font-size: 14px;
+    text-align: center;
+    &:hover {
+      color: var(--bs-primary);
+    }
+    &:last-child {
+      border-bottom: 0;
+    }
   }
 `;
 
