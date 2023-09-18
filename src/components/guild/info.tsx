@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Button, Container, InputGroup, Form } from 'react-bootstrap';
+import { Button, InputGroup, Form } from 'react-bootstrap';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { IBudgetItem, InfoObj, ReTurnProject } from 'type/project.type';
@@ -196,7 +196,7 @@ export default function Info(props: Iprops) {
   return (
     <Box>
       {Toast}
-      <Container>
+      <div>
         <TopImg>
           <img src={detail?.logo} alt="" />
         </TopImg>
@@ -322,7 +322,7 @@ export default function Info(props: Iprops) {
             </dd>
           </dl>
         </InfoBox>
-      </Container>
+      </div>
     </Box>
   );
 }
