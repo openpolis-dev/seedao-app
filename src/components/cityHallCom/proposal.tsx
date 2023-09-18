@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { Button } from 'react-bootstrap';
 import React, { useEffect, useState } from 'react';
-import PropsalModal from 'components/guild/propsalModal';
+import PropsalModal from 'components/projectInfoCom/propsalModal';
 import { ReTurnProject } from 'type/project.type';
 // import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
@@ -38,13 +38,13 @@ interface Iprops {
 export default function ProjectProposal(props: Iprops) {
   const { detail, refreshProject } = props;
   // const router = useRouter();
-  const { id } = useParams();
+  // const { id } = useParams();
   const [show, setShow] = useState(false);
   const [list, setList] = useState<IBaseProposal[]>([]);
   const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
 
-  const canUpdateInfo = usePermission(PermissionAction.Modify, PermissionObject.GuildPrefix + id);
+  const canUpdateInfo = usePermission(PermissionAction.Modify, PermissionObject.GuildPrefix + detail?.id);
 
   const getProposals = async (ids: string[]) => {
     const reqs = ids.map((pid) => requests.proposal.getProposalDetail(Number(pid)));
@@ -70,7 +70,7 @@ export default function ProjectProposal(props: Iprops) {
     if (detail?.proposals) {
       getProposals(detail?.proposals);
     }
-  }, [id, detail]);
+  }, [detail]);
 
   const handleModal = () => {
     setShow(true);

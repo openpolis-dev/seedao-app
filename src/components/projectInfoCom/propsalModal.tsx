@@ -72,13 +72,14 @@ const CardFooter = styled.div`
 `;
 interface Iprops {
   closeModal: (ifRefresh: boolean) => void;
+  id: string | undefined | number;
 }
 export default function PropsalModal(props: Iprops) {
-  const { closeModal } = props;
+  const { closeModal, id } = props;
   const { t } = useTranslation();
   const { Toast, showToast } = useToast();
   // const router = useRouter();
-  const { id } = useParams();
+  // const { id } = useParams();
   const [list, setList] = useState(['']);
   const [loading, setLoading] = useState(false);
   const handleInput = (e: ChangeEvent, index: number) => {
