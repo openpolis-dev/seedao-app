@@ -87,10 +87,12 @@ export default function ProjectProposal(props: Iprops) {
 
       {canUpdateInfo && (
         <TopBox>
-          <Button variant="outline-primary" onClick={() => window.open('https://forum.seedao.xyz/', '_blank')}>
+          <Button onClick={() => window.open('https://forum.seedao.xyz/', '_blank')}>
             {t('Guild.createProposal')}
           </Button>
-          <Button onClick={() => handleModal()}>{t('Guild.AssociatedProposal')}</Button>
+          <Button variant="outline-primary" onClick={() => handleModal()}>
+            {t('Guild.AssociatedProposal')}
+          </Button>
         </TopBox>
       )}
 

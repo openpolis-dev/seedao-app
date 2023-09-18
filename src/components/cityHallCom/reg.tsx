@@ -242,7 +242,7 @@ export default function Reg({ id }: { id?: number }) {
             <span>{t('Project.ImportForm').toUpperCase()}</span>
           </BtnBox>
           {!!list.length && (
-            <Button disabled={!list.length} onClick={() => Clear()}>
+            <Button variant="outline-primary" disabled={!list.length} onClick={() => Clear()}>
               {t('general.Clear')}
             </Button>
           )}

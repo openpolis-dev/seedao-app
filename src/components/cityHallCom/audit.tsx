@@ -395,7 +395,7 @@ export default function Audit() {
         <Button onClick={handleApprove} disabled={!selectOne}>
           {t('city-hall.Pass')}
         </Button>
-        <Button onClick={handleReject} disabled={!selectOne}>
+        <Button variant="outline-primary" onClick={handleReject} disabled={!selectOne}>
           {t('city-hall.Reject')}
         </Button>
       </TopBox>
