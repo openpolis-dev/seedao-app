@@ -9,12 +9,54 @@ import useCheckLogin from 'hooks/useCheckLogin';
 import { useAuthContext } from 'providers/authProvider';
 import { WalletType } from 'wallet/wallet';
 
-const Box = styled.div<{ open: boolean }>`
+const Box = styled.div`
   background: #fff;
   box-sizing: border-box;
   padding: 20px;
+  width: 65px;
   flex-shrink: 0;
-  ${(props) => props.open && 'width: 200px;'}
+  &.expand {
+    animation: 'expand' 0.3s ease;
+    animation-fill-mode: forwards;
+  }
+  &.unexpand {
+    animation: 'unexpand' 0.3s ease;
+    animation-fill-mode: forwards;
+  }
+  @keyframes expand {
+    0% {
+      width: 65px;
+    }
+    25% {
+      width: 50px;
+    }
+    50% {
+      width: 100px;
+    }
+    75% {
+      width: 150px;
+    }
+    100% {
+      width: 200px;
+    }
+  }
+  @keyframes unexpand {
+    0% {
+      width: 200px;
+    }
+    25% {
+      width: 150px;
+    }
+    50% {
+      width: 100px;
+    }
+    75% {
+      width: 50px;
+    }
+    100% {
+      width: 65px;
+    }
+  }
 `;
 
 const LftLi = styled.div<{ selected?: boolean }>`
@@ -22,6 +64,7 @@ const LftLi = styled.div<{ selected?: boolean }>`
   display: flex;
   align-items: center;
   border-bottom: 1px dashed #eee;
+  white-space: nowrap;
   cursor: pointer;
   font-size: 14px;
   font-weight: 500;
@@ -131,7 +174,7 @@ export default function Menu({ open }: { open: boolean }) {
   }, [t, isLogin, wallet_type]);
 
   return (
-    <Box open={open}>
+    <Box className={open ? 'expand' : 'unexpand'}>
       {menuItemsFormat.map((item) => (
         <MenuItem
           open={open}
