@@ -15,6 +15,7 @@ import LogoImg from '../assets/images/logo.png';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { List as ListIcon } from 'react-bootstrap-icons';
+import Loading from 'components/loading';
 
 export default function Header() {
   const { i18n } = useTranslation();
@@ -31,7 +32,7 @@ export default function Header() {
   const [lan, setLan] = useState('en');
 
   const {
-    state: { show_login_modal, language, expandMenu, userData },
+    state: { show_login_modal, language, expandMenu, userData, loading },
     dispatch,
   } = useAuthContext();
 
@@ -140,6 +141,7 @@ export default function Header() {
 
   return (
     <HeadeStyle>
+      {loading && <Loading />}
       <nav>
         <NavLeft>
           <MenuExpandIcon

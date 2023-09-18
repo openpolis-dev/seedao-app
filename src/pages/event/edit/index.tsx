@@ -14,7 +14,7 @@ import 'md-editor-rt/lib/style.css';
 import { createEvent, editEventById, getEventById, uplodaEventImage } from 'requests/event';
 import { useWeb3React } from '@web3-react/core';
 import { useNavigate } from 'react-router-dom';
-import { ChevronLeft, X } from 'react-bootstrap-icons';
+import { ChevronLeft, X, Upload } from 'react-bootstrap-icons';
 
 const OuterBox = styled.div`
   padding: 40px;
@@ -369,7 +369,7 @@ export default function CreateGuild() {
               {!url && (
                 <div>
                   <input id="fileUpload" type="file" hidden accept=".jpg, .jpeg, .png, .svg" />
-                  {/*<EvaIcon name="cloud-upload-outline" className="iconRht" />*/}
+                  <Upload className="iconRht" />
                   <span>{t('event.upload')}</span>
                 </div>
               )}

@@ -159,7 +159,6 @@ export default function ViewEvent() {
   const [creator, setCreator] = useState('');
 
   useEffect(() => {
-    console.log('===id', id);
     if (!id) return;
     getDetail();
   }, [id]);
@@ -205,9 +204,7 @@ export default function ViewEvent() {
             </div>
             <div>
               {account && account.toLocaleLowerCase() === creator && (
-                <EditButton onClick={() => navigate(`/event/edit?id=${id}`)} fullWidth shape="Rectangle">
-                  {t('event.edit')}
-                </EditButton>
+                <EditButton onClick={() => navigate(`/event/edit?id=${id}`)}>{t('event.edit')}</EditButton>
               )}
             </div>
           </BackBox>
