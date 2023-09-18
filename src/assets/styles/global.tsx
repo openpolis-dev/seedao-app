@@ -15,7 +15,7 @@ const GlobalStyle = createGlobalStyle`
     background: #f0f3f8;
   }
    
-  ul, li, dl, dt, dd{
+  ul, li, dl, dt, dd,p{
     list-style: none;
     padding: 0;
     margin: 0;

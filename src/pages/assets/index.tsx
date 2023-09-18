@@ -15,7 +15,7 @@ import ModifyBudgetModal from 'components/assetsCom/modifyBudget';
 import { BudgetType } from 'type/project.type';
 import { formatNumber } from 'utils/number';
 import BgImg from '../../assets/images/homebg.png';
-import { Clipboard, Share, ChevronDown, ChevronUp } from 'react-bootstrap-icons';
+import { Clipboard, Share, ChevronDown, ChevronUp, Pencil } from 'react-bootstrap-icons';
 
 const BoxOuter = styled.div`
   margin: 40px;
@@ -40,7 +40,7 @@ const FirstLine = styled.ul`
   margin-bottom: 40px;
   li {
     width: 23%;
-    height: 172px;
+    height: 192px;
     //border: 1px solid #f1f1f1;
     border-radius: 10px;
     overflow: hidden;
@@ -91,7 +91,7 @@ const FirstLine = styled.ul`
   .num {
     font-size: 25px;
     font-weight: 600;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     margin-top: 10px;
     color: #fff;
   }
@@ -375,7 +375,6 @@ export default function Index() {
                           <div>
                             <CopyBox text={v.address}>
                               <Clipboard className="iconBox" />
-                              {/*<EvaIcon name="clipboard-outline" options={{ width: '18px', height: '18px' }} />*/}
                             </CopyBox>
                           </div>
                           <div>
@@ -385,7 +384,6 @@ export default function Index() {
                               rel="noreferrer"
                             >
                               <Share className="iconBox" />
-                              {/*<EvaIcon name="external-link-outline" options={{ width: '18px', height: '18px' }} />*/}
                             </a>
                           </div>
                         </div>
@@ -444,6 +442,7 @@ export default function Index() {
                   <span>{formatNumber(asset.token_total_amount)}</span>
                   {canUseCityhall && (
                     <span className="btn-edit" onClick={() => setshowModifyModal(BudgetType.Token)}>
+                      <Pencil />
                       {/*<EvaIcon name="edit-2-outline" options={{ width: '16px', height: '16px' }} />*/}
                     </span>
                   )}
@@ -463,6 +462,7 @@ export default function Index() {
                   <span>{formatNumber(asset.credit_total_amount)}</span>
                   {canUseCityhall && (
                     <span className="btn-edit" onClick={() => setshowModifyModal(BudgetType.Credit)}>
+                      <Pencil />
                       {/*<EvaIcon name="edit-2-outline" options={{ width: '16px', height: '16px' }} />*/}
                     </span>
                   )}
@@ -482,11 +482,15 @@ export default function Index() {
 const AssetBox = styled.div`
   display: flex;
   align-items: center;
-  gap: 8px;
+  position: relative;
+  //gap: 8px;
   font-size: 0.9rem !important;
   .btn-edit {
     cursor: pointer;
     height: 18px;
+    padding-left: 10px;
+    margin-bottom: 5px;
+    z-index: 9;
   }
 `;
 
@@ -560,7 +564,7 @@ const VaultItem = styled.li`
   display: flex;
   justify-content: space-between;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  padding-block: 20px;
+  padding-block: 15px;
   color: #000;
   &:last-child {
     border-bottom: 0;
@@ -571,6 +575,7 @@ const VaultItem = styled.li`
     align-items: center;
     .name {
       width: 160px;
+      font-size: 14px;
     }
   }
   .tag {
@@ -580,6 +585,7 @@ const VaultItem = styled.li`
   .address {
     display: flex;
     align-items: center;
+    font-size: 14px;
   }
   .address {
     gap: 5px;
@@ -637,7 +643,4 @@ const LiHead = styled.div`
 const LiTitle = styled.div`
   color: #fff;
   font-size: 1.2rem;
-  ${({ theme }) => css`
-    font-weight: ${theme.textSubtitleFontWeight};
-  `}
 `;
