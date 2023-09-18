@@ -14,6 +14,7 @@ import LoginModal from 'components/modals/login';
 import LogoImg from '../assets/images/logo.png';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import { List as ListIcon } from 'react-bootstrap-icons';
 
 export default function Header() {
   const { i18n } = useTranslation();
@@ -30,7 +31,7 @@ export default function Header() {
   const [lan, setLan] = useState('en');
 
   const {
-    state: { show_login_modal, language, loading, userData },
+    state: { show_login_modal, language, expandMenu, userData },
     dispatch,
   } = useAuthContext();
 
@@ -140,9 +141,16 @@ export default function Header() {
   return (
     <HeadeStyle>
       <nav>
-        <LogoIcon onClick={() => toGo()}>
-          <img src={LogoImg} alt="" />
-        </LogoIcon>
+        <NavLeft>
+          <MenuExpandIcon
+            fontSize="30px"
+            onClick={() => dispatch({ type: AppActionType.SET_EXPAND_MENU, payload: !expandMenu })}
+          />
+          <LogoIcon onClick={() => toGo()}>
+            <img src={LogoImg} alt="" />
+          </LogoIcon>
+        </NavLeft>
+
         <RightBox>
           <Form.Select
             style={{ minWidth: '100px' }}
@@ -219,4 +227,15 @@ const RightBox = styled.div`
   display: flex;
   align-items: center;
   gap: 10px;
+`;
+
+const NavLeft = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding-left: 20px;
+`;
+const MenuExpandIcon = styled(ListIcon)`
+  cursor: pointer;
+  color: #666;
 `;

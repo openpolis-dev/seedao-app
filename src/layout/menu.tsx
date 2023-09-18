@@ -9,12 +9,12 @@ import useCheckLogin from 'hooks/useCheckLogin';
 import { useAuthContext } from 'providers/authProvider';
 import { WalletType } from 'wallet/wallet';
 
-const Box = styled.div`
+const Box = styled.div<{ open: boolean }>`
   background: #fff;
-  width: 200px;
   box-sizing: border-box;
   padding: 20px;
   flex-shrink: 0;
+  ${(props) => props.open && 'width: 200px;'}
 `;
 
 const LftLi = styled.div<{ selected?: boolean }>`
@@ -91,13 +91,14 @@ interface IMenuItem {
   data: MenuItemType;
   onSelectMenu: (m: MenuItemType) => void;
   selected?: boolean;
+  open?: boolean;
 }
 
-const MenuItem = ({ data, onSelectMenu, selected }: IMenuItem) => {
+const MenuItem = ({ data, onSelectMenu, selected, open }: IMenuItem) => {
   return (
     <LftLi onClick={() => onSelectMenu(data)} selected={selected}>
       <span className="icon">{data.icon.name}</span>
-      <span className="name">{data.title}</span>
+      {open && <span className="name">{data.title}</span>}
     </LftLi>
   );
 };
@@ -130,10 +131,10 @@ export default function Menu({ open }: { open: boolean }) {
   }, [t, isLogin, wallet_type]);
 
   return (
-    // <div open={open}>
-    <Box>
+    <Box open={open}>
       {menuItemsFormat.map((item) => (
         <MenuItem
+          open={open}
           key={item.title}
           data={item}
           onSelectMenu={onSelectMenu}
