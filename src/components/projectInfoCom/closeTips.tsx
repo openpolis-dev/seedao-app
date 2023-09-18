@@ -22,11 +22,26 @@ const InnerBox = styled.div`
   width: 400px;
 `;
 
-const CardHeader = styled.div``;
+const CardHeader = styled.div`
+  min-width: 500px;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid rgb(237, 241, 247);
+  border-top-left-radius: 0.25rem;
+  border-top-right-radius: 0.25rem;
+  color: rgb(34, 43, 69);
+  font-family: Inter-Regular, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.5rem;
+`;
 
-const CardBody = styled.div``;
-const CardFooter = styled.div``;
-
+const CardBody = styled.div`
+  padding: 20px;
+`;
+const CardFooter = styled.div`
+  padding: 0 20px 20px;
+`;
 interface Iprops {
   closeModal: () => void;
   handleClosePro: () => void;
@@ -44,7 +59,7 @@ export default function CloseTips(props: Iprops) {
           <InnerBox>{t('Project.confirmClose')}</InnerBox>
         </CardBody>
         <CardFooter>
-          <Button className="btnBtmAll" onClick={() => closeModal()}>
+          <Button variant="outline-primary" className="btnBtmAll" onClick={() => closeModal()}>
             {t('general.cancel')}
           </Button>
           <Button onClick={() => handleClosePro()}>{t('general.confirm')}</Button>

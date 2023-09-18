@@ -1,6 +1,6 @@
 // import Container from '@paljs/ui/Container';
 import styled, { css } from 'styled-components';
-import { Button, Container, InputGroup, Form } from 'react-bootstrap';
+import { Button, InputGroup, Form } from 'react-bootstrap';
 import React, { ChangeEvent, useEffect, useMemo, useState } from 'react';
 import CloseTips from 'components/projectInfoCom/closeTips';
 import CloseSuccess from 'components/projectInfoCom/closeSuccess';
@@ -104,9 +104,7 @@ export default function Info(props: Iprops) {
     const _token = detail?.budgets?.find((item) => item.name === 'USDT');
     setToken(_token);
     setEditToken(_token?.total_amount);
-    console.error(_token);
     const _point = detail?.budgets?.find((item) => item.name === 'SCR');
-    console.log(_point);
     setPoints(_point);
     setEditPoint(_point?.total_amount);
   };
@@ -256,7 +254,7 @@ export default function Info(props: Iprops) {
       {show && <CloseTips closeModal={closeModal} handleClosePro={handleClosePro} />}
       {showSuccess && <CloseSuccess closeModal={closeSuccess} />}
 
-      <Container>
+      <div>
         <TopImg>
           <img src={detail?.logo} alt="" />
         </TopImg>
@@ -379,7 +377,7 @@ export default function Info(props: Iprops) {
             </dd>
           </dl>
         </InfoBox>
-      </Container>
+      </div>
     </Box>
   );
 }

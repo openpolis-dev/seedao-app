@@ -311,12 +311,12 @@ export default function CreateGuild() {
         rt = await createEvent(obj);
       }
       showToast('Success', ToastType.Success);
+      navigate('/event');
     } catch (e: any) {
       console.error('create event error:', e);
       showToast(e.data?.msg, ToastType.Danger);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: null });
-      navigate('/event');
     }
   };
 
