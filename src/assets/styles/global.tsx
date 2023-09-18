@@ -42,6 +42,9 @@ const GlobalStyle = createGlobalStyle`
   .btn-primary{
     color:#fff;
     text-transform: uppercase;
+    &:hover {
+      color:#fff;
+    }
     &:disabled{
       background-color: rgb(230, 228, 235);
       border-color: transparent;
