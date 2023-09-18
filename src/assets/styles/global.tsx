@@ -56,6 +56,10 @@ const GlobalStyle = createGlobalStyle`
     text-transform: uppercase;
     background-color: rgba(161, 100, 255, 0.25);
     font-weight: bold;
+    &:hover {
+      background-color: rgba(161, 100, 255, 0.15);
+      color: var(--bs-primary);
+    }
   }
   .nav-tabs{
     font-size: 14px;
