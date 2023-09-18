@@ -343,7 +343,9 @@ export default function AssetList({ id }: { id: number }) {
                     <td>{item.reviewer_name || publicJs.AddressToShow(item.reviewer_wallet)}</td>
                     <td>
                       {item.status === ApplicationStatus.Completed && (
-                        <Button onClick={() => handleShow(item.transactions || [])}>{t('Project.View')}</Button>
+                        <Button size="sm" variant="outline-primary" onClick={() => handleShow(item.transactions || [])}>
+                          {t('Project.View')}
+                        </Button>
                       )}
                     </td>
                   </tr>
