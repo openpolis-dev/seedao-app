@@ -16,6 +16,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { List as ListIcon } from 'react-bootstrap-icons';
 import Loading from 'components/loading';
+import usePushPermission from 'hooks/usePushPermission';
 
 export default function Header() {
   const { i18n } = useTranslation();
@@ -23,6 +24,7 @@ export default function Header() {
   const isLogin = useCheckLogin();
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { hasGranted, handlePermission } = usePushPermission();
 
   const [list] = useState([
     { title: t('My.MyProfile'), link: '/user/profile', value: 'profile' },
@@ -133,7 +135,13 @@ export default function Header() {
   ];
 
   const showWalletLogin = () => {
-    dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: true });
+    if (!hasGranted) {
+      handlePermission().finally(() => {
+        dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: true });
+      });
+    } else {
+      dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: true });
+    }
   };
   const toGo = () => {
     navigate('/');

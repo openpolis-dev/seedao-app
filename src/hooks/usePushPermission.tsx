@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 
 const askPermission = () => {
   return new Promise(function (resolve, reject) {
@@ -16,7 +16,7 @@ const askPermission = () => {
   });
 };
 
-export default function usePermisson() {
+export default function usePushPermission() {
   const [permission, setPermission] = useState('default');
 
   useEffect(() => {
@@ -45,5 +45,7 @@ export default function usePermisson() {
       });
   };
 
-  return { handlePermission, permission };
+  const hasGranted = useMemo(() => permission === 'granted', [permission]);
+
+  return { handlePermission, hasGranted };
 }
