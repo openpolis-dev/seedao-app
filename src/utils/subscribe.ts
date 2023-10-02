@@ -1,4 +1,5 @@
 import { registerDevice } from 'requests/push';
+import { isMobile } from 'utils/userAgent';
 
 async function subscribeToPushMessages(wallet: string) {
   if (!window.navigator || !navigator.serviceWorker) {
@@ -13,7 +14,7 @@ async function subscribeToPushMessages(wallet: string) {
     // Subscribe the user to push notifications
     pushSubscription = await serviceWorkerRegistration.pushManager.subscribe({
       userVisibleOnly: true,
-      applicationServerKey: urlBase64ToUint8Array(process.env.WEB_PUSH_PUBLIC_KEY || ''),
+      applicationServerKey: urlBase64ToUint8Array(process.env.REACT_APP_WEB_PUSH_PUBLIC_KEY || ''),
     });
     const subscription = await pushSubscription;
     const data = subscription.toJSON();
@@ -21,7 +22,7 @@ async function subscribeToPushMessages(wallet: string) {
     console.log(JSON.stringify(data));
     console.log('===============');
     // TODO handle device
-    await registerDevice({ wallet, device: 'pc', push_subscription: data });
+    await registerDevice({ wallet, device: isMobile ? 'mobile' : 'pc', push_subscription: data });
     return data;
   } catch (err) {
     // The subscription wasn't successful.
