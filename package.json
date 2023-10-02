@@ -43,6 +43,7 @@
     "siwe": "^2.1.4",
     "styled-components": "^5.3.11",
     "typescript": "^4.9.5",
+    "ua-parser-js": "^1.0.36",
     "web-vitals": "^2.1.4",
     "xlsx": "^0.18.5"
   },
@@ -60,6 +61,7 @@
     "@types/react-dom": "^18.2.7",
     "@types/react-select": "4.0.17",
     "@types/styled-components": "^5.1.27",
+    "@types/ua-parser-js": "^0.7.37",
     "@web3-react/types": "^8.2.0",
     "husky": "7.0.2",
     "prettier": "2.3.2",
