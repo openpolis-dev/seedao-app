@@ -18,6 +18,7 @@ import { Web3Provider } from '@ethersproject/providers';
 import { X } from 'react-bootstrap-icons';
 import MetamaskIcon from 'assets/images/wallet/metamask.png';
 import UnipassIcon from 'assets/images/wallet/unipass.svg';
+import subscribeToPushMessages from 'utils/subscribe';
 
 const { useProvider, useAccount } = uniPassHooks;
 
@@ -137,6 +138,9 @@ export default function LoginModal() {
       await authorizer.setUser(_account.toLowerCase());
       dispatch({ type: AppActionType.SET_AUTHORIZER, payload: authorizer });
       dispatch({ type: AppActionType.SET_WALLET_TYPE, payload: chooseWallet.type });
+
+      // register push
+      await subscribeToPushMessages(_account.toLowerCase());
 
       // gtag.event({ action: gtag.EVENTS.LOGIN_SUCCESS, category: chooseWallet.value, value: account });
     } catch (error: any) {
