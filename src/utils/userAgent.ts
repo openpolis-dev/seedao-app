@@ -9,3 +9,5 @@ export const isPad = type === 'tablet';
 
 const platform = parser.getOS().name;
 export const isIOS = platform === 'iOS';
+
+export const isAndroid = platform === 'Android';
