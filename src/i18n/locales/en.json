@@ -247,5 +247,11 @@
     "guest": "Guests",
     "volunteer": "Volunteers",
     "upload": "Upload Image"
+  },
+  "install": {
+    "iosTitle": "Add to Home Screen",
+    "iosStep1": "1) Press the 'Share' button on the menu bar below.",
+    "iosStep2": "2) Press 'Add to Home Screen'.",
+    "androidInstall": "Install"
   }
 }

@@ -247,5 +247,11 @@
     "guest": "嘉宾",
     "volunteer": "志愿者",
     "upload": "上传图片"
+  },
+  "install": {
+    "iosTitle": "添加到主屏幕",
+    "iosStep1": "1) 点击 菜单栏上的'分享' 按钮",
+    "iosStep2": "2) 点击 '添加到主屏幕'",
+    "androidInstall": "安装"
   }
 }
