@@ -19,6 +19,9 @@ import { Clipboard, Share, ChevronDown, ChevronUp, Pencil } from 'react-bootstra
 
 const BoxOuter = styled.div`
   margin: 40px;
+  @media (max-width: 1024px) {
+    margin: 20px;
+  }
 `;
 
 const Box = styled.div`
