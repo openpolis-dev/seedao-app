@@ -23,6 +23,11 @@ const BannerBox = styled.div`
   padding: 6rem 2.5rem 4rem;
   background: url(${BgImg}) no-repeat right;
   background-size: auto 100%;
+  @media (max-width: 1024px) {
+    padding: 40px 25px 30px;
+    background: url(${BgImg}) no-repeat bottom right;
+    background-size: auto 80%;
+  }
 `;
 
 const LFtBox = styled.div`
@@ -56,6 +61,16 @@ const LFtBox = styled.div`
       font-size: 3.5rem;
     }
   }
+
+  @media (max-width: 1024px) {
+    .tit {
+      font-size: 30px;
+    }
+    .tips {
+      padding: 20px;
+      font-size: 14px;
+    }
+  }
 `;
 
 const ActiveBox = styled.div`
@@ -73,6 +88,10 @@ const TitBox = styled.div`
     text-decoration: underline;
     cursor: pointer;
   }
+
+  @media (max-width: 1024px) {
+    font-size: 20px;
+  }
 `;
 
 const LineBox = styled.div`
@@ -82,7 +101,7 @@ const LineBox = styled.div`
   margin-bottom: 40px;
   .inner {
     background: rgba(161, 110, 255, 0.7);
-    padding: 20px;
+    padding: 10px;
   }
   ul {
     display: flex;
@@ -102,6 +121,11 @@ const LineBox = styled.div`
     font-weight: bold;
     margin-right: 1.5rem;
     font-family: 'Jost-Bold';
+  }
+  @media (max-width: 1024px) {
+    .num {
+      font-size: 24px;
+    }
   }
 `;
 
@@ -149,6 +173,16 @@ const LinkBox = styled(Row)`
   .tBtm {
     font-size: 0.8rem;
   }
+  @media (max-width: 1024px) {
+    .inn {
+      margin-bottom: 20px;
+      padding: 20px;
+    }
+    .tit {
+      font-size: 18px;
+      margin-bottom: 0;
+    }
+  }
 `;
 
 const EventCardStyle = styled.div`
@@ -167,6 +201,15 @@ const EventCardStyle = styled.div`
   margin-bottom: 20px;
   .iconBox {
     font-size: 24px;
+  }
+
+  @media (max-width: 1024px) {
+    padding-block: 20px;
+    gap: 5px;
+    font-size: 14px;
+    .iconBox {
+      font-size: 20px;
+    }
   }
 `;
 
