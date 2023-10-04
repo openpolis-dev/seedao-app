@@ -7,7 +7,7 @@ import { parseToken, checkTokenValid, clearStorage } from '../utils/auth';
 import { Authorizer } from 'casbin.js';
 import { readPermissionUrl } from '../requests/user';
 import requests from '../requests';
-import { SEEDAO_USER, SEEDAO_USER_DATA } from '../utils/constant';
+import { SEEDAO_USER, SEEDAO_USER_DATA, SELECT_WALLET } from '../utils/constant';
 import Avatar from 'components/common/avatar';
 import { Button, Form, Dropdown } from 'react-bootstrap';
 import LoginModal from 'components/modals/login';
@@ -30,7 +30,6 @@ export default function Header() {
   const [list] = useState([
     { title: t('My.MyProfile'), link: '/user/profile', value: 'profile' },
     { title: t('My.MyAccount'), link: '/user/vault', value: 'vault' },
-    { title: t('My.Exit'), value: 'logout' },
   ]);
   const [lan, setLan] = useState('en');
 
@@ -151,6 +150,16 @@ export default function Header() {
     navigate('/');
   };
 
+  const onClickLogout = () => {
+    dispatch({ type: AppActionType.CLEAR_AUTH, payload: undefined });
+    localStorage.removeItem(SEEDAO_USER_DATA);
+    localStorage.removeItem(SELECT_WALLET);
+    dispatch({ type: AppActionType.SET_LOGIN_DATA, payload: null });
+    dispatch({ type: AppActionType.SET_AUTHORIZER, payload: null });
+    dispatch({ type: AppActionType.SET_WALLET_TYPE, payload: null });
+    toGo();
+  };
+
   return (
     <HeadeStyle>
       {loading && <Loading />}
@@ -190,6 +199,7 @@ export default function Header() {
                     {item.title}
                   </Dropdown.Item>
                 ))}
+                <Dropdown.Item onClick={onClickLogout}>{t('My.Exit')}</Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
           ) : (
