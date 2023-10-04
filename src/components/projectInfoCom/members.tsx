@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import React, { useEffect, useState, useMemo } from 'react';
-import { Button } from 'react-bootstrap';
+import { Button, Row } from 'react-bootstrap';
 import Add from './add';
 import Del from './Del';
 import { useTranslation } from 'react-i18next';
@@ -189,7 +189,7 @@ export default function Members(props: Iprops) {
 
       <ItemBox>
         <TitleBox>{t('Project.Dominator')}</TitleBox>
-        <UlBox>
+        <Row>
           {adminArr.map((item, index) => (
             <UserCard
               key={index}
@@ -199,13 +199,13 @@ export default function Members(props: Iprops) {
               showEdit={edit && canUpdateSponsor}
             />
           ))}
-        </UlBox>
+        </Row>
       </ItemBox>
       {!adminArr.length && <NoItem />}
 
       <ItemBox>
         <TitleBox>{t('Project.Others')}</TitleBox>
-        <UlBox>
+        <Row>
           {memberArr.map((item, index) => (
             <UserCard
               key={index}
@@ -215,7 +215,7 @@ export default function Members(props: Iprops) {
               showEdit={edit && canUpdateMember}
             />
           ))}
-        </UlBox>
+        </Row>
       </ItemBox>
       {!memberArr.length && <NoItem />}
     </Box>
@@ -233,11 +233,6 @@ const ItemBox = styled.div`
 const TitleBox = styled.div`
   font-weight: bold;
   margin-bottom: 30px;
-`;
-
-const UlBox = styled.ul`
-  display: flex;
-  flex-wrap: wrap;
 `;
 
 const TopBox = styled.div`

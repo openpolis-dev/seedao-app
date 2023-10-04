@@ -19,6 +19,30 @@ const TipsBox = styled.div`
   }
 `;
 
+const TableBox = styled.div`
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 3rem;
+  table {
+    th {
+      background: transparent;
+      color: #6e6893;
+      border: 1px solid #d9d5ec;
+      border-left: none;
+      border-right: none;
+      border-radius: 0;
+    }
+    td {
+      border-bottom-color: #d9d5ec;
+      word-break: break-all;
+    }
+    tr:hover td {
+      background: #f2f0f9;
+    }
+  }
+`;
+
 interface Iprops {
   uploadList: ExcelObj[];
 }
@@ -28,30 +52,32 @@ export default function RegList(props: Iprops) {
 
   return (
     <Box>
-      <table className="table" cellPadding="0" cellSpacing="0">
-        <thead>
-          <tr>
-            <th>&nbsp;</th>
-            <th>{t('Project.Address')}</th>
-            <th>{t('Project.AddPoints')}</th>
-            <th>{t('Project.AddToken')}</th>
-            <th>{t('Project.Content')}</th>
-            <th>{t('Project.Note')}</th>
-          </tr>
-        </thead>
-        <tbody>
-          {uploadList.map((item, index) => (
-            <tr key={index}>
-              <td>{index + 1}</td>
-              <td>{item.address}</td>
-              <td>{item.points}</td>
-              <td>{item.token}</td>
-              <td>{item.content}</td>
-              <td>{item.note}</td>
+      <TableBox>
+        <table className="table" cellPadding="0" cellSpacing="0">
+          <thead>
+            <tr>
+              <th>&nbsp;</th>
+              <th>{t('Project.Address')}</th>
+              <th>{t('Project.AddPoints')}</th>
+              <th>{t('Project.AddToken')}</th>
+              <th>{t('Project.Content')}</th>
+              <th>{t('Project.Note')}</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {uploadList.map((item, index) => (
+              <tr key={index}>
+                <td>{index + 1}</td>
+                <td>{item.address}</td>
+                <td>{item.points}</td>
+                <td>{item.token}</td>
+                <td>{item.content}</td>
+                <td>{item.note}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </TableBox>
 
       {!uploadList?.length && (
         <TipsBox>

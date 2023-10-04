@@ -46,6 +46,14 @@ const FirstLine = styled.ul`
     padding-top: 10px;
     font-weight: bold;
   }
+  @media (max-width: 1000px) {
+    li {
+      flex-direction: column;
+      & > div:first-child {
+        margin-bottom: 40px;
+      }
+    }
+  }
 `;
 
 interface IProps {
