@@ -18,6 +18,9 @@ import { useNavigate } from 'react-router-dom';
 const BoxOuter = styled.div`
   padding: 40px 40px 40px;
   height: 100%;
+  @media (max-width: 1024px) {
+    padding: 20px;
+  }
 `;
 
 const Box = styled.div`
@@ -31,7 +34,7 @@ const Box = styled.div`
 const Card = styled.div`
   background: #fff;
   box-shadow: rgba(44, 51, 73, 0.1) 0px 0.5rem 1rem 0px;
-  height: 100%;
+  min-height: 100%;
   padding-top: 10px;
   box-sizing: border-box;
 `;
@@ -238,12 +241,7 @@ export default function Index() {
             </TitBox>
             <Row>
               {list?.map((item, idx) => (
-                <Col
-                  md={2}
-                  // breakPoint={{ xs: 3, sm: 3, md: 3, lg: 2.4 }}
-                  key={idx}
-                  onClick={() => navigate(`/event/view?id=${item?.id}`)}
-                >
+                <Col md={4} lg={3} xl={2} key={idx} onClick={() => navigate(`/event/view?id=${item?.id}`)}>
                   <CardBox>
                     <Item>
                       <ImageBox>
