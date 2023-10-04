@@ -184,7 +184,25 @@
     "Tips": "After clicking the [Send] button, the status of the selected user changes to [Sending], and only after the sending is completed can it be sent to other users",
     "SendCompleted": "Send Completed",
     "FillInId": "Please fill in the transaction ID of the sending record(use ; to split)",
-    "SendSuccess": "Sent"
+    "SendSuccess": "Sent",
+    "Push": "Push"
+  },
+  "Push": {
+    "CreatePush": "Create Push",
+    "History": "Push Records",
+    "Title": "Title",
+    "Content": "Content",
+    "Href": "Href",
+    "Timer": "Timer",
+    "Success": "Create Success",
+    "Create": "Create",
+    "Time": "Time",
+    "Status": "Status",
+    "Creator": "Creator",
+    "Options": "Options",
+    "ToBePushed": "To be pushed",
+    "Pushed": "Pushed",
+    "Canceled": "Canceled"
   },
   "Assets": {
     "TotalBalance": "Vault Balance",

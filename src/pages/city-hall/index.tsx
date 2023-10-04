@@ -14,6 +14,7 @@ import { ReTurnProject } from 'type/project.type';
 import usePermission from 'hooks/usePermission';
 import { PermissionAction, PermissionObject } from 'utils/constant';
 import Reg from 'components/cityHallCom/reg';
+import PushPanel from 'components/cityHallCom/push';
 
 const Box = styled.div`
   //position: relative;
@@ -81,6 +82,9 @@ export default function Index() {
             </Tab>
             <Tab eventKey={6} title={t('city-hall.Add')}>
               <Reg id={detail?.id} />
+            </Tab>
+            <Tab eventKey={7} title={t('city-hall.Push')}>
+              <PushPanel id={detail?.id} />
             </Tab>
           </TabsBox>
         </TopBox>
