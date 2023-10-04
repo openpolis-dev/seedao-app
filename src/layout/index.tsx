@@ -1,17 +1,21 @@
 import styled from 'styled-components';
+import { useEffect } from 'react';
 import Header from './head';
 import Menu from './menu';
-import { useAuthContext } from '../providers/authProvider';
+import { AppActionType, useAuthContext } from 'providers/authProvider';
+import useMedia from 'hooks/useMedia';
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  const {
-    state: { expandMenu },
-  } = useAuthContext();
+  const isMedium = useMedia('(max-width: 1200px)');
+  const { dispatch } = useAuthContext();
+  useEffect(() => {
+    dispatch({ type: AppActionType.SET_EXPAND_MENU, payload: !isMedium });
+  }, [isMedium, dispatch]);
   return (
     <Box>
       <Header />
       <LayoutBottom>
-        <Menu open={expandMenu} />
+        <Menu isMedium={isMedium} />
         <Container>{children}</Container>
       </LayoutBottom>
     </Box>
@@ -32,6 +36,7 @@ const LayoutBottom = styled.div`
   box-sizing: border-box;
   display: flex;
   align-items: stretch;
+  position: relative;
 `;
 
 const Container = styled.div`

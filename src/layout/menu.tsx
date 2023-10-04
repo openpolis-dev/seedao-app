@@ -1,6 +1,5 @@
 import { useMemo } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-// import MuiDrawer from '@mui/material/Drawer';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { House, Grid1x2, CashCoin, PieChart, People, Box2Heart, ShieldCheck, Envelope } from 'react-bootstrap-icons';
@@ -15,12 +14,19 @@ const Box = styled.div`
   padding: 20px;
   width: 65px;
   flex-shrink: 0;
+  &.expand.float {
+    position: absolute;
+    z-index: 100;
+    top: 60px;
+    left: 0;
+    height: calc(100% - 60px);
+  }
   &.expand {
-    animation: 'expand' 0.3s ease;
+    animation: 'expand' 0.1s ease;
     animation-fill-mode: forwards;
   }
   &.unexpand {
-    animation: 'unexpand' 0.3s ease;
+    animation: 'unexpand' 0.1s ease;
     animation-fill-mode: forwards;
   }
   @keyframes expand {
@@ -146,14 +152,14 @@ const MenuItem = ({ data, onSelectMenu, selected, open }: IMenuItem) => {
   );
 };
 
-export default function Menu({ open }: { open: boolean }) {
+export default function Menu({ isMedium }: { isMedium: boolean }) {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const { t } = useTranslation();
 
   const isLogin = useCheckLogin();
   const {
-    state: { wallet_type },
+    state: { wallet_type, expandMenu: open },
   } = useAuthContext();
 
   const onSelectMenu = (m: MenuItemType) => {
@@ -173,8 +179,12 @@ export default function Menu({ open }: { open: boolean }) {
     return display_items;
   }, [t, isLogin, wallet_type]);
 
+  const boxClassName = useMemo(() => {
+    return (isMedium ? 'float ' : '') + (open ? 'expand' : 'unexpand');
+  }, [isMedium, open]);
+
   return (
-    <Box className={open ? 'expand' : 'unexpand'}>
+    <Box className={boxClassName}>
       {menuItemsFormat.map((item) => (
         <MenuItem
           open={open}

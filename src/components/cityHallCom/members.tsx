@@ -102,7 +102,6 @@ export default function Members(props: Iprops) {
 
   const getUser = (wallet: string): IUser => {
     const user = userMap[wallet.toLowerCase()];
-    console.log(userMap, wallet, user);
     if (!user) {
       return {
         id: '',
