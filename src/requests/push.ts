@@ -12,6 +12,7 @@ interface IRegisterDeviceParams {
   device: deviceType;
   push_subscription: PushSubscriptionJSON;
   wallet: string;
+  language: string;
 }
 
 const getHeaders = () => {

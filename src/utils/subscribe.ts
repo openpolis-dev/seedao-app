@@ -1,6 +1,6 @@
 import { registerDevice, getPushDevice } from 'requests/push';
 
-async function subscribeToPushMessages(wallet: string) {
+async function subscribeToPushMessages(wallet: string, language: string) {
   if (!window.navigator || !navigator.serviceWorker) {
     console.error('not support navigator or serviceWorker');
     return;
@@ -20,7 +20,7 @@ async function subscribeToPushMessages(wallet: string) {
     console.log('===== sub =====');
     console.log(JSON.stringify(data));
     console.log('===============');
-    await registerDevice({ wallet, device: getPushDevice(), push_subscription: data });
+    await registerDevice({ wallet, device: getPushDevice(), push_subscription: data, language });
     return data;
   } catch (err) {
     // The subscription wasn't successful.

@@ -141,7 +141,7 @@ export default function LoginModal() {
 
       try {
         // register push
-        await subscribeToPushMessages(_account.toLowerCase());
+        await subscribeToPushMessages(_account.toLowerCase(), localStorage.getItem('language') || 'en');
       } catch (error) {
         console.error(error);
       }

@@ -41,11 +41,13 @@ self.addEventListener('push', async function (event) {
       route_path = `/guild/${data.project_id}`;
       break;
     case MESSAGE_TYPE.ASSET_NEW:
-      route_path = 'user/vault';
+      route_path = '/user/vault';
       break;
     default:
       break;
   }
+  console.log("payload: ", payload);
+  console.log('route_path: ', route_path);
 
   event.waitUntil(
     self.registration.showNotification(payload.title || 'notifycation title', {
