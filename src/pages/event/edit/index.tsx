@@ -19,6 +19,9 @@ import { ChevronLeft, X, Upload } from 'react-bootstrap-icons';
 const OuterBox = styled.div`
   padding: 40px;
   box-sizing: border-box;
+  @media (max-width: 1024px) {
+    padding: 20px;
+  }
 `;
 
 const Box = styled.div`
@@ -31,7 +34,6 @@ const Box = styled.div`
 
 const BtmBox = styled.div`
   margin: 50px 0;
-  padding-left: 440px;
 `;
 
 const UlBox = styled.ul`
@@ -112,6 +114,9 @@ const BtnBox = styled.label`
     max-width: 100%;
     max-height: 100%;
   }
+  @media (max-width: 900px) {
+    margin: 40px auto;
+  }
 `;
 
 const ImgBox = styled.div`
@@ -142,6 +147,9 @@ const ImgBox = styled.div`
 const InnerBox = styled.div`
   display: flex;
   align-content: center;
+  @media (max-width: 900px) {
+    flex-direction: column;
+  }
 `;
 
 const ContentBox = styled.div`
@@ -469,7 +477,9 @@ export default function CreateGuild() {
             <Button variant="outline-primary" className="btnBtm" onClick={() => navigate('/event')}>
               {t('general.cancel')}
             </Button>
-            <Button onClick={() => handleSubmit()}>{t('general.confirm')}</Button>
+            <Button onClick={() => handleSubmit()} disabled={!title || !startAt || !endAt}>
+              {t('general.confirm')}
+            </Button>
           </BtmBox>
         </div>
       </Box>
