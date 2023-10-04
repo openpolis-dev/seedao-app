@@ -5,7 +5,7 @@ import './assets/styles/font.css';
 import './assets/styles/custom.scss';
 import RouterLink from './router';
 import GlobalStyle from 'assets/styles/global';
-import InstallCheck from 'components/installPWA';
+// import InstallCheck from 'components/installPWA';
 
 // import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -15,7 +15,7 @@ function App() {
       <Web3Provider>
         <GlobalStyle />
         <RouterLink />
-        <InstallCheck />
+        {/* <InstallCheck /> */}
       </Web3Provider>
     </AuthProvider>
   );
