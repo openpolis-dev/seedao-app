@@ -138,6 +138,19 @@ const GlobalStyle = createGlobalStyle`
     border-radius: var(--bs-border-radius);
     transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
   }
+  .form-control:focus {
+    border-color: rgb(161, 100, 255);
+    box-shadow: 0 0 0 0.25rem rgba(161, 100, 255, 0.25);
+  }
+  .form-check-input:focus {
+    border-color: var(--bs-primary);
+    box-shadow: 0 0 0 0.25rem rgba(161, 100, 255, 0.25);
+  } 
+  .form-check-input:checked {
+    background-color: var(--bs-primary);
+    border-color: var(--bs-primary);
+    box-shadow: 0 0 0 0.25rem rgba(161, 100, 255, 0.25);
+  }
 `;
 
 export default GlobalStyle;

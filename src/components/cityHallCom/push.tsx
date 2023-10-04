@@ -55,7 +55,13 @@ const CreatePushContent = () => {
       </FormGroup>
       <FormGroup className="mb-3">
         <FormLabel>{t('Push.Content')}</FormLabel>
-        <FormInput as="textarea" rows={5} value={content} onChange={(e: any) => setContent(e.target.value)} />
+        <FormInput
+          className="form-control"
+          as="textarea"
+          rows={5}
+          value={content}
+          onChange={(e: any) => setContent(e.target.value)}
+        />
       </FormGroup>
       <FormGroup className="mb-3">
         <FormLabel>{t('Push.Href')}</FormLabel>
