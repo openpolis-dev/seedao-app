@@ -129,7 +129,7 @@ export default function DatePickerStyle(props: DateProps) {
         dateFormat="MM/dd/yyyy h:mm aa"
         selected={dateTime}
         onChange={onChangeTime}
-        className="borderLess"
+        // className="borderLess"
         placeholderText={placeholder}
       />
     </Box>

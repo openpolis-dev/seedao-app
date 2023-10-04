@@ -8,6 +8,8 @@ import Page from 'components/pagination';
 import NoItem from 'components/noItem';
 import publicJs from 'utils/publicJs';
 import { PUSH_STATUS, IPushDisplay } from 'type/push.type';
+import { AppActionType, useAuthContext } from 'providers/authProvider';
+import useToast, { ToastType } from 'hooks/useToast';
 
 enum PUSH_TAB {
   CREATE = 1,
@@ -29,27 +31,46 @@ const formatPushStatus = (status: PUSH_STATUS, t: Function) => {
 
 const CreatePushContent = () => {
   const { t } = useTranslation();
+  const { dispatch } = useAuthContext();
+  const { showToast } = useToast();
+  const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
+  const [href, setHref] = useState('');
+
+  const handleCreate = () => {
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    try {
+    } catch (error: any) {
+      console.error(error);
+      showToast(error, ToastType.Danger);
+    } finally {
+      dispatch({ type: AppActionType.SET_LOADING, payload: false });
+    }
+  };
   return (
     <Form>
-      <FormGroup className="mb-3" controlId="formBasicEmail">
+      <FormGroup className="mb-3">
         <FormLabel>{t('Push.Title')}</FormLabel>
-        <FormInput type="text" />
+        <FormInput type="text" value={title} onChange={(e: any) => setTitle(e.target.value)} />
       </FormGroup>
       <FormGroup className="mb-3">
         <FormLabel>{t('Push.Content')}</FormLabel>
-        <FormInput as="textarea" rows={5} />
+        <FormInput as="textarea" rows={5} value={content} onChange={(e: any) => setContent(e.target.value)} />
       </FormGroup>
       <FormGroup className="mb-3">
         <FormLabel>{t('Push.Href')}</FormLabel>
-        <FormInput type="text" />
+        <FormInput type="text" value={href} onChange={(e: any) => setHref(e.target.value)} />
       </FormGroup>
-      <FormGroup className="mb-3" controlId="formBasicCheckbox">
-        <Form.Check type="checkbox" label={t('Push.Timer')} />
+      <FormGroup className="mb-3">
+        <Form.Check type="checkbox" className="checkbox" />
+        <FormLabel>{t('Push.Timer')}</FormLabel>
         <DatePickerStyle placeholder="" onChange={() => {}} dateTime={new Date()} />
       </FormGroup>
-      <Button variant="primary" type="submit">
-        Submit
-      </Button>
+      <SubmitBox className="mt-3">
+        <Button variant="primary" type="submit" onClick={handleCreate}>
+          {t('Push.Create')}
+        </Button>
+      </SubmitBox>
     </Form>
   );
 };
@@ -185,6 +206,12 @@ const FormGroup = styled(Form.Group)`
   display: flex;
   gap: 20px;
   align-items: center;
+  .checkbox {
+    width: unset;
+  }
+  .form-label {
+    width: unset;
+  }
 `;
 
 const FormLabel = styled(Form.Label)`
@@ -217,4 +244,8 @@ const TableBox = styled.div`
       background: #f2f0f9;
     }
   }
+`;
+
+const SubmitBox = styled.div`
+  text-align: right;
 `;
