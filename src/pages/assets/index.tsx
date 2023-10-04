@@ -102,6 +102,14 @@ const FirstLine = styled.ul`
     font-size: 0.9rem;
     color: #fff;
   }
+  @media (max-width: 1100px) {
+    .num {
+      font-size: 20px;
+    }
+    .tips {
+      font-size: 12px;
+    }
+  }
 `;
 
 const enum CHAINS {
@@ -340,7 +348,7 @@ export default function Index() {
           <Vault>
             <VaultOverview>
               <div className="vaultInner">
-                <div>
+                <div className="LftBox">
                   <TotalBalance>{t('Assets.TotalBalance')}</TotalBalance>
                   <TotalBalanceNum>${formatNumber(Number(totalBalance))}</TotalBalanceNum>
                 </div>
@@ -506,11 +514,9 @@ const Vault = styled.div`
 `;
 
 const VaultOverview = styled.div`
-  //background: linear-gradient(to right, #9d72fa, #6961fa);
   background: url(${BgImg}) top no-repeat;
   background-size: 100%;
   background-attachment: fixed;
-  //background: #f8f8f8;
   border-radius: 10px;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
   overflow: hidden;
@@ -521,12 +527,27 @@ const VaultOverview = styled.div`
     background: rgba(161, 110, 255, 0.2);
     padding: 30px 40px;
     backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
   }
   .right {
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 60px;
+  }
+
+  @media (max-width: 950px) {
+    .vaultInner {
+      flex-direction: column;
+    }
+    .LftBox {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 20px;
+      margin-bottom: 20px;
+    }
   }
 `;
 
@@ -552,6 +573,16 @@ const InfoItem = styled.li`
     }
     > span:first-child {
       font-weight: ${theme.textSubtitleFontWeight};
+    }
+
+    @media (max-width: 950px) {
+      color: #000;
+      gap: 0;
+      &:first-child,
+      &:nth-child(2) {
+        padding-right: 40px;
+        border-right: 1px solid #eee;
+      }
     }
   `}
 `;
@@ -607,6 +638,11 @@ const VaultItem = styled.li`
   .balance {
     font-weight: 600;
   }
+  @media (max-width: 950px) {
+    .left {
+      gap: 0;
+    }
+  }
 `;
 
 const TotalBalance = styled.div`
@@ -619,6 +655,12 @@ const TotalBalanceNum = styled.div`
   font-size: 1.375rem;
   margin-top: 20px;
   text-align: center;
+
+  @media (max-width: 950px) {
+    text-align: left;
+    margin-top: 0;
+    margin-left: 20px;
+  }
 `;
 
 const Tag = styled.span`

@@ -15,6 +15,9 @@ const OuterBox = styled.div`
   padding: 40px;
   box-sizing: border-box;
   min-height: 100%;
+  @media (max-width: 1024px) {
+    padding: 20px;
+  }
 `;
 
 const Box = styled.div`
@@ -71,6 +74,9 @@ const UlBox = styled.ul`
 const InputBox = styled(InputGroup)`
   width: 600px;
   margin-right: 20px;
+  @media (max-width: 1024px) {
+    width: 350px;
+  }
 `;
 
 const ItemBox = styled.div`

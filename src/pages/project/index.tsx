@@ -16,6 +16,9 @@ import ProjectOrGuildItem from 'components/projectOrGuildItem';
 const OuterBox = styled.div`
   margin: 40px;
   min-height: 100%;
+  @media (max-width: 1024px) {
+    margin: 20px;
+  }
 `;
 
 const CardBox = styled.div`
@@ -38,7 +41,7 @@ const Box = styled.div`
 
 const TopLine = styled.div`
   position: absolute;
-  right: 20px;
+  right: 0;
   top: 14px;
   z-index: 9;
   cursor: pointer;

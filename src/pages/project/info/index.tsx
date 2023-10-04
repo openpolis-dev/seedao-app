@@ -23,6 +23,15 @@ import { ChevronLeft } from 'react-bootstrap-icons';
 const OuterBox = styled.div`
   min-height: 100%;
   margin: 40px;
+  @media (max-width: 1024px) {
+    margin: 20px;
+    .nav {
+      flex-wrap: nowrap;
+    }
+    .nav-item {
+      white-space: nowrap;
+    }
+  }
 `;
 
 const Box = styled.div`
@@ -50,6 +59,20 @@ const BackBox = styled.div`
   .iconTop {
     margin-right: 10px;
   }
+`;
+
+const LineBox = styled.div`
+  width: 100%;
+  overflow-x: auto;
+  border-bottom: 1px solid #eee;
+  &::-webkit-scrollbar {
+    display: none;
+    width: 0;
+  }
+`;
+
+const TabsBox = styled(Tabs)`
+  border-bottom: 0;
 `;
 
 const BtmBox = styled.div``;
@@ -142,11 +165,14 @@ export default function Index() {
           <Row>
             <Col>
               <TopBox>
-                <Tabs defaultActiveKey={0} onSelect={(e: any) => selectCurrent(e)}>
-                  {list.map((item, index) => (
-                    <Tab key={item.id} title={item.name} eventKey={index} />
-                  ))}
-                </Tabs>
+                <LineBox>
+                  <TabsBox defaultActiveKey={0} onSelect={(e: any) => selectCurrent(e)}>
+                    {list.map((item, index) => (
+                      <Tab key={item.id} title={item.name} eventKey={index} />
+                    ))}
+                  </TabsBox>
+                </LineBox>
+
                 <BtmBox>
                   {current === 0 && (
                     <Info
