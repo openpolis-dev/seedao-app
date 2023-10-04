@@ -1,5 +1,4 @@
-import { registerDevice } from 'requests/push';
-import { isMobile } from 'utils/userAgent';
+import { registerDevice, getPushDevice } from 'requests/push';
 
 async function subscribeToPushMessages(wallet: string) {
   if (!window.navigator || !navigator.serviceWorker) {
@@ -21,8 +20,7 @@ async function subscribeToPushMessages(wallet: string) {
     console.log('===== sub =====');
     console.log(JSON.stringify(data));
     console.log('===============');
-    // TODO handle device
-    await registerDevice({ wallet, device: isMobile ? 'mobile' : 'pc', push_subscription: data });
+    await registerDevice({ wallet, device: getPushDevice(), push_subscription: data });
     return data;
   } catch (err) {
     // The subscription wasn't successful.

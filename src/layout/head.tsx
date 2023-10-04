@@ -17,6 +17,7 @@ import { useNavigate } from 'react-router-dom';
 import { List as ListIcon } from 'react-bootstrap-icons';
 import Loading from 'components/loading';
 import usePushPermission from 'hooks/usePushPermission';
+import { requestSetDeviceLanguage, getPushDevice } from 'requests/push';
 
 export default function Header() {
   const { i18n } = useTranslation();
@@ -38,11 +39,14 @@ export default function Header() {
     dispatch,
   } = useAuthContext();
 
-  const changeLang = (v: string) => {
+  const changeLang = (v: string, select?: boolean) => {
     setLan(v);
     dispatch({ type: AppActionType.SET_LAN, payload: v });
     localStorage.setItem('language', v);
     i18n.changeLanguage(v);
+    if (select && isLogin && userData) {
+      requestSetDeviceLanguage({ device: getPushDevice(), language: v });
+    }
   };
 
   useEffect(() => {
@@ -165,7 +169,7 @@ export default function Header() {
           <Form.Select
             style={{ minWidth: '100px' }}
             value={getLanguages().find((item) => item.value === lan)?.value || getLanguages()[0].value}
-            onChange={(event: any) => changeLang(event.target.value)}
+            onChange={(event: any) => changeLang(event.target.value, true)}
           >
             {getLanguages().map((item) => (
               <option key={item.value} value={item.value}>

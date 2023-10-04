@@ -139,8 +139,12 @@ export default function LoginModal() {
       dispatch({ type: AppActionType.SET_AUTHORIZER, payload: authorizer });
       dispatch({ type: AppActionType.SET_WALLET_TYPE, payload: chooseWallet.type });
 
-      // register push
-      await subscribeToPushMessages(_account.toLowerCase());
+      try {
+        // register push
+        await subscribeToPushMessages(_account.toLowerCase());
+      } catch (error) {
+        console.error(error);
+      }
 
       // gtag.event({ action: gtag.EVENTS.LOGIN_SUCCESS, category: chooseWallet.value, value: account });
     } catch (error: any) {
