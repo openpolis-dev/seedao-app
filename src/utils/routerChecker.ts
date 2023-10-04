@@ -1,7 +1,14 @@
 import ReactGA from 'react-ga4';
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-ReactGA.initialize('G-584K59B1LH');
+
+export const isNotOnline = () => {
+  return process.env.NODE_ENV === 'development';
+};
+
+export const GA_TRACKING_ID = isNotOnline() ? 'G-TLV0DRYC92' : 'G-QPVKNX8BXZ';
+
+ReactGA.initialize(GA_TRACKING_ID);
 
 export default function RouterChecker() {
   let location = useLocation();

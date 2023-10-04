@@ -7,6 +7,7 @@ import React from 'react';
 import useCheckLogin from 'hooks/useCheckLogin';
 import { useAuthContext } from 'providers/authProvider';
 import { WalletType } from 'wallet/wallet';
+import AppVersion from '../components/version';
 
 const Box = styled.div`
   background: #fff;
@@ -194,6 +195,8 @@ export default function Menu({ isMedium }: { isMedium: boolean }) {
           selected={pathname.startsWith(item.link.href)}
         />
       ))}
+
+      {!isMedium && <AppVersion />}
     </Box>
   );
 }
