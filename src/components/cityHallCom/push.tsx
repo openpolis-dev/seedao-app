@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
@@ -47,10 +47,15 @@ const CreatePushContent = () => {
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }
   };
+  const createBtnDisabled = useMemo(() => {
+    return !title || !href || !title.trim() || !href.trim();
+  }, [title, href]);
   return (
     <Form>
       <FormGroup className="mb-3">
-        <FormLabel>{t('Push.Title')}</FormLabel>
+        <FormLabel>
+          {t('Push.Title')} <span className="required">*</span>
+        </FormLabel>
         <FormInput type="text" value={title} onChange={(e: any) => setTitle(e.target.value)} />
       </FormGroup>
       <FormGroup className="mb-3">
@@ -64,16 +69,18 @@ const CreatePushContent = () => {
         />
       </FormGroup>
       <FormGroup className="mb-3">
-        <FormLabel>{t('Push.Href')}</FormLabel>
+        <FormLabel>
+          {t('Push.Href')} <span className="required">*</span>
+        </FormLabel>
         <FormInput type="text" value={href} onChange={(e: any) => setHref(e.target.value)} />
       </FormGroup>
       <FormGroup className="mb-3">
         <Form.Check type="checkbox" className="checkbox" />
-        <FormLabel>{t('Push.Timer')}</FormLabel>
+        <div style={{ whiteSpace: 'nowrap' }}>{t('Push.Timer')}</div>
         <DatePickerStyle placeholder="" onChange={() => {}} dateTime={new Date()} />
       </FormGroup>
       <SubmitBox className="mt-3">
-        <Button variant="primary" type="submit" onClick={handleCreate}>
+        <Button variant="primary" type="submit" onClick={handleCreate} disabled={createBtnDisabled}>
           {t('Push.Create')}
         </Button>
       </SubmitBox>
@@ -215,14 +222,15 @@ const FormGroup = styled(Form.Group)`
   .checkbox {
     width: unset;
   }
-  .form-label {
-    width: unset;
-  }
 `;
 
 const FormLabel = styled(Form.Label)`
   margin-bottom: unset;
   width: 80px;
+  font-family: unset;
+  .required {
+    color: darkred;
+  }
 `;
 
 const FormInput = styled(Form.Control)`

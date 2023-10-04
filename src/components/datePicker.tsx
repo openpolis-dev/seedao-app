@@ -10,6 +10,7 @@ const Box = styled.div`
     border-radius: var(--bs-border-radius);
     background-color: rgb(247, 249, 252);
     padding: 0.375rem 0.75rem;
+    font-size: 1rem;
     &:focus {
       outline: 0;
       border-color: rgb(161, 100, 255);
