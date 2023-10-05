@@ -138,13 +138,16 @@ export default function Header() {
   ];
 
   const showWalletLogin = () => {
-    if (!hasGranted) {
-      handlePermission().finally(() => {
-        dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: true });
-      });
-    } else {
+    // if (!hasGranted) {
+    //   handlePermission().finally(() => {
+    //     dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: true });
+    //   });
+    // } else {
+    //   dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: true });
+    // }
+    handlePermission().finally(() => {
       dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: true });
-    }
+    });
   };
   const toGo = () => {
     navigate('/');
