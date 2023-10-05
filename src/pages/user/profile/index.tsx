@@ -3,10 +3,9 @@ import styled from 'styled-components';
 import React, { ChangeEvent, useEffect, useState, FormEvent } from 'react';
 import requests from 'requests';
 import { useAuthContext, AppActionType } from 'providers/authProvider';
-// import { EvaIcon } from '@paljs/ui/Icon';
 import { useTranslation } from 'react-i18next';
 import useToast, { ToastType } from 'hooks/useToast';
-import { X } from 'react-bootstrap-icons';
+import { Upload, X } from 'react-bootstrap-icons';
 import { ContainerPadding } from 'assets/styles/global';
 
 const OuterBox = styled.div`
@@ -38,9 +37,15 @@ const UlBox = styled.ul`
       min-width: 90px;
     }
   }
+  @media (max-width: 750px) {
+    li {
+      flex-direction: column;
+      margin-bottom: 10px;
+    }
+  }
 `;
 const InputBox = styled(InputGroup)`
-  width: 600px;
+  max-width: 600px;
   margin-right: 20px;
   .wallet {
     border: 1px solid #eee;
@@ -198,7 +203,7 @@ export default function Profile() {
               {!avatar && (
                 <div>
                   <input id="fileUpload" type="file" hidden accept=".jpg, .jpeg, .png" />
-                  {/*<EvaIcon name="cloud-upload-outline" className="iconRht" />*/}
+                  {<Upload />}
                 </div>
               )}
               {!!avatar && (
@@ -331,7 +336,7 @@ const ImgBox = styled.div`
     align-items: center;
     justify-content: center;
     background: #a16eff;
-    opacity: 0.8;
+    opacity: 0.5;
     color: #fff;
     cursor: pointer;
     .iconTop {
