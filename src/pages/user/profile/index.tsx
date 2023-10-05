@@ -46,7 +46,6 @@ const UlBox = styled.ul`
 `;
 const InputBox = styled(InputGroup)`
   max-width: 600px;
-  margin-right: 20px;
   .wallet {
     border: 1px solid #eee;
     width: 100%;
@@ -55,7 +54,11 @@ const InputBox = styled(InputGroup)`
     padding: 0 1.125rem;
     display: flex;
     align-items: center;
+    overflow-x: auto;
   }
+  @media (max-width: 1024px) {
+    max-width: 100%;
+  } ;
 `;
 const MidBox = styled.div`
   display: flex;

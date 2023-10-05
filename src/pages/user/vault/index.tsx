@@ -15,9 +15,7 @@ const OuterBox = styled.div`
   ${ContainerPadding};
 `;
 
-const Box = styled.div`
-  padding: 40px 20px;
-`;
+const Box = styled.div``;
 const CardBox = styled.div`
   background: #fff;
   padding: 20px;
@@ -82,6 +80,14 @@ const FirstLine = styled.ul`
   .tips {
     font-size: 12px;
   }
+  @media (max-width: 1024px) {
+    li {
+      padding: 26px 16px;
+    }
+    .num {
+      padding-top: 0;
+    }
+  } ;
 `;
 
 export default function Vault() {

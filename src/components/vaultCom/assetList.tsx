@@ -37,12 +37,12 @@ const FirstLine = styled.div`
 const TopLine = styled.ul`
   display: flex;
   align-items: center;
-  margin-bottom: 20px;
   flex-wrap: wrap;
   li {
     display: flex;
     align-items: center;
     margin-right: 40px;
+    margin-bottom: 20px;
 
     .tit {
       padding-right: 20px;
@@ -50,7 +50,7 @@ const TopLine = styled.ul`
   }
 `;
 
-const TimeLine = styled.div`
+const TimeLine = styled.li`
   display: flex;
   align-items: center;
   margin-bottom: 20px;
@@ -343,22 +343,22 @@ export default function AssetList() {
               }}
             />
           </li>
+          <TimeLine>
+            <TimeBox>
+              <BorderBox>
+                <RangeDatePickerStyle
+                  placeholder={t('Project.RangeTime')}
+                  onChange={changeDate}
+                  startDate={startDate}
+                  endDate={endDate}
+                />
+              </BorderBox>
+            </TimeBox>
+            <Button onClick={handleExport} disabled={!selectOne}>
+              {t('Project.Export')}
+            </Button>
+          </TimeLine>
         </TopLine>
-        <TimeLine>
-          <TimeBox>
-            <BorderBox>
-              <RangeDatePickerStyle
-                placeholder={t('Project.RangeTime')}
-                onChange={changeDate}
-                startDate={startDate}
-                endDate={endDate}
-              />
-            </BorderBox>
-          </TimeBox>
-          <Button onClick={handleExport} disabled={!selectOne}>
-            {t('Project.Export')}
-          </Button>
-        </TimeLine>
       </FirstLine>
       <TableBox>
         <table className="table" cellPadding="0" cellSpacing="0">
