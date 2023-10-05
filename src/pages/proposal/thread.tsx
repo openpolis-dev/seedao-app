@@ -79,6 +79,9 @@ export default function Proposal() {
 const BoxOuter = styled.div`
   padding: 40px;
   min-height: 100%;
+  @media (max-width: 1024px) {
+    padding: 20px;
+  }
 `;
 
 const ProposalContainer = styled.div`
@@ -91,7 +94,11 @@ const ProposalContainer = styled.div`
 const ProposalTitle = styled.div`
   font-size: 30px;
   font-weight: 600;
-  line-height: 50px;
+  line-height: 1.5em;
+  @media (max-width: 900px) {
+    width: 80%;
+    font-size: 24px;
+  }
 `;
 const User = styled.div`
   display: flex;
