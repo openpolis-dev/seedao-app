@@ -88,6 +88,9 @@ const FirstLine = styled.ul`
     @media screen and (max-width: 1000px) {
       width: 48%;
     }
+    @media (max-width: 695px) {
+      width: 100%;
+    }
   }
   .num {
     font-size: 25px;

@@ -8,10 +8,11 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 // import { useRouter } from 'next/router';
 // import Script from 'next/script';
+import { ContainerPadding } from 'assets/styles/global';
 
 const Box = styled.div`
-  margin: 40px;
   height: 100%;
+  ${ContainerPadding};
 `;
 
 export default function Index() {

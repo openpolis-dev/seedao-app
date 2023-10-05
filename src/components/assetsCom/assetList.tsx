@@ -18,6 +18,7 @@ import publicJs from 'utils/publicJs';
 import { useTranslation } from 'react-i18next';
 import { formatApplicationStatus } from 'utils/index';
 import Select from 'components/common/select';
+import { formatNumber } from 'utils/number';
 
 const Box = styled.div``;
 const TitBox = styled.div`
@@ -382,8 +383,8 @@ export default function AssetList() {
                         </CopyBox> */}
                       </div>
                     </td>
-                    <td>{item.credit_amount}</td>
-                    <td>{item.token_amount}</td>
+                    <td>{formatNumber(item.credit_amount)}</td>
+                    <td>{formatNumber(item.token_amount)}</td>
                     <td>{item.detailed_type}</td>
                     <td>{item.budget_source}</td>
                     <td>{item.comment}</td>
