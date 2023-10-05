@@ -18,10 +18,11 @@ import usePermission from 'hooks/usePermission';
 import { PermissionObject, PermissionAction } from 'utils/constant';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ChevronLeft } from 'react-bootstrap-icons';
+import { ContainerPadding } from 'assets/styles/global';
 
 const OuterBox = styled.div`
-  padding: 40px;
   min-height: 100%;
+  ${ContainerPadding};
 `;
 
 const Box = styled.div`

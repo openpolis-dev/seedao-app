@@ -16,12 +16,10 @@ import { BudgetType } from 'type/project.type';
 import { formatNumber } from 'utils/number';
 import BgImg from '../../assets/images/homebg.png';
 import { Clipboard, Share, ChevronDown, ChevronUp, Pencil } from 'react-bootstrap-icons';
+import { ContainerPadding } from 'assets/styles/global';
 
 const BoxOuter = styled.div`
-  margin: 40px;
-  @media (max-width: 1024px) {
-    margin: 20px;
-  }
+  ${ContainerPadding};
 `;
 
 const Box = styled.div`

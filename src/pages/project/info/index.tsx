@@ -19,12 +19,12 @@ import { PermissionObject, PermissionAction } from 'utils/constant';
 import { useNavigate, useParams } from 'react-router-dom';
 import { isNum } from 'react-toastify/dist/utils';
 import { ChevronLeft } from 'react-bootstrap-icons';
+import { ContainerPadding } from 'assets/styles/global';
 
 const OuterBox = styled.div`
   min-height: 100%;
-  margin: 40px;
+  ${ContainerPadding};
   @media (max-width: 1024px) {
-    margin: 20px;
     .nav {
       flex-wrap: nowrap;
     }

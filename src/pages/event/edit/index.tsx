@@ -15,13 +15,11 @@ import { createEvent, editEventById, getEventById, uplodaEventImage } from 'requ
 import { useWeb3React } from '@web3-react/core';
 import { useNavigate } from 'react-router-dom';
 import { ChevronLeft, X, Upload } from 'react-bootstrap-icons';
+import { ContainerPadding } from 'assets/styles/global';
 
 const OuterBox = styled.div`
-  padding: 40px;
   box-sizing: border-box;
-  @media (max-width: 1024px) {
-    padding: 20px;
-  }
+  ${ContainerPadding};
 `;
 
 const Box = styled.div`

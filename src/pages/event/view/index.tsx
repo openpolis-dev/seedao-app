@@ -11,16 +11,14 @@ import { formatTime } from 'utils/time';
 import { useWeb3React } from '@web3-react/core';
 import { useNavigate } from 'react-router-dom';
 import { ChevronLeft, Clock } from 'react-bootstrap-icons';
+import { ContainerPadding } from 'assets/styles/global';
 
 const Box = styled.div`
   min-height: 100%;
-  margin: 40px;
   .btnBtm {
     margin-right: 20px;
   }
-  @media (max-width: 1024px) {
-    margin: 20px;
-  }
+  ${ContainerPadding}
 `;
 
 const CardBox = styled.div`

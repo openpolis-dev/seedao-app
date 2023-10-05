@@ -12,11 +12,12 @@ import { AssetName } from 'utils/constant';
 import InputNumber from 'components/inputNumber';
 import { useNavigate } from 'react-router-dom';
 import { ChevronLeft, DashLg, PlusLg, Upload, X } from 'react-bootstrap-icons';
+import { ContainerPadding } from 'assets/styles/global';
 
 const OuterBox = styled.div`
-  padding: 40px;
   box-sizing: border-box;
   min-height: 100%;
+  ${ContainerPadding};
 `;
 
 const Box = styled.div`

@@ -8,10 +8,11 @@ import { BudgetType } from 'type/project.type';
 import { useTranslation } from 'react-i18next';
 import SBTCard from './sbt';
 import { formatNumber } from 'utils/number';
+import { ContainerPadding } from 'assets/styles/global';
 
 const OuterBox = styled.div`
-  margin: 40px;
   min-height: 100%;
+  ${ContainerPadding};
 `;
 
 const Box = styled.div`

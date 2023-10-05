@@ -7,10 +7,11 @@ import { useAuthContext, AppActionType } from 'providers/authProvider';
 import { useTranslation } from 'react-i18next';
 import useToast, { ToastType } from 'hooks/useToast';
 import { X } from 'react-bootstrap-icons';
+import { ContainerPadding } from 'assets/styles/global';
 
 const OuterBox = styled.div`
-  padding: 40px;
   min-height: 100%;
+  ${ContainerPadding};
 `;
 
 const Box = styled.div``;

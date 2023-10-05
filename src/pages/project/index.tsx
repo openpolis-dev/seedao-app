@@ -12,13 +12,11 @@ import usePermission from 'hooks/usePermission';
 import { PermissionObject, PermissionAction } from 'utils/constant';
 import useCheckLogin from 'hooks/useCheckLogin';
 import ProjectOrGuildItem from 'components/projectOrGuildItem';
+import { ContainerPadding } from 'assets/styles/global';
 
 const OuterBox = styled.div`
-  margin: 40px;
   min-height: 100%;
-  @media (max-width: 1024px) {
-    margin: 20px;
-  }
+  ${ContainerPadding};
 `;
 
 const CardBox = styled.div`

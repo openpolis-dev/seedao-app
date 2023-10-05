@@ -9,6 +9,7 @@ import ProposalSubNav from 'components/proposal/proposalSubNav';
 import { useTranslation } from 'react-i18next';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import MsgIcon from 'assets/images/proposal/message.png';
+import { ContainerPadding } from 'assets/styles/global';
 
 export default function Index() {
   const {
@@ -115,8 +116,8 @@ export default function Index() {
 }
 
 const BoxOuter = styled.div`
-  padding: 40px;
   min-height: 100%;
+  ${ContainerPadding};
 `;
 
 const ProposalContainer = styled.div`

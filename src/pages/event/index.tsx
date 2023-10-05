@@ -14,13 +14,11 @@ import { filter } from 'minimatch';
 import useToast, { ToastType } from 'hooks/useToast';
 import { useWeb3React } from '@web3-react/core';
 import { useNavigate } from 'react-router-dom';
+import { ContainerPadding } from 'assets/styles/global';
 
 const BoxOuter = styled.div`
-  padding: 40px 40px 40px;
   height: 100%;
-  @media (max-width: 1024px) {
-    padding: 20px;
-  }
+  ${ContainerPadding};
 `;
 
 const Box = styled.div`
