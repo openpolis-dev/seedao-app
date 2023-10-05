@@ -6,7 +6,7 @@ export const isNotOnline = () => {
   return process.env.NODE_ENV === 'development';
 };
 
-export const GA_TRACKING_ID = isNotOnline() ? 'G-TLV0DRYC92' : 'G-584K59B1LH';
+export const GA_TRACKING_ID = isNotOnline() ? 'G-TLV0DRYC92' : 'G-QPVKNX8BXZ';
 
 ReactGA.initialize(GA_TRACKING_ID);
 
