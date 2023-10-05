@@ -21,6 +21,7 @@ const Box = styled.div`
     top: 60px;
     left: 0;
     height: calc(100% - 60px);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
   }
   &.expand {
     animation: 'expand' 0.1s ease;
