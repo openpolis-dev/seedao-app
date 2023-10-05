@@ -22,7 +22,7 @@ interface IUserProps {
 export default function UserCard({ user, showEdit, onSelectUser, formatActive }: IUserProps) {
   const { account } = useWeb3React();
   return (
-    <UserCardBox md={6} lg={6} xl={3}>
+    <UserCardBox sm={12} md={6} lg={4} xl={3}>
       <div className="boxAll">
         <div className="fst">
           {user.avatar ? (

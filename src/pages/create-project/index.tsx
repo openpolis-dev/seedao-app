@@ -67,6 +67,14 @@ const UlBox = styled.ul`
       font-size: 14px;
     }
   }
+  @media (max-width: 750px) {
+    li {
+      flex-direction: column;
+      .title {
+        margin-bottom: 10px;
+      }
+    }
+  }
 `;
 
 const InputBox = styled(InputGroup)`
