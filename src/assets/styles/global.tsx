@@ -1,4 +1,4 @@
-import { createGlobalStyle } from 'styled-components';
+import { createGlobalStyle, css } from 'styled-components';
 import './font.css';
 
 const GlobalStyle = createGlobalStyle`
@@ -154,3 +154,10 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 export default GlobalStyle;
+
+export const ContainerPadding = css`
+  padding: 40px;
+  @media (max-width: 1024px) {
+    padding: 20px;
+  }
+`;
