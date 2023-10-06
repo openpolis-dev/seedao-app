@@ -65,7 +65,7 @@ self.addEventListener('notificationclick', async function (event) {
   console.log('notificationt:', event.notification);
   if (event.notification.data) {
     const promise = new Promise(function (resolve) {
-      setTimeout(resolve, 1000);
+      setTimeout(resolve, 800);
     }).then(function () {
       // return the promise returned by openWindow, just in case.
       // Opening any origin only works in Chrome 43+.

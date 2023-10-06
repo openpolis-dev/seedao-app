@@ -49,13 +49,18 @@ function App() {
     .catch((err) => console.log('failed: ', err));
 
   useEffect(() => {
+    if (!window.navigator || !navigator.serviceWorker) {
+      console.error('not support navigator or serviceWorker');
+      return;
+    }
+
     navigator.serviceWorker
-      .register('firebase-messaging-sw.js')
+      .register('/firebase-messaging-sw.js')
       .then(() => {
-        console.log('sucess ----- ');
+        console.log('sucess to load firebase-messaging-sw.js');
       })
       .catch((err) => {
-        console.error('error ----- ', err);
+        console.error('failed to load firebase-messaging-sw.js', err);
       });
   }, []);
 
