@@ -30,17 +30,17 @@ const MESSAGE_TYPE = {
 messaging.onBackgroundMessage(function (payload) {
   console.log('Received background message ', payload);
 
-  const { type, data } = payload.data;
+  const { type } = payload.data;
 
   let route_path = '';
   switch (type) {
     case MESSAGE_TYPE.PROJECT_ADD:
     case MESSAGE_TYPE.PROJECT_REMOVE:
-      route_path = `/project/${data.project_id}`;
+      route_path = `/project/${payload.data.project_id}`;
       break;
     case MESSAGE_TYPE.GUILD_ADD:
     case MESSAGE_TYPE.GUILD_REMOVE:
-      route_path = `/guild/${data.project_id}`;
+      route_path = `/guild/${payload.data.guild_id}`;
       break;
     case MESSAGE_TYPE.ASSET_NEW:
       route_path = '/user/vault';
