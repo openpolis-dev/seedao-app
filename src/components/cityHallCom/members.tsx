@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import React, { useEffect, useMemo, useState } from 'react';
-import { Button } from 'react-bootstrap';
+import { Button, Row } from 'react-bootstrap';
 import Add from './add';
 import Del from './Del';
 import { useTranslation } from 'react-i18next';
@@ -13,7 +13,6 @@ import NoItem from 'components/noItem';
 import { PermissionObject, PermissionAction } from 'utils/constant';
 import usePermission from 'hooks/usePermission';
 import UserCard from 'components/userCard';
-import { useWeb3React } from '@web3-react/core';
 
 interface Iprops {
   detail: ReTurnProject | undefined;
@@ -146,7 +145,7 @@ export default function Members(props: Iprops) {
       )}
       <ItemBox>
         <TitleBox>{t('Guild.Dominator')}</TitleBox>
-        <UlBox>
+        <Row>
           {adminArr.map((item, index) => (
             <UserCard
               key={index}
@@ -156,7 +155,7 @@ export default function Members(props: Iprops) {
               showEdit={edit && canUpdateSponsor}
             />
           ))}
-        </UlBox>
+        </Row>
       </ItemBox>
       {!adminArr.length && <NoItem />}
     </Box>
@@ -174,11 +173,6 @@ const ItemBox = styled.div`
 const TitleBox = styled.div`
   font-weight: bold;
   margin-bottom: 30px;
-`;
-
-const UlBox = styled.ul`
-  display: flex;
-  flex-wrap: wrap;
 `;
 
 const TopBox = styled.div`

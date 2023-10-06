@@ -11,6 +11,7 @@ import TwitterIcon from 'assets/images/twitterNor.svg';
 import DiscordIcon from 'assets/images/discordNor.svg';
 import EmailIcon from 'assets/images/email.svg';
 import { Col } from 'react-bootstrap';
+import useParseSNS from 'hooks/useParseSNS';
 
 interface IUserProps {
   user: IUser;
@@ -21,6 +22,7 @@ interface IUserProps {
 
 export default function UserCard({ user, showEdit, onSelectUser, formatActive }: IUserProps) {
   const { account } = useWeb3React();
+  const sns = useParseSNS(user?.wallet);
   return (
     <UserCardBox sm={12} md={6} lg={4} xl={3}>
       <div className="boxAll">
@@ -32,7 +34,7 @@ export default function UserCard({ user, showEdit, onSelectUser, formatActive }:
           )}
 
           <div>
-            <div>{user.name}</div>
+            <div>{sns || user.name}</div>
             <div style={{ display: 'flex', gap: '5px' }}>
               <span>{PublicJs.AddressToShow(user.wallet || '')}</span>
               <CopyBox text={user.wallet || ''} dir="left">
