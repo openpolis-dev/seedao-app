@@ -10,6 +10,11 @@ const GlobalStyle = createGlobalStyle`
     padding: 0;
     margin: 0;
   }
+
+  w3m-modal{
+    position: relative;
+    z-index: 9999!important;
+  }
   
   body{
     background: #f0f3f8;

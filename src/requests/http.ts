@@ -28,7 +28,7 @@ instance.interceptors.request.use(
     const tokenData = parseToken(tokenstr);
     if (!checkTokenValid(tokenData?.token, tokenData?.token_exp)) {
       clearStorage();
-      return Promise.reject();
+      return Promise.reject('token is expired!');
     }
 
     if (!config.headers) {

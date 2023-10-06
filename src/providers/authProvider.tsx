@@ -2,7 +2,7 @@ import React, { useReducer, createContext, useContext } from 'react';
 import { IUser, ITokenType } from 'type/user.type';
 import { ICategory } from 'type/proposal.type';
 import { Authorizer } from 'casbin.js';
-import { SEEDAO_USER, SEEDAO_USER_DATA, SENDING_ME_USER } from '../utils/constant';
+import { SEEDAO_ACCOUNT, SEEDAO_USER, SEEDAO_USER_DATA, SENDING_ME_USER } from '../utils/constant';
 import { WalletType } from '../wallet/wallet';
 
 interface IState {
@@ -16,6 +16,7 @@ interface IState {
   authorizer?: Authorizer;
   wallet_type?: WalletType;
   expandMenu: boolean;
+  provider?: any;
 }
 
 export enum AppActionType {
@@ -30,6 +31,7 @@ export enum AppActionType {
   SET_AUTHORIZER = 'SET_AUTHORIZER',
   SET_WALLET_TYPE = 'set_wallet_type',
   SET_EXPAND_MENU = 'set_expand_menu',
+  SET_PROVIDER = 'set_provider',
 }
 
 interface IAction {
@@ -73,6 +75,7 @@ const reducer = (state: IState, action: IAction): IState => {
     case AppActionType.SET_EXPAND_MENU:
       return { ...state, expandMenu: action.payload };
     case AppActionType.SET_ACCOUNT:
+      localStorage.setItem(SEEDAO_ACCOUNT, action.payload);
       return { ...state, account: action.payload };
     case AppActionType.SET_LOGIN_MODAL:
       return { ...state, show_login_modal: action.payload };
@@ -98,6 +101,8 @@ const reducer = (state: IState, action: IAction): IState => {
       return { ...state, loading: action.payload };
     case AppActionType.SET_AUTHORIZER:
       return { ...state, authorizer: action.payload };
+    case AppActionType.SET_PROVIDER:
+      return { ...state, provider: action.payload };
 
     case AppActionType.SET_LAN:
       return { ...state, language: action.payload };
@@ -110,6 +115,7 @@ const reducer = (state: IState, action: IAction): IState => {
 
 const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, INIT_STATE);
+  console.log('--state---', state);
   return <AuthContext.Provider value={{ state, dispatch }}>{children}</AuthContext.Provider>;
 };
 

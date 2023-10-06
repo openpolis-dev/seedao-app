@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useAuthContext, AppActionType } from '../providers/authProvider';
-import { useWeb3React } from '@web3-react/core';
+// import { useWeb3React } from '@web3-react/core';
 import useCheckLogin from '../hooks/useCheckLogin';
 import { parseToken, checkTokenValid, clearStorage } from '../utils/auth';
 import { Authorizer } from 'casbin.js';
 import { readPermissionUrl } from '../requests/user';
 import requests from '../requests';
-import { SEEDAO_USER, SEEDAO_USER_DATA, SELECT_WALLET } from '../utils/constant';
+import { SEEDAO_ACCOUNT, SEEDAO_USER, SEEDAO_USER_DATA, SELECT_WALLET } from '../utils/constant';
 import Avatar from 'components/common/avatar';
 import { Button, Form, Dropdown } from 'react-bootstrap';
-import LoginModal from 'components/modals/login';
+import LoginModal from 'components/modals/loginNew';
 import LogoImg from '../assets/images/logo.png';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -18,14 +18,16 @@ import { List as ListIcon } from 'react-bootstrap-icons';
 import Loading from 'components/loading';
 import usePushPermission from 'hooks/usePushPermission';
 import { requestSetDeviceLanguage, getPushDevice } from 'requests/push';
+import { useDisconnect } from 'wagmi';
 
 export default function Header() {
   const { i18n } = useTranslation();
-  const { account } = useWeb3React();
-  const isLogin = useCheckLogin();
+  // const { account } = useWeb3React();
+
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { hasGranted, handlePermission } = usePushPermission();
+  const { disconnect } = useDisconnect();
 
   const [list] = useState([
     { title: t('My.MyProfile'), link: '/user/profile', value: 'profile' },
@@ -34,9 +36,11 @@ export default function Header() {
   const [lan, setLan] = useState('en');
 
   const {
-    state: { show_login_modal, language, expandMenu, userData, loading },
+    state: { show_login_modal, language, expandMenu, userData, loading, account },
     dispatch,
   } = useAuthContext();
+
+  const isLogin = useCheckLogin(account);
 
   const changeLang = (v: string, select?: boolean) => {
     setLan(v);
@@ -74,8 +78,11 @@ export default function Header() {
   };
 
   useEffect(() => {
-    dispatch({ type: AppActionType.SET_ACCOUNT, payload: account });
-  }, [account]);
+    const acc = localStorage.getItem(SEEDAO_ACCOUNT);
+    if (acc) {
+      dispatch({ type: AppActionType.SET_ACCOUNT, payload: acc });
+    }
+  }, []);
 
   const getUser = async () => {
     const res = await requests.user.getUser();
@@ -151,6 +158,10 @@ export default function Header() {
   };
 
   const onClickLogout = () => {
+    let wt = localStorage.getItem(SELECT_WALLET);
+    if (wt === 'METAMASK') {
+      disconnect();
+    }
     dispatch({ type: AppActionType.CLEAR_AUTH, payload: undefined });
     localStorage.removeItem(SEEDAO_USER_DATA);
     localStorage.removeItem(SELECT_WALLET);
