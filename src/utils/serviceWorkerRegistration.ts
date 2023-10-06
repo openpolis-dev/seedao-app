@@ -16,10 +16,7 @@ const version = 'v1';
 export function register(config?: any) {
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-      registerValidSW('./sw.js', config);
-      navigator.serviceWorker.addEventListener('message', (event) => {
-        console.log('-----listen-----', event.data);
-      });
+      registerValidSW('/firebase-messaging-sw.js', config);
     });
   }
 }

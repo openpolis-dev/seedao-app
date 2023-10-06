@@ -8,7 +8,6 @@ import GlobalStyle from 'assets/styles/global';
 // import InstallCheck from 'components/installPWA';
 
 // import 'bootstrap/dist/css/bootstrap.min.css';
-import { onMessageListener } from './components/firebase';
 import useMedia from 'hooks/useMedia';
 import { isMobile, isPhone } from 'utils/userAgent';
 import { useEffect } from 'react';
@@ -41,28 +40,6 @@ function App() {
       mobile_app && window.location.replace(mobile_app);
     }
   }, [isPhone, isLargeScreen]);
-
-  onMessageListener()
-    .then((payload) => {
-      console.log('onMessageListener', payload);
-    })
-    .catch((err) => console.log('failed: ', err));
-
-  useEffect(() => {
-    if (!window.navigator || !navigator.serviceWorker) {
-      console.error('not support navigator or serviceWorker');
-      return;
-    }
-
-    navigator.serviceWorker
-      .register('/firebase-messaging-sw.js')
-      .then(() => {
-        console.log('sucess to load firebase-messaging-sw.js');
-      })
-      .catch((err) => {
-        console.error('failed to load firebase-messaging-sw.js', err);
-      });
-  }, []);
 
   return (
     <Web3Provider>

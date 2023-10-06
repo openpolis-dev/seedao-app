@@ -1,5 +1,13 @@
 import { useState, useEffect, useMemo } from 'react';
 
+const checkNotificationSupport = () => {
+  if (!window.Notification) {
+    console.error('not support navigator');
+    return;
+  }
+  return true;
+};
+
 const askPermission = () => {
   return new Promise(function (resolve, reject) {
     const permissionResult = Notification.requestPermission(function (result) {
@@ -20,8 +28,7 @@ export default function usePushPermission() {
   const [permission, setPermission] = useState('default');
 
   useEffect(() => {
-    if (!window.Notification) {
-      console.error('not support navigator');
+    if (!checkNotificationSupport()) {
       return;
     }
 
@@ -35,6 +42,9 @@ export default function usePushPermission() {
   }, []);
 
   const handlePermission = () => {
+    if (!checkNotificationSupport()) {
+      return Promise.reject('not support navigator');
+    }
     return askPermission()
       .then((res) => {
         console.log('you agreed permission');
