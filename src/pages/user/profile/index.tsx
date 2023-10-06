@@ -1,12 +1,13 @@
 import { InputGroup, Button, Form } from 'react-bootstrap';
 import styled from 'styled-components';
-import React, { ChangeEvent, useEffect, useState, FormEvent } from 'react';
+import React, { ChangeEvent, useEffect, useState, FormEvent, useMemo } from 'react';
 import requests from 'requests';
 import { useAuthContext, AppActionType } from 'providers/authProvider';
 import { useTranslation } from 'react-i18next';
 import useToast, { ToastType } from 'hooks/useToast';
 import { Upload, X } from 'react-bootstrap-icons';
 import { ContainerPadding } from 'assets/styles/global';
+import useParseSNS from 'hooks/useParseSNS';
 
 const OuterBox = styled.div`
   min-height: 100%;
@@ -74,6 +75,7 @@ export default function Profile() {
     state: { userData },
     dispatch,
   } = useAuthContext();
+  const sns = useParseSNS(userData?.wallet);
   const { t } = useTranslation();
   const { Toast, showToast } = useToast();
   const [userName, setUserName] = useState('');
@@ -222,6 +224,12 @@ export default function Profile() {
 
           <MidBox>
             <UlBox>
+              <li>
+                <div className="title">SNS</div>
+                <InputBox>
+                  <div className="wallet">{sns}</div>
+                </InputBox>
+              </li>
               <li>
                 <div className="title">{t('My.wallet')}</div>
                 <InputBox>
