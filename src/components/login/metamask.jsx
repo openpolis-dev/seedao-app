@@ -6,8 +6,6 @@ import {ethers} from "ethers";
 import {createSiweMessage} from "../../utils/sign";
 import {useNavigate} from "react-router-dom";
 import ReactGA from "react-ga4";
-import styled from "styled-components";
-import MetamaskIcon from 'assets/images/wallet/metamask.png';
 import requests from "../../requests";
 import { AppActionType, useAuthContext } from "../../providers/authProvider";
 import { SEEDAO_USER_DATA, SELECT_WALLET } from "../../utils/constant";
@@ -15,31 +13,6 @@ import { Authorizer } from "casbin.js";
 import { readPermissionUrl } from "../../requests/user";
 import { WalletType } from "../../wallet/wallet";
 import { clearStorage } from "../../utils/auth";
-
-const WalletOption = styled.li`
-
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    justify-content: space-between;
-    padding: 10px 28px;
-    border-radius: 8px;
-    margin-block: 10px;
-    cursor: pointer;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-    border: 1px solid #f1f1f1;
-    background: #fff;
-    color: #000;
-    font-weight: 600;
-    font-size: 16px;
-    &:hover {
-      background-color: #f5f5f5;
-    }
-    img {
-      width: 28px;
-      height: 28px;
-    }
-`;
 
 export default function  Metamask(){
     const navigate = useNavigate();
@@ -104,6 +77,7 @@ export default function  Metamask(){
             setConnectWallet(false);
         }catch (e) {
             setConnectWallet(true);
+            window.location.reload()
             disconnect();
             console.error("sign error:",e)
         }
@@ -151,7 +125,6 @@ export default function  Metamask(){
             console.error("Login to",e)
             dispatch({ type: AppActionType.CLEAR_AUTH, payload: undefined });
             localStorage.removeItem(SEEDAO_USER_DATA);
-            localStorage.removeItem(SELECT_WALLET);
             clearStorage();
             dispatch({ type: AppActionType.SET_LOGIN_DATA, payload: null });
             dispatch({ type: AppActionType.SET_AUTHORIZER, payload: null });
@@ -161,12 +134,9 @@ export default function  Metamask(){
         }
     }
 
-    return <div>
-        <WalletOption  onClick={()=>onClick()}>
-            <span>MetaMask</span>
-            <span>
-                <img src={MetamaskIcon} alt="" width="28px" height="28px" />
-              </span>
-        </WalletOption>
-    </div>
+    useEffect(() => {
+        onClick()
+    }, []);
+
+    return null;
 }

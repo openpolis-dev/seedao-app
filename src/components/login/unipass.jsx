@@ -1,12 +1,16 @@
 import { UniPassProvider } from "@unipasswallet/ethereum-provider";
 import {ethers} from "ethers";
-import React, {useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import {createSiweMessage} from "../../utils/sign";
 import {useNavigate} from "react-router-dom";
 import ReactGA from "react-ga4";
-import styled from "styled-components";
-import UnipassIcon from 'assets/images/wallet/unipass.svg';
 import requests from "../../requests";
+import { AppActionType, useAuthContext } from "../../providers/authProvider";
+import { Authorizer } from "casbin.js";
+import { readPermissionUrl } from "../../requests/user";
+import { WalletType } from "../../wallet/wallet";
+import { SELECT_WALLET } from "../../utils/constant";
+import { clearStorage } from "../../utils/auth";
 
 const upProvider = new UniPassProvider({
     chainId: 1,
@@ -22,80 +26,51 @@ const upProvider = new UniPassProvider({
     },
 });
 
-const WalletOption = styled.li`
-
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    justify-content: space-between;
-    padding: 10px 28px;
-    border-radius: 8px;
-    margin-block: 10px;
-    cursor: pointer;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-    border: 1px solid #f1f1f1;
-    background: #fff;
-    color: #000;
-    font-weight: 600;
-    font-size: 16px;
-    &:hover {
-      background-color: #f5f5f5;
-    }
-    img {
-      width: 28px;
-      height: 28px;
-    }
-`;
 
 export default function Unipass(){
     const navigate = useNavigate();
-    const [addr,setAddr] = useState();
-    const [provider,setProvider] = useState();
     const [msg,setMsg] = useState(null);
     const [signInfo,setSignInfo] = useState();
     const [result,setResult] = useState(null);
-    const AppConfig = {
-        host: 'superapp.seedao.tech',
-        origin: 'https://superapp.seedao.tech',
-    }
-
+    const { state: { provider,account },dispatch } = useAuthContext();
 
     const getP = async() =>{
         try{
-
+            localStorage.setItem(SELECT_WALLET, 'UNIPASS');
+            await upProvider.disconnect();
             await upProvider.connect();
             const provider = new ethers.providers.Web3Provider(upProvider, "any");
-            setProvider(provider);
+            dispatch({ type: AppActionType.SET_PROVIDER, payload: provider });
         }catch (e){
-            console.error(e)
+            console.error("get Provider",e)
         }
-
-
     }
 
     useEffect(()=>{
-        if(!provider)return;
-        connect();
+       let type = localStorage.getItem(SELECT_WALLET);
+        if(provider && type === "UNIPASS"){
+            connect();
+        }
+
     },[provider])
 
     const connect = async() =>{
-
         try{
+            clearStorage();
             const signer = provider.getSigner();
             const address = await signer.getAddress();
-            setAddr(address)
-            // store.dispatch(saveAccount(address))
+            dispatch({ type: AppActionType.SET_ACCOUNT, payload: address });
+            // setAddr(address)
         }catch (e) {
-            console.error(e)
+            console.error("connect",e)
         }
     }
 
 
     useEffect(()=>{
-
-        if(!addr) return;
+        if(!account) return;
         signMessage()
-    },[addr])
+    },[account])
 
 
     const getMyNonce = async(wallet) =>{
@@ -105,20 +80,18 @@ export default function Unipass(){
 
     const signMessage = async() =>{
         try{
-            let nonce = await getMyNonce(addr);
-            const eip55Addr = ethers.utils.getAddress(addr);
+            let nonce = await getMyNonce(account);
+            const eip55Addr = ethers.utils.getAddress(account);
+            console.error(eip55Addr)
 
             const siweMessage = createSiweMessage(eip55Addr, 1, nonce, 'Welcome to SeeDAO!');
             setMsg(siweMessage)
             const signer = provider.getSigner();
             let res = await signer.signMessage(siweMessage);
             setSignInfo(res)
-
-
         }catch (e) {
-            console.error(e)
-            // store.dispatch(saveAccount(null))
-            setAddr(null)
+            console.error("signMessage",e)
+            // setAddr(null)
             await upProvider.disconnect();
         }
 
@@ -133,23 +106,31 @@ export default function Unipass(){
     const LoginTo = async () =>{
 
 
-        const { host} = AppConfig;
+        const { host} = window.AppConfig;
         let obj = {
-            wallet: addr,
+            wallet: account,
             message: msg,
             signature: signInfo,
             domain: host,
-            wallet_type: 'AA',
+            wallet_type: WalletType.AA,
             is_eip191_prefix: true
         };
         try{
-            let rt = await requests.user.login(obj);
-            // store.dispatch(saveUserToken(rt.data));
-            // store.dispatch(saveWalletType("unipass"));
-            setResult(rt.data)
+            let res = await requests.user.login(obj);
+            setResult(res.data)
+
+            const now = Date.now();
+            res.data.token_exp = now + res.data.token_exp * 1000;
+            dispatch({ type: AppActionType.SET_LOGIN_DATA, payload: res.data });
+
+            const authorizer = new Authorizer('auto', { endpoint: readPermissionUrl });
+            await authorizer.setUser(account.toLowerCase());
+            dispatch({ type: AppActionType.SET_AUTHORIZER, payload: authorizer });
+            dispatch({ type: AppActionType.SET_WALLET_TYPE, payload:WalletType.AA });
+            dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: false });
             ReactGA.event("login_success",{
                 type: "unipass",
-                account:"account:"+addr
+                account:"account:"+account
             });
         }catch (e){
             console.error(e)
@@ -164,12 +145,9 @@ export default function Unipass(){
 
     },[result])
 
-    return <div>
-        <WalletOption  onClick={()=>getP()}>
-            <span>Unipass</span>
-            <span>
-                <img src={UnipassIcon} alt="" width="28px" height="28px" />
-              </span>
-        </WalletOption>
-    </div>
+    useEffect(()=>{
+        getP()
+    },[])
+
+    return null;
 }

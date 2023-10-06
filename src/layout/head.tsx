@@ -7,7 +7,7 @@ import { parseToken, checkTokenValid, clearStorage } from '../utils/auth';
 import { Authorizer } from 'casbin.js';
 import { readPermissionUrl } from '../requests/user';
 import requests from '../requests';
-import { SEEDAO_ACCOUNT, SEEDAO_USER, SEEDAO_USER_DATA, SELECT_WALLET } from '../utils/constant';
+import { SEEDAO_ACCOUNT, SEEDAO_USER, SEEDAO_USER_DATA, SELECT_WALLET, SET_PROVIDER } from '../utils/constant';
 import Avatar from 'components/common/avatar';
 import { Button, Form, Dropdown } from 'react-bootstrap';
 import LoginModal from 'components/modals/loginNew';
@@ -158,18 +158,37 @@ export default function Header() {
   };
 
   const onClickLogout = () => {
-    let wt = localStorage.getItem(SELECT_WALLET);
-    if (wt === 'METAMASK') {
-      disconnect();
-    }
+    disconnect();
     dispatch({ type: AppActionType.CLEAR_AUTH, payload: undefined });
     localStorage.removeItem(SEEDAO_USER_DATA);
     localStorage.removeItem(SELECT_WALLET);
+    localStorage.removeItem(SEEDAO_ACCOUNT);
+    localStorage.removeItem('joyid-status');
+    localStorage.removeItem('joyid-msg');
+    localStorage.removeItem('joyid-address');
+    localStorage.removeItem('select_wallet');
+    dispatch({ type: AppActionType.SET_PROVIDER, payload: null });
     dispatch({ type: AppActionType.SET_LOGIN_DATA, payload: null });
     dispatch({ type: AppActionType.SET_AUTHORIZER, payload: null });
     dispatch({ type: AppActionType.SET_WALLET_TYPE, payload: null });
+    dispatch({ type: AppActionType.SET_ACCOUNT, payload: null });
+    window.location.reload();
     toGo();
   };
+
+  let qr = window.location.search;
+
+  useEffect(() => {
+    console.error('===qr clear==', qr);
+    if (qr.indexOf('Rejected') > -1) {
+      localStorage.removeItem('joyid-status');
+      localStorage.removeItem('joyid-msg');
+      localStorage.removeItem('joyid-address');
+      localStorage.removeItem('select_wallet');
+      navigate('/home');
+      window.location.reload();
+    }
+  }, [qr]);
 
   return (
     <HeadeStyle>
@@ -218,7 +237,8 @@ export default function Header() {
           )}
         </RightBox>
       </nav>
-      {show_login_modal && <LoginModal />}
+      {/*{show_login_modal && <LoginModal />}*/}
+      <LoginModal showModal={show_login_modal} />
     </HeadeStyle>
   );
 }

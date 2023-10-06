@@ -5,7 +5,6 @@ export const clearStorage = () => {
   localStorage.removeItem(SEEDAO_USER);
   localStorage.removeItem(SENDING_ME_USER);
   localStorage.removeItem(SEEDAO_USER_DATA);
-  localStorage.removeItem(SELECT_WALLET);
 };
 
 export const checkTokenValid = (token?: string, expireAt?: number) => {

@@ -38,7 +38,7 @@ const Web3Provider: React.FC<{ children: React.ReactNode }> = (props) => {
           wallet_type = WalletType.AA;
           break;
       }
-      dispatch({ type: AppActionType.SET_WALLET_TYPE, payload: wallet_type });
+      // dispatch({ type: AppActionType.SET_WALLET_TYPE, payload: wallet_type });
       selectWallet && connect(getConnectorForWallet(selectWallet));
     }
   }, []);
