@@ -8,15 +8,14 @@ import { BudgetType } from 'type/project.type';
 import { useTranslation } from 'react-i18next';
 import SBTCard from './sbt';
 import { formatNumber } from 'utils/number';
+import { ContainerPadding } from 'assets/styles/global';
 
 const OuterBox = styled.div`
-  margin: 40px;
   min-height: 100%;
+  ${ContainerPadding};
 `;
 
-const Box = styled.div`
-  padding: 40px 20px;
-`;
+const Box = styled.div``;
 const CardBox = styled.div`
   background: #fff;
   padding: 20px;
@@ -81,6 +80,14 @@ const FirstLine = styled.ul`
   .tips {
     font-size: 12px;
   }
+  @media (max-width: 1024px) {
+    li {
+      padding: 26px 16px;
+    }
+    .num {
+      padding-top: 0;
+    }
+  } ;
 `;
 
 export default function Vault() {

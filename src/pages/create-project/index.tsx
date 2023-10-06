@@ -10,11 +10,12 @@ import { AssetName } from 'utils/constant';
 import InputNumber from 'components/inputNumber';
 import { useNavigate } from 'react-router-dom';
 import { ChevronLeft, PlusLg, DashLg, Upload, X } from 'react-bootstrap-icons';
+import { ContainerPadding } from 'assets/styles/global';
 
 const OuterBox = styled.div`
-  padding: 40px;
   box-sizing: border-box;
   min-height: 100%;
+  ${ContainerPadding};
 `;
 
 const Box = styled.div`
@@ -66,11 +67,22 @@ const UlBox = styled.ul`
       font-size: 14px;
     }
   }
+  @media (max-width: 750px) {
+    li {
+      flex-direction: column;
+      .title {
+        margin-bottom: 10px;
+      }
+    }
+  }
 `;
 
 const InputBox = styled(InputGroup)`
   width: 600px;
   margin-right: 20px;
+  @media (max-width: 1024px) {
+    width: 350px;
+  }
 `;
 
 const ItemBox = styled.div`

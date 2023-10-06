@@ -12,6 +12,7 @@ import { formatDate } from 'utils/time';
 import LoadingBox from 'components/loadingBox';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
+import { ContainerPadding } from 'assets/styles/global';
 
 export default function Proposal() {
   const { id: qid } = useParams();
@@ -77,8 +78,8 @@ export default function Proposal() {
 }
 
 const BoxOuter = styled.div`
-  padding: 40px;
   min-height: 100%;
+  ${ContainerPadding};
 `;
 
 const ProposalContainer = styled.div`
@@ -91,7 +92,11 @@ const ProposalContainer = styled.div`
 const ProposalTitle = styled.div`
   font-size: 30px;
   font-weight: 600;
-  line-height: 50px;
+  line-height: 1.5em;
+  @media (max-width: 900px) {
+    width: 80%;
+    font-size: 24px;
+  }
 `;
 const User = styled.div`
   display: flex;

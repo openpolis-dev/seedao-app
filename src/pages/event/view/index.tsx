@@ -11,13 +11,14 @@ import { formatTime } from 'utils/time';
 import { useWeb3React } from '@web3-react/core';
 import { useNavigate } from 'react-router-dom';
 import { ChevronLeft, Clock } from 'react-bootstrap-icons';
+import { ContainerPadding } from 'assets/styles/global';
 
 const Box = styled.div`
   min-height: 100%;
-  margin: 40px;
   .btnBtm {
     margin-right: 20px;
   }
+  ${ContainerPadding}
 `;
 
 const CardBox = styled.div`
@@ -80,6 +81,9 @@ const BtnBox = styled.label`
     max-width: 100%;
     max-height: 100%;
   }
+  @media (max-width: 900px) {
+    margin: 40px auto;
+  }
 `;
 
 const ImgBox = styled.div`
@@ -105,6 +109,10 @@ const ImgBox = styled.div`
 const InnerBox = styled.div`
   display: flex;
   align-content: center;
+  @media (max-width: 900px) {
+    flex-direction: column;
+    margin-bottom: 20px;
+  }
 `;
 
 const ContentBox = styled.div`
@@ -114,6 +122,9 @@ const ContentBox = styled.div`
   }
   p {
     padding: 0 -0px 1rem;
+  }
+  img {
+    max-width: 100%;
   }
 `;
 

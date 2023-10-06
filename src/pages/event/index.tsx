@@ -14,10 +14,11 @@ import { filter } from 'minimatch';
 import useToast, { ToastType } from 'hooks/useToast';
 import { useWeb3React } from '@web3-react/core';
 import { useNavigate } from 'react-router-dom';
+import { ContainerPadding } from 'assets/styles/global';
 
 const BoxOuter = styled.div`
-  padding: 40px 40px 40px;
   height: 100%;
+  ${ContainerPadding};
 `;
 
 const Box = styled.div`
@@ -31,7 +32,7 @@ const Box = styled.div`
 const Card = styled.div`
   background: #fff;
   box-shadow: rgba(44, 51, 73, 0.1) 0px 0.5rem 1rem 0px;
-  height: 100%;
+  min-height: 100%;
   padding-top: 10px;
   box-sizing: border-box;
 `;
@@ -239,8 +240,11 @@ export default function Index() {
             <Row>
               {list?.map((item, idx) => (
                 <Col
-                  md={2}
-                  // breakPoint={{ xs: 3, sm: 3, md: 3, lg: 2.4 }}
+                  xs={12}
+                  sm={6}
+                  md={4}
+                  lg={3}
+                  xl={2}
                   key={idx}
                   onClick={() => navigate(`/event/view?id=${item?.id}`)}
                 >

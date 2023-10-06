@@ -18,10 +18,11 @@ import usePermission from 'hooks/usePermission';
 import { PermissionObject, PermissionAction } from 'utils/constant';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ChevronLeft } from 'react-bootstrap-icons';
+import { ContainerPadding } from 'assets/styles/global';
 
 const OuterBox = styled.div`
-  padding: 40px;
   min-height: 100%;
+  ${ContainerPadding};
 `;
 
 const Box = styled.div`
@@ -48,6 +49,15 @@ const BackBox = styled.div`
   cursor: pointer;
   .iconTop {
     margin-right: 10px;
+  }
+`;
+
+const TabsBox = styled(Tabs)`
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  &::-webkit-scrollbar {
+    display: none;
+    width: 0;
   }
 `;
 
@@ -126,11 +136,11 @@ export default function Index() {
           <Row>
             <Col>
               <TopBox>
-                <Tabs defaultActiveKey={0} onSelect={(e: any) => selectCurrent(e)}>
+                <TabsBox defaultActiveKey={0} onSelect={(e: any) => selectCurrent(e)}>
                   {list.map((item, index) => (
                     <Tab key={item.id} title={item.name} eventKey={index} />
                   ))}
-                </Tabs>
+                </TabsBox>
                 <BtmBox>
                   {current === 0 && (
                     <Info detail={detail} updateProjectName={updateProjectName} updateProject={getDetail} />

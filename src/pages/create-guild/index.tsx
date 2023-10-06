@@ -12,11 +12,12 @@ import { AssetName } from 'utils/constant';
 import InputNumber from 'components/inputNumber';
 import { useNavigate } from 'react-router-dom';
 import { ChevronLeft, DashLg, PlusLg, Upload, X } from 'react-bootstrap-icons';
+import { ContainerPadding } from 'assets/styles/global';
 
 const OuterBox = styled.div`
-  padding: 40px;
   box-sizing: border-box;
   min-height: 100%;
+  ${ContainerPadding};
 `;
 
 const Box = styled.div`
@@ -65,6 +66,14 @@ const UlBox = styled.ul`
       background: #f8f8f8;
       padding: 0 20px;
       font-size: 14px;
+    }
+  }
+  @media (max-width: 750px) {
+    li {
+      flex-direction: column;
+      .title {
+        margin-bottom: 10px;
+      }
     }
   }
 `;

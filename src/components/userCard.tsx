@@ -10,60 +10,64 @@ import { useWeb3React } from '@web3-react/core';
 import TwitterIcon from 'assets/images/twitterNor.svg';
 import DiscordIcon from 'assets/images/discordNor.svg';
 import EmailIcon from 'assets/images/email.svg';
+import { Col } from 'react-bootstrap';
 
 interface IUserProps {
   user: IUser;
   showEdit: boolean;
+  sns?: string;
   onSelectUser?: (user: IUser) => void;
   formatActive?: (wallet: string) => boolean;
 }
 
-export default function UserCard({ user, showEdit, onSelectUser, formatActive }: IUserProps) {
+export default function UserCard({ user, showEdit, onSelectUser, formatActive, sns }: IUserProps) {
   const { account } = useWeb3React();
   return (
-    <UserCardBox>
-      <div className="fst">
-        {user.avatar ? (
-          <img className="avatar" src={user.avatar} alt="" />
-        ) : (
-          <img className="avatar" src={DefaultAvatar} alt="" width="40px" height="40px" />
-        )}
+    <UserCardBox sm={12} md={6} lg={4} xl={3}>
+      <div className="boxAll">
+        <div className="fst">
+          {user.avatar ? (
+            <img className="avatar" src={user.avatar} alt="" />
+          ) : (
+            <img className="avatar" src={DefaultAvatar} alt="" width="40px" height="40px" />
+          )}
 
-        <div>
-          <div>{user.name}</div>
-          <div style={{ display: 'flex', gap: '5px' }}>
-            <span>{PublicJs.AddressToShow(user.wallet || '')}</span>
-            <CopyBox text={user.wallet || ''} dir="left">
-              <img src={copyIcon} alt="" style={{ position: 'relative', top: '-2px' }} />
-            </CopyBox>
+          <div>
+            <div>{sns || user.name}</div>
+            <div style={{ display: 'flex', gap: '5px' }}>
+              <span>{PublicJs.AddressToShow(user.wallet || '')}</span>
+              <CopyBox text={user.wallet || ''} dir="left">
+                <img src={copyIcon} alt="" style={{ position: 'relative', top: '-2px' }} />
+              </CopyBox>
+            </div>
           </div>
+          {showEdit && account?.toLowerCase() !== user.wallet?.toLowerCase() && (
+            <div
+              className={formatActive && formatActive(user.wallet || '') ? 'topRht active' : 'topRht'}
+              onClick={() => onSelectUser && onSelectUser(user)}
+            >
+              <div className="inner" />
+            </div>
+          )}
         </div>
-        {showEdit && account?.toLowerCase() !== user.wallet?.toLowerCase() && (
-          <div
-            className={formatActive && formatActive(user.wallet || '') ? 'topRht active' : 'topRht'}
-            onClick={() => onSelectUser && onSelectUser(user)}
-          >
-            <div className="inner" />
-          </div>
-        )}
+        <LinkBox>
+          {user.twitter_profile && (
+            <a href={user.twitter_profile} target="_blank" rel="noreferrer">
+              <img src={TwitterIcon} alt="" className="icon" width="20px" height="20px" />
+            </a>
+          )}
+          {user.discord_profile && (
+            <CopyBox text={user.discord_profile || ''} dir="right">
+              <img src={DiscordIcon} alt="" className="icon" width="20px" height="20px" />
+            </CopyBox>
+          )}
+          {user.email && (
+            <CopyBox text={user.email || ''}>
+              <img src={EmailIcon} alt="" className="icon" width="20px" height="20px" />
+            </CopyBox>
+          )}
+        </LinkBox>
       </div>
-      <LinkBox>
-        {user.twitter_profile && (
-          <a href={user.twitter_profile} target="_blank" rel="noreferrer">
-            <img src={TwitterIcon} alt="" className="icon" width="20px" height="20px" />
-          </a>
-        )}
-        {user.discord_profile && (
-          <CopyBox text={user.discord_profile || ''} dir="right">
-            <img src={DiscordIcon} alt="" className="icon" width="20px" height="20px" />
-          </CopyBox>
-        )}
-        {user.email && (
-          <CopyBox text={user.email || ''}>
-            <img src={EmailIcon} alt="" className="icon" width="20px" height="20px" />
-          </CopyBox>
-        )}
-      </LinkBox>
     </UserCardBox>
   );
 }
@@ -79,23 +83,24 @@ const LinkBox = styled.div`
     display: inline-block;
   }
 `;
-const UserCardBox = styled.li`
-  width: 23%;
-  margin-right: 2%;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+const UserCardBox = styled(Col)`
+  //margin-right: 2%;
+
   margin-bottom: 40px;
-  box-sizing: border-box;
-  border-radius: 4px;
-  overflow: hidden;
-  padding: 20px;
-  &:nth-child(4n) {
-    margin-right: 0;
+
+  .boxAll {
+    padding: 20px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    overflow: hidden;
+    box-sizing: border-box;
+    height: 100%;
   }
+
   .fst {
     display: flex;
     align-items: center;
     position: relative;
-    gap: 10px;
   }
   img.avatar {
     width: 40px;

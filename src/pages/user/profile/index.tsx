@@ -1,16 +1,17 @@
 import { InputGroup, Button, Form } from 'react-bootstrap';
 import styled from 'styled-components';
-import React, { ChangeEvent, useEffect, useState, FormEvent } from 'react';
+import React, { ChangeEvent, useEffect, useState, FormEvent, useMemo } from 'react';
 import requests from 'requests';
 import { useAuthContext, AppActionType } from 'providers/authProvider';
-// import { EvaIcon } from '@paljs/ui/Icon';
 import { useTranslation } from 'react-i18next';
 import useToast, { ToastType } from 'hooks/useToast';
-import { X } from 'react-bootstrap-icons';
+import { Upload, X } from 'react-bootstrap-icons';
+import { ContainerPadding } from 'assets/styles/global';
+import useParseSNS from 'hooks/useParseSNS';
 
 const OuterBox = styled.div`
-  padding: 40px;
   min-height: 100%;
+  ${ContainerPadding};
 `;
 
 const Box = styled.div``;
@@ -37,10 +38,15 @@ const UlBox = styled.ul`
       min-width: 90px;
     }
   }
+  @media (max-width: 750px) {
+    li {
+      flex-direction: column;
+      margin-bottom: 10px;
+    }
+  }
 `;
 const InputBox = styled(InputGroup)`
-  width: 600px;
-  margin-right: 20px;
+  max-width: 600px;
   .wallet {
     border: 1px solid #eee;
     width: 100%;
@@ -49,7 +55,11 @@ const InputBox = styled(InputGroup)`
     padding: 0 1.125rem;
     display: flex;
     align-items: center;
+    overflow-x: auto;
   }
+  @media (max-width: 1024px) {
+    max-width: 100%;
+  } ;
 `;
 const MidBox = styled.div`
   display: flex;
@@ -65,6 +75,7 @@ export default function Profile() {
     state: { userData },
     dispatch,
   } = useAuthContext();
+  const sns = useParseSNS(userData?.wallet);
   const { t } = useTranslation();
   const { Toast, showToast } = useToast();
   const [userName, setUserName] = useState('');
@@ -197,7 +208,7 @@ export default function Profile() {
               {!avatar && (
                 <div>
                   <input id="fileUpload" type="file" hidden accept=".jpg, .jpeg, .png" />
-                  {/*<EvaIcon name="cloud-upload-outline" className="iconRht" />*/}
+                  {<Upload />}
                 </div>
               )}
               {!!avatar && (
@@ -213,6 +224,12 @@ export default function Profile() {
 
           <MidBox>
             <UlBox>
+              <li>
+                <div className="title">SNS</div>
+                <InputBox>
+                  <div className="wallet">{sns}</div>
+                </InputBox>
+              </li>
               <li>
                 <div className="title">{t('My.wallet')}</div>
                 <InputBox>
@@ -330,7 +347,7 @@ const ImgBox = styled.div`
     align-items: center;
     justify-content: center;
     background: #a16eff;
-    opacity: 0.8;
+    opacity: 0.5;
     color: #fff;
     cursor: pointer;
     .iconTop {

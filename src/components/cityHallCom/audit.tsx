@@ -17,6 +17,7 @@ import { useTranslation } from 'react-i18next';
 import useToast, { ToastType } from 'hooks/useToast';
 import { formatApplicationStatus } from 'utils/index';
 import Select from 'components/common/select';
+import { formatNumber } from 'utils/number';
 
 const Box = styled.div``;
 const FirstLine = styled.div`
@@ -32,12 +33,13 @@ const FirstLine = styled.div`
 const TopLine = styled.ul`
   display: flex;
   align-items: center;
-  margin-bottom: 20px;
+  flex-wrap: wrap;
 
   li {
     display: flex;
     align-items: center;
     margin-right: 40px;
+    margin-bottom: 20px;
 
     .tit {
       padding-right: 20px;
@@ -439,8 +441,8 @@ export default function Audit() {
                       </CopyBox> */}
                       </div>
                     </td>
-                    <td>{item.credit_amount}</td>
-                    <td>{item.token_amount}</td>
+                    <td>{formatNumber(item.credit_amount)}</td>
+                    <td>{formatNumber(item.token_amount)}</td>
                     <td>{item.detailed_type}</td>
                     <td>{item.budget_source}</td>
                     <td>{item.comment}</td>

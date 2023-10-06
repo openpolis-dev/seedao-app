@@ -21,6 +21,7 @@ import CreateProject from './pages/create-project';
 import CreateGuild from './pages/create-guild';
 import Profile from './pages/user/profile';
 import UserVault from './pages/user/vault';
+import RouterChecker from './utils/routerChecker';
 
 export default function RouterLink() {
   return (
@@ -54,6 +55,7 @@ export default function RouterLink() {
           <Route path="/chat" element={<Chat />} />
         </Routes>
       </Layout>
+      <RouterChecker />
       {/* <Footer /> */}
       <ToastContainer
         position="top-right"

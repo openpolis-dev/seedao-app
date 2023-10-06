@@ -83,6 +83,9 @@ const CategoryPage = styled.div`
   //background: #fff;
   padding: 20px;
   min-height: 100%;
+  @media (max-width: 1024px) {
+    padding: 0;
+  }
 `;
 
 const ProposalBox = styled.div`

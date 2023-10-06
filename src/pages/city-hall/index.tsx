@@ -15,15 +15,16 @@ import usePermission from 'hooks/usePermission';
 import { PermissionAction, PermissionObject } from 'utils/constant';
 import Reg from 'components/cityHallCom/reg';
 import PushPanel from 'components/cityHallCom/push';
+import { ContainerPadding } from 'assets/styles/global';
 
 const Box = styled.div`
   //position: relative;
-  padding: 40px;
   min-height: 100%;
   .tab-content {
     padding: 0 0 30px !important;
     box-sizing: border-box;
   }
+  ${ContainerPadding};
 `;
 const CardBox = styled.div`
   background: #fff;
@@ -38,7 +39,14 @@ const TopBox = styled.div`
   flex-direction: column;
 `;
 
-const TabsBox = styled(Tabs)``;
+const TabsBox = styled(Tabs)`
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  &::-webkit-scrollbar {
+    display: none;
+    width: 0;
+  }
+`;
 export default function Index() {
   const { t } = useTranslation();
   const { dispatch } = useAuthContext();

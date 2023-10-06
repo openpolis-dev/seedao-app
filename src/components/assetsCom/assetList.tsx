@@ -18,6 +18,7 @@ import publicJs from 'utils/publicJs';
 import { useTranslation } from 'react-i18next';
 import { formatApplicationStatus } from 'utils/index';
 import Select from 'components/common/select';
+import { formatNumber } from 'utils/number';
 
 const Box = styled.div``;
 const TitBox = styled.div`
@@ -36,13 +37,13 @@ const FirstLine = styled.div`
 const TopLine = styled.ul`
   display: flex;
   align-items: center;
-  margin-bottom: 20px;
+  flex-wrap: wrap;
 
   li {
     display: flex;
     align-items: center;
     margin-right: 40px;
-
+    margin-bottom: 20px;
     .tit {
       padding-right: 20px;
       white-space: nowrap;
@@ -323,22 +324,22 @@ export default function AssetList() {
               }}
             />
           </li>
+          <TimeLine>
+            <TimeBox>
+              <BorderBox>
+                <RangeDatePickerStyle
+                  placeholder={t('Project.RangeTime')}
+                  onChange={changeDate}
+                  startDate={startDate}
+                  endDate={endDate}
+                />
+              </BorderBox>
+            </TimeBox>
+            <Button onClick={handleExport} disabled={!selectOne}>
+              {t('Project.Export')}
+            </Button>
+          </TimeLine>
         </TopLine>
-        <TimeLine>
-          <TimeBox>
-            <BorderBox>
-              <RangeDatePickerStyle
-                placeholder={t('Project.RangeTime')}
-                onChange={changeDate}
-                startDate={startDate}
-                endDate={endDate}
-              />
-            </BorderBox>
-          </TimeBox>
-          <Button onClick={handleExport} disabled={!selectOne}>
-            {t('Project.Export')}
-          </Button>
-        </TimeLine>
       </FirstLine>
 
       <TableBox>
@@ -382,8 +383,8 @@ export default function AssetList() {
                         </CopyBox> */}
                       </div>
                     </td>
-                    <td>{item.credit_amount}</td>
-                    <td>{item.token_amount}</td>
+                    <td>{formatNumber(item.credit_amount)}</td>
+                    <td>{formatNumber(item.token_amount)}</td>
                     <td>{item.detailed_type}</td>
                     <td>{item.budget_source}</td>
                     <td>{item.comment}</td>

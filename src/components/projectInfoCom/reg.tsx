@@ -25,6 +25,12 @@ const FirstBox = styled.div`
   align-items: center;
   justify-content: space-between;
   margin-bottom: 40px;
+  @media (max-width: 1000px) {
+    flex-direction: column;
+    .lft {
+      width: 100%;
+    }
+  }
 `;
 
 const RhtBox = styled.div`
@@ -38,6 +44,11 @@ const RhtBox = styled.div`
     span {
       padding-left: 10px;
     }
+  }
+  @media (max-width: 1000px) {
+    margin-top: 20px;
+    width: 100%;
+    justify-content: flex-start;
   }
 `;
 
@@ -57,6 +68,7 @@ const BtnBox = styled.label`
   cursor: pointer;
   .iconRht {
     margin-right: 10px;
+    white-space: nowrap;
   }
   &:hover {
     background: var(--bs-primary);
@@ -194,9 +206,12 @@ export default function Reg({ id }: { id: number }) {
       {loading && <Loading />}
       {Toast}
       <FirstBox>
-        <Button disabled={!list.length || !!errList.length} onClick={handleCreate}>
-          {t('Project.SubmitForReview')}
-        </Button>
+        <div className="lft">
+          <Button disabled={!list.length || !!errList.length} onClick={handleCreate}>
+            {t('Project.SubmitForReview')}
+          </Button>
+        </div>
+
         <RhtBox>
           <Button variant="outline-primary" className="rhtBtn" onClick={downloadFile}>
             {/*<EvaIcon name="cloud-download-outline" />*/}

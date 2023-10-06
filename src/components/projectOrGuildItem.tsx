@@ -81,7 +81,7 @@ interface Iprops {
 
 export default function ProjectOrGuildItem({ data, onClickItem }: Iprops) {
   return (
-    <Col md={2}>
+    <Col xs={12} sm={6} md={4} lg={3} xl={2}>
       <CardBox>
         <Item onClick={() => onClickItem(data.id)}>
           <ImageBox>
