@@ -22,28 +22,18 @@ initializeApp(firebaseConfig);
 const firebaseApp = initializeApp(firebaseConfig);
 const messaging = getMessaging(firebaseApp);
 
-export const getPushToken = () => {
-  return getToken(
-    messaging,
-    //   {
-    //   vapidKey: 'BFzQaf5oTRDg_OIy3Y6pE818Bsn_o6u3L4c571vU5OZhGt6mWPiY7OdS2WIiutCnqQOMD6Up16hjVbi4La4o_eQ',
-    // }
-  )
-    .then((currentToken) => {
-      if (currentToken) {
-        console.log('current token for client: ', currentToken);
-        // Track the token -> client mapping, by sending to backend server
-        // show on the UI that permission is secured
-      } else {
-        console.log('No registration token available. Request permission to generate one.');
-        // shows on the UI that permission is required
-        throw new Error('No registration token available. Request permission to generate one.');
-      }
-    })
-    .catch((err) => {
-      console.log('An error occurred while retrieving token. ', err);
-      // catch error while creating client token
-    });
+export const getPushToken = async () => {
+  try {
+    const token = await getToken(messaging);
+    if (token) {
+      console.log('current token for client: ', token);
+      return token;
+    } else {
+      throw new Error('No registration token available. Request permission to generate one.');
+    }
+  } catch (error) {
+    console.log('An error occurred while retrieving token. ', error);
+  }
 };
 
 export const onMessageListener = () =>

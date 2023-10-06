@@ -18,7 +18,8 @@ import { Web3Provider } from '@ethersproject/providers';
 import { X } from 'react-bootstrap-icons';
 import MetamaskIcon from 'assets/images/wallet/metamask.png';
 import UnipassIcon from 'assets/images/wallet/unipass.svg';
-import subscribeToPushMessages from 'utils/subscribe';
+import { getPushToken } from 'components/firebase';
+import { registerDevice, getPushDevice } from 'requests/push';
 
 const { useProvider, useAccount } = uniPassHooks;
 
@@ -141,7 +142,14 @@ export default function LoginModal() {
 
       try {
         // register push
-        await subscribeToPushMessages(_account.toLowerCase(), localStorage.getItem('language') || 'en');
+        const deviceToken = await getPushToken();
+        if (deviceToken) {
+          await registerDevice({
+            device: getPushDevice(),
+            registration_token: deviceToken,
+            language: localStorage.getItem('language') || 'en',
+          });
+        }
       } catch (error) {
         console.error(error);
       }
