@@ -11,18 +11,17 @@ import TwitterIcon from 'assets/images/twitterNor.svg';
 import DiscordIcon from 'assets/images/discordNor.svg';
 import EmailIcon from 'assets/images/email.svg';
 import { Col } from 'react-bootstrap';
-import useParseSNS from 'hooks/useParseSNS';
 
 interface IUserProps {
   user: IUser;
   showEdit: boolean;
+  sns?: string;
   onSelectUser?: (user: IUser) => void;
   formatActive?: (wallet: string) => boolean;
 }
 
-export default function UserCard({ user, showEdit, onSelectUser, formatActive }: IUserProps) {
+export default function UserCard({ user, showEdit, onSelectUser, formatActive, sns }: IUserProps) {
   const { account } = useWeb3React();
-  const sns = useParseSNS(user?.wallet);
   return (
     <UserCardBox sm={12} md={6} lg={4} xl={3}>
       <div className="boxAll">

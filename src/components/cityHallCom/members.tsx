@@ -13,6 +13,7 @@ import NoItem from 'components/noItem';
 import { PermissionObject, PermissionAction } from 'utils/constant';
 import usePermission from 'hooks/usePermission';
 import UserCard from 'components/userCard';
+import { useParseSNSList } from 'hooks/useParseSNS';
 
 interface Iprops {
   detail: ReTurnProject | undefined;
@@ -35,6 +36,8 @@ export default function Members(props: Iprops) {
   const [adminArr, setAdminArr] = useState<string[]>([]);
 
   const [userMap, setUserMap] = useState<UserMap>({});
+
+  const nameMap = useParseSNSList(adminArr);
 
   useEffect(() => {
     if (!detail) return;
@@ -153,6 +156,7 @@ export default function Members(props: Iprops) {
               onSelectUser={handleAdminSelect}
               formatActive={formatAdminActive}
               showEdit={edit && canUpdateSponsor}
+              sns={nameMap[getUser(item)?.wallet || '']}
             />
           ))}
         </Row>

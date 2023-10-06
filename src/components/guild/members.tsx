@@ -14,6 +14,7 @@ import { PermissionObject, PermissionAction } from 'utils/constant';
 import usePermission from 'hooks/usePermission';
 import UserCard from 'components/userCard';
 import { useParams } from 'react-router-dom';
+import { useParseSNSList } from 'hooks/useParseSNS';
 
 interface Iprops {
   detail: ReTurnProject | undefined;
@@ -43,6 +44,12 @@ export default function Members(props: Iprops) {
   const [adminArr, setAdminArr] = useState<string[]>([]);
 
   const [userMap, setUserMap] = useState<UserMap>({});
+
+  const uniqueUsers = useMemo(() => {
+    return Array.from(new Set([...memberArr, ...adminArr]));
+  }, [memberArr, adminArr]);
+
+  const nameMap = useParseSNSList(uniqueUsers);
 
   useEffect(() => {
     if (!id || !detail) return;
@@ -191,6 +198,7 @@ export default function Members(props: Iprops) {
               onSelectUser={handleAdminSelect}
               formatActive={formatAdminActive}
               showEdit={edit && canUpdateSponsor}
+              sns={nameMap[getUser(item)?.wallet || '']}
             />
           ))}
         </Row>
@@ -207,6 +215,7 @@ export default function Members(props: Iprops) {
               onSelectUser={handleMemSelect}
               formatActive={formatMemActive}
               showEdit={edit && canUpdateMember}
+              sns={nameMap[getUser(item)?.wallet || '']}
             />
           ))}
         </Row>
