@@ -18,7 +18,7 @@ import { Web3Provider } from '@ethersproject/providers';
 import { X } from 'react-bootstrap-icons';
 import MetamaskIcon from 'assets/images/wallet/metamask.png';
 import UnipassIcon from 'assets/images/wallet/unipass.svg';
-import { getPushToken } from 'components/firebase';
+import { getPushToken } from 'utils/serviceWorkerRegistration';
 import { registerDevice, getPushDevice } from 'requests/push';
 
 const { useProvider, useAccount } = uniPassHooks;
