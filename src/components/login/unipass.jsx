@@ -27,12 +27,14 @@ const upProvider = new UniPassProvider({
 });
 
 
-export default function Unipass(){
+export default function Unipass({callback}){
     const navigate = useNavigate();
     const [msg,setMsg] = useState(null);
     const [signInfo,setSignInfo] = useState();
     const [result,setResult] = useState(null);
-    const { state: { provider,account },dispatch } = useAuthContext();
+    const [provider, setProvider] = useState()
+    const [account, setAccount] = useState()
+    const { dispatch } = useAuthContext();
 
     const getP = async() =>{
         try{
@@ -40,18 +42,18 @@ export default function Unipass(){
             await upProvider.disconnect();
             await upProvider.connect();
             const provider = new ethers.providers.Web3Provider(upProvider, "any");
-            dispatch({ type: AppActionType.SET_PROVIDER, payload: provider });
+            setProvider(provider)
         }catch (e){
             console.error("get Provider",e)
+            dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: false });
+            callback()
         }
     }
 
     useEffect(()=>{
-       let type = localStorage.getItem(SELECT_WALLET);
-        if(provider && type === "UNIPASS"){
+        if(provider){
             connect();
         }
-
     },[provider])
 
     const connect = async() =>{
@@ -59,10 +61,12 @@ export default function Unipass(){
             clearStorage();
             const signer = provider.getSigner();
             const address = await signer.getAddress();
-            dispatch({ type: AppActionType.SET_ACCOUNT, payload: address });
+            setAccount(address)
             // setAddr(address)
         }catch (e) {
             console.error("connect",e)
+            dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: false });
+            callback()
         }
     }
 
@@ -80,19 +84,23 @@ export default function Unipass(){
 
     const signMessage = async() =>{
         try{
+            console.log("signMessage", account)
             let nonce = await getMyNonce(account);
             const eip55Addr = ethers.utils.getAddress(account);
             console.error(eip55Addr)
 
             const siweMessage = createSiweMessage(eip55Addr, 1, nonce, 'Welcome to SeeDAO!');
             setMsg(siweMessage)
+            console.log("siweMessage", siweMessage)
             const signer = provider.getSigner();
             let res = await signer.signMessage(siweMessage);
             setSignInfo(res)
         }catch (e) {
             console.error("signMessage",e)
+            dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: false });
             // setAddr(null)
             await upProvider.disconnect();
+            callback()
         }
 
     }
@@ -117,12 +125,14 @@ export default function Unipass(){
         };
         try{
             let res = await requests.user.login(obj);
+            console.log("LoginTo", res)
             setResult(res.data)
+            dispatch({ type: AppActionType.SET_ACCOUNT, payload: account })
 
             const now = Date.now();
             res.data.token_exp = now + res.data.token_exp * 1000;
             dispatch({ type: AppActionType.SET_LOGIN_DATA, payload: res.data });
-
+            dispatch({ type: AppActionType.SET_PROVIDER, payload: provider });
             const authorizer = new Authorizer('auto', { endpoint: readPermissionUrl });
             await authorizer.setUser(account.toLowerCase());
             dispatch({ type: AppActionType.SET_AUTHORIZER, payload: authorizer });
@@ -135,6 +145,8 @@ export default function Unipass(){
         }catch (e){
             console.error(e)
             ReactGA.event("login_failed",{type: "unipass"});
+        }  finally {
+            callback()
         }
 
     }

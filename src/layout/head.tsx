@@ -176,20 +176,6 @@ export default function Header() {
     toGo();
   };
 
-  let qr = window.location.search;
-
-  useEffect(() => {
-    console.error('===qr clear==', qr);
-    if (qr.indexOf('Rejected') > -1) {
-      localStorage.removeItem('joyid-status');
-      localStorage.removeItem('joyid-msg');
-      localStorage.removeItem('joyid-address');
-      localStorage.removeItem('select_wallet');
-      navigate('/home');
-      window.location.reload();
-    }
-  }, [qr]);
-
   return (
     <HeadeStyle>
       {loading && <Loading />}

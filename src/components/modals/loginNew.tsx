@@ -83,6 +83,7 @@ export default function LoginModal({ showModal }: any) {
 
   useEffect(() => {
     let type = localStorage.getItem('select_wallet');
+    console.log('type', type);
     if (!type) return;
     setType(type);
   }, []);
@@ -97,9 +98,27 @@ export default function LoginModal({ showModal }: any) {
         </span>
 
         <Title>{t('general.ConnectWallet')}</Title>
-        {type === Wallet.METAMASK && <Metamask />}
-        {type === Wallet.UNIPASS && <Unipass />}
-        {type === Wallet.JOYID && <Joyid />}
+        {type === Wallet.METAMASK && (
+          <Metamask
+            callback={() => {
+              selectType(undefined);
+            }}
+          />
+        )}
+        {type === Wallet.UNIPASS && (
+          <Unipass
+            callback={() => {
+              selectType(undefined);
+            }}
+          />
+        )}
+        {type === Wallet.JOYID && (
+          <Joyid
+            callback={() => {
+              selectType(undefined);
+            }}
+          />
+        )}
 
         <Content>
           {LOGIN_WALLETS.map((w) => (

@@ -16,62 +16,11 @@ import { readPermissionUrl } from "../../requests/user";
 import { WalletType } from "../../wallet/wallet";
 import { SELECT_WALLET } from "../../utils/constant";
 
-export default function Joyid(){
+export default function Joyid({callback}){
 
     const navigate = useNavigate();
-    const [account, setAccount] = useState();
-    const [sig, setSig] = useState("");
-    const [msg,setMsg] = useState();
-    const [result,setResult] = useState(null);
     const { dispatch } = useAuthContext();
 
-    useEffect(() => {
-
-        console.log("%c fdsafdafd","color:#f0f");
-        const redirectHome = () => {
-
-            const _address = localStorage.getItem("joyid-address");
-            const provider =   new ethers.providers.StaticJsonRpcProvider('https://eth.llamarpc.com');
-            dispatch({ type: AppActionType.SET_PROVIDER, payload: provider });
-            localStorage.setItem(SELECT_WALLET, 'JOYID');
-            if (_address) {
-                setAccount(_address);
-
-
-                dispatch({ type: AppActionType.SET_ACCOUNT, payload: _address });
-                return;
-            }
-            let state;
-            try {
-                state = connectCallback();
-                if (state?.address) {
-                    setAccount(state.address);
-                    // store.dispatch(saveAccount(state.address))
-                    dispatch({ type: AppActionType.SET_ACCOUNT, payload: state.address });
-                    localStorage.setItem("joyid-address", state.address);
-                    return true;
-                }
-            } catch (error) {
-                console.log("callback:", error);
-                localStorage.removeItem("joyid-status")
-            }
-        };
-
-        const redirectSignMessage = () => {
-            let state;
-            try {
-                state = signMessageCallback();
-                console.log("===signMessageCallback===",state)
-                setSig(state.signature);
-                return true;
-            } catch (error) {
-                console.log("callback sign:", error);
-                localStorage.removeItem("joyid-status")
-            }
-        };
-        redirectHome();
-        redirectSignMessage();
-    }, []);
 
     const buildRedirectUrl = (action) => {
         const url = new URL(`${window.location.origin}/home`);
@@ -79,46 +28,26 @@ export default function Joyid(){
         return url.href;
     }
 
-    useEffect(()=>{
-        let action = localStorage.getItem("joyid-status")
-        if(!account || action !== "login" ) return;
-        onSignMessageRedirect()
-    },[account])
-
-    useEffect(()=>{
-        console.error(sig,account)
-        if(!sig || !account) return;
-        LoginTo()
-    },[sig,account])
-
-
     const getMyNonce = async(wallet) =>{
         let rt = await requests.user.getNonce(wallet);
         return rt.data.nonce;
     }
 
-    const onSignMessageRedirect = async() => {
+    const onSignMessageRedirect = async(account) => {
         try{
-            localStorage.removeItem("joyid-msg")
-            localStorage.setItem("joyid-status","sign")
+            console.log("onSignMessageRedirect", account)
             let nonce = await getMyNonce(account);
             const eip55Addr = ethers.utils.getAddress(account);
 
             const siweMessage = createSiweMessage(eip55Addr, 1, nonce, 'Welcome to SeeDAO!');
-            setMsg(siweMessage)
             localStorage.setItem("joyid-msg",siweMessage)
 
             const url = buildRedirectUrl("sign-message");
             signMessageWithRedirect(url, siweMessage, account, {
-                state: msg,
+                state: siweMessage,
             });
         }catch (e) {
-            localStorage.removeItem("joyid-status");
-            localStorage.removeItem("joyid-msg");
-            localStorage.removeItem("joyid-address");
-            localStorage.removeItem("select_wallet");
-            localStorage.removeItem("select_wallet");
-            window.location.reload();
+            console.log("onSignMessageRedirect", e)
         }
 
     };
@@ -126,7 +55,6 @@ export default function Joyid(){
 
     const onConnectRedirect = () => {
         localStorage.setItem(SELECT_WALLET, 'JOYID');
-        localStorage.setItem("joyid-status","login")
         const url = buildRedirectUrl("connect");
         connectWithRedirect(url, {
             rpcURL: "https://eth.llamarpc.com",
@@ -140,9 +68,11 @@ export default function Joyid(){
     };
 
 
-    const LoginTo = async () =>{
-        localStorage.setItem("joyid-status",null)
+    const LoginTo = async (sig) =>{
+        console.log("LoginTo", sig)
+        // localStorage.setItem("joyid-status",null)
         const { host} = window.AppConfig;
+        const account = localStorage.getItem("joyid-address");
         let ms =  localStorage.getItem("joyid-msg")
         let obj = {
             wallet: account,
@@ -154,8 +84,9 @@ export default function Joyid(){
         };
         try{
             let res = await requests.user.login(obj);
-            // store.dispatch(saveUserToken(rt.data));
-            // store.dispatch(saveWalletType("joyid"));
+            console.log("loginTo res", res)
+            dispatch({ type: AppActionType.SET_ACCOUNT, payload: account })
+
 
             const now = Date.now();
             res.data.token_exp = now + res.data.token_exp * 1000;
@@ -172,29 +103,46 @@ export default function Joyid(){
                 type: "joyid",
                 account:"account:"+account
             });
-            setResult(res.data)
+
         }catch (e){
             console.error("LoginTo joyid",e)
             ReactGA.event("login_failed",{type: "joyid"});
+        } finally {
+            callback()
+            navigate('/home')
         }
-
     }
 
-    useEffect(()=>{
-        if(!result)return;
-        navigate('/home');
-
-    },[result])
-
-    let action = localStorage.getItem("joyid-status")
-    let qr = window.location.search;
     useEffect(() => {
-        if(!action && !account && qr.indexOf("Rejected") === -1){
+        try {
+            let connectState = connectCallback();
+            console.log("connect" + connectState.address)
+            if (connectState.address) {
+                localStorage.setItem("joyid-address", connectState.address);
+                onSignMessageRedirect(connectState.address)
+                return
+            }
+            let signState = signMessageCallback()
+            console.log("sign", signState)
+            if (signState.signature) {
+                LoginTo(signState.signature)
+                return;
+            }
+
+            navigate('/home')
+            callback()
+
+        } catch (e) {
+            let search = window.location.search;
+            if (search && search.indexOf("Rejected") >= 0) {
+                navigate('/home')
+                callback()
+                return;
+            }
             onConnectRedirect()
         }
 
-    }, [action,account,qr]);
-
+    }, []);
 
     return null
 }

@@ -14,7 +14,7 @@ import { readPermissionUrl } from "../../requests/user";
 import { WalletType } from "../../wallet/wallet";
 import { clearStorage } from "../../utils/auth";
 
-export default function  Metamask(){
+export default function  Metamask({callback}){
     const navigate = useNavigate();
     const { dispatch } = useAuthContext();
 
@@ -55,6 +55,8 @@ export default function  Metamask(){
             setConnectWallet(true);
         }catch (e) {
             console.error("connect",e)
+            dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: false });
+            callback();
         }
 
     }
@@ -77,9 +79,10 @@ export default function  Metamask(){
             setConnectWallet(false);
         }catch (e) {
             setConnectWallet(true);
-            window.location.reload()
+            dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: false });
             disconnect();
             console.error("sign error:",e)
+            callback()
         }
 
     }
@@ -131,6 +134,9 @@ export default function  Metamask(){
             dispatch({ type: AppActionType.SET_WALLET_TYPE, payload: null });
             disconnect();
             ReactGA.event("login_failed",{type: "metamask"});
+        }
+        finally {
+            callback();
         }
     }
 
