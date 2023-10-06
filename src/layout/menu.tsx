@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { House, Grid1x2, CashCoin, PieChart, People, Box2Heart, ShieldCheck, Envelope } from 'react-bootstrap-icons';
 import React from 'react';
 import useCheckLogin from 'hooks/useCheckLogin';
-import { useAuthContext } from 'providers/authProvider';
+import { AppActionType, useAuthContext } from 'providers/authProvider';
 import { WalletType } from 'wallet/wallet';
 import AppVersion from '../components/version';
 
@@ -162,10 +162,14 @@ export default function Menu({ isMedium }: { isMedium: boolean }) {
   const isLogin = useCheckLogin();
   const {
     state: { wallet_type, expandMenu: open },
+    dispatch,
   } = useAuthContext();
 
   const onSelectMenu = (m: MenuItemType) => {
     navigate(m.link.href);
+    if (isMedium && open) {
+      dispatch({ type: AppActionType.SET_EXPAND_MENU, payload: false });
+    }
   };
 
   const menuItemsFormat = useMemo(() => {

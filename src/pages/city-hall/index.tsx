@@ -39,7 +39,14 @@ const TopBox = styled.div`
   flex-direction: column;
 `;
 
-const TabsBox = styled(Tabs)``;
+const TabsBox = styled(Tabs)`
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  &::-webkit-scrollbar {
+    display: none;
+    width: 0;
+  }
+`;
 export default function Index() {
   const { t } = useTranslation();
   const { dispatch } = useAuthContext();

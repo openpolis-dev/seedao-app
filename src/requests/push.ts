@@ -10,8 +10,7 @@ type deviceType = 'pc' | 'mobile';
 
 interface IRegisterDeviceParams {
   device: deviceType;
-  push_subscription: PushSubscriptionJSON;
-  wallet: string;
+  registration_token: string;
   language: string;
 }
 

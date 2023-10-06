@@ -9,7 +9,7 @@ import GlobalStyle from 'assets/styles/global';
 
 // import 'bootstrap/dist/css/bootstrap.min.css';
 import useMedia from 'hooks/useMedia';
-import { isPad } from 'utils/userAgent';
+import { isMobile, isPhone } from 'utils/userAgent';
 import { useEffect } from 'react';
 import { EthereumClient, w3mConnectors, w3mProvider } from '@web3modal/ethereum';
 import { Web3Modal } from '@web3modal/react';
@@ -34,12 +34,12 @@ function App() {
 
   useEffect(() => {
     console.log('[isLargeScreen]', isLargeScreen);
-    console.log('[isPad]', isPad);
-    if (!isPad && !isLargeScreen) {
+    console.log('[isPhone]', isPhone);
+    if (isPhone || (isMobile && !isLargeScreen)) {
       const mobile_app = process.env.REACT_APP_MOBILE_URL;
-      mobile_app && window.location.replace('https://dev-m.seedao.tech/');
+      mobile_app && window.location.replace(mobile_app);
     }
-  }, [isPad, isLargeScreen]);
+  }, [isPhone, isLargeScreen]);
 
   return (
     <Web3Provider>

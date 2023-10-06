@@ -52,6 +52,15 @@ const BackBox = styled.div`
   }
 `;
 
+const TabsBox = styled(Tabs)`
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  &::-webkit-scrollbar {
+    display: none;
+    width: 0;
+  }
+`;
+
 const BtmBox = styled.div``;
 export default function Index() {
   // const router = useRouter();
@@ -127,11 +136,11 @@ export default function Index() {
           <Row>
             <Col>
               <TopBox>
-                <Tabs defaultActiveKey={0} onSelect={(e: any) => selectCurrent(e)}>
+                <TabsBox defaultActiveKey={0} onSelect={(e: any) => selectCurrent(e)}>
                   {list.map((item, index) => (
                     <Tab key={item.id} title={item.name} eventKey={index} />
                   ))}
-                </Tabs>
+                </TabsBox>
                 <BtmBox>
                   {current === 0 && (
                     <Info detail={detail} updateProjectName={updateProjectName} updateProject={getDetail} />

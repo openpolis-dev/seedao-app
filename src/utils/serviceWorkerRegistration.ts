@@ -1,25 +1,29 @@
-// This optional code is used to register a service worker.
-// register() is not called by default.
+import { initializeApp } from 'firebase/app';
+import { getMessaging, getToken, onMessage, Messaging, isSupported } from 'firebase/messaging';
 
-// This lets the app load faster on subsequent visits in production, and gives
-// it offline capabilities. However, it also means that developers (and users)
-// will only see deployed updates on subsequent visits to a page, after all the
-// existing tabs open on the page have been closed, since previously cached
-// resources are updated in the background.
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: 'AIzaSyCuXK4qOcVPZHwen8YJ_xiBNYzM5K8VgtY',
+  authDomain: 'test-pwa-12448.firebaseapp.com',
+  databaseURL: 'https://test-pwa-12448-default-rtdb.firebaseio.com',
+  projectId: 'test-pwa-12448',
+  storageBucket: 'test-pwa-12448.appspot.com',
+  messagingSenderId: '134621359161',
+  appId: '1:134621359161:web:5ef9ef4afa8e3aafcb71e8',
+};
 
-// To learn more about the benefits of this model and instructions on how to
-// opt-in, read https://cra.link/PWA
-// import sw from "../public/service-worker";
+let messaging: Messaging;
 
 const version = 'v1';
 
 export function register(config?: any) {
   if ('serviceWorker' in navigator) {
+    // Initialize Firebase
+    const firebaseApp = initializeApp(firebaseConfig);
+    messaging = getMessaging(firebaseApp);
+
     window.addEventListener('load', () => {
-      registerValidSW('./sw.js', config);
-      navigator.serviceWorker.addEventListener('message', (event) => {
-        console.log('-----listen-----', event.data);
-      });
+      registerValidSW('/firebase-messaging-sw.js', config);
     });
   }
 }
@@ -84,3 +88,29 @@ export function unregister() {
       });
   }
 }
+
+export const getPushToken = async () => {
+  try {
+    await navigator.serviceWorker.ready;
+    const supported = await isSupported();
+    if (!supported) {
+      throw new Error('NOTIFICATIONS_NOT_SUPPORTED');
+    }
+    const token = await getToken(messaging);
+    if (token) {
+      console.log('current token for client: ', token);
+      return token;
+    } else {
+      throw new Error('No registration token available. Request permission to generate one.');
+    }
+  } catch (error) {
+    console.log('An error occurred while retrieving token. ', error);
+  }
+};
+
+export const onMessageListener = () =>
+  new Promise((resolve) => {
+    onMessage(messaging, (payload) => {
+      resolve(payload);
+    });
+  });
