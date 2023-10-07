@@ -8,7 +8,7 @@ import { AppActionType, useAuthContext } from 'providers/authProvider';
 import ReactMarkdown from 'react-markdown';
 import { getEventById, uplodaEventImage } from 'requests/event';
 import { formatTime } from 'utils/time';
-import { useWeb3React } from '@web3-react/core';
+// import { useWeb3React } from '@web3-react/core';
 import { useNavigate } from 'react-router-dom';
 import { ChevronLeft, Clock } from 'react-bootstrap-icons';
 import { ContainerPadding } from 'assets/styles/global';
@@ -154,8 +154,10 @@ export default function ViewEvent() {
   const id = new URLSearchParams(search).get('id');
   const navigate = useNavigate();
 
-  const { dispatch } = useAuthContext();
-  const { account } = useWeb3React();
+  const {
+    state: { account },
+    dispatch,
+  } = useAuthContext();
 
   const [title, setTitle] = useState('');
   const [startAt, setStartAt] = useState<number>();

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
 import { injected, uniPassWallet, uniPassHooks } from 'wallet/connector';
 import requests from 'requests';
-import { useWeb3React } from '@web3-react/core';
+// import { useWeb3React } from '@web3-react/core';
 import { createSiweMessage } from 'utils/sign';
 import { Authorizer } from 'casbin.js';
 import { readPermissionUrl } from 'requests/user';
@@ -59,7 +59,11 @@ export default function LoginModal() {
   const { t } = useTranslation();
   const { dispatch } = useAuthContext();
   const { Toast, showToast } = useToast();
-  const { account, provider } = useWeb3React();
+  // const { account, provider } = useWeb3React();
+
+  const {
+    state: { account, provider },
+  } = useAuthContext();
   const [loginStatus, setLoginStatus] = useState<LoginStatus>(LoginStatus.Default);
   const [chooseWallet, setChooseWallet] = useState<LoginWallet>();
 

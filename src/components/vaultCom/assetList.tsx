@@ -15,7 +15,7 @@ import { AppActionType, useAuthContext } from 'providers/authProvider';
 import Loading from 'components/loading';
 import { formatDate, formatTime } from 'utils/time';
 import publicJs from 'utils/publicJs';
-import { useWeb3React } from '@web3-react/core';
+// import { useWeb3React } from '@web3-react/core';
 import { useTranslation } from 'react-i18next';
 import { formatApplicationStatus } from 'utils/index';
 import Select from 'components/common/select';
@@ -98,7 +98,10 @@ export default function AssetList() {
     dispatch,
   } = useAuthContext();
   const { t } = useTranslation();
-  const { account } = useWeb3React();
+  // const { account } = useWeb3React();
+  const {
+    state: { account },
+  } = useAuthContext();
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [total, setTotal] = useState(0);

@@ -4,6 +4,7 @@ import { ethers } from 'ethers';
 import axios from 'axios';
 import { useWeb3React } from '@web3-react/core';
 import { useTranslation } from 'react-i18next';
+import { useAuthContext } from '../../../providers/authProvider';
 
 const getNftsByContract = (account: string, contract: string, chain: number) => {
   let base = '';
@@ -80,7 +81,10 @@ type SBTtype = {
 
 export default function SBTCard() {
   const { t } = useTranslation();
-  const { account } = useWeb3React();
+  // const { account } = useWeb3React();
+  const {
+    state: { account },
+  } = useAuthContext();
   const [polygonProvider, setPolygonProvider] = useState<any>(null);
 
   const [govSBTs, setGovSBTs] = useState<SBTtype[]>([]);

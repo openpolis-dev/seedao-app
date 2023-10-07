@@ -159,11 +159,12 @@ export default function Menu({ isMedium }: { isMedium: boolean }) {
   const { pathname } = useLocation();
   const { t } = useTranslation();
 
-  const isLogin = useCheckLogin();
   const {
-    state: { wallet_type, expandMenu: open },
+    state: { wallet_type, account, expandMenu: open },
     dispatch,
   } = useAuthContext();
+
+  const isLogin = useCheckLogin(account);
 
   const onSelectMenu = (m: MenuItemType) => {
     navigate(m.link.href);

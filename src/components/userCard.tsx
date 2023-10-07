@@ -6,11 +6,12 @@ import { DefaultAvatar } from 'utils/constant';
 import PublicJs from 'utils/publicJs';
 import copyIcon from 'assets/images/copy.svg';
 import styled from 'styled-components';
-import { useWeb3React } from '@web3-react/core';
+// import { useWeb3React } from '@web3-react/core';
 import TwitterIcon from 'assets/images/twitterNor.svg';
 import DiscordIcon from 'assets/images/discordNor.svg';
 import EmailIcon from 'assets/images/email.svg';
 import { Col } from 'react-bootstrap';
+import { useAuthContext } from '../providers/authProvider';
 
 interface IUserProps {
   user: IUser;
@@ -21,7 +22,12 @@ interface IUserProps {
 }
 
 export default function UserCard({ user, showEdit, onSelectUser, formatActive, sns }: IUserProps) {
-  const { account } = useWeb3React();
+  // const { account } = useWeb3React();
+
+  const {
+    state: { account },
+  } = useAuthContext();
+
   return (
     <UserCardBox sm={12} md={6} lg={4} xl={3}>
       <div className="boxAll">

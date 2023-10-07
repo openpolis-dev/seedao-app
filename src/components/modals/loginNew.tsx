@@ -83,7 +83,6 @@ export default function LoginModal({ showModal }: any) {
 
   useEffect(() => {
     let type = localStorage.getItem('select_wallet');
-    console.log('type', type);
     if (!type) return;
     setType(type);
   }, []);

@@ -58,10 +58,10 @@ export default function Index() {
   const { t } = useTranslation();
   const canCreateProj = usePermission(PermissionAction.Create, PermissionObject.Guild);
   const {
-    state: { language },
+    state: { language, account },
     dispatch,
   } = useAuthContext();
-  const isLogin = useCheckLogin();
+  const isLogin = useCheckLogin(account);
   const navigate = useNavigate();
 
   const [pageCur, setPageCur] = useState(1);

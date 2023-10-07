@@ -79,8 +79,12 @@ const BtmBox = styled.div``;
 export default function Index() {
   // const router = useRouter();
   const { t } = useTranslation();
-  const isLogin = useCheckLogin();
-  const { dispatch } = useAuthContext();
+
+  const {
+    state: { account },
+    dispatch,
+  } = useAuthContext();
+  const isLogin = useCheckLogin(account);
   // const { id } = router.query;
 
   // const { search } = window.location;

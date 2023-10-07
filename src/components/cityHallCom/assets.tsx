@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { IUpdateBudgetParams, UpdateBudget } from 'requests/cityHall';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import useToast, { ToastType } from 'hooks/useToast';
-import { useWeb3React } from '@web3-react/core';
+// import { useWeb3React } from '@web3-react/core';
 import { Pencil, CheckLg } from 'react-bootstrap-icons';
 
 const Box = styled.div`
@@ -92,7 +92,11 @@ export default function Assets({ detail, refreshProject }: IProps) {
   const { t } = useTranslation();
   const { Toast, showToast } = useToast();
   const { dispatch } = useAuthContext();
-  const { account } = useWeb3React();
+  // const { account } = useWeb3React();
+
+  const {
+    state: { account },
+  } = useAuthContext();
 
   const [token, setToken] = useState<IBudgetItem>();
   const [point, setPoint] = useState<IBudgetItem>();

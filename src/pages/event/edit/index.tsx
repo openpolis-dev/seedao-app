@@ -12,7 +12,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { MdEditor } from 'md-editor-rt';
 import 'md-editor-rt/lib/style.css';
 import { createEvent, editEventById, getEventById, uplodaEventImage } from 'requests/event';
-import { useWeb3React } from '@web3-react/core';
+// import { useWeb3React } from '@web3-react/core';
 import { useNavigate } from 'react-router-dom';
 import { ChevronLeft, X, Upload } from 'react-bootstrap-icons';
 import { ContainerPadding } from 'assets/styles/global';
@@ -164,13 +164,13 @@ export default function CreateGuild() {
   const navigate = useNavigate();
 
   const {
-    state: { language },
+    state: { language, account },
+    dispatch,
   } = useAuthContext();
 
   // const { id } = router.query;
 
-  const { dispatch } = useAuthContext();
-  const { account } = useWeb3React();
+  // const { account } = useWeb3React();
 
   const [title, setTitle] = useState('');
   const [startAt, setStartAt] = useState<number>(0);

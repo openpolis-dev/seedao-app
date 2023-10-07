@@ -28,26 +28,26 @@ const ethereumClient = new EthereumClient(wagmiConfig, chains);
 
 function App() {
   return (
-    <Web3Provider>
-      <WagmiConfig config={wagmiConfig}>
-        <AuthProvider>
-          <GlobalStyle />
-          <RouterLink />
-          {/* <InstallCheck /> */}
+    // <Web3Provider>
+    <WagmiConfig config={wagmiConfig}>
+      <AuthProvider>
+        <GlobalStyle />
+        <RouterLink />
+        {/* <InstallCheck /> */}
 
-          <Web3Modal
-            projectId={projectId}
-            ethereumClient={ethereumClient}
-            explorerRecommendedWalletIds={[
-              'c57ca95b47569778a828d19178114f4db188b89b763c899ba0be274e97267d96',
-              // '80c7742837ad9455049270303bccd55bae39a9e639b70d931191269d3a76320a',
-              // '4622a2b2d6af1c9844944291e5e7351a6aa24cd7b23099efac1b2fd875da31a0'
-            ]}
-            explorerExcludedWalletIds="ALL"
-          />
-        </AuthProvider>
-      </WagmiConfig>
-    </Web3Provider>
+        <Web3Modal
+          projectId={projectId}
+          ethereumClient={ethereumClient}
+          explorerRecommendedWalletIds={[
+            'c57ca95b47569778a828d19178114f4db188b89b763c899ba0be274e97267d96',
+            // '80c7742837ad9455049270303bccd55bae39a9e639b70d931191269d3a76320a',
+            // '4622a2b2d6af1c9844944291e5e7351a6aa24cd7b23099efac1b2fd875da31a0'
+          ]}
+          explorerExcludedWalletIds="ALL"
+        />
+      </AuthProvider>
+    </WagmiConfig>
+    // </Web3Provider>
   );
 }
 

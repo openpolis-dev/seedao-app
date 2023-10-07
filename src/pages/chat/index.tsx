@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import * as user from 'requests/user';
 
-import { useWeb3React } from '@web3-react/core';
+// import { useWeb3React } from '@web3-react/core';
 import useCheckLogin from 'hooks/useCheckLogin';
 import { useAuthContext } from 'providers/authProvider';
 import { useNavigate } from 'react-router-dom';
@@ -18,11 +18,12 @@ const Box = styled.div`
 export default function Index() {
   // const router = useRouter();
   const navigate = useNavigate();
-  const { account, provider } = useWeb3React();
-  const isLogin = useCheckLogin();
+  // const { account, provider } = useWeb3React();
+
   const {
-    state: { userData },
+    state: { userData, account, provider },
   } = useAuthContext();
+  const isLogin = useCheckLogin(account);
 
   useEffect(() => {
     window.seeDAOosApi = {
