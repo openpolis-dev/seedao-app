@@ -8,9 +8,6 @@ import GlobalStyle from 'assets/styles/global';
 // import InstallCheck from 'components/installPWA';
 
 // import 'bootstrap/dist/css/bootstrap.min.css';
-import useMedia from 'hooks/useMedia';
-import { isMobile, isPhone } from 'utils/userAgent';
-import { useEffect } from 'react';
 import { EthereumClient, w3mConnectors, w3mProvider } from '@web3modal/ethereum';
 import { Web3Modal } from '@web3modal/react';
 import { configureChains, createConfig, WagmiConfig } from 'wagmi';
@@ -30,17 +27,6 @@ const wagmiConfig = createConfig({
 const ethereumClient = new EthereumClient(wagmiConfig, chains);
 
 function App() {
-  const isLargeScreen = useMedia('(min-width: 768px)', true);
-
-  useEffect(() => {
-    console.log('[isLargeScreen]', isLargeScreen);
-    console.log('[isPhone]', isPhone);
-    if (isPhone || (isMobile && !isLargeScreen)) {
-      const mobile_app = process.env.REACT_APP_MOBILE_URL;
-      mobile_app && window.location.replace(mobile_app);
-    }
-  }, [isPhone, isLargeScreen]);
-
   return (
     <Web3Provider>
       <WagmiConfig config={wagmiConfig}>
