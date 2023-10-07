@@ -23,6 +23,14 @@ import { ContainerPadding } from 'assets/styles/global';
 const OuterBox = styled.div`
   min-height: 100%;
   ${ContainerPadding};
+  @media (max-width: 1024px) {
+    .nav {
+      flex-wrap: nowrap;
+    }
+    .nav-item {
+      white-space: nowrap;
+    }
+  }
 `;
 
 const Box = styled.div`
