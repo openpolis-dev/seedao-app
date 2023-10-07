@@ -49,7 +49,11 @@ export default function Header() {
     localStorage.setItem('language', v);
     i18n.changeLanguage(v);
     if (select && isLogin && userData) {
-      requestSetDeviceLanguage({ device: getPushDevice(), language: v });
+      try {
+        requestSetDeviceLanguage({ device: getPushDevice(), language: v });
+      } catch (error) {
+        console.error('Set Device Language Failed', error);
+      }
     }
   };
 

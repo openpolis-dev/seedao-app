@@ -106,6 +106,7 @@ export const getPushToken = async () => {
     }
   } catch (error) {
     console.log('An error occurred while retrieving token. ', error);
+    throw new Error('An error occurred while retrieving token.');
   }
 };
 
@@ -129,5 +130,21 @@ export const registerPush = async () => {
     }
   } catch (error) {
     console.error(error);
+    console.log('process.env.NODE_ENV', process.env.NODE_ENV);
+    if (process.env.NODE_ENV === 'development') {
+      try {
+        // register push
+        const deviceToken = await getPushToken();
+        if (deviceToken) {
+          await registerDevice({
+            device: getPushDevice(),
+            registration_token: deviceToken,
+            language: localStorage.getItem('language') || 'en',
+          });
+        }
+      } catch (error) {
+        console.error('dev second failed', error);
+      }
+    }
   }
 };
