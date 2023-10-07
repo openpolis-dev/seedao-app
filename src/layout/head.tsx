@@ -19,6 +19,7 @@ import Loading from 'components/loading';
 import usePushPermission from 'hooks/usePushPermission';
 import { requestSetDeviceLanguage, getPushDevice } from 'requests/push';
 import { useDisconnect } from 'wagmi';
+import { mainnet } from 'wagmi/chains';
 
 export default function Header() {
   const { i18n } = useTranslation();
@@ -91,13 +92,17 @@ export default function Header() {
   };
 
   useEffect(() => {
+    if (!window.ethereum) return;
     const initProvider = async () => {
       const { ethereum } = window as any;
-      ethereum?.on('chainChanged', () => {
-        window.location.reload();
+      ethereum?.on('chainChanged', (chainId: any) => {
+        if (parseInt(chainId, 16) !== mainnet.id) {
+          onClickLogout();
+        }
       });
-      ethereum?.on('accountsChanged', function () {
-        window.location.reload();
+      ethereum?.on('accountsChanged', function (accounts: any) {
+        console.log('=====accountsChanged', accounts);
+        onClickLogout();
       });
     };
 
@@ -172,8 +177,8 @@ export default function Header() {
     dispatch({ type: AppActionType.SET_AUTHORIZER, payload: null });
     dispatch({ type: AppActionType.SET_WALLET_TYPE, payload: null });
     dispatch({ type: AppActionType.SET_ACCOUNT, payload: null });
-    window.location.reload();
     toGo();
+    window.location.reload();
   };
 
   return (
