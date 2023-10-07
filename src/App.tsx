@@ -1,4 +1,4 @@
-import Web3Provider from './providers/web3Provider';
+// import Web3Provider from './providers/web3Provider';
 import AuthProvider from './providers/authProvider';
 import './assets/styles/quill.css';
 import './assets/styles/font.css';
@@ -29,6 +29,7 @@ const ethereumClient = new EthereumClient(wagmiConfig, chains);
 function App() {
   return (
     // <Web3Provider>
+
     <WagmiConfig config={wagmiConfig}>
       <AuthProvider>
         <GlobalStyle />
@@ -36,6 +37,7 @@ function App() {
         {/* <InstallCheck /> */}
 
         <Web3Modal
+          defaultChain={mainnet}
           projectId={projectId}
           ethereumClient={ethereumClient}
           explorerRecommendedWalletIds={[

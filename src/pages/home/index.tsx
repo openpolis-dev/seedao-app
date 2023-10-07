@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import { Row, Col } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import { GOV_NODE_CONTRACT, SGN_CONTRACT } from 'utils/constant';
-import { useNavigate } from 'react-router-dom';
 import BgImg from '../../assets/images/topBg.png';
 import HomeBg from '../../assets/images/homebg.png';
 import { People, ShieldCheck, Grid1x2, Calendar } from 'react-bootstrap-icons';

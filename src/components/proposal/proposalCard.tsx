@@ -5,6 +5,7 @@ import styled from 'styled-components';
 // import { useRouter } from 'next/router';
 import { useNavigate } from 'react-router-dom';
 import { formatDate } from 'utils/time';
+import QuillViewer from './quillViewer';
 
 const CardBody = styled.div``;
 
@@ -16,8 +17,9 @@ export default function ProposalCard({ data }: { data: IBaseProposal }) {
     let delta: any[] = [];
     try {
       delta = JSON.parse(data.first_post.content);
+      console.log(delta);
     } catch (e) {
-      console.info('illegal json:' + data.first_post.content);
+      // console.info('illegal json:' + JSON.stringify(data));
     }
 
     const text: any[] = [];
@@ -58,6 +60,7 @@ export default function ProposalCard({ data }: { data: IBaseProposal }) {
     if (textContent == '<p><br/></p>') {
       textContent = '';
     }
+
     setContent(textContent);
   };
 

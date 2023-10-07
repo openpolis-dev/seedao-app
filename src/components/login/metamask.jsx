@@ -19,7 +19,7 @@ export default function  Metamask({callback}){
     const navigate = useNavigate();
     const { dispatch } = useAuthContext();
 
-    const { open } = useWeb3Modal();
+    const { open,close } = useWeb3Modal();
     const { isConnected,address } = useAccount();
     const { disconnect } = useDisconnect();
     const { chain } = useNetwork();
@@ -47,15 +47,17 @@ export default function  Metamask({callback}){
     },[signer,connectWallet])
 
     const onClick = async () =>{
+        dispatch({ type: AppActionType.SET_LOADING, payload: true });
         try{
             localStorage.setItem(SELECT_WALLET, 'METAMASK');
             clearStorage();
             disconnect();
-            // store.dispatch(saveLoading(true));
             await open();
             setConnectWallet(true);
+
         }catch (e) {
             console.error("connect",e)
+            dispatch({ type: AppActionType.SET_LOADING, payload: false });
             dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: false });
             callback();
         }
@@ -80,6 +82,7 @@ export default function  Metamask({callback}){
             setConnectWallet(false);
         }catch (e) {
             setConnectWallet(true);
+            dispatch({ type: AppActionType.SET_LOADING, payload: false });
             dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: false });
             disconnect();
             console.error("sign error:",e)
@@ -138,6 +141,8 @@ export default function  Metamask({callback}){
             ReactGA.event("login_failed",{type: "metamask"});
         }
         finally {
+            dispatch({ type: AppActionType.SET_LOADING, payload: false });
+            close();
             callback();
         }
     }

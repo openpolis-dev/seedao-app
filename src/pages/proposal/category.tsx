@@ -33,7 +33,6 @@ export default function ProposalCategory() {
         category_index_id: _id,
         sort: orderType,
       });
-      console.log('res:', res);
       setProposals([...proposals, ...res.data.threads]);
       setHasMore(res.data.threads.length >= pageSize);
       setPage(page + 1);
