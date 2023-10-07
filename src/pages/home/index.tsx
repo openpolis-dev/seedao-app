@@ -7,6 +7,7 @@ import { GOV_NODE_CONTRACT, SGN_CONTRACT } from 'utils/constant';
 import BgImg from '../../assets/images/topBg.png';
 import HomeBg from '../../assets/images/homebg.png';
 import { People, ShieldCheck, Grid1x2, Calendar } from 'react-bootstrap-icons';
+import { useNavigate } from 'react-router-dom';
 
 const CITY_HALL = 'https://seedao.notion.site/07c258913c5d4847b59271e2ae6f7c66';
 const CITY_HALL_MEMBERS = 'https://www.notion.so/3913d631d7bc49e1a0334140e3cd84f5';
