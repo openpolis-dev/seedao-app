@@ -34,30 +34,23 @@ const TopLine = styled.ul`
   display: flex;
   align-items: center;
   flex-wrap: wrap;
+  gap: 20px 40px;
 
   li {
     display: flex;
     align-items: center;
-    margin-right: 40px;
-    margin-bottom: 20px;
-
     .tit {
       padding-right: 20px;
       white-space: nowrap;
     }
   }
+  @media (max-width: 1024px) {
+    gap: 20px;
+  } ;
 `;
 
-const TimeLine = styled.div`
-  display: flex;
-  align-items: center;
-  margin-bottom: 20px;
-`;
-
-const TimeBox = styled.div`
-  display: flex;
-  align-items: center;
-  margin-right: 20px;
+const TimeBox = styled.li`
+  gap: 20px;
 `;
 
 const BorderBox = styled.div`
@@ -376,8 +369,6 @@ export default function Audit() {
               }}
             />
           </li>
-        </TopLine>
-        <TimeLine>
           <TimeBox>
             <BorderBox>
               <RangeDatePickerStyle
@@ -387,11 +378,11 @@ export default function Audit() {
                 endDate={endDate}
               />
             </BorderBox>
+            <Button onClick={handleExport} disabled={!selectOne}>
+              {t('Project.Export')}
+            </Button>
           </TimeBox>
-          <Button onClick={handleExport} disabled={!selectOne}>
-            {t('Project.Export')}
-          </Button>
-        </TimeLine>
+        </TopLine>
       </FirstLine>
       <TopBox>
         <Button onClick={handleApprove} disabled={!selectOne}>

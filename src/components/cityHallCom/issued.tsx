@@ -31,24 +31,18 @@ const FirstLine = styled.div`
 const TopLine = styled.ul`
   display: flex;
   align-items: center;
-  margin-bottom: 20px;
-
+  gap: 20px 40px;
   li {
     display: flex;
     align-items: center;
-    margin-right: 40px;
-
     .tit {
       padding-right: 20px;
       white-space: nowrap;
     }
   }
-`;
-
-const TimeLine = styled.div`
-  display: flex;
-  align-items: center;
-  margin-bottom: 20px;
+  @media (max-width: 1024px) {
+    gap: 20px;
+  }
 `;
 
 const TimeBox = styled.div`
@@ -332,22 +326,22 @@ export default function Issued() {
               }}
             ></Select>
           </li>
+          <li>
+            <TimeBox>
+              <BorderBox>
+                <RangeDatePickerStyle
+                  placeholder={t('Project.RangeTime')}
+                  onChange={changeDate}
+                  startDate={startDate}
+                  endDate={endDate}
+                />
+              </BorderBox>
+            </TimeBox>
+            <Button onClick={handleExport} disabled={!selectOne}>
+              {t('Project.Export')}
+            </Button>
+          </li>
         </TopLine>
-        <TimeLine>
-          <TimeBox>
-            <BorderBox>
-              <RangeDatePickerStyle
-                placeholder={t('Project.RangeTime')}
-                onChange={changeDate}
-                startDate={startDate}
-                endDate={endDate}
-              />
-            </BorderBox>
-          </TimeBox>
-          <Button onClick={handleExport} disabled={!selectOne}>
-            {t('Project.Export')}
-          </Button>
-        </TimeLine>
       </FirstLine>
       {showProcessButton()}
       <TableBox>
