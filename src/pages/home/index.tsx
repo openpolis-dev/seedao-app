@@ -221,9 +221,17 @@ const getDatafromNftscan = (contract: string, base?: string) => {
   });
 };
 
-const EventCard = ({ icon, name, link }: { icon: React.ReactElement; name: string; link: string }) => {
+const EventCard = ({ icon, name, link, id }: { icon: React.ReactElement; name: string; link: string; id: string }) => {
+  const navigate = useNavigate();
+  const handleClickEvent = () => {
+    if (id === 'online') {
+      navigate('/online-event');
+    } else {
+      window.open(link, '_blank');
+    }
+  };
   return (
-    <EventCardStyle className="boxBg" onClick={() => window.open(link, '_blank')}>
+    <EventCardStyle className="boxBg" onClick={handleClickEvent}>
       <div className="iconBox">{icon}</div>
       <div>{name}</div>
     </EventCardStyle>
@@ -240,11 +248,13 @@ export default function Home() {
   const events = useMemo(() => {
     return [
       {
+        id: 'online',
         name: t('Home.OnlineEvent'),
         link: 'https://calendar.google.com/calendar/u/4?cid=YzcwNGNlNTA5ODUxMmIwYjBkNzA3MjJlNjQzMGFmNDIyMWUzYzllYmM2ZDFlNzJhYTcwYjgyYzgwYmI2OTk5ZkBncm91cC5jYWxlbmRhci5nb29nbGUuY29t',
         icon: <Calendar />,
       },
       {
+        id: 'offline',
         name: t('Home.OfflineEvent'),
         link: 'https://seeu.network/',
         icon: <Grid1x2 />,

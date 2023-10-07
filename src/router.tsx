@@ -21,6 +21,7 @@ import CreateProject from './pages/create-project';
 import CreateGuild from './pages/create-guild';
 import Profile from './pages/user/profile';
 import UserVault from './pages/user/vault';
+import CalendarPage from './pages/calendar';
 import RouterChecker from './utils/routerChecker';
 
 export default function RouterLink() {
@@ -37,6 +38,7 @@ export default function RouterLink() {
           <Route path="/event" element={<Event />} />
           <Route path="/event/view" element={<EventView />} />
           <Route path="/event/edit" element={<EventEdit />} />
+          <Route path="/online-event" element={<CalendarPage />} />
 
           <Route path="/assets" element={<Assets />} />
 

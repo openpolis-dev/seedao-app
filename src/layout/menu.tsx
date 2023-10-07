@@ -2,7 +2,17 @@ import { useMemo } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import { House, Grid1x2, CashCoin, PieChart, People, Box2Heart, ShieldCheck, Envelope } from 'react-bootstrap-icons';
+import {
+  House,
+  Grid1x2,
+  Calendar,
+  CashCoin,
+  PieChart,
+  People,
+  Box2Heart,
+  ShieldCheck,
+  Envelope,
+} from 'react-bootstrap-icons';
 import React from 'react';
 import useCheckLogin from 'hooks/useCheckLogin';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
@@ -103,6 +113,11 @@ const items: MenuItemType[] = [
     title: 'menus.Event',
     icon: { name: <Grid1x2 /> },
     link: { href: '/event' },
+  },
+  {
+    title: 'Home.OnlineEvent',
+    icon: { name: <Calendar /> },
+    link: { href: '/online-event' },
   },
   {
     title: 'menus.assets',
