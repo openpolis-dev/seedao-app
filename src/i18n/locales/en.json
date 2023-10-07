@@ -236,6 +236,7 @@
     "WeChat": "WeChat",
     "Mirror": "Mirror",
     "Google": "Google",
+    "Bio": "Bio",
     "ModifiedSuccess": "Modified Successfully",
     "ModifiedFailed": "Modified Failed",
     "IncorrectLink": "{{media}}：required the correct link",

@@ -65,7 +65,6 @@ const MidBox = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 40px;
   flex-direction: column;
   padding-bottom: 40px;
 `;
@@ -86,6 +85,7 @@ export default function Profile() {
   const [mirror, setMirror] = useState('');
   const [google, setGoogle] = useState('');
   const [avatar, setAvatar] = useState('');
+  const [bio, setBio] = useState('');
 
   const handleInput = (e: ChangeEvent, type: string) => {
     const { value } = e.target as HTMLInputElement;
@@ -111,6 +111,8 @@ export default function Profile() {
       case 'google':
         setGoogle(value);
         break;
+      case 'bio':
+        setBio(value);
     }
   };
   const saveProfile = async () => {
@@ -244,6 +246,18 @@ export default function Profile() {
                     placeholder=""
                     value={userName}
                     onChange={(e) => handleInput(e, 'userName')}
+                  />
+                </InputBox>
+              </li>
+              <li>
+                <div className="title">{t('My.Bio')}</div>
+                <InputBox>
+                  <Form.Control
+                    placeholder=""
+                    as="textarea"
+                    rows={5}
+                    value={bio}
+                    onChange={(e) => handleInput(e, 'setBio')}
                   />
                 </InputBox>
               </li>

@@ -236,6 +236,7 @@
     "WeChat": "微信号",
     "Mirror": "Mirror",
     "Google": "Google",
+    "Bio": "简介",
     "ModifiedSuccess": "修改成功",
     "ModifiedFailed": "修改失败",
     "IncorrectLink": "{{media}}：请填写正确的信息",
