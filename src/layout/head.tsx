@@ -100,8 +100,7 @@ export default function Header() {
           onClickLogout();
         }
       });
-      ethereum?.on('accountsChanged', function (accounts: any) {
-        console.log('=====accountsChanged', accounts);
+      ethereum?.on('accountsChanged', function () {
         onClickLogout();
       });
     };
