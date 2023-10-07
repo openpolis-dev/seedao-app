@@ -46,6 +46,14 @@ const TabsBox = styled(Tabs)`
     display: none;
     width: 0;
   }
+  @media (max-width: 1024px) {
+    .nav {
+      flex-wrap: nowrap;
+    }
+    .nav-item {
+      white-space: nowrap;
+    }
+  }
 `;
 export default function Index() {
   const { t } = useTranslation();
