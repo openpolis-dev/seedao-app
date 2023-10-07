@@ -1,5 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getMessaging, getToken, onMessage, Messaging, isSupported } from 'firebase/messaging';
+import { registerDevice, getPushDevice } from 'requests/push';
 
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
@@ -114,3 +115,19 @@ export const onMessageListener = () =>
       resolve(payload);
     });
   });
+
+export const registerPush = async () => {
+  try {
+    // register push
+    const deviceToken = await getPushToken();
+    if (deviceToken) {
+      await registerDevice({
+        device: getPushDevice(),
+        registration_token: deviceToken,
+        language: localStorage.getItem('language') || 'en',
+      });
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};

@@ -15,6 +15,7 @@ import { Authorizer } from "casbin.js";
 import { readPermissionUrl } from "../../requests/user";
 import { WalletType } from "../../wallet/wallet";
 import { SELECT_WALLET } from "../../utils/constant";
+import { registerPush } from 'utils/serviceWorkerRegistration';
 
 export default function Joyid({callback}){
 
@@ -103,6 +104,7 @@ export default function Joyid({callback}){
                 type: "joyid",
                 account:"account:"+account
             });
+            await registerPush();
 
         }catch (e){
             console.error("LoginTo joyid",e)

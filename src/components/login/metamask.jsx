@@ -13,6 +13,7 @@ import { Authorizer } from "casbin.js";
 import { readPermissionUrl } from "../../requests/user";
 import { WalletType } from "../../wallet/wallet";
 import { clearStorage } from "../../utils/auth";
+import { registerPush } from 'utils/serviceWorkerRegistration';
 
 export default function  Metamask({callback}){
     const navigate = useNavigate();
@@ -123,6 +124,7 @@ export default function  Metamask({callback}){
                 type: "metamask",
                 account:"account:"+address
             });
+            await registerPush();
 
         }catch (e){
             console.error("Login to",e)

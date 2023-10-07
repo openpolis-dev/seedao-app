@@ -11,6 +11,7 @@ import { readPermissionUrl } from "../../requests/user";
 import { WalletType } from "../../wallet/wallet";
 import { SELECT_WALLET } from "../../utils/constant";
 import { clearStorage } from "../../utils/auth";
+import { registerPush } from 'utils/serviceWorkerRegistration';
 
 const upProvider = new UniPassProvider({
     chainId: 1,
@@ -142,6 +143,7 @@ export default function Unipass({callback}){
                 type: "unipass",
                 account:"account:"+account
             });
+            await registerPush();
         }catch (e){
             console.error(e)
             ReactGA.event("login_failed",{type: "unipass"});
