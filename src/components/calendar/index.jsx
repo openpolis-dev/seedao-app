@@ -11,8 +11,7 @@ const Box = styled.div`
         font-family: 'Jost-ExtraBold';
     }
     .tooltip{
-        border-width: 1px;
-        box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+
         &>div>div:first-child{
             top:-36px;
         }
@@ -71,7 +70,10 @@ let styles = {
     },
     tooltip:{
         width:"500px",
-        padding:"40px 20px 20px"
+        padding:"40px 20px 20px",
+        background: "#fff",
+        boxShadow:"0 5px 10px rgba(0,0,0,0.2)",
+        borderWidth: "1px"
     },
     today: css`
     color: var(--bs-primary);
