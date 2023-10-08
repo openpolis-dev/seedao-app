@@ -8,7 +8,6 @@ export interface IUser {
   wallet?: string;
   discord_profile: string;
   twitter_profile: string;
-  google_profile: string;
   wechat: string;
   mirror: string;
   assets: any[];
@@ -20,7 +19,6 @@ export interface IUserInfo {
   email: string;
   discord_profile: string;
   twitter_profile: string;
-  google_profile: string;
   wechat: string;
   mirror: string;
 }

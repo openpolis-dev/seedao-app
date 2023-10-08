@@ -83,7 +83,6 @@ export default function Profile() {
   const [twitter, setTwitter] = useState('');
   const [wechat, setWechat] = useState('');
   const [mirror, setMirror] = useState('');
-  const [google, setGoogle] = useState('');
   const [avatar, setAvatar] = useState('');
   const [bio, setBio] = useState('');
 
@@ -108,9 +107,6 @@ export default function Profile() {
       case 'mirror':
         setMirror(value);
         break;
-      case 'google':
-        setGoogle(value);
-        break;
       case 'bio':
         setBio(value);
     }
@@ -119,11 +115,6 @@ export default function Profile() {
     const reg = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (email && !reg.test(email)) {
       showToast(t('My.IncorrectEmail'), ToastType.Danger);
-      return;
-    }
-
-    if (google && !reg.test(google)) {
-      showToast(t('My.IncorrectGoogle'), ToastType.Danger);
       return;
     }
     if (mirror && mirror.indexOf('mirror.xyz') === -1) {
@@ -143,7 +134,6 @@ export default function Profile() {
         email,
         discord_profile: discord,
         twitter_profile: twitter,
-        google_profile: google,
         wechat,
         mirror,
       };
@@ -165,7 +155,6 @@ export default function Profile() {
       setEmail(userData.email || '');
       setDiscord(userData.discord_profile);
       setTwitter(userData.twitter_profile);
-      setGoogle(userData.google_profile);
       setWechat(userData.wechat);
       setMirror(userData.mirror);
     }
@@ -177,7 +166,7 @@ export default function Profile() {
     xhr.open('get', imgUrl, true);
     xhr.responseType = 'blob';
     xhr.onload = function () {
-      if (this.status == 200) {
+      if (this.status === 200) {
         const blob = this.response;
         const oFileReader = new FileReader();
         oFileReader.onloadend = function (e) {
@@ -257,7 +246,7 @@ export default function Profile() {
                     as="textarea"
                     rows={5}
                     value={bio}
-                    onChange={(e) => handleInput(e, 'setBio')}
+                    onChange={(e) => handleInput(e, 'bio')}
                   />
                 </InputBox>
               </li>
@@ -299,12 +288,6 @@ export default function Profile() {
                 <div className="title">{t('My.Mirror')}</div>
                 <InputBox>
                   <Form.Control type="text" placeholder="" value={mirror} onChange={(e) => handleInput(e, 'mirror')} />
-                </InputBox>
-              </li>
-              <li>
-                <div className="title">{t('My.Google')}</div>
-                <InputBox>
-                  <Form.Control type="text" placeholder="" value={google} onChange={(e) => handleInput(e, 'google')} />
                 </InputBox>
               </li>
             </UlBox>

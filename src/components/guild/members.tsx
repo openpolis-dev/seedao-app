@@ -140,7 +140,6 @@ export default function Members(props: Iprops) {
         avatar: '',
         discord_profile: '',
         twitter_profile: '',
-        google_profile: '',
         wechat: '',
         mirror: '',
         assets: [],
