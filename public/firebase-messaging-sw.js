@@ -25,6 +25,7 @@ const MESSAGE_TYPE = {
   GUILD_ADD: 'guid_staff_add',
   GUILD_REMOVE: 'guild_staff_remove',
   ASSET_NEW: 'receive_assert',
+  CUSTOM: 'custom',
 };
 
 messaging.onBackgroundMessage(function (payload) {
@@ -44,6 +45,9 @@ messaging.onBackgroundMessage(function (payload) {
       break;
     case MESSAGE_TYPE.ASSET_NEW:
       route_path = '/user/vault';
+      break;
+    case MESSAGE_TYPE.CUSTOM:
+      route_path = payload.data.jump_url;
       break;
     default:
       break;
