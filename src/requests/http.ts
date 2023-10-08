@@ -17,7 +17,12 @@ export const getBaseURL = instance.getUri;
 instance.interceptors.request.use(
   (config: any) => {
     const method = config.method?.toLowerCase();
-    if (!['post', 'put', 'delete'].includes(method) && !config.url.includes('my') && !config.url.includes('user')) {
+    if (
+      !['post', 'put', 'delete'].includes(method) &&
+      !config.url.includes('my') &&
+      !config.url.includes('user') &&
+      !config.url.includes('push')
+    ) {
       return config;
     }
     const tokenstr = localStorage.getItem(SEEDAO_USER);
