@@ -66,7 +66,6 @@ export default function  Metamask({callback}){
     // },[address])
 
     useEffect(()=>{
-        console.log("====address,signer==",address,signer)
         if(!signer || !connectWallet || !address) return;
 
         sign()
@@ -78,10 +77,7 @@ export default function  Metamask({callback}){
             localStorage.setItem(SELECT_WALLET, 'METAMASK');
             clearStorage();
             disconnect();
-            console.log("=====onClick==== start =====",isOpen)
-
             await open();
-            console.log("=====onClick==== end =====",isOpen)
             setConnectWallet(true);
 
         }catch (e) {
