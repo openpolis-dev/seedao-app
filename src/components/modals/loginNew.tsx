@@ -46,6 +46,7 @@ export default function LoginModal({ showModal }: any) {
 
   const closeModal = () => {
     dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: false });
+    selectType(undefined);
   };
 
   type LoginWallet = {
@@ -88,49 +89,53 @@ export default function LoginModal({ showModal }: any) {
   }, []);
 
   return (
-    <Mask show={showModal}>
-      {/*{Toast}*/}
-      <Modal>
-        <span className="icon-close" onClick={closeModal}>
-          {/*<EvaIcon name="close-outline" />*/}
-          <X />
-        </span>
+    <>
+      {showModal && (
+        <Mask>
+          {/*{Toast}*/}
+          <Modal>
+            <span className="icon-close" onClick={() => closeModal()}>
+              {/*<EvaIcon name="close-outline" />*/}
+              <X />
+            </span>
 
-        <Title>{t('general.ConnectWallet')}</Title>
-        {type === Wallet.METAMASK && (
-          <Metamask
-            callback={() => {
-              selectType(undefined);
-            }}
-          />
-        )}
-        {type === Wallet.UNIPASS && (
-          <Unipass
-            callback={() => {
-              selectType(undefined);
-            }}
-          />
-        )}
-        {type === Wallet.JOYID && (
-          <Joyid
-            callback={() => {
-              selectType(undefined);
-            }}
-          />
-        )}
+            <Title>{t('general.ConnectWallet')}</Title>
+            {type === Wallet.METAMASK && (
+              <Metamask
+                callback={() => {
+                  selectType(undefined);
+                }}
+              />
+            )}
+            {type === Wallet.UNIPASS && (
+              <Unipass
+                callback={() => {
+                  selectType(undefined);
+                }}
+              />
+            )}
+            {type === Wallet.JOYID && (
+              <Joyid
+                callback={() => {
+                  selectType(undefined);
+                }}
+              />
+            )}
 
-        <Content>
-          {LOGIN_WALLETS.map((w) => (
-            <WalletOption key={w.value} onClick={() => selectType(w.value)}>
-              <span>{w.name}</span>
-              <span>
-                <img src={w.iconURL} alt="" width="28px" height="28px" />
-              </span>
-            </WalletOption>
-          ))}
-        </Content>
-      </Modal>
-    </Mask>
+            <Content>
+              {LOGIN_WALLETS.map((w) => (
+                <WalletOption key={w.value} onClick={() => selectType(w.value)}>
+                  <span>{w.name}</span>
+                  <span>
+                    <img src={w.iconURL} alt="" width="28px" height="28px" />
+                  </span>
+                </WalletOption>
+              ))}
+            </Content>
+          </Modal>
+        </Mask>
+      )}
+    </>
   );
 }
 
@@ -138,7 +143,7 @@ interface ShowProps {
   show: boolean;
 }
 
-const Mask = styled.div<ShowProps>`
+const Mask = styled.div`
   position: fixed;
   left: 0;
   top: 0;
@@ -146,8 +151,7 @@ const Mask = styled.div<ShowProps>`
   width: 100vw;
   height: 100vh;
   background: rgba(45, 51, 46, 0.6);
-  display: ${(props) => (props.show ? 'flex' : 'none')};
-
+  display: flex;
   justify-content: center;
   align-items: center;
 `;
