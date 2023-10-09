@@ -2,6 +2,7 @@
   "name": "os-frontend",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "dependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@ericz1803/react-google-calendar": "^4.3.1",
@@ -71,14 +72,18 @@
     "@types/styled-components": "^5.1.27",
     "@types/ua-parser-js": "^0.7.37",
     "@web3-react/types": "^8.2.0",
+    "fs": "0.0.1-security",
     "husky": "7.0.2",
     "prettier": "2.3.2",
     "pretty-quick": "3.1.1"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
+    "config": "node firebase-config.js",
+    "dev": "npm run config && react-scripts start",
+    "start": "REACT_APP_ENV_VERSION=dev npm run dev",
+    "build": "npm run config && react-scripts build",
+    "build:dev": "REACT_APP_ENV_VERSION=dev npm run build",
+    "build:prod": "REACT_APP_ENV_VERSION=prod npm run build",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {

@@ -69,3 +69,5 @@ yarn-error.log
 _static
 build
 out
+
+public/firebase-env.js
