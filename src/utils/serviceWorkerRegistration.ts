@@ -15,7 +15,7 @@ const firebaseConfig = {
 
 let messaging: Messaging;
 
-const version = 'v1';
+const version = 'v1.0.0';
 
 export function register(config?: any) {
   if ('serviceWorker' in navigator) {
