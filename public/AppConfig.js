@@ -1,5 +1,5 @@
 window.AppConfig = {
-  host: 'superapp.seedao.tech',
-  origin: 'https://superapp.seedao.tech',
+  host: window.location.host,
+  origin:  window.location.origin,
 };
 
