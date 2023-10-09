@@ -43,6 +43,7 @@ export default function LoginModal({ showModal }: any) {
   const { dispatch } = useAuthContext();
   const { Toast, showToast } = useToast();
   const [type, setType] = useState<string | undefined>();
+  const [key, setKey] = useState(0);
 
   const closeModal = () => {
     dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: false });
@@ -78,6 +79,7 @@ export default function LoginModal({ showModal }: any) {
   ];
 
   const selectType = (item: string | undefined) => {
+    setKey(key + 1);
     setType(item);
     localStorage.setItem('select_wallet', item!);
   };
@@ -102,6 +104,7 @@ export default function LoginModal({ showModal }: any) {
             <Title>{t('general.ConnectWallet')}</Title>
             {type === Wallet.METAMASK && (
               <Metamask
+                key={key}
                 callback={() => {
                   selectType(undefined);
                 }}
@@ -109,6 +112,7 @@ export default function LoginModal({ showModal }: any) {
             )}
             {type === Wallet.UNIPASS && (
               <Unipass
+                key={key}
                 callback={() => {
                   selectType(undefined);
                 }}
@@ -116,6 +120,7 @@ export default function LoginModal({ showModal }: any) {
             )}
             {type === Wallet.JOYID && (
               <Joyid
+                key={key}
                 callback={() => {
                   selectType(undefined);
                 }}

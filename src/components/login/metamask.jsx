@@ -28,7 +28,6 @@ export default function  Metamask({callback}){
     const [signInfo,setSignInfo] = useState();
     const [result,setResult] = useState(null);
     const [connectWallet,setConnectWallet] = useState(false);
-    const [isShowPopup, setShowPopup] = useState(false)
 
     const signer = useEthersSigner({chainId:chain});
 
@@ -38,32 +37,6 @@ export default function  Metamask({callback}){
         LoginTo()
     },[signInfo])
 
-
-
-    useEffect(() => {
-        if (!isShowPopup && isOpen) {
-            setShowPopup(true);
-            return;
-        }
-        if (isShowPopup && !isOpen) {
-            setShowPopup(false)
-            callback();
-        }
-
-    }, [isOpen]);
-
-
-    // useEffect(()=>{
-    //     if(!isOpen && closeInner){
-    //         callback()
-    //     }
-    //
-    //     console.error("====isOpen===",isOpen)
-    // },[isOpen])
-
-    // useEffect(()=>{
-    //     dispatch({ type: AppActionType.SET_ACCOUNT, payload: address });
-    // },[address])
 
     useEffect(()=>{
         if(!signer || !connectWallet || !address) return;
