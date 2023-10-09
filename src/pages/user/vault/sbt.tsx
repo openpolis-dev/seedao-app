@@ -20,7 +20,7 @@ const getNftsByContract = (account: string, contract: string, chain: number) => 
     `${base}/api/v2/account/own/${account}?erc_type=erc1155&show_attribute=false&sort_field=&sort_direction=&contract_address=${contract}`,
     {
       headers: {
-        'X-API-KEY': process.env.NEXT_PUBLIC_NFTSCAN_KEY,
+        'X-API-KEY': process.env.REACT_APP_NFTSCAN_KEY,
       },
     },
   );

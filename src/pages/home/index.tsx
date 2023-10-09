@@ -216,7 +216,7 @@ const EventCardStyle = styled.div`
 const getDatafromNftscan = (contract: string, base?: string) => {
   return axios.get(`${base || 'https://polygonapi.nftscan.com'}/api/v2/statistics/collection/${contract}`, {
     headers: {
-      'X-API-KEY': process.env.NEXT_PUBLIC_NFTSCAN_KEY,
+      'X-API-KEY': process.env.REACT_APP_NFTSCAN_KEY,
     },
   });
 };
