@@ -39,7 +39,7 @@ export default function Unipass({callback}){
 
     const getP = async() =>{
         try{
-            localStorage.setItem(SELECT_WALLET, 'UNIPASS');
+            // localStorage.setItem(SELECT_WALLET, 'UNIPASS');
             await upProvider.disconnect();
             await upProvider.connect();
             const provider = new ethers.providers.Web3Provider(upProvider, "any");

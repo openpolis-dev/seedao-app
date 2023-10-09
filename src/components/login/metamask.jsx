@@ -8,18 +8,19 @@ import {useNavigate} from "react-router-dom";
 import ReactGA from "react-ga4";
 import requests from "../../requests";
 import { AppActionType, useAuthContext } from "../../providers/authProvider";
-import { SEEDAO_USER_DATA, SELECT_WALLET } from "../../utils/constant";
+import { SEEDAO_USER_DATA } from "../../utils/constant";
 import { Authorizer } from "casbin.js";
 import { readPermissionUrl } from "../../requests/user";
 import { WalletType } from "../../wallet/wallet";
 import { clearStorage } from "../../utils/auth";
 import { registerPush } from 'utils/serviceWorkerRegistration';
+import { SELECT_WALLET } from "../../utils/constant";
 
 export default function  Metamask({callback}){
     const navigate = useNavigate();
     const { dispatch } = useAuthContext();
 
-    const { open,close } = useWeb3Modal();
+    const { open,close,isOpen } = useWeb3Modal();
     const { isConnected,address } = useAccount();
     const { disconnect } = useDisconnect();
     const { chain } = useNetwork();
@@ -36,18 +37,15 @@ export default function  Metamask({callback}){
         LoginTo()
     },[signInfo])
 
-    useEffect(()=>{
-        dispatch({ type: AppActionType.SET_ACCOUNT, payload: address });
-    },[address])
 
     useEffect(()=>{
         if(!signer || !connectWallet || !address) return;
-        dispatch({ type: AppActionType.SET_PROVIDER, payload: signer });
+
         sign()
-    },[signer,connectWallet])
+    },[signer,connectWallet,address])
+
 
     const onClick = async () =>{
-        dispatch({ type: AppActionType.SET_LOADING, payload: true });
         try{
             localStorage.setItem(SELECT_WALLET, 'METAMASK');
             clearStorage();
@@ -57,7 +55,7 @@ export default function  Metamask({callback}){
 
         }catch (e) {
             console.error("connect",e)
-            dispatch({ type: AppActionType.SET_LOADING, payload: false });
+            // dispatch({ type: AppActionType.SET_LOADING, payload: false });
             dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: false });
             callback();
         }
@@ -71,6 +69,7 @@ export default function  Metamask({callback}){
 
     const sign = async() =>{
         if(!isConnected || !signer.provider)return;
+        dispatch({ type: AppActionType.SET_LOADING, payload: true });
         try{
             const eip55Addr = ethers.utils.getAddress(address);
             const {chainId} =  await signer.provider.getNetwork();
@@ -120,6 +119,8 @@ export default function  Metamask({callback}){
             // config permission authorizer
             const authorizer = new Authorizer('auto', { endpoint: readPermissionUrl });
             await authorizer.setUser(address.toLowerCase());
+            dispatch({ type: AppActionType.SET_ACCOUNT, payload: address });
+            dispatch({ type: AppActionType.SET_PROVIDER, payload: signer });
             dispatch({ type: AppActionType.SET_AUTHORIZER, payload: authorizer });
             dispatch({ type: AppActionType.SET_WALLET_TYPE, payload:WalletType.EOA });
             dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: false });
@@ -148,7 +149,7 @@ export default function  Metamask({callback}){
     }
 
     useEffect(() => {
-        onClick()
+            onClick()
     }, []);
 
     return null;
