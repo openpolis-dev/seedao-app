@@ -1,6 +1,7 @@
 export interface IUser {
   id: string;
   name: string;
+  bio: string;
   avatar: string;
   email?: string;
   created_at?: string;
@@ -15,6 +16,7 @@ export interface IUser {
 
 export interface IUserInfo {
   name: string;
+  bio: string;
   avatar: string;
   email: string;
   discord_profile: string;

@@ -113,6 +113,7 @@ export default function Members(props: Iprops) {
         twitter_profile: '',
         wechat: '',
         mirror: '',
+        bio: '',
         assets: [],
       };
     }

@@ -136,6 +136,7 @@ export default function Members(props: Iprops) {
     if (!user) {
       return {
         id: '',
+        bio: '',
         name: '',
         avatar: '',
         discord_profile: '',

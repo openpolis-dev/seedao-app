@@ -136,6 +136,7 @@ export default function Profile() {
         twitter_profile: twitter,
         wechat,
         mirror,
+        bio,
       };
       await requests.user.updateUser(data);
       dispatch({ type: AppActionType.SET_USER_DATA, payload: { ...userData, ...data } });
@@ -157,6 +158,7 @@ export default function Profile() {
       setTwitter(userData.twitter_profile);
       setWechat(userData.wechat);
       setMirror(userData.mirror);
+      setBio(userData.bio);
     }
   }, [userData]);
 
