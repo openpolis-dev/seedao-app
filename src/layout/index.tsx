@@ -16,7 +16,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <Header />
       <LayoutBottom>
         <Menu isMedium={isMedium} />
-        <Container>{children}</Container>
+        <Container id="scrollableDiv">{children}</Container>
       </LayoutBottom>
     </Box>
   );
