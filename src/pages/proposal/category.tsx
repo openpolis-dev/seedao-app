@@ -57,7 +57,13 @@ export default function ProposalCategory() {
       <CategoryPage>
         <NavBox>{ProposalNav}</NavBox>
         <ProposalSubNav onSelect={handleChangeOrder} />
-        <InfiniteScroll dataLength={proposals.length} next={getProposals} hasMore={hasMore} loader={<></>}>
+        <InfiniteScroll
+          scrollableTarget="scrollableDiv"
+          dataLength={proposals.length}
+          next={getProposals}
+          hasMore={hasMore}
+          loader={<></>}
+        >
           <ProposalBox>
             {proposals.map((p) => (
               <ProposalCard key={p.id} data={p} />

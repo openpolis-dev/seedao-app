@@ -100,7 +100,13 @@ export default function Index() {
           <>
             <ProposalSubNav onSelect={handleChangeOrder} />
             <div>
-              <InfiniteScroll dataLength={proposals.length} next={getAllProposals} hasMore={hasMore} loader={<></>}>
+              <InfiniteScroll
+                dataLength={proposals.length}
+                next={getAllProposals}
+                hasMore={hasMore}
+                scrollableTarget="scrollableDiv"
+                loader={<></>}
+              >
                 <ProposalBox>
                   {proposals.map((proposal) => (
                     <ProposalCard key={proposal.id} data={proposal} />
