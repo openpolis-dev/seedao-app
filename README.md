@@ -20,3 +20,11 @@ https://app.netlify.com/sites/dev-seedao-superapp/deploys
 Production link: https://superapp.seedao.tech
 
 Dev link: https://dev-superapp.seedao.tech
+
+## Notion
+To ensure subscription-push proper functionality, please ensure that your system meets the following requirements:
+
+* For PC users using Safari:
+    * macOS 13 or later
+* For iPhone users:
+    * iOS 16.4 or later
