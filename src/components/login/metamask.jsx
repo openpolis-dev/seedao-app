@@ -8,15 +8,42 @@ import {useNavigate} from "react-router-dom";
 import ReactGA from "react-ga4";
 import requests from "../../requests";
 import { AppActionType, useAuthContext } from "../../providers/authProvider";
-import { SEEDAO_USER_DATA } from "../../utils/constant";
+import { SEEDAO_USER, SEEDAO_USER_DATA } from "../../utils/constant";
 import { Authorizer } from "casbin.js";
 import { readPermissionUrl } from "../../requests/user";
 import { WalletType } from "../../wallet/wallet";
 import { clearStorage } from "../../utils/auth";
 import { registerPush } from 'utils/serviceWorkerRegistration';
 import { SELECT_WALLET } from "../../utils/constant";
+import styled from "styled-components";
+import MetamaskIcon from "../../assets/images/wallet/metamask.png";
 
-export default function  Metamask({callback}){
+
+const WalletOption = styled.li`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: space-between;
+  padding: 10px 28px;
+  border-radius: 8px;
+  margin-block: 10px;
+  cursor: pointer;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+  border: 1px solid #f1f1f1;
+  background: #fff;
+  color: #000;
+  font-weight: 600;
+  font-size: 16px;
+  &:hover {
+    background-color: #f5f5f5;
+  }
+  img {
+    width: 28px;
+    height: 28px;
+  }
+`;
+
+export default function  Metamask(){
     const navigate = useNavigate();
     const { dispatch } = useAuthContext();
 
@@ -57,7 +84,6 @@ export default function  Metamask({callback}){
             console.error("connect",e)
             // dispatch({ type: AppActionType.SET_LOADING, payload: false });
             dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: false });
-            callback();
         }
 
     }
@@ -85,7 +111,6 @@ export default function  Metamask({callback}){
             dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: false });
             disconnect();
             console.error("sign error:",e)
-            callback()
         }
 
     }
@@ -116,11 +141,13 @@ export default function  Metamask({callback}){
             res.data.token_exp = now + res.data.token_exp * 1000;
             dispatch({ type: AppActionType.SET_LOGIN_DATA, payload: res.data });
 
-            // config permission authorizer
-            const authorizer = new Authorizer('auto', { endpoint: readPermissionUrl });
-            await authorizer.setUser(address.toLowerCase());
+
+
             dispatch({ type: AppActionType.SET_ACCOUNT, payload: address });
             dispatch({ type: AppActionType.SET_PROVIDER, payload: signer });
+
+            const authorizer = new Authorizer('auto', { endpoint: readPermissionUrl });
+            await authorizer.setUser(address.toLowerCase());
             dispatch({ type: AppActionType.SET_AUTHORIZER, payload: authorizer });
             dispatch({ type: AppActionType.SET_WALLET_TYPE, payload:WalletType.EOA });
             dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: false });
@@ -128,6 +155,8 @@ export default function  Metamask({callback}){
                 type: "metamask",
                 account:"account:"+address
             });
+            const tokenstr = localStorage.getItem(SEEDAO_USER);
+            console.log("===res.data===",res.data,tokenstr)
             await registerPush();
 
         }catch (e){
@@ -144,13 +173,13 @@ export default function  Metamask({callback}){
         finally {
             dispatch({ type: AppActionType.SET_LOADING, payload: false });
             close();
-            callback();
         }
     }
 
-    useEffect(() => {
-            onClick()
-    }, []);
-
-    return null;
+    return<WalletOption onClick={() => onClick()}>
+        <span>MetaMask</span>
+        <span>
+                    <img src={MetamaskIcon} alt="" width="28px" height="28px" />
+                  </span>
+    </WalletOption>
 }

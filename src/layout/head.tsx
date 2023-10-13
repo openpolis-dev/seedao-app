@@ -168,13 +168,13 @@ export default function Header() {
   const onClickLogout = () => {
     disconnect();
     dispatch({ type: AppActionType.CLEAR_AUTH, payload: undefined });
-    localStorage.removeItem(SEEDAO_USER_DATA);
-    localStorage.removeItem(SELECT_WALLET);
-    localStorage.removeItem(SEEDAO_ACCOUNT);
+    // localStorage.removeItem(SEEDAO_USER_DATA);
+    // localStorage.removeItem(SELECT_WALLET);
+    // localStorage.removeItem(SEEDAO_ACCOUNT);
     localStorage.removeItem('joyid-status');
     localStorage.removeItem('joyid-msg');
     localStorage.removeItem('joyid-address');
-    localStorage.removeItem('select_wallet');
+    // localStorage.removeItem('select_wallet');
     dispatch({ type: AppActionType.SET_PROVIDER, payload: null });
     dispatch({ type: AppActionType.SET_LOGIN_DATA, payload: null });
     dispatch({ type: AppActionType.SET_AUTHORIZER, payload: null });

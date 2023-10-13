@@ -1,6 +1,6 @@
 import { UniPassProvider } from "@unipasswallet/ethereum-provider";
 import {ethers} from "ethers";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {createSiweMessage} from "../../utils/sign";
 import {useNavigate} from "react-router-dom";
 import ReactGA from "react-ga4";
@@ -12,6 +12,34 @@ import { WalletType } from "../../wallet/wallet";
 import { SELECT_WALLET } from "../../utils/constant";
 import { clearStorage } from "../../utils/auth";
 import { registerPush } from 'utils/serviceWorkerRegistration';
+
+import styled from "styled-components";
+import UnipassIcon from "../../assets/images/wallet/unipass.svg";
+
+
+const WalletOption = styled.li`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: space-between;
+  padding: 10px 28px;
+  border-radius: 8px;
+  margin-block: 10px;
+  cursor: pointer;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+  border: 1px solid #f1f1f1;
+  background: #fff;
+  color: #000;
+  font-weight: 600;
+  font-size: 16px;
+  &:hover {
+    background-color: #f5f5f5;
+  }
+  img {
+    width: 28px;
+    height: 28px;
+  }
+`;
 
 const upProvider = new UniPassProvider({
     chainId: 1,
@@ -28,7 +56,7 @@ const upProvider = new UniPassProvider({
 });
 
 
-export default function Unipass({callback}){
+export default function Unipass(){
     const navigate = useNavigate();
     const [msg,setMsg] = useState(null);
     const [signInfo,setSignInfo] = useState();
@@ -47,7 +75,6 @@ export default function Unipass({callback}){
         }catch (e){
             console.error("get Provider",e)
             dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: false });
-            callback()
         }
     }
 
@@ -59,31 +86,24 @@ export default function Unipass({callback}){
 
     const connect = async() =>{
         try{
+
             clearStorage();
             const signer = provider.getSigner();
             const address = await signer.getAddress();
             setAccount(address)
+            await signMessage(address)
             // setAddr(address)
         }catch (e) {
             console.error("connect",e)
-            dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: false });
-            callback()
         }
     }
-
-
-    useEffect(()=>{
-        if(!account) return;
-        signMessage()
-    },[account])
-
 
     const getMyNonce = async(wallet) =>{
         let rt = await requests.user.getNonce(wallet);
         return rt.data.nonce;
     }
 
-    const signMessage = async() =>{
+    const signMessage = async(account) =>{
         try{
             console.log("signMessage", account)
             let nonce = await getMyNonce(account);
@@ -101,7 +121,6 @@ export default function Unipass({callback}){
             dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: false });
             // setAddr(null)
             await upProvider.disconnect();
-            callback()
         }
 
     }
@@ -147,9 +166,7 @@ export default function Unipass({callback}){
         }catch (e){
             console.error(e)
             ReactGA.event("login_failed",{type: "unipass"});
-        }  finally {
-            callback()
-        }
+        } 
 
     }
 
@@ -159,9 +176,12 @@ export default function Unipass({callback}){
 
     },[result])
 
-    useEffect(()=>{
-        getP()
-    },[])
 
-    return null;
+    return <WalletOption onClick={() => getP()}>
+        <span>Unipass</span>
+        <span>
+                    <img src={UnipassIcon} alt="" width="28px" height="28px" />
+                  </span>
+    </WalletOption>
+
 }

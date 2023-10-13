@@ -42,12 +42,12 @@ export default function LoginModal({ showModal }: any) {
   const { t } = useTranslation();
   const { dispatch } = useAuthContext();
   const { Toast, showToast } = useToast();
-  const [type, setType] = useState<string | undefined>();
-  const [key, setKey] = useState(0);
+  // const [type, setType] = useState<string | undefined>();
+  // const [key, setKey] = useState(0);
 
   const closeModal = () => {
     dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: false });
-    selectType(undefined);
+    // selectType(undefined);
   };
 
   type LoginWallet = {
@@ -78,68 +78,25 @@ export default function LoginModal({ showModal }: any) {
     },
   ];
 
-  const selectType = (item: string | undefined) => {
-    setKey(key + 1);
-    setType(item);
-    localStorage.setItem('select_wallet', item!);
-  };
-
-  useEffect(() => {
-    let type = localStorage.getItem('select_wallet');
-    if (!type) return;
-    setType(type);
-  }, []);
-
   return (
     <>
-      {showModal && (
-        <Mask>
-          {/*{Toast}*/}
-          <Modal>
-            <span className="icon-close" onClick={() => closeModal()}>
-              {/*<EvaIcon name="close-outline" />*/}
-              <X />
-            </span>
+      <Mask show={showModal}>
+        {/*{Toast}*/}
+        <Modal>
+          <span className="icon-close" onClick={() => closeModal()}>
+            {/*<EvaIcon name="close-outline" />*/}
+            <X />
+          </span>
 
-            <Title>{t('general.ConnectWallet')}</Title>
-            {type === Wallet.METAMASK && (
-              <Metamask
-                key={key}
-                callback={() => {
-                  selectType(undefined);
-                }}
-              />
-            )}
-            {type === Wallet.UNIPASS && (
-              <Unipass
-                key={key}
-                callback={() => {
-                  selectType(undefined);
-                }}
-              />
-            )}
-            {type === Wallet.JOYID && (
-              <Joyid
-                key={key}
-                callback={() => {
-                  selectType(undefined);
-                }}
-              />
-            )}
+          <Title>{t('general.ConnectWallet')}</Title>
+          <Metamask />
 
-            <Content>
-              {LOGIN_WALLETS.map((w) => (
-                <WalletOption key={w.value} onClick={() => selectType(w.value)}>
-                  <span>{w.name}</span>
-                  <span>
-                    <img src={w.iconURL} alt="" width="28px" height="28px" />
-                  </span>
-                </WalletOption>
-              ))}
-            </Content>
-          </Modal>
-        </Mask>
-      )}
+          <Unipass />
+
+          <Joyid />
+        </Modal>
+      </Mask>
+      )
     </>
   );
 }
@@ -148,7 +105,7 @@ interface ShowProps {
   show: boolean;
 }
 
-const Mask = styled.div`
+const Mask = styled.div<ShowProps>`
   position: fixed;
   left: 0;
   top: 0;
@@ -156,7 +113,8 @@ const Mask = styled.div`
   width: 100vw;
   height: 100vh;
   background: rgba(45, 51, 46, 0.6);
-  display: flex;
+  //display: flex;
+  display: ${(props) => (props.show ? 'flex' : 'none')};
   justify-content: center;
   align-items: center;
 `;
