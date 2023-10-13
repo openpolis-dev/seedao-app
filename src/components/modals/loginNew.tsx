@@ -96,7 +96,6 @@ export default function LoginModal({ showModal }: any) {
           <Joyid />
         </Modal>
       </Mask>
-      )
     </>
   );
 }
