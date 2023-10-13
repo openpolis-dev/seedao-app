@@ -8,6 +8,12 @@ import BgImg from '../../assets/images/topBg.png';
 import HomeBg from '../../assets/images/homebg.png';
 import { People, ShieldCheck, Grid1x2, Calendar } from 'react-bootstrap-icons';
 import { useNavigate } from 'react-router-dom';
+import MetaforoIcon from 'assets/images/apps/metaforo.png';
+import AaanyIcon from 'assets/images/apps/AAAny.svg';
+import DeschoolIcon from 'assets/images/apps/deschool.png';
+import DaolinkIcon from 'assets/images/apps/daolink.svg';
+import Cascad3Icon from 'assets/images/apps/cascad3.svg';
+import Wormhole3Icon from 'assets/images/apps/wormhole3.svg';
 
 const CITY_HALL = 'https://seedao.notion.site/07c258913c5d4847b59271e2ae6f7c66';
 const CITY_HALL_MEMBERS = 'https://www.notion.so/3913d631d7bc49e1a0334140e3cd84f5';
@@ -185,7 +191,7 @@ const LinkBox = styled(Row)`
   }
 `;
 
-const EventCardStyle = styled.div`
+const AppCardStyle = styled.div`
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
   background-size: 100%;
   border-radius: 10px;
@@ -213,6 +219,10 @@ const EventCardStyle = styled.div`
   }
 `;
 
+const AppIcon = styled.img`
+  height: 30px;
+`;
+
 const getDatafromNftscan = (contract: string, base?: string) => {
   return axios.get(`${base || 'https://polygonapi.nftscan.com'}/api/v2/statistics/collection/${contract}`, {
     headers: {
@@ -221,7 +231,7 @@ const getDatafromNftscan = (contract: string, base?: string) => {
   });
 };
 
-const EventCard = ({ icon, name, link, id }: { icon: React.ReactElement; name: string; link: string; id: string }) => {
+const AppCard = ({ icon, name, link, id }: { icon: React.ReactElement; name: string; link: string; id: string }) => {
   const navigate = useNavigate();
   const handleClickEvent = () => {
     if (id === 'online') {
@@ -231,10 +241,10 @@ const EventCard = ({ icon, name, link, id }: { icon: React.ReactElement; name: s
     }
   };
   return (
-    <EventCardStyle className="boxBg" onClick={handleClickEvent}>
+    <AppCardStyle className="boxBg" onClick={handleClickEvent}>
       <div className="iconBox">{icon}</div>
       <div>{name}</div>
-    </EventCardStyle>
+    </AppCardStyle>
   );
 };
 
@@ -247,6 +257,42 @@ export default function Home() {
 
   const events = useMemo(() => {
     return [
+      {
+        id: 'Deschool',
+        name: 'Deschool',
+        link: 'https://deschool.app/origin/plaza',
+        icon: <AppIcon src={DeschoolIcon} alt="" />,
+      },
+      {
+        id: 'AAAny',
+        name: 'AAAny',
+        link: 'https://apps.apple.com/ca/app/aaany-ask-anyone-anything/id6450619356',
+        icon: <AppIcon src={AaanyIcon} alt="" />,
+      },
+      {
+        id: 'Cascad3',
+        name: 'Cascad3',
+        link: 'https://www.cascad3.com/',
+        icon: <AppIcon src={Cascad3Icon} alt="" style={{ height: '20px' }} />,
+      },
+      {
+        id: 'DAOLink',
+        name: 'DAOLink',
+        link: 'https://m.daolink.space',
+        icon: <AppIcon src={DaolinkIcon} alt="" />,
+      },
+      {
+        id: 'Wormhole3',
+        name: 'Wormhole3',
+        link: 'https://alpha.wormhole3.io',
+        icon: <AppIcon src={Wormhole3Icon} alt="" style={{ height: '20px' }} />,
+      },
+      {
+        id: 'Metaforo',
+        name: 'Metaforo',
+        link: 'www.metaforo.io',
+        icon: <AppIcon src={MetaforoIcon} alt="" />,
+      },
       {
         id: 'online',
         name: t('Home.OnlineEvent'),
@@ -347,8 +393,8 @@ export default function Home() {
         <TitBox>{t('Home.Apps')}</TitBox>
         <Row>
           {events.map((item, idx) => (
-            <Col key={idx}>
-              <EventCard {...item} />
+            <Col key={idx} sm={12} md={6} lg={4} xl={3}>
+              <AppCard {...item} />
             </Col>
           ))}
         </Row>
