@@ -33,7 +33,6 @@ export default function Header() {
   const [list, setList] = useState<any[]>([]);
 
   useEffect(() => {
-    console.log(i18n.language);
     setList([
       { title: t('My.MyProfile'), link: '/user/profile', value: 'profile' },
       { title: t('My.MyAccount'), link: '/user/vault', value: 'vault' },
@@ -275,6 +274,10 @@ const HeadeStyle = styled.header`
     text-align: center;
     &:hover {
       color: var(--bs-primary);
+    }
+    &:active {
+      color: var(--bs-primary);
+      background-color: var(--bs-dropdown-link-hover-bg);
     }
     &:last-child {
       border-bottom: 0;
