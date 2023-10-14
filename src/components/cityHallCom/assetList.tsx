@@ -310,7 +310,7 @@ export default function AssetList({ id }: { id: number }) {
                   <th>{t('Project.Content')}</th>
                   <th>{t('Project.Note')}</th>
                   <th>{t('Project.State')}</th>
-                  <th>{t('Project.Add')}</th>
+                  <th>{t('Project.Operator')}</th>
                   <th>{t('Project.Auditor')}</th>
                   <th>{t('Project.TransactionID')}</th>
                 </tr>
