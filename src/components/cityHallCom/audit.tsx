@@ -420,7 +420,7 @@ export default function Audit() {
                     <td>
                       <Form.Check
                         checked={!!selectMap[item.application_id]}
-                        onChange={(value: any) => onChangeCheckbox(value, item.application_id, item.status)}
+                        onChange={(e: any) => onChangeCheckbox(e.target.checked, item.application_id, item.status)}
                       />
                     </td>
                     <td>{item.created_date}</td>
