@@ -188,6 +188,7 @@ const Page: FC<Props> = ({ itemsPerPage, total, handleToPage, current }) => {
   const handleToGo = () => {
     const pg = Number(pageToGo) - 1;
     setCurr(pg);
+    handleToPage(pg);
   };
 
   return (
