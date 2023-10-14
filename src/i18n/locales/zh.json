@@ -251,7 +251,8 @@
     "ApproveSuccess": "操作成功",
     "ApproveFailed": "操作失败",
     "IncorrectAddress": "无效的钱包地址：{{content}}",
-    "ImportFailed": "导入失败"
+    "ImportFailed": "导入失败",
+    "RequestFailed": "请求失败"
   },
   "event": {
     "events": "活动",

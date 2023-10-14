@@ -251,7 +251,8 @@
     "ApproveSuccess": "Operate successfully",
     "ApproveFailed": "Operate failed",
     "IncorrectAddress": "Invalid address: {{content}}",
-    "ImportFailed": "Import failed"
+    "ImportFailed": "Import failed",
+    "RequestFailed": "Request failed"
   },
   "event": {
     "events": "Events",
