@@ -4,7 +4,7 @@ import {
     signMessageWithRedirect,
     signMessageCallback,
 } from "@joyid/evm";
-import  {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {ethers} from "ethers";
 import {createSiweMessage} from "../../utils/sign";
 import {useNavigate} from "react-router-dom";
@@ -16,8 +16,35 @@ import { readPermissionUrl } from "../../requests/user";
 import { WalletType } from "../../wallet/wallet";
 import { SELECT_WALLET } from "../../utils/constant";
 import { registerPush } from 'utils/serviceWorkerRegistration';
+import JoyIdImg from "../../assets/images/wallet/joyid.png";
+import styled from "styled-components";
 
-export default function Joyid({callback}){
+
+const WalletOption = styled.li`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: space-between;
+  padding: 10px 28px;
+  border-radius: 8px;
+  margin-block: 10px;
+  cursor: pointer;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+  border: 1px solid #f1f1f1;
+  background: #fff;
+  color: #000;
+  font-weight: 600;
+  font-size: 16px;
+  &:hover {
+    background-color: #f5f5f5;
+  }
+  img {
+    width: 28px;
+    height: 28px;
+  }
+`;
+
+export default function Joyid(){
 
     const navigate = useNavigate();
     const { dispatch } = useAuthContext();
@@ -110,7 +137,6 @@ export default function Joyid({callback}){
             console.error("LoginTo joyid",e)
             ReactGA.event("login_failed",{type: "joyid"});
         } finally {
-            callback()
             navigate('/home')
         }
     }
@@ -132,21 +158,25 @@ export default function Joyid({callback}){
             }
 
             navigate('/home')
-            callback()
 
         } catch (e) {
             let search = window.location.search;
             if (search && search.indexOf("Rejected") >= 0) {
                 navigate('/home')
-                callback()
                 return;
             }
-            onConnectRedirect()
+            // onConnectRedirect()
         }
 
     }, []);
 
-    return null
+    return <WalletOption onClick={() => onConnectRedirect()}>
+        <span>JoyID</span>
+        <span>
+                    <img src={JoyIdImg} alt="" width="28px" height="28px" />
+                  </span>
+    </WalletOption>
+
 }
 
 
