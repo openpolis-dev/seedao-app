@@ -73,18 +73,18 @@ export default function Members(props: Iprops) {
     setEdit(false);
     setShowDel(true);
   };
-  const closeAdd = () => {
+  const closeAdd = (shouldUpdate?: boolean) => {
     setShow(false);
-    updateProject();
+    shouldUpdate && updateProject();
   };
   const handleAdd = () => {
     setShow(true);
   };
-  const closeRemove = () => {
+  const closeRemove = (shouldUpdate?: boolean) => {
     setShowDel(false);
     setEdit(false);
     setSelectAdminArr([]);
-    updateProject();
+    shouldUpdate && updateProject();
   };
 
   const handleAdminSelect = (selItem: IUser) => {

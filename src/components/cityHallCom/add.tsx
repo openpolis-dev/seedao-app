@@ -86,7 +86,7 @@ const InnerBox = styled.div`
 `;
 
 interface Iprops {
-  closeAdd: () => void;
+  closeAdd: (shouldUpdate?: boolean) => void;
   canUpdateSponsor: boolean;
 }
 export default function Add(props: Iprops) {
@@ -142,7 +142,7 @@ export default function Add(props: Iprops) {
       showToast(JSON.stringify(e), ToastType.Danger);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: null });
-      closeAdd();
+      closeAdd(true);
     }
   };
 

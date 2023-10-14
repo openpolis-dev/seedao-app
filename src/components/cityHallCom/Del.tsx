@@ -73,7 +73,7 @@ const ItemBox = styled.div`
 `;
 
 interface Iprops {
-  closeRemove: () => void;
+  closeRemove: (shouldUpdate?: boolean) => void;
   selectAdminArr: IUser[];
   selectMemArr?: IUser[];
 }
@@ -97,7 +97,7 @@ export default function Del(props: Iprops) {
       console.error(e);
       showToast(JSON.stringify(e), ToastType.Danger);
     } finally {
-      closeRemove();
+      closeRemove(true);
       dispatch({ type: AppActionType.SET_LOADING, payload: null });
     }
   };
