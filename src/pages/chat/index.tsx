@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import * as user from 'requests/user';
 
 // import { useWeb3React } from '@web3-react/core';
@@ -16,57 +16,47 @@ const Box = styled.div`
 `;
 
 export default function Index() {
-  // const router = useRouter();
   const navigate = useNavigate();
-  // const { account, provider } = useWeb3React();
-
   const {
     state: { userData, account, provider },
   } = useAuthContext();
   const isLogin = useCheckLogin(account);
+  const [status, setStatus] = useState(false);
 
   useEffect(() => {
     window.seeDAOosApi = {
       getUsers: user.getUsers,
     };
+    const init = (window.chatWidgetApi as any).init;
+    (window.chatWidgetApi as any).init = (baseUri: string) => {
+      init(baseUri);
+      setStatus(true);
+    };
   }, []);
 
-  const signer = async ({ message }: { message: string }) => {
+  const signerMsg = async ({ message }: { message: string }) => {
     if (!provider || !account) {
       return '';
     }
-    const signData = await provider.send('personal_sign', [message, account]);
+    // const signData = await provider.send('personal_sign', [message, account]);
+    const signData = await provider.signMessage(message);
     return signData as string;
   };
-
   const loginCallback = (r: any) => {
     console.log('loginCallback: ', r);
   };
 
-  const handleLogin = () => {
-    if (!account) {
+  const handleLogin = async () => {
+    if (!account || !provider) {
       return;
     }
-    window.chatWidgetApi.thirdDIDLogin(account, signer, loginCallback);
+    window.chatWidgetApi.thirdDIDLogin(account, signerMsg, loginCallback);
   };
 
   useEffect(() => {
-    isLogin && window && window.chatWidgetApi && handleLogin();
-  }, [isLogin]);
-
-  useEffect(() => {
-    if (window.chatWidgetApi) return;
-    const script = document.createElement('script');
-    script.type = 'text/javascript';
-    script.async = true;
-    script.src = './sdnChatWidget.js';
-    // script.onload = resolve
-    // script.onerror = reject
-    // script.onload = function () {
-    //
-    // }
-    document.head.appendChild(script);
-  }, [window.chatWidgetApi]);
+    if (!status) return;
+    isLogin && handleLogin();
+  }, [isLogin, status]);
 
   useEffect(() => {
     if (!userData && window?.chatWidgetApi) {
