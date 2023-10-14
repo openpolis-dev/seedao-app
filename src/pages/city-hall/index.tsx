@@ -46,12 +46,12 @@ const TabsBox = styled(Tabs)`
     display: none;
     width: 0;
   }
+  .nav-item {
+    white-space: nowrap;
+  }
   @media (max-width: 1024px) {
     .nav {
       flex-wrap: nowrap;
-    }
-    .nav-item {
-      white-space: nowrap;
     }
   }
 `;
