@@ -30,10 +30,15 @@ export default function Header() {
   const { hasGranted, handlePermission } = usePushPermission();
   const { disconnect } = useDisconnect();
 
-  const [list] = useState([
-    { title: t('My.MyProfile'), link: '/user/profile', value: 'profile' },
-    { title: t('My.MyAccount'), link: '/user/vault', value: 'vault' },
-  ]);
+  const [list, setList] = useState<any[]>([]);
+
+  useEffect(() => {
+    console.log(i18n.language);
+    setList([
+      { title: t('My.MyProfile'), link: '/user/profile', value: 'profile' },
+      { title: t('My.MyAccount'), link: '/user/vault', value: 'vault' },
+    ]);
+  }, [i18n.language]);
   const [lan, setLan] = useState('en');
 
   const {
@@ -227,7 +232,7 @@ export default function Header() {
               </Dropdown.Menu>
             </Dropdown>
           ) : (
-            <Button onClick={showWalletLogin}>Connect Wallet</Button>
+            <Button onClick={showWalletLogin}>{t('menus.connectWallet')}</Button>
           )}
         </RightBox>
       </nav>
