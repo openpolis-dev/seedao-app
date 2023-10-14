@@ -319,8 +319,9 @@ export default function CreateGuild() {
       showToast('Success', ToastType.Success);
       navigate('/event');
     } catch (e: any) {
+      showToast(e.response?.data?.msg || JSON.stringify(e), ToastType.Danger);
+      console.log(e.response?.data?.msg);
       console.error('create event error:', e);
-      showToast(e.data?.msg, ToastType.Danger);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: null });
     }

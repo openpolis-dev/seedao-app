@@ -117,6 +117,9 @@ const InnerBox = styled.div`
 
 const ContentBox = styled.div`
   line-height: 1.2em;
+  padding-top: 40px;
+  border-top: 1px solid #eee;
+  margin-top: 20px;
   h2 {
     padding: 1rem 0;
   }
@@ -216,7 +219,7 @@ export default function ViewEvent() {
               <span>{t('general.back')}</span>
             </div>
             <div>
-              {account && account.toLocaleLowerCase() === creator && (
+              {account && account.toLocaleLowerCase() === creator && new Date().valueOf() < startAt! && (
                 <EditButton onClick={() => navigate(`/event/edit?id=${id}`)}>{t('event.edit')}</EditButton>
               )}
             </div>
