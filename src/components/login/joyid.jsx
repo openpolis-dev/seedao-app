@@ -124,7 +124,7 @@ export default function Joyid(){
             const authorizer = new Authorizer('auto', { endpoint: readPermissionUrl });
             await authorizer.setUser(account.toLowerCase());
             dispatch({ type: AppActionType.SET_AUTHORIZER, payload: authorizer });
-            dispatch({ type: AppActionType.SET_WALLET_TYPE, payload:WalletType.EOA });
+            dispatch({ type: AppActionType.SET_WALLET_TYPE, payload:WalletType.AA });
             dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: false });
 
             ReactGA.event("login_success",{

@@ -20,6 +20,7 @@ import usePushPermission from 'hooks/usePushPermission';
 import { requestSetDeviceLanguage, getPushDevice } from 'requests/push';
 import { useDisconnect } from 'wagmi';
 import { mainnet } from 'wagmi/chains';
+import { Wallet, WalletType } from 'wallet/wallet';
 
 export default function Header() {
   const { i18n } = useTranslation();
@@ -90,6 +91,20 @@ export default function Header() {
     const acc = localStorage.getItem(SEEDAO_ACCOUNT);
     if (acc) {
       dispatch({ type: AppActionType.SET_ACCOUNT, payload: acc });
+    }
+    const selectWallet = localStorage.getItem(SELECT_WALLET);
+    let wallet_type: WalletType | undefined = undefined;
+    if (selectWallet) {
+      switch (selectWallet) {
+        case Wallet.METAMASK:
+          wallet_type = WalletType.EOA;
+          break;
+        case Wallet.UNIPASS:
+        case Wallet.JOYID:
+          wallet_type = WalletType.AA;
+          break;
+      }
+      wallet_type && dispatch({ type: AppActionType.SET_WALLET_TYPE, payload: wallet_type });
     }
   }, []);
 
