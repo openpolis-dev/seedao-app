@@ -20,10 +20,23 @@ const Mask = styled.div`
   }
 `;
 
-const CardHeader = styled.div``;
+const CardHeader = styled.div`
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid rgb(237, 241, 247);
+  border-top-left-radius: 0.25rem;
+  border-top-right-radius: 0.25rem;
+  color: rgb(34, 43, 69);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.5rem;
+`;
 
-const CardBody = styled.div``;
-const CardFooter = styled.div``;
+const CardBody = styled.div`
+  padding: 20px;
+`;
+const CardFooter = styled.div`
+  padding: 0 20px 20px;
+`;
 
 const ItemBox = styled.div`
   margin-bottom: 40px;
@@ -31,7 +44,6 @@ const ItemBox = styled.div`
     margin-bottom: 0;
   }
   .title {
-    font-weight: bold;
     margin-bottom: 10px;
   }
   ul {
@@ -50,6 +62,10 @@ const ItemBox = styled.div`
       margin-left: 10px;
     }
   }
+`;
+
+const ModalContainer = styled(Card)`
+  min-width: 500px;
 `;
 
 interface Iprops {
@@ -94,7 +110,7 @@ export default function IssuedModal(props: Iprops) {
 
   return (
     <Mask>
-      <Card>
+      <ModalContainer>
         <CardHeader>{t('city-hall.SendCompleted')}</CardHeader>
         <CardBody>
           <ItemBox>
@@ -120,12 +136,12 @@ export default function IssuedModal(props: Iprops) {
           </ItemBox>
         </CardBody>
         <CardFooter>
-          <Button className="btn-cancel" onClick={() => closeShow()}>
+          <Button className="btn-cancel" onClick={() => closeShow()} variant="outline-primary">
             {t('general.cancel')}
           </Button>
           <Button onClick={onClickConfirm}>{t('general.confirm')}</Button>
         </CardFooter>
-      </Card>
+      </ModalContainer>
     </Mask>
   );
 }
@@ -142,5 +158,9 @@ const Textarea = styled.textarea`
     border-radius: 0.25rem;
     border-color: ${theme.inputBasicBorderColor};
     background-color: ${theme.inputBasicBackgroundColor};
+    &:focus {
+      border-color: rgb(161, 100, 255);
+      box-shadow: 0 0 0 0.25rem rgba(161, 100, 255, 0.25);
+    }
   `}
 `;
