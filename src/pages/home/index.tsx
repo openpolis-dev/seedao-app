@@ -290,7 +290,7 @@ export default function Home() {
       {
         id: 'Metaforo',
         name: 'Metaforo',
-        link: 'www.metaforo.io',
+        link: 'https://www.metaforo.io',
         icon: <AppIcon src={MetaforoIcon} alt="" />,
       },
       {
