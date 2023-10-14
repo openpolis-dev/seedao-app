@@ -9,11 +9,11 @@ self.addEventListener('notificationclick', async function (event) {
     switch (type) {
       case MESSAGE_TYPE.PROJECT_ADD:
       case MESSAGE_TYPE.PROJECT_REMOVE:
-        route_path = `/project/${data.project_id}`;
+        route_path = `/project/info/${data.project_id}`;
         break;
       case MESSAGE_TYPE.GUILD_ADD:
       case MESSAGE_TYPE.GUILD_REMOVE:
-        route_path = `/guild/${data.guild_id}`;
+        route_path = `/guild/info/${data.guild_id}`;
         break;
       case MESSAGE_TYPE.ASSET_NEW:
         route_path = '/user/vault';
