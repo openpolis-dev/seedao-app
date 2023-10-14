@@ -112,7 +112,7 @@ export default function Index() {
       sort_order: 'desc',
       sort_field: 'created_at',
     };
-    const rt = await getProjects(obj);
+    const rt = await getProjects(obj, false);
     dispatch({ type: AppActionType.SET_LOADING, payload: null });
     const { rows, page, size, total } = rt.data;
     setProList(rows);
