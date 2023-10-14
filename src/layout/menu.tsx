@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
@@ -94,6 +94,29 @@ const LftLi = styled.div<{ selected?: boolean }>`
     font-size: 20px;
   }
   ${(props) => props.selected && 'color: var(--bs-primary);'}
+  position: relative;
+  .tooltip-content {
+    position: absolute;
+    padding: 5px 12px;
+    border-radius: 8px;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    left: 40px;
+    top: 15px;
+    white-space: nowrap;
+    background: #000;
+    color: #fff;
+    z-index: 99;
+    font-size: 12px;
+  }
+  .tooltip-content::before {
+    content: '';
+    position: absolute;
+    border: 6px solid transparent;
+    border-bottom-color: #000;
+    top: 8px;
+    left: -16px;
+    transform: translateX(50%) rotate(-90deg);
+  }
 `;
 
 type MenuItemType = {
@@ -161,10 +184,17 @@ interface IMenuItem {
 }
 
 const MenuItem = ({ data, onSelectMenu, selected, open }: IMenuItem) => {
+  const [hover, setHover] = useState(false);
   return (
-    <LftLi onClick={() => onSelectMenu(data)} selected={selected}>
+    <LftLi
+      onClick={() => onSelectMenu(data)}
+      selected={selected}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+    >
       <span className="icon">{data.icon.name}</span>
       {open && <span className="name">{data.title}</span>}
+      {!open && hover && <span className="tooltip-content">{data.title}</span>}
     </LftLi>
   );
 };
