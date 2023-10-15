@@ -9,6 +9,8 @@ import { AppActionType, useAuthContext } from 'providers/authProvider';
 import useToast, { ToastType } from 'hooks/useToast';
 // import { useWeb3React } from '@web3-react/core';
 import { Pencil, CheckLg } from 'react-bootstrap-icons';
+import usePermission from 'hooks/usePermission';
+import { PermissionAction, PermissionObject } from 'utils/constant';
 
 const Box = styled.div`
   padding: 40px 20px;
@@ -98,6 +100,8 @@ export default function Assets({ detail, refreshProject }: IProps) {
     state: { account },
   } = useAuthContext();
 
+  const canUseCityhall = usePermission(PermissionAction.AuditApplication, PermissionObject.ProjectAndGuild);
+
   const [token, setToken] = useState<IBudgetItem>();
   const [point, setPoint] = useState<IBudgetItem>();
   const [showLft, setShowLft] = useState(false);
@@ -182,7 +186,7 @@ export default function Assets({ detail, refreshProject }: IProps) {
             {!showLft && (
               <FlexBox>
                 <div className="num">{token?.total_amount || 0}</div>
-                {!!account && (
+                {canUseCityhall && !!account && (
                   <span onClick={() => handleShow1()}>
                     <Pencil className="iconRht" />
                   </span>
@@ -214,7 +218,7 @@ export default function Assets({ detail, refreshProject }: IProps) {
               {!showRht && (
                 <FlexBox>
                   <div className="num">{point?.total_amount || 0}</div>
-                  {!!account && (
+                  {canUseCityhall && !!account && (
                     <span onClick={() => handleShow2()}>
                       <Pencil className="iconRht" />
                       {/*<EvaIcon name="edit-2-outline" />*/}
