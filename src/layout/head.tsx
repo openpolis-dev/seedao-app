@@ -7,7 +7,7 @@ import { parseToken, checkTokenValid, clearStorage } from '../utils/auth';
 import { Authorizer } from 'casbin.js';
 import { readPermissionUrl } from '../requests/user';
 import requests from '../requests';
-import { SEEDAO_ACCOUNT, SEEDAO_USER, SEEDAO_USER_DATA, SELECT_WALLET, SET_PROVIDER } from '../utils/constant';
+import { SEEDAO_ACCOUNT, SEEDAO_USER, SEEDAO_USER_DATA, SELECT_WALLET } from '../utils/constant';
 import Avatar from 'components/common/avatar';
 import { Button, Form, Dropdown } from 'react-bootstrap';
 import LoginModal from 'components/modals/loginNew';
@@ -24,7 +24,6 @@ import { Wallet, WalletType } from 'wallet/wallet';
 
 export default function Header() {
   const { i18n } = useTranslation();
-  // const { account } = useWeb3React();
 
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -188,7 +187,7 @@ export default function Header() {
     disconnect();
     dispatch({ type: AppActionType.CLEAR_AUTH, payload: undefined });
     // localStorage.removeItem(SEEDAO_USER_DATA);
-    // localStorage.removeItem(SELECT_WALLET);
+    localStorage.removeItem(SELECT_WALLET);
     // localStorage.removeItem(SEEDAO_ACCOUNT);
     localStorage.removeItem('joyid-status');
     localStorage.removeItem('joyid-msg');

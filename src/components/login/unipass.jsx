@@ -41,7 +41,7 @@ const WalletOption = styled.li`
   }
 `;
 
-const upProvider = new UniPassProvider({
+export const upProvider = new UniPassProvider({
     chainId: 1,
     returnEmail: false,
     appSetting: {
@@ -67,7 +67,7 @@ export default function Unipass(){
 
     const getP = async() =>{
         try{
-            // localStorage.setItem(SELECT_WALLET, 'UNIPASS');
+            localStorage.setItem(SELECT_WALLET, 'UNIPASS');
             await upProvider.disconnect();
             await upProvider.connect();
             const provider = new ethers.providers.Web3Provider(upProvider, "any");
@@ -166,7 +166,7 @@ export default function Unipass(){
         }catch (e){
             console.error(e)
             ReactGA.event("login_failed",{type: "unipass"});
-        } 
+        }
 
     }
 

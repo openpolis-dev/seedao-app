@@ -47,7 +47,7 @@ export default function  Metamask(){
     const navigate = useNavigate();
     const { dispatch } = useAuthContext();
 
-    const { open,close,isOpen } = useWeb3Modal();
+    const { open,close } = useWeb3Modal();
     const { isConnected,address } = useAccount();
     const { disconnect } = useDisconnect();
     const { chain } = useNetwork();
@@ -55,6 +55,7 @@ export default function  Metamask(){
     const [signInfo,setSignInfo] = useState();
     const [result,setResult] = useState(null);
     const [connectWallet,setConnectWallet] = useState(false);
+
 
     const signer = useEthersSigner({chainId:chain});
 

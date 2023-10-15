@@ -65,20 +65,25 @@ export default function Index() {
   }, [userData]);
 
   return (
-    <Box>
-      {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
-      {/* @ts-ignore */}
-      <chat-component
-        baseUrl="https://sdktest.sending.me"
-        useThirdLogin={true}
-        widgetWidth="100%"
-        widgetHeight="80vh"
-        colorPrimary500="#BFEF2D"
-        colorPrimary400="#C9FB30"
-        colorPrimaryTransparent100="rgba(195, 242, 55, 0.25)"
-        colorPrimaryTransparent200="rgba(195, 242, 55, 0.15)"
-        colorPrimaryTransparent300="rgba(195, 242, 55, 0.08)"
-      />
-    </Box>
+    <>
+      {!!provider && (
+        <Box>
+          {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+          {/* @ts-ignore */}
+
+          <chat-component
+            baseUrl="https://sdktest.sending.me"
+            useThirdLogin={true}
+            widgetWidth="100%"
+            widgetHeight="80vh"
+            colorPrimary500="#BFEF2D"
+            colorPrimary400="#C9FB30"
+            colorPrimaryTransparent100="rgba(195, 242, 55, 0.25)"
+            colorPrimaryTransparent200="rgba(195, 242, 55, 0.15)"
+            colorPrimaryTransparent300="rgba(195, 242, 55, 0.08)"
+          />
+        </Box>
+      )}
+    </>
   );
 }
