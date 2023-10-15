@@ -8,6 +8,8 @@ import useToast, { ToastType } from 'hooks/useToast';
 import { Upload, X } from 'react-bootstrap-icons';
 import { ContainerPadding } from 'assets/styles/global';
 import useParseSNS from 'hooks/useParseSNS';
+import CopyBox from 'components/copy';
+import copyIcon from 'assets/images/copy.svg';
 
 const OuterBox = styled.div`
   min-height: 100%;
@@ -56,6 +58,11 @@ const InputBox = styled(InputGroup)`
     display: flex;
     align-items: center;
     overflow-x: auto;
+  }
+  .copy-content {
+    position: absolute;
+    right: -30px;
+    top: 8px;
   }
   @media (max-width: 1024px) {
     max-width: 100%;
@@ -227,6 +234,11 @@ export default function Profile() {
                 <div className="title">{t('My.wallet')}</div>
                 <InputBox>
                   <div className="wallet">{userData?.wallet}</div>
+                  {userData?.wallet && (
+                    <CopyBox text={userData?.wallet} dir="right">
+                      <img src={copyIcon} alt="" style={{ position: 'relative', top: '-2px' }} />
+                    </CopyBox>
+                  )}
                 </InputBox>
               </li>
               <li>
