@@ -39,7 +39,7 @@ export default function UserCard({ user, showEdit, onSelectUser, formatActive, s
           )}
 
           <div>
-            <div>{sns || user.name}</div>
+            <div className="name">{sns || user.name}</div>
             <div style={{ display: 'flex', gap: '5px' }}>
               <span>{PublicJs.AddressToShow(user.wallet || '')}</span>
               <CopyBox text={user.wallet || ''} dir="left">
@@ -107,6 +107,10 @@ const UserCardBox = styled(Col)`
     display: flex;
     align-items: center;
     position: relative;
+  }
+  .name {
+    font-size: 14px;
+    word-break: break-all;
   }
   img.avatar {
     width: 40px;
