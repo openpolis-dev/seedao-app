@@ -157,7 +157,6 @@ export default function  Metamask(){
                 account:"account:"+address
             });
             const tokenstr = localStorage.getItem(SEEDAO_USER);
-            console.log("===res.data===",res.data,tokenstr)
             await registerPush();
 
         }catch (e){
