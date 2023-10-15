@@ -15,14 +15,14 @@ import ProjectOrGuildItem from 'components/projectOrGuildItem';
 import { ContainerPadding } from 'assets/styles/global';
 
 const OuterBox = styled.div`
-  height: 100%;
+  min-height: 100%;
   ${ContainerPadding};
 `;
 
 const CardBox = styled.div`
   background: #fff;
   padding: 10px 40px;
-  height: 100%;
+  min-height: 100%;
 `;
 
 const Box = styled.div`
