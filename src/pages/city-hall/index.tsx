@@ -59,6 +59,7 @@ export default function Index() {
   const { t } = useTranslation();
   const { dispatch } = useAuthContext();
   const [detail, setDetail] = useState<ReTurnProject | undefined>();
+  const [current, setCurrent] = useState<number>(0);
 
   const canUseCityhall = usePermission(PermissionAction.AuditApplication, PermissionObject.ProjectAndGuild);
 
@@ -73,36 +74,46 @@ export default function Index() {
     setDetail(dt.data);
   };
 
+  const getFullContent = () => {
+    return (
+      [
+        <Audit />,
+        <ProjectAudit />,
+        <Issued />,
+        <Members detail={detail} updateProject={getDetail} />,
+        <Assets detail={detail} refreshProject={getDetail} />,
+        <Proposal detail={detail} refreshProject={getDetail} />,
+        <Reg id={detail?.id} />,
+        <PushPanel id={detail?.id} />,
+      ][current] || <></>
+    );
+  };
+
+  const getShortContent = () => {
+    return (
+      [
+        <Members detail={detail} updateProject={getDetail} />,
+        <Assets detail={detail} refreshProject={getDetail} />,
+        <Proposal detail={detail} refreshProject={getDetail} />,
+      ][current] || <></>
+    );
+  };
+
   return canUseCityhall ? (
     <Box>
       <CardBox>
         <TopBox>
-          <TabsBox defaultActiveKey={0}>
-            <Tab eventKey={0} title={t('city-hall.PointsAndTokenAudit')}>
-              <Audit />
-            </Tab>
-            <Tab eventKey={1} title={t('city-hall.ProjectAudit')}>
-              <ProjectAudit />
-            </Tab>
-            <Tab eventKey={2} title={t('city-hall.Send')}>
-              <Issued />
-            </Tab>
-            <Tab eventKey={3} title={t('city-hall.Members')}>
-              <Members detail={detail} updateProject={getDetail} />
-            </Tab>
-            <Tab eventKey={4} title={t('city-hall.Asset')}>
-              <Assets detail={detail} refreshProject={getDetail} />
-            </Tab>
-            <Tab eventKey={5} title={t('city-hall.Proposal')}>
-              <Proposal detail={detail} refreshProject={getDetail} />
-            </Tab>
-            <Tab eventKey={6} title={t('city-hall.Add')}>
-              <Reg id={detail?.id} />
-            </Tab>
-            <Tab eventKey={7} title={t('city-hall.Push')}>
-              <PushPanel id={detail?.id} />
-            </Tab>
+          <TabsBox defaultActiveKey={0} onSelect={(e: any) => setCurrent(Number(e))}>
+            <Tab eventKey={0} title={t('city-hall.PointsAndTokenAudit')} />
+            <Tab eventKey={1} title={t('city-hall.ProjectAudit')} />
+            <Tab eventKey={2} title={t('city-hall.Send')} />
+            <Tab eventKey={3} title={t('city-hall.Members')} />
+            <Tab eventKey={4} title={t('city-hall.Asset')} />
+            <Tab eventKey={5} title={t('city-hall.Proposal')} />
+            <Tab eventKey={6} title={t('city-hall.Add')} />
+            <Tab eventKey={7} title={t('city-hall.Push')} />
           </TabsBox>
+          {getFullContent()}
         </TopBox>
       </CardBox>
     </Box>
@@ -110,17 +121,12 @@ export default function Index() {
     <Box>
       <CardBox>
         <TopBox>
-          <TabsBox defaultActiveKey={0}>
-            <Tab eventKey={0} title={t('city-hall.Members')}>
-              <Members detail={detail} updateProject={getDetail} />
-            </Tab>
-            <Tab eventKey={1} title={t('city-hall.Asset')}>
-              <Assets detail={detail} refreshProject={getDetail} />
-            </Tab>
-            <Tab eventKey={2} title={t('city-hall.Proposal')}>
-              <Proposal detail={detail} refreshProject={getDetail} />
-            </Tab>
+          <TabsBox defaultActiveKey={0} onSelect={(e: any) => setCurrent(Number(e))}>
+            <Tab eventKey={0} title={t('city-hall.Members')} />
+            <Tab eventKey={1} title={t('city-hall.Asset')} />
+            <Tab eventKey={2} title={t('city-hall.Proposal')} />
           </TabsBox>
+          {getShortContent()}
         </TopBox>
       </CardBox>
     </Box>
