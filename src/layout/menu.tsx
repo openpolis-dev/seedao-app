@@ -12,6 +12,7 @@ import {
   Box2Heart,
   ShieldCheck,
   Envelope,
+  ChatDots,
 } from 'react-bootstrap-icons';
 import React from 'react';
 import useCheckLogin from 'hooks/useCheckLogin';
@@ -170,10 +171,16 @@ const items: MenuItemType[] = [
 
   {
     title: 'menus.Chat',
-    icon: { name: <Envelope /> },
+    icon: { name: <ChatDots /> },
     link: { href: '/chat' },
     value: 'chat',
   },
+  // {
+  //   title: 'menus.feedback',
+  //   icon: { name: <Envelope /> },
+  //   link: { href: '/feedback' },
+  //   value: 'feedback',
+  // },
 ];
 
 interface IMenuItem {

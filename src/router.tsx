@@ -23,6 +23,7 @@ import Profile from './pages/user/profile';
 import UserVault from './pages/user/vault';
 import CalendarPage from './pages/calendar';
 import RouterChecker from './utils/routerChecker';
+import Canny from './pages/canny';
 
 export default function RouterLink() {
   return (
@@ -55,6 +56,7 @@ export default function RouterLink() {
           <Route path="/proposal/thread/:id" element={<ProposalThread />} />
           <Route path="/city-hall" element={<CityHall />} />
           <Route path="/chat" element={<Chat />} />
+          <Route path="/feedback" element={<Canny />} />
         </Routes>
       </Layout>
       <RouterChecker />
