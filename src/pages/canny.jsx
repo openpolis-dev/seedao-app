@@ -23,12 +23,11 @@ const Feedback = () => {
   } = useAuthContext();
 
 
-  useEffect(() => {
-  }, []);
 
 
 
   useEffect(() => {
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
     (function(w, d, i, s) {
       function l() {
         if (!d.getElementById(i)) {
@@ -53,6 +52,9 @@ const Feedback = () => {
       ssoToken: null, // See step 3,
       theme: "light" // options: light [default], dark, auto
     });
+    setTimeout(()=>{
+      dispatch({ type: AppActionType.SET_LOADING, payload: null });
+    },3000)
   }, []);
 
 
