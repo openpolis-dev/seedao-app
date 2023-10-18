@@ -24,6 +24,7 @@ import UserVault from './pages/user/vault';
 import CalendarPage from './pages/calendar';
 import RouterChecker from './utils/routerChecker';
 import Canny from './pages/canny';
+import Apps from './pages/Apps';
 
 export default function RouterLink() {
   return (
@@ -37,6 +38,7 @@ export default function RouterLink() {
           <Route path="/user/vault" element={<UserVault />} />
 
           <Route path="/event" element={<Event />} />
+          <Route path="/apps" element={<Apps />} />
           <Route path="/event/view" element={<EventView />} />
           <Route path="/event/edit" element={<EventEdit />} />
           <Route path="/online-event" element={<CalendarPage />} />

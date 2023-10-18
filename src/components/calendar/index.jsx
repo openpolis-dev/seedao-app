@@ -3,6 +3,8 @@ import Calendar from "@ericz1803/react-google-calendar";
 import { css } from "@emotion/react";
 import styled from 'styled-components';
 
+import { Button } from 'react-bootstrap';
+
 const Box = styled.div`
     background: #fff;
     padding: 20px 20px 40px;
@@ -51,6 +53,13 @@ const Box = styled.div`
     }
     
 `
+
+const FstTop = styled.div`
+    padding-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+`
 const API_KEY = "AIzaSyDyZO-Xhx71aD0Rpv8EcwY2N5rsdBWG8hA";
 let calendars = [
     {
@@ -90,6 +99,9 @@ export default function CalendarBox(){
 
 return (
     <Box>
+        <FstTop>
+            <Button>Apply</Button>
+        </FstTop>
         <Calendar
             apiKey={API_KEY}
             calendars={calendars}
