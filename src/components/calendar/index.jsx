@@ -4,6 +4,7 @@ import { css } from "@emotion/react";
 import styled from 'styled-components';
 
 import { Button } from 'react-bootstrap';
+import { useTranslation } from "react-i18next";
 
 const Box = styled.div`
     background: #fff;
@@ -96,11 +97,12 @@ let styles = {
 const language = "EN";
 
 export default function CalendarBox(){
+    const { t } = useTranslation();
 
 return (
     <Box>
         <FstTop>
-            <Button>Apply</Button>
+            <Button>{t('general.apply')}</Button>
         </FstTop>
         <Calendar
             apiKey={API_KEY}

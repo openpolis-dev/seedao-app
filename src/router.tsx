@@ -26,6 +26,7 @@ import CalendarPage from './pages/calendar';
 import RouterChecker from './utils/routerChecker';
 import Canny from './pages/canny';
 import Apps from './pages/Apps';
+import Resources from './pages/resources';
 
 export default function RouterLink() {
   return (
@@ -40,6 +41,7 @@ export default function RouterLink() {
 
           <Route path="/event" element={<Event />} />
           <Route path="/apps" element={<Apps />} />
+          <Route path="/resources" element={<Resources />} />
           <Route path="/event/view" element={<EventView />} />
           <Route path="/event/edit" element={<EventEdit />} />
           <Route path="/online-event" element={<CalendarPage />} />

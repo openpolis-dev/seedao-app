@@ -22,7 +22,8 @@
     "Clear": "Clear",
     "Loading": "Loading",
     "Copied": "Copied",
-    "ConnectWallet": "Connect Wallet"
+    "ConnectWallet": "Connect Wallet",
+    "apply": "Apply"
   },
   "Home": {
     "Slogan": "SeeDAO is a network polis to connect millions of nomads in Web3.",

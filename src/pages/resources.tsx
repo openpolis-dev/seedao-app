@@ -79,7 +79,7 @@ const AppCard = ({ icon, name, link, id }: { icon: React.ReactElement; name: str
     </AppCardStyle>
   );
 };
-export default function Apps() {
+export default function Resources() {
   const { t } = useTranslation();
 
   const events = useMemo(() => {
