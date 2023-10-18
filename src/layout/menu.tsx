@@ -13,6 +13,7 @@ import {
   ShieldCheck,
   Envelope,
   ChatDots,
+  ViewList,
 } from 'react-bootstrap-icons';
 import React from 'react';
 import useCheckLogin from 'hooks/useCheckLogin';
@@ -153,27 +154,26 @@ const items: MenuItemType[] = [
     icon: { name: <CashCoin /> },
     link: { href: '/assets' },
   },
-  {
-    title: 'menus.Project',
-    icon: { name: <PieChart /> },
-    link: { href: '/project' },
-  },
-  {
-    title: 'menus.Guild',
-    icon: { name: <People /> },
-    link: { href: '/guild' },
-  },
-  {
-    title: 'menus.Proposal',
-    icon: { name: <Box2Heart /> },
-    link: { href: '/proposal' },
-  },
+  // {
+  //   title: 'menus.Project',
+  //   icon: { name: <PieChart /> },
+  //   link: { href: '/project' },
+  // },
+  // {
+  //   title: 'menus.Guild',
+  //   icon: { name: <People /> },
+  //   link: { href: '/guild' },
+  // },
+  // {
+  //   title: 'menus.Proposal',
+  //   icon: { name: <Box2Heart /> },
+  //   link: { href: '/proposal' },
+  // },
   {
     title: 'menus.city-hall',
     icon: { name: <ShieldCheck /> },
     link: { href: '/city-hall' },
   },
-
   // {
   //   title: 'menus.Chat',
   //   icon: { name: <ChatDots /> },
@@ -187,6 +187,11 @@ const items: MenuItemType[] = [
   //   link: { href: '/feedback' },
   //   value: 'feedback',
   // },
+  {
+    title: 'menus.Resources',
+    icon: { name: <ViewList /> },
+    link: { href: '/resources' },
+  },
 ];
 
 interface IMenuItem {
