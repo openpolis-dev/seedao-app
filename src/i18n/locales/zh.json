@@ -188,7 +188,12 @@
     "SendCompleted": "发放完成",
     "FillInId": "请填入发放记录的交易ID（使用;隔开）",
     "SendSuccess": "已发放",
-    "Push": "推送"
+    "Push": "推送",
+    "Governance": "治理线",
+    "Band": "品牌线",
+    "Tech": "技术线",
+    "CalendarReview": "日历审核",
+    "AppReview": "城邦应用审核"
   },
   "Push": {
     "CreatePush": "创建推送",

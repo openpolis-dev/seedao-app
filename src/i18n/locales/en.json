@@ -188,7 +188,12 @@
     "SendCompleted": "Send Completed",
     "FillInId": "Please fill in the transaction ID of the sending record(use ; to split)",
     "SendSuccess": "Sent",
-    "Push": "Push"
+    "Push": "Push",
+    "Governance": "Governance",
+    "Band": "Band",
+    "Tech": "Tech",
+    "CalendarReview": "Calendar Review",
+    "AppReview": "App Review"
   },
   "Push": {
     "CreatePush": "Create Push",
