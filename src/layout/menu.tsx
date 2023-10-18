@@ -265,8 +265,7 @@ export default function Menu({ isMedium }: { isMedium: boolean }) {
           selected={pathname.startsWith(item.link.href)}
         />
       ))}
-
-      {!isMedium && <AppVersion />}
+      {!isMedium && <AppVersion open={open} />}
     </Box>
   );
 }

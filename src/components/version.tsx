@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
-export default function AppVersion() {
+export default function AppVersion({ open }: any) {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
@@ -11,11 +11,15 @@ export default function AppVersion() {
     navigate('/feedback');
   };
   return (
-    <VersionBox>
-      <FeedbackBox onClick={() => toGo()}>{t('menus.feedback')}</FeedbackBox>
-      {process.env.REACT_APP_APP_VERSION} Build {process.env.REACT_APP_BUILD_ID?.slice(0, 6)}.
-      {process.env.REACT_APP_COMMIT_REF?.slice(0, 6)}
-    </VersionBox>
+    <>
+      {open && (
+        <VersionBox>
+          <FeedbackBox onClick={() => toGo()}>{t('menus.feedback')}</FeedbackBox>
+          {process.env.REACT_APP_APP_VERSION} Build {process.env.REACT_APP_BUILD_ID?.slice(0, 6)}.
+          {process.env.REACT_APP_COMMIT_REF?.slice(0, 6)}
+        </VersionBox>
+      )}
+    </>
   );
 }
 
