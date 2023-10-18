@@ -5,10 +5,13 @@ import styled from 'styled-components';
 
 const Box = styled.div`
     background: #fff;
-    padding: 20px;
+    padding: 20px 20px 40px;
     box-shadow: 0 5px 10px rgba(0,0,0,0.1);
     .calendar-title{
         font-family: 'Jost-ExtraBold';
+    }
+    .calendar-footer{
+        display: none;
     }
     .tooltip{
 
@@ -92,6 +95,7 @@ return (
             calendars={calendars}
             styles={styles}
             language={language}
+            showFooter={false}
         />
     </Box>
 );

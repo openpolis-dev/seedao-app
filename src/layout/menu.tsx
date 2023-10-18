@@ -134,6 +134,11 @@ const items: MenuItemType[] = [
     link: { href: '/home' },
   },
   {
+    title: 'Home.Apps',
+    icon: { name: <Grid1x2 /> },
+    link: { href: '/apps' },
+  },
+  {
     title: 'menus.Event',
     icon: { name: <Grid1x2 /> },
     link: { href: '/event' },
@@ -169,12 +174,13 @@ const items: MenuItemType[] = [
     link: { href: '/city-hall' },
   },
 
-  {
-    title: 'menus.Chat',
-    icon: { name: <ChatDots /> },
-    link: { href: '/chat' },
-    value: 'chat',
-  },
+  // {
+  //   title: 'menus.Chat',
+  //   icon: { name: <ChatDots /> },
+  //   link: { href: '/chat' },
+  //   value: 'chat',
+  // },
+
   // {
   //   title: 'menus.feedback',
   //   icon: { name: <Envelope /> },

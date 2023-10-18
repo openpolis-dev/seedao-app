@@ -16,7 +16,6 @@ export default function CalendarPage() {
   return (
     <PageStyle>
       {/*{loading && <LoadingBox />}*/}
-
       <CalendarBox />
     </PageStyle>
   );
