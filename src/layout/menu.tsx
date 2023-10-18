@@ -14,6 +14,7 @@ import {
   Envelope,
   ChatDots,
   ViewList,
+  Boxes,
 } from 'react-bootstrap-icons';
 import React from 'react';
 import useCheckLogin from 'hooks/useCheckLogin';
@@ -136,7 +137,7 @@ const items: MenuItemType[] = [
   },
   {
     title: 'Home.Apps',
-    icon: { name: <Grid1x2 /> },
+    icon: { name: <Boxes /> },
     link: { href: '/apps' },
   },
   {
