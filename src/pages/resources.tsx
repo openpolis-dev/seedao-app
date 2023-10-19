@@ -10,10 +10,10 @@ import Wormhole3Icon from '../assets/images/apps/wormhole3.svg';
 import MetaforoIcon from '../assets/images/apps/metaforo.png';
 import { Calendar, Grid1x2 } from 'react-bootstrap-icons';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
 import Links from 'utils/links';
 import SeedIcon from '../assets/images/seed.png';
+import AppCard, { AppIcon } from 'components/common/appCard';
 
 const OuterBox = styled.div`
   min-height: 100%;
@@ -26,38 +26,6 @@ const InnerBox = styled.div`
   min-height: 100%;
 `;
 
-const AppIcon = styled.img`
-  height: 30px;
-`;
-
-const AppCardStyle = styled.div`
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-  background-size: 100%;
-  border-radius: 10px;
-  overflow: hidden;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 15px;
-  padding-block: 30px;
-  background-color: #fff;
-  margin-bottom: 20px;
-  .iconBox {
-    font-size: 24px;
-  }
-
-  @media (max-width: 1024px) {
-    padding-block: 20px;
-    gap: 5px;
-    font-size: 14px;
-    .iconBox {
-      font-size: 20px;
-    }
-  }
-`;
-
 const FstTop = styled.div`
   padding-bottom: 30px;
   display: flex;
@@ -65,22 +33,6 @@ const FstTop = styled.div`
   justify-content: flex-end;
 `;
 
-const AppCard = ({ icon, name, link, id }: { icon: React.ReactElement; name: string; link: string; id: string }) => {
-  const navigate = useNavigate();
-  const handleClickEvent = () => {
-    if (id === 'online') {
-      navigate('/online-event');
-    } else {
-      window.open(link, '_blank');
-    }
-  };
-  return (
-    <AppCardStyle className="boxBg" onClick={handleClickEvent}>
-      <div className="iconBox">{icon}</div>
-      <div>{name}</div>
-    </AppCardStyle>
-  );
-};
 export default function Resources() {
   const { t } = useTranslation();
 

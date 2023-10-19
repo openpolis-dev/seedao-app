@@ -35,7 +35,7 @@ const AppCardStyle = styled.div`
   align-items: center;
   justify-content: center;
   gap: 15px;
-  padding-block: 30px;
+  padding-block: 15px;
   background-color: #fff;
   margin-bottom: 20px;
   .iconBox {
@@ -43,7 +43,7 @@ const AppCardStyle = styled.div`
   }
 
   @media (max-width: 1024px) {
-    padding-block: 20px;
+    padding-block: 10px;
     gap: 5px;
     font-size: 14px;
     .iconBox {
