@@ -12,6 +12,8 @@ import { Calendar, Grid1x2 } from 'react-bootstrap-icons';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
+import Links from 'utils/links';
+import SeedIcon from '../assets/images/seed.png';
 
 const OuterBox = styled.div`
   min-height: 100%;
@@ -147,6 +149,9 @@ export default function Resources() {
               <AppCard {...item} />
             </Col>
           ))}
+          <Col sm={12} md={6} lg={4} xl={3}>
+            <AppCard icon={<AppIcon src={SeedIcon} alt="" />} name="Seed" link={Links.seed} id="seed" />
+          </Col>
         </Row>
       </InnerBox>
     </OuterBox>

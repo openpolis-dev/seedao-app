@@ -12,6 +12,7 @@ import { Calendar, Grid1x2 } from 'react-bootstrap-icons';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
+import Links from 'utils/links';
 
 const OuterBox = styled.div`
   min-height: 100%;
@@ -139,7 +140,7 @@ export default function Apps() {
     <OuterBox>
       <InnerBox>
         <FstTop>
-          <Button>{t('general.apply')}</Button>
+          <Button onClick={() => window.open(Links.applyAppLink, '_target')}>{t('general.apply')}</Button>
         </FstTop>
         <Row>
           {events.map((item, idx) => (

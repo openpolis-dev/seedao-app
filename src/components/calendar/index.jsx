@@ -5,6 +5,7 @@ import styled from 'styled-components';
 
 import { Button } from 'react-bootstrap';
 import { useTranslation } from "react-i18next";
+import Links from "utils/links";
 
 const Box = styled.div`
     background: #fff;
@@ -100,18 +101,12 @@ export default function CalendarBox(){
     const { t } = useTranslation();
 
 return (
-    <Box>
-        <FstTop>
-            <Button>{t('general.apply')}</Button>
-        </FstTop>
-        <Calendar
-            apiKey={API_KEY}
-            calendars={calendars}
-            styles={styles}
-            language={language}
-            showFooter={false}
-        />
-    </Box>
+  <Box>
+    <FstTop>
+      <Button onClick={() => window.open(Links.applyCalendarLink, "_target")}>{t('general.apply')}</Button>
+    </FstTop>
+    <Calendar apiKey={API_KEY} calendars={calendars} styles={styles} language={language} showFooter={false} />
+  </Box>
 );
 }
 

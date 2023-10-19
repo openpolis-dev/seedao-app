@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { Row, Col } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { Calendar, Boxes } from 'react-bootstrap-icons';
+import Links from 'utils/links';
 
 export default function GovernancePanel() {
   const { t } = useTranslation();
@@ -9,7 +10,7 @@ export default function GovernancePanel() {
     <div>
       <Row>
         <Col sm={12} md={6} lg={4} xl={3}>
-          <AppCardStyle href="" target="_blank">
+          <AppCardStyle href={Links.calendarReviewLink} target="_blank">
             <div className="iconBox">
               <Calendar />
             </div>
@@ -17,7 +18,7 @@ export default function GovernancePanel() {
           </AppCardStyle>
         </Col>
         <Col sm={12} md={6} lg={4} xl={3}>
-          <AppCardStyle href="" target="_blank">
+          <AppCardStyle href={Links.appReviewLink} target="_blank">
             <div className="iconBox">
               <Boxes />
             </div>
