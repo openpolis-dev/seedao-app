@@ -282,5 +282,8 @@
     "iosStep1": "1) Press the 'Share' button on the menu bar below.",
     "iosStep2": "2) Press 'Add to Home Screen'.",
     "androidInstall": "Install"
+  },
+  "resources": {
+    "all": "All Resources"
   }
 }

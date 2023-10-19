@@ -282,5 +282,8 @@
     "iosStep1": "1) 点击 菜单栏上的'分享' 按钮",
     "iosStep2": "2) 点击 '添加到主屏幕'",
     "androidInstall": "安装"
+  },
+  "resources": {
+    "all": "所有资源"
   }
 }
