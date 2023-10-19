@@ -6,13 +6,14 @@ import InputNumber from 'components/inputNumber';
 import LftImg from '../assets/images/left.svg';
 import RhtImg from '../assets/images/right.svg';
 
-const Box = styled.div`
+const Box = styled.div<{ dir: string }>`
   display: flex;
   //justify-content: space-between;
   align-items: center;
 
   margin-top: 40px;
   width: 100%;
+  justify-content: ${(props) => (props.dir === 'right' ? 'flex-end' : 'flex-start')};
   a {
     text-decoration: none;
     //color: #616666;
@@ -146,9 +147,10 @@ interface Props {
   current: number;
   handleToPage: (a: number) => void;
   handlePageSize?: (a: number) => void;
+  dir?: 'left' | 'right';
 }
 
-const Page: FC<Props> = ({ itemsPerPage, total, handleToPage, current }) => {
+const Page: FC<Props> = ({ itemsPerPage, total, handleToPage, current, dir }) => {
   const [pageCount, setPageCount] = useState(0);
   const [curr, setCurr] = useState(0);
   const [pageToGo, setPageToGo] = useState('');
@@ -192,7 +194,7 @@ const Page: FC<Props> = ({ itemsPerPage, total, handleToPage, current }) => {
   };
 
   return (
-    <Box>
+    <Box dir={dir || 'left'}>
       {/*<NumBox>*/}
       {/*    Total <span>{total}</span> results*/}
       {/*</NumBox>*/}
