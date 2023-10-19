@@ -12,7 +12,7 @@ import { Calendar, Grid1x2 } from 'react-bootstrap-icons';
 import { useTranslation } from 'react-i18next';
 import { Button } from 'react-bootstrap';
 import Links from 'utils/links';
-import AppCard, { AppIcon } from 'components/common/appCard';
+import AppCard, { AppIcon, EmptyAppCard } from 'components/common/appCard';
 
 const OuterBox = styled.div`
   min-height: 100%;
@@ -119,6 +119,9 @@ export default function Apps() {
               <AppCard {...item} />
             </Col>
           ))}
+          <Col sm={12} md={6} lg={4} xl={3}>
+            <EmptyAppCard />
+          </Col>
         </AppBox>
       </InnerBox>
     </OuterBox>

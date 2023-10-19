@@ -285,6 +285,7 @@
   },
   "resources": {
     "all": "所有资源",
-    "calendar": "申请日历"
+    "calendar": "申请日历",
+    "wait2add": "待添加"
   }
 }

@@ -6,7 +6,7 @@ import { Row, Col, Tab, Tabs } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import Links from 'utils/links';
 import SeedIcon from '../assets/images/seed.png';
-import AppCard, { AppIcon } from 'components/common/appCard';
+import AppCard, { AppIcon, EmptyAppCard } from 'components/common/appCard';
 
 const OuterBox = styled.div`
   min-height: 100%;
@@ -63,6 +63,9 @@ export default function Resources() {
           ))}
           <Col sm={12} md={6} lg={4} xl={3}>
             <AppCard icon={<AppIcon src={SeedIcon} alt="" />} name="Seed" link={Links.seed} id="seed" />
+          </Col>
+          <Col sm={12} md={6} lg={4} xl={3}>
+            <EmptyAppCard />
           </Col>
         </AppBox>
       </InnerBox>

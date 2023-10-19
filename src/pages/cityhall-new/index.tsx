@@ -12,6 +12,8 @@ import { PermissionAction, PermissionObject } from 'utils/constant';
 import PushPanel from 'components/cityHallCom/push';
 import { ContainerPadding } from 'assets/styles/global';
 import GovernancePanel from 'components/cityHallCom/Governance';
+import BrandPanel from 'components/cityHallCom/brand';
+import TechPanel from 'components/cityHallCom/tech';
 
 const Box = styled.div`
   //position: relative;
@@ -75,8 +77,8 @@ export default function Index() {
       [
         <Members detail={detail} updateProject={getDetail} />,
         <GovernancePanel />,
-        <></>,
-        <></>,
+        <BrandPanel />,
+        <TechPanel />,
         <PushPanel id={detail?.id} />,
       ][current] || <></>
     );

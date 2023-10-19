@@ -285,6 +285,7 @@
   },
   "resources": {
     "all": "All Resources",
-    "calendar": "Calendar"
+    "calendar": "Calendar",
+    "wait2add": "待添加"
   }
 }

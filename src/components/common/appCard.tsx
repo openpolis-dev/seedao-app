@@ -1,5 +1,7 @@
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { WindowPlus } from 'react-bootstrap-icons';
 
 const AppCard = ({ icon, name, link, id }: { icon: React.ReactElement; name: string; link: string; id: string }) => {
   const navigate = useNavigate();
@@ -19,6 +21,16 @@ const AppCard = ({ icon, name, link, id }: { icon: React.ReactElement; name: str
 };
 
 export default AppCard;
+
+export const EmptyAppCard = () => {
+  const { t } = useTranslation();
+  return (
+    <AppCardStyle>
+      <div className="iconBox">{<WindowPlus />}</div>
+      <div>{t('resources.wait2add')}</div>
+    </AppCardStyle>
+  );
+};
 
 export const AppIcon = styled.img`
   height: 30px;
