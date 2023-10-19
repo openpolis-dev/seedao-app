@@ -36,57 +36,9 @@ const FstTop = styled.div`
 export default function Resources() {
   const { t } = useTranslation();
 
-  const events = useMemo(() => {
-    return [
-      {
-        id: 'Deschool',
-        name: 'Deschool',
-        link: 'https://deschool.app/origin/plaza',
-        icon: <AppIcon src={DeschoolIcon} alt="" />,
-      },
-      {
-        id: 'AAAny',
-        name: 'AAAny',
-        link: 'https://apps.apple.com/ca/app/aaany-ask-anyone-anything/id6450619356',
-        icon: <AppIcon src={AaanyIcon} alt="" />,
-      },
-      {
-        id: 'Cascad3',
-        name: 'Cascad3',
-        link: 'https://www.cascad3.com/',
-        icon: <AppIcon src={Cascad3Icon} alt="" style={{ height: '20px' }} />,
-      },
-      {
-        id: 'DAOLink',
-        name: 'DAOLink',
-        link: 'https://m.daolink.space',
-        icon: <AppIcon src={DaolinkIcon} alt="" />,
-      },
-      {
-        id: 'Wormhole3',
-        name: 'Wormhole3',
-        link: 'https://alpha.wormhole3.io',
-        icon: <AppIcon src={Wormhole3Icon} alt="" style={{ height: '20px' }} />,
-      },
-      {
-        id: 'Metaforo',
-        name: 'Metaforo',
-        link: 'https://www.metaforo.io',
-        icon: <AppIcon src={MetaforoIcon} alt="" />,
-      },
-      {
-        id: 'online',
-        name: t('Home.OnlineEvent'),
-        link: 'https://calendar.google.com/calendar/u/4?cid=YzcwNGNlNTA5ODUxMmIwYjBkNzA3MjJlNjQzMGFmNDIyMWUzYzllYmM2ZDFlNzJhYTcwYjgyYzgwYmI2OTk5ZkBncm91cC5jYWxlbmRhci5nb29nbGUuY29t',
-        icon: <Calendar />,
-      },
-      {
-        id: 'offline',
-        name: t('Home.OfflineEvent'),
-        link: 'https://seeu.network/',
-        icon: <Grid1x2 />,
-      },
-    ];
+  const resources = useMemo(() => {
+    // @ts-ignore
+    return Links.resource.map((item) => ({ ...item, name: t(item.name) as string }));
   }, [t]);
 
   return (
@@ -96,7 +48,7 @@ export default function Resources() {
           <Button>{t('general.apply')}</Button>
         </FstTop>
         <Row>
-          {events.map((item, idx) => (
+          {resources.map((item, idx) => (
             <Col key={idx} sm={12} md={6} lg={4} xl={3}>
               <AppCard {...item} />
             </Col>
