@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { ContainerPadding } from '../assets/styles/global';
 import React, { useMemo } from 'react';
-import { Col, Row } from 'react-bootstrap';
+import { Col, Row, Tab, Tabs } from 'react-bootstrap';
 import DeschoolIcon from '../assets/images/apps/deschool.png';
 import AaanyIcon from '../assets/images/apps/AAAny.svg';
 import Cascad3Icon from '../assets/images/apps/cascad3.svg';
@@ -10,7 +10,6 @@ import Wormhole3Icon from '../assets/images/apps/wormhole3.svg';
 import MetaforoIcon from '../assets/images/apps/metaforo.png';
 import { Calendar, Grid1x2 } from 'react-bootstrap-icons';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
 import Links from 'utils/links';
 import AppCard, { AppIcon } from 'components/common/appCard';
@@ -26,11 +25,23 @@ const InnerBox = styled.div`
   min-height: 100%;
 `;
 
-const FstTop = styled.div`
-  padding-bottom: 30px;
+const TitBox = styled.div`
+  font-weight: bold;
+  font-size: 1.5rem;
+  margin-bottom: 20px;
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: space-between;
+  position: relative;
+  .titLft {
+    width: 100%;
+  }
+`;
+
+const RhtBoxT = styled.div`
+  position: absolute;
+  right: 0;
+  top: 0;
 `;
 
 export default function Apps() {
@@ -92,9 +103,16 @@ export default function Apps() {
   return (
     <OuterBox>
       <InnerBox>
-        <FstTop>
-          <Button onClick={() => window.open(Links.applyAppLink, '_target')}>{t('general.apply')}</Button>
-        </FstTop>
+        <TitBox>
+          <div className="titLft">
+            <Tabs defaultActiveKey={0}>
+              <Tab title={t('resources.all')} eventKey={0} />
+            </Tabs>
+          </div>
+          <RhtBoxT>
+            <Button onClick={() => window.open(Links.applyAppLink, '_target')}>{t('general.apply')}</Button>
+          </RhtBoxT>
+        </TitBox>
         <Row>
           {events.map((item, idx) => (
             <Col key={idx} sm={12} md={6} lg={4} xl={3}>
