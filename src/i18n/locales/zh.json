@@ -284,6 +284,7 @@
     "androidInstall": "安装"
   },
   "resources": {
-    "all": "所有资源"
+    "all": "所有资源",
+    "calendar": "申请日历"
   }
 }

@@ -284,6 +284,7 @@
     "androidInstall": "Install"
   },
   "resources": {
-    "all": "All Resources"
+    "all": "All Resources",
+    "calendar": "Calendar"
   }
 }
