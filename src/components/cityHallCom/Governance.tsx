@@ -7,6 +7,7 @@ import AppCard from 'components/common/appCard';
 
 const AppBox = styled(Row)`
   padding-inline: 20px;
+  padding-top: 10px;
 `;
 
 export default function GovernancePanel() {

@@ -49,30 +49,24 @@ const Box = styled.div`
       width: 65px;
     }
     25% {
-      width: 50px;
+      width: 70px;
     }
     50% {
-      width: 100px;
-    }
-    75% {
-      width: 150px;
+      width: 80px;
     }
     100% {
-      width: 200px;
+      width: unset;
     }
   }
   @keyframes unexpand {
     0% {
-      width: 200px;
-    }
-    25% {
-      width: 150px;
+      width: unset;
     }
     50% {
-      width: 100px;
+      width: 80px;
     }
     75% {
-      width: 50px;
+      width: 70px;
     }
     100% {
       width: 65px;
