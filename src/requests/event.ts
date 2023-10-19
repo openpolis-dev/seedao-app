@@ -39,3 +39,21 @@ export const editEventById = (id: string, data: Ievent) => {
 export const getMyEvent = (data: IPageParams) => {
   return request.get(`my_events`, data);
 };
+
+const SEEU_API = 'https://seeu-network-backend.vercel.app/api/event/list';
+type SeeuParams = {
+  pageSize: number;
+  currentPage: number;
+  type?: 'end';
+};
+export const getSeeuEventList = async (data: SeeuParams) => {
+  try {
+    const resp = await axios.get(`${SEEU_API}`, { params: data });
+    if (resp.status === 200 && resp.data?.success && resp.data?.err_code === 0) {
+      return resp.data;
+    }
+    throw Error(`status is ${resp.status}, err_code is ${resp.data?.err_code}`);
+  } catch (error: any) {
+    throw Error(error);
+  }
+};
