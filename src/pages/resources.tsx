@@ -32,6 +32,10 @@ const TitBox = styled.div`
   }
 `;
 
+const AppBox = styled(Row)`
+  padding: 20px;
+`;
+
 export default function Resources() {
   const { t } = useTranslation();
 
@@ -51,7 +55,7 @@ export default function Resources() {
           </div>
         </TitBox>
 
-        <Row>
+        <AppBox>
           {resources.map((item, idx) => (
             <Col key={idx} sm={12} md={6} lg={4} xl={3}>
               <AppCard {...item} />
@@ -60,7 +64,7 @@ export default function Resources() {
           <Col sm={12} md={6} lg={4} xl={3}>
             <AppCard icon={<AppIcon src={SeedIcon} alt="" />} name="Seed" link={Links.seed} id="seed" />
           </Col>
-        </Row>
+        </AppBox>
       </InnerBox>
     </OuterBox>
   );

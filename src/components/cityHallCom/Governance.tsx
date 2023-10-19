@@ -3,13 +3,17 @@ import { Row, Col } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { Calendar, Boxes } from 'react-bootstrap-icons';
 import Links from 'utils/links';
-import AppCard, { AppIcon } from 'components/common/appCard';
+import AppCard from 'components/common/appCard';
+
+const AppBox = styled(Row)`
+  padding-inline: 20px;
+`;
 
 export default function GovernancePanel() {
   const { t } = useTranslation();
   return (
     <div>
-      <Row>
+      <AppBox>
         <Col sm={12} md={6} lg={4} xl={3}>
           <AppCard
             id="calendar"
@@ -21,7 +25,7 @@ export default function GovernancePanel() {
         <Col sm={12} md={6} lg={4} xl={3}>
           <AppCard id="calendar" link={Links.appReviewLink} icon={<Boxes />} name={t('city-hall.AppReview')} />
         </Col>
-      </Row>
+      </AppBox>
     </div>
   );
 }

@@ -113,14 +113,18 @@ export default function Apps() {
             <Button onClick={() => window.open(Links.applyAppLink, '_target')}>{t('general.apply')}</Button>
           </RhtBoxT>
         </TitBox>
-        <Row>
+        <AppBox>
           {events.map((item, idx) => (
             <Col key={idx} sm={12} md={6} lg={4} xl={3}>
               <AppCard {...item} />
             </Col>
           ))}
-        </Row>
+        </AppBox>
       </InnerBox>
     </OuterBox>
   );
 }
+
+const AppBox = styled(Row)`
+  padding: 20px;
+`;
