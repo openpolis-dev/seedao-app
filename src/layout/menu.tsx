@@ -28,6 +28,7 @@ const Box = styled.div`
   padding: 20px;
   width: 65px;
   flex-shrink: 0;
+  position: relative;
   &.expand.float {
     position: absolute;
     z-index: 100;

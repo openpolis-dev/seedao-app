@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 
 const Box = styled.div`
     background: #fff;
-    padding: 20px 20px 40px;
+    padding: 0 20px 40px;
     box-shadow: 0 5px 10px rgba(0,0,0,0.1);
     .calendar-title{
         font-family: 'Jost-ExtraBold';
