@@ -297,7 +297,7 @@ const HeadeStyle = styled.header`
       border-bottom: 0;
     }
   }
-  @media (max-width: 1024px) {
+  @media (max-width: 1440px) {
     nav {
       height: 60px;
     }

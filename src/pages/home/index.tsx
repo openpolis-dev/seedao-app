@@ -105,7 +105,7 @@ const LineBox = styled.div`
   background: url(${HomeBg}) center no-repeat;
   background-size: 100%;
   background-attachment: fixed;
-  margin-bottom: 40px;
+  margin-bottom: 16px;
   .inner {
     background: rgba(161, 110, 255, 0.7);
     padding: 10px;
@@ -137,7 +137,7 @@ const LineBox = styled.div`
 `;
 
 const CityBox = styled.div`
-  margin: 1rem 2rem;
+  margin: 0 2rem;
 `;
 
 const LinkBox = styled(Row)`
