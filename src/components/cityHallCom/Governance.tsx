@@ -1,7 +1,7 @@
 import styled from 'styled-components';
+import { useMemo } from 'react';
 import { Row, Col } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
-import { Calendar, Boxes } from 'react-bootstrap-icons';
 import Links from 'utils/links';
 import AppCard, { EmptyAppCard } from 'components/common/appCard';
 
@@ -12,20 +12,20 @@ const AppBox = styled(Row)`
 
 export default function GovernancePanel() {
   const { t } = useTranslation();
+
+  const lst = useMemo(() => {
+    // @ts-ignore
+    return Links.governance.map((item) => ({ ...item, name: t(item.name) as string }));
+  }, [t]);
+
   return (
     <div>
       <AppBox>
-        <Col sm={12} md={6} lg={4} xl={3}>
-          <AppCard
-            id="calendar"
-            link={Links.calendarReviewLink}
-            icon={<Calendar />}
-            name={t('city-hall.CalendarReview')}
-          />
-        </Col>
-        <Col sm={12} md={6} lg={4} xl={3}>
-          <AppCard id="calendar" link={Links.appReviewLink} icon={<Boxes />} name={t('city-hall.AppReview')} />
-        </Col>
+        {lst.map((app, i) => (
+          <Col sm={12} md={6} lg={4} xl={3} key={i}>
+            <AppCard {...app} />
+          </Col>
+        ))}
         <Col sm={12} md={6} lg={4} xl={3}>
           <EmptyAppCard />
         </Col>

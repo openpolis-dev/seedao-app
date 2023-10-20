@@ -194,7 +194,9 @@
     "Band": "品牌线",
     "Tech": "技术线",
     "CalendarReview": "日历审核",
-    "AppReview": "城邦应用审核"
+    "AppReview": "城邦应用审核",
+    "communityReview": "社区大会分享申请审核",
+    "brandReview": "品牌标识使用申请审核"
   },
   "Push": {
     "CreatePush": "创建推送",
@@ -286,6 +288,8 @@
   "resources": {
     "all": "所有资源",
     "calendar": "申请日历",
-    "wait2add": "待添加"
+    "wait2add": "待添加",
+    "community": "社区大会分享申请",
+    "brand": "品牌标识使用申请"
   }
 }
