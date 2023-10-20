@@ -4,16 +4,19 @@ import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
 import Layout from './layout';
 import Home from './pages/home';
-import Event from './pages/event';
+// import Event from './pages/event';
+import Event from './pages/seeu-network';
 import Assets from './pages/assets';
 import Project from './pages/project';
 import Guild from './pages/guild';
 import Proposal from './pages/proposal';
 import ProposalCategory from './pages/proposal/category';
 import ProposalThread from './pages/proposal/thread';
-import CityHall from './pages/city-hall';
+// import CityHall from './pages/city-hall';
+import CityHall from './pages/cityhall-new';
 import Chat from './pages/chat';
-import EventView from './pages/event/view';
+// import EventView from './pages/event/view';
+import EventView from './pages/seeu-network/detail';
 import EventEdit from './pages/event/edit';
 import ProjectInfo from './pages/project/info';
 import GuildInfo from './pages/guild/info';
@@ -24,6 +27,8 @@ import UserVault from './pages/user/vault';
 import CalendarPage from './pages/calendar';
 import RouterChecker from './utils/routerChecker';
 import Canny from './pages/canny';
+import Apps from './pages/Apps';
+import Resources from './pages/resources';
 
 export default function RouterLink() {
   return (
@@ -37,6 +42,8 @@ export default function RouterLink() {
           <Route path="/user/vault" element={<UserVault />} />
 
           <Route path="/event" element={<Event />} />
+          <Route path="/apps" element={<Apps />} />
+          <Route path="/resources" element={<Resources />} />
           <Route path="/event/view" element={<EventView />} />
           <Route path="/event/edit" element={<EventEdit />} />
           <Route path="/online-event" element={<CalendarPage />} />

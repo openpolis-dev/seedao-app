@@ -14,6 +14,7 @@ import DeschoolIcon from 'assets/images/apps/deschool.png';
 import DaolinkIcon from 'assets/images/apps/daolink.svg';
 import Cascad3Icon from 'assets/images/apps/cascad3.svg';
 import Wormhole3Icon from 'assets/images/apps/wormhole3.svg';
+import AppCard, { AppIcon } from 'components/common/appCard';
 
 const CITY_HALL = 'https://seedao.notion.site/07c258913c5d4847b59271e2ae6f7c66';
 const CITY_HALL_MEMBERS = 'https://www.notion.so/3913d631d7bc49e1a0334140e3cd84f5';
@@ -104,7 +105,7 @@ const LineBox = styled.div`
   background: url(${HomeBg}) center no-repeat;
   background-size: 100%;
   background-attachment: fixed;
-  margin-bottom: 40px;
+  margin-bottom: 16px;
   .inner {
     background: rgba(161, 110, 255, 0.7);
     padding: 10px;
@@ -136,7 +137,7 @@ const LineBox = styled.div`
 `;
 
 const CityBox = styled.div`
-  margin: 1rem 2rem;
+  margin: 0 2rem;
 `;
 
 const LinkBox = styled(Row)`
@@ -191,61 +192,12 @@ const LinkBox = styled(Row)`
   }
 `;
 
-const AppCardStyle = styled.div`
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-  background-size: 100%;
-  border-radius: 10px;
-  overflow: hidden;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 15px;
-  padding-block: 30px;
-  background-color: #fff;
-  margin-bottom: 20px;
-  .iconBox {
-    font-size: 24px;
-  }
-
-  @media (max-width: 1024px) {
-    padding-block: 20px;
-    gap: 5px;
-    font-size: 14px;
-    .iconBox {
-      font-size: 20px;
-    }
-  }
-`;
-
-const AppIcon = styled.img`
-  height: 30px;
-`;
-
 const getDatafromNftscan = (contract: string, base?: string) => {
   return axios.get(`${base || 'https://polygonapi.nftscan.com'}/api/v2/statistics/collection/${contract}`, {
     headers: {
       'X-API-KEY': process.env.REACT_APP_NFTSCAN_KEY,
     },
   });
-};
-
-const AppCard = ({ icon, name, link, id }: { icon: React.ReactElement; name: string; link: string; id: string }) => {
-  const navigate = useNavigate();
-  const handleClickEvent = () => {
-    if (id === 'online') {
-      navigate('/online-event');
-    } else {
-      window.open(link, '_blank');
-    }
-  };
-  return (
-    <AppCardStyle className="boxBg" onClick={handleClickEvent}>
-      <div className="iconBox">{icon}</div>
-      <div>{name}</div>
-    </AppCardStyle>
-  );
 };
 
 export default function Home() {

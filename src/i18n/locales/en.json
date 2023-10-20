@@ -9,7 +9,8 @@
     "city-hall": "City Hall",
     "assets": "Vault/Points",
     "feedback": "Feedback",
-    "connectWallet": "Connect Wallet"
+    "connectWallet": "Connect Wallet",
+    "Resources": "Apply Resources"
   },
   "general": {
     "back": "Back",
@@ -21,7 +22,8 @@
     "Clear": "Clear",
     "Loading": "Loading",
     "Copied": "Copied",
-    "ConnectWallet": "Connect Wallet"
+    "ConnectWallet": "Connect Wallet",
+    "apply": "Apply"
   },
   "Home": {
     "Slogan": "SeeDAO is a network polis to connect millions of nomads in Web3.",
@@ -36,7 +38,7 @@
     "SBTHolder": "SBT Holder",
     "GovernNode": "Govern Node",
     "Apps": "Apps",
-    "OnlineEvent": "Online Conference",
+    "OnlineEvent": "Calendar",
     "OfflineEvent": "Offline Meetup"
   },
   "Proposal": {
@@ -187,7 +189,14 @@
     "SendCompleted": "Send Completed",
     "FillInId": "Please fill in the transaction ID of the sending record(use ; to split)",
     "SendSuccess": "Sent",
-    "Push": "Push"
+    "Push": "Push",
+    "Governance": "Governance",
+    "Band": "Band",
+    "Tech": "Tech",
+    "CalendarReview": "Calendar Review",
+    "AppReview": "App Review",
+    "communityReview": "Community Review",
+    "brandReview": "品牌标识使用申请审核"
   },
   "Push": {
     "CreatePush": "Create Push",
@@ -275,5 +284,12 @@
     "iosStep1": "1) Press the 'Share' button on the menu bar below.",
     "iosStep2": "2) Press 'Add to Home Screen'.",
     "androidInstall": "Install"
+  },
+  "resources": {
+    "all": "All Resources",
+    "calendar": "Calendar",
+    "wait2add": "待添加",
+    "community": "社区大会分享",
+    "brand": "品牌标识使用申请"
   }
 }

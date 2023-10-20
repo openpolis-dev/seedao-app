@@ -9,7 +9,8 @@
     "city-hall": "市政厅",
     "assets": "金库/积分",
     "feedback": "意见反馈",
-    "connectWallet": "链接钱包"
+    "connectWallet": "连接钱包",
+    "Resources": "资源申请"
   },
   "general": {
     "back": "返回",
@@ -21,7 +22,8 @@
     "Clear": "清空",
     "Loading": "加载中",
     "Copied": "已复制",
-    "ConnectWallet": "连接钱包"
+    "ConnectWallet": "连接钱包",
+    "apply": "申请"
   },
   "Home": {
     "Slogan": "SeeDAO 是一个致力于连接 100 万 Web3 游民的数字城邦",
@@ -36,7 +38,7 @@
     "SBTHolder": "SBT 持有者",
     "GovernNode": "治理节点",
     "Apps": "应用",
-    "OnlineEvent": "线上会议",
+    "OnlineEvent": "日历",
     "OfflineEvent": "线下活动"
   },
   "Proposal": {
@@ -187,7 +189,14 @@
     "SendCompleted": "发放完成",
     "FillInId": "请填入发放记录的交易ID（使用;隔开）",
     "SendSuccess": "已发放",
-    "Push": "推送"
+    "Push": "推送",
+    "Governance": "治理线",
+    "Band": "品牌线",
+    "Tech": "技术线",
+    "CalendarReview": "日历审核",
+    "AppReview": "城邦应用审核",
+    "communityReview": "社区大会分享申请审核",
+    "brandReview": "品牌标识使用申请审核"
   },
   "Push": {
     "CreatePush": "创建推送",
@@ -275,5 +284,12 @@
     "iosStep1": "1) 点击 菜单栏上的'分享' 按钮",
     "iosStep2": "2) 点击 '添加到主屏幕'",
     "androidInstall": "安装"
+  },
+  "resources": {
+    "all": "所有资源",
+    "calendar": "申请日历",
+    "wait2add": "待添加",
+    "community": "社区大会分享申请",
+    "brand": "品牌标识使用申请"
   }
 }

@@ -37,7 +37,7 @@ const LayoutBottom = styled.div`
   display: flex;
   align-items: stretch;
   position: relative;
-  @media (max-width: 1024px) {
+  @media (max-width: 1440px) {
     height: calc(100vh - 60px);
     padding-top: 60px;
   }

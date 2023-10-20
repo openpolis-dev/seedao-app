@@ -16,10 +16,19 @@ const OuterBox = styled.div`
   ${ContainerPadding};
 `;
 
-const Box = styled.div``;
+const HeadBox = styled.div`
+  display: flex;
+  gap: 30px;
+  align-items: center;
+  margin-bottom: 40px;
+`;
 const CardBox = styled.div`
   background: #fff;
   min-height: 100%;
+  padding: 20px 40px;
+  @media (max-width: 1024px) {
+    padding: 20px;
+  }
 `;
 const AvatarBox = styled.div`
   display: flex;
@@ -28,6 +37,7 @@ const AvatarBox = styled.div`
 `;
 
 const UlBox = styled.ul`
+  flex: 1;
   li {
     display: flex;
     align-items: flex-start;
@@ -37,7 +47,7 @@ const UlBox = styled.ul`
     .title {
       margin-right: 20px;
       line-height: 2.5em;
-      min-width: 90px;
+      min-width: 70px;
     }
   }
   @media (max-width: 750px) {
@@ -70,10 +80,9 @@ const InputBox = styled(InputGroup)`
 `;
 const MidBox = styled.div`
   display: flex;
-  align-items: center;
   justify-content: center;
-  flex-direction: column;
   padding-bottom: 40px;
+  gap: 60px;
 `;
 
 export default function Profile() {
@@ -202,7 +211,7 @@ export default function Profile() {
     <OuterBox>
       {Toast}
       <CardBox>
-        <Box>
+        <HeadBox>
           <AvatarBox>
             <UploadBox htmlFor="fileUpload" onChange={(e) => updateLogo(e)}>
               {!avatar && (
@@ -221,95 +230,85 @@ export default function Profile() {
               )}
             </UploadBox>
           </AvatarBox>
-
-          <MidBox>
-            <UlBox>
-              <li>
-                <div className="title">SNS</div>
-                <InputBox>
-                  <div className="wallet">{sns}</div>
-                </InputBox>
-              </li>
-              <li>
-                <div className="title">{t('My.wallet')}</div>
-                <InputBox>
-                  <div className="wallet">{userData?.wallet}</div>
-                  {userData?.wallet && (
-                    <CopyBox text={userData?.wallet} dir="right">
-                      <img src={copyIcon} alt="" style={{ position: 'relative', top: '-2px' }} />
-                    </CopyBox>
-                  )}
-                </InputBox>
-              </li>
-              <li>
-                <div className="title">{t('My.Name')}</div>
-                <InputBox>
-                  <Form.Control
-                    type="text"
-                    placeholder=""
-                    value={userName}
-                    onChange={(e) => handleInput(e, 'userName')}
-                  />
-                </InputBox>
-              </li>
-              <li>
-                <div className="title">{t('My.Bio')}</div>
-                <InputBox>
-                  <Form.Control
-                    placeholder=""
-                    as="textarea"
-                    rows={5}
-                    value={bio}
-                    onChange={(e) => handleInput(e, 'bio')}
-                  />
-                </InputBox>
-              </li>
-              <li>
-                <div className="title">{t('My.Email')}</div>
-                <InputBox>
-                  <Form.Control type="text" placeholder="" value={email} onChange={(e) => handleInput(e, 'email')} />
-                </InputBox>
-              </li>
-              <li>
-                <div className="title">{t('My.Discord')}</div>
-                <InputBox>
-                  <Form.Control
-                    type="text"
-                    placeholder=""
-                    value={discord}
-                    onChange={(e) => handleInput(e, 'discord')}
-                  />
-                </InputBox>
-              </li>
-              <li>
-                <div className="title">{t('My.Twitter')}</div>
-                <InputBox>
-                  <Form.Control
-                    type="text"
-                    placeholder="eg, https://twitter.com/..."
-                    value={twitter}
-                    onChange={(e) => handleInput(e, 'twitter')}
-                  />
-                </InputBox>
-              </li>
-              <li>
-                <div className="title">{t('My.WeChat')}</div>
-                <InputBox>
-                  <Form.Control type="text" placeholder="" value={wechat} onChange={(e) => handleInput(e, 'wechat')} />
-                </InputBox>
-              </li>
-              <li>
-                <div className="title">{t('My.Mirror')}</div>
-                <InputBox>
-                  <Form.Control type="text" placeholder="" value={mirror} onChange={(e) => handleInput(e, 'mirror')} />
-                </InputBox>
-              </li>
-            </UlBox>
-            <div>
-              <Button onClick={saveProfile}>{t('general.confirm')}</Button>
+          <InfoBox>
+            <div className="wallet">{sns}</div>
+            <div className="wallet">
+              <div>{userData?.wallet}</div>
+              {userData?.wallet && (
+                <CopyBox text={userData?.wallet} dir="right">
+                  <img src={copyIcon} alt="" style={{ position: 'relative', top: '-2px' }} />
+                </CopyBox>
+              )}
             </div>
-          </MidBox>
-        </Box>
+          </InfoBox>
+        </HeadBox>
+        <MidBox>
+          <UlBox>
+            <li>
+              <div className="title">{t('My.Name')}</div>
+              <InputBox>
+                <Form.Control
+                  type="text"
+                  placeholder=""
+                  value={userName}
+                  onChange={(e) => handleInput(e, 'userName')}
+                />
+              </InputBox>
+            </li>
+            <li>
+              <div className="title">{t('My.Bio')}</div>
+              <InputBox>
+                <Form.Control
+                  placeholder=""
+                  as="textarea"
+                  rows={5}
+                  value={bio}
+                  onChange={(e) => handleInput(e, 'bio')}
+                />
+              </InputBox>
+            </li>
+            <li>
+              <div className="title">{t('My.Email')}</div>
+              <InputBox>
+                <Form.Control type="text" placeholder="" value={email} onChange={(e) => handleInput(e, 'email')} />
+              </InputBox>
+            </li>
+          </UlBox>
+          <UlBox>
+            <li>
+              <div className="title">{t('My.Discord')}</div>
+              <InputBox>
+                <Form.Control type="text" placeholder="" value={discord} onChange={(e) => handleInput(e, 'discord')} />
+              </InputBox>
+            </li>
+            <li>
+              <div className="title">{t('My.Twitter')}</div>
+              <InputBox>
+                <Form.Control
+                  type="text"
+                  placeholder="eg, https://twitter.com/..."
+                  value={twitter}
+                  onChange={(e) => handleInput(e, 'twitter')}
+                />
+              </InputBox>
+            </li>
+            <li>
+              <div className="title">{t('My.WeChat')}</div>
+              <InputBox>
+                <Form.Control type="text" placeholder="" value={wechat} onChange={(e) => handleInput(e, 'wechat')} />
+              </InputBox>
+            </li>
+            <li>
+              <div className="title">{t('My.Mirror')}</div>
+              <InputBox>
+                <Form.Control type="text" placeholder="" value={mirror} onChange={(e) => handleInput(e, 'mirror')} />
+              </InputBox>
+            </li>
+          </UlBox>
+        </MidBox>
+        <div style={{ textAlign: 'center' }}>
+          <Button onClick={saveProfile}>{t('general.confirm')}</Button>
+        </div>
       </CardBox>
     </OuterBox>
   );
@@ -328,7 +327,6 @@ const UploadBox = styled.label`
   font-family: 'Inter-Regular';
   font-weight: 700;
   font-size: 14px;
-  margin-bottom: 40px;
   cursor: pointer;
   .iconRht {
     margin-right: 10px;
@@ -369,5 +367,15 @@ const ImgBox = styled.div`
     .del {
       display: flex;
     }
+  }
+`;
+
+const InfoBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  .wallet {
+    display: flex;
+    gap: 10px;
   }
 `;

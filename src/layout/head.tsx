@@ -35,7 +35,7 @@ export default function Header() {
   useEffect(() => {
     setList([
       { title: t('My.MyProfile'), link: '/user/profile', value: 'profile' },
-      { title: t('My.MyAccount'), link: '/user/vault', value: 'vault' },
+      // { title: t('My.MyAccount'), link: '/user/vault', value: 'vault' },
     ]);
   }, [i18n.language]);
   const [lan, setLan] = useState('en');
@@ -297,7 +297,7 @@ const HeadeStyle = styled.header`
       border-bottom: 0;
     }
   }
-  @media (max-width: 1024px) {
+  @media (max-width: 1440px) {
     nav {
       height: 60px;
     }

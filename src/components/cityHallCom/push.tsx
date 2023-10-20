@@ -61,7 +61,7 @@ const CreatePushContent = () => {
     return !title || !href || !title.trim() || !href.trim();
   }, [title, href]);
   return (
-    <>
+    <div style={{ flex: 1 }}>
       <Form>
         <FormGroup className="mb-3">
           <FormLabel>
@@ -96,7 +96,7 @@ const CreatePushContent = () => {
           {t('Push.Create')}
         </Button>
       </SubmitBox>
-    </>
+    </div>
   );
 };
 
@@ -153,11 +153,11 @@ const PushHistoryContent = () => {
             <tbody>
               {list.map((item) => (
                 <tr key={item.title}>
-                  <td>{item.timeDisplay}</td>
+                  <td>{item.title}</td>
                   <td>{item.content}</td>
                   <td>
                     <a href={item.jump_url} target="_blank" rel="noreferrer">
-                      {item.jump_url}
+                      {item.jump_url?.slice(0, 10) + '...'}
                     </a>
                   </td>
                   <td>{item.timeDisplay}</td>
@@ -184,6 +184,7 @@ const PushHistoryContent = () => {
             current={page - 1}
             handleToPage={handlePage}
             handlePageSize={handlePageSize}
+            dir="right"
           />
         </>
       ) : (
@@ -194,53 +195,20 @@ const PushHistoryContent = () => {
 };
 
 export default function PushPanel({ id }: { id?: number }) {
-  const { t } = useTranslation();
-  const [activeTab, setActiveTab] = useState<PUSH_TAB>(PUSH_TAB.CREATE);
-
-  const getContent = () => {
-    switch (activeTab) {
-      case PUSH_TAB.CREATE:
-        return <CreatePushContent />;
-      case PUSH_TAB.HISTORY:
-        return <PushHistoryContent />;
-      default:
-        return <></>;
-    }
-  };
-
   return (
     <Box>
-      <TopBox>
-        <Button
-          onClick={() => setActiveTab(PUSH_TAB.CREATE)}
-          variant={activeTab === PUSH_TAB.CREATE ? 'primary' : 'outline-primary'}
-        >
-          {t('Push.CreatePush')}
-        </Button>
-        <Button
-          onClick={() => setActiveTab(PUSH_TAB.HISTORY)}
-          variant={activeTab === PUSH_TAB.HISTORY ? 'primary' : 'outline-primary'}
-        >
-          {t('Push.History')}
-        </Button>
-      </TopBox>
-      {getContent()}
+      <CreatePushContent />
+      <PushHistoryContent />
     </Box>
   );
 }
 
 const Box = styled.div`
   padding: 20px 0;
-`;
-
-const TopBox = styled.div`
-  background: #f8f8f8;
   display: flex;
-  justify-content: flex-start;
-  padding: 20px;
-  margin-bottom: 30px;
-  button {
-    margin-left: 20px;
+  gap: 40px;
+  @media (max-width: 768px) {
+    flex-direction: column;
   }
 `;
 
@@ -263,7 +231,6 @@ const FormLabel = styled(Form.Label)`
 `;
 
 const FormInput = styled(Form.Control)`
-  width: 50%;
   min-width: 200px;
 `;
 
@@ -271,6 +238,7 @@ const TableBox = styled.div`
   width: 100%;
   overflow-x: auto;
   overflow-y: hidden;
+  flex: 2;
   table {
     th {
       background: transparent;

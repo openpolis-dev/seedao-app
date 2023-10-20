@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
-export default function AppVersion() {
+export default function AppVersion({ open }: any) {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
@@ -11,26 +11,35 @@ export default function AppVersion() {
     navigate('/feedback');
   };
   return (
-    <VersionBox>
-      <FeedbackBox onClick={() => toGo()}>{t('menus.feedback')}</FeedbackBox>
-      {process.env.REACT_APP_APP_VERSION} Build {process.env.REACT_APP_BUILD_ID?.slice(0, 6)}.
-      {process.env.REACT_APP_COMMIT_REF?.slice(0, 6)}
-    </VersionBox>
+    <>
+      {open && (
+        <VersionBox>
+          <FeedbackBox onClick={() => toGo()}>{t('menus.feedback')}</FeedbackBox>
+          <div>
+            {process.env.REACT_APP_APP_VERSION}
+            <br />
+            Build {process.env.REACT_APP_BUILD_ID?.slice(0, 6)}.{process.env.REACT_APP_COMMIT_REF?.slice(0, 6)}
+          </div>
+        </VersionBox>
+      )}
+    </>
   );
 }
 
 const VersionBox = styled.div`
-  position: fixed;
+  position: absolute;
   bottom: 0;
   left: 0;
-  width: 200px;
+  width: 100%;
   font-size: 12px;
-  line-height: 40px;
+  line-height: 22px;
   text-align: center;
   box-sizing: border-box;
   color: #999;
+  padding-bottom: 20px;
 `;
 
 const FeedbackBox = styled.div`
   cursor: pointer;
+  margin-bottom: 10px;
 `;

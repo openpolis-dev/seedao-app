@@ -13,6 +13,8 @@ import {
   ShieldCheck,
   Envelope,
   ChatDots,
+  ViewList,
+  Boxes,
 } from 'react-bootstrap-icons';
 import React from 'react';
 import useCheckLogin from 'hooks/useCheckLogin';
@@ -26,6 +28,7 @@ const Box = styled.div`
   padding: 20px;
   width: 65px;
   flex-shrink: 0;
+  position: relative;
   &.expand.float {
     position: absolute;
     z-index: 100;
@@ -47,30 +50,24 @@ const Box = styled.div`
       width: 65px;
     }
     25% {
-      width: 50px;
+      width: 70px;
     }
     50% {
-      width: 100px;
-    }
-    75% {
-      width: 150px;
+      width: 80px;
     }
     100% {
-      width: 200px;
+      width: unset;
     }
   }
   @keyframes unexpand {
     0% {
-      width: 200px;
-    }
-    25% {
-      width: 150px;
+      width: unset;
     }
     50% {
-      width: 100px;
+      width: 80px;
     }
     75% {
-      width: 50px;
+      width: 70px;
     }
     100% {
       width: 65px;
@@ -134,6 +131,11 @@ const items: MenuItemType[] = [
     link: { href: '/home' },
   },
   {
+    title: 'Home.Apps',
+    icon: { name: <Boxes /> },
+    link: { href: '/apps' },
+  },
+  {
     title: 'menus.Event',
     icon: { name: <Grid1x2 /> },
     link: { href: '/event' },
@@ -148,39 +150,44 @@ const items: MenuItemType[] = [
     icon: { name: <CashCoin /> },
     link: { href: '/assets' },
   },
-  {
-    title: 'menus.Project',
-    icon: { name: <PieChart /> },
-    link: { href: '/project' },
-  },
-  {
-    title: 'menus.Guild',
-    icon: { name: <People /> },
-    link: { href: '/guild' },
-  },
-  {
-    title: 'menus.Proposal',
-    icon: { name: <Box2Heart /> },
-    link: { href: '/proposal' },
-  },
+  // {
+  //   title: 'menus.Project',
+  //   icon: { name: <PieChart /> },
+  //   link: { href: '/project' },
+  // },
+  // {
+  //   title: 'menus.Guild',
+  //   icon: { name: <People /> },
+  //   link: { href: '/guild' },
+  // },
+  // {
+  //   title: 'menus.Proposal',
+  //   icon: { name: <Box2Heart /> },
+  //   link: { href: '/proposal' },
+  // },
   {
     title: 'menus.city-hall',
     icon: { name: <ShieldCheck /> },
     link: { href: '/city-hall' },
   },
+  // {
+  //   title: 'menus.Chat',
+  //   icon: { name: <ChatDots /> },
+  //   link: { href: '/chat' },
+  //   value: 'chat',
+  // },
 
-  {
-    title: 'menus.Chat',
-    icon: { name: <ChatDots /> },
-    link: { href: '/chat' },
-    value: 'chat',
-  },
   // {
   //   title: 'menus.feedback',
   //   icon: { name: <Envelope /> },
   //   link: { href: '/feedback' },
   //   value: 'feedback',
   // },
+  {
+    title: 'menus.Resources',
+    icon: { name: <ViewList /> },
+    link: { href: '/resources' },
+  },
 ];
 
 interface IMenuItem {
@@ -253,8 +260,7 @@ export default function Menu({ isMedium }: { isMedium: boolean }) {
           selected={pathname.startsWith(item.link.href)}
         />
       ))}
-
-      {!isMedium && <AppVersion />}
+      {!isMedium && <AppVersion open={open} />}
     </Box>
   );
 }

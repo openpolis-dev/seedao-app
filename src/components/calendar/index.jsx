@@ -3,12 +3,17 @@ import Calendar from "@ericz1803/react-google-calendar";
 import { css } from "@emotion/react";
 import styled from 'styled-components';
 
+import { useTranslation } from "react-i18next";
+
 const Box = styled.div`
     background: #fff;
-    padding: 20px;
+    padding: 0 20px 40px;
     box-shadow: 0 5px 10px rgba(0,0,0,0.1);
     .calendar-title{
         font-family: 'Jost-ExtraBold';
+    }
+    .calendar-footer{
+        display: none;
     }
     .tooltip{
 
@@ -48,6 +53,7 @@ const Box = styled.div`
     }
     
 `
+
 const API_KEY = "AIzaSyDyZO-Xhx71aD0Rpv8EcwY2N5rsdBWG8hA";
 let calendars = [
     {
@@ -84,16 +90,12 @@ let styles = {
 const language = "EN";
 
 export default function CalendarBox(){
+    const { t } = useTranslation();
 
 return (
-    <Box>
-        <Calendar
-            apiKey={API_KEY}
-            calendars={calendars}
-            styles={styles}
-            language={language}
-        />
-    </Box>
+  <Box>
+    <Calendar apiKey={API_KEY} calendars={calendars} styles={styles} language={language} showFooter={false} />
+  </Box>
 );
 }
 
