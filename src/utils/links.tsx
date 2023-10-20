@@ -32,7 +32,7 @@ export default {
   brand: [
     {
       name: 'city-hall.brandReview',
-      link: 'https://tally.so/forms/3XozzP/submissions',
+      link: 'https://tally.so/forms/w4QxNd/submissions',
       id: 'brand',
       icon: <Postcard />,
     },
