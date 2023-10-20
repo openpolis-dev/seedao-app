@@ -69,7 +69,15 @@ export default function SeeuNetwork() {
         </TitBox>
         <Row>
           {lst.map((item, idx) => (
-            <Col key={idx} sm={12} md={6} lg={3} xl={3}>
+            <Col
+              key={idx}
+              sm={12}
+              md={6}
+              lg={3}
+              xl={3}
+              onClick={() => window.open(`https://seeu.network/event/${item.id}`, '_blank')}
+              style={{ marginBottom: '30px' }}
+            >
               <EventCard item={item} />
             </Col>
           ))}
@@ -97,6 +105,15 @@ const InnerBox = styled.div`
   background: #fff;
   padding: 20px;
   min-height: 100%;
+  .item-content {
+    h5,
+    h6 {
+      font-size: 16px;
+    }
+    .status {
+      font-size: 12px;
+    }
+  }
 `;
 
 const TitBox = styled.div`
