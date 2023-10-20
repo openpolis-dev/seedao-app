@@ -1,10 +1,13 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { EventList } from 'seeucomp';
+import { EventCard } from 'seeucomp';
 import { getSeeuEventList } from 'requests/event';
 import Page from 'components/pagination';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import useToast, { ToastType } from 'hooks/useToast';
+import { Row, Col, Tabs, Tab } from 'react-bootstrap';
+import { ContainerPadding } from '../assets/styles/global';
+import { useTranslation } from 'react-i18next';
 
 interface IEventProps {
   startTime: string;
@@ -24,6 +27,8 @@ interface IEventProps {
 }
 
 export default function SeeuNetwork() {
+  const { t } = useTranslation();
+
   const [lst, setLst] = useState<IEventProps[]>([]);
   const [pageCur, setPageCur] = useState(1);
   const [pageSize, setPageSize] = useState(20);
@@ -53,18 +58,56 @@ export default function SeeuNetwork() {
     getList();
   }, [pageCur, pageSize]);
   return (
-    <div>
-      {/* @ts-ignore */}
-      {lst.length > 0 && <EventList listData={lst} />}
-      {total > pageSize && (
-        <PageBox>
-          <Page itemsPerPage={pageSize} total={total} current={pageCur - 1} handleToPage={handlePage} />
-        </PageBox>
-      )}
-    </div>
+    <OuterBox>
+      <InnerBox>
+        <TitBox>
+          <div className="titLft">
+            <Tabs defaultActiveKey={0}>
+              <Tab title={t('event.events')} eventKey={0} />
+            </Tabs>
+          </div>
+        </TitBox>
+        <Row>
+          {lst.map((item, idx) => (
+            <Col key={idx} sm={12} md={6} lg={3} xl={3}>
+              <EventCard item={item} />
+            </Col>
+          ))}
+        </Row>
+        {total > pageSize && (
+          <PageBox>
+            <Page itemsPerPage={pageSize} total={total} current={pageCur - 1} handleToPage={handlePage} />
+          </PageBox>
+        )}
+      </InnerBox>
+    </OuterBox>
   );
 }
 
 const PageBox = styled.div`
   margin: 0 40px;
+`;
+
+const OuterBox = styled.div`
+  min-height: 100%;
+  ${ContainerPadding};
+`;
+
+const InnerBox = styled.div`
+  background: #fff;
+  padding: 20px;
+  min-height: 100%;
+`;
+
+const TitBox = styled.div`
+  font-weight: bold;
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  .titLft {
+    width: 100%;
+  }
 `;
