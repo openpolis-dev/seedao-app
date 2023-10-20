@@ -6,8 +6,9 @@ import Page from 'components/pagination';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import useToast, { ToastType } from 'hooks/useToast';
 import { Row, Col, Tabs, Tab } from 'react-bootstrap';
-import { ContainerPadding } from '../assets/styles/global';
+import { ContainerPadding } from '../../assets/styles/global';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 
 interface IEventProps {
   startTime: string;
@@ -69,16 +70,10 @@ export default function SeeuNetwork() {
         </TitBox>
         <Row>
           {lst.map((item, idx) => (
-            <Col
-              key={idx}
-              sm={12}
-              md={6}
-              lg={3}
-              xl={3}
-              onClick={() => window.open(`https://seeu.network/event/${item.id}`, '_blank')}
-              style={{ marginBottom: '30px' }}
-            >
-              <EventCard item={item} />
+            <Col key={idx} sm={12} md={6} lg={3} xl={3} style={{ marginBottom: '30px' }}>
+              <Link to={`/event/view?id=${item.id}`}>
+                <EventCard item={item} />
+              </Link>
             </Col>
           ))}
         </Row>
