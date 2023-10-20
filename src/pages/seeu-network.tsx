@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import EventList from 'seeucomp/src';
+import { EventList } from 'seeucomp';
 import { getSeeuEventList } from 'requests/event';
 import Page from 'components/pagination';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
@@ -45,7 +45,7 @@ export default function SeeuNetwork() {
     } catch (error: any) {
       showToast(error, ToastType.Danger);
     } finally {
-      dispatch({ type: AppActionType.SET_LOADING, payload: true });
+      dispatch({ type: AppActionType.SET_LOADING, payload: null });
     }
   };
 
