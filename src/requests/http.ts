@@ -1,8 +1,9 @@
 import axios from 'axios';
 import { SEEDAO_USER } from 'utils/constant';
 import { parseToken, checkTokenValid, clearStorage } from 'utils/auth';
+import getConfig from 'utils/envCofnig';
 
-export const BASE_URL = process.env.REACT_APP_BASE_ENDPOINT;
+export const BASE_URL = getConfig().REACT_APP_BASE_ENDPOINT;
 
 export const API_VERSION = process.env.REACT_APP_API_VERSION;
 
