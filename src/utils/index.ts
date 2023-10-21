@@ -1,4 +1,5 @@
 import { ApplicationStatus } from 'type/application.type';
+import getConfig from './envCofnig';
 
 export const formatApplicationStatus = (status: ApplicationStatus, isProj?: boolean): any => {
   if (isProj) {
@@ -23,5 +24,5 @@ export const formatApplicationStatus = (status: ApplicationStatus, isProj?: bool
 };
 
 export const isNotOnline = () => {
-  return process.env.NODE_ENV === 'development' || process.env.REACT_APP_ENV === 'test';
+  return getConfig().REACT_APP_ENV === 'test';
 };

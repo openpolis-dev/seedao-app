@@ -5,10 +5,13 @@ import reportWebVitals from './reportWebVitals';
 import './i18n/i18n';
 import * as serviceWorkerRegistration from 'utils/serviceWorkerRegistration';
 import { isMobile, isPhone } from 'utils/userAgent';
+import getConfig from 'utils/envCofnig';
 
+const config = getConfig();
 const isLargeScreen = window.innerWidth >= 768;
-if (process.env.REACT_APP_MOBILE_OPEN === 'true' && (isPhone || (isMobile && !isLargeScreen))) {
-  const mobile_app = process.env.REACT_APP_MOBILE_URL;
+
+if (config.REACT_APP_MOBILE_OPEN && (isPhone || (isMobile && !isLargeScreen))) {
+  const mobile_app = config.REACT_APP_MOBILE_URL;
   mobile_app && window.location.replace(mobile_app);
 } else {
   const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
