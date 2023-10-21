@@ -19,7 +19,9 @@ self.addEventListener('notificationclick', async function (event) {
         route_path = '/user/vault';
         break;
       case MESSAGE_TYPE.CUSTOM:
-        route_path = data.jump_url;
+        if (data.jump_url) {
+          route_path = data.jump_url;
+        }
         break;
       default:
         break;
