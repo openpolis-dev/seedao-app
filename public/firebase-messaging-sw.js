@@ -9,7 +9,7 @@ self.addEventListener('notificationclick', async function (event) {
     switch (type) {
       case MESSAGE_TYPE.PROJECT_ADD:
       case MESSAGE_TYPE.PROJECT_REMOVE:
-        route_path = `/project/info/${data.project_id}`;
+        route_path = `/project/info/${data.proj_id}`;
         break;
       case MESSAGE_TYPE.GUILD_ADD:
       case MESSAGE_TYPE.GUILD_REMOVE:
@@ -50,7 +50,7 @@ const messaging = firebase.messaging();
 const MESSAGE_TYPE = {
   PROJECT_ADD: 'proj_staff_add',
   PROJECT_REMOVE: 'proj_staff_remove',
-  GUILD_ADD: 'guid_staff_add',
+  GUILD_ADD: 'guild_staff_add',
   GUILD_REMOVE: 'guild_staff_remove',
   ASSET_NEW: 'receive_assert',
   CUSTOM: 'custom',
