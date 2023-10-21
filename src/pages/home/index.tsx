@@ -6,15 +6,9 @@ import axios from 'axios';
 import { GOV_NODE_CONTRACT, SGN_CONTRACT } from 'utils/constant';
 import BgImg from '../../assets/images/topBg.png';
 import HomeBg from '../../assets/images/homebg.png';
-import { People, ShieldCheck, Grid1x2, Calendar } from 'react-bootstrap-icons';
-import { useNavigate } from 'react-router-dom';
-import MetaforoIcon from 'assets/images/apps/metaforo.png';
-import AaanyIcon from 'assets/images/apps/AAAny.svg';
-import DeschoolIcon from 'assets/images/apps/deschool.png';
-import DaolinkIcon from 'assets/images/apps/daolink.svg';
-import Cascad3Icon from 'assets/images/apps/cascad3.svg';
-import Wormhole3Icon from 'assets/images/apps/wormhole3.svg';
-import AppCard, { AppIcon } from 'components/common/appCard';
+import { People, ShieldCheck } from 'react-bootstrap-icons';
+import AppCard from 'components/common/appCard';
+import Links from 'utils/links';
 
 const CITY_HALL = 'https://seedao.notion.site/07c258913c5d4847b59271e2ae6f7c66';
 const CITY_HALL_MEMBERS = 'https://www.notion.so/3913d631d7bc49e1a0334140e3cd84f5';
@@ -208,56 +202,8 @@ export default function Home() {
   const [onNewHolders, setNewHolders] = useState(0);
 
   const events = useMemo(() => {
-    return [
-      {
-        id: 'Deschool',
-        name: 'Deschool',
-        link: 'https://deschool.app/origin/plaza',
-        icon: <AppIcon src={DeschoolIcon} alt="" />,
-      },
-      {
-        id: 'AAAny',
-        name: 'AAAny',
-        link: 'https://apps.apple.com/ca/app/aaany-ask-anyone-anything/id6450619356',
-        icon: <AppIcon src={AaanyIcon} alt="" />,
-      },
-      {
-        id: 'Cascad3',
-        name: 'Cascad3',
-        link: 'https://www.cascad3.com/',
-        icon: <AppIcon src={Cascad3Icon} alt="" style={{ height: '20px' }} />,
-      },
-      {
-        id: 'DAOLink',
-        name: 'DAOLink',
-        link: 'https://m.daolink.space',
-        icon: <AppIcon src={DaolinkIcon} alt="" />,
-      },
-      {
-        id: 'Wormhole3',
-        name: 'Wormhole3',
-        link: 'https://alpha.wormhole3.io',
-        icon: <AppIcon src={Wormhole3Icon} alt="" style={{ height: '20px' }} />,
-      },
-      {
-        id: 'Metaforo',
-        name: 'Metaforo',
-        link: 'https://www.metaforo.io',
-        icon: <AppIcon src={MetaforoIcon} alt="" />,
-      },
-      {
-        id: 'online',
-        name: t('Home.OnlineEvent'),
-        link: 'https://calendar.google.com/calendar/u/4?cid=YzcwNGNlNTA5ODUxMmIwYjBkNzA3MjJlNjQzMGFmNDIyMWUzYzllYmM2ZDFlNzJhYTcwYjgyYzgwYmI2OTk5ZkBncm91cC5jYWxlbmRhci5nb29nbGUuY29t',
-        icon: <Calendar />,
-      },
-      {
-        id: 'offline',
-        name: t('Home.OfflineEvent'),
-        link: 'https://seeu.network/',
-        icon: <Grid1x2 />,
-      },
-    ];
+    // @ts-ignore
+    return Links.apps.map((item) => ({ ...item, name: t(item.name) as string }));
   }, [t]);
 
   useEffect(() => {

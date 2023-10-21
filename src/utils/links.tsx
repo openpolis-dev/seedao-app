@@ -1,5 +1,13 @@
-import { Calendar, Boxes, Receipt, Postcard } from 'react-bootstrap-icons';
+import { Calendar, Boxes, Receipt, Postcard, Grid1x2 } from 'react-bootstrap-icons';
 // NOTE: choose icon from the library: https://icons.getbootstrap.com/
+import { AppIcon } from 'components/common/appCard';
+// Apps
+import MetaforoIcon from 'assets/images/apps/metaforo.png';
+import AaanyIcon from 'assets/images/apps/AAAny.svg';
+import DeschoolIcon from 'assets/images/apps/deschool.png';
+import DaolinkIcon from 'assets/images/apps/daolink.svg';
+import Cascad3Icon from 'assets/images/apps/cascad3.svg';
+import Wormhole3Icon from 'assets/images/apps/wormhole3.svg';
 
 export default {
   seed: 'https://seed.seedao.xyz/',
@@ -35,6 +43,56 @@ export default {
       link: 'https://tally.so/forms/w4QxNd/submissions',
       id: 'brand',
       icon: <Postcard />,
+    },
+  ],
+  apps: [
+    {
+      id: 'Deschool',
+      name: 'Deschool',
+      link: 'https://deschool.app/origin/plaza',
+      icon: <AppIcon src={DeschoolIcon} alt="" />,
+    },
+    {
+      id: 'AAAny',
+      name: 'AAAny',
+      link: 'https://apps.apple.com/ca/app/aaany-ask-anyone-anything/id6450619356',
+      icon: <AppIcon src={AaanyIcon} alt="" style={{ transform: 'scale(1.3)' }} />,
+    },
+    {
+      id: 'Cascad3',
+      name: 'Cascad3',
+      link: 'https://www.cascad3.com/',
+      icon: <AppIcon src={Cascad3Icon} alt="" style={{ height: '20px' }} />,
+    },
+    {
+      id: 'DAOLink',
+      name: 'DAOLink',
+      link: 'https://app.daolink.space',
+      icon: <AppIcon src={DaolinkIcon} alt="" />,
+    },
+    {
+      id: 'Wormhole3',
+      name: 'Wormhole3',
+      link: 'https://alpha.wormhole3.io',
+      icon: <AppIcon src={Wormhole3Icon} alt="" style={{ height: '20px' }} />,
+    },
+    {
+      id: 'Metaforo',
+      name: 'Metaforo',
+      link: 'https://www.metaforo.io',
+      icon: <AppIcon src={MetaforoIcon} alt="" />,
+    },
+    {
+      id: 'online',
+      name: 'Home.OnlineEvent',
+      link: 'https://calendar.google.com/calendar/u/4?cid=YzcwNGNlNTA5ODUxMmIwYjBkNzA3MjJlNjQzMGFmNDIyMWUzYzllYmM2ZDFlNzJhYTcwYjgyYzgwYmI2OTk5ZkBncm91cC5jYWxlbmRhci5nb29nbGUuY29t',
+      icon: <Calendar />,
+    },
+    {
+      id: 'offline',
+      name: 'Home.OfflineEvent',
+      link: 'https://seeu.network/',
+      icon: <Grid1x2 />,
     },
   ],
 };
