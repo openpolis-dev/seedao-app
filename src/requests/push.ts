@@ -5,7 +5,7 @@ import { isMobile } from 'utils/userAgent';
 import request, { ResponseData } from './http';
 import { IPush } from 'type/push.type';
 
-const TEMP_ENDPPOINT = 'https://test-push-api.seedao.tech/v1';
+const PUSH_BASE_PATH = `${process.env.REACT_APP_PUSH_ENDPOINT}/${process.env.REACT_APP_API_VERSION}`;
 const PATH_PREFIX = '/push/';
 
 type deviceType = 'pc' | 'mobile';
@@ -29,7 +29,7 @@ const getHeaders = () => {
 
 export const registerDevice = (data: IRegisterDeviceParams) => {
   const headers = getHeaders();
-  axios.post(`${TEMP_ENDPPOINT}/register`, data, {
+  axios.post(`${PUSH_BASE_PATH}/register`, data, {
     headers,
   });
 };
@@ -41,7 +41,7 @@ interface ISetDeviceLanguage {
 
 export const requestSetDeviceLanguage = (data: ISetDeviceLanguage) => {
   const headers = getHeaders();
-  return axios.post(`${TEMP_ENDPPOINT}/set_language`, data, {
+  return axios.post(`${PUSH_BASE_PATH}/set_language`, data, {
     headers,
   });
 };
