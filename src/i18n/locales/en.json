@@ -1,16 +1,16 @@
 {
   "menus": {
     "Home": "Home",
-    "Proposal": "Proposal",
-    "Project": "Project",
-    "Guild": "Guild",
+    "Proposal": "Proposals",
+    "Project": "Projects",
+    "Guild": "Guilds",
     "Chat": "Chat",
-    "Event": "Event",
+    "Event": "Events",
     "city-hall": "City Hall",
-    "assets": "Vault/Points",
+    "assets": "Treasury",
     "feedback": "Feedback",
     "connectWallet": "Connect Wallet",
-    "Resources": "Apply Resources"
+    "Resources": "Apply Now"
   },
   "general": {
     "back": "Back",
@@ -34,7 +34,7 @@
     "Publicity": "Publicity",
     "CityHall": "Cit Hall",
     "CityHallMembers": "City Hall Members",
-    "SGNHolder": "SGN Holder",
+    "SGNHolder": "SEED Holder",
     "SBTHolder": "SBT Holder",
     "GovernNode": "Govern Node",
     "Apps": "Apps",
@@ -222,7 +222,7 @@
     "Chain": "Chain",
     "Detail": "Detail",
     "SupplySCR": "Sent SCR",
-    "SupplySGN": "Sent SGN",
+    "SupplySGN": "Sent SEED",
     "SeasonUseUSD": "Season used USD",
     "SeasonBudget": "Season budget",
     "ModifySeasonBudget": "Modify season budget",
