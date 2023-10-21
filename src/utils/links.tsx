@@ -56,7 +56,7 @@ export default {
       id: 'AAAny',
       name: 'AAAny',
       link: 'https://apps.apple.com/ca/app/aaany-ask-anyone-anything/id6450619356',
-      icon: <AppIcon src={AaanyIcon} alt="" />,
+      icon: <AppIcon src={AaanyIcon} alt="" style={{ transform: 'scale(1.3)' }} />,
     },
     {
       id: 'Cascad3',
