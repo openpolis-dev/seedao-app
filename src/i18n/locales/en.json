@@ -288,8 +288,8 @@
   "resources": {
     "all": "All Resources",
     "calendar": "Calendar",
-    "wait2add": "待添加",
-    "community": "社区大会分享",
-    "brand": "品牌标识使用申请"
+    "wait2add": "Coming Soon",
+    "community": "Community Meetup",
+    "brand": "Branding"
   }
 }
