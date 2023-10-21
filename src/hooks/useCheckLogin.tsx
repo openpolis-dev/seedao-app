@@ -1,9 +1,7 @@
 import { AppActionType, useAuthContext } from 'providers/authProvider';
-import { useWeb3React } from '@web3-react/core';
+// import { useWeb3React } from '@web3-react/core';
 
-const useCheckLogin = () => {
-  const { account } = useWeb3React();
-
+const useCheckLogin = (account?: string) => {
   const {
     state: { account: tokenAccount, tokenData, userData },
     dispatch,

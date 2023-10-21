@@ -5,6 +5,18 @@ import styled from 'styled-components';
 
 const Box = styled.div`
   width: 100%;
+  input {
+    border: var(--bs-border-width) solid var(--bs-border-color);
+    border-radius: var(--bs-border-radius);
+    background-color: rgb(247, 249, 252);
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    &:focus {
+      outline: 0;
+      border-color: rgb(161, 100, 255);
+      box-shadow: rgba(161, 100, 255, 0.25) 0px 0px 0px 0.25rem;
+    }
+  }
   .borderLess {
     width: 100%;
     border: 0;
@@ -129,7 +141,7 @@ export default function DatePickerStyle(props: DateProps) {
         dateFormat="MM/dd/yyyy h:mm aa"
         selected={dateTime}
         onChange={onChangeTime}
-        className="borderLess"
+        // className="borderLess"
         placeholderText={placeholder}
       />
     </Box>

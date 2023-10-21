@@ -1,8 +1,7 @@
 import styled from 'styled-components';
-import { Card, CardHeader, CardBody, CardFooter } from '@paljs/ui/Card';
-import { Button } from '@paljs/ui/Button';
+import { Card, Button } from 'react-bootstrap';
 import React from 'react';
-import useTranslation from 'hooks/useTranslation';
+import { useTranslation } from 'react-i18next';
 
 const Mask = styled.div`
   background: rgba(0, 0, 0, 0.3);
@@ -19,6 +18,10 @@ const Mask = styled.div`
     margin-right: 20px;
   }
 `;
+const CardHeader = styled.div``;
+
+const CardBody = styled.div``;
+const CardFooter = styled.div``;
 const InnerBox = styled.div`
   width: 400px;
 `;
@@ -40,7 +43,7 @@ export default function CloseTips(props: Iprops) {
           <InnerBox>{t('Project.confirmClose')}</InnerBox>
         </CardBody>
         <CardFooter>
-          <Button appearance="outline" className="btnBtmAll" onClick={() => closeModal()}>
+          <Button className="btnBtmAll" onClick={() => closeModal()}>
             {t('general.cancel')}
           </Button>
           <Button onClick={() => handleClosePro()}>{t('general.confirm')}</Button>

@@ -1,20 +1,34 @@
-import Layout from 'Layouts';
-import { Card } from '@paljs/ui/Card';
+import { InputGroup, Button, Form } from 'react-bootstrap';
 import styled from 'styled-components';
-import React, { ChangeEvent, useEffect, useState, FormEvent } from 'react';
-import { InputGroup } from '@paljs/ui/Input';
-import { Button } from '@paljs/ui/Button';
+import React, { ChangeEvent, useEffect, useState, FormEvent, useMemo } from 'react';
 import requests from 'requests';
 import { useAuthContext, AppActionType } from 'providers/authProvider';
-import { EvaIcon } from '@paljs/ui/Icon';
-import useTranslation from 'hooks/useTranslation';
+import { useTranslation } from 'react-i18next';
 import useToast, { ToastType } from 'hooks/useToast';
+import { Upload, X } from 'react-bootstrap-icons';
+import { ContainerPadding } from 'assets/styles/global';
+import useParseSNS from 'hooks/useParseSNS';
+import CopyBox from 'components/copy';
+import copyIcon from 'assets/images/copy.svg';
 
-const Box = styled.div`
-  padding: 40px 20px;
+const OuterBox = styled.div`
+  min-height: 100%;
+  ${ContainerPadding};
 `;
-const CardBox = styled(Card)`
-  min-height: 85vh;
+
+const HeadBox = styled.div`
+  display: flex;
+  gap: 30px;
+  align-items: center;
+  margin-bottom: 40px;
+`;
+const CardBox = styled.div`
+  background: #fff;
+  min-height: 100%;
+  padding: 20px 40px;
+  @media (max-width: 1024px) {
+    padding: 20px;
+  }
 `;
 const AvatarBox = styled.div`
   display: flex;
@@ -23,6 +37,7 @@ const AvatarBox = styled.div`
 `;
 
 const UlBox = styled.ul`
+  flex: 1;
   li {
     display: flex;
     align-items: flex-start;
@@ -32,13 +47,18 @@ const UlBox = styled.ul`
     .title {
       margin-right: 20px;
       line-height: 2.5em;
-      min-width: 90px;
+      min-width: 70px;
+    }
+  }
+  @media (max-width: 750px) {
+    li {
+      flex-direction: column;
+      margin-bottom: 10px;
     }
   }
 `;
 const InputBox = styled(InputGroup)`
-  width: 600px;
-  margin-right: 20px;
+  max-width: 600px;
   .wallet {
     border: 1px solid #eee;
     width: 100%;
@@ -47,14 +67,22 @@ const InputBox = styled(InputGroup)`
     padding: 0 1.125rem;
     display: flex;
     align-items: center;
+    overflow-x: auto;
   }
+  .copy-content {
+    position: absolute;
+    right: -30px;
+    top: 8px;
+  }
+  @media (max-width: 1024px) {
+    max-width: 100%;
+  } ;
 `;
 const MidBox = styled.div`
   display: flex;
-  align-items: center;
   justify-content: center;
-  margin-top: 40px;
-  flex-direction: column;
+  padding-bottom: 40px;
+  gap: 60px;
 `;
 
 export default function Profile() {
@@ -62,6 +90,7 @@ export default function Profile() {
     state: { userData },
     dispatch,
   } = useAuthContext();
+  const sns = useParseSNS(userData?.wallet);
   const { t } = useTranslation();
   const { Toast, showToast } = useToast();
   const [userName, setUserName] = useState('');
@@ -70,8 +99,8 @@ export default function Profile() {
   const [twitter, setTwitter] = useState('');
   const [wechat, setWechat] = useState('');
   const [mirror, setMirror] = useState('');
-  const [google, setGoogle] = useState('');
   const [avatar, setAvatar] = useState('');
+  const [bio, setBio] = useState('');
 
   const handleInput = (e: ChangeEvent, type: string) => {
     const { value } = e.target as HTMLInputElement;
@@ -94,20 +123,14 @@ export default function Profile() {
       case 'mirror':
         setMirror(value);
         break;
-      case 'google':
-        setGoogle(value);
-        break;
+      case 'bio':
+        setBio(value);
     }
   };
   const saveProfile = async () => {
     const reg = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (email && !reg.test(email)) {
       showToast(t('My.IncorrectEmail'), ToastType.Danger);
-      return;
-    }
-
-    if (google && !reg.test(google)) {
-      showToast(t('My.IncorrectGoogle'), ToastType.Danger);
       return;
     }
     if (mirror && mirror.indexOf('mirror.xyz') === -1) {
@@ -127,9 +150,9 @@ export default function Profile() {
         email,
         discord_profile: discord,
         twitter_profile: twitter,
-        google_profile: google,
         wechat,
         mirror,
+        bio,
       };
       await requests.user.updateUser(data);
       dispatch({ type: AppActionType.SET_USER_DATA, payload: { ...userData, ...data } });
@@ -149,9 +172,9 @@ export default function Profile() {
       setEmail(userData.email || '');
       setDiscord(userData.discord_profile);
       setTwitter(userData.twitter_profile);
-      setGoogle(userData.google_profile);
       setWechat(userData.wechat);
       setMirror(userData.mirror);
+      setBio(userData.bio);
     }
   }, [userData]);
 
@@ -161,7 +184,7 @@ export default function Profile() {
     xhr.open('get', imgUrl, true);
     xhr.responseType = 'blob';
     xhr.onload = function () {
-      if (this.status == 200) {
+      if (this.status === 200) {
         const blob = this.response;
         const oFileReader = new FileReader();
         oFileReader.onloadend = function (e) {
@@ -185,92 +208,109 @@ export default function Profile() {
   };
 
   return (
-    <Layout title="SeeDAO | My Profile">
+    <OuterBox>
       {Toast}
       <CardBox>
-        <Box>
+        <HeadBox>
           <AvatarBox>
             <UploadBox htmlFor="fileUpload" onChange={(e) => updateLogo(e)}>
               {!avatar && (
                 <div>
                   <input id="fileUpload" type="file" hidden accept=".jpg, .jpeg, .png" />
-                  <EvaIcon name="cloud-upload-outline" className="iconRht" />
+                  {<Upload />}
                 </div>
               )}
               {!!avatar && (
                 <ImgBox onClick={() => removeUrl()}>
                   <div className="del">
-                    <EvaIcon className="iconTop" name="close-outline" status="Control" />
+                    <X className="iconTop" />
                   </div>
                   <img src={avatar} alt="" />
                 </ImgBox>
               )}
             </UploadBox>
           </AvatarBox>
-
-          <MidBox>
-            <UlBox>
-              <li>
-                <div className="title">{t('My.wallet')}</div>
-                <InputBox fullWidth>
-                  <div className="wallet">{userData?.wallet}</div>
-                </InputBox>
-              </li>
-              <li>
-                <div className="title">{t('My.Name')}</div>
-                <InputBox fullWidth>
-                  <input type="text" placeholder="" value={userName} onChange={(e) => handleInput(e, 'userName')} />
-                </InputBox>
-              </li>
-              <li>
-                <div className="title">{t('My.Email')}</div>
-                <InputBox fullWidth>
-                  <input type="text" placeholder="" value={email} onChange={(e) => handleInput(e, 'email')} />
-                </InputBox>
-              </li>
-              <li>
-                <div className="title">{t('My.Discord')}</div>
-                <InputBox fullWidth>
-                  <input type="text" placeholder="" value={discord} onChange={(e) => handleInput(e, 'discord')} />
-                </InputBox>
-              </li>
-              <li>
-                <div className="title">{t('My.Twitter')}</div>
-                <InputBox fullWidth>
-                  <input
-                    type="text"
-                    placeholder="eg, https://twitter.com/..."
-                    value={twitter}
-                    onChange={(e) => handleInput(e, 'twitter')}
-                  />
-                </InputBox>
-              </li>
-              <li>
-                <div className="title">{t('My.WeChat')}</div>
-                <InputBox fullWidth>
-                  <input type="text" placeholder="" value={wechat} onChange={(e) => handleInput(e, 'wechat')} />
-                </InputBox>
-              </li>
-              <li>
-                <div className="title">{t('My.Mirror')}</div>
-                <InputBox fullWidth>
-                  <input type="text" placeholder="" value={mirror} onChange={(e) => handleInput(e, 'mirror')} />
-                </InputBox>
-              </li>
-              <li>
-                <div className="title">{t('My.Google')}</div>
-                <InputBox fullWidth>
-                  <input type="text" placeholder="" value={google} onChange={(e) => handleInput(e, 'google')} />
-                </InputBox>
-              </li>
-            </UlBox>
-            <div>
-              <Button onClick={saveProfile}>{t('general.confirm')}</Button>
+          <InfoBox>
+            <div className="wallet">{sns}</div>
+            <div className="wallet">
+              <div>{userData?.wallet}</div>
+              {userData?.wallet && (
+                <CopyBox text={userData?.wallet} dir="right">
+                  <img src={copyIcon} alt="" style={{ position: 'relative', top: '-2px' }} />
+                </CopyBox>
+              )}
             </div>
-          </MidBox>
-        </Box>
+          </InfoBox>
+        </HeadBox>
+        <MidBox>
+          <UlBox>
+            <li>
+              <div className="title">{t('My.Name')}</div>
+              <InputBox>
+                <Form.Control
+                  type="text"
+                  placeholder=""
+                  value={userName}
+                  onChange={(e) => handleInput(e, 'userName')}
+                />
+              </InputBox>
+            </li>
+            <li>
+              <div className="title">{t('My.Bio')}</div>
+              <InputBox>
+                <Form.Control
+                  placeholder=""
+                  as="textarea"
+                  rows={5}
+                  value={bio}
+                  onChange={(e) => handleInput(e, 'bio')}
+                />
+              </InputBox>
+            </li>
+            <li>
+              <div className="title">{t('My.Email')}</div>
+              <InputBox>
+                <Form.Control type="text" placeholder="" value={email} onChange={(e) => handleInput(e, 'email')} />
+              </InputBox>
+            </li>
+          </UlBox>
+          <UlBox>
+            <li>
+              <div className="title">{t('My.Discord')}</div>
+              <InputBox>
+                <Form.Control type="text" placeholder="" value={discord} onChange={(e) => handleInput(e, 'discord')} />
+              </InputBox>
+            </li>
+            <li>
+              <div className="title">{t('My.Twitter')}</div>
+              <InputBox>
+                <Form.Control
+                  type="text"
+                  placeholder="eg, https://twitter.com/..."
+                  value={twitter}
+                  onChange={(e) => handleInput(e, 'twitter')}
+                />
+              </InputBox>
+            </li>
+            <li>
+              <div className="title">{t('My.WeChat')}</div>
+              <InputBox>
+                <Form.Control type="text" placeholder="" value={wechat} onChange={(e) => handleInput(e, 'wechat')} />
+              </InputBox>
+            </li>
+            <li>
+              <div className="title">{t('My.Mirror')}</div>
+              <InputBox>
+                <Form.Control type="text" placeholder="" value={mirror} onChange={(e) => handleInput(e, 'mirror')} />
+              </InputBox>
+            </li>
+          </UlBox>
+        </MidBox>
+        <div style={{ textAlign: 'center' }}>
+          <Button onClick={saveProfile}>{t('general.confirm')}</Button>
+        </div>
       </CardBox>
-    </Layout>
+    </OuterBox>
   );
 }
 
@@ -287,7 +327,6 @@ const UploadBox = styled.label`
   font-family: 'Inter-Regular';
   font-weight: 700;
   font-size: 14px;
-  margin-bottom: 40px;
   cursor: pointer;
   .iconRht {
     margin-right: 10px;
@@ -317,7 +356,7 @@ const ImgBox = styled.div`
     align-items: center;
     justify-content: center;
     background: #a16eff;
-    opacity: 0.8;
+    opacity: 0.5;
     color: #fff;
     cursor: pointer;
     .iconTop {
@@ -328,5 +367,15 @@ const ImgBox = styled.div`
     .del {
       display: flex;
     }
+  }
+`;
+
+const InfoBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  .wallet {
+    display: flex;
+    gap: 10px;
   }
 `;

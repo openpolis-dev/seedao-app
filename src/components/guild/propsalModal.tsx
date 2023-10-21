@@ -1,14 +1,14 @@
 import styled from 'styled-components';
-import { Card, CardHeader, CardBody, CardFooter } from '@paljs/ui/Card';
-import { Button } from '@paljs/ui/Button';
+import { Button, Card, InputGroup, Form } from 'react-bootstrap';
 import React, { ChangeEvent, useState } from 'react';
-import { InputGroup } from '@paljs/ui/Input';
-import { EvaIcon } from '@paljs/ui/Icon';
-import useTranslation from 'hooks/useTranslation';
+// import { EvaIcon } from '@paljs/ui/Icon';
+import { useTranslation } from 'react-i18next';
 import requests from 'requests';
-import { useRouter } from 'next/router';
+// import { useRouter } from 'next/router';
 import Loading from 'components/loading';
 import useToast, { ToastType } from 'hooks/useToast';
+import { DashLg, PlusLg } from 'react-bootstrap-icons';
+import { useParams } from 'react-router-dom';
 
 const Mask = styled.div`
   background: rgba(0, 0, 0, 0.3);
@@ -25,6 +25,28 @@ const Mask = styled.div`
     margin-right: 20px;
   }
 `;
+
+const CardHeader = styled.div`
+  min-width: 500px;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid rgb(237, 241, 247);
+  border-top-left-radius: 0.25rem;
+  border-top-right-radius: 0.25rem;
+  color: rgb(34, 43, 69);
+  font-family: Inter-Regular, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.5rem;
+`;
+
+const CardBody = styled.div`
+  padding: 20px;
+`;
+const CardFooter = styled.div`
+  padding: 0 20px 20px;
+`;
+
 const Box = styled.div`
   ul {
     margin-top: 20px;
@@ -42,17 +64,24 @@ const Box = styled.div`
       margin-left: 10px;
     }
   }
+  .iconForm {
+    color: var(--bs-primary);
+    font-size: 20px;
+    margin-right: 10px;
+    cursor: pointer;
+  }
 `;
 
 interface Iprops {
   closeModal: (ifRefresh: boolean) => void;
-  id: number;
+  id?: number;
 }
 export default function PropsalModal(props: Iprops) {
-  const { closeModal, id } = props;
+  const { closeModal } = props;
   const { t } = useTranslation();
+  const { id } = useParams();
   const { Toast, showToast } = useToast();
-  const router = useRouter();
+  // const router = useRouter();
   const [list, setList] = useState(['']);
   const [loading, setLoading] = useState(false);
   const handleInput = (e: ChangeEvent, index: number) => {
@@ -77,6 +106,7 @@ export default function PropsalModal(props: Iprops) {
 
   const handleProposal = async () => {
     const ids: string[] = [];
+
     for (const l of list) {
       if (l) {
         if (l.startsWith('https://forum.seedao.xyz/thread/')) {
@@ -104,7 +134,7 @@ export default function PropsalModal(props: Iprops) {
     }
     try {
       setLoading(true);
-      await requests.project.addRelatedProposal(id as string, ids);
+      await requests.guild.addRelatedProposal(id as any, ids);
     } catch (error) {
       console.error('handle related proposals failed: ', error);
     } finally {
@@ -124,8 +154,8 @@ export default function PropsalModal(props: Iprops) {
             <ul>
               {list.map((item, index) => (
                 <li key={index}>
-                  <InputGroup fullWidth>
-                    <input
+                  <InputGroup>
+                    <Form.Control
                       type="text"
                       placeholder="eg, https://forum.seedao.xyz/thread/..."
                       value={item}
@@ -133,14 +163,14 @@ export default function PropsalModal(props: Iprops) {
                     />
                   </InputGroup>
                   {index === list.length - 1 && (
-                    <span onClick={() => handleAdd()}>
-                      <EvaIcon name="plus-outline" status="Primary" />
+                    <span className="iconForm" onClick={() => handleAdd()}>
+                      <PlusLg />
                     </span>
                   )}
 
                   {!(!index && index === list.length - 1) && (
-                    <span onClick={() => removeList(index)}>
-                      <EvaIcon name="minus-outline" status="Primary" />
+                    <span className="iconForm" onClick={() => removeList(index)}>
+                      <DashLg />
                     </span>
                   )}
                 </li>
@@ -149,7 +179,7 @@ export default function PropsalModal(props: Iprops) {
           </Box>
         </CardBody>
         <CardFooter>
-          <Button appearance="outline" className="btnBtm" onClick={() => closeModal(false)}>
+          <Button variant="outline-primary" className="btnBtm" onClick={() => closeModal(false)}>
             {t('general.cancel')}
           </Button>
           <Button disabled={!list.length} onClick={handleProposal}>

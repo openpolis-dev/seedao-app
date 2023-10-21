@@ -1,8 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Button } from '@paljs/ui';
-import { Tabs, Tab } from '@paljs/ui/Tabs';
-import useTranslation from 'hooks/useTranslation';
+import { Button, Tabs, Tab } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 
 interface IProps {
   onSelect(index: number): void;
@@ -14,7 +13,6 @@ export default function ProposalSubNav({ onSelect }: IProps) {
   return (
     <SubNav>
       <Button
-        size="Small"
         onClick={() => {
           window.open(`https://forum.seedao.xyz/`, '_blank');
         }}
@@ -22,9 +20,9 @@ export default function ProposalSubNav({ onSelect }: IProps) {
         {t('Proposal.CreateProposal')}
       </Button>
       <div>
-        <Tabs activeIndex={0} onSelect={onSelect}>
-          <Tab title={t('Proposal.TheNeweset')} responsive></Tab>
-          <Tab title={t('Proposal.TheOldest')} responsive></Tab>
+        <Tabs defaultActiveKey={0} onSelect={(e: any) => onSelect(Number(e))}>
+          <Tab title={t('Proposal.TheNeweset')} eventKey={0}></Tab>
+          <Tab title={t('Proposal.TheOldest')} eventKey={1}></Tab>
         </Tabs>
       </div>
     </SubNav>

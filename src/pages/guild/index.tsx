@@ -1,13 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import Layout from 'Layouts';
-import Row from '@paljs/ui/Row';
-import Col from '@paljs/ui/Col';
-import { Tabs, Tab } from '@paljs/ui/Tabs';
+import { Row, Tabs, Tab, Button } from 'react-bootstrap';
 import styled from 'styled-components';
-import { ButtonLink } from '@paljs/ui/Button';
-import { useRouter } from 'next/router';
-import { Card, CardHeader } from '@paljs/ui/Card';
-import useTranslation from 'hooks/useTranslation';
+import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { getMyProjects, getProjects } from 'requests/guild';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import Page from 'components/pagination';
@@ -17,6 +12,18 @@ import usePermission from 'hooks/usePermission';
 import { PermissionObject, PermissionAction } from 'utils/constant';
 import useCheckLogin from 'hooks/useCheckLogin';
 import ProjectOrGuildItem from 'components/projectOrGuildItem';
+import { ContainerPadding } from 'assets/styles/global';
+
+const OuterBox = styled.div`
+  min-height: 100%;
+  ${ContainerPadding};
+`;
+
+const CardBox = styled.div`
+  background: #fff;
+  padding: 10px 40px;
+  min-height: 100%;
+`;
 
 const Box = styled.div`
   position: relative;
@@ -51,11 +58,11 @@ export default function Index() {
   const { t } = useTranslation();
   const canCreateProj = usePermission(PermissionAction.Create, PermissionObject.Guild);
   const {
-    state: { language },
+    state: { language, account },
     dispatch,
   } = useAuthContext();
-  const isLogin = useCheckLogin();
-  const router = useRouter();
+  const isLogin = useCheckLogin(account);
+  const navigate = useNavigate();
 
   const [pageCur, setPageCur] = useState(1);
   const [pageSize, setPageSize] = useState(20);
@@ -123,7 +130,7 @@ export default function Index() {
     setPageCur(page);
   };
   const selectCurrent = (e: number) => {
-    setCurrent(e);
+    setCurrent(Number(e));
     setPageCur(1);
   };
   const handlePage = (num: number) => {
@@ -131,49 +138,41 @@ export default function Index() {
   };
 
   const openDetail = (id: number) => {
-    router.push(`/guild/info/${id}`);
+    navigate(`/guild/info/${id}`);
   };
 
   return (
-    <Layout title="SeeDAO Project">
-      <Card>
+    <OuterBox>
+      <CardBox>
         <Box>
           <TopLine>
-            {canCreateProj && (
-              <ButtonLink onClick={() => router.push('/create-guild')} fullWidth shape="Rectangle">
-                {t('Guild.create')}
-              </ButtonLink>
-            )}
+            {canCreateProj && <Button onClick={() => navigate('/create-guild')}>{t('Guild.create')}</Button>}
           </TopLine>
-          <Row>
-            <Col breakPoint={{ xs: 12 }}>
-              <CardHeader>
-                <Tabs activeIndex={0} onSelect={(e) => selectCurrent(e)}>
-                  {list.map((item) => (
-                    <Tab key={item.id} title={item.name} responsive />
-                  ))}
-                </Tabs>
+          <div>
+            <Tabs defaultActiveKey={0} onSelect={(e: any) => selectCurrent(e)}>
+              {list.map((item, index) => (
+                <Tab key={item.id} title={item.name} eventKey={index} />
+              ))}
+            </Tabs>
 
+            <div>
+              <ItemBox>
+                <Row>
+                  {proList.map((item) => (
+                    <ProjectOrGuildItem key={item.id} data={item} onClickItem={openDetail} />
+                  ))}
+                </Row>
+              </ItemBox>
+              {!proList.length && <NoItem />}
+              {total > pageSize && (
                 <div>
-                  <ItemBox>
-                    <Row>
-                      {proList.map((item) => (
-                        <ProjectOrGuildItem key={item.id} data={item} onClickItem={openDetail} />
-                      ))}
-                    </Row>
-                  </ItemBox>
-                  {!proList.length && <NoItem />}
-                  {total > pageSize && (
-                    <div>
-                      <Page itemsPerPage={pageSize} total={total} current={pageCur - 1} handleToPage={handlePage} />
-                    </div>
-                  )}
+                  <Page itemsPerPage={pageSize} total={total} current={pageCur - 1} handleToPage={handlePage} />
                 </div>
-              </CardHeader>
-            </Col>
-          </Row>
+              )}
+            </div>
+          </div>
         </Box>
-      </Card>
-    </Layout>
+      </CardBox>
+    </OuterBox>
   );
 }

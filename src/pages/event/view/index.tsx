@@ -1,25 +1,30 @@
-import Layout from 'Layouts';
-import { Card, CardBody } from '@paljs/ui/Card';
+import { Button } from 'react-bootstrap';
 import styled from 'styled-components';
 import React, { FormEvent, useEffect, useState } from 'react';
-import { EvaIcon } from '@paljs/ui/Icon';
-import { useRouter } from 'next/router';
-import useTranslation from 'hooks/useTranslation';
+// import { EvaIcon } from '@paljs/ui/Icon';
+// import { useRouter } from 'next/router';
+import { useTranslation } from 'react-i18next';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import ReactMarkdown from 'react-markdown';
 import { getEventById, uplodaEventImage } from 'requests/event';
 import { formatTime } from 'utils/time';
-import { ButtonLink } from '@paljs/ui/Button';
-import { useWeb3React } from '@web3-react/core';
+// import { useWeb3React } from '@web3-react/core';
+import { useNavigate } from 'react-router-dom';
+import { ChevronLeft, Clock } from 'react-bootstrap-icons';
+import { ContainerPadding } from 'assets/styles/global';
 
 const Box = styled.div`
+  min-height: 100%;
   .btnBtm {
     margin-right: 20px;
   }
+  ${ContainerPadding}
 `;
 
-const CardBox = styled(Card)`
-  min-height: 80vh;
+const CardBox = styled.div`
+  background: #fff;
+  padding: 20px;
+  min-height: 100%;
 `;
 const UlBox = styled.div`
   width: 100%;
@@ -42,17 +47,18 @@ const UlBox = styled.div`
 
 const BackBox = styled.div`
   width: 100%;
-  padding: 30px 20px 0;
+  padding: 10px 0 20px;
   display: inline-flex;
   align-items: center;
   justify-content: space-between;
+
   .back {
     display: flex;
     align-items: center;
     cursor: pointer;
   }
-  .icon {
-    font-size: 24px;
+  .iconTop {
+    margin-right: 10px;
   }
 `;
 
@@ -74,6 +80,9 @@ const BtnBox = styled.label`
   img {
     max-width: 100%;
     max-height: 100%;
+  }
+  @media (max-width: 900px) {
+    margin: 40px auto;
   }
 `;
 
@@ -100,15 +109,25 @@ const ImgBox = styled.div`
 const InnerBox = styled.div`
   display: flex;
   align-content: center;
+  @media (max-width: 900px) {
+    flex-direction: column;
+    margin-bottom: 20px;
+  }
 `;
 
 const ContentBox = styled.div`
   line-height: 1.2em;
+  padding-top: 40px;
+  border-top: 1px solid #eee;
+  margin-top: 20px;
   h2 {
     padding: 1rem 0;
   }
   p {
     padding: 0 -0px 1rem;
+  }
+  img {
+    max-width: 100%;
   }
 `;
 
@@ -132,12 +151,16 @@ const TimeBox = styled.div`
 `;
 
 export default function ViewEvent() {
-  const router = useRouter();
+  // const router = useRouter();
   const { t } = useTranslation();
-  const { id } = router.query;
+  const { search } = window.location;
+  const id = new URLSearchParams(search).get('id');
+  const navigate = useNavigate();
 
-  const { dispatch } = useAuthContext();
-  const { account } = useWeb3React();
+  const {
+    state: { account },
+    dispatch,
+  } = useAuthContext();
 
   const [title, setTitle] = useState('');
   const [startAt, setStartAt] = useState<number>();
@@ -187,85 +210,81 @@ export default function ViewEvent() {
   };
 
   return (
-    <Layout title="SeeDAO Event">
-      <Box>
-        <CardBox>
-          <div>
-            <BackBox>
-              <div className="back" onClick={() => router.back()}>
-                <EvaIcon name="chevron-left-outline" className="icon" />
-                <span>{t('general.back')}</span>
-              </div>
-              <div>
-                {account && account.toLocaleLowerCase() === creator && (
-                  <EditButton onClick={() => router.push(`/event/edit?id=${id}`)} fullWidth shape="Rectangle">
-                    {t('event.edit')}
-                  </EditButton>
-                )}
-              </div>
-            </BackBox>
-          </div>
+    <Box>
+      <CardBox>
+        <div>
+          <BackBox>
+            <div className="back" onClick={() => navigate(-1)}>
+              <ChevronLeft className="iconTop" />
+              <span>{t('general.back')}</span>
+            </div>
+            <div>
+              {account && account.toLocaleLowerCase() === creator && new Date().valueOf() < startAt! && (
+                <EditButton onClick={() => navigate(`/event/edit?id=${id}`)}>{t('event.edit')}</EditButton>
+              )}
+            </div>
+          </BackBox>
+        </div>
 
-          {/*<CardHeader> {id ? t('event.edit') : t('event.create')}</CardHeader>*/}
-          <CardBody>
-            <InnerBox>
-              <BtnBox>
-                {!!url && (
-                  <ImgBox>
-                    <img src={url} alt="" />
-                  </ImgBox>
-                )}
-              </BtnBox>
-              <UlBox>
-                <TitleTop>{title}</TitleTop>
-                <TimeBox>
-                  <EvaIcon name="clock-outline" className="iconRht" />
-                  <span>{formatTime(startAt)}</span> ~ <span>{formatTime(endAt)}</span>
-                </TimeBox>
+        {/*<CardHeader> {id ? t('event.edit') : t('event.create')}</CardHeader>*/}
+        <div>
+          <InnerBox>
+            <BtnBox>
+              {!!url && (
+                <ImgBox>
+                  <img src={url} alt="" />
+                </ImgBox>
+              )}
+            </BtnBox>
+            <UlBox>
+              <TitleTop>{title}</TitleTop>
+              <TimeBox>
+                <Clock className="iconRht" />
+                <span>{formatTime(startAt!)}</span> ~ <span>{formatTime(endAt!)}</span>
+              </TimeBox>
 
-                {!!sponsor && (
-                  <li>
-                    <div className="title">{t('event.sponsor')}</div>
-                    <div>{sponsor}</div>
-                  </li>
-                )}
-                {!!media && (
-                  <li>
-                    <div className="title">{t('event.media')}</div>
-                    <div>{media}</div>
-                  </li>
-                )}
-                {!!moderator && (
-                  <li>
-                    <div className="title">{t('event.host')}</div>
-                    <div>{moderator}</div>
-                  </li>
-                )}
-                {!!guest && (
-                  <li>
-                    <div className="title">{t('event.guest')}</div>
-                    <div>{guest}</div>
-                  </li>
-                )}
-                {!!volunteer && (
-                  <li>
-                    <div className="title">{t('event.volunteer')}</div>
-                    <div>{volunteer}</div>
-                  </li>
-                )}
-              </UlBox>
-            </InnerBox>
-            <ContentBox>
-              <ReactMarkdown>{content}</ReactMarkdown>
-            </ContentBox>
-          </CardBody>
-        </CardBox>
-      </Box>
-    </Layout>
+              {!!sponsor && (
+                <li>
+                  <div className="title">{t('event.sponsor')}</div>
+                  <div>{sponsor}</div>
+                </li>
+              )}
+              {!!media && (
+                <li>
+                  <div className="title">{t('event.media')}</div>
+                  <div>{media}</div>
+                </li>
+              )}
+              {!!moderator && (
+                <li>
+                  <div className="title">{t('event.host')}</div>
+                  <div>{moderator}</div>
+                </li>
+              )}
+              {!!guest && (
+                <li>
+                  <div className="title">{t('event.guest')}</div>
+                  <div>{guest}</div>
+                </li>
+              )}
+              {!!volunteer && (
+                <li>
+                  <div className="title">{t('event.volunteer')}</div>
+                  <div>{volunteer}</div>
+                </li>
+              )}
+            </UlBox>
+          </InnerBox>
+          <ContentBox>
+            <ReactMarkdown>{content}</ReactMarkdown>
+          </ContentBox>
+        </div>
+      </CardBox>
+    </Box>
   );
 }
 
-const EditButton = styled(ButtonLink)`
+const EditButton = styled(Button)`
   &:hover {
     color: #fff;
   }

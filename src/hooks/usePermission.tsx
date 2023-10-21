@@ -3,11 +3,11 @@ import useCheckLogin from 'hooks/useCheckLogin';
 import { useEffect, useState } from 'react';
 
 const usePermission = (action: string, object: string) => {
-  const isLogin = useCheckLogin();
   const {
-    state: { authorizer },
+    state: { authorizer, account },
   } = useAuthContext();
 
+  const isLogin = useCheckLogin(account);
   const [checkResult, setCheckResult] = useState(false);
 
   const checkLogic = async () => {

@@ -1,66 +1,79 @@
 import React from 'react';
 import { IUser } from 'type/user.type';
-import Image from 'next/image';
+// import Image from 'next/image';
 import CopyBox from 'components/copy';
 import { DefaultAvatar } from 'utils/constant';
 import PublicJs from 'utils/publicJs';
-import { EvaIcon } from '@paljs/ui/Icon';
+import copyIcon from 'assets/images/copy.svg';
 import styled from 'styled-components';
-import { useWeb3React } from '@web3-react/core';
+// import { useWeb3React } from '@web3-react/core';
+import TwitterIcon from 'assets/images/twitterNor.svg';
+import DiscordIcon from 'assets/images/discordNor.svg';
+import EmailIcon from 'assets/images/email.svg';
+import { Col } from 'react-bootstrap';
+import { useAuthContext } from '../providers/authProvider';
 
 interface IUserProps {
   user: IUser;
   showEdit: boolean;
+  sns?: string;
   onSelectUser?: (user: IUser) => void;
   formatActive?: (wallet: string) => boolean;
 }
 
-export default function UserCard({ user, showEdit, onSelectUser, formatActive }: IUserProps) {
-  const { account } = useWeb3React();
-  return (
-    <UserCardBox>
-      <div className="fst">
-        {user.avatar ? (
-          <img className="avatar" src={user.avatar} alt="" />
-        ) : (
-          <Image className="avatar" src={DefaultAvatar} alt="" width="40px" height="40px" />
-        )}
+export default function UserCard({ user, showEdit, onSelectUser, formatActive, sns }: IUserProps) {
+  // const { account } = useWeb3React();
 
-        <div>
-          <div>{user.name}</div>
-          <div style={{ display: 'flex', gap: '5px' }}>
-            <span>{PublicJs.AddressToShow(user.wallet || '')}</span>
-            <CopyBox text={user.wallet || ''} dir="left">
-              <EvaIcon name="clipboard-outline" options={{ width: '18px', height: '18px' }} />
-            </CopyBox>
+  const {
+    state: { account },
+  } = useAuthContext();
+
+  return (
+    <UserCardBox sm={12} md={6} lg={4} xl={3}>
+      <div className="boxAll">
+        <div className="fst">
+          {user.avatar ? (
+            <img className="avatar" src={user.avatar} alt="" />
+          ) : (
+            <img className="avatar" src={DefaultAvatar} alt="" width="40px" height="40px" />
+          )}
+
+          <div>
+            <div className="name">{sns || user.name}</div>
+            <div style={{ display: 'flex', gap: '5px' }}>
+              <span>{PublicJs.AddressToShow(user.wallet || '')}</span>
+              <CopyBox text={user.wallet || ''} dir="left">
+                <img src={copyIcon} alt="" style={{ position: 'relative', top: '-2px' }} />
+              </CopyBox>
+            </div>
           </div>
+          {showEdit && account?.toLowerCase() !== user.wallet?.toLowerCase() && (
+            <div
+              className={formatActive && formatActive(user.wallet || '') ? 'topRht active' : 'topRht'}
+              onClick={() => onSelectUser && onSelectUser(user)}
+            >
+              <div className="inner" />
+            </div>
+          )}
         </div>
-        {showEdit && account?.toLowerCase() !== user.wallet?.toLowerCase() && (
-          <div
-            className={formatActive && formatActive(user.wallet || '') ? 'topRht active' : 'topRht'}
-            onClick={() => onSelectUser && onSelectUser(user)}
-          >
-            <div className="inner" />
-          </div>
-        )}
+        <LinkBox>
+          {user.twitter_profile && (
+            <a href={user.twitter_profile} target="_blank" rel="noreferrer">
+              <img src={TwitterIcon} alt="" className="icon" width="20px" height="20px" />
+            </a>
+          )}
+          {user.discord_profile && (
+            <CopyBox text={user.discord_profile || ''} dir="right">
+              <img src={DiscordIcon} alt="" className="icon" width="20px" height="20px" />
+            </CopyBox>
+          )}
+          {user.email && (
+            <CopyBox text={user.email || ''}>
+              <img src={EmailIcon} alt="" className="icon" width="20px" height="20px" />
+            </CopyBox>
+          )}
+        </LinkBox>
       </div>
-      <LinkBox>
-        {user.twitter_profile && (
-          <a href={user.twitter_profile} target="_blank" rel="noreferrer">
-            <Image src="/images/twitterNor.svg" alt="" className="icon" width="20px" height="20px" />
-          </a>
-        )}
-        {user.discord_profile && (
-          <CopyBox text={user.discord_profile || ''} dir="right">
-            <Image src="/images/discordNor.svg" alt="" className="icon" width="20px" height="20px" />
-          </CopyBox>
-        )}
-        {user.email && (
-          <CopyBox text={user.email || ''}>
-            <Image src="/images/email.svg" alt="" className="icon" width="20px" height="20px" />
-          </CopyBox>
-        )}
-      </LinkBox>
     </UserCardBox>
   );
 }
@@ -76,23 +89,28 @@ const LinkBox = styled.div`
     display: inline-block;
   }
 `;
-const UserCardBox = styled.li`
-  width: 23%;
-  margin-right: 2%;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+const UserCardBox = styled(Col)`
+  //margin-right: 2%;
+
   margin-bottom: 40px;
-  box-sizing: border-box;
-  border-radius: 4px;
-  overflow: hidden;
-  padding: 20px;
-  &:nth-child(4n) {
-    margin-right: 0;
+
+  .boxAll {
+    padding: 20px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    overflow: hidden;
+    box-sizing: border-box;
+    height: 100%;
   }
+
   .fst {
     display: flex;
     align-items: center;
     position: relative;
-    gap: 10px;
+  }
+  .name {
+    font-size: 14px;
+    word-break: break-all;
   }
   img.avatar {
     width: 40px;

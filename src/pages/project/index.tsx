@@ -1,13 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import Layout from 'Layouts';
-import Row from '@paljs/ui/Row';
-import Col from '@paljs/ui/Col';
-import { Tabs, Tab } from '@paljs/ui/Tabs';
+import { Row, Col, Tabs, Tab, Button } from 'react-bootstrap';
 import styled from 'styled-components';
-import { ButtonLink } from '@paljs/ui/Button';
-import { useRouter } from 'next/router';
-import { Card, CardHeader } from '@paljs/ui/Card';
-import useTranslation from 'hooks/useTranslation';
+import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { getMyProjects, getProjects } from 'requests/project';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import Page from 'components/pagination';
@@ -17,6 +12,19 @@ import usePermission from 'hooks/usePermission';
 import { PermissionObject, PermissionAction } from 'utils/constant';
 import useCheckLogin from 'hooks/useCheckLogin';
 import ProjectOrGuildItem from 'components/projectOrGuildItem';
+import { ContainerPadding } from 'assets/styles/global';
+
+const OuterBox = styled.div`
+  min-height: 100%;
+  ${ContainerPadding};
+`;
+
+const CardBox = styled.div`
+  background: #fff;
+  padding: 10px 40px;
+  box-sizing: border-box;
+  min-height: 100%;
+`;
 
 const Box = styled.div`
   position: relative;
@@ -31,7 +39,7 @@ const Box = styled.div`
 
 const TopLine = styled.div`
   position: absolute;
-  right: 20px;
+  right: 0;
   top: 14px;
   z-index: 9;
   cursor: pointer;
@@ -51,11 +59,11 @@ export default function Index() {
   const { t } = useTranslation();
   const canCreateProj = usePermission(PermissionAction.Create, PermissionObject.Project);
   const {
-    state: { language },
+    state: { language, account },
     dispatch,
   } = useAuthContext();
-  const isLogin = useCheckLogin();
-  const router = useRouter();
+  const isLogin = useCheckLogin(account);
+  const navigate = useNavigate();
 
   const [pageCur, setPageCur] = useState(1);
   const [pageSize, setPageSize] = useState(20);
@@ -104,7 +112,7 @@ export default function Index() {
       sort_order: 'desc',
       sort_field: 'created_at',
     };
-    const rt = await getProjects(obj);
+    const rt = await getProjects(obj, false);
     dispatch({ type: AppActionType.SET_LOADING, payload: null });
     const { rows, page, size, total } = rt.data;
     setProList(rows);
@@ -130,7 +138,7 @@ export default function Index() {
     setPageCur(page);
   };
   const selectCurrent = (e: number) => {
-    setCurrent(e);
+    setCurrent(Number(e));
     setPageCur(1);
   };
   const handlePage = (num: number) => {
@@ -138,48 +146,40 @@ export default function Index() {
   };
 
   const openDetail = (id: number) => {
-    router.push(`/project/info/${id}`);
+    navigate(`/project/info/${id}`);
   };
 
   return (
-    <Layout title="SeeDAO Project">
-      <Card>
+    <OuterBox>
+      <CardBox>
         <Box>
           <TopLine>
-            {canCreateProj && (
-              <ButtonLink onClick={() => router.push('/create-project')} fullWidth shape="Rectangle">
-                {t('Project.create')}
-              </ButtonLink>
-            )}
+            {canCreateProj && <Button onClick={() => navigate('/create-project')}>{t('Project.create')}</Button>}
           </TopLine>
-          <Row>
-            <Col breakPoint={{ xs: 12 }}>
-              <CardHeader>
-                <Tabs activeIndex={0} onSelect={(e) => selectCurrent(e)}>
-                  {list.map((item) => (
-                    <Tab key={item.id} title={item.name} responsive />
+          <div>
+            <Tabs defaultActiveKey={0} onSelect={(e: any) => selectCurrent(e)}>
+              {list.map((item, index) => (
+                <Tab key={item.id} title={item.name} eventKey={index} />
+              ))}
+            </Tabs>
+            <div>
+              <ItemBox>
+                <Row>
+                  {proList.map((item) => (
+                    <ProjectOrGuildItem key={item.id} data={item} onClickItem={openDetail} />
                   ))}
-                </Tabs>
+                </Row>
+              </ItemBox>
+              {!proList.length && <NoItem />}
+              {total > pageSize && (
                 <div>
-                  <ItemBox>
-                    <Row>
-                      {proList.map((item) => (
-                        <ProjectOrGuildItem key={item.id} data={item} onClickItem={openDetail} />
-                      ))}
-                    </Row>
-                  </ItemBox>
-                  {!proList.length && <NoItem />}
-                  {total > pageSize && (
-                    <div>
-                      <Page itemsPerPage={pageSize} total={total} current={pageCur - 1} handleToPage={handlePage} />
-                    </div>
-                  )}
+                  <Page itemsPerPage={pageSize} total={total} current={pageCur - 1} handleToPage={handlePage} />
                 </div>
-              </CardHeader>
-            </Col>
-          </Row>
+              )}
+            </div>
+          </div>
         </Box>
-      </Card>
-    </Layout>
+      </CardBox>
+    </OuterBox>
   );
 }

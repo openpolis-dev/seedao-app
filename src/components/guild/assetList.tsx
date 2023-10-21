@@ -1,11 +1,11 @@
 import styled from 'styled-components';
-import { Button } from '@paljs/ui/Button';
-import Select from '@paljs/ui/Select';
+import { Button, Form } from 'react-bootstrap';
+// import Select from '@paljs/ui/Select';
 import React, { useEffect, useState, useMemo } from 'react';
 import Page from 'components/pagination';
 import ViewHash from '../projectInfoCom/viewHash';
 import RangeDatePickerStyle from 'components/rangeDatePicker';
-import { Checkbox } from '@paljs/ui/Checkbox';
+// import { Checkbox } from '@paljs/ui/Checkbox';
 import requests from 'requests';
 import { IQueryApplicationsParams } from 'requests/applications';
 import { IApplicationDisplay, ApplicationStatus } from 'type/application.type';
@@ -15,8 +15,9 @@ import { AppActionType, useAuthContext } from 'providers/authProvider';
 import Loading from 'components/loading';
 import { formatDate, formatTime } from 'utils/time';
 import publicJs from 'utils/publicJs';
-import useTranslation from 'hooks/useTranslation';
+import { useTranslation } from 'react-i18next';
 import { formatApplicationStatus } from 'utils/index';
+import Select from 'components/common/select';
 
 const Box = styled.div``;
 const TitBox = styled.div`
@@ -44,10 +45,7 @@ const TopLine = styled.ul`
 
     .tit {
       padding-right: 20px;
-    }
-
-    .sel {
-      min-width: 150px;
+      white-space: nowrap;
     }
   }
 `;
@@ -258,29 +256,25 @@ export default function AssetList({ id }: { id: number }) {
           <li>
             <span className="tit">{t('Project.State')}</span>
             <Select
-              className="sel"
               options={statusOption}
               placeholder=""
-              onChange={(value) => {
+              onChange={(value: any) => {
                 setSelectStatus(value?.value);
                 setSelectMap({});
                 setPage(1);
               }}
-              isClearable={true}
             />
           </li>
           <li>
             <span className="tit">{t('Project.Operator')}</span>
             <Select
-              className="sel"
               options={applicants}
               placeholder=""
-              onChange={(value) => {
+              onChange={(value: any) => {
                 setSelectApplicant(value?.value);
                 setSelectMap({});
                 setPage(1);
               }}
-              isClearable={true}
             />
           </li>
         </TopLine>
@@ -295,7 +289,7 @@ export default function AssetList({ id }: { id: number }) {
               />
             </BorderBox>
           </TimeBox>
-          <Button size="Medium" onClick={handleExport} disabled={!selectOne}>
+          <Button onClick={handleExport} disabled={!selectOne}>
             {t('Project.Export')}
           </Button>
         </TimeLine>
@@ -307,7 +301,7 @@ export default function AssetList({ id }: { id: number }) {
               <thead>
                 <tr>
                   <th>
-                    <Checkbox status="Primary" checked={ifSelectAll} onChange={(value) => onSelectAll(value)} />
+                    <Form.Check checked={ifSelectAll} onChange={(e) => onSelectAll(e.target.checked)} />
                   </th>
                   <th>{t('Project.Time')}</th>
                   <th>{t('Project.Address')}</th>
@@ -325,11 +319,10 @@ export default function AssetList({ id }: { id: number }) {
                 {list.map((item) => (
                   <tr key={item.application_id}>
                     <td>
-                      <Checkbox
-                        status="Primary"
+                      <Form.Check
                         checked={!!selectMap[item.application_id]}
-                        onChange={(value) => onChangeCheckbox(value, item.application_id, item.status)}
-                      ></Checkbox>
+                        onChange={(e) => onChangeCheckbox(e.target.checked, item.application_id, item.status)}
+                      ></Form.Check>
                     </td>
                     <td>{item.created_date}</td>
                     <td>
@@ -349,7 +342,7 @@ export default function AssetList({ id }: { id: number }) {
                     <td>{item.reviewer_name || publicJs.AddressToShow(item.reviewer_wallet)}</td>
                     <td>
                       {item.status === ApplicationStatus.Completed && (
-                        <Button appearance="outline" size="Tiny" onClick={() => handleShow(item.transactions || [])}>
+                        <Button size="sm" variant="outline-primary" onClick={() => handleShow(item.transactions || [])}>
                           {t('Project.View')}
                         </Button>
                       )}

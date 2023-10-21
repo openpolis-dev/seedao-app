@@ -1,13 +1,12 @@
 import styled from 'styled-components';
-import { Card, CardHeader, CardBody, CardFooter } from '@paljs/ui/Card';
 import React from 'react';
-import { Button } from '@paljs/ui/Button';
-import useTranslation from 'hooks/useTranslation';
+import { Button, Card } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 import { IUser } from 'type/user.type';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import { updateStaffs, IUpdateStaffsParams } from 'requests/project';
 import { DefaultAvatar } from 'utils/constant';
-import Image from 'next/image';
+// import Image from 'next/image';
 import useToast, { ToastType } from 'hooks/useToast';
 
 const Mask = styled.div`
@@ -35,6 +34,27 @@ const Mask = styled.div`
     font-weight: bold;
     margin-block: 15px;
   }
+`;
+
+const CardHeader = styled.div`
+  min-width: 500px;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid rgb(237, 241, 247);
+  border-top-left-radius: 0.25rem;
+  border-top-right-radius: 0.25rem;
+  color: rgb(34, 43, 69);
+  font-family: Inter-Regular, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.5rem;
+`;
+
+const CardBody = styled.div`
+  padding: 20px;
+`;
+const CardFooter = styled.div`
+  padding: 0 20px 20px;
 `;
 
 const ItemBox = styled.div`
@@ -103,7 +123,7 @@ export default function Del(props: Iprops) {
                 {item.avatar ? (
                   <img src={item.avatar} style={{ width: '40px', height: '40px' }} />
                 ) : (
-                  <Image src={DefaultAvatar} alt="" width="40px" height="40px" />
+                  <img src={DefaultAvatar} alt="" width="40px" height="40px" />
                 )}
               </div>
               <div>
@@ -119,7 +139,7 @@ export default function Del(props: Iprops) {
                 {item.avatar ? (
                   <img src={item.avatar} style={{ width: '40px', height: '40px' }} />
                 ) : (
-                  <Image src={DefaultAvatar} alt="" width="40px" height="40px" />
+                  <img src={DefaultAvatar} alt="" width="40px" height="40px" />
                 )}
               </div>
               <div>
@@ -130,7 +150,7 @@ export default function Del(props: Iprops) {
           ))}
         </CardBody>
         <CardFooter>
-          <Button appearance="outline" className="btnBtm" onClick={() => closeRemove()}>
+          <Button variant="outline-primary" className="btnBtm" onClick={() => closeRemove()}>
             {t('general.cancel')}
           </Button>
           <Button onClick={() => submitUpdate()}> {t('general.confirm')}</Button>

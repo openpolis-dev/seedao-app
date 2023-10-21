@@ -2,8 +2,8 @@ import React, { useReducer, createContext, useContext } from 'react';
 import { IUser, ITokenType } from 'type/user.type';
 import { ICategory } from 'type/proposal.type';
 import { Authorizer } from 'casbin.js';
-import { SEEDAO_USER, SEEDAO_USER_DATA, SENDING_ME_USER } from 'utils/constant';
-import { WalletType } from 'wallet/wallet';
+import { SEEDAO_ACCOUNT, SEEDAO_USER, SEEDAO_USER_DATA, SENDING_ME_USER } from '../utils/constant';
+import { WalletType } from '../wallet/wallet';
 
 interface IState {
   account?: string;
@@ -15,6 +15,8 @@ interface IState {
   loading: boolean | null;
   authorizer?: Authorizer;
   wallet_type?: WalletType;
+  expandMenu: boolean;
+  provider?: any;
 }
 
 export enum AppActionType {
@@ -28,6 +30,8 @@ export enum AppActionType {
   SET_LOADING = 'SET_LOADING',
   SET_AUTHORIZER = 'SET_AUTHORIZER',
   SET_WALLET_TYPE = 'set_wallet_type',
+  SET_EXPAND_MENU = 'set_expand_menu',
+  SET_PROVIDER = 'set_provider',
 }
 
 interface IAction {
@@ -36,6 +40,7 @@ interface IAction {
 }
 
 const INIT_STATE: IState = {
+  expandMenu: true,
   show_login_modal: false,
   proposal_categories: [
     {
@@ -53,7 +58,7 @@ const INIT_STATE: IState = {
       ],
     },
   ],
-  language: 'en',
+  language: '',
   loading: null,
 };
 
@@ -67,7 +72,10 @@ const AuthContext = createContext<{
 
 const reducer = (state: IState, action: IAction): IState => {
   switch (action.type) {
+    case AppActionType.SET_EXPAND_MENU:
+      return { ...state, expandMenu: action.payload };
     case AppActionType.SET_ACCOUNT:
+      localStorage.setItem(SEEDAO_ACCOUNT, action.payload);
       return { ...state, account: action.payload };
     case AppActionType.SET_LOGIN_MODAL:
       return { ...state, show_login_modal: action.payload };
@@ -93,6 +101,8 @@ const reducer = (state: IState, action: IAction): IState => {
       return { ...state, loading: action.payload };
     case AppActionType.SET_AUTHORIZER:
       return { ...state, authorizer: action.payload };
+    case AppActionType.SET_PROVIDER:
+      return { ...state, provider: action.payload };
 
     case AppActionType.SET_LAN:
       return { ...state, language: action.payload };

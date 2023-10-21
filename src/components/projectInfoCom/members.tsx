@@ -1,18 +1,20 @@
 import styled from 'styled-components';
 import React, { useEffect, useState, useMemo } from 'react';
-import { Button } from '@paljs/ui/Button';
+import { Button, Row } from 'react-bootstrap';
 import Add from './add';
 import Del from './Del';
-import useTranslation from 'hooks/useTranslation';
+import { useTranslation } from 'react-i18next';
 import { ReTurnProject, ProjectStatus } from 'type/project.type';
 import { getUsers } from 'requests/user';
 import { IUser } from 'type/user.type';
-import { useRouter } from 'next/router';
+// import { useRouter } from 'next/router';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import NoItem from 'components/noItem';
 import { PermissionObject, PermissionAction } from 'utils/constant';
 import usePermission from 'hooks/usePermission';
 import UserCard from 'components/userCard';
+import { useParams } from 'react-router-dom';
+import { useParseSNSList } from 'hooks/useParseSNS';
 
 interface Iprops {
   detail: ReTurnProject | undefined;
@@ -24,8 +26,9 @@ type UserMap = { [w: string]: IUser };
 export default function Members(props: Iprops) {
   const { detail, updateProject } = props;
 
-  const router = useRouter();
-  const { id } = router.query;
+  // const router = useRouter();
+  // const { id } = router.query;
+  const { id } = useParams();
 
   const canUpdateMember = usePermission(PermissionAction.UpdateMember, PermissionObject.ProjPrefix + id);
   const canUpdateSponsor = usePermission(PermissionAction.UpdateSponsor, PermissionObject.ProjPrefix + id);
@@ -42,6 +45,12 @@ export default function Members(props: Iprops) {
   const [adminArr, setAdminArr] = useState<string[]>([]);
 
   const [userMap, setUserMap] = useState<UserMap>({});
+
+  const uniqueUsers = useMemo(() => {
+    return Array.from(new Set([...memberArr, ...adminArr]));
+  }, [memberArr, adminArr]);
+
+  const nameMap = useParseSNSList(uniqueUsers);
 
   useEffect(() => {
     if (!id || !detail) return;
@@ -128,11 +137,11 @@ export default function Members(props: Iprops) {
     if (!user) {
       return {
         id: '',
+        bio: '',
         name: '',
         avatar: '',
         discord_profile: '',
         twitter_profile: '',
-        google_profile: '',
         wechat: '',
         mirror: '',
         assets: [],
@@ -168,7 +177,7 @@ export default function Members(props: Iprops) {
             {t('Project.AddMember')}
           </Button>
           {!edit && (
-            <Button appearance="outline" onClick={() => handleDel()}>
+            <Button variant="outline-primary" onClick={() => handleDel()}>
               {t('Project.RemoveMember')}
             </Button>
           )}
@@ -177,7 +186,7 @@ export default function Members(props: Iprops) {
               <Button onClick={() => closeDel()} disabled={removeButtonDisabled}>
                 {t('general.confirm')}
               </Button>
-              <Button appearance="outline" onClick={() => closeRemove()}>
+              <Button variant="outline-primary" onClick={() => closeRemove()}>
                 {t('general.cancel')}
               </Button>
             </>
@@ -187,7 +196,7 @@ export default function Members(props: Iprops) {
 
       <ItemBox>
         <TitleBox>{t('Project.Dominator')}</TitleBox>
-        <UlBox>
+        <Row>
           {adminArr.map((item, index) => (
             <UserCard
               key={index}
@@ -195,15 +204,16 @@ export default function Members(props: Iprops) {
               onSelectUser={handleAdminSelect}
               formatActive={formatAdminActive}
               showEdit={edit && canUpdateSponsor}
+              sns={nameMap[getUser(item)?.wallet || '']}
             />
           ))}
-        </UlBox>
+        </Row>
       </ItemBox>
       {!adminArr.length && <NoItem />}
 
       <ItemBox>
         <TitleBox>{t('Project.Others')}</TitleBox>
-        <UlBox>
+        <Row>
           {memberArr.map((item, index) => (
             <UserCard
               key={index}
@@ -211,9 +221,10 @@ export default function Members(props: Iprops) {
               onSelectUser={handleMemSelect}
               formatActive={formatMemActive}
               showEdit={edit && canUpdateMember}
+              sns={nameMap[getUser(item)?.wallet || '']}
             />
           ))}
-        </UlBox>
+        </Row>
       </ItemBox>
       {!memberArr.length && <NoItem />}
     </Box>
@@ -231,11 +242,6 @@ const ItemBox = styled.div`
 const TitleBox = styled.div`
   font-weight: bold;
   margin-bottom: 30px;
-`;
-
-const UlBox = styled.ul`
-  display: flex;
-  flex-wrap: wrap;
 `;
 
 const TopBox = styled.div`

@@ -1,10 +1,11 @@
 import axios from 'axios';
 import { SEEDAO_USER } from 'utils/constant';
 import { parseToken, checkTokenValid, clearStorage } from 'utils/auth';
+import getConfig from 'utils/envCofnig';
 
-export const BASE_URL = process.env.NEXT_PUBLIC_BASE_ENDPOINT;
+export const BASE_URL = getConfig().REACT_APP_BASE_ENDPOINT;
 
-export const API_VERSION = process.env.NEXT_PUBLIC_API_VERSION;
+export const API_VERSION = process.env.REACT_APP_API_VERSION;
 
 const instance = axios.create({
   baseURL: `${BASE_URL}/${API_VERSION}`,
@@ -17,7 +18,12 @@ export const getBaseURL = instance.getUri;
 instance.interceptors.request.use(
   (config: any) => {
     const method = config.method?.toLowerCase();
-    if (!['post', 'put', 'delete'].includes(method) && !config.url.includes('my') && !config.url.includes('user')) {
+    if (
+      !['post', 'put', 'delete'].includes(method) &&
+      !config.url.includes('my') &&
+      !config.url.includes('user') &&
+      !config.url.includes('push')
+    ) {
       return config;
     }
     const tokenstr = localStorage.getItem(SEEDAO_USER);
@@ -28,7 +34,7 @@ instance.interceptors.request.use(
     const tokenData = parseToken(tokenstr);
     if (!checkTokenValid(tokenData?.token, tokenData?.token_exp)) {
       clearStorage();
-      return Promise.reject();
+      return Promise.reject('token is expired!');
     }
 
     if (!config.headers) {

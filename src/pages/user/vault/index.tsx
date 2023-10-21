@@ -1,20 +1,26 @@
 import React, { useEffect, useState } from 'react';
-import Layout from 'Layouts';
+// import Layout from 'Layouts';
 import AssetList from 'components/vaultCom/assetList';
 import styled from 'styled-components';
-import { Card } from '@paljs/ui/Card';
 import { Asset } from 'type/user.type';
 import requests from 'requests';
 import { BudgetType } from 'type/project.type';
-import useTranslation from 'hooks/useTranslation';
+import { useTranslation } from 'react-i18next';
 import SBTCard from './sbt';
 import { formatNumber } from 'utils/number';
+import { ContainerPadding } from 'assets/styles/global';
 
-const Box = styled.div`
-  padding: 40px 20px;
+const OuterBox = styled.div`
+  min-height: 100%;
+  ${ContainerPadding};
 `;
-const CardBox = styled(Card)`
-  min-height: 85vh;
+
+const Box = styled.div``;
+const CardBox = styled.div`
+  background: #fff;
+  padding: 20px;
+  min-height: 100%;
+  box-sizing: border-box;
 `;
 
 const FirstLine = styled.ul`
@@ -52,11 +58,10 @@ const FirstLine = styled.ul`
   .decorBg {
     position: absolute;
     right: 0;
-    bottom: 1.3rem;
-    font-size: 12rem;
+    bottom: -4rem;
+    font-size: 11rem;
     font-family: 'Jost-Bold';
     opacity: 0.03;
-    transform-origin: 0 0;
     color: #000;
   }
   .topBox {
@@ -75,6 +80,14 @@ const FirstLine = styled.ul`
   .tips {
     font-size: 12px;
   }
+  @media (max-width: 1024px) {
+    li {
+      padding: 26px 16px;
+    }
+    .num {
+      padding-top: 0;
+    }
+  } ;
 `;
 
 export default function Vault() {
@@ -108,7 +121,7 @@ export default function Vault() {
   }, []);
 
   return (
-    <Layout title="SeeDAO | My Vault">
+    <OuterBox>
       <CardBox>
         <Box>
           <FirstLine>
@@ -131,6 +144,6 @@ export default function Vault() {
           <AssetList />
         </Box>
       </CardBox>
-    </Layout>
+    </OuterBox>
   );
 }

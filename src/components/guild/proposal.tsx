@@ -1,10 +1,10 @@
 import styled from 'styled-components';
-import { Button } from '@paljs/ui/Button';
+import { Button } from 'react-bootstrap';
 import React, { useEffect, useState } from 'react';
 import PropsalModal from 'components/guild/propsalModal';
 import { ReTurnProject } from 'type/project.type';
-import { useRouter } from 'next/router';
-import useTranslation from 'hooks/useTranslation';
+// import { useRouter } from 'next/router';
+import { useTranslation } from 'react-i18next';
 import NoItem from 'components/noItem';
 import ProposalCard from 'components/proposal/proposalCard';
 import requests from 'requests';
@@ -12,6 +12,7 @@ import { IBaseProposal } from 'type/proposal.type';
 import usePermission from 'hooks/usePermission';
 import { PermissionObject, PermissionAction } from 'utils/constant';
 import Loading from 'components/loading';
+import { useParams } from 'react-router-dom';
 
 const Box = styled.div`
   padding: 20px 0;
@@ -36,8 +37,8 @@ interface Iprops {
 }
 export default function ProjectProposal(props: Iprops) {
   const { detail, refreshProject } = props;
-  const router = useRouter();
-  const { id } = router.query;
+  // const router = useRouter();
+  const { id } = useParams();
   const [show, setShow] = useState(false);
   const [list, setList] = useState<IBaseProposal[]>([]);
   const { t } = useTranslation();
@@ -89,7 +90,7 @@ export default function ProjectProposal(props: Iprops) {
           <Button onClick={() => window.open('https://forum.seedao.xyz/', '_blank')}>
             {t('Guild.createProposal')}
           </Button>
-          <Button appearance="outline" onClick={() => handleModal()}>
+          <Button variant="outline-primary" onClick={() => handleModal()}>
             {t('Guild.AssociatedProposal')}
           </Button>
         </TopBox>

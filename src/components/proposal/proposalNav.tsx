@@ -1,7 +1,6 @@
-import React from 'react';
-import Link from 'next/link';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import Image from 'next/image';
+import ArrowIcon from 'assets/images/proposal/rightArrow.svg';
 
 export interface ICatergoryNav {
   name: string;
@@ -16,10 +15,10 @@ export default function ProposalNav({ navs }: { navs: ICatergoryNav[] }) {
         <li key={n.category_id}>
           {i !== 0 && (
             <ImageBox>
-              <Image src="/images/proposal/rightArrow.svg" alt="" width="14px" height="14px" />
+              <img src={ArrowIcon} alt="" width="14px" height="14px" />
             </ImageBox>
           )}
-          <Link href={n.to}>
+          <Link to={n.to}>
             <NavText>{n.name}</NavText>
           </Link>
         </li>

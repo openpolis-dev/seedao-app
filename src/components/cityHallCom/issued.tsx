@@ -1,10 +1,9 @@
 import styled from 'styled-components';
-import { Button } from '@paljs/ui/Button';
-import Select from '@paljs/ui/Select';
+import { Button, Form } from 'react-bootstrap';
+
 import React, { useState, useEffect, useMemo } from 'react';
 import Page from 'components/pagination';
 import RangeDatePickerStyle from 'components/rangeDatePicker';
-import { Checkbox } from '@paljs/ui/Checkbox';
 import IssuedModal from 'components/cityHallCom/issuedModal';
 import { IApplicationDisplay, ApplicationStatus } from 'type/application.type';
 import Loading from 'components/loading';
@@ -13,9 +12,10 @@ import { formatDate, formatTime } from 'utils/time';
 import publicJs from 'utils/publicJs';
 import NoItem from 'components/noItem';
 import { IQueryApplicationsParams } from 'requests/applications';
-import useTranslation from 'hooks/useTranslation';
+import { useTranslation } from 'react-i18next';
 import { formatApplicationStatus } from 'utils/index';
 import useToast, { ToastType } from 'hooks/useToast';
+import Select from 'components/common/select';
 
 const Box = styled.div``;
 const FirstLine = styled.div`
@@ -31,27 +31,18 @@ const FirstLine = styled.div`
 const TopLine = styled.ul`
   display: flex;
   align-items: center;
-  margin-bottom: 20px;
-
+  gap: 20px 40px;
   li {
     display: flex;
     align-items: center;
-    margin-right: 40px;
-
     .tit {
       padding-right: 20px;
-    }
-
-    .sel {
-      min-width: 150px;
+      white-space: nowrap;
     }
   }
-`;
-
-const TimeLine = styled.div`
-  display: flex;
-  align-items: center;
-  margin-bottom: 20px;
+  @media (max-width: 1024px) {
+    gap: 20px;
+  }
 `;
 
 const TimeBox = styled.div`
@@ -326,33 +317,31 @@ export default function Issued() {
           <li>
             <span className="tit">{t('Project.State')}</span>
             <Select
-              className="sel"
               options={statusOption}
               placeholder=""
               value={statusOption.find((s) => s.value === selectStatus)}
-              onChange={(value) => {
+              onChange={(value: any) => {
                 setSelectStatus(value?.value as ApplicationStatus);
                 setSelectMap({});
               }}
-              isClearable={true}
-            />
+            ></Select>
+          </li>
+          <li>
+            <TimeBox>
+              <BorderBox>
+                <RangeDatePickerStyle
+                  placeholder={t('Project.RangeTime')}
+                  onChange={changeDate}
+                  startDate={startDate}
+                  endDate={endDate}
+                />
+              </BorderBox>
+            </TimeBox>
+            <Button onClick={handleExport} disabled={!selectOne}>
+              {t('Project.Export')}
+            </Button>
           </li>
         </TopLine>
-        <TimeLine>
-          <TimeBox>
-            <BorderBox>
-              <RangeDatePickerStyle
-                placeholder={t('Project.RangeTime')}
-                onChange={changeDate}
-                startDate={startDate}
-                endDate={endDate}
-              />
-            </BorderBox>
-          </TimeBox>
-          <Button size="Medium" onClick={handleExport} disabled={!selectOne}>
-            {t('Project.Export')}
-          </Button>
-        </TimeLine>
       </FirstLine>
       {showProcessButton()}
       <TableBox>
@@ -362,7 +351,7 @@ export default function Issued() {
               <thead>
                 <tr>
                   <th>
-                    <Checkbox status="Primary" checked={ifSelectAll} onChange={(value) => onSelectAll(value)} />
+                    <Form.Check checked={ifSelectAll} onChange={(e) => onSelectAll(e.target.checked)} />
                   </th>
                   <th>{t('Project.Time')}</th>
                   <th>{t('Project.Address')}</th>
@@ -381,11 +370,10 @@ export default function Issued() {
                 {list.map((item) => (
                   <tr key={item.application_id}>
                     <td>
-                      <Checkbox
-                        status="Primary"
+                      <Form.Check
                         checked={!!selectMap[item.application_id]}
-                        onChange={(value) => onChangeCheckbox(value, item.application_id, item.status)}
-                      ></Checkbox>
+                        onChange={(e) => onChangeCheckbox(e.target.checked, item.application_id, item.status)}
+                      ></Form.Check>
                     </td>
                     <td>{item.created_date}</td>
                     <td>

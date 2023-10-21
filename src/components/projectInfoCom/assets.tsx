@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import AssetList from './assetList';
 import React, { useEffect, useState } from 'react';
 import { BudgetType, ReTurnProject, IBudgetItem } from 'type/project.type';
-import useTranslation from 'hooks/useTranslation';
+import { useTranslation } from 'react-i18next';
 import { formatNumber } from 'utils/number';
 
 const Box = styled.div`
@@ -45,6 +45,14 @@ const FirstLine = styled.ul`
     font-size: 25px;
     padding-top: 10px;
     font-weight: bold;
+  }
+  @media (max-width: 1000px) {
+    li {
+      flex-direction: column;
+      & > div:first-child {
+        margin-bottom: 40px;
+      }
+    }
   }
 `;
 

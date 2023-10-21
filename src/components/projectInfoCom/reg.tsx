@@ -1,9 +1,9 @@
 import styled, { css } from 'styled-components';
-import { Button, ButtonLink } from '@paljs/ui/Button';
+import { Button } from 'react-bootstrap';
 import RegList from 'components/projectInfoCom/regList';
-import { EvaIcon } from '@paljs/ui/Icon';
+// import { EvaIcon } from '@paljs/ui/Icon';
 import React, { ChangeEvent, FormEvent, useState } from 'react';
-import useTranslation from 'hooks/useTranslation';
+import { useTranslation } from 'react-i18next';
 import * as XLSX from 'xlsx';
 import { ExcelObj } from 'type/project.type';
 import requests from 'requests';
@@ -14,6 +14,7 @@ import { ethers } from 'ethers';
 import useToast, { ToastType } from 'hooks/useToast';
 import { AssetName } from 'utils/constant';
 import { useAuthContext } from 'providers/authProvider';
+import { Download } from 'react-bootstrap-icons';
 
 const Box = styled.div`
   padding: 20px;
@@ -24,6 +25,12 @@ const FirstBox = styled.div`
   align-items: center;
   justify-content: space-between;
   margin-bottom: 40px;
+  @media (max-width: 1000px) {
+    flex-direction: column;
+    .lft {
+      width: 100%;
+    }
+  }
 `;
 
 const RhtBox = styled.div`
@@ -38,30 +45,34 @@ const RhtBox = styled.div`
       padding-left: 10px;
     }
   }
+  @media (max-width: 1000px) {
+    margin-top: 20px;
+    width: 100%;
+    justify-content: flex-start;
+  }
 `;
 
 const BtnBox = styled.label`
-  ${({ theme }) => css`
-    background: ${theme.colorPrimary500};
-    color: #fff;
-    height: 42px;
-    padding: 0 25px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 4px;
-    font-family: 'Inter-Regular';
-    font-weight: 700;
-    font-size: 0.875rem;
-    margin-right: 20px;
-    cursor: pointer;
-    .iconRht {
-      margin-right: 10px;
-    }
-    &:hover {
-      background: ${theme.colorPrimary400};
-    }
-  `}
+  background: var(--bs-primary);
+  color: #fff;
+  //height: 42px;
+  padding: 8px 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  //font-family: 'Inter-Regular';
+  //font-weight: 700;
+  font-size: 0.875rem;
+  margin-right: 20px;
+  cursor: pointer;
+  .iconRht {
+    margin-right: 10px;
+    white-space: nowrap;
+  }
+  &:hover {
+    background: var(--bs-primary);
+  }
 `;
 
 type ErrorDataType = {
@@ -105,7 +116,7 @@ export default function Reg({ id }: { id: number }) {
             const arrs = csvData.split('\n');
             const objs: any = [];
 
-            arrs.forEach((item, index) => {
+            arrs.forEach((item: any, index: number) => {
               console.log(index, item);
               if (index !== 0) {
                 const vals = item.split(',');
@@ -195,14 +206,18 @@ export default function Reg({ id }: { id: number }) {
       {loading && <Loading />}
       {Toast}
       <FirstBox>
-        <Button disabled={!list.length || !!errList.length} onClick={handleCreate}>
-          {t('Project.SubmitForReview')}
-        </Button>
+        <div className="lft">
+          <Button disabled={!list.length || !!errList.length} onClick={handleCreate}>
+            {t('Project.SubmitForReview')}
+          </Button>
+        </div>
+
         <RhtBox>
-          <ButtonLink className="rhtBtn" appearance="outline" onClick={downloadFile}>
-            <EvaIcon name="cloud-download-outline" />
+          <Button variant="outline-primary" className="rhtBtn" onClick={downloadFile}>
+            {/*<EvaIcon name="cloud-download-outline" />*/}
+            <Download />
             <span>{t('Project.DownloadForm')}</span>
-          </ButtonLink>
+          </Button>
 
           {/* <CSVReader
             onUploadAccepted={(results: { data: any[] }) => {
@@ -231,11 +246,12 @@ export default function Reg({ id }: { id: number }) {
                 (event.target as any).value = null;
               }}
             />
-            <EvaIcon name="cloud-upload-outline" className="iconRht" />
+            {/*<EvaIcon name="cloud-upload-outline" className="iconRht" />*/}
+            <Download className="iconRht" />
             <span>{t('Project.ImportForm').toUpperCase()}</span>
           </BtnBox>
           {!!list.length && (
-            <Button appearance="outline" disabled={!list.length} onClick={() => Clear()}>
+            <Button disabled={!list.length} onClick={() => Clear()}>
               {t('general.Clear')}
             </Button>
           )}

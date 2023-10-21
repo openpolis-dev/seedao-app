@@ -1,19 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardBody } from '@paljs/ui/Card';
+import { Card } from 'react-bootstrap';
 import { IBaseProposal } from 'type/proposal.type';
 import styled from 'styled-components';
-import { useRouter } from 'next/router';
+// import { useRouter } from 'next/router';
+import { useNavigate } from 'react-router-dom';
 import { formatDate } from 'utils/time';
+import QuillViewer from './quillViewer';
+
+const CardBody = styled.div``;
 
 export default function ProposalCard({ data }: { data: IBaseProposal }) {
-  const router = useRouter();
+  // const router = useRouter();
+  const navigate = useNavigate();
   const [content, setContent] = useState('');
   const handleContent = async () => {
     let delta: any[] = [];
     try {
       delta = JSON.parse(data.first_post.content);
+      console.log(delta);
     } catch (e) {
-      console.info('illegal json:' + data.first_post.content);
+      // console.info('illegal json:' + JSON.stringify(data));
     }
 
     const text: any[] = [];
@@ -54,6 +60,7 @@ export default function ProposalCard({ data }: { data: IBaseProposal }) {
     if (textContent == '<p><br/></p>') {
       textContent = '';
     }
+
     setContent(textContent);
   };
 
@@ -62,10 +69,10 @@ export default function ProposalCard({ data }: { data: IBaseProposal }) {
   }, [data?.first_post.content]);
 
   const openProposal = () => {
-    router.push(`/proposal/thread/${data.id}`);
+    navigate(`/proposal/thread/${data.id}`);
   };
   return (
-    <CardBox size="Tiny" key={data.id}>
+    <CardBox key={data.id}>
       <div onClick={openProposal}>
         <CardHeaderStyled>
           <div className="left">
@@ -85,9 +92,14 @@ export default function ProposalCard({ data }: { data: IBaseProposal }) {
   );
 }
 
-const CardBox = styled(Card)`
-  border: 1px solid #f1f1f1;
+const CardBox = styled.div`
+  //border: 1px solid #f1f1f1;
   cursor: pointer;
+  background: #fff;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  border-radius: 0.25rem;
+  margin-bottom: 20px;
 `;
 
 const CardHeaderStyled = styled.div`
@@ -120,6 +132,7 @@ const ProposalContent = styled.div`
   display: -webkit-box;
   -webkit-line-clamp: 2;
   overflow: hidden;
+  font-size: 14px;
   .ql-editor p {
     line-height: 24px;
   }

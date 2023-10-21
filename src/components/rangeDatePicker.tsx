@@ -13,6 +13,8 @@ const Box = styled.div`
       height: 34px;
       border: 0;
       font-weight: 400;
+      font-family: unset !important;
+      font-size: 14px !important;
       cursor: pointer;
       &:focus {
         outline: none;

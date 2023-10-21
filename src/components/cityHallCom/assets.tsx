@@ -2,12 +2,15 @@ import styled from 'styled-components';
 import AssetList from './assetList';
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { BudgetType, ReTurnProject, IBudgetItem } from 'type/project.type';
-import useTranslation from 'hooks/useTranslation';
-import { EvaIcon } from '@paljs/ui/Icon';
+import { useTranslation } from 'react-i18next';
+// import { EvaIcon } from '@paljs/ui/Icon';
 import { IUpdateBudgetParams, UpdateBudget } from 'requests/cityHall';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import useToast, { ToastType } from 'hooks/useToast';
-import { useWeb3React } from '@web3-react/core';
+// import { useWeb3React } from '@web3-react/core';
+import { Pencil, CheckLg } from 'react-bootstrap-icons';
+import usePermission from 'hooks/usePermission';
+import { PermissionAction, PermissionObject } from 'utils/constant';
 
 const Box = styled.div`
   padding: 40px 20px;
@@ -48,6 +51,14 @@ const FirstLine = styled.ul`
     padding-top: 10px;
     font-weight: bold;
   }
+  @media (max-width: 1000px) {
+    li {
+      flex-direction: column;
+      & > div:first-child {
+        margin-bottom: 40px;
+      }
+    }
+  }
 `;
 
 const FlexBox = styled.div`
@@ -59,6 +70,7 @@ const FlexBox = styled.div`
     margin-left: 10px;
     margin-top: 8px;
     cursor: pointer;
+    font-size: 20px;
   }
   .inputBg {
     background: transparent;
@@ -82,7 +94,13 @@ export default function Assets({ detail, refreshProject }: IProps) {
   const { t } = useTranslation();
   const { Toast, showToast } = useToast();
   const { dispatch } = useAuthContext();
-  const { account } = useWeb3React();
+  // const { account } = useWeb3React();
+
+  const {
+    state: { account },
+  } = useAuthContext();
+
+  const canUseCityhall = usePermission(PermissionAction.AuditApplication, PermissionObject.ProjectAndGuild);
 
   const [token, setToken] = useState<IBudgetItem>();
   const [point, setPoint] = useState<IBudgetItem>();
@@ -96,7 +114,7 @@ export default function Assets({ detail, refreshProject }: IProps) {
     if (!detail) {
       return;
     }
-    console.log(detail.id);
+    console.log(detail?.id);
     const _token = detail?.budgets.find((b) => b.type === BudgetType.Token);
     const _point = detail?.budgets.find((b) => b.type === BudgetType.Credit);
     setToken(_token);
@@ -136,7 +154,7 @@ export default function Assets({ detail, refreshProject }: IProps) {
       await UpdateBudget(obj);
       showToast(t('Project.changeBudgetSuccess'), ToastType.Success);
       refreshProject();
-    } catch (e) {
+    } catch (e: any) {
       console.error(e.statusText);
       showToast(e.statusText || e.message, ToastType.Danger);
     } finally {
@@ -168,9 +186,9 @@ export default function Assets({ detail, refreshProject }: IProps) {
             {!showLft && (
               <FlexBox>
                 <div className="num">{token?.total_amount || 0}</div>
-                {!!account && (
+                {canUseCityhall && !!account && (
                   <span onClick={() => handleShow1()}>
-                    <EvaIcon name="edit-2-outline" className="iconRht" />
+                    <Pencil className="iconRht" />
                   </span>
                 )}
               </FlexBox>
@@ -180,7 +198,8 @@ export default function Assets({ detail, refreshProject }: IProps) {
               <FlexBox>
                 <input type="text" className="inputBg" value={editToken} onChange={(e) => handleInput(e, 'token')} />
                 <span onClick={() => hideShow1()}>
-                  <EvaIcon name="checkmark-outline" className="iconRht" />
+                  <CheckLg className="iconRht" />
+                  {/*<EvaIcon name="checkmark-outline" />*/}
                 </span>
               </FlexBox>
             )}
@@ -199,9 +218,10 @@ export default function Assets({ detail, refreshProject }: IProps) {
               {!showRht && (
                 <FlexBox>
                   <div className="num">{point?.total_amount || 0}</div>
-                  {!!account && (
+                  {canUseCityhall && !!account && (
                     <span onClick={() => handleShow2()}>
-                      <EvaIcon name="edit-2-outline" className="iconRht" />
+                      <Pencil className="iconRht" />
+                      {/*<EvaIcon name="edit-2-outline" />*/}
                     </span>
                   )}
                 </FlexBox>
@@ -211,7 +231,8 @@ export default function Assets({ detail, refreshProject }: IProps) {
                 <FlexBox>
                   <input type="text" className="inputBg" value={editPoint} onChange={(e) => handleInput(e, 'points')} />
                   <span onClick={() => hideShow2()}>
-                    <EvaIcon name="checkmark-outline" className="iconRht" />
+                    <CheckLg className="iconRht" />
+                    {/*<EvaIcon name="checkmark-outline" className="iconRht" />*/}
                   </span>
                 </FlexBox>
               )}
@@ -219,8 +240,7 @@ export default function Assets({ detail, refreshProject }: IProps) {
           </div>
         </li>
       </FirstLine>
-
-      <AssetList id={detail.id} />
+      {!!detail?.id && <AssetList id={detail?.id} />}
     </Box>
   );
 }

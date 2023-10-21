@@ -1,17 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import Link from 'next/link';
-import Layout from 'Layouts';
 import requests from 'requests';
 import { IBaseProposal } from 'type/proposal.type';
-import { Tabs, Tab } from '@paljs/ui/Tabs';
+import { Tabs, Tab } from 'react-bootstrap';
 import { useAuthContext, AppActionType } from 'providers/authProvider';
 import styled, { css } from 'styled-components';
-import { Card } from '@paljs/ui/Card';
 import ProposalCard from 'components/proposal/proposalCard';
 import ProposalSubNav from 'components/proposal/proposalSubNav';
-import Image from 'next/image';
-import useTranslation from 'hooks/useTranslation';
+import { useTranslation } from 'react-i18next';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import MsgIcon from 'assets/images/proposal/message.png';
+import { ContainerPadding } from 'assets/styles/global';
 
 export default function Index() {
   const {
@@ -61,8 +59,8 @@ export default function Index() {
     setOrderType(index === 0 ? 'latest' : 'old');
   };
 
-  const handleSelectTab = (index: number) => {
-    setActiveTab(index);
+  const handleSelectTab = (index: string) => {
+    setActiveTab(Number(index));
   };
 
   useEffect(() => {
@@ -74,20 +72,19 @@ export default function Index() {
   }, [activeTab, orderType]);
 
   return (
-    <Layout title="SeeDAO Proposal">
+    <BoxOuter>
       <ProposalContainer>
-        <Tabs activeIndex={activeTab} onSelect={handleSelectTab}>
-          <Tab title={t('Proposal.AllCategories')} responsive></Tab>
-          <Tab title={t('Proposal.TheNeweset')} responsive></Tab>
+        <Tabs defaultActiveKey={activeTab} onSelect={(e: any) => handleSelectTab(e)}>
+          <Tab title={t('Proposal.AllCategories')} eventKey={0}></Tab>
+          <Tab title={t('Proposal.TheNeweset')} eventKey={1}></Tab>
         </Tabs>
-        {activeTab === 1 && <ProposalSubNav onSelect={handleChangeOrder} />}
         {activeTab === 0 ? (
           <div>
             <SubCategoryCard>
               {proposal_categories[0].children.map((subCategory) => (
-                <Link href={`/proposal/category/${subCategory.category_id}`} key={subCategory.category_id}>
+                <a href={`/proposal/category/${subCategory.category_id}`} key={subCategory.category_id}>
                   <SubCategoryItem>
-                    <Image src="/images/proposal/message.png" alt="" width="24px" height="24px" />
+                    <img src={MsgIcon} alt="" width="24px" height="24px" />
                     <div>
                       <div className="name">{subCategory.name}</div>
                       <div>
@@ -95,28 +92,44 @@ export default function Index() {
                       </div>
                     </div>
                   </SubCategoryItem>
-                </Link>
+                </a>
               ))}
             </SubCategoryCard>
           </div>
         ) : (
-          <div>
-            <InfiniteScroll dataLength={proposals.length} next={getAllProposals} hasMore={hasMore} loader={<></>}>
-              <ProposalBox>
-                {proposals.map((proposal) => (
-                  <ProposalCard key={proposal.id} data={proposal} />
-                ))}
-              </ProposalBox>
-            </InfiniteScroll>
-          </div>
+          <>
+            <ProposalSubNav onSelect={handleChangeOrder} />
+            <div>
+              <InfiniteScroll
+                dataLength={proposals.length}
+                next={getAllProposals}
+                hasMore={hasMore}
+                scrollableTarget="scrollableDiv"
+                loader={<></>}
+              >
+                <ProposalBox>
+                  {proposals.map((proposal) => (
+                    <ProposalCard key={proposal.id} data={proposal} />
+                  ))}
+                </ProposalBox>
+              </InfiniteScroll>
+            </div>
+          </>
         )}
       </ProposalContainer>
-    </Layout>
+    </BoxOuter>
   );
 }
 
-const ProposalContainer = styled(Card)`
-  min-height: 85vh;
+const BoxOuter = styled.div`
+  min-height: 100%;
+  ${ContainerPadding};
+`;
+
+const ProposalContainer = styled.div`
+  background: #fff;
+  padding: 20px;
+  min-height: 100%;
 `;
 
 const SubCategoryCard = styled.div`
@@ -129,25 +142,23 @@ const SubCategoryCard = styled.div`
 `;
 
 const SubCategoryItem = styled.div`
-  ${({ theme }) => css`
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 16px;
-    cursor: pointer;
-    border-bottom: 1px solid #eee;
-    &:hover {
-      box-shadow: 0 0 4px rgba(0, 0, 0, 0.15);
-    }
-    .name {
-      color: ${theme.colorPrimary500};
-      font-weight: 600;
-    }
-  `}
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  cursor: pointer;
+  border-bottom: 1px solid #eee;
+  &:hover {
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.15);
+  }
+  .name {
+    color: var(--bs-primary);
+    font-weight: 600;
+  }
 `;
 
 const ProposalBox = styled.div`
   & > div {
-    margin-inline: 20px;
+    margin: 20px;
   }
 `;

@@ -1,3 +1,3 @@
 export const formatNumber = (num: number) => {
-  return num.toLocaleString('en-US');
+  return (num >= 0 ? '' : '-') + Math.abs(num).toLocaleString('en-US');
 };

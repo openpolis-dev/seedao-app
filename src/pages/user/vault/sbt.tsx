@@ -3,8 +3,8 @@ import styled from 'styled-components';
 import { ethers } from 'ethers';
 import axios from 'axios';
 import { useWeb3React } from '@web3-react/core';
-import useTranslation from 'hooks/useTranslation';
-import Image from 'next/image';
+import { useTranslation } from 'react-i18next';
+import { useAuthContext } from '../../../providers/authProvider';
 
 const getNftsByContract = (account: string, contract: string, chain: number) => {
   let base = '';
@@ -20,7 +20,7 @@ const getNftsByContract = (account: string, contract: string, chain: number) => 
     `${base}/api/v2/account/own/${account}?erc_type=erc1155&show_attribute=false&sort_field=&sort_direction=&contract_address=${contract}`,
     {
       headers: {
-        'X-API-KEY': process.env.NEXT_PUBLIC_NFTSCAN_KEY,
+        'X-API-KEY': process.env.REACT_APP_NFTSCAN_KEY,
       },
     },
   );
@@ -81,7 +81,10 @@ type SBTtype = {
 
 export default function SBTCard() {
   const { t } = useTranslation();
-  const { account } = useWeb3React();
+  // const { account } = useWeb3React();
+  const {
+    state: { account },
+  } = useAuthContext();
   const [polygonProvider, setPolygonProvider] = useState<any>(null);
 
   const [govSBTs, setGovSBTs] = useState<SBTtype[]>([]);
@@ -218,7 +221,7 @@ export default function SBTCard() {
       <div className="title">SBT</div>
       {loading ? (
         <LoadingStyled>
-          <Image src="/images/loader.svg" alt="" className="icon" width="20px" height="20px" />
+          <img src="/images/loader.svg" alt="" className="icon" width="20px" height="20px" />
         </LoadingStyled>
       ) : (
         <SBTCardBox>

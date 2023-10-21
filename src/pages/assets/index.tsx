@@ -1,11 +1,8 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import Layout from 'Layouts';
 import AssetList from 'components/assetsCom/assetList';
 import styled, { css } from 'styled-components';
-import { Card } from '@paljs/ui/Card';
 import requests from 'requests';
-import { EvaIcon } from '@paljs/ui';
-import useTranslation from 'hooks/useTranslation';
+import { useTranslation } from 'react-i18next';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import useToast, { ToastType } from 'hooks/useToast';
 import usePermission from 'hooks/usePermission';
@@ -17,12 +14,21 @@ import { ethers } from 'ethers';
 import ModifyBudgetModal from 'components/assetsCom/modifyBudget';
 import { BudgetType } from 'type/project.type';
 import { formatNumber } from 'utils/number';
+import BgImg from '../../assets/images/homebg.png';
+import { Clipboard, Share, ChevronDown, ChevronUp, Pencil } from 'react-bootstrap-icons';
+import { ContainerPadding } from 'assets/styles/global';
+
+const BoxOuter = styled.div`
+  ${ContainerPadding};
+`;
 
 const Box = styled.div`
   padding: 40px 20px;
 `;
-const CardBox = styled(Card)`
-  min-height: 85vh;
+const CardBox = styled.div`
+  background: #fff;
+  box-shadow: rgba(44, 51, 73, 0.1) 0px 0.5rem 1rem 0px;
+  height: 100%;
 `;
 
 const FirstLine = styled.ul`
@@ -35,12 +41,13 @@ const FirstLine = styled.ul`
   margin-bottom: 40px;
   li {
     width: 23%;
-    height: 172px;
+    height: 192px;
     //border: 1px solid #f1f1f1;
     border-radius: 10px;
     overflow: hidden;
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
     position: relative;
+
     background: #fff;
     color: #fff;
     &:first-child {
@@ -61,21 +68,18 @@ const FirstLine = styled.ul`
       display: flex;
       align-items: center;
       flex-direction: column;
-      position: relative;
-      z-index: 99;
-      //background: #008800;
+      //position: relative;
+      //z-index: 9;
       color: #000;
     }
 
     .decorBg {
       position: absolute;
       right: 0;
-      bottom: 1rem;
-      font-size: 5.5rem;
+      bottom: -25px;
+      font-size: 90px;
       font-family: 'Jost-Bold';
       opacity: 0.04;
-      transform: scale(1, 1.5);
-      transform-origin: 0 0;
       color: #000;
     }
     div {
@@ -84,17 +88,28 @@ const FirstLine = styled.ul`
     @media screen and (max-width: 1000px) {
       width: 48%;
     }
+    @media (max-width: 695px) {
+      width: 100%;
+    }
   }
   .num {
     font-size: 25px;
     font-weight: 600;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     margin-top: 10px;
     color: #fff;
   }
   .tips {
     font-size: 0.9rem;
     color: #fff;
+  }
+  @media (max-width: 1100px) {
+    .num {
+      font-size: 20px;
+    }
+    .tips {
+      font-size: 12px;
+    }
   }
 `;
 
@@ -273,7 +288,7 @@ export default function Index() {
   };
   const getVaultsInfo = async () => {
     const vaults_map: VaultInfoMap = {};
-    const users: string[] = [];
+    const users: any[] = [];
     let _total = 0;
 
     try {
@@ -319,12 +334,12 @@ export default function Index() {
 
   useEffect(() => {
     getSCR();
-    process.env.NODE_ENV === 'production' && process.env.NEXT_PUBLIC_ENV !== 'test' && getFloorPrice();
+    process.env.NODE_ENV === 'production' && getFloorPrice();
     getVaultsInfo();
   }, []);
 
   return (
-    <Layout title="SEEDAO Assets">
+    <BoxOuter>
       {Toast}
       {!!showModifyModal && (
         <ModifyBudgetModal handleClose={() => setshowModifyModal(undefined)} handleModify={handleModifyBudget} />
@@ -334,7 +349,7 @@ export default function Index() {
           <Vault>
             <VaultOverview>
               <div className="vaultInner">
-                <div>
+                <div className="LftBox">
                   <TotalBalance>{t('Assets.TotalBalance')}</TotalBalance>
                   <TotalBalanceNum>${formatNumber(Number(totalBalance))}</TotalBalanceNum>
                 </div>
@@ -354,7 +369,7 @@ export default function Index() {
                   <InfoItem className="detail">
                     <div onClick={() => setShowVaultDetail(!showVaultDetail)}>
                       <span>{t('Assets.Detail')}</span>
-                      <EvaIcon name={showVaultDetail ? 'arrow-ios-upward-outline' : 'arrow-ios-downward-outline'} />
+                      {showVaultDetail ? <ChevronUp /> : <ChevronDown />}
                     </div>
                   </InfoItem>
                 </div>
@@ -365,13 +380,13 @@ export default function Index() {
                 {VAULTS.map((v) => (
                   <VaultItem key={v.address}>
                     <div className="left">
-                      <span className="name">{t(v.name)}</span>
+                      <span className="name">{t(v.name as any)}</span>
                       <div className="info">
                         <div className="address">
                           <span>{publicJs.AddressToShow(v.address)}</span>
                           <div>
                             <CopyBox text={v.address}>
-                              <EvaIcon name="clipboard-outline" options={{ width: '18px', height: '18px' }} />
+                              <Clipboard className="iconBox" />
                             </CopyBox>
                           </div>
                           <div>
@@ -380,7 +395,7 @@ export default function Index() {
                               target="_blank"
                               rel="noreferrer"
                             >
-                              <EvaIcon name="external-link-outline" options={{ width: '18px', height: '18px' }} />
+                              <Share className="iconBox" />
                             </a>
                           </div>
                         </div>
@@ -433,13 +448,14 @@ export default function Index() {
                 <LiHead>
                   <LiTitle>{t('Assets.SeasonUseUSD')}</LiTitle>
                 </LiHead>
-                <div className="num">{asset.token_used_amount}</div>
+                <div className="num">{formatNumber(asset.token_used_amount)}</div>
                 <AssetBox className="tips">
                   <span>{t('Assets.SeasonBudget')}:</span>
-                  <span>{asset.token_total_amount}</span>
+                  <span>{formatNumber(asset.token_total_amount)}</span>
                   {canUseCityhall && (
                     <span className="btn-edit" onClick={() => setshowModifyModal(BudgetType.Token)}>
-                      <EvaIcon name="edit-2-outline" options={{ width: '16px', height: '16px' }} />
+                      <Pencil />
+                      {/*<EvaIcon name="edit-2-outline" options={{ width: '16px', height: '16px' }} />*/}
                     </span>
                   )}
                 </AssetBox>
@@ -458,7 +474,8 @@ export default function Index() {
                   <span>{formatNumber(asset.credit_total_amount)}</span>
                   {canUseCityhall && (
                     <span className="btn-edit" onClick={() => setshowModifyModal(BudgetType.Credit)}>
-                      <EvaIcon name="edit-2-outline" options={{ width: '16px', height: '16px' }} />
+                      <Pencil />
+                      {/*<EvaIcon name="edit-2-outline" options={{ width: '16px', height: '16px' }} />*/}
                     </span>
                   )}
                 </AssetBox>
@@ -470,18 +487,22 @@ export default function Index() {
           <AssetList />
         </Box>
       </CardBox>
-    </Layout>
+    </BoxOuter>
   );
 }
 
 const AssetBox = styled.div`
   display: flex;
   align-items: center;
-  gap: 8px;
+  position: relative;
+  //gap: 8px;
   font-size: 0.9rem !important;
   .btn-edit {
     cursor: pointer;
     height: 18px;
+    padding-left: 10px;
+    margin-bottom: 5px;
+    z-index: 9;
   }
 `;
 
@@ -494,11 +515,9 @@ const Vault = styled.div`
 `;
 
 const VaultOverview = styled.div`
-  //background: linear-gradient(to right, #9d72fa, #6961fa);
-  background: url('/images/homebg.png') top no-repeat;
+  background: url(${BgImg}) top no-repeat;
   background-size: 100%;
   background-attachment: fixed;
-  //background: #f8f8f8;
   border-radius: 10px;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
   overflow: hidden;
@@ -509,12 +528,27 @@ const VaultOverview = styled.div`
     background: rgba(161, 110, 255, 0.2);
     padding: 30px 40px;
     backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
   }
   .right {
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 60px;
+  }
+
+  @media (max-width: 950px) {
+    .vaultInner {
+      flex-direction: column;
+    }
+    .LftBox {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 20px;
+      margin-bottom: 20px;
+    }
   }
 `;
 
@@ -541,6 +575,16 @@ const InfoItem = styled.li`
     > span:first-child {
       font-weight: ${theme.textSubtitleFontWeight};
     }
+
+    @media (max-width: 950px) {
+      color: #000;
+      gap: 0;
+      &:first-child,
+      &:nth-child(2) {
+        padding-right: 40px;
+        border-right: 1px solid #eee;
+      }
+    }
   `}
 `;
 
@@ -555,7 +599,7 @@ const VaultItem = styled.li`
   display: flex;
   justify-content: space-between;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  padding-block: 20px;
+  padding-block: 15px;
   color: #000;
   &:last-child {
     border-bottom: 0;
@@ -566,6 +610,7 @@ const VaultItem = styled.li`
     align-items: center;
     .name {
       width: 160px;
+      font-size: 14px;
     }
   }
   .tag {
@@ -575,6 +620,7 @@ const VaultItem = styled.li`
   .address {
     display: flex;
     align-items: center;
+    font-size: 14px;
   }
   .address {
     gap: 5px;
@@ -586,32 +632,41 @@ const VaultItem = styled.li`
       }
     }
   }
+  .iconBox {
+    cursor: pointer;
+    margin: 0 0 10px 10px;
+  }
   .balance {
     font-weight: 600;
+  }
+  @media (max-width: 950px) {
+    .left {
+      gap: 0;
+    }
   }
 `;
 
 const TotalBalance = styled.div`
-  ${({ theme }) => css`
-    font-weight: ${theme.textSubtitleFontWeight};
-    font-size: ${theme.textHeading6FontSize};
-  `}
+  font-weight: 600;
+  font-size: 1.125rem;
 `;
 
 const TotalBalanceNum = styled.div`
-  ${({ theme }) => css`
-    font-weight: ${theme.textSubtitleFontWeight};
-    font-size: ${theme.textHeading5FontSize};
-    margin-top: 20px;
-    text-align: center;
-  `}
+  font-weight: 600;
+  font-size: 1.375rem;
+  margin-top: 20px;
+  text-align: center;
+
+  @media (max-width: 950px) {
+    text-align: left;
+    margin-top: 0;
+    margin-left: 20px;
+  }
 `;
 
 const Tag = styled.span`
-  ${({ theme }) => css`
-    border: 1px solid ${theme.colorPrimary500};
-    background: ${theme.colorPrimary500};
-  `}
+  border: 1px solid var(--bs-primary);
+  background: var(--bs-primary);
   //border: 1px solid #eecf00;
   border-radius: 6px;
   color: #fff;
@@ -634,7 +689,4 @@ const LiHead = styled.div`
 const LiTitle = styled.div`
   color: #fff;
   font-size: 1.2rem;
-  ${({ theme }) => css`
-    font-weight: ${theme.textSubtitleFontWeight};
-  `}
 `;

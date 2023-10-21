@@ -1,15 +1,19 @@
 import { useAuthContext } from 'providers/authProvider';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import ProposalNav, { ICatergoryNav } from 'components/proposal/proposalNav';
-
-const HomeNav: ICatergoryNav = { name: '分类', category_id: -1, to: '/proposal' };
+import { useTranslation } from 'react-i18next';
 
 export default function useProposalCategory(proposal_category_id?: number) {
+  const { t } = useTranslation();
   const {
     state: { proposal_categories },
   } = useAuthContext();
 
   const [navs, setNavs] = useState<ICatergoryNav[]>([]);
+
+  const HomeNav: ICatergoryNav = useMemo(() => {
+    return { name: t('Proposal.AllCategories'), category_id: -1, to: '/proposal' };
+  }, [t]);
 
   const findCategoryList = (id: number): ICatergoryNav[] => {
     const category = proposal_categories.find((category) => category.category_id === id);
@@ -38,7 +42,7 @@ export default function useProposalCategory(proposal_category_id?: number) {
   useEffect(() => {
     if (!proposal_category_id || !proposal_categories.length) return;
     setNavs(findCategoryList(proposal_category_id));
-  }, [proposal_category_id, proposal_categories]);
+  }, [proposal_category_id, proposal_categories, t]);
 
   return <ProposalNav navs={navs} />;
 }

@@ -1,6 +1,7 @@
 import styled from 'styled-components';
-import { EvaIcon } from '@paljs/ui/Icon';
+
 import React from 'react';
+import { Calendar3Range } from 'react-bootstrap-icons';
 
 const Box = styled.div`
   background: #f8f8f8;
@@ -20,7 +21,8 @@ export default function NoItem() {
   return (
     <Box>
       <div>
-        <EvaIcon name="monitor-outline" className="sizeTop" />
+        {/*<EvaIcon name="monitor-outline" className="sizeTop" />*/}
+        <Calendar3Range className="sizeTop" />
       </div>
       <div>No Data</div>
     </Box>

@@ -15,9 +15,8 @@ export const signMessage = (account: string, timestamp: number) => {
 };
 
 export const createSiweMessage = (address: string, chainId: number, nonce: string, statement: string) => {
-  const { host, origin } = window.location;
   const siweMessage = new SiweMessage({
-    domain: host,
+    domain: (window as any).AppConfig.host,
     address,
     statement,
     uri: origin,
@@ -25,5 +24,7 @@ export const createSiweMessage = (address: string, chainId: number, nonce: strin
     chainId: chainId,
     nonce,
   });
-  return siweMessage;
+
+  // return siweMessage;
+  return (siweMessage as any).prepareMessage();
 };

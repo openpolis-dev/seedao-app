@@ -1,10 +1,10 @@
 import styled from 'styled-components';
-import { Button } from '@paljs/ui/Button';
-import Select from '@paljs/ui/Select';
+import { Button, Form } from 'react-bootstrap';
+// import Select from '@paljs/ui/Select';
 import React, { useEffect, useMemo, useState } from 'react';
 import Page from 'components/pagination';
 import RangeDatePickerStyle from 'components/rangeDatePicker';
-import { Checkbox } from '@paljs/ui/Checkbox';
+// import { Checkbox } from '@paljs/ui/Checkbox';
 import requests from 'requests';
 import { IApplicationDisplay, ApplicationStatus } from 'type/application.type';
 import Loading from 'components/loading';
@@ -13,9 +13,11 @@ import utils from 'utils/publicJs';
 import { IQueryParams } from 'requests/applications';
 import NoItem from 'components/noItem';
 import publicJs from 'utils/publicJs';
-import useTranslation from 'hooks/useTranslation';
+import { useTranslation } from 'react-i18next';
 import useToast, { ToastType } from 'hooks/useToast';
 import { formatApplicationStatus } from 'utils/index';
+import Select from 'components/common/select';
+import { formatNumber } from 'utils/number';
 
 const Box = styled.div``;
 const FirstLine = styled.div`
@@ -31,33 +33,24 @@ const FirstLine = styled.div`
 const TopLine = styled.ul`
   display: flex;
   align-items: center;
-  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 20px 40px;
 
   li {
     display: flex;
     align-items: center;
-    margin-right: 40px;
-
     .tit {
       padding-right: 20px;
-    }
-
-    .sel {
-      min-width: 150px;
+      white-space: nowrap;
     }
   }
+  @media (max-width: 1024px) {
+    gap: 20px;
+  } ;
 `;
 
-const TimeLine = styled.div`
-  display: flex;
-  align-items: center;
-  margin-bottom: 20px;
-`;
-
-const TimeBox = styled.div`
-  display: flex;
-  align-items: center;
-  margin-right: 20px;
+const TimeBox = styled.li`
+  gap: 20px;
 `;
 
 const BorderBox = styled.div`
@@ -343,47 +336,39 @@ export default function Audit() {
           <li>
             <span className="tit">{t('Project.State')}</span>
             <Select
-              className="sel"
               options={statusOption}
               placeholder=""
-              onChange={(value) => {
+              onChange={(value: any) => {
                 setSelectStatus(value?.value as ApplicationStatus);
                 setSelectMap({});
                 setPage(1);
               }}
-              isClearable={true}
             />
           </li>
           <li>
             <span className="tit">{t('Project.BudgetSource')}</span>
             <Select
-              className="sel"
               options={allSource}
               placeholder=""
-              onChange={(value) => {
+              onChange={(value: any) => {
                 setSelectSource({ id: value?.value as number, type: value?.data });
                 setSelectMap({});
                 setPage(1);
               }}
-              isClearable={true}
             />
           </li>
           <li>
             <span className="tit">{t('Project.Operator')}</span>
             <Select
-              className="sel"
               options={applicants}
               placeholder=""
-              onChange={(value) => {
+              onChange={(value: ISelectItem) => {
                 setSelectApplicant(value?.value);
                 setSelectMap({});
                 setPage(1);
               }}
-              isClearable={true}
             />
           </li>
-        </TopLine>
-        <TimeLine>
           <TimeBox>
             <BorderBox>
               <RangeDatePickerStyle
@@ -393,17 +378,17 @@ export default function Audit() {
                 endDate={endDate}
               />
             </BorderBox>
+            <Button onClick={handleExport} disabled={!selectOne}>
+              {t('Project.Export')}
+            </Button>
           </TimeBox>
-          <Button size="Medium" onClick={handleExport} disabled={!selectOne}>
-            {t('Project.Export')}
-          </Button>
-        </TimeLine>
+        </TopLine>
       </FirstLine>
       <TopBox>
         <Button onClick={handleApprove} disabled={!selectOne}>
           {t('city-hall.Pass')}
         </Button>
-        <Button shape="Rectangle" appearance="outline" onClick={handleReject} disabled={!selectOne}>
+        <Button variant="outline-primary" onClick={handleReject} disabled={!selectOne}>
           {t('city-hall.Reject')}
         </Button>
       </TopBox>
@@ -415,7 +400,7 @@ export default function Audit() {
                 <tr>
                   {/* <th>&nbsp;</th> */}
                   <th>
-                    <Checkbox status="Primary" checked={ifSelectAll} onChange={(value) => onSelectAll(value)} />
+                    <Form.Check checked={ifSelectAll} onChange={(e) => onSelectAll(e.target.checked)} />
                   </th>
                   <th>{t('Project.Time')}</th>
                   <th>{t('Project.Address')}</th>
@@ -433,10 +418,9 @@ export default function Audit() {
                 {list.map((item) => (
                   <tr key={item.application_id}>
                     <td>
-                      <Checkbox
-                        status="Primary"
+                      <Form.Check
                         checked={!!selectMap[item.application_id]}
-                        onChange={(value) => onChangeCheckbox(value, item.application_id, item.status)}
+                        onChange={(e: any) => onChangeCheckbox(e.target.checked, item.application_id, item.status)}
                       />
                     </td>
                     <td>{item.created_date}</td>
@@ -448,8 +432,8 @@ export default function Audit() {
                       </CopyBox> */}
                       </div>
                     </td>
-                    <td>{item.credit_amount}</td>
-                    <td>{item.token_amount}</td>
+                    <td>{formatNumber(item.credit_amount)}</td>
+                    <td>{formatNumber(item.token_amount)}</td>
                     <td>{item.detailed_type}</td>
                     <td>{item.budget_source}</td>
                     <td>{item.comment}</td>

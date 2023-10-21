@@ -1,6 +1,7 @@
 export interface IUser {
   id: string;
   name: string;
+  bio: string;
   avatar: string;
   email?: string;
   created_at?: string;
@@ -8,7 +9,6 @@ export interface IUser {
   wallet?: string;
   discord_profile: string;
   twitter_profile: string;
-  google_profile: string;
   wechat: string;
   mirror: string;
   assets: any[];
@@ -16,11 +16,11 @@ export interface IUser {
 
 export interface IUserInfo {
   name: string;
+  bio: string;
   avatar: string;
   email: string;
   discord_profile: string;
   twitter_profile: string;
-  google_profile: string;
   wechat: string;
   mirror: string;
 }

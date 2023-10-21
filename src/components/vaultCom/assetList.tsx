@@ -1,11 +1,11 @@
 import styled from 'styled-components';
-import { Button } from '@paljs/ui/Button';
-import Select from '@paljs/ui/Select';
+import { Button, Form } from 'react-bootstrap';
+// import Select from '@paljs/ui/Select';
 import React, { useState, useEffect, useMemo } from 'react';
 import Page from 'components/pagination';
 import ViewHash from '../projectInfoCom/viewHash';
 import RangeDatePickerStyle from 'components/rangeDatePicker';
-import { Checkbox } from '@paljs/ui/Checkbox';
+// import { Checkbox } from '@paljs/ui/Checkbox';
 import requests from 'requests';
 import { IQueryParams } from 'requests/applications';
 import { IApplicationDisplay, ApplicationStatus } from 'type/application.type';
@@ -15,9 +15,10 @@ import { AppActionType, useAuthContext } from 'providers/authProvider';
 import Loading from 'components/loading';
 import { formatDate, formatTime } from 'utils/time';
 import publicJs from 'utils/publicJs';
-import { useWeb3React } from '@web3-react/core';
-import useTranslation from 'hooks/useTranslation';
+// import { useWeb3React } from '@web3-react/core';
+import { useTranslation } from 'react-i18next';
 import { formatApplicationStatus } from 'utils/index';
+import Select from 'components/common/select';
 
 const Box = styled.div``;
 const TitBox = styled.div`
@@ -36,24 +37,20 @@ const FirstLine = styled.div`
 const TopLine = styled.ul`
   display: flex;
   align-items: center;
-  margin-bottom: 20px;
   flex-wrap: wrap;
   li {
     display: flex;
     align-items: center;
     margin-right: 40px;
+    margin-bottom: 20px;
 
     .tit {
       padding-right: 20px;
     }
-
-    .sel {
-      min-width: 150px;
-    }
   }
 `;
 
-const TimeLine = styled.div`
+const TimeLine = styled.li`
   display: flex;
   align-items: center;
   margin-bottom: 20px;
@@ -101,7 +98,10 @@ export default function AssetList() {
     dispatch,
   } = useAuthContext();
   const { t } = useTranslation();
-  const { account } = useWeb3React();
+  // const { account } = useWeb3React();
+  const {
+    state: { account },
+  } = useAuthContext();
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [total, setTotal] = useState(0);
@@ -313,135 +313,126 @@ export default function AssetList() {
           <li>
             <span className="tit">{t('Project.State')}</span>
             <Select
-              className="sel"
               options={statusOption}
               placeholder=""
-              onChange={(value) => {
+              onChange={(value: any) => {
                 setSelectStatus(value?.value as ApplicationStatus);
                 setSelectMap({});
                 setPage(1);
               }}
-              isClearable={true}
             />
           </li>
           <li>
             <span className="tit">{t('Project.BudgetSource')}</span>
             <Select
-              className="sel"
               options={allSource}
               placeholder=""
-              onChange={(value) => {
+              onChange={(value: any) => {
                 setSelectSource({ id: value?.value as number, type: value?.data });
                 setSelectMap({});
                 setPage(1);
               }}
-              isClearable={true}
             />
           </li>
           <li>
             <span className="tit">{t('Project.Operator')}</span>
             <Select
-              className="sel"
               options={applicants}
               placeholder=""
-              onChange={(value) => {
+              onChange={(value: any) => {
                 setSelectApplicant(value?.value);
                 setSelectMap({});
                 setPage(1);
               }}
-              isClearable={true}
             />
           </li>
+          <TimeLine>
+            <TimeBox>
+              <BorderBox>
+                <RangeDatePickerStyle
+                  placeholder={t('Project.RangeTime')}
+                  onChange={changeDate}
+                  startDate={startDate}
+                  endDate={endDate}
+                />
+              </BorderBox>
+            </TimeBox>
+            <Button onClick={handleExport} disabled={!selectOne}>
+              {t('Project.Export')}
+            </Button>
+          </TimeLine>
         </TopLine>
-        <TimeLine>
-          <TimeBox>
-            <BorderBox>
-              <RangeDatePickerStyle
-                placeholder={t('Project.RangeTime')}
-                onChange={changeDate}
-                startDate={startDate}
-                endDate={endDate}
-              />
-            </BorderBox>
-          </TimeBox>
-          <Button size="Medium" onClick={handleExport} disabled={!selectOne}>
-            {t('Project.Export')}
-          </Button>
-        </TimeLine>
       </FirstLine>
       <TableBox>
-        <table className="table" cellPadding="0" cellSpacing="0">
-          {list.length ? (
-            <>
-              <table className="table" cellPadding="0" cellSpacing="0">
-                <thead>
-                  <tr>
-                    <th>
-                      <Checkbox status="Primary" checked={ifSelectAll} onChange={(value) => onSelectAll(value)} />
-                    </th>
-                    <th>{t('Project.Time')}</th>
-                    <th>{t('Project.Address')}</th>
-                    <th>{t('Project.AddPoints')}</th>
-                    <th>{t('Project.AddToken')}</th>
-                    <th>{t('Project.Content')}</th>
-                    <th>{t('Project.BudgetSource')}</th>
-                    <th>{t('Project.Note')}</th>
-                    <th>{t('Project.State')}</th>
-                    <th>{t('Project.Operator')}</th>
-                    <th>{t('Project.Auditor')}</th>
-                    <th>{t('Project.TransactionID')}</th>
+        {list.length ? (
+          <>
+            <table className="table" cellPadding="0" cellSpacing="0">
+              <thead>
+                <tr>
+                  <th>
+                    <Form.Check checked={ifSelectAll} onChange={(e) => onSelectAll(e.target.checked)} />
+                  </th>
+                  <th>{t('Project.Time')}</th>
+                  <th>{t('Project.Address')}</th>
+                  <th>{t('Project.AddPoints')}</th>
+                  <th>{t('Project.AddToken')}</th>
+                  <th>{t('Project.Content')}</th>
+                  <th>{t('Project.BudgetSource')}</th>
+                  <th>{t('Project.Note')}</th>
+                  <th>{t('Project.State')}</th>
+                  <th>{t('Project.Operator')}</th>
+                  <th>{t('Project.Auditor')}</th>
+                  <th>{t('Project.TransactionID')}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {list.map((item) => (
+                  <tr key={item.application_id}>
+                    <td>
+                      <Form.Check
+                        checked={!!selectMap[item.application_id]}
+                        onChange={(e) => onChangeCheckbox(e.target.checked, item.application_id, item.status)}
+                      ></Form.Check>
+                    </td>
+                    <td>{item.created_date}</td>
+                    <td>
+                      <div>
+                        <span>{publicJs.AddressToShow(item.target_user_wallet)}</span>
+                        {/* <CopyBox text={item.target_user_wallet}>
+                        <>复制</>
+                      </CopyBox> */}
+                      </div>
+                    </td>
+                    <td>{item.credit_amount}</td>
+                    <td>{item.token_amount}</td>
+                    <td>{item.detailed_type}</td>
+                    <td>{item.budget_source}</td>
+                    <td>{item.comment}</td>
+                    <td>{t(formatApplicationStatus(item.status))}</td>
+                    <td>{item.submitter_name || publicJs.AddressToShow(item.submitter_wallet)}</td>
+                    <td>{item.reviewer_name || publicJs.AddressToShow(item.reviewer_wallet)}</td>
+                    <td>
+                      {item.status === ApplicationStatus.Completed && (
+                        <Button size="sm" variant="outline-primary" onClick={() => handleShow(item.transactions || [])}>
+                          {t('Project.View')}
+                        </Button>
+                      )}
+                    </td>
                   </tr>
-                </thead>
-                <tbody>
-                  {list.map((item) => (
-                    <tr key={item.application_id}>
-                      <td>
-                        <Checkbox
-                          status="Primary"
-                          checked={!!selectMap[item.application_id]}
-                          onChange={(value) => onChangeCheckbox(value, item.application_id, item.status)}
-                        ></Checkbox>
-                      </td>
-                      <td>{item.created_date}</td>
-                      <td>
-                        <div>
-                          <span>{publicJs.AddressToShow(item.target_user_wallet)}</span>
-                          {/* <CopyBox text={item.target_user_wallet}>
-                          <>复制</>
-                        </CopyBox> */}
-                        </div>
-                      </td>
-                      <td>{item.credit_amount}</td>
-                      <td>{item.token_amount}</td>
-                      <td>{item.detailed_type}</td>
-                      <td>{item.budget_source}</td>
-                      <td>{item.comment}</td>
-                      <td>{t(formatApplicationStatus(item.status))}</td>
-                      <td>{item.submitter_name || publicJs.AddressToShow(item.submitter_wallet)}</td>
-                      <td>{item.reviewer_name || publicJs.AddressToShow(item.reviewer_wallet)}</td>
-                      <td>
-                        {item.status === ApplicationStatus.Completed && (
-                          <Button appearance="outline" size="Tiny" onClick={() => handleShow(item.transactions || [])}>
-                            {t('Project.View')}
-                          </Button>
-                        )}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-              <Page
-                itemsPerPage={pageSize}
-                total={total}
-                current={page - 1}
-                handleToPage={handlePage}
-                handlePageSize={handlePageSize}
-              />
-            </>
-          ) : (
-            <NoItem />
-          )}
-        </table>
+                ))}
+              </tbody>
+            </table>
+            <Page
+              itemsPerPage={pageSize}
+              total={total}
+              current={page - 1}
+              handleToPage={handlePage}
+              handlePageSize={handlePageSize}
+            />
+          </>
+        ) : (
+          <NoItem />
+        )}
       </TableBox>
     </Box>
   );

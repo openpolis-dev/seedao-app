@@ -1,10 +1,10 @@
 import styled from 'styled-components';
-import { Button } from '@paljs/ui/Button';
-import Select from '@paljs/ui/Select';
+import { Button, Form } from 'react-bootstrap';
+// import Select from '@paljs/ui/Select';
 import React, { useState, useEffect, useMemo } from 'react';
 import Page from 'components/pagination';
 import RangeDatePickerStyle from 'components/rangeDatePicker';
-import { Checkbox } from '@paljs/ui/Checkbox';
+// import { Checkbox } from '@paljs/ui/Checkbox';
 import requests from 'requests';
 import Loading from 'components/loading';
 import { IApplicationDisplay, ApplicationStatus } from 'type/application.type';
@@ -12,9 +12,10 @@ import { formatDate, formatTime } from 'utils/time';
 import { IQueryApplicationsParams } from 'requests/applications';
 import publicJs from 'utils/publicJs';
 import NoItem from 'components/noItem';
-import useTranslation from 'hooks/useTranslation';
+import { useTranslation } from 'react-i18next';
 import { formatApplicationStatus } from 'utils/index';
 import useToast, { ToastType } from 'hooks/useToast';
+import Select from 'components/common/select';
 
 const Box = styled.div``;
 const FirstLine = styled.div`
@@ -39,10 +40,6 @@ const TopLine = styled.ul`
 
     .tit {
       padding-right: 20px;
-    }
-
-    .sel {
-      min-width: 150px;
     }
   }
 `;
@@ -264,14 +261,12 @@ export default function ProjectAudit() {
           <li>
             <span className="tit">{t('Project.State')}</span>
             <Select
-              className="sel"
               options={statusOption}
               placeholder=""
-              onChange={(value) => {
+              onChange={(value: any) => {
                 setSelectStatus(value?.value);
                 setSelectMap({});
               }}
-              isClearable={true}
             />
           </li>
         </TopLine>
@@ -286,7 +281,7 @@ export default function ProjectAudit() {
               />
             </BorderBox>
           </TimeBox>
-          <Button size="Medium" onClick={handleExport} disabled={!selectOne}>
+          <Button onClick={handleExport} disabled={!selectOne}>
             {t('Project.Export')}
           </Button>
         </TimeLine>
@@ -295,7 +290,7 @@ export default function ProjectAudit() {
         <Button onClick={handleApprove} disabled={!selectOne}>
           {t('city-hall.Pass')}
         </Button>
-        <Button appearance="outline" onClick={handleReject} disabled={!selectOne}>
+        <Button variant="outline-primary" onClick={handleReject} disabled={!selectOne}>
           {t('city-hall.Reject')}
         </Button>
       </TopBox>
@@ -306,11 +301,7 @@ export default function ProjectAudit() {
               <thead>
                 <tr>
                   <th>
-                    <Checkbox
-                      status="Primary"
-                      checked={ifSelectAll}
-                      onChange={(value) => onSelectAll(value)}
-                    ></Checkbox>
+                    <Form.Check checked={ifSelectAll} onChange={(e) => onSelectAll(e.target.checked)}></Form.Check>
                   </th>
                   <th>{t('Project.Time')}</th>
                   <th>{t('city-hall.ProjectName')}</th>
@@ -324,11 +315,10 @@ export default function ProjectAudit() {
                 {list.map((item, index) => (
                   <tr key={index}>
                     <td>
-                      <Checkbox
-                        status="Primary"
+                      <Form.Check
                         checked={!!selectMap[item.application_id]}
-                        onChange={(value) => onChangeCheckbox(value, item.application_id, item.status)}
-                      ></Checkbox>
+                        onChange={(e) => onChangeCheckbox(e.target.checked, item.application_id, item.status)}
+                      ></Form.Check>
                     </td>
                     <td>{item.created_date}</td>
                     <td>{item.budget_source}</td>

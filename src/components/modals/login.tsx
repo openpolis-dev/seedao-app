@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
 import { injected, uniPassWallet, uniPassHooks } from 'wallet/connector';
 import requests from 'requests';
-import { useWeb3React } from '@web3-react/core';
+// import { useWeb3React } from '@web3-react/core';
 import { createSiweMessage } from 'utils/sign';
 import { Authorizer } from 'casbin.js';
 import { readPermissionUrl } from 'requests/user';
@@ -11,13 +11,17 @@ import { Wallet, WalletType } from 'wallet/wallet';
 import { SELECT_WALLET } from 'utils/constant';
 import { MetaMask } from '@web3-react/metamask';
 import { UniPass } from '@unipasswallet/web3-react';
-import { EvaIcon } from '@paljs/ui/Icon';
 import useToast, { ToastType } from 'hooks/useToast';
-import Image from 'next/image';
 import * as gtag from 'utils/gtag';
-import useTranslation from 'hooks/useTranslation';
+import { useTranslation } from 'react-i18next';
 import { Web3Provider } from '@ethersproject/providers';
+import { X } from 'react-bootstrap-icons';
+import MetamaskIcon from 'assets/images/wallet/metamask.png';
+import UnipassIcon from 'assets/images/wallet/unipass.svg';
+import { registerPush } from 'utils/serviceWorkerRegistration';
+
 const { useProvider, useAccount } = uniPassHooks;
+
 enum LoginStatus {
   Default = 0,
   Pending,
@@ -38,14 +42,14 @@ const LOGIN_WALLETS: LoginWallet[] = [
     name: 'MetaMask',
     value: Wallet.METAMASK,
     connector: injected,
-    iconURL: '/icons/metamask.png',
+    iconURL: MetamaskIcon,
     type: WalletType.EOA,
   },
   {
     name: 'Unipass',
     value: Wallet.UNIPASS,
     connector: uniPassWallet,
-    iconURL: '/icons/unipass.svg',
+    iconURL: UnipassIcon,
     type: WalletType.AA,
   },
 ];
@@ -54,7 +58,11 @@ export default function LoginModal() {
   const { t } = useTranslation();
   const { dispatch } = useAuthContext();
   const { Toast, showToast } = useToast();
-  const { account, provider } = useWeb3React();
+  // const { account, provider } = useWeb3React();
+
+  const {
+    state: { account, provider },
+  } = useAuthContext();
   const [loginStatus, setLoginStatus] = useState<LoginStatus>(LoginStatus.Default);
   const [chooseWallet, setChooseWallet] = useState<LoginWallet>();
 
@@ -135,12 +143,13 @@ export default function LoginModal() {
       dispatch({ type: AppActionType.SET_AUTHORIZER, payload: authorizer });
       dispatch({ type: AppActionType.SET_WALLET_TYPE, payload: chooseWallet.type });
 
-      gtag.event({ action: gtag.EVENTS.LOGIN_SUCCESS, category: chooseWallet.value, value: account });
+      await registerPush();
+      // gtag.event({ action: gtag.EVENTS.LOGIN_SUCCESS, category: chooseWallet.value, value: account });
     } catch (error: any) {
       console.error(error?.data);
       const msg = error?.data?.msg || 'Login failed';
       console.error('error?.data', msg);
-      gtag.event({ action: gtag.EVENTS.LOGIN_FAILED, category: chooseWallet.value, value: account });
+      // gtag.event({ action: gtag.EVENTS.LOGIN_FAILED, category: chooseWallet.value, value: account });
       showToast(msg, ToastType.Danger);
       handleFailed();
     } finally {
@@ -175,7 +184,8 @@ export default function LoginModal() {
       {Toast}
       <Modal>
         <span className="icon-close" onClick={closeModal}>
-          <EvaIcon name="close-outline" />
+          {/*<EvaIcon name="close-outline" />*/}
+          <X />
         </span>
 
         <Title>{t('general.ConnectWallet')}</Title>
@@ -184,7 +194,7 @@ export default function LoginModal() {
             <WalletOption key={w.value} onClick={() => connect(w)}>
               <span>{w.name}</span>
               <span>
-                <Image src={w.iconURL} alt="" width="28px" height="28px" />
+                <img src={w.iconURL} alt="" width="28px" height="28px" />
               </span>
             </WalletOption>
           ))}
@@ -198,7 +208,7 @@ const Mask = styled.div`
   position: fixed;
   left: 0;
   top: 0;
-  z-index: 999;
+  z-index: 9999;
   width: 100vw;
   height: 100vh;
   background: rgba(45, 51, 46, 0.6);

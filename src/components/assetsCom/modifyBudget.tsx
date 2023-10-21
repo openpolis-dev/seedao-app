@@ -1,11 +1,10 @@
 import styled from 'styled-components';
-import { Card, CardHeader, CardBody, CardFooter } from '@paljs/ui/Card';
-import { EvaIcon } from '@paljs/ui/Icon';
+import { Card, InputGroup, Button } from 'react-bootstrap';
+// import { EvaIcon } from '@paljs/ui/Icon';
 import React, { useState } from 'react';
-import { Button } from '@paljs/ui';
-import { InputGroup } from '@paljs/ui/Input';
-import useTranslation from 'hooks/useTranslation';
+import { useTranslation } from 'react-i18next';
 import InputNumber from 'components/inputNumber';
+import { X } from 'react-bootstrap-icons';
 
 const Mask = styled.div`
   background: rgba(0, 0, 0, 0.3);
@@ -22,15 +21,30 @@ const Mask = styled.div`
     margin-right: 20px;
   }
 `;
-
-const HeaderBox = styled(CardHeader)`
+const CardHeader = styled.div`
+  min-width: 500px;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid rgb(237, 241, 247);
+  border-top-left-radius: 0.25rem;
+  border-top-right-radius: 0.25rem;
+  color: rgb(34, 43, 69);
+  font-family: Inter-Regular, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.5rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  .rht {
-    cursor: pointer;
-  }
 `;
+
+const CardBody = styled.div`
+  padding: 20px;
+`;
+const CardFooter = styled.div`
+  padding: 0 20px 20px;
+`;
+
 interface Iprops {
   handleClose: () => void;
   handleModify: (value: number) => void;
@@ -51,14 +65,14 @@ export default function ModifyBudgetModal(props: Iprops) {
   return (
     <Mask>
       <Card>
-        <HeaderBox>
+        <CardHeader>
           {t('Assets.ModifySeasonBudget')}
           <div className="rht" onClick={handleClose}>
-            <EvaIcon name="close-outline" />
+            <X />
           </div>
-        </HeaderBox>
+        </CardHeader>
         <CardBody>
-          <InputGroup fullWidth>
+          <InputGroup>
             <InputNumber
               placeholder=""
               autoFocus
@@ -68,7 +82,7 @@ export default function ModifyBudgetModal(props: Iprops) {
           </InputGroup>
         </CardBody>
         <CardFooter>
-          <Button shape="Rectangle" appearance="outline" className="btn-cancel" onClick={() => handleClose()}>
+          <Button variant="outline-primary" className="btn-cancel" onClick={() => handleClose()}>
             {t('general.cancel')}
           </Button>
           <Button onClick={handleConfirm} className="rht10">

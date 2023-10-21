@@ -1,8 +1,8 @@
 import styled, { css } from 'styled-components';
 import React from 'react';
-import useTranslation from 'hooks/useTranslation';
+import { useTranslation } from 'react-i18next';
 import { ExcelObj } from 'type/project.type';
-import { EvaIcon } from '@paljs/ui/Icon';
+// import { EvaIcon } from '@paljs/ui/Icon';
 
 const Box = styled.div``;
 
@@ -52,9 +52,7 @@ export default function RegList(props: Iprops) {
 
       {!uploadList?.length && (
         <TipsBox>
-          <div>
-            <EvaIcon name="alert-triangle-outline" status="Primary" className="iconTop" />
-          </div>
+          <div>{/*<EvaIcon name="alert-triangle-outline" status="Primary" className="iconTop" />*/}</div>
           <div>{t('Project.Tips')}</div>
         </TipsBox>
       )}

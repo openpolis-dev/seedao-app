@@ -1,16 +1,15 @@
-import Container from '@paljs/ui/Container';
+// import Container from '@paljs/ui/Container';
 import styled, { css } from 'styled-components';
-import { Button } from '@paljs/ui/Button';
+import { Button, InputGroup, Form } from 'react-bootstrap';
 import React, { ChangeEvent, useEffect, useMemo, useState } from 'react';
 import CloseTips from 'components/projectInfoCom/closeTips';
 import CloseSuccess from 'components/projectInfoCom/closeSuccess';
-import useTranslation from 'hooks/useTranslation';
+import { useTranslation } from 'react-i18next';
 import { IBudgetItem, InfoObj, ProjectStatus, ReTurnProject } from 'type/project.type';
-import { useRouter } from 'next/router';
+import { useParams } from 'react-router-dom';
 import { IUpdateBudgetParams, UpdateBudget, UpdateInfo } from 'requests/project';
 import requests from 'requests';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
-import { InputGroup } from '@paljs/ui/Input';
 import usePermission from 'hooks/usePermission';
 import { PermissionObject, PermissionAction } from 'utils/constant';
 import useToast, { ToastType } from 'hooks/useToast';
@@ -79,8 +78,8 @@ export default function Info(props: Iprops) {
   const [show, setShow] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const { t } = useTranslation();
-  const router = useRouter();
-  const { id } = router.query;
+  // const router = useParams();
+  const { id } = useParams();
   const { dispatch } = useAuthContext();
 
   const [token, setToken] = useState<IBudgetItem>();
@@ -105,9 +104,7 @@ export default function Info(props: Iprops) {
     const _token = detail?.budgets?.find((item) => item.name === 'USDT');
     setToken(_token);
     setEditToken(_token?.total_amount);
-    console.error(_token);
     const _point = detail?.budgets?.find((item) => item.name === 'SCR');
-    console.log(_point);
     setPoints(_point);
     setEditPoint(_point?.total_amount);
   };
@@ -243,11 +240,7 @@ export default function Info(props: Iprops) {
         return <Tag>{t('Project.Closed')}</Tag>;
     }
     if (canCloseProject) {
-      return (
-        <Button shape="Rectangle" size="Medium" onClick={() => handleShow()}>
-          {t('Project.CloseProject')}
-        </Button>
-      );
+      return <Button onClick={() => handleShow()}>{t('Project.CloseProject')}</Button>;
     }
   };
 
@@ -261,7 +254,7 @@ export default function Info(props: Iprops) {
       {show && <CloseTips closeModal={closeModal} handleClosePro={handleClosePro} />}
       {showSuccess && <CloseSuccess closeModal={closeSuccess} />}
 
-      <Container>
+      <div>
         <TopImg>
           <img src={detail?.logo} alt="" />
         </TopImg>
@@ -273,13 +266,7 @@ export default function Info(props: Iprops) {
                 <>
                   <div className="info">{detail?.name}</div>
                   {isProjectOpen && canUpdateInfo && (
-                    <Button
-                      shape="Rectangle"
-                      appearance="outline"
-                      size="Medium"
-                      onClick={() => handleShowName()}
-                      className="rht10"
-                    >
+                    <Button variant="outline-primary" onClick={() => handleShowName()} className="rht10">
                       {t('general.Change')}
                     </Button>
                   )}
@@ -288,24 +275,18 @@ export default function Info(props: Iprops) {
 
               {showName && (
                 <>
-                  <InputBox fullWidth>
-                    <input
+                  <InputBox>
+                    <Form.Control
                       type="text"
                       placeholder={t('Project.ProjectName')}
                       value={editName}
                       onChange={(e) => handleInput(e, 'name')}
                     />
                   </InputBox>
-                  <Button shape="Rectangle" size="Medium" onClick={() => submitName()} className="rht10">
+                  <Button onClick={() => submitName()} className="rht10">
                     {t('general.confirm')}
                   </Button>
-                  <Button
-                    shape="Rectangle"
-                    size="Medium"
-                    appearance="outline"
-                    className="rht10"
-                    onClick={() => closeShowName()}
-                  >
+                  <Button variant="outline-primary" className="rht10" onClick={() => closeShowName()}>
                     {t('general.cancel')}
                   </Button>
                 </>
@@ -332,7 +313,7 @@ export default function Info(props: Iprops) {
                     </span>
                   </div>
                   {isProjectOpen && canUpdateBudget && (
-                    <Button shape="Rectangle" appearance="outline" size="Medium" onClick={() => handleShowEditPoints()}>
+                    <Button variant="outline-primary" onClick={() => handleShowEditPoints()}>
                       {t('general.Change')}
                     </Button>
                   )}
@@ -340,17 +321,17 @@ export default function Info(props: Iprops) {
               )}
               {showEditPoints && (
                 <div className="info">
-                  <InputBox fullWidth>
+                  <InputBox>
                     <InputNumber
                       placeholder={t('Project.Points')}
                       value={editPoint}
                       onChange={(e) => handleInput(e, 'points')}
                     />
                   </InputBox>
-                  <Button shape="Rectangle" size="Medium" onClick={() => handlecloseEditP()} className="rht10">
+                  <Button onClick={() => handlecloseEditP()} className="rht10">
                     {t('general.confirm')}
                   </Button>
-                  <Button shape="Rectangle" appearance="outline" size="Medium" onClick={() => closeEditP()}>
+                  <Button variant="outline-primary" onClick={() => closeEditP()}>
                     {t('general.cancel')}
                   </Button>
                 </div>
@@ -374,7 +355,7 @@ export default function Info(props: Iprops) {
                     </span>
                   </div>
                   {isProjectOpen && canUpdateBudget && (
-                    <Button shape="Rectangle" appearance="outline" size="Medium" onClick={() => handleShowEditToken()}>
+                    <Button variant="outline-primary" onClick={() => handleShowEditToken()}>
                       {t('general.Change')}
                     </Button>
                   )}
@@ -382,13 +363,13 @@ export default function Info(props: Iprops) {
               )}
               {showEditToken && (
                 <div className="info">
-                  <InputBox fullWidth>
+                  <InputBox>
                     <InputNumber placeholder="USDT" value={editToken} onChange={(e) => handleInput(e, 'token')} />
                   </InputBox>
-                  <Button shape="Rectangle" size="Medium" onClick={() => handlecloseEditT()} className="rht10">
+                  <Button onClick={() => handlecloseEditT()} className="rht10">
                     {t('general.confirm')}
                   </Button>
-                  <Button shape="Rectangle" appearance="outline" size="Medium" onClick={() => closeEditT()}>
+                  <Button variant="outline-primary" onClick={() => closeEditT()}>
                     {t('general.cancel')}
                   </Button>
                 </div>
@@ -396,20 +377,18 @@ export default function Info(props: Iprops) {
             </dd>
           </dl>
         </InfoBox>
-      </Container>
+      </div>
     </Box>
   );
 }
 
 const Tag = styled.span`
-  ${({ theme }) => css`
-    border: 1px solid ${theme.colorPrimary500};
-    border-radius: 6px;
-    color: ${theme.colorPrimary500};
-    padding: 4px 6px;
-    font-size: 12px;
-    span {
-      margin-left: 5px;
-    }
-  `}
+  border: 1px solid var(--bs-primary);
+  border-radius: 6px;
+  color: var(--bs-primary);
+  padding: 4px 6px;
+  font-size: 12px;
+  span {
+    margin-left: 5px;
+  }
 `;

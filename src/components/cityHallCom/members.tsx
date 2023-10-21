@@ -1,19 +1,19 @@
 import styled from 'styled-components';
 import React, { useEffect, useMemo, useState } from 'react';
-import { Button } from '@paljs/ui/Button';
+import { Button, Row } from 'react-bootstrap';
 import Add from './add';
 import Del from './Del';
-import useTranslation from 'hooks/useTranslation';
+import { useTranslation } from 'react-i18next';
 import { ReTurnProject } from 'type/project.type';
 import { getUsers } from 'requests/user';
 import { IUser } from 'type/user.type';
-import { useRouter } from 'next/router';
+// import { useRouter } from 'next/router';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import NoItem from 'components/noItem';
 import { PermissionObject, PermissionAction } from 'utils/constant';
 import usePermission from 'hooks/usePermission';
 import UserCard from 'components/userCard';
-import { useWeb3React } from '@web3-react/core';
+import { useParseSNSList } from 'hooks/useParseSNS';
 
 interface Iprops {
   detail: ReTurnProject | undefined;
@@ -36,6 +36,8 @@ export default function Members(props: Iprops) {
   const [adminArr, setAdminArr] = useState<string[]>([]);
 
   const [userMap, setUserMap] = useState<UserMap>({});
+
+  const nameMap = useParseSNSList(adminArr);
 
   useEffect(() => {
     if (!detail) return;
@@ -71,18 +73,18 @@ export default function Members(props: Iprops) {
     setEdit(false);
     setShowDel(true);
   };
-  const closeAdd = () => {
+  const closeAdd = (shouldUpdate?: boolean) => {
     setShow(false);
-    updateProject();
+    shouldUpdate && updateProject();
   };
   const handleAdd = () => {
     setShow(true);
   };
-  const closeRemove = () => {
+  const closeRemove = (shouldUpdate?: boolean) => {
     setShowDel(false);
     setEdit(false);
     setSelectAdminArr([]);
-    updateProject();
+    shouldUpdate && updateProject();
   };
 
   const handleAdminSelect = (selItem: IUser) => {
@@ -102,7 +104,6 @@ export default function Members(props: Iprops) {
 
   const getUser = (wallet: string): IUser => {
     const user = userMap[wallet.toLowerCase()];
-    console.log(userMap, wallet, user);
     if (!user) {
       return {
         id: '',
@@ -110,9 +111,9 @@ export default function Members(props: Iprops) {
         avatar: '',
         discord_profile: '',
         twitter_profile: '',
-        google_profile: '',
         wechat: '',
         mirror: '',
+        bio: '',
         assets: [],
       };
     }
@@ -129,7 +130,7 @@ export default function Members(props: Iprops) {
             {t('Guild.AddMember')}
           </Button>
           {!edit && (
-            <Button appearance="outline" onClick={() => handleDel()}>
+            <Button variant="outline-primary" onClick={() => handleDel()}>
               {t('Guild.RemoveMember')}
             </Button>
           )}
@@ -138,7 +139,7 @@ export default function Members(props: Iprops) {
               <Button onClick={() => closeDel()} disabled={!selectAdminArr.length}>
                 {t('general.confirm')}
               </Button>
-              <Button appearance="outline" onClick={() => closeRemove()}>
+              <Button variant="outline-primary" onClick={() => closeRemove()}>
                 {t('general.cancel')}
               </Button>
             </>
@@ -147,7 +148,7 @@ export default function Members(props: Iprops) {
       )}
       <ItemBox>
         <TitleBox>{t('Guild.Dominator')}</TitleBox>
-        <UlBox>
+        <Row>
           {adminArr.map((item, index) => (
             <UserCard
               key={index}
@@ -155,9 +156,10 @@ export default function Members(props: Iprops) {
               onSelectUser={handleAdminSelect}
               formatActive={formatAdminActive}
               showEdit={edit && canUpdateSponsor}
+              sns={nameMap[getUser(item)?.wallet || '']}
             />
           ))}
-        </UlBox>
+        </Row>
       </ItemBox>
       {!adminArr.length && <NoItem />}
     </Box>
@@ -175,11 +177,6 @@ const ItemBox = styled.div`
 const TitleBox = styled.div`
   font-weight: bold;
   margin-bottom: 30px;
-`;
-
-const UlBox = styled.ul`
-  display: flex;
-  flex-wrap: wrap;
 `;
 
 const TopBox = styled.div`

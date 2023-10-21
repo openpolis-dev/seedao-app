@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react';
 import { Web3ReactProvider, Web3ReactHooks } from '@web3-react/core';
-import { getConnectorForWallet, useConnectors } from 'wallet/connector';
+import { getConnectorForWallet, useConnectors } from '../wallet/connector';
 import type { Connector } from '@web3-react/types';
-import { SELECT_WALLET } from 'utils/constant';
-import { Wallet, WalletType } from 'wallet/wallet';
+import { SELECT_WALLET } from '../utils/constant';
+import { Wallet, WalletType } from '../wallet/wallet';
 import { AppActionType, useAuthContext } from './authProvider';
-import { parseToken, checkTokenValid } from 'utils/auth';
-import { SEEDAO_USER } from 'utils/constant';
+import { parseToken, checkTokenValid } from '../utils/auth';
+import { SEEDAO_USER } from '../utils/constant';
 
 const connect = async (connector: any) => {
   try {
@@ -38,7 +38,7 @@ const Web3Provider: React.FC<{ children: React.ReactNode }> = (props) => {
           wallet_type = WalletType.AA;
           break;
       }
-      dispatch({ type: AppActionType.SET_WALLET_TYPE, payload: wallet_type });
+      // dispatch({ type: AppActionType.SET_WALLET_TYPE, payload: wallet_type });
       selectWallet && connect(getConnectorForWallet(selectWallet));
     }
   }, []);

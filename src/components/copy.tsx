@@ -1,4 +1,4 @@
-import useTranslation from 'hooks/useTranslation';
+import { useTranslation } from 'react-i18next';
 import React, { useState } from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import styled, { css } from 'styled-components';

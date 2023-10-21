@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import Spinner from '@paljs/ui/Spinner';
-import useTranslation from 'hooks/useTranslation';
+import { Spinner } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 
 const Mask = styled.div`
   background: rgba(0, 0, 0, 0.3);
@@ -21,6 +21,9 @@ const Mask = styled.div`
 const Box = styled.div`
   width: 300px;
   height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   span {
     padding-left: 10px;
   }
@@ -30,9 +33,10 @@ export default function Loading() {
   return (
     <Mask>
       <Box>
-        <Spinner status="Primary" size="Giant">
+        <Spinner animation="border" variant="primary"></Spinner>
+        <div>
           <span>{t('general.Loading')}...</span>
-        </Spinner>
+        </div>
       </Box>
     </Mask>
   );

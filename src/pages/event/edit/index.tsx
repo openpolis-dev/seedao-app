@@ -1,12 +1,10 @@
-import Layout from 'Layouts';
-import { Card, CardHeader, CardBody } from '@paljs/ui/Card';
+import { Button, InputGroup, Form } from 'react-bootstrap';
 import styled from 'styled-components';
-import { InputGroup } from '@paljs/ui/Input';
 import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react';
-import { Button, ButtonLink } from '@paljs/ui/Button';
-import { EvaIcon } from '@paljs/ui/Icon';
-import { useRouter } from 'next/router';
-import useTranslation from 'hooks/useTranslation';
+// import { Button, ButtonLink } from '@paljs/ui/Button';
+// import { EvaIcon } from '@paljs/ui/Icon';
+// import { useRouter } from 'next/router';
+import { useTranslation } from 'react-i18next';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import useToast, { ToastType } from 'hooks/useToast';
 import DatePicker from 'react-datepicker';
@@ -14,21 +12,26 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { MdEditor } from 'md-editor-rt';
 import 'md-editor-rt/lib/style.css';
 import { createEvent, editEventById, getEventById, uplodaEventImage } from 'requests/event';
-import { useWeb3React } from '@web3-react/core';
+// import { useWeb3React } from '@web3-react/core';
+import { useNavigate } from 'react-router-dom';
+import { ChevronLeft, X, Upload } from 'react-bootstrap-icons';
+import { ContainerPadding } from 'assets/styles/global';
+
+const OuterBox = styled.div`
+  box-sizing: border-box;
+  ${ContainerPadding};
+`;
 
 const Box = styled.div`
+  background: #fff;
+  padding: 20px;
   .btnBtm {
     margin-right: 20px;
   }
 `;
 
-const CardBox = styled(Card)`
-  min-height: 80vh;
-`;
-
 const BtmBox = styled.div`
   margin: 50px 0;
-  padding-left: 440px;
 `;
 
 const UlBox = styled.ul`
@@ -79,12 +82,12 @@ const InputBox = styled(InputGroup)`
 `;
 
 const BackBox = styled.div`
-  padding: 30px 20px 0;
+  padding: 10px 0 20px;
   display: inline-flex;
   align-items: center;
   cursor: pointer;
-  .icon {
-    font-size: 24px;
+  .iconTop {
+    margin-right: 10px;
   }
 `;
 
@@ -109,6 +112,9 @@ const BtnBox = styled.label`
     max-width: 100%;
     max-height: 100%;
   }
+  @media (max-width: 900px) {
+    margin: 40px auto;
+  }
 `;
 
 const ImgBox = styled.div`
@@ -123,17 +129,25 @@ const ImgBox = styled.div`
     right: -15px;
     top: -15px;
     z-index: 999;
-    padding: 6px;
     border-radius: 100%;
     background: #a16eff;
     color: #fff;
     cursor: pointer;
+    width: 30px;
+    height: 30px;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 `;
 
 const InnerBox = styled.div`
   display: flex;
   align-content: center;
+  @media (max-width: 900px) {
+    flex-direction: column;
+  }
 `;
 
 const ContentBox = styled.div`
@@ -143,18 +157,20 @@ const ContentBox = styled.div`
 `;
 
 export default function CreateGuild() {
-  const router = useRouter();
+  const { search } = window.location;
+  const id = new URLSearchParams(search).get('id');
   const { t } = useTranslation();
   const { Toast, showToast } = useToast();
+  const navigate = useNavigate();
 
   const {
-    state: { language },
+    state: { language, account },
+    dispatch,
   } = useAuthContext();
 
-  const { id } = router.query;
+  // const { id } = router.query;
 
-  const { dispatch } = useAuthContext();
-  const { account } = useWeb3React();
+  // const { account } = useWeb3React();
 
   const [title, setTitle] = useState('');
   const [startAt, setStartAt] = useState<number>(0);
@@ -301,9 +317,11 @@ export default function CreateGuild() {
         rt = await createEvent(obj);
       }
       showToast('Success', ToastType.Success);
-    } catch (e) {
+      navigate('/event');
+    } catch (e: any) {
+      showToast(e.response?.data?.msg || JSON.stringify(e), ToastType.Danger);
+      console.log(e.response?.data?.msg);
       console.error('create event error:', e);
-      showToast(e.data?.msg, ToastType.Danger);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: null });
     }
@@ -338,128 +356,132 @@ export default function CreateGuild() {
   };
 
   if (account && creator && account.toLocaleLowerCase() !== creator) {
-    router.push('/');
+    navigate('/');
   }
   return (
-    <Layout title="SeeDAO | Create Guild">
+    <OuterBox>
       <Box>
         {Toast}
-        <CardBox>
-          <div>
-            <BackBox onClick={() => router.back()}>
-              <EvaIcon name="chevron-left-outline" className="icon" /> <span>{t('general.back')}</span>
-            </BackBox>
-          </div>
 
-          {/*<CardHeader> {id ? t('event.edit') : t('event.create')}</CardHeader>*/}
-          <CardBody>
-            <InnerBox>
-              <BtnBox htmlFor="fileUpload" onChange={(e) => updateLogo(e)}>
-                {!url && (
-                  <div>
-                    <input id="fileUpload" type="file" hidden accept=".jpg, .jpeg, .png, .svg" />
-                    <EvaIcon name="cloud-upload-outline" className="iconRht" />
-                    <span>{t('event.upload')}</span>
+        <div>
+          <BackBox onClick={() => navigate(-1)}>
+            <ChevronLeft className="iconTop" />
+            <span>{t('general.back')}</span>
+          </BackBox>
+        </div>
+
+        {/*<CardHeader> {id ? t('event.edit') : t('event.create')}</CardHeader>*/}
+        <div>
+          <InnerBox>
+            <BtnBox htmlFor="fileUpload" onChange={(e) => updateLogo(e)}>
+              {!url && (
+                <div>
+                  <input id="fileUpload" type="file" hidden accept=".jpg, .jpeg, .png, .svg" />
+                  <Upload className="iconRht" />
+                  <span>{t('event.upload')}</span>
+                </div>
+              )}
+              {!!url && (
+                <ImgBox>
+                  <div className="del" onClick={() => removeUrl()}>
+                    {/*<EvaIcon name="close-outline" status="Control" />*/}
+                    <X />
                   </div>
-                )}
-                {!!url && (
-                  <ImgBox>
-                    <div className="del" onClick={() => removeUrl()}>
-                      <EvaIcon name="close-outline" status="Control" />
-                    </div>
-                    <img src={url} alt="" />
-                  </ImgBox>
-                )}
-              </BtnBox>
-              <UlBox>
-                <li>
-                  <div className="title">{t('event.title')}</div>
-                  <InputBox fullWidth>
-                    <input type="text" value={title} onChange={(e) => handleInput(e, 'title')} />
-                  </InputBox>
-                </li>
-                <li>
-                  <div className="title">{t('event.startTime')}</div>
-                  <InputBox fullWidth>
-                    <DatePicker
-                      showTimeSelect
-                      minDate={new Date()}
-                      timeFormat="HH:mm aa"
-                      selected={startAt}
-                      dateFormat="yyyy-MM-dd HH:mm aa"
-                      onChange={(date) => ChangeStart(date!.valueOf())}
-                      className="dateBox"
-                    />
-                    {/*<input type="text" value={startAt} onChange={(e) => handleInput(e, 'startAt')} />*/}
-                  </InputBox>
-                </li>
-                <li>
-                  <div className="title">{t('event.endTime')}</div>
-                  <InputBox fullWidth>
-                    <DatePicker
-                      showTimeSelect
-                      selected={endAt}
-                      timeFormat="HH:mm aa"
-                      minDate={new Date(startAt!)}
-                      onChange={(date) => changeEnd(date!.valueOf())}
-                      dateFormat="yyyy-MM-dd HH:mm aa"
-                    />
-                    {/*<input type="text" value={endAt} onChange={(e) => handleInput(e, 'endAt')} />*/}
-                  </InputBox>
-                </li>
-                <li>
-                  <div className="title">{t('event.sponsor')}</div>
-                  <InputBox fullWidth>
-                    <input type="text" value={sponsor} onChange={(e) => handleInput(e, 'sponsor')} />
-                  </InputBox>
-                </li>
-                <li>
-                  <div className="title">{t('event.media')}</div>
-                  <InputBox fullWidth>
-                    <input type="text" value={media} onChange={(e) => handleInput(e, 'media')} />
-                  </InputBox>
-                </li>
-                <li>
-                  <div className="title">{t('event.host')}</div>
-                  <InputBox fullWidth>
-                    <input type="text" value={moderator} onChange={(e) => handleInput(e, 'moderator')} />
-                  </InputBox>
-                </li>
-                <li>
-                  <div className="title">{t('event.guest')}</div>
-                  <InputBox fullWidth>
-                    <input type="text" value={guest} onChange={(e) => handleInput(e, 'guest')} />
-                  </InputBox>
-                </li>
-                <li>
-                  <div className="title">{t('event.volunteer')}</div>
-                  <InputBox fullWidth>
-                    <input type="text" value={volunteer} onChange={(e) => handleInput(e, 'volunteer')} />
-                  </InputBox>
-                </li>
-              </UlBox>
-            </InnerBox>
-            <ContentBox>
-              <MdEditor
-                modelValue={content}
-                onChange={(val) => {
-                  setContent(val);
-                }}
-                toolbars={data.toobars as any}
-                language={lan}
-                codeStyleReverse={false}
-                noUploadImg
-              />
-            </ContentBox>
-            <BtmBox>
-              <ButtonLink appearance="outline" className="btnBtm" onClick={() => router.push('/event')}>
-                {t('general.cancel')}
-              </ButtonLink>
-              <Button onClick={() => handleSubmit()}>{t('general.confirm')}</Button>
-            </BtmBox>
-          </CardBody>
-        </CardBox>
+                  <img src={url} alt="" />
+                </ImgBox>
+              )}
+            </BtnBox>
+            <UlBox>
+              <li>
+                <div className="title">{t('event.title')}</div>
+                <InputBox>
+                  <Form.Control type="text" value={title} onChange={(e) => handleInput(e, 'title')} />
+                </InputBox>
+              </li>
+              <li>
+                <div className="title">{t('event.startTime')}</div>
+                <InputBox>
+                  <DatePicker
+                    showTimeSelect
+                    minDate={new Date()}
+                    timeFormat="HH:mm aa"
+                    selected={startAt ? new Date(startAt) : null}
+                    dateFormat="yyyy-MM-dd HH:mm aa"
+                    onChange={(date) => ChangeStart(date!.valueOf())}
+                    className="dateBox"
+                  />
+                  {/*<input type="text" value={startAt} onChange={(e) => handleInput(e, 'startAt')} />*/}
+                </InputBox>
+              </li>
+              <li>
+                <div className="title">{t('event.endTime')}</div>
+                <InputBox>
+                  <DatePicker
+                    showTimeSelect
+                    selected={endAt ? new Date(endAt) : null}
+                    timeFormat="HH:mm aa"
+                    minDate={new Date(startAt!)}
+                    onChange={(date) => changeEnd(date!.valueOf())}
+                    dateFormat="yyyy-MM-dd HH:mm aa"
+                    className="dateBox"
+                  />
+                  {/*<input type="text" value={endAt} onChange={(e) => handleInput(e, 'endAt')} />*/}
+                </InputBox>
+              </li>
+              <li>
+                <div className="title">{t('event.sponsor')}</div>
+                <InputBox>
+                  <Form.Control type="text" value={sponsor} onChange={(e) => handleInput(e, 'sponsor')} />
+                </InputBox>
+              </li>
+              <li>
+                <div className="title">{t('event.media')}</div>
+                <InputBox>
+                  <Form.Control type="text" value={media} onChange={(e) => handleInput(e, 'media')} />
+                </InputBox>
+              </li>
+              <li>
+                <div className="title">{t('event.host')}</div>
+                <InputBox>
+                  <Form.Control type="text" value={moderator} onChange={(e) => handleInput(e, 'moderator')} />
+                </InputBox>
+              </li>
+              <li>
+                <div className="title">{t('event.guest')}</div>
+                <InputBox>
+                  <Form.Control type="text" value={guest} onChange={(e) => handleInput(e, 'guest')} />
+                </InputBox>
+              </li>
+              <li>
+                <div className="title">{t('event.volunteer')}</div>
+                <InputBox>
+                  <Form.Control type="text" value={volunteer} onChange={(e) => handleInput(e, 'volunteer')} />
+                </InputBox>
+              </li>
+            </UlBox>
+          </InnerBox>
+          <ContentBox>
+            <MdEditor
+              modelValue={content}
+              onChange={(val) => {
+                setContent(val);
+              }}
+              toolbars={data.toobars as any}
+              language={lan}
+              codeStyleReverse={false}
+              noUploadImg
+            />
+          </ContentBox>
+          <BtmBox>
+            <Button variant="outline-primary" className="btnBtm" onClick={() => navigate('/event')}>
+              {t('general.cancel')}
+            </Button>
+            <Button onClick={() => handleSubmit()} disabled={!title || !startAt || !endAt}>
+              {t('general.confirm')}
+            </Button>
+          </BtmBox>
+        </div>
       </Box>
-    </Layout>
+    </OuterBox>
   );
 }

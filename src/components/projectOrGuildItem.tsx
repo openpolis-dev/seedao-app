@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import Col from '@paljs/ui/Col';
+import { Col } from 'react-bootstrap';
 
 const Item = styled.div`
   display: flex;
@@ -81,7 +81,7 @@ interface Iprops {
 
 export default function ProjectOrGuildItem({ data, onClickItem }: Iprops) {
   return (
-    <Col breakPoint={{ xs: 3, sm: 3, md: 3, lg: 2.4 }}>
+    <Col xs={12} sm={6} md={4} lg={3} xl={2}>
       <CardBox>
         <Item onClick={() => onClickItem(data.id)}>
           <ImageBox>

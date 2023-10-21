@@ -8,8 +8,11 @@ export const createProjects = (data: IBaseProject) => {
   return request.post(PATH_PREFIX, data);
 };
 
-export const getProjects = (data: IPageParams): Promise<ResponseData<IPageResponse<ReTurnProject>>> => {
-  return request.get(PATH_PREFIX, data);
+export const getProjects = (
+  data: IPageParams,
+  show_special = true,
+): Promise<ResponseData<IPageResponse<ReTurnProject>>> => {
+  return request.get(`${PATH_PREFIX}?show_special=${show_special}`, data);
 };
 export const getMyProjects = (data: IPageParams) => {
   return request.get(`/my_projects`, data);

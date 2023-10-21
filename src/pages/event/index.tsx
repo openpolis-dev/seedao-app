@@ -1,28 +1,40 @@
 import React, { useEffect, useState } from 'react';
-import Layout from 'Layouts';
-import { Card } from '@paljs/ui/Card';
+// import { Card } from '@paljs/ui/Card';
 import styled from 'styled-components';
-import Col from '@paljs/ui/Col';
-import Row from '@paljs/ui/Row';
-import { ButtonLink } from '@paljs/ui/Button';
-import { useRouter } from 'next/router';
+import { Row, Col, Tab, Tabs, Button } from 'react-bootstrap';
+// import { ButtonLink } from '@paljs/ui/Button';
 import { getEventList, getMyEvent } from 'requests/event';
 import Page from 'components/pagination';
-import { Tab, Tabs } from '@paljs/ui/Tabs';
+// import { Tab, Tabs } from '@paljs/ui/Tabs';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
-import useTranslation from 'hooks/useTranslation';
+import { useTranslation } from 'react-i18next';
 import usePermission from 'hooks/usePermission';
 import { PermissionObject, PermissionAction } from 'utils/constant';
 import { filter } from 'minimatch';
 import useToast, { ToastType } from 'hooks/useToast';
-import { useWeb3React } from '@web3-react/core';
+// import { useWeb3React } from '@web3-react/core';
+import { useNavigate } from 'react-router-dom';
+import { ContainerPadding } from 'assets/styles/global';
+
+const BoxOuter = styled.div`
+  height: 100%;
+  ${ContainerPadding};
+`;
 
 const Box = styled.div`
-  padding: 40px 0;
+  box-sizing: border-box;
   a:hover {
     color: #fff;
     opacity: 0.8;
   }
+`;
+
+const Card = styled.div`
+  background: #fff;
+  box-shadow: rgba(44, 51, 73, 0.1) 0px 0.5rem 1rem 0px;
+  min-height: 100%;
+  padding-top: 10px;
+  box-sizing: border-box;
 `;
 
 const ActiveBox = styled.div`
@@ -126,7 +138,8 @@ const RhtBoxT = styled.div`
   top: 0;
 `;
 export default function Index() {
-  const router = useRouter();
+  // const router = useRouter();
+  const navigate = useNavigate();
   const { t } = useTranslation();
   const { Toast, showToast } = useToast();
   const { dispatch } = useAuthContext();
@@ -134,7 +147,7 @@ export default function Index() {
   const [pageSize, setPageSize] = useState(20);
   const [total, setTotal] = useState(1);
   const [current, setCurrent] = useState<number>(0);
-  const [list, setList] = useState([]);
+  const [list, setList] = useState<any[]>([]);
 
   const canCreateEvent = usePermission(PermissionAction.ActCreateEvent, PermissionObject.ObjEvent);
 
@@ -161,7 +174,7 @@ export default function Index() {
       setPageCur(page);
       setPageSize(size);
       setTotal(total);
-    } catch (e) {
+    } catch (e: any) {
       showToast(e.message, ToastType.Danger);
       console.error('event list', e);
     } finally {
@@ -186,7 +199,7 @@ export default function Index() {
       setPageCur(page);
       setPageSize(size);
       setTotal(total);
-    } catch (e) {
+    } catch (e: any) {
       console.error('my event list', e);
       showToast(e.message, ToastType.Danger);
     } finally {
@@ -198,40 +211,42 @@ export default function Index() {
     setPageCur(num + 1);
   };
 
-  const selectCurrent = (e: number) => {
-    setCurrent(e);
+  const selectCurrent = (e: any) => {
+    setCurrent(Number(e));
     setPageCur(1);
   };
 
   return (
-    <Layout title="SeeDAO Project">
+    <BoxOuter>
       {Toast}
       <Card>
         <Box>
           <ActiveBox>
             <TitBox>
               <div className="titLft">
-                <Tabs activeIndex={0} onSelect={(e) => selectCurrent(e)}>
-                  <Tab title={t('event.events')} responsive />
-                  <Tab title={t('event.MyEvents')} responsive disabled={!canCreateEvent} />
+                <Tabs defaultActiveKey={0} onSelect={(e) => selectCurrent(e)}>
+                  <Tab title={t('event.events')} eventKey={0} />
+                  <Tab title={t('event.MyEvents')} eventKey={1} disabled={!canCreateEvent} />
                 </Tabs>
               </div>
 
               {/*<span>Events</span>*/}
               {canCreateEvent && (
                 <RhtBoxT>
-                  <ButtonLink onClick={() => router.push('/event/edit')} fullWidth shape="Rectangle">
-                    {t('event.create')}
-                  </ButtonLink>
+                  <Button onClick={() => navigate('/event/edit')}>{t('event.create')}</Button>
                 </RhtBoxT>
               )}
             </TitBox>
             <Row>
               {list?.map((item, idx) => (
                 <Col
-                  breakPoint={{ xs: 3, sm: 3, md: 3, lg: 2.4 }}
+                  xs={12}
+                  sm={6}
+                  md={4}
+                  lg={3}
+                  xl={2}
                   key={idx}
-                  onClick={() => router.push(`event/view?id=${item.id}`)}
+                  onClick={() => navigate(`/event/view?id=${item?.id}`)}
                 >
                   <CardBox>
                     <Item>
@@ -240,12 +255,12 @@ export default function Index() {
                           <div className="aspect" />
                           <div className="content">
                             <div className="innerImg">
-                              <img src={item.cover_img} alt="" />
+                              <img src={item?.cover_img} alt="" />
                             </div>
                           </div>
                         </Photo>
                       </ImageBox>
-                      <div className="title">{item.title}</div>
+                      <div className="title">{item?.title}</div>
                     </Item>
                   </CardBox>
                 </Col>
@@ -259,6 +274,6 @@ export default function Index() {
           )}
         </Box>
       </Card>
-    </Layout>
+    </BoxOuter>
   );
 }

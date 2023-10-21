@@ -1,9 +1,8 @@
 import styled from 'styled-components';
-import { Card, CardHeader, CardBody } from '@paljs/ui/Card';
-import { EvaIcon } from '@paljs/ui/Icon';
 import React from 'react';
 import publicJs from 'utils/publicJs';
 import CopyBox from 'components/copy';
+import { X, Clipboard } from 'react-bootstrap-icons';
 
 const Mask = styled.div`
   background: rgba(0, 0, 0, 0.3);
@@ -20,10 +19,16 @@ const Mask = styled.div`
     margin-right: 20px;
   }
 `;
+
+const CardBox = styled.div`
+  background: #fff;
+  border-radius: 0.25rem;
+`;
 const UlBox = styled.div`
   min-width: 500px;
   max-height: 300px;
   overflow-y: auto;
+  padding: 20px;
   li {
     display: flex;
     align-items: center;
@@ -34,10 +39,11 @@ const UlBox = styled.div`
     margin-bottom: 10px;
   }
 `;
-const HeaderBox = styled(CardHeader)`
+const HeaderBox = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding: 20px;
   .rht {
     cursor: pointer;
   }
@@ -52,26 +58,26 @@ export default function ViewHash(props: Iprops) {
 
   return (
     <Mask>
-      <Card>
+      <CardBox>
         <HeaderBox>
           交易ID
           <div className="rht" onClick={() => closeShow()}>
-            <EvaIcon name="close-outline" />
+            <X />
           </div>
         </HeaderBox>
-        <CardBody>
+        <div>
           <UlBox id="scrollTriggerId">
             {txs.map((item, index) => (
               <li key={index}>
                 <span>{publicJs.AddressToShow(item, 8)}</span>
                 <CopyBox text={item} dir="left">
-                  <EvaIcon name="clipboard-outline" />
+                  <Clipboard />
                 </CopyBox>
               </li>
             ))}
           </UlBox>
-        </CardBody>
-      </Card>
+        </div>
+      </CardBox>
     </Mask>
   );
 }

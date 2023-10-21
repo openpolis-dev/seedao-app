@@ -1,0 +1,26 @@
+@font-face {
+    font-family: "Inter-Bold";
+    src: url("../fonts/Inter-Bold.otf") format("otf");
+}
+
+@font-face {
+    font-family: "Inter-Regular";
+    src: url("../fonts/Inter-Regular.otf") format("otf");
+}
+
+@font-face {
+    font-family: 'Jost-ExtraBold';
+    src: url('../fonts/Jost-ExtraBold.ttf');
+}
+@font-face {
+    font-family: 'Jost-Bold';
+    src: url('../fonts/Jost-Bold.ttf');
+}
+@font-face {
+    font-family: 'Jost-SemiBold';
+    src: url('../fonts/Jost-SemiBold.ttf');
+}
+@font-face {
+    font-family: 'Barlow-Regular';
+    src: url('../fonts/Barlow-Regular.ttf');
+}
