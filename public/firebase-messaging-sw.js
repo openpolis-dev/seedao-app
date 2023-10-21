@@ -5,7 +5,7 @@ self.addEventListener('notificationclick', async function (event) {
 
   if (data) {
     const type = data.type;
-    let route_path = '';
+    let route_path = '/';
     switch (type) {
       case MESSAGE_TYPE.PROJECT_ADD:
       case MESSAGE_TYPE.PROJECT_REMOVE:
