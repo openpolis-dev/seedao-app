@@ -7,7 +7,7 @@ import * as serviceWorkerRegistration from 'utils/serviceWorkerRegistration';
 import { isMobile, isPhone } from 'utils/userAgent';
 
 const isLargeScreen = window.innerWidth >= 768;
-if (isPhone || (isMobile && !isLargeScreen)) {
+if (process.env.REACT_APP_MOBILE_OPEN === 'true' && (isPhone || (isMobile && !isLargeScreen))) {
   const mobile_app = process.env.REACT_APP_MOBILE_URL;
   mobile_app && window.location.replace(mobile_app);
 } else {
