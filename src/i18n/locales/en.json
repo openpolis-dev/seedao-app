@@ -195,16 +195,16 @@
     "Tech": "Tech",
     "CalendarReview": "Calendar Review",
     "AppReview": "App Review",
-    "communityReview": "Community Review",
-    "brandReview": "品牌标识使用申请审核"
+    "communityReview": "Community Conf Speech Review",
+    "brandReview": "Branding Review"
   },
   "Push": {
-    "CreatePush": "Create Push",
-    "History": "Push Records",
+    "CreatePush": "Create Notification",
+    "History": "Notifications History",
     "Title": "Title",
     "Content": "Content",
     "Href": "Href",
-    "Timer": "Scheduled push",
+    "Timer": "Scheduled Notifications",
     "Success": "Create Success",
     "Create": "Create",
     "Time": "Time",
@@ -250,7 +250,7 @@
     "Bio": "Bio",
     "ModifiedSuccess": "Modified Successfully",
     "ModifiedFailed": "Modified Failed",
-    "IncorrectLink": "{{media}}：required the correct link",
+    "IncorrectLink": "{{media}}: required the correct link",
     "IncorrectEmail": "Please enter the correct email information",
     "IncorrectGoogle": "Please enter the correct Google email",
     "IncorrectMirror": "Please enter the correct Mirror link",
@@ -289,7 +289,7 @@
     "all": "All Resources",
     "calendar": "Calendar",
     "wait2add": "Coming Soon",
-    "community": "Community Meetup",
+    "community": "Community Conf Speech",
     "brand": "Branding"
   }
 }
