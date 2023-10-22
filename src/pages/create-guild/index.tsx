@@ -182,6 +182,7 @@ export default function CreateGuild() {
   const [credit, setCredit] = useState<number>();
 
   const [proName, setProName] = useState('');
+  const [desc, setDesc] = useState('');
   const [url, setUrl] = useState('');
 
   const handleInput = (e: ChangeEvent, index: number, type: string) => {
@@ -205,6 +206,9 @@ export default function CreateGuild() {
         break;
       case 'proName':
         setProName(value);
+        break;
+      case 'desc':
+        setDesc(value);
         break;
       case 'credit':
         setCredit(Number(value));
@@ -349,9 +353,8 @@ export default function CreateGuild() {
         <CardBox>
           <BackBox onClick={() => navigate(-1)}>
             <ChevronLeft className="iconTop" />
-            <span>{t('general.back')}</span>
+            <span>{t('Guild.create')}</span>
           </BackBox>
-          <CardHeader> {t('Guild.create')}</CardHeader>
           <CardBody>
             <BtnBox htmlFor="fileUpload" onChange={(e) => updateLogo(e)}>
               {!url && (
@@ -383,34 +386,6 @@ export default function CreateGuild() {
                 </InputBox>
               </li>
               <li>
-                <div className="title">{t('Guild.Dominator')}</div>
-                <div>
-                  {adminList.map((item, index) => (
-                    <ItemBox key={`mem_${index}`}>
-                      <InputBox>
-                        <Form.Control
-                          type="text"
-                          placeholder={t('Guild.Dominator')}
-                          value={item}
-                          onChange={(e) => handleInput(e, index, 'admin')}
-                        />
-                      </InputBox>
-                      {index === adminList.length - 1 && (
-                        <span className="iconForm" onClick={() => handleAdd('admin')}>
-                          <PlusLg />
-                        </span>
-                      )}
-
-                      {!(!index && index === adminList.length - 1) && (
-                        <span className="iconForm" onClick={() => removeItem(index, 'admin')}>
-                          <DashLg />
-                        </span>
-                      )}
-                    </ItemBox>
-                  ))}
-                </div>
-              </li>
-              <li>
                 <div className="title">{t('Guild.AssociatedProposal')}</div>
                 <div>
                   {proList.map((item, index) => (
@@ -439,26 +414,34 @@ export default function CreateGuild() {
                 </div>
               </li>
               <li>
-                <div className="title">{t('Guild.Budget')}</div>
+                <div className="title">{t('Guild.Dominator')}</div>
                 <div>
-                  <ItemBox>
-                    <span className="titleLft">{t('Guild.Points')}</span>
-                    <InputGroup>
-                      <InputNumber
-                        placeholder={t('Guild.Points')}
-                        value={credit}
-                        onChange={(e) => handleInput(e, 0, 'credit')}
-                      />
-                    </InputGroup>
-                  </ItemBox>
-                  <ItemBox>
-                    <span className="titleLft">USD</span>
-                    <InputGroup>
-                      <InputNumber placeholder="USD" value={token} onChange={(e) => handleInput(e, 0, 'token')} />
-                    </InputGroup>
-                  </ItemBox>
+                  {adminList.map((item, index) => (
+                    <ItemBox key={`mem_${index}`}>
+                      <InputBox>
+                        <Form.Control
+                          type="text"
+                          placeholder={t('Guild.Dominator')}
+                          value={item}
+                          onChange={(e) => handleInput(e, index, 'admin')}
+                        />
+                      </InputBox>
+                      {index === adminList.length - 1 && (
+                        <span className="iconForm" onClick={() => handleAdd('admin')}>
+                          <PlusLg />
+                        </span>
+                      )}
+
+                      {!(!index && index === adminList.length - 1) && (
+                        <span className="iconForm" onClick={() => removeItem(index, 'admin')}>
+                          <DashLg />
+                        </span>
+                      )}
+                    </ItemBox>
+                  ))}
                 </div>
               </li>
+
               <li>
                 <div className="title">{t('Guild.Members')}</div>
                 <div>
@@ -486,6 +469,18 @@ export default function CreateGuild() {
                     </ItemBox>
                   ))}
                 </div>
+              </li>
+              <li>
+                <div className="title">{t('Guild.Desc')}</div>
+                <InputBox>
+                  <Form.Control
+                    placeholder=""
+                    as="textarea"
+                    rows={5}
+                    value={desc}
+                    onChange={(e) => handleInput(e, 0, 'desc')}
+                  />
+                </InputBox>
               </li>
             </UlBox>
             <BtmBox>

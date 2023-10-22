@@ -184,6 +184,7 @@ export default function CreateProject() {
   const [credit, setCredit] = useState<number>();
 
   const [proName, setProName] = useState('');
+  const [desc, setDesc] = useState('');
   const [url, setUrl] = useState('');
 
   const handleInput = (e: ChangeEvent, index: number, type: string) => {
@@ -207,6 +208,9 @@ export default function CreateProject() {
         break;
       case 'proName':
         setProName(value);
+        break;
+      case 'desc':
+        setDesc(value);
         break;
       case 'credit':
         setCredit(Number(value));
@@ -351,9 +355,8 @@ export default function CreateProject() {
         <CardBox>
           <BackBox onClick={() => navigate(-1)}>
             <ChevronLeft className="iconTop" />
-            <span> {t('general.back')}</span>
+            <span> {t('Project.create')}</span>
           </BackBox>
-          <CardHeader> {t('Project.create')}</CardHeader>
           <CardBody>
             <BtnBox htmlFor="fileUpload" onChange={(e) => updateLogo(e)}>
               {!url && (
@@ -385,34 +388,7 @@ export default function CreateProject() {
                   />
                 </InputBox>
               </li>
-              <li>
-                <div className="title">{t('Project.Dominator')}</div>
-                <div>
-                  {adminList.map((item, index) => (
-                    <ItemBox key={`mem_${index}`}>
-                      <InputBox>
-                        <Form.Control
-                          type="text"
-                          placeholder={t('Project.Dominator')}
-                          value={item}
-                          onChange={(e) => handleInput(e, index, 'admin')}
-                        />
-                      </InputBox>
-                      {index === adminList.length - 1 && (
-                        <span className="iconForm" onClick={() => handleAdd('admin')}>
-                          <PlusLg />
-                        </span>
-                      )}
 
-                      {!(!index && index === adminList.length - 1) && (
-                        <span className="iconForm" onClick={() => removeItem(index, 'admin')}>
-                          <DashLg />
-                        </span>
-                      )}
-                    </ItemBox>
-                  ))}
-                </div>
-              </li>
               <li>
                 <div className="title">{t('Project.AssociatedProposal')}</div>
                 <div>
@@ -442,24 +418,31 @@ export default function CreateProject() {
                 </div>
               </li>
               <li>
-                <div className="title">{t('Project.Budget')}</div>
+                <div className="title">{t('Project.Dominator')}</div>
                 <div>
-                  <ItemBox>
-                    <span className="titleLft">{t('Project.Points')}</span>
-                    <InputGroup>
-                      <InputNumber
-                        placeholder={t('Project.Points')}
-                        value={credit}
-                        onChange={(e) => handleInput(e, 0, 'credit')}
-                      />
-                    </InputGroup>
-                  </ItemBox>
-                  <ItemBox>
-                    <span className="titleLft">USD</span>
-                    <InputGroup>
-                      <InputNumber placeholder="USD" value={token} onChange={(e) => handleInput(e, 0, 'token')} />
-                    </InputGroup>
-                  </ItemBox>
+                  {adminList.map((item, index) => (
+                    <ItemBox key={`mem_${index}`}>
+                      <InputBox>
+                        <Form.Control
+                          type="text"
+                          placeholder={t('Project.Dominator')}
+                          value={item}
+                          onChange={(e) => handleInput(e, index, 'admin')}
+                        />
+                      </InputBox>
+                      {index === adminList.length - 1 && (
+                        <span className="iconForm" onClick={() => handleAdd('admin')}>
+                          <PlusLg />
+                        </span>
+                      )}
+
+                      {!(!index && index === adminList.length - 1) && (
+                        <span className="iconForm" onClick={() => removeItem(index, 'admin')}>
+                          <DashLg />
+                        </span>
+                      )}
+                    </ItemBox>
+                  ))}
                 </div>
               </li>
               <li>
@@ -489,6 +472,18 @@ export default function CreateProject() {
                     </ItemBox>
                   ))}
                 </div>
+              </li>
+              <li>
+                <div className="title">{t('Project.Desc')}</div>
+                <InputBox>
+                  <Form.Control
+                    placeholder=""
+                    as="textarea"
+                    rows={5}
+                    value={desc}
+                    onChange={(e) => handleInput(e, 0, 'desc')}
+                  />
+                </InputBox>
               </li>
             </UlBox>
             <BtmBox>
