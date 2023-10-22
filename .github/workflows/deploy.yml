@@ -23,10 +23,10 @@ jobs:
          
      - name: Insall dependencies
        run: npm install
-     - name: Compile 
-       run: |
-         echo "$NEXT_PUBLIC_COMMIT_HASH";
-         npm run build;  
+     # - name: Compile 
+     #   run: |
+     #     echo "$NEXT_PUBLIC_COMMIT_HASH";
+     #     npm run build;  
 #      - name: Export
 #        run: npm run export
 
