@@ -32,14 +32,14 @@
     "Events": "Events",
     "AllEvents": "All Events",
     "Publicity": "Publicity",
-    "CityHall": "Cit Hall",
+    "CityHall": "City Hall",
     "CityHallMembers": "City Hall Members",
     "SGNHolder": "SEED Holder",
     "SBTHolder": "SBT Holder",
     "GovernNode": "Govern Node",
     "Apps": "Apps",
     "OnlineEvent": "Calendar",
-    "OfflineEvent": "Offline Meetup"
+    "OfflineEvent": "Offline Events"
   },
   "Proposal": {
     "AllCategories": "All Categories",
@@ -189,9 +189,9 @@
     "SendCompleted": "Send Completed",
     "FillInId": "Please fill in the transaction ID of the sending record(use ; to split)",
     "SendSuccess": "Sent",
-    "Push": "Push",
+    "Push": "Notification",
     "Governance": "Governance",
-    "Band": "Band",
+    "Band": "Branding",
     "Tech": "Tech",
     "CalendarReview": "Calendar Review",
     "AppReview": "App Review",
