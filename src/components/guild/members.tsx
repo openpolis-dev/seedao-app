@@ -164,7 +164,13 @@ export default function Members(props: Iprops) {
         />
       )}
       {showDel && (
-        <Del id={id as string} closeRemove={closeRemove} selectAdminArr={selectAdminArr} selectMemArr={selectMemArr} />
+        <Del
+          id={id as string}
+          nameMap={nameMap}
+          closeRemove={closeRemove}
+          selectAdminArr={selectAdminArr}
+          selectMemArr={selectMemArr}
+        />
       )}
       <TopBox>
         <BlockTitle>{t('Guild.Members')}</BlockTitle>
