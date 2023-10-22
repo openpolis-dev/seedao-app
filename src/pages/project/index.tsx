@@ -150,36 +150,36 @@ export default function Index() {
   };
 
   return (
-    <OuterBox>
-      <CardBox>
-        <Box>
-          <TopLine>
-            {canCreateProj && <Button onClick={() => navigate('/create-project')}>{t('Project.create')}</Button>}
-          </TopLine>
-          <div>
-            <Tabs defaultActiveKey={0} onSelect={(e: any) => selectCurrent(e)}>
-              {list.map((item, index) => (
-                <Tab key={item.id} title={item.name} eventKey={index} />
+    // <OuterBox>
+    //   <CardBox>
+    <Box>
+      <TopLine>
+        {canCreateProj && <Button onClick={() => navigate('/create-project')}>{t('Project.create')}</Button>}
+      </TopLine>
+      <div>
+        <Tabs defaultActiveKey={0} onSelect={(e: any) => selectCurrent(e)}>
+          {list.map((item, index) => (
+            <Tab key={item.id} title={item.name} eventKey={index} />
+          ))}
+        </Tabs>
+        <div>
+          <ItemBox>
+            <Row>
+              {proList.map((item) => (
+                <ProjectOrGuildItem key={item.id} data={item} onClickItem={openDetail} />
               ))}
-            </Tabs>
+            </Row>
+          </ItemBox>
+          {!proList.length && <NoItem />}
+          {total > pageSize && (
             <div>
-              <ItemBox>
-                <Row>
-                  {proList.map((item) => (
-                    <ProjectOrGuildItem key={item.id} data={item} onClickItem={openDetail} />
-                  ))}
-                </Row>
-              </ItemBox>
-              {!proList.length && <NoItem />}
-              {total > pageSize && (
-                <div>
-                  <Page itemsPerPage={pageSize} total={total} current={pageCur - 1} handleToPage={handlePage} />
-                </div>
-              )}
+              <Page itemsPerPage={pageSize} total={total} current={pageCur - 1} handleToPage={handlePage} />
             </div>
-          </div>
-        </Box>
-      </CardBox>
-    </OuterBox>
+          )}
+        </div>
+      </div>
+    </Box>
+    //   </CardBox>
+    // </OuterBox>
   );
 }

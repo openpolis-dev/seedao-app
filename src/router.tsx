@@ -7,8 +7,6 @@ import Home from './pages/home';
 // import Event from './pages/event';
 import Event from './pages/seeu-network';
 import Assets from './pages/assets';
-import Project from './pages/project';
-import Guild from './pages/guild';
 import Proposal from './pages/proposal';
 import ProposalCategory from './pages/proposal/category';
 import ProposalThread from './pages/proposal/thread';
@@ -29,6 +27,7 @@ import RouterChecker from './utils/routerChecker';
 import Canny from './pages/canny';
 import Apps from './pages/Apps';
 import Resources from './pages/resources';
+import ExplorePage from './pages/explore';
 
 export default function RouterLink() {
   return (
@@ -49,12 +48,11 @@ export default function RouterLink() {
           <Route path="/online-event" element={<CalendarPage />} />
 
           <Route path="/assets" element={<Assets />} />
+          <Route path="/explore" element={<ExplorePage />} />
 
-          <Route path="/project" element={<Project />} />
           <Route path="/project/info/:id" element={<ProjectInfo />} />
           <Route path="/create-project" element={<CreateProject />} />
 
-          <Route path="/guild" element={<Guild />} />
           <Route path="/guild/info/:id" element={<GuildInfo />} />
           <Route path="/create-guild" element={<CreateGuild />} />
 

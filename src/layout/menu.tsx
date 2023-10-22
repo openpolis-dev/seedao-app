@@ -150,6 +150,11 @@ const items: MenuItemType[] = [
     icon: { name: <CashCoin /> },
     link: { href: '/assets' },
   },
+  {
+    title: 'menus.Explore',
+    icon: { name: <CashCoin /> },
+    link: { href: '/explore' },
+  },
   // {
   //   title: 'menus.Project',
   //   icon: { name: <PieChart /> },
