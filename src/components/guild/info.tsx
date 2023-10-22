@@ -1,12 +1,15 @@
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
 import { ReTurnProject } from 'type/project.type';
+import Members from './members';
 
 interface Iprops {
   detail: ReTurnProject | undefined;
 }
 export default function Info({ detail }: Iprops) {
   const { t } = useTranslation();
+
+  const updateProject = () => {};
   return (
     <>
       <TopBox>
@@ -29,6 +32,7 @@ export default function Info({ detail }: Iprops) {
           </div>
         </TopInfo>
       </TopBox>
+      <Members detail={detail} updateProject={updateProject} />
     </>
   );
 }

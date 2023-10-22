@@ -166,28 +166,33 @@ export default function Members(props: Iprops) {
       {showDel && (
         <Del id={id as string} closeRemove={closeRemove} selectAdminArr={selectAdminArr} selectMemArr={selectMemArr} />
       )}
-      {(canUpdateMember || canUpdateSponsor) && (
-        <TopBox>
-          <Button onClick={() => handleAdd()} disabled={edit}>
-            {t('Guild.AddMember')}
-          </Button>
-          {!edit && (
-            <Button variant="outline-primary" onClick={() => handleDel()}>
-              {t('Guild.RemoveMember')}
+      <TopBox>
+        <BlockTitle>{t('Guild.Members')}</BlockTitle>
+
+        {(canUpdateMember || canUpdateSponsor) && (
+          <div>
+            <Button onClick={() => handleAdd()} disabled={edit}>
+              {t('Guild.AddMember')}
             </Button>
-          )}
-          {edit && (
-            <>
-              <Button onClick={() => closeDel()} disabled={removeButtonDisabled}>
-                {t('general.confirm')}
+            {!edit && (
+              <Button variant="outline-primary" onClick={() => handleDel()}>
+                {t('Guild.RemoveMember')}
               </Button>
-              <Button variant="outline-primary" onClick={() => closeRemove()}>
-                {t('general.cancel')}
-              </Button>
-            </>
-          )}
-        </TopBox>
-      )}
+            )}
+            {edit && (
+              <>
+                <Button onClick={() => closeDel()} disabled={removeButtonDisabled}>
+                  {t('general.confirm')}
+                </Button>
+                <Button variant="outline-primary" onClick={() => closeRemove()}>
+                  {t('general.cancel')}
+                </Button>
+              </>
+            )}
+          </div>
+        )}
+      </TopBox>
+
       <ItemBox>
         <TitleBox>{t('Guild.Dominator')}</TitleBox>
         <Row>
@@ -234,17 +239,19 @@ const ItemBox = styled.div`
   flex-direction: column;
 `;
 const TitleBox = styled.div`
-  font-weight: bold;
   margin-bottom: 30px;
 `;
 
 const TopBox = styled.div`
-  background: #f5f5f5;
   display: flex;
-  justify-content: flex-end;
-  padding: 20px;
+  justify-content: space-between;
   margin-bottom: 30px;
   button {
     margin-left: 20px;
   }
+`;
+
+const BlockTitle = styled.div`
+  margin: 20px 0 20px;
+  font-weight: 600;
 `;
