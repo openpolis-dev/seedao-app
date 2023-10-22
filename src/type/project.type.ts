@@ -48,6 +48,7 @@ export interface ReTurnProject {
   created_at: string;
   id: number;
   logo: string;
+  desc: string;
   members: string[];
   name: string;
   proposals: string[];
