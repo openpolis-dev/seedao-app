@@ -197,7 +197,10 @@
     "CalendarReview": "Calendar Review",
     "AppReview": "App Review",
     "communityReview": "Community Conf Speech Review",
-    "brandReview": "Branding Review"
+    "brandReview": "Branding Review",
+    "management": "Management",
+    "create": "Create",
+    "closeProjectReview": "Close project review"
   },
   "Push": {
     "CreatePush": "Create Notification",

@@ -16,12 +16,12 @@ import { useTranslation } from 'react-i18next';
 import { formatApplicationStatus } from 'utils/index';
 import useToast, { ToastType } from 'hooks/useToast';
 import Select from 'components/common/select';
+import { useNavigate } from 'react-router-dom';
 
 const Box = styled.div``;
 const FirstLine = styled.div`
   display: flex;
   //flex-direction: column;
-  margin: 40px 0 20px;
   align-items: center;
   flex-wrap: wrap;
 
@@ -96,8 +96,14 @@ const TableBox = styled.div`
   }
 `;
 
+const SectionTitle = styled.div`
+  margin: 20px 0 20px;
+  font-weight: 600;
+`;
+
 export default function ProjectAudit() {
   const { Toast, showToast } = useToast();
+  const navigate = useNavigate();
   const { t } = useTranslation();
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -252,96 +258,116 @@ export default function ProjectAudit() {
     return _is_select_all;
   }, [list, selectMap]);
 
+  const openCreate = (val: string) => {
+    if (val === 'project') navigate('/create-project');
+    if (val === 'guild') navigate('/create-guild');
+  };
+
   return (
     <Box>
       {loading && <Loading />}
       {Toast}
-      <FirstLine>
-        <TopLine>
-          <li>
-            <span className="tit">{t('Project.State')}</span>
-            <Select
-              options={statusOption}
-              placeholder=""
-              onChange={(value: any) => {
-                setSelectStatus(value?.value);
-                setSelectMap({});
-              }}
-            />
-          </li>
-        </TopLine>
-        <TimeLine>
-          <TimeBox>
-            <BorderBox>
-              <RangeDatePickerStyle
-                placeholder={t('Project.RangeTime')}
-                onChange={changeDate}
-                startDate={startDate}
-                endDate={endDate}
-              />
-            </BorderBox>
-          </TimeBox>
-          <Button onClick={handleExport} disabled={!selectOne}>
-            {t('Project.Export')}
+      <section>
+        <SectionTitle>{t('city-hall.create')}</SectionTitle>
+        <TopBox>
+          <Button variant="outline-primary" onClick={() => openCreate('project')}>
+            {t('Project.create')}
           </Button>
-        </TimeLine>
-      </FirstLine>
-      <TopBox>
-        <Button onClick={handleApprove} disabled={!selectOne}>
-          {t('city-hall.Pass')}
-        </Button>
-        <Button variant="outline-primary" onClick={handleReject} disabled={!selectOne}>
-          {t('city-hall.Reject')}
-        </Button>
-      </TopBox>
-      <TableBox>
-        {list.length ? (
-          <>
-            <table className="table" cellPadding="0" cellSpacing="0">
-              <thead>
-                <tr>
-                  <th>
-                    <Form.Check checked={ifSelectAll} onChange={(e) => onSelectAll(e.target.checked)}></Form.Check>
-                  </th>
-                  <th>{t('Project.Time')}</th>
-                  <th>{t('city-hall.ProjectName')}</th>
-                  <th>{t('city-hall.Content')}</th>
-                  <th>{t('Project.Note')}</th>
-                  <th>{t('Project.State')}</th>
-                  <th>{t('city-hall.Applicant')}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {list.map((item, index) => (
-                  <tr key={index}>
-                    <td>
-                      <Form.Check
-                        checked={!!selectMap[item.application_id]}
-                        onChange={(e) => onChangeCheckbox(e.target.checked, item.application_id, item.status)}
-                      ></Form.Check>
-                    </td>
-                    <td>{item.created_date}</td>
-                    <td>{item.budget_source}</td>
-                    <td>{t('city-hall.CloseProject')}</td>
-                    <td>{item.comment}</td>
-                    <td>{t(formatApplicationStatus(item.status, true))}</td>
-                    <td>{item.submitter_name || publicJs.AddressToShow(item.submitter_wallet)}</td>
+          <Button variant="outline-primary" onClick={() => openCreate('guild')}>
+            {t('Guild.create')}
+          </Button>
+        </TopBox>
+      </section>
+      <section>
+        <SectionTitle>{t('city-hall.closeProjectReview')}</SectionTitle>
+        <FirstLine>
+          <TopLine>
+            <li>
+              <span className="tit">{t('Project.State')}</span>
+              <Select
+                options={statusOption}
+                placeholder=""
+                onChange={(value: any) => {
+                  setSelectStatus(value?.value);
+                  setSelectMap({});
+                }}
+              />
+            </li>
+          </TopLine>
+          <TimeLine>
+            <TimeBox>
+              <BorderBox>
+                <RangeDatePickerStyle
+                  placeholder={t('Project.RangeTime')}
+                  onChange={changeDate}
+                  startDate={startDate}
+                  endDate={endDate}
+                />
+              </BorderBox>
+            </TimeBox>
+            <Button onClick={handleExport} disabled={!selectOne}>
+              {t('Project.Export')}
+            </Button>
+          </TimeLine>
+        </FirstLine>
+
+        <TopBox>
+          <Button onClick={handleApprove} disabled={!selectOne}>
+            {t('city-hall.Pass')}
+          </Button>
+          <Button variant="outline-primary" onClick={handleReject} disabled={!selectOne}>
+            {t('city-hall.Reject')}
+          </Button>
+        </TopBox>
+        <TableBox>
+          {list.length ? (
+            <>
+              <table className="table" cellPadding="0" cellSpacing="0">
+                <thead>
+                  <tr>
+                    <th>
+                      <Form.Check checked={ifSelectAll} onChange={(e) => onSelectAll(e.target.checked)}></Form.Check>
+                    </th>
+                    <th>{t('Project.Time')}</th>
+                    <th>{t('city-hall.ProjectName')}</th>
+                    <th>{t('city-hall.Content')}</th>
+                    <th>{t('Project.Note')}</th>
+                    <th>{t('Project.State')}</th>
+                    <th>{t('city-hall.Applicant')}</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-            <Page
-              itemsPerPage={pageSize}
-              total={total}
-              current={page - 1}
-              handleToPage={handlePage}
-              handlePageSize={handlePageSize}
-            />
-          </>
-        ) : (
-          <NoItem />
-        )}
-      </TableBox>
+                </thead>
+                <tbody>
+                  {list.map((item, index) => (
+                    <tr key={index}>
+                      <td>
+                        <Form.Check
+                          checked={!!selectMap[item.application_id]}
+                          onChange={(e) => onChangeCheckbox(e.target.checked, item.application_id, item.status)}
+                        ></Form.Check>
+                      </td>
+                      <td>{item.created_date}</td>
+                      <td>{item.budget_source}</td>
+                      <td>{t('city-hall.CloseProject')}</td>
+                      <td>{item.comment}</td>
+                      <td>{t(formatApplicationStatus(item.status, true))}</td>
+                      <td>{item.submitter_name || publicJs.AddressToShow(item.submitter_wallet)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <Page
+                itemsPerPage={pageSize}
+                total={total}
+                current={page - 1}
+                handleToPage={handlePage}
+                handlePageSize={handlePageSize}
+              />
+            </>
+          ) : (
+            <NoItem />
+          )}
+        </TableBox>
+      </section>
     </Box>
   );
 }
