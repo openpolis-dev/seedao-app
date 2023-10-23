@@ -50,7 +50,7 @@ const CardHeader = styled.div`
 `;
 
 const CardBody = styled.div`
-  padding: 20px;
+  padding: 0 20px 20px;
 `;
 const CardFooter = styled.div`
   padding: 0 20px 20px;

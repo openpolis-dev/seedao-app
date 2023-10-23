@@ -155,14 +155,7 @@ export default function Members(props: Iprops) {
 
   return (
     <Box>
-      {show && (
-        <Add
-          closeAdd={closeAdd}
-          id={id as string}
-          canUpdateMember={canUpdateMember}
-          canUpdateSponsor={canUpdateSponsor}
-        />
-      )}
+      {show && <Add closeAdd={closeAdd} id={id as string} />}
       {showDel && (
         <Del
           id={id as string}
