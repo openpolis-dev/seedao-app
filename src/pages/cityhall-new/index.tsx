@@ -15,6 +15,7 @@ import GovernancePanel from 'components/cityHallCom/Governance';
 import BrandPanel from 'components/cityHallCom/brand';
 import TechPanel from 'components/cityHallCom/tech';
 import Management from 'components/cityHallCom/projectAudit';
+import Register from 'components/cityHallCom/register';
 
 const Box = styled.div`
   //position: relative;
@@ -82,6 +83,7 @@ export default function Index() {
         <TechPanel />,
         <PushPanel id={detail?.id} />,
         <Management />,
+        <Register />,
       ][current] || <></>
     );
   };
@@ -101,6 +103,7 @@ export default function Index() {
             <Tab eventKey={3} title={t('city-hall.Tech')} />
             <Tab eventKey={4} title={t('city-hall.Push')} />
             <Tab eventKey={5} title={t('city-hall.management')} />
+            <Tab eventKey={6} title={t('city-hall.Add')} />
           </TabsBox>
           {getFullContent()}
         </TopBox>
