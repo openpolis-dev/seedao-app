@@ -7,13 +7,14 @@ import { X } from 'react-bootstrap-icons';
 
 import Metamask from '../login/metamask';
 import Unipass, { upProvider } from '../login/unipass';
-// import Joyid from '../login/joyid';
+import Joyid from '../login/joyid';
 
 import { useNetwork } from 'wagmi';
 import { useEthersSigner } from '../login/ethersNew';
 import { SELECT_WALLET } from '../../utils/constant';
 import { ethers } from 'ethers';
 import { mainnet } from 'wagmi/chains';
+import getConfig from 'utils/envCofnig';
 
 export default function LoginModal({ showModal }: any) {
   const { t } = useTranslation();
@@ -58,7 +59,7 @@ export default function LoginModal({ showModal }: any) {
           <Title>{t('general.ConnectWallet')}</Title>
           <Metamask />
           <Unipass />
-          {/*<Joyid />*/}
+          {getConfig().REACT_APP_JOYID_ENABLE && <Joyid />}
         </Modal>
       </Mask>
     </>
@@ -85,7 +86,7 @@ const Mask = styled.div<ShowProps>`
 
 const Modal = styled.div`
   width: 400px;
-  height: 260px;
+  min-height: 260px;
   opacity: 1;
   border-radius: 8px;
   background: #fff linear-gradient(90deg, rgba(235, 255, 255, 0.6) 0%, rgba(230, 255, 255, 0) 100%);
