@@ -1,10 +1,10 @@
 import styled from 'styled-components';
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Button, Row } from 'react-bootstrap';
 import Add from './add';
 import Del from './Del';
 import { useTranslation } from 'react-i18next';
-import { ReTurnProject, ProjectStatus } from 'type/project.type';
+import { ReTurnProject } from 'type/project.type';
 import { getUsers } from 'requests/user';
 import { IUser } from 'type/user.type';
 // import { useRouter } from 'next/router';
@@ -27,7 +27,6 @@ export default function Members(props: Iprops) {
   const { detail, updateProject } = props;
 
   // const router = useRouter();
-  // const { id } = router.query;
   const { id } = useParams();
 
   const canUpdateMember = usePermission(PermissionAction.UpdateMember, PermissionObject.ProjPrefix + id);
@@ -150,49 +149,48 @@ export default function Members(props: Iprops) {
     return user;
   };
 
-  const isProjectOpen = useMemo(() => {
-    return detail?.status === ProjectStatus.Open;
-  }, [detail?.status]);
-
   const removeButtonDisabled = useMemo(() => {
     return !selectAdminArr.length && !selectMemArr.length;
   }, [selectAdminArr, selectMemArr]);
 
   return (
     <Box>
-      {show && (
-        <Add
-          closeAdd={closeAdd}
+      {show && <Add closeAdd={closeAdd} id={id as string} />}
+      {showDel && (
+        <Del
           id={id as string}
-          canUpdateMember={canUpdateMember}
-          canUpdateSponsor={canUpdateSponsor}
+          nameMap={nameMap}
+          closeRemove={closeRemove}
+          selectAdminArr={selectAdminArr}
+          selectMemArr={selectMemArr}
         />
       )}
-      {showDel && (
-        <Del id={id as string} closeRemove={closeRemove} selectAdminArr={selectAdminArr} selectMemArr={selectMemArr} />
-      )}
-      {isProjectOpen && (canUpdateMember || canUpdateSponsor) && (
-        <TopBox>
-          <Button onClick={() => handleAdd()} disabled={edit}>
-            {t('Project.AddMember')}
-          </Button>
-          {!edit && (
-            <Button variant="outline-primary" onClick={() => handleDel()}>
-              {t('Project.RemoveMember')}
+      <TopBox>
+        <BlockTitle>{t('Project.Members')}</BlockTitle>
+
+        {(canUpdateMember || canUpdateSponsor) && (
+          <div>
+            <Button onClick={() => handleAdd()} disabled={edit}>
+              {t('Project.AddMember')}
             </Button>
-          )}
-          {edit && (
-            <>
-              <Button onClick={() => closeDel()} disabled={removeButtonDisabled}>
-                {t('general.confirm')}
+            {!edit && (
+              <Button variant="outline-primary" onClick={() => handleDel()}>
+                {t('Project.RemoveMember')}
               </Button>
-              <Button variant="outline-primary" onClick={() => closeRemove()}>
-                {t('general.cancel')}
-              </Button>
-            </>
-          )}
-        </TopBox>
-      )}
+            )}
+            {edit && (
+              <>
+                <Button onClick={() => closeDel()} disabled={removeButtonDisabled}>
+                  {t('general.confirm')}
+                </Button>
+                <Button variant="outline-primary" onClick={() => closeRemove()}>
+                  {t('general.cancel')}
+                </Button>
+              </>
+            )}
+          </div>
+        )}
+      </TopBox>
 
       <ItemBox>
         <TitleBox>{t('Project.Dominator')}</TitleBox>
@@ -240,17 +238,19 @@ const ItemBox = styled.div`
   flex-direction: column;
 `;
 const TitleBox = styled.div`
-  font-weight: bold;
   margin-bottom: 30px;
 `;
 
 const TopBox = styled.div`
-  background: #f5f5f5;
   display: flex;
-  justify-content: flex-end;
-  padding: 20px;
+  justify-content: space-between;
   margin-bottom: 30px;
   button {
     margin-left: 20px;
   }
+`;
+
+const BlockTitle = styled.div`
+  margin: 20px 0 20px;
+  font-weight: 600;
 `;
