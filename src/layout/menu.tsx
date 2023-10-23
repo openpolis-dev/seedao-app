@@ -15,6 +15,7 @@ import {
   ChatDots,
   ViewList,
   Boxes,
+  BarChartSteps,
 } from 'react-bootstrap-icons';
 import React from 'react';
 import useCheckLogin from 'hooks/useCheckLogin';
@@ -152,7 +153,7 @@ const items: MenuItemType[] = [
   },
   {
     title: 'menus.Explore',
-    icon: { name: <CashCoin /> },
+    icon: { name: <BarChartSteps /> },
     link: { href: '/explore' },
   },
   // {
@@ -165,11 +166,11 @@ const items: MenuItemType[] = [
   //   icon: { name: <People /> },
   //   link: { href: '/guild' },
   // },
-  // {
-  //   title: 'menus.Proposal',
-  //   icon: { name: <Box2Heart /> },
-  //   link: { href: '/proposal' },
-  // },
+  {
+    title: 'menus.Proposal',
+    icon: { name: <Box2Heart /> },
+    link: { href: '/proposal' },
+  },
   {
     title: 'menus.city-hall',
     icon: { name: <ShieldCheck /> },
