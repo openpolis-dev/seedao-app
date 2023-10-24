@@ -7,6 +7,7 @@ import Home from './pages/home';
 // import Event from './pages/event';
 import Event from './pages/seeu-network';
 import Assets from './pages/assets';
+import RegisterAssets from './pages/assets/register';
 import Proposal from './pages/proposal';
 import ProposalCategory from './pages/proposal/category';
 import ProposalThread from './pages/proposal/thread';
@@ -48,6 +49,7 @@ export default function RouterLink() {
           <Route path="/online-event" element={<CalendarPage />} />
 
           <Route path="/assets" element={<Assets />} />
+          <Route path="/assets/register" element={<RegisterAssets />} />
           <Route path="/explore" element={<ExplorePage />} />
 
           <Route path="/project/info/:id" element={<ProjectInfo />} />
