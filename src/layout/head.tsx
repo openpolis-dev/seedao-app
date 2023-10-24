@@ -21,6 +21,7 @@ import { requestSetDeviceLanguage, getPushDevice } from 'requests/push';
 import { useDisconnect } from 'wagmi';
 import { mainnet } from 'wagmi/chains';
 import { Wallet, WalletType } from 'wallet/wallet';
+import OneSignal from 'react-onesignal';
 
 export default function Header() {
   const { i18n } = useTranslation();
@@ -198,6 +199,7 @@ export default function Header() {
     dispatch({ type: AppActionType.SET_AUTHORIZER, payload: null });
     dispatch({ type: AppActionType.SET_WALLET_TYPE, payload: null });
     dispatch({ type: AppActionType.SET_ACCOUNT, payload: null });
+    OneSignal.logout();
     toGo();
     window.location.reload();
   };

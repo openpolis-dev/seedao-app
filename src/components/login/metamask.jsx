@@ -17,6 +17,7 @@ import { registerPush } from 'utils/serviceWorkerRegistration';
 import { SELECT_WALLET } from "../../utils/constant";
 import styled from "styled-components";
 import MetamaskIcon from "../../assets/images/wallet/metamask.png";
+import OneSignal from "react-onesignal";
 
 
 const WalletOption = styled.li`
@@ -157,8 +158,8 @@ export default function  Metamask(){
                 account:"account:"+address
             });
             const tokenstr = localStorage.getItem(SEEDAO_USER);
-            await registerPush();
-
+            // await registerPush();
+            OneSignal.login(address.toLocaleLowerCase());
         }catch (e){
             console.error("Login to",e)
             dispatch({ type: AppActionType.CLEAR_AUTH, payload: undefined });

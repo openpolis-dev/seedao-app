@@ -71,11 +71,12 @@ function registerValidSW(swUrl: string, config?: any) {
     });
 }
 
-export function unregister() {
+export function unregister(callback: any) {
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.ready
       .then((registration) => {
         registration.unregister();
+        callback && callback();
       })
       .catch((error) => {
         console.error(error.message);

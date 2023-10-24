@@ -12,6 +12,9 @@ import { EthereumClient, w3mConnectors, w3mProvider } from '@web3modal/ethereum'
 import { Web3Modal } from '@web3modal/react';
 import { configureChains, createConfig, WagmiConfig } from 'wagmi';
 import { mainnet } from 'wagmi/chains';
+import { useEffect } from 'react';
+import runOneSignal from 'utils/onesignal';
+import { unregister } from 'utils/serviceWorkerRegistration';
 
 const chains = [mainnet];
 
@@ -27,6 +30,10 @@ const wagmiConfig = createConfig({
 const ethereumClient = new EthereumClient(wagmiConfig, chains);
 
 function App() {
+  useEffect(() => {
+    unregister(runOneSignal);
+  }, []);
+
   return (
     // <Web3Provider>
 
