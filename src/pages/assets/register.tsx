@@ -2,7 +2,7 @@ import styled, { css } from 'styled-components';
 import { Button } from 'react-bootstrap';
 import RegList from 'components/guild/regList';
 // import { EvaIcon } from '@paljs/ui/Icon';
-import React, { ChangeEvent, FormEvent, useState } from 'react';
+import React, { ChangeEvent, FormEvent, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import * as XLSX from 'xlsx';
 import { ExcelObj } from 'type/project.type';
@@ -10,22 +10,20 @@ import requests from 'requests';
 // import { useCSVReader } from 'react-papaparse';
 import { ApplicationType } from 'type/application.type';
 import { ICreateBudgeApplicationRequest } from 'requests/applications';
-import Loading from 'components/loading';
 import { AssetName } from 'utils/constant';
 import useToast, { ToastType } from 'hooks/useToast';
 import { ethers } from 'ethers';
-import { useAuthContext } from 'providers/authProvider';
+import { AppActionType, useAuthContext } from 'providers/authProvider';
 import { Download } from 'react-bootstrap-icons';
-
-const Box = styled.div`
-  padding: 20px;
-`;
+import { ContainerPadding } from 'assets/styles/global';
+import Select from 'components/common/select';
 
 const FirstBox = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 40px;
+  margin-top: 20px;
 `;
 
 const RhtBox = styled.div`
@@ -75,18 +73,21 @@ export default function Register() {
   const {
     state: { language },
   } = useAuthContext();
-  const { Toast, showToast } = useToast();
-  const [loading, setLoading] = useState(false);
+  const { dispatch } = useAuthContext();
+  const { showToast } = useToast();
 
   const [list, setList] = useState<ExcelObj[]>([]);
   const [errList, setErrList] = useState<ErrorDataType[]>([]);
   const [id, setId] = useState(1);
 
+  const [allSource, setAllSource] = useState<ISelectItem[]>([]);
+  const [selectSource, setSelectSource] = useState<{ id: number; type: 'project' | 'guild' }>();
+
   const Clear = () => {
     setList([]);
     setErrList([]);
   };
-  const updateLogo = (e: FormEvent) => {
+  const updateFile = (e: FormEvent) => {
     const { files } = e.target as any;
     const fileReader = new FileReader();
     fileReader.readAsBinaryString(files[0]);
@@ -158,7 +159,8 @@ export default function Register() {
   };
 
   const handleCreate = async () => {
-    setLoading(true);
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+
     try {
       const data: ICreateBudgeApplicationRequest[] = list.map((item) => {
         const d: ICreateBudgeApplicationRequest = {
@@ -187,7 +189,7 @@ export default function Register() {
       console.error('createBudgetApplications failed:', error);
       showToast(t('Guild.SubmitFailed'), ToastType.Danger);
     } finally {
-      setLoading(false);
+      dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }
   };
 
@@ -195,21 +197,77 @@ export default function Register() {
     window.open(requests.application.getTemplateFileUrl(language), '_blank');
   };
 
-  return (
-    <Box>
-      {loading && <Loading />}
-      {Toast}
-      <FirstBox>
-        <Button disabled={!list.length || !!errList.length} onClick={handleCreate}>
-          {t('Project.SubmitForReview')}
-        </Button>
-        <RhtBox>
-          <Button variant="outline-primary" className="rhtBtn" onClick={downloadFile}>
-            <Download />
-            <span>{t('Project.DownloadForm')}</span>
-          </Button>
+  const getProjects = async () => {
+    try {
+      const res = await requests.project.getProjects({
+        page: 1,
+        size: 1000,
+        sort_order: 'desc',
+        sort_field: 'created_at',
+      });
+      return res.data.rows.map((item) => ({
+        label: item.name,
+        value: item.id,
+        data: 'project',
+      }));
+    } catch (error) {
+      console.error('getProjects in city-hall failed: ', error);
+      return [];
+    }
+  };
+  const getGuilds = async () => {
+    try {
+      const res = await requests.guild.getProjects({
+        page: 1,
+        size: 1000,
+        sort_order: 'desc',
+        sort_field: 'created_at',
+      });
+      return res.data.rows.map((item) => ({
+        label: item.name,
+        value: item.id,
+        data: 'guild',
+      }));
+    } catch (error) {
+      console.error('getGuilds in city-hall failed: ', error);
+      return [];
+    }
+  };
 
-          {/* <CSVReader
+  useEffect(() => {
+    const getSources = async () => {
+      const projects = await getProjects();
+      const guilds = await getGuilds();
+      setAllSource([...projects, ...guilds]);
+    };
+    getSources();
+  }, []);
+
+  return (
+    <OuterBox>
+      <Box>
+        <ChooseSourceBox>
+          <span className="title">1. 选择项目/公会</span>
+          <Select
+            options={allSource}
+            placeholder=""
+            onChange={(value: any) => {
+              setSelectSource({ id: value?.value as number, type: value?.data });
+            }}
+          />
+        </ChooseSourceBox>
+        <span className="title">2. 登记信息</span>
+        <FirstBox>
+          <Button disabled={!list.length || !!errList.length} onClick={handleCreate}>
+            {t('Project.SubmitForReview')}
+          </Button>
+          <RhtBox>
+            <Button variant="outline-primary" className="rhtBtn" onClick={downloadFile}>
+              <Download />
+              <span>{t('Project.DownloadForm')}</span>
+            </Button>
+
+            {/* <CSVReader
             onUploadAccepted={(results: { data: any[] }) => {
               handleCSVfile(results.data);
             }}
@@ -226,42 +284,43 @@ export default function Register() {
             )}
           </CSVReader> */}
 
-          <BtnBox htmlFor="fileUpload" onChange={(e) => updateLogo(e)}>
-            <input
-              id="fileUpload"
-              accept=".xlsx, .xls, .csv"
-              type="file"
-              hidden
-              onClick={(event) => {
-                (event.target as any).value = null;
-              }}
-            />
-            <Download className="iconRht" />
-            <span>{t('Project.ImportForm').toUpperCase()}</span>
-          </BtnBox>
-          {!!list.length && (
-            <Button disabled={!list.length} onClick={() => Clear()}>
-              {t('general.Clear')}
-            </Button>
-          )}
-        </RhtBox>
-      </FirstBox>
-      {!!errList.length && (
-        <ErrorBox>
-          <li>{t('Msg.ImportFailed')}:</li>
-          {errList.map((item) => (
-            <li key={item.line}>
-              #{item.line}{' '}
-              {item.errorKeys.map((ekey) => (
-                //   @ts-ignore
-                <span key={ekey}>{t('Project.ImportError', { key: t(`Project.${ekey}`) })}</span>
-              ))}
-            </li>
-          ))}
-        </ErrorBox>
-      )}
-      <RegList uploadList={list} />
-    </Box>
+            <BtnBox htmlFor="fileUpload" onChange={(e) => updateFile(e)}>
+              <input
+                id="fileUpload"
+                accept=".xlsx, .xls, .csv"
+                type="file"
+                hidden
+                onClick={(event) => {
+                  (event.target as any).value = null;
+                }}
+              />
+              <Download className="iconRht" />
+              <span>{t('Project.ImportForm').toUpperCase()}</span>
+            </BtnBox>
+            {!!list.length && (
+              <Button disabled={!list.length} onClick={() => Clear()}>
+                {t('general.Clear')}
+              </Button>
+            )}
+          </RhtBox>
+        </FirstBox>
+        {!!errList.length && (
+          <ErrorBox>
+            <li>{t('Msg.ImportFailed')}:</li>
+            {errList.map((item) => (
+              <li key={item.line}>
+                #{item.line}{' '}
+                {item.errorKeys.map((ekey) => (
+                  //   @ts-ignore
+                  <span key={ekey}>{t('Project.ImportError', { key: t(`Project.${ekey}`) })}</span>
+                ))}
+              </li>
+            ))}
+          </ErrorBox>
+        )}
+        <RegList uploadList={list} />
+      </Box>
+    </OuterBox>
   );
 }
 
@@ -273,4 +332,28 @@ const ErrorBox = styled.ul`
       margin-inline: 5px;
     }
   }
+`;
+
+const OuterBox = styled.div`
+  box-sizing: border-box;
+  min-height: 100%;
+  ${ContainerPadding};
+`;
+
+const Box = styled.div`
+  min-height: 100%;
+  padding: 20px;
+  background-color: #fff;
+  .btnBtm {
+    margin-right: 20px;
+  }
+  .title {
+  }
+`;
+
+const ChooseSourceBox = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
 `;
