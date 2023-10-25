@@ -1,4 +1,4 @@
-import { Calendar, Boxes, Receipt, Postcard, Grid1x2 } from 'react-bootstrap-icons';
+import { Calendar, Boxes, Receipt, Postcard, Grid1x2, CashCoin } from 'react-bootstrap-icons';
 // NOTE: choose icon from the library: https://icons.getbootstrap.com/
 import { AppIcon } from 'components/common/appCard';
 // Apps
@@ -93,6 +93,12 @@ export default {
       name: 'Home.OfflineEvent',
       link: 'https://seeu.network/',
       icon: <Grid1x2 />,
+    },
+    {
+      id: 'pub',
+      name: 'Home.pub',
+      link: 'https://seeu.network/',
+      icon: <CashCoin />,
     },
   ],
 };
