@@ -31,7 +31,7 @@ const ethereumClient = new EthereumClient(wagmiConfig, chains);
 
 function App() {
   useEffect(() => {
-    unregister(runOneSignal);
+    runOneSignal();
   }, []);
 
   return (
