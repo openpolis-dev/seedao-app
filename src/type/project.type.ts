@@ -64,6 +64,8 @@ export interface ReTurnProject {
 export interface InfoObj {
   logo: string;
   name: string;
+  desc: string;
+  intro: string;
 }
 
 export interface ExcelObj {

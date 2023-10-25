@@ -8,6 +8,7 @@ import { AppActionType, useAuthContext } from 'providers/authProvider';
 import useToast, { ToastType } from 'hooks/useToast';
 import { useNavigate } from 'react-router-dom';
 import { DashLg, PlusLg, Upload, X } from 'react-bootstrap-icons';
+import { MdEditor } from 'md-editor-rt';
 
 const BtmBox = styled.div`
   margin-top: 50px;
@@ -62,19 +63,52 @@ const ItemBox = styled.div`
   }
 `;
 
+const config = {
+  toobars: [
+    'bold',
+    'underline',
+    'italic',
+    'strikeThrough',
+    'sub',
+    'sup',
+    'quote',
+    'unorderedList',
+    'orderedList',
+    'codeRow',
+    'code',
+    'link',
+    'image',
+    'table',
+    'revoke',
+    'next',
+    'pageFullscreen',
+    'fullscreen',
+    'preview',
+    'htmlPreview',
+  ],
+  toolbarsExclude: ['github'],
+};
+
 export default function EditProject({ detail, onUpdate }: { detail: ReTurnProject | undefined; onUpdate: () => void }) {
-  // const router = useRouter();
-
-  const navigate = useNavigate();
-
   const { t } = useTranslation();
   const { showToast } = useToast();
-  const { dispatch } = useAuthContext();
+  const {
+    dispatch,
+    state: { language },
+  } = useAuthContext();
   const [proList, setProList] = useState(['']);
 
   const [proName, setProName] = useState('');
   const [desc, setDesc] = useState('');
   const [url, setUrl] = useState('');
+  const [intro, setIntro] = useState('');
+
+  const [lan, setLan] = useState('');
+
+  useEffect(() => {
+    const localLan = language === 'zh' ? 'zh-CN' : 'en-US';
+    setLan(localLan);
+  }, [language]);
 
   useEffect(() => {
     if (detail) {
@@ -156,6 +190,8 @@ export default function EditProject({ detail, onUpdate }: { detail: ReTurnProjec
     const obj: InfoObj = {
       logo: url,
       name: proName,
+      desc,
+      intro,
     };
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
@@ -267,6 +303,21 @@ export default function EditProject({ detail, onUpdate }: { detail: ReTurnProjec
             />
           </InputBox>
         </li>
+        <li>
+          <div className="title">{t('Project.Intro')}</div>
+          <IntroBox>
+            <MdEditor
+              modelValue={intro}
+              onChange={(val) => {
+                setIntro(val);
+              }}
+              toolbars={config.toobars as any}
+              language={lan}
+              codeStyleReverse={false}
+              noUploadImg
+            />
+          </IntroBox>
+        </li>
       </UlBox>
       <BtmBox>
         <Button variant="outline-primary" className="btnBtm">
@@ -335,5 +386,11 @@ const ImgBox = styled.div`
     justify-content: center;
     font-size: 20px;
     cursor: pointer;
+  }
+`;
+
+const IntroBox = styled.div`
+  .cm-scroller {
+    background: #f7f9fc;
   }
 `;
