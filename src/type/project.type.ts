@@ -70,3 +70,11 @@ export interface ExcelObj {
   content: string;
   note: string;
 }
+
+export interface IExcelObj {
+  address: string;
+  amount: string;
+  assetType: string;
+  content: string;
+  note: string;
+}
