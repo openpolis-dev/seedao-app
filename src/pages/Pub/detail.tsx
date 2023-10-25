@@ -1,10 +1,12 @@
 import styled from 'styled-components';
 import { ContainerPadding } from '../../assets/styles/global';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Row, Col } from 'react-bootstrap';
 import { AppActionType, useAuthContext } from '../../providers/authProvider';
+import { ChevronLeft } from 'react-bootstrap-icons';
+import { useTranslation } from 'react-i18next';
 
 const PageStyle = styled.div`
   ${ContainerPadding};
@@ -75,8 +77,20 @@ const LinkBox = styled.div`
   }
 `;
 
+const BackBox = styled.div`
+  padding: 10px 0 20px;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  .iconTop {
+    margin-right: 10px;
+  }
+`;
+
 export default function PubDetail() {
   const { dispatch } = useAuthContext();
+  const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const [title, setTitle] = useState('');
   const [status, setStatus] = useState('');
@@ -149,7 +163,7 @@ export default function PubDetail() {
       const titleStr = detail?.title[0][0] ?? '';
       setTitle(titleStr);
 
-      setStatus(detail?.ArpA[0][0] ?? '');
+      setStatus(detail?.['ArpA'][0][0] ?? '');
       setTag(detail?.['GJ=R'][0] ?? []);
       setDesc(detail?.['Bzg@'][0][0] ?? '');
       setReward(detail?.['_zm^'][0][0] ?? '');
@@ -165,7 +179,6 @@ export default function PubDetail() {
       let arr: any[] = [];
       contactList.map(async (item) => {
         let rt = await getInfo(item);
-        console.log(item.replace(/-/g, ''));
         arr.push({
           name: rt?.data[item]?.value.properties.title[0][0] ?? '',
           id: item.replace(/-/g, ''),
@@ -181,6 +194,11 @@ export default function PubDetail() {
   return (
     <PageStyle>
       <Box>
+        <BackBox onClick={() => navigate(-1)}>
+          <ChevronLeft className="iconTop" />
+          <span>{t('general.back')}</span>
+        </BackBox>
+
         <Title>{title}</Title>
         <ContentBox>
           <Row>

@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { ContainerPadding } from '../../assets/styles/global';
-import { Row, Col } from 'react-bootstrap';
+import { Row, Col, Button } from 'react-bootstrap';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { AppActionType, useAuthContext } from '../../providers/authProvider';
+import { useTranslation } from 'react-i18next';
+import Links from '../../utils/links';
+import { ChevronLeft } from 'react-bootstrap-icons';
 
 const PageStyle = styled.div`
   ${ContainerPadding};
@@ -108,10 +111,28 @@ const TypeBox = styled(TagBox)`
   }
 `;
 
+const FlexBox = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+`;
+
+const BackBox = styled.div`
+  padding: 10px 0 20px;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  .iconTop {
+    margin-right: 10px;
+  }
+`;
+
 export default function Pub() {
   const { dispatch } = useAuthContext();
   const navigate = useNavigate();
   const [list, setList] = useState([]);
+  const { t } = useTranslation();
 
   useEffect(() => {
     getList();
@@ -165,8 +186,14 @@ export default function Pub() {
 
   return (
     <PageStyle>
-      {/*{loading && <LoadingBox />}*/}
       <Box>
+        <FlexBox>
+          <BackBox onClick={() => navigate(-1)}>
+            <ChevronLeft className="iconTop" />
+            <span>{t('general.back')}</span>
+          </BackBox>
+          <Button onClick={() => window.open('https://tally.so/r/mDKbqb', '_target')}>{t('general.apply')}</Button>
+        </FlexBox>
         <Row>
           {list.map((item: any, index) => (
             <Col md={3} key={index} onClick={() => ToGo(item.id)}>
