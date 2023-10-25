@@ -5,10 +5,12 @@ const LOCAL = {
   REACT_APP_MOBILE_OPEN: false,
   REACT_APP_ENV: 'test',
   REACT_APP_JOYID_ENABLE: true,
+  REAT_APP_ONESIGNAL_ID: '9c6122e1-3de4-4c03-8e68-9f357e9ca1ae',
 };
 const DEVELOPMENT = {
   ...LOCAL,
   REACT_APP_ENV: 'test',
+  REAT_APP_ONESIGNAL_ID: '135980e7-6778-4bf8-9aac-dabc7fbd8e31',
 };
 
 const PRODUCTION = {
