@@ -26,10 +26,7 @@ export default function Info({ detail, onUpdate }: Iprops) {
               </li>
             ))}
           </ProposalBox>
-          <div className="desc">
-            this is description this is description this is description this is description this is description this is
-            description this is description this is description this is description this is description
-          </div>
+          <div className="desc">{detail?.desc}</div>
         </TopInfo>
       </TopBox>
       <Members detail={detail} updateProject={onUpdate} />
