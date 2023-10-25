@@ -83,9 +83,9 @@
     "config": "node firebase-config.js",
     "dev": "npm run config && react-scripts start",
     "start": "npm run dev",
-    "build:dev": "npm run config && react-scripts build",
-    "build": "REACT_APP_ENV_VERSION=dev npm run build",
-    "build:prod": "REACT_APP_ENV_VERSION=prod npm run build",
+    "build:online": "npm run config && react-scripts build",
+    "build": "REACT_APP_ENV_VERSION=dev npm run build:online",
+    "build:prod": "REACT_APP_ENV_VERSION=prod npm run build:online",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
