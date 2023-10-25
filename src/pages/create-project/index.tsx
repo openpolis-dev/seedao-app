@@ -1,16 +1,16 @@
 import { InputGroup, Button, Form } from 'react-bootstrap';
 import styled from 'styled-components';
-import React, { ChangeEvent, FormEvent, useState } from 'react';
+import React, { ChangeEvent, FormEvent, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { createProjects } from 'requests/project';
 import { BudgetType, IBaseProject } from 'type/project.type';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import useToast, { ToastType } from 'hooks/useToast';
 import { AssetName } from 'utils/constant';
-import InputNumber from 'components/inputNumber';
 import { useNavigate } from 'react-router-dom';
 import { ChevronLeft, PlusLg, DashLg, Upload, X } from 'react-bootstrap-icons';
 import { ContainerPadding } from 'assets/styles/global';
+import { MdEditor } from 'md-editor-rt';
 
 const OuterBox = styled.div`
   box-sizing: border-box;
@@ -169,13 +169,42 @@ const ImgBox = styled.div`
   }
 `;
 
+const config = {
+  toobars: [
+    'bold',
+    'underline',
+    'italic',
+    'strikeThrough',
+    'sub',
+    'sup',
+    'quote',
+    'unorderedList',
+    'orderedList',
+    'codeRow',
+    'code',
+    'link',
+    'image',
+    'table',
+    'revoke',
+    'next',
+    'pageFullscreen',
+    'fullscreen',
+    'preview',
+    'htmlPreview',
+  ],
+  toolbarsExclude: ['github'],
+};
+
 export default function CreateProject() {
   // const router = useRouter();
 
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { Toast, showToast } = useToast();
-  const { dispatch } = useAuthContext();
+  const {
+    dispatch,
+    state: { language },
+  } = useAuthContext();
   const [adminList, setAdminList] = useState(['']);
   const [memberList, setMemberList] = useState(['']);
   const [proList, setProList] = useState(['']);
@@ -186,6 +215,13 @@ export default function CreateProject() {
   const [proName, setProName] = useState('');
   const [desc, setDesc] = useState('');
   const [url, setUrl] = useState('');
+  const [intro, setIntro] = useState('');
+  const [lan, setLan] = useState('');
+
+  useEffect(() => {
+    const localLan = language === 'zh' ? 'zh-CN' : 'en-US';
+    setLan(localLan);
+  }, [language]);
 
   const handleInput = (e: ChangeEvent, index: number, type: string) => {
     const { value } = e.target as HTMLInputElement;
@@ -485,6 +521,21 @@ export default function CreateProject() {
                   />
                 </InputBox>
               </li>
+              <li>
+                <div className="title">{t('Project.Intro')}</div>
+                <IntroBox>
+                  <MdEditor
+                    modelValue={intro}
+                    onChange={(val) => {
+                      setIntro(val);
+                    }}
+                    toolbars={config.toobars as any}
+                    language={lan}
+                    codeStyleReverse={false}
+                    noUploadImg
+                  />
+                </IntroBox>
+              </li>
             </UlBox>
             <BtmBox>
               <Button variant="outline-primary" className="btnBtm">
@@ -511,3 +562,9 @@ export default function CreateProject() {
     </OuterBox>
   );
 }
+
+const IntroBox = styled.div`
+  .cm-scroller {
+    background: #f7f9fc;
+  }
+`;
