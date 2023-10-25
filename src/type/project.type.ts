@@ -42,6 +42,8 @@ export interface IBaseProject {
   members: string[];
   proposals: string[];
   budgets: IBaseBudgetItem[];
+  desc: string;
+  intro: string;
 }
 
 export interface ReTurnProject {
@@ -56,6 +58,7 @@ export interface ReTurnProject {
   status: ProjectStatus;
   updated_at: string;
   budgets: IBudgetItem[];
+  intro: string;
 }
 
 export interface InfoObj {

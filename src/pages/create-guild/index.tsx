@@ -329,6 +329,8 @@ export default function CreateGuild() {
       sponsors: adminList,
       members: memberList,
       proposals: ids,
+      desc,
+      intro,
       budgets: [
         {
           name: AssetName.Token,

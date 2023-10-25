@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
 import { ReTurnProject } from 'type/project.type';
 import Members from './members';
+import ReactMarkdown from 'react-markdown';
 
 interface Iprops {
   detail: ReTurnProject | undefined;
@@ -33,6 +34,10 @@ export default function Info({ detail }: Iprops) {
         </TopInfo>
       </TopBox>
       <Members detail={detail} updateProject={updateProject} />
+      <ContentBox>
+        <div>介绍</div>
+        <ReactMarkdown>{detail?.intro || ''}</ReactMarkdown>
+      </ContentBox>
     </>
   );
 }
@@ -60,5 +65,21 @@ const ProposalBox = styled.ul`
     a {
       padding: 5px 10px;
     }
+  }
+`;
+
+const ContentBox = styled.div`
+  line-height: 1.2em;
+  padding-top: 40px;
+  border-top: 1px solid #eee;
+  margin-top: 20px;
+  h2 {
+    padding: 1rem 0;
+  }
+  p {
+    padding: 0 -0px 1rem;
+  }
+  img {
+    max-width: 100%;
   }
 `;

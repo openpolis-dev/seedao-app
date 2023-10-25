@@ -330,6 +330,8 @@ export default function CreateProject() {
       sponsors: adminList,
       members: memberList,
       proposals: ids,
+      desc,
+      intro,
       budgets: [
         {
           name: AssetName.Token,
