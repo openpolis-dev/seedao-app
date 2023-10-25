@@ -22,6 +22,7 @@ import GuildInfo from './pages/guild/info';
 import CreateProject from './pages/create-project';
 import CreateGuild from './pages/create-guild';
 import Profile from './pages/user/profile';
+import ProfileEdit from './pages/user/profile/edit';
 import UserVault from './pages/user/vault';
 import CalendarPage from './pages/calendar';
 import RouterChecker from './utils/routerChecker';
@@ -39,6 +40,7 @@ export default function RouterLink() {
           <Route path="/home" element={<Home />} />
 
           <Route path="/user/profile" element={<Profile />} />
+          <Route path="/user/profile/edit" element={<ProfileEdit />} />
           <Route path="/user/vault" element={<UserVault />} />
 
           <Route path="/event" element={<Event />} />

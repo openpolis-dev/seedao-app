@@ -1,4 +1,4 @@
-import { InputGroup, Row, Col, Form, Button } from 'react-bootstrap';
+import { InputGroup, Button, Form } from 'react-bootstrap';
 import styled from 'styled-components';
 import React, { ChangeEvent, useEffect, useState, FormEvent, useMemo } from 'react';
 import requests from 'requests';
@@ -10,13 +10,6 @@ import { ContainerPadding } from 'assets/styles/global';
 import useParseSNS from 'hooks/useParseSNS';
 import CopyBox from 'components/copy';
 import copyIcon from 'assets/images/copy.svg';
-import SeedIcon from 'assets/images/seed.png';
-
-import TwitterIcon from 'assets/images/twitterNor.svg';
-import DiscordIcon from 'assets/images/discordNor.svg';
-import EmailIcon from 'assets/images/email.svg';
-import { formatNumber } from 'utils/number';
-import { Link } from 'react-router-dom';
 
 const OuterBox = styled.div`
   min-height: 100%;
@@ -24,7 +17,6 @@ const OuterBox = styled.div`
 `;
 
 const HeadBox = styled.div`
-  position: relative;
   display: flex;
   gap: 30px;
   align-items: center;
@@ -239,15 +231,7 @@ export default function Profile() {
             </UploadBox>
           </AvatarBox>
           <InfoBox>
-            <div className="wallet">
-              <span>{sns || '-'}</span>
-              <TagBox>
-                <li>s4节点</li>
-                <li>s4节点</li>
-                <li>s4节点</li>
-              </TagBox>
-            </div>
-            <div className="wallet">{userName}</div>
+            <div className="wallet">{sns}</div>
             <div className="wallet">
               <div>{userData?.wallet}</div>
               {userData?.wallet && (
@@ -257,72 +241,74 @@ export default function Profile() {
               )}
             </div>
           </InfoBox>
-          <EditButton to="/user/profile/edit">
-            <Button variant="primary">编辑</Button>
-          </EditButton>
         </HeadBox>
-        <LinkBox>
-          {twitter && (
-            <a href={twitter} target="_blank" rel="noreferrer">
-              <img src={TwitterIcon} alt="" className="icon" width="20px" height="20px" />
-            </a>
-          )}
-          {discord && (
-            <CopyBox text={discord || ''} dir="right">
-              <img src={DiscordIcon} alt="" className="icon" width="20px" height="20px" />
-            </CopyBox>
-          )}
-          {email && (
-            <CopyBox text={email || ''}>
-              <img src={EmailIcon} alt="" className="icon" width="20px" height="20px" />
-            </CopyBox>
-          )}
-
-          {wechat && (
-            <a href={wechat} target="_blank" rel="noopener noreferrer" className="icon">
-              wehat
-            </a>
-          )}
-          {mirror && (
-            <a href={mirror} target="_blank" rel="noopener noreferrer" className="icon">
-              mirror
-            </a>
-          )}
-        </LinkBox>
-        <BioBox>
-          {t('My.Bio')}: {bio || '-'}
-        </BioBox>
-        <ProgressOuter>
-          <FstLine>
-            <LevelBox>level 2</LevelBox>
-            <SCRBox>{formatNumber(50000)} SCR</SCRBox>
-          </FstLine>
-          <ProgressBox width="60">
-            <div className="inner" />
-          </ProgressBox>
-          <TipsBox>
-            <div>next level</div>
-            <div>{formatNumber(10000)} SCR</div>
-          </TipsBox>
-        </ProgressOuter>
-        <NftBox>
-          <div className="title">SEED</div>
-          <Row>
-            {[...Array(8)].map((item, index) => (
-              <Col key={index} sm={12} md={6} lg={3} xl={2}>
-                <img src={SeedIcon} alt="" />
-              </Col>
-            ))}
-          </Row>
-          <div className="title">SBT</div>
-          <Row>
-            {[...Array(8)].map((item, index) => (
-              <Col key={index} sm={12} md={6} lg={3} xl={2}>
-                <img src={SeedIcon} alt="" />
-              </Col>
-            ))}
-          </Row>
-        </NftBox>
+        <MidBox>
+          <UlBox>
+            <li>
+              <div className="title">{t('My.Name')}</div>
+              <InputBox>
+                <Form.Control
+                  type="text"
+                  placeholder=""
+                  value={userName}
+                  onChange={(e) => handleInput(e, 'userName')}
+                />
+              </InputBox>
+            </li>
+            <li>
+              <div className="title">{t('My.Bio')}</div>
+              <InputBox>
+                <Form.Control
+                  placeholder=""
+                  as="textarea"
+                  rows={5}
+                  value={bio}
+                  onChange={(e) => handleInput(e, 'bio')}
+                />
+              </InputBox>
+            </li>
+            <li>
+              <div className="title">{t('My.Email')}</div>
+              <InputBox>
+                <Form.Control type="text" placeholder="" value={email} onChange={(e) => handleInput(e, 'email')} />
+              </InputBox>
+            </li>
+          </UlBox>
+          <UlBox>
+            <li>
+              <div className="title">{t('My.Discord')}</div>
+              <InputBox>
+                <Form.Control type="text" placeholder="" value={discord} onChange={(e) => handleInput(e, 'discord')} />
+              </InputBox>
+            </li>
+            <li>
+              <div className="title">{t('My.Twitter')}</div>
+              <InputBox>
+                <Form.Control
+                  type="text"
+                  placeholder="eg, https://twitter.com/..."
+                  value={twitter}
+                  onChange={(e) => handleInput(e, 'twitter')}
+                />
+              </InputBox>
+            </li>
+            <li>
+              <div className="title">{t('My.WeChat')}</div>
+              <InputBox>
+                <Form.Control type="text" placeholder="" value={wechat} onChange={(e) => handleInput(e, 'wechat')} />
+              </InputBox>
+            </li>
+            <li>
+              <div className="title">{t('My.Mirror')}</div>
+              <InputBox>
+                <Form.Control type="text" placeholder="" value={mirror} onChange={(e) => handleInput(e, 'mirror')} />
+              </InputBox>
+            </li>
+          </UlBox>
+        </MidBox>
+        <div style={{ textAlign: 'center' }}>
+          <Button onClick={saveProfile}>{t('general.confirm')}</Button>
+        </div>
       </CardBox>
     </OuterBox>
   );
@@ -387,109 +373,9 @@ const ImgBox = styled.div`
 const InfoBox = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 16px;
   .wallet {
     display: flex;
     gap: 10px;
   }
-`;
-
-const NftBox = styled.section`
-  margin-block: 20px;
-  .title {
-    margin-bottom: 20px;
-  }
-  img {
-    width: 100%;
-    margin-bottom: 20px;
-  }
-`;
-
-const BioBox = styled.section`
-  margin-top: 20px;
-`;
-
-const LinkBox = styled.div`
-  margin-top: 20px;
-  img {
-    width: 20px;
-    height: 20px;
-  }
-  .icon {
-    margin-inline: 5px !important;
-  }
-  .copy-content {
-    display: inline-block;
-  }
-`;
-
-const ProgressBox = styled.div<{ width: number | string }>`
-  width: 100%;
-  height: 10px;
-  background: #fff;
-  border: 2px solid #000;
-  border-radius: 10px;
-  overflow: hidden;
-  .inner {
-    height: 8px;
-    background: #000;
-    width: ${(props) => props.width + '%'};
-    border-radius: 8px;
-  }
-`;
-
-const ProgressOuter = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin: 50px 0 20px;
-  width: 300px;
-`;
-
-const FstLine = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 10px;
-`;
-
-const LevelBox = styled.div`
-  background: #ff3231;
-  color: #fff;
-  padding: 2px 10px;
-  border-radius: 7px;
-  text-transform: uppercase;
-  font-size: 12px;
-`;
-
-const SCRBox = styled.div`
-  font-size: 15px;
-  text-align: right;
-  font-weight: 700;
-`;
-const TipsBox = styled.div`
-  color: #b5b6c4;
-  margin-top: 10px;
-  font-size: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-`;
-
-const TagBox = styled.ul`
-  font-size: 12px;
-  margin-left: 8px;
-  display: flex;
-  gap: 8px;
-  li {
-    border-radius: 5px;
-    padding-inline: 10px;
-    border: 1px solid #ccc;
-    line-height: 22px;
-  }
-`;
-
-const EditButton = styled(Link)`
-  position: absolute;
-  right: 20px;
-  top: 20px;
 `;
