@@ -69,9 +69,14 @@ export default function Index() {
 
   const getDetail = async () => {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
-    const dt = await getProjectById(id as string);
-    dispatch({ type: AppActionType.SET_LOADING, payload: null });
-    setDetail(dt.data);
+    try {
+      const dt = await getProjectById(id as string);
+      setDetail(dt.data);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      dispatch({ type: AppActionType.SET_LOADING, payload: null });
+    }
   };
 
   const handleBack = () => {
@@ -79,8 +84,8 @@ export default function Index() {
   };
 
   const handleUpadte = () => {
-    // TODO get info
     setIsEdit(false);
+    getDetail();
   };
 
   return (
@@ -90,10 +95,16 @@ export default function Index() {
           <ChevronLeft className="back" onClick={handleBack} />
           <div>
             <span>{detail?.name}</span>
-            {canAuditApplication && <PencilSquare onClick={() => setIsEdit(true)} className="edit" />}
+            {canAuditApplication && !isEdit && <PencilSquare onClick={() => setIsEdit(true)} className="edit" />}
           </div>
         </BackBox>
-        <Content>{isEdit ? <EditGuild detail={detail} onUpdate={handleUpadte} /> : <Info detail={detail} />}</Content>
+        <Content>
+          {isEdit ? (
+            <EditGuild detail={detail} onUpdate={handleUpadte} />
+          ) : (
+            <Info detail={detail} onUpdate={handleUpadte} />
+          )}
+        </Content>
       </Box>
     </OuterBox>
   );

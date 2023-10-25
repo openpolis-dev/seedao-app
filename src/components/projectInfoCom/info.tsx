@@ -3,14 +3,15 @@ import { useTranslation } from 'react-i18next';
 import { ReTurnProject } from 'type/project.type';
 import Members from './members';
 import ReactMarkdown from 'react-markdown';
+import { updateMembers } from 'requests/project';
 
 interface Iprops {
   detail: ReTurnProject | undefined;
+  onUpdate: () => void;
 }
-export default function Info({ detail }: Iprops) {
+export default function Info({ detail, onUpdate }: Iprops) {
   const { t } = useTranslation();
 
-  const updateProject = () => {};
   return (
     <>
       <TopBox>
@@ -33,7 +34,7 @@ export default function Info({ detail }: Iprops) {
           </div>
         </TopInfo>
       </TopBox>
-      <Members detail={detail} updateProject={updateProject} />
+      <Members detail={detail} updateProject={onUpdate} />
       <ContentBox>
         <div>介绍</div>
         <ReactMarkdown>{detail?.intro || ''}</ReactMarkdown>

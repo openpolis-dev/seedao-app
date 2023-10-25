@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { Card, InputGroup, Button, Form } from 'react-bootstrap';
 import React, { ChangeEvent, useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { updateStaffs, IUpdateStaffsParams } from 'requests/guild';
+import { updateStaffs, IUpdateStaffsParams } from 'requests/project';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import { ethers } from 'ethers';
 import useToast, { ToastType } from 'hooks/useToast';
@@ -184,7 +184,7 @@ export default function Add(props: Iprops) {
 
       dispatch({ type: AppActionType.SET_LOADING, payload: true });
       await updateStaffs(id as string, params);
-      showToast(t('Guild.addMemberSuccess'), ToastType.Success);
+      showToast(t('Project.addMemberSuccess'), ToastType.Success);
       dispatch({ type: AppActionType.SET_LOADING, payload: null });
       closeAdd(true);
     } catch (e) {
@@ -198,8 +198,8 @@ export default function Add(props: Iprops) {
 
   const roleOptions = useMemo(() => {
     return [
-      { label: t('Guild.Dominator'), value: false },
-      { label: t('Guild.Members'), value: true },
+      { label: t('Project.Dominator'), value: false },
+      { label: t('Project.Members'), value: true },
     ];
   }, [t]);
 
