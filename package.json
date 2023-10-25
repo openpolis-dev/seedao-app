@@ -83,8 +83,8 @@
     "config": "node firebase-config.js",
     "dev": "npm run config && react-scripts start",
     "start": "npm run dev",
-    "build": "npm run config && react-scripts build",
-    "build:dev": "REACT_APP_ENV_VERSION=dev npm run build",
+    "build:dev": "npm run config && react-scripts build",
+    "build": "REACT_APP_ENV_VERSION=dev npm run build",
     "build:prod": "REACT_APP_ENV_VERSION=prod npm run build",
     "eject": "react-scripts eject"
   },
