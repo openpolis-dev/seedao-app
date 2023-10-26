@@ -12,7 +12,7 @@ const MESSAGE_TYPE = {
 self.addEventListener('notificationclick', async function (event) {
   console.log('click event:', event);
   console.log('notificationt:', event.notification);
-  const data = event.notification.data?.FCM_MSG?.data;
+  const data = event.notification.data?.additionalData;
 
   if (data) {
     const type = data.type;
