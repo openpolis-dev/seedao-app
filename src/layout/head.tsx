@@ -188,7 +188,7 @@ export default function Header() {
     navigate('/');
   };
 
-  const onClickLogout = () => {
+  const onClickLogout = async () => {
     disconnect();
     dispatch({ type: AppActionType.CLEAR_AUTH, payload: undefined });
     // localStorage.removeItem(SEEDAO_USER_DATA);
@@ -203,7 +203,7 @@ export default function Header() {
     dispatch({ type: AppActionType.SET_AUTHORIZER, payload: null });
     dispatch({ type: AppActionType.SET_WALLET_TYPE, payload: null });
     dispatch({ type: AppActionType.SET_ACCOUNT, payload: null });
-    OneSignal.logout();
+    await OneSignal.logout();
     toGo();
     window.location.reload();
   };
