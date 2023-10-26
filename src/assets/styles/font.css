@@ -1,26 +1,16 @@
 @font-face {
-    font-family: "Inter-Bold";
-    src: url("../fonts/Inter-Bold.otf") format("otf");
-}
-
-@font-face {
-    font-family: "Inter-Regular";
-    src: url("../fonts/Inter-Regular.otf") format("otf");
-}
-
-@font-face {
-    font-family: 'Jost-ExtraBold';
-    src: url('../fonts/Jost-ExtraBold.ttf');
+    font-family: 'Poppins-Regular';
+    src: url('../fonts/Poppins-Regular.ttf');
 }
 @font-face {
-    font-family: 'Jost-Bold';
-    src: url('../fonts/Jost-Bold.ttf');
+    font-family: 'Poppins-SemiBold';
+    src: url('../fonts/Poppins-SemiBold.ttf');
 }
 @font-face {
-    font-family: 'Jost-SemiBold';
-    src: url('../fonts/Jost-SemiBold.ttf');
+    font-family: 'Poppins-Medium';
+    src: url('../fonts/Poppins-Medium.ttf');
 }
 @font-face {
-    font-family: 'Barlow-Regular';
-    src: url('../fonts/Barlow-Regular.ttf');
+    font-family: 'Poppins-Bold';
+    src: url('../fonts/Poppins-Bold.ttf');
 }

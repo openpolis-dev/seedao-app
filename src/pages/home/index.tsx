@@ -72,7 +72,9 @@ const LineBox = styled.div`
     margin-right: 14px;
   }
   .num {
-    font-size: 3rem;
+    font-family: 'Poppins-SemiBold';
+    color: var(--bs-body-color_active);
+    font-size: 40px;
     font-weight: bold;
   }
   @media (max-width: 1024px) {
