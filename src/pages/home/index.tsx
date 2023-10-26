@@ -4,73 +4,34 @@ import { Row, Col } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import { GOV_NODE_CONTRACT, SGN_CONTRACT } from 'utils/constant';
-import BgImg from '../../assets/images/topBg.png';
-import HomeBg from '../../assets/images/homebg.png';
+
 import { People, ShieldCheck } from 'react-bootstrap-icons';
 import AppCard from 'components/common/appCard';
 import Links from 'utils/links';
 
+import SGNImg from '../../assets/newImages/dark/sgnHome.png';
+import SbtImg from '../../assets/newImages/dark/sbt.png';
+import GovernImg from '../../assets/newImages/dark/govern.png';
+import SGNImgLight from '../../assets/newImages/light/sgnHome.png';
+import SbtImgLight from '../../assets/newImages/light/sbt.png';
+import GovernImgLight from '../../assets/newImages/light/govern.png';
+import { useAuthContext } from '../../providers/authProvider';
+
 const CITY_HALL = 'https://seedao.notion.site/07c258913c5d4847b59271e2ae6f7c66';
 const CITY_HALL_MEMBERS = 'https://www.notion.so/3913d631d7bc49e1a0334140e3cd84f5';
 
-const Box = styled.div`
-  background: #f0f3f8;
-`;
+const Box = styled.div``;
 
 const BannerBox = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 6rem 2.5rem 4rem;
-  background: url(${BgImg}) no-repeat right;
+
   background-size: auto 100%;
   @media (max-width: 1024px) {
     padding: 40px 25px 30px;
-    background: url(${BgImg}) no-repeat bottom right;
     background-size: auto 80%;
-  }
-`;
-
-const LFtBox = styled.div`
-  width: 59%;
-  .tit {
-    font-size: 2.5rem;
-    font-weight: bold;
-    text-transform: uppercase;
-    line-height: 1.2em;
-    font-family: 'Jost-ExtraBold';
-    text-shadow: 5px 5px #f5f5f5;
-  }
-  .tips {
-    background: #fff;
-    padding: 2rem 1.5rem;
-    border-radius: 10px;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-    margin-top: 2rem;
-    width: 80%;
-    font-size: 1.2rem;
-    line-height: 1.4em;
-    span {
-      padding: 2px 5px;
-      font-weight: bold;
-      margin-right: 5px;
-      //background: #f1f1f1;
-    }
-  }
-  @media (min-width: 1780px) {
-    .tit {
-      font-size: 3.5rem;
-    }
-  }
-
-  @media (max-width: 1024px) {
-    .tit {
-      font-size: 30px;
-    }
-    .tips {
-      padding: 20px;
-      font-size: 14px;
-    }
   }
 `;
 
@@ -96,32 +57,23 @@ const TitBox = styled.div`
 `;
 
 const LineBox = styled.div`
-  background: url(${HomeBg}) center no-repeat;
-  background-size: 100%;
-  background-attachment: fixed;
+  display: flex;
+  align-items: center;
+  width: 100%;
   margin-bottom: 16px;
-  .inner {
-    background: rgba(161, 110, 255, 0.7);
-    padding: 10px;
-  }
-  ul {
-    display: flex;
-    align-items: center;
-    width: 100%;
-  }
-  li {
+
+  dl {
     width: 33.33333%;
-    color: #fff;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.2rem;
+  }
+  img {
+    margin-right: 14px;
   }
   .num {
     font-size: 3rem;
     font-weight: bold;
-    margin-right: 1.5rem;
-    font-family: 'Jost-Bold';
   }
   @media (max-width: 1024px) {
     .num {
@@ -201,6 +153,10 @@ export default function Home() {
   const [onboardingHolders, setOnboardingHolders] = useState(0);
   const [onNewHolders, setNewHolders] = useState(0);
 
+  const {
+    state: { theme },
+  } = useAuthContext();
+
   const events = useMemo(() => {
     // @ts-ignore
     return Links.apps.map((item) => ({ ...item, name: t(item.name) as string }));
@@ -261,31 +217,42 @@ export default function Home() {
   return (
     <Box>
       <BannerBox>
-        <LFtBox>
-          <div className="tit">{t('Home.Slogan')}</div>
-          <div className="tips">
-            <span>{t('Home.SloganVison')}:</span>
-            {t('Home.SloganDesc')}
-          </div>
-        </LFtBox>
+        {/*<LFtBox>*/}
+        {/*  <div className="tit">{t('Home.Slogan')}</div>*/}
+        {/*  <div className="tips">*/}
+        {/*    <span>{t('Home.SloganVison')}:</span>*/}
+        {/*    {t('Home.SloganDesc')}*/}
+        {/*  </div>*/}
+        {/*</LFtBox>*/}
       </BannerBox>
       <LineBox>
-        <div className="inner">
-          <ul>
-            <li>
-              <div className="num">{sgnHolders}</div>
-              <div>{t('Home.SGNHolder')}</div>
-            </li>
-            <li>
-              <div className="num">{governNodes}</div>
-              <div>{t('Home.GovernNode')}</div>
-            </li>
-            <li>
-              <div className="num">{sbtHolders}</div>
-              <div>{t('Home.SBTHolder')}</div>
-            </li>
-          </ul>
-        </div>
+        <dl>
+          <dt>
+            <img src={theme ? SGNImg : SGNImgLight} alt="" />
+          </dt>
+          <dd>
+            <div className="num">{sgnHolders}</div>
+            <div>{t('Home.SGNHolder')}</div>
+          </dd>
+        </dl>
+        <dl>
+          <dt>
+            <img src={theme ? GovernImg : GovernImgLight} alt="" />
+          </dt>
+          <dd>
+            <div className="num">{governNodes}</div>
+            <div>{t('Home.GovernNode')}</div>
+          </dd>
+        </dl>
+        <dl>
+          <dt>
+            <img src={theme ? SbtImg : SbtImgLight} alt="" />
+          </dt>
+          <dd>
+            <div className="num">{sbtHolders}</div>
+            <div>{t('Home.SBTHolder')}</div>
+          </dd>
+        </dl>
       </LineBox>
       <ActiveBox>
         <TitBox>{t('Home.Apps')}</TitBox>

@@ -134,11 +134,26 @@ export default function Pub() {
   const [list, setList] = useState([]);
   const { t } = useTranslation();
 
+  const secretKey = 'secret_gnVFq5NWrDHY481DoMPwaCLuo6GDvGw7s31xOxdQNkR';
+
   useEffect(() => {
     getList();
   }, []);
 
   const getList = async () => {
+    //
+    // try{
+    //   let result = await axios.get(`https://api.notion.com/v1/databases/73d83a0a-258d-4ac5-afa5-7a997114755a`,{
+    //     headers:{
+    //       Authorization: `Bearer ${secretKey}`,
+    //       'Notion-Version': '2022-06-28'
+    //     }
+    //   });
+    //   console.log(result);
+    // }catch (e){
+    //
+    // }
+
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
       let result = await axios.get(`https://notion-api.splitbee.io/v1/table/73d83a0a-258d-4ac5-afa5-7a997114755a`);

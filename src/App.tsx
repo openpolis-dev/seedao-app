@@ -35,8 +35,6 @@ function App() {
   }, []);
 
   return (
-    // <Web3Provider>
-
     <WagmiConfig config={wagmiConfig}>
       <AuthProvider>
         <GlobalStyle />
@@ -56,7 +54,6 @@ function App() {
         />
       </AuthProvider>
     </WagmiConfig>
-    // </Web3Provider>
   );
 }
 

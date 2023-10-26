@@ -15,10 +15,9 @@ export default function AppVersion({ open }: any) {
       {open && (
         <VersionBox>
           <FeedbackBox onClick={() => toGo()}>{t('menus.feedback')}</FeedbackBox>
-          <div>
-            {process.env.REACT_APP_APP_VERSION}
-            <br />
-            Build {process.env.REACT_APP_BUILD_ID?.slice(0, 6)}.{process.env.REACT_APP_COMMIT_REF?.slice(0, 6)}
+          <div className="lft">
+            {process.env.REACT_APP_APP_VERSION}.Build {process.env.REACT_APP_BUILD_ID?.slice(0, 6)}.
+            {process.env.REACT_APP_COMMIT_REF?.slice(0, 6)}
           </div>
         </VersionBox>
       )}
@@ -35,11 +34,15 @@ const VersionBox = styled.div`
   line-height: 22px;
   text-align: center;
   box-sizing: border-box;
-  color: #999;
-  padding-bottom: 20px;
+  overflow: hidden;
+  padding: 0 0 20px 30px;
+  .lft {
+    text-align: left;
+  }
 `;
 
 const FeedbackBox = styled.div`
   cursor: pointer;
-  margin-bottom: 10px;
+  text-align: left;
+  color: var(--bs-body-color_active);
 `;

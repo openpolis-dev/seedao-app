@@ -17,7 +17,7 @@ const GlobalStyle = createGlobalStyle`
   }
   
   body{
-    background: #f0f3f8;
+    background: var(--bs-background);
   }
    
   ul, li, dl, dt, dd,p{
@@ -41,12 +41,11 @@ const GlobalStyle = createGlobalStyle`
     font-size: 14px;
     
   }
-  .btn{
-    border-radius: 0.25rem;
-  }
   .btn-primary{
     color:#fff;
     text-transform: uppercase;
+    background: var(--bs-primary);
+    border-color: var(--bs-primary);
     &:hover, &:focus-visible, &:active {
       color:#fff !important;
     }
@@ -121,9 +120,7 @@ const GlobalStyle = createGlobalStyle`
       background: #f2f0f9;
     }
   }
-  .form-control,.form-select{
-    background-color: rgb(247, 249, 252);
-  }
+
   .dateBox{
     position: relative;
     flex: 1 1 auto;

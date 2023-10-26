@@ -1,0 +1,25 @@
+:root{
+  --bs-border-radius:8px;
+}
+:root[data-bs-theme="light"] {
+  --bs-primary: #5200FF;
+  --bs-background:#fff;
+  --bs-body-bg:#fff;
+  --bs-body-color:#B0B0B0;
+  --bs-body-color_active:#000;
+  --bs-box-background:#fff;
+  --bs-border-color: #E9EBED;
+  --bs-border-color-focus: #E9EBED;
+
+}
+
+:root[data-bs-theme="dark"] {
+  --bs-primary: #5200FF;
+  --bs-background:#0D0C0F;
+  --bs-body-bg:#0D0C0F;
+  --bs-body-color:#B0B0B0;
+  --bs-body-color_active:#fff;
+  --bs-box-background:#1A1323;
+  --bs-border-color: #29282F;
+  --bs-border-color-focus: #fff;
+}

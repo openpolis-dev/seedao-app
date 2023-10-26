@@ -11,7 +11,7 @@ import { SEEDAO_ACCOUNT, SEEDAO_USER, SEEDAO_USER_DATA, SELECT_WALLET } from '..
 import Avatar from 'components/common/avatar';
 import { Button, Form, Dropdown } from 'react-bootstrap';
 import LoginModal from 'components/modals/loginNew';
-import LogoImg from '../assets/images/logo.png';
+
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { List as ListIcon } from 'react-bootstrap-icons';
@@ -22,6 +22,10 @@ import { useDisconnect } from 'wagmi';
 import { mainnet } from 'wagmi/chains';
 import { Wallet, WalletType } from 'wallet/wallet';
 import OneSignal from 'react-onesignal';
+import LightImg from '../assets/newImages/light.png';
+
+import LogoImg from '../assets/images/logo.png';
+import LogoImgDark from '../assets/images/email.svg';
 
 export default function Header() {
   const { i18n } = useTranslation();
@@ -42,7 +46,7 @@ export default function Header() {
   const [lan, setLan] = useState('en');
 
   const {
-    state: { show_login_modal, language, expandMenu, userData, loading, account },
+    state: { show_login_modal, language, theme, userData, loading, account },
     dispatch,
   } = useAuthContext();
 
@@ -204,22 +208,38 @@ export default function Header() {
     window.location.reload();
   };
 
+  const SwitchThemeFun = () => {
+    if (document.documentElement.getAttribute('data-bs-theme') === 'dark') {
+      document.documentElement.setAttribute('data-bs-theme', 'light');
+    } else {
+      document.documentElement.setAttribute('data-bs-theme', 'dark');
+    }
+    dispatch({
+      type: AppActionType.SET_THEME,
+      payload: document.documentElement.getAttribute('data-bs-theme') === 'dark',
+    });
+  };
+
   return (
     <HeadeStyle>
       {loading && <Loading />}
       <nav>
         <NavLeft>
-          <MenuExpandIcon
-            fontSize="30px"
-            onClick={() => dispatch({ type: AppActionType.SET_EXPAND_MENU, payload: !expandMenu })}
-          />
+          {/*<MenuExpandIcon*/}
+          {/*  fontSize="30px"*/}
+          {/*  onClick={() => dispatch({ type: AppActionType.SET_EXPAND_MENU, payload: !expandMenu })}*/}
+          {/*/>*/}
           <LogoIcon onClick={() => toGo()}>
-            <img src={LogoImg} alt="" />
+            <img src={theme ? LogoImgDark : LogoImg} alt="" />
           </LogoIcon>
         </NavLeft>
 
         <RightBox>
+          <SwitchTheme>
+            <img src={LightImg} alt="" onClick={() => SwitchThemeFun()} />
+          </SwitchTheme>
           <Form.Select
+            data-bs-theme={theme ? 'dark' : 'light'}
             style={{ minWidth: '100px' }}
             value={getLanguages().find((item) => item.value === lan)?.value || getLanguages()[0].value}
             onChange={(event: any) => changeLang(event.target.value, true)}
@@ -233,7 +253,7 @@ export default function Header() {
 
           {isLogin && userData ? (
             <Dropdown>
-              <Dropdown.Toggle variant="success" className="dropBox">
+              <Dropdown.Toggle variant="primary" className="dropBox">
                 <Avatar user={userData} />
               </Dropdown.Toggle>
 
@@ -257,16 +277,32 @@ export default function Header() {
   );
 }
 
+const SwitchTheme = styled.div`
+  width: 25px;
+  height: 25px;
+  margin-right: 24px;
+  flex-shrink: 0;
+  cursor: pointer;
+  img {
+    width: 100%;
+    height: 100%;
+  }
+`;
+
 const HeadeStyle = styled.header`
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   z-index: 999;
-  background: #fff;
+  background: var(--bs-background);
+  border-bottom: 1px solid var(--bs-border-color);
+
+  .form-select:focus {
+    border-color: var(--bs-border-color-focus);
+  }
   nav {
-    box-shadow: rgba(44, 51, 73, 0.1) 0px 0.5rem 1rem 0px;
-    height: 80px;
+    height: 72px;
     padding: 0 20px;
     box-sizing: border-box;
     display: flex;

@@ -17,6 +17,7 @@ interface IState {
   wallet_type?: WalletType;
   expandMenu: boolean;
   provider?: any;
+  theme: boolean;
 }
 
 export enum AppActionType {
@@ -32,6 +33,7 @@ export enum AppActionType {
   SET_WALLET_TYPE = 'set_wallet_type',
   SET_EXPAND_MENU = 'set_expand_menu',
   SET_PROVIDER = 'set_provider',
+  SET_THEME = 'set_theme',
 }
 
 interface IAction {
@@ -42,6 +44,7 @@ interface IAction {
 const INIT_STATE: IState = {
   expandMenu: true,
   show_login_modal: false,
+  theme: document.documentElement.getAttribute('data-bs-theme') === 'dark',
   proposal_categories: [
     {
       category_id: 19,
@@ -103,6 +106,9 @@ const reducer = (state: IState, action: IAction): IState => {
       return { ...state, authorizer: action.payload };
     case AppActionType.SET_PROVIDER:
       return { ...state, provider: action.payload };
+
+    case AppActionType.SET_THEME:
+      return { ...state, theme: action.payload };
 
     case AppActionType.SET_LAN:
       return { ...state, language: action.payload };
