@@ -9,12 +9,12 @@ import { People, ShieldCheck } from 'react-bootstrap-icons';
 import AppCard from 'components/common/appCard';
 import Links from 'utils/links';
 
-import SGNImg from '../../assets/newImages/dark/sgnHome.png';
-import SbtImg from '../../assets/newImages/dark/sbt.png';
-import GovernImg from '../../assets/newImages/dark/govern.png';
-import SGNImgLight from '../../assets/newImages/light/sgnHome.png';
-import SbtImgLight from '../../assets/newImages/light/sbt.png';
-import GovernImgLight from '../../assets/newImages/light/govern.png';
+import SGNImg from '../../assets/Imgs/dark/sgnHome.png';
+import SbtImg from '../../assets/Imgs/dark/sbt.png';
+import GovernImg from '../../assets/Imgs/dark/govern.png';
+import SGNImgLight from '../../assets/Imgs/light/sgnHome.png';
+import SbtImgLight from '../../assets/Imgs/light/sbt.png';
+import GovernImgLight from '../../assets/Imgs/light/govern.png';
 import { useAuthContext } from '../../providers/authProvider';
 
 const CITY_HALL = 'https://seedao.notion.site/07c258913c5d4847b59271e2ae6f7c66';

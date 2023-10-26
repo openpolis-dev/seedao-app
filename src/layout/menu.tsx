@@ -2,36 +2,36 @@ import { useMemo, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import MenuSwitch from '../assets/newImages/menuDark.png';
-import HomeImg from '../assets/newImages/darkMenu/home.png';
-import HomeImgActive from '../assets/newImages/darkMenu/home_active.png';
-import HomeImgLight from '../assets/newImages/lightMenu/home.png';
-import HomeImgLightActive from '../assets/newImages/lightMenu/home_active.png';
+import MenuSwitch from '../assets/Imgs/menuDark.png';
+import HomeImg from '../assets/Imgs/darkMenu/home.png';
+import HomeImgActive from '../assets/Imgs/darkMenu/home_active.png';
+import HomeImgLight from '../assets/Imgs/lightMenu/home.png';
+import HomeImgLightActive from '../assets/Imgs/lightMenu/home_active.png';
 
-import EventImg from '../assets/newImages/darkMenu/event.png';
-import EventImgActive from '../assets/newImages/darkMenu/event_active.png';
-import EventImgLight from '../assets/newImages/lightMenu/event.png';
-import EventImgLightActive from '../assets/newImages/lightMenu/event_active.png';
+import EventImg from '../assets/Imgs/darkMenu/event.png';
+import EventImgActive from '../assets/Imgs/darkMenu/event_active.png';
+import EventImgLight from '../assets/Imgs/lightMenu/event.png';
+import EventImgLightActive from '../assets/Imgs/lightMenu/event_active.png';
 
-import CreditImg from '../assets/newImages/darkMenu/credit.png';
-import CreditImgActive from '../assets/newImages/darkMenu/credit_active.png';
-import CreditImgLight from '../assets/newImages/lightMenu/credit.png';
-import CreditImgLightActive from '../assets/newImages/lightMenu/credit_active.png';
+import CreditImg from '../assets/Imgs/darkMenu/credit.png';
+import CreditImgActive from '../assets/Imgs/darkMenu/credit_active.png';
+import CreditImgLight from '../assets/Imgs/lightMenu/credit.png';
+import CreditImgLightActive from '../assets/Imgs/lightMenu/credit_active.png';
 
-import ExploreImg from '../assets/newImages/darkMenu/explore.png';
-import ExploreImgActive from '../assets/newImages/darkMenu/explore_active.png';
-import ExploreImgLight from '../assets/newImages/lightMenu/explore.png';
-import ExploreImgLightActive from '../assets/newImages/lightMenu/explore_active.png';
+import ExploreImg from '../assets/Imgs/darkMenu/explore.png';
+import ExploreImgActive from '../assets/Imgs/darkMenu/explore_active.png';
+import ExploreImgLight from '../assets/Imgs/lightMenu/explore.png';
+import ExploreImgLightActive from '../assets/Imgs/lightMenu/explore_active.png';
 
-import CityHallImg from '../assets/newImages/darkMenu/cityHall.png';
-import CityHallImgActive from '../assets/newImages/darkMenu/cityHall_active.png';
-import CityHallImgLight from '../assets/newImages/lightMenu/cityHall.png';
-import CityHallImgLightActive from '../assets/newImages/lightMenu/cityHall_active.png';
+import CityHallImg from '../assets/Imgs/darkMenu/cityHall.png';
+import CityHallImgActive from '../assets/Imgs/darkMenu/cityHall_active.png';
+import CityHallImgLight from '../assets/Imgs/lightMenu/cityHall.png';
+import CityHallImgLightActive from '../assets/Imgs/lightMenu/cityHall_active.png';
 
-import GovernImg from '../assets/newImages/darkMenu/govern.png';
-import GovernImgActive from '../assets/newImages/darkMenu/govern_active.png';
-import GovernImgLight from '../assets/newImages/lightMenu/govern.png';
-import GovernImgLightActive from '../assets/newImages/lightMenu/govern_active.png';
+import GovernImg from '../assets/Imgs/darkMenu/govern.png';
+import GovernImgActive from '../assets/Imgs/darkMenu/govern_active.png';
+import GovernImgLight from '../assets/Imgs/lightMenu/govern.png';
+import GovernImgLightActive from '../assets/Imgs/lightMenu/govern_active.png';
 
 import React from 'react';
 import useCheckLogin from 'hooks/useCheckLogin';

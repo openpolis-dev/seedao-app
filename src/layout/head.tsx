@@ -22,7 +22,7 @@ import { useDisconnect } from 'wagmi';
 import { mainnet } from 'wagmi/chains';
 import { Wallet, WalletType } from 'wallet/wallet';
 import OneSignal from 'react-onesignal';
-import LightImg from '../assets/newImages/light.png';
+import LightImg from '../assets/Imgs/light.png';
 
 import LogoImg from '../assets/images/logo.png';
 import LogoImgDark from '../assets/images/email.svg';
@@ -209,6 +209,7 @@ export default function Header() {
   };
 
   const SwitchThemeFun = () => {
+    //theme true dark
     if (document.documentElement.getAttribute('data-bs-theme') === 'dark') {
       document.documentElement.setAttribute('data-bs-theme', 'light');
     } else {
