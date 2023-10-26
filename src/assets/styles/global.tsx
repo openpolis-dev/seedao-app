@@ -153,6 +153,11 @@ const GlobalStyle = createGlobalStyle`
     border-color: var(--bs-primary);
     box-shadow: 0 0 0 0.25rem rgba(161, 100, 255, 0.25);
   }
+
+  /* svg color */
+  .svg-stroke {
+    stroke: var(--bs-svg-color) !important;
+  }
 `;
 
 export default GlobalStyle;

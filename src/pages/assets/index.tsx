@@ -14,13 +14,20 @@ import { ethers } from 'ethers';
 import ModifyBudgetModal from 'components/assetsCom/modifyBudget';
 import { BudgetType } from 'type/project.type';
 import { formatNumber } from 'utils/number';
-import BgImg from '../../assets/images/homebg.png';
-import { Clipboard, Share, ChevronDown, ChevronUp, Pencil } from 'react-bootstrap-icons';
+import { ChevronDown, ChevronUp, Pencil } from 'react-bootstrap-icons';
 import { ContainerPadding } from 'assets/styles/global';
 import { Link } from 'react-router-dom';
+import BalanceIcon from 'assets/images/vault/balance.svg';
+import WalletIcon from 'assets/images/vault/wallet.svg';
+import ChainIcon from 'assets/images/vault/chain.svg';
+import SignerIcon from 'assets/images/vault/signer.svg';
+import CopyIconSVG from 'components/svgs/copy';
+import ShareIconSVG from 'components/svgs/share';
 
 const BoxOuter = styled.div`
   ${ContainerPadding};
+  color: var(--bs-body-color_active);
+  font-family: Poppins-Regular, Poppins;
 `;
 
 const Box = styled.div`
@@ -71,7 +78,6 @@ const FirstLine = styled.ul`
       flex-direction: column;
       //position: relative;
       //z-index: 9;
-      color: #000;
     }
 
     .decorBg {
@@ -81,7 +87,6 @@ const FirstLine = styled.ul`
       font-size: 90px;
       font-family: 'Jost-Bold';
       opacity: 0.04;
-      color: #000;
     }
     div {
       text-align: center;
@@ -334,9 +339,9 @@ export default function Index() {
   }, [totalSCR]);
 
   useEffect(() => {
-    getSCR();
+    // getSCR();
     process.env.NODE_ENV === 'production' && getFloorPrice();
-    getVaultsInfo();
+    // getVaultsInfo();
   }, []);
 
   return (
@@ -350,22 +355,42 @@ export default function Index() {
           <Vault>
             <VaultOverview>
               <div className="vaultInner">
-                <div className="LftBox">
-                  <TotalBalance>{t('Assets.TotalBalance')}</TotalBalance>
-                  <TotalBalanceNum>${formatNumber(Number(totalBalance))}</TotalBalanceNum>
-                </div>
+                <InfoItem className="left">
+                  <div>
+                    <IconStyle src={BalanceIcon} alt="" />
+                  </div>
+                  <div className="info-right">
+                    <div className="title">{t('Assets.TotalBalance')}</div>
+                    <div className="balance num">${formatNumber(Number(totalBalance))}</div>
+                  </div>
+                </InfoItem>
                 <div className="right">
                   <InfoItem>
-                    <span>{t('Assets.Wallet')}</span>
-                    <span>4</span>
+                    <div>
+                      <IconStyle src={WalletIcon} alt="" />
+                    </div>
+                    <div className="info-right">
+                      <div className="title">{t('Assets.Wallet')}</div>
+                      <div className="num">4</div>
+                    </div>
                   </InfoItem>
                   <InfoItem>
-                    <span>{t('Assets.MultiSign')}</span>
-                    <span>{totalSigner}</span>
+                    <div>
+                      <IconStyle src={SignerIcon} alt="" />
+                    </div>
+                    <div className="info-right">
+                      <div className="title">{t('Assets.MultiSign')}</div>
+                      <div className="num">{totalSigner}</div>
+                    </div>
                   </InfoItem>
                   <InfoItem>
-                    <span>{t('Assets.Chain')}</span>
-                    <span>2</span>
+                    <div>
+                      <IconStyle src={ChainIcon} alt="" />
+                    </div>
+                    <div className="info-right">
+                      <div className="title">{t('Assets.Chain')}</div>
+                      <div className="num">2</div>
+                    </div>
                   </InfoItem>
                   <InfoItem className="detail">
                     <Link to="/assets/register">登记</Link>
@@ -376,46 +401,49 @@ export default function Index() {
                   </InfoItem>
                 </div>
               </div>
-            </VaultOverview>
-            {showVaultDetail && (
-              <VaultInfo>
-                {VAULTS.map((v) => (
-                  <VaultItem key={v.address}>
-                    <div className="left">
-                      <span className="name">{t(v.name as any)}</span>
-                      <div className="info">
-                        <div className="address">
-                          <span>{publicJs.AddressToShow(v.address)}</span>
-                          <div>
-                            <CopyBox text={v.address}>
-                              <Clipboard className="iconBox" />
-                            </CopyBox>
+              {showVaultDetail && (
+                <VaultInfo>
+                  {VAULTS.map((v) => (
+                    <VaultItem key={v.address}>
+                      <div className="left">
+                        <span className="name">
+                          <DotIcon />
+                          <span>{t(v.name as any)}</span>
+                        </span>
+                        <div className="info">
+                          <div className="address">
+                            <span>{publicJs.AddressToShow(v.address)}</span>
+                            <div>
+                              <CopyBox text={v.address}>
+                                <CopyIconSVG />
+                              </CopyBox>
+                            </div>
                           </div>
-                          <div>
-                            <a
-                              href={`https://app.safe.global/balances?safe=${SAFE_CHAIN[v.chainId].short}:${v.address}`}
-                              target="_blank"
-                              rel="noreferrer"
-                            >
-                              <Share className="iconBox" />
-                            </a>
+                          <div className="tag">
+                            <Tag>
+                              {SAFE_CHAIN[v.chainId].name}
+                              <span>
+                                {vaultsMap[v.id]?.threshold || 0}/{vaultsMap[v.id]?.total || 0}
+                              </span>
+                            </Tag>
                           </div>
-                        </div>
-                        <div className="tag">
-                          <Tag>
-                            {SAFE_CHAIN[v.chainId].name}
-                            <span>
-                              {vaultsMap[v.id]?.threshold || 0}/{vaultsMap[v.id]?.total || 0}
-                            </span>
-                          </Tag>
                         </div>
                       </div>
-                    </div>
-                    <div className="balance">${formatNumber(Number(vaultsMap[v.id]?.balance || 0.0))}</div>
-                  </VaultItem>
-                ))}
-              </VaultInfo>
-            )}
+                      <div className="balance">
+                        <span> ${formatNumber(Number(vaultsMap[v.id]?.balance || 0.0))}</span>
+                        <a
+                          href={`https://app.safe.global/balances?safe=${SAFE_CHAIN[v.chainId].short}:${v.address}`}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          <ShareIconSVG />
+                        </a>
+                      </div>
+                    </VaultItem>
+                  ))}
+                </VaultInfo>
+              )}
+            </VaultOverview>
           </Vault>
           <FirstLine>
             <li>
@@ -513,24 +541,19 @@ const Vault = styled.div`
   margin-bottom: 20px;
   border-radius: 4px;
   //background: #fff;
-  color: #000;
 `;
 
 const VaultOverview = styled.div`
-  background: url(${BgImg}) top no-repeat;
-  background-size: 100%;
-  background-attachment: fixed;
-  border-radius: 10px;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+  background: var(--bs-box-background);
+  border-radius: 16px;
   overflow: hidden;
   .vaultInner {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: rgba(161, 110, 255, 0.2);
-    padding: 30px 40px;
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
+    height: 152px;
+    padding-left: 29px;
+    padding-right: 62px;
   }
   .right {
     display: flex;
@@ -543,10 +566,8 @@ const VaultOverview = styled.div`
     .vaultInner {
       flex-direction: column;
     }
-    .LftBox {
+    .left {
       width: 100%;
-      display: flex;
-      align-items: center;
       border-bottom: 1px solid #eee;
       padding-bottom: 20px;
       margin-bottom: 20px;
@@ -555,39 +576,47 @@ const VaultOverview = styled.div`
 `;
 
 const InfoItem = styled.li`
-  ${({ theme }) => css`
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  .title {
+    font-size: 14px;
+    color: var(--bs-body-color);
+  }
+  .num {
+    font-size: 28px;
+    font-family: Poppins-Medium, Poppins;
+  }
+
+  .info-right {
     display: flex;
-    align-items: center;
     flex-direction: column;
-    gap: 8px;
-    color: #fff;
-    &.detail {
-      cursor: pointer;
-      background: rgba(255, 255, 255, 0.4);
-      color: #000;
-      padding: 10px 20px;
-      border-radius: 10px;
+    gap: 16px;
+  }
 
-      div {
-        display: flex;
-        align-items: center;
-        gap: 5px;
-      }
-    }
-    > span:first-child {
-      font-weight: ${theme.textSubtitleFontWeight};
-    }
+  &.detail {
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.4);
+    padding: 10px 20px;
+    border-radius: 10px;
 
-    @media (max-width: 950px) {
-      color: #000;
-      gap: 0;
-      &:first-child,
-      &:nth-child(2) {
-        padding-right: 40px;
-        border-right: 1px solid #eee;
-      }
+    div {
+      display: flex;
+      align-items: center;
+      gap: 5px;
     }
-  `}
+  }
+  > span:first-child {
+  }
+
+  @media (max-width: 950px) {
+    gap: 0;
+    &:first-child,
+    &:nth-child(2) {
+      padding-right: 40px;
+      border-right: 1px solid #eee;
+    }
+  }
 `;
 
 const VaultInfo = styled.ul`
@@ -602,7 +631,6 @@ const VaultItem = styled.li`
   justify-content: space-between;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   padding-block: 15px;
-  color: #000;
   &:last-child {
     border-bottom: 0;
   }
@@ -613,6 +641,8 @@ const VaultItem = styled.li`
     .name {
       width: 160px;
       font-size: 14px;
+      font-family: Poppins-SemiBold, Poppins;
+      font-weight: 600;
     }
   }
   .tag {
@@ -625,21 +655,18 @@ const VaultItem = styled.li`
     font-size: 14px;
   }
   .address {
-    gap: 5px;
-    > div {
-      height: 20px;
-      cursor: pointer;
-      a {
-        color: unset;
-      }
-    }
+    gap: 8px;
   }
   .iconBox {
     cursor: pointer;
     margin: 0 0 10px 10px;
   }
   .balance {
-    font-weight: 600;
+    font-size: 18px;
+    font-family: Poppins-SemiBold, Poppins;
+    display: flex;
+    gap: 16px;
+    align-items: center;
   }
   @media (max-width: 950px) {
     .left {
@@ -648,33 +675,13 @@ const VaultItem = styled.li`
   }
 `;
 
-const TotalBalance = styled.div`
-  font-weight: 600;
-  font-size: 1.125rem;
-`;
-
-const TotalBalanceNum = styled.div`
-  font-weight: 600;
-  font-size: 1.375rem;
-  margin-top: 20px;
+const Tag = styled.div`
+  background: #ebe9ff;
+  color: var(--bs-primary);
   text-align: center;
-
-  @media (max-width: 950px) {
-    text-align: left;
-    margin-top: 0;
-    margin-left: 20px;
-  }
-`;
-
-const Tag = styled.span`
-  border: 1px solid var(--bs-primary);
-  background: var(--bs-primary);
-  //border: 1px solid #eecf00;
-  border-radius: 6px;
-  color: #fff;
-
-  padding: 4px 6px;
-  font-size: 12px;
+  border-radius: 8px;
+  width: 128px;
+  line-height: 30px;
   span {
     margin-left: 5px;
   }
@@ -691,4 +698,18 @@ const LiHead = styled.div`
 const LiTitle = styled.div`
   color: #fff;
   font-size: 1.2rem;
+`;
+
+const IconStyle = styled.img`
+  width: 54px;
+  height: 54px;
+`;
+
+const DotIcon = styled.span`
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background: var(--bs-primary);
+  border-radius: 50%;
+  margin-right: 14px;
 `;
