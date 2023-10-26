@@ -23,7 +23,6 @@ const Box = styled.div`
 
     .react-datepicker {
       font-size: 14px;
-      background-color: #fff;
       display: inline-block;
       position: relative;
       border: 1px solid #eee;
@@ -82,7 +81,9 @@ const Box = styled.div`
     .react-datepicker__close-icon {
       right: -10px;
       &:after {
-        background-color: #a16eff;
+        background-color: transparent;
+        font-size: 24px;
+        color: var(--bs-svg-color);
       }
     }
 
@@ -122,8 +123,6 @@ const Box = styled.div`
       font-size: 1rem;
       background: transparent;
       min-width: 200px;
-      font-family: Inter-Regular, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
-        sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
     }
   `}
 `;

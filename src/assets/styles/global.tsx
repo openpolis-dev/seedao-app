@@ -102,22 +102,24 @@ const GlobalStyle = createGlobalStyle`
   .table {
     th {
       background: transparent;
-      color: #6e6893;
       border: 1px solid #d9d5ec;
       border-left: none;
       border-right: none;
       border-radius: 0;
       white-space: nowrap;
       padding: 20px;
+      color: var(--bs-body-color);
+      font-family: Poppins-SemiBold, Poppins;
     }
     td {
-      border-bottom-color: #d9d5ec;
-      color: rgb(34, 43, 69);
       font-size: 14px;
       padding: 20px;
     }
+    th, td {
+      border-style: none;
+    }
     tr:hover td {
-      background: #f2f0f9;
+      background: var(--bs-box-background);
     }
   }
 
@@ -144,14 +146,17 @@ const GlobalStyle = createGlobalStyle`
     border-color: rgb(161, 100, 255);
     box-shadow: 0 0 0 0.25rem rgba(161, 100, 255, 0.25);
   }
+  .form-check-input {
+    width: 18px;
+    height: 18px;
+  }
   .form-check-input:focus {
     border-color: var(--bs-primary);
-    box-shadow: 0 0 0 0.25rem rgba(161, 100, 255, 0.25);
+    box-shadow: unset;
   } 
   .form-check-input:checked {
     background-color: var(--bs-primary);
     border-color: var(--bs-primary);
-    box-shadow: 0 0 0 0.25rem rgba(161, 100, 255, 0.25);
   }
 
   /* svg color */

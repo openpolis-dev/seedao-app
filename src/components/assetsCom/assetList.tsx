@@ -22,8 +22,11 @@ import { formatNumber } from 'utils/number';
 
 const Box = styled.div``;
 const TitBox = styled.div`
+  margin: 40px 0 26px;
+  font-size: 24px;
+  font-family: Poppins-Bold, Poppins;
   font-weight: bold;
-  margin: 40px 0 20px;
+  line-height: 30px;
 `;
 const FirstLine = styled.div`
   display: flex;
@@ -64,10 +67,13 @@ const TimeBox = styled.div`
 `;
 
 const BorderBox = styled.div`
-  border: 1px solid #eee;
+  border-radius: 8px;
+  opacity: 1;
+  border: 1px solid var(--bs-border-color);
   padding: 2px 20px;
-  border-radius: 5px;
-  background: #f7f9fc;
+  &:hover {
+    border-color: var(--bs-border-color-focus);
+  }
 `;
 
 const TableBox = styled.div`
