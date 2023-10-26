@@ -163,7 +163,7 @@ const GlobalStyle = createGlobalStyle`
 export default GlobalStyle;
 
 export const ContainerPadding = css`
-  padding: 40px;
+  padding: 24px 32px;
   @media (max-width: 1024px) {
     padding: 20px;
   }
