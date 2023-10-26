@@ -8,6 +8,8 @@ const AppCard = ({ icon, name, link, id }: { icon: React.ReactElement; name: str
   const handleClickEvent = () => {
     if (id === 'online') {
       navigate('/online-event');
+    } else if (id === 'pub') {
+      navigate('/pub');
     } else {
       window.open(link, '_blank');
     }

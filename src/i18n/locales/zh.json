@@ -10,7 +10,8 @@
     "assets": "金库",
     "feedback": "意见反馈",
     "connectWallet": "连接钱包",
-    "Resources": "资源申请"
+    "Resources": "资源申请",
+    "Explore": "探索"
   },
   "general": {
     "back": "返回",
@@ -39,6 +40,7 @@
     "GovernNode": "治理节点",
     "Apps": "应用",
     "OnlineEvent": "日历",
+    "pub": "Bounty Pub",
     "OfflineEvent": "线下活动"
   },
   "Proposal": {
@@ -61,6 +63,8 @@
     "Budget": "预算",
     "Points": "积分",
     "Members": "成员",
+    "Desc": "描述",
+    "Intro": "介绍",
     "upload": "上传LOGO",
     "ProjectInformation": "项目信息",
     "ProjectProposal": "项目提案",
@@ -133,6 +137,8 @@
     "Budget": "预算",
     "Points": "积分",
     "Members": "成员",
+    "Desc": "描述",
+    "Intro": "介绍",
     "upload": "上传LOGO",
     "ProjectInformation": "公会信息",
     "ProjectProposal": "公会提案",
@@ -196,7 +202,10 @@
     "CalendarReview": "活动日历审核",
     "AppReview": "城邦应用审核",
     "communityReview": "社区大会分享申请审核",
-    "brandReview": "品牌标识使用申请审核"
+    "brandReview": "品牌标识使用申请审核",
+    "management": "管理",
+    "create": "创建",
+    "closeProjectReview": "项目关闭审核"
   },
   "Push": {
     "CreatePush": "创建推送",

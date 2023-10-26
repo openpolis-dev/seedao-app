@@ -1,16 +1,16 @@
 import { InputGroup, Button, Form } from 'react-bootstrap';
 import styled from 'styled-components';
-import React, { ChangeEvent, FormEvent, useState } from 'react';
+import React, { ChangeEvent, FormEvent, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { createProjects } from 'requests/project';
 import { BudgetType, IBaseProject } from 'type/project.type';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import useToast, { ToastType } from 'hooks/useToast';
 import { AssetName } from 'utils/constant';
-import InputNumber from 'components/inputNumber';
 import { useNavigate } from 'react-router-dom';
 import { ChevronLeft, PlusLg, DashLg, Upload, X } from 'react-bootstrap-icons';
 import { ContainerPadding } from 'assets/styles/global';
+import { MdEditor } from 'md-editor-rt';
 
 const OuterBox = styled.div`
   box-sizing: border-box;
@@ -169,13 +169,42 @@ const ImgBox = styled.div`
   }
 `;
 
+const config = {
+  toobars: [
+    'bold',
+    'underline',
+    'italic',
+    'strikeThrough',
+    'sub',
+    'sup',
+    'quote',
+    'unorderedList',
+    'orderedList',
+    'codeRow',
+    'code',
+    'link',
+    'image',
+    'table',
+    'revoke',
+    'next',
+    'pageFullscreen',
+    'fullscreen',
+    'preview',
+    'htmlPreview',
+  ],
+  toolbarsExclude: ['github'],
+};
+
 export default function CreateProject() {
   // const router = useRouter();
 
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { Toast, showToast } = useToast();
-  const { dispatch } = useAuthContext();
+  const {
+    dispatch,
+    state: { language },
+  } = useAuthContext();
   const [adminList, setAdminList] = useState(['']);
   const [memberList, setMemberList] = useState(['']);
   const [proList, setProList] = useState(['']);
@@ -184,7 +213,15 @@ export default function CreateProject() {
   const [credit, setCredit] = useState<number>();
 
   const [proName, setProName] = useState('');
+  const [desc, setDesc] = useState('');
   const [url, setUrl] = useState('');
+  const [intro, setIntro] = useState('');
+  const [lan, setLan] = useState('');
+
+  useEffect(() => {
+    const localLan = language === 'zh' ? 'zh-CN' : 'en-US';
+    setLan(localLan);
+  }, [language]);
 
   const handleInput = (e: ChangeEvent, index: number, type: string) => {
     const { value } = e.target as HTMLInputElement;
@@ -207,6 +244,9 @@ export default function CreateProject() {
         break;
       case 'proName':
         setProName(value);
+        break;
+      case 'desc':
+        setDesc(value);
         break;
       case 'credit':
         setCredit(Number(value));
@@ -290,6 +330,8 @@ export default function CreateProject() {
       sponsors: adminList,
       members: memberList,
       proposals: ids,
+      desc,
+      intro,
       budgets: [
         {
           name: AssetName.Token,
@@ -351,9 +393,8 @@ export default function CreateProject() {
         <CardBox>
           <BackBox onClick={() => navigate(-1)}>
             <ChevronLeft className="iconTop" />
-            <span> {t('general.back')}</span>
+            <span> {t('Project.create')}</span>
           </BackBox>
-          <CardHeader> {t('Project.create')}</CardHeader>
           <CardBody>
             <BtnBox htmlFor="fileUpload" onChange={(e) => updateLogo(e)}>
               {!url && (
@@ -385,34 +426,7 @@ export default function CreateProject() {
                   />
                 </InputBox>
               </li>
-              <li>
-                <div className="title">{t('Project.Dominator')}</div>
-                <div>
-                  {adminList.map((item, index) => (
-                    <ItemBox key={`mem_${index}`}>
-                      <InputBox>
-                        <Form.Control
-                          type="text"
-                          placeholder={t('Project.Dominator')}
-                          value={item}
-                          onChange={(e) => handleInput(e, index, 'admin')}
-                        />
-                      </InputBox>
-                      {index === adminList.length - 1 && (
-                        <span className="iconForm" onClick={() => handleAdd('admin')}>
-                          <PlusLg />
-                        </span>
-                      )}
 
-                      {!(!index && index === adminList.length - 1) && (
-                        <span className="iconForm" onClick={() => removeItem(index, 'admin')}>
-                          <DashLg />
-                        </span>
-                      )}
-                    </ItemBox>
-                  ))}
-                </div>
-              </li>
               <li>
                 <div className="title">{t('Project.AssociatedProposal')}</div>
                 <div>
@@ -442,24 +456,31 @@ export default function CreateProject() {
                 </div>
               </li>
               <li>
-                <div className="title">{t('Project.Budget')}</div>
+                <div className="title">{t('Project.Dominator')}</div>
                 <div>
-                  <ItemBox>
-                    <span className="titleLft">{t('Project.Points')}</span>
-                    <InputGroup>
-                      <InputNumber
-                        placeholder={t('Project.Points')}
-                        value={credit}
-                        onChange={(e) => handleInput(e, 0, 'credit')}
-                      />
-                    </InputGroup>
-                  </ItemBox>
-                  <ItemBox>
-                    <span className="titleLft">USD</span>
-                    <InputGroup>
-                      <InputNumber placeholder="USD" value={token} onChange={(e) => handleInput(e, 0, 'token')} />
-                    </InputGroup>
-                  </ItemBox>
+                  {adminList.map((item, index) => (
+                    <ItemBox key={`mem_${index}`}>
+                      <InputBox>
+                        <Form.Control
+                          type="text"
+                          placeholder={t('Project.Dominator')}
+                          value={item}
+                          onChange={(e) => handleInput(e, index, 'admin')}
+                        />
+                      </InputBox>
+                      {index === adminList.length - 1 && (
+                        <span className="iconForm" onClick={() => handleAdd('admin')}>
+                          <PlusLg />
+                        </span>
+                      )}
+
+                      {!(!index && index === adminList.length - 1) && (
+                        <span className="iconForm" onClick={() => removeItem(index, 'admin')}>
+                          <DashLg />
+                        </span>
+                      )}
+                    </ItemBox>
+                  ))}
                 </div>
               </li>
               <li>
@@ -490,6 +511,33 @@ export default function CreateProject() {
                   ))}
                 </div>
               </li>
+              <li>
+                <div className="title">{t('Project.Desc')}</div>
+                <InputBox>
+                  <Form.Control
+                    placeholder=""
+                    as="textarea"
+                    rows={5}
+                    value={desc}
+                    onChange={(e) => handleInput(e, 0, 'desc')}
+                  />
+                </InputBox>
+              </li>
+              <li>
+                <div className="title">{t('Project.Intro')}</div>
+                <IntroBox>
+                  <MdEditor
+                    modelValue={intro}
+                    onChange={(val) => {
+                      setIntro(val);
+                    }}
+                    toolbars={config.toobars as any}
+                    language={lan}
+                    codeStyleReverse={false}
+                    noUploadImg
+                  />
+                </IntroBox>
+              </li>
             </UlBox>
             <BtmBox>
               <Button variant="outline-primary" className="btnBtm">
@@ -516,3 +564,9 @@ export default function CreateProject() {
     </OuterBox>
   );
 }
+
+const IntroBox = styled.div`
+  .cm-scroller {
+    background: #f7f9fc;
+  }
+`;

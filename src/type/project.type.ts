@@ -42,12 +42,15 @@ export interface IBaseProject {
   members: string[];
   proposals: string[];
   budgets: IBaseBudgetItem[];
+  desc: string;
+  intro: string;
 }
 
 export interface ReTurnProject {
   created_at: string;
   id: number;
   logo: string;
+  desc: string;
   members: string[];
   name: string;
   proposals: string[];
@@ -55,17 +58,28 @@ export interface ReTurnProject {
   status: ProjectStatus;
   updated_at: string;
   budgets: IBudgetItem[];
+  intro: string;
 }
 
 export interface InfoObj {
   logo: string;
   name: string;
+  desc: string;
+  intro: string;
 }
 
 export interface ExcelObj {
   address: string;
   points: string;
   token: string;
+  content: string;
+  note: string;
+}
+
+export interface IExcelObj {
+  address: string;
+  amount: string;
+  assetType: string;
   content: string;
   note: string;
 }

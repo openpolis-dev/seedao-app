@@ -1,14 +1,14 @@
 import styled from 'styled-components';
 import { Card, InputGroup, Button, Form } from 'react-bootstrap';
-// import { EvaIcon } from '@paljs/ui/Icon';
-import React, { ChangeEvent, useState } from 'react';
-// import { Button } from '@paljs/ui/Button';
+import React, { ChangeEvent, useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { updateStaffs, IUpdateStaffsParams } from 'requests/guild';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import { ethers } from 'ethers';
 import useToast, { ToastType } from 'hooks/useToast';
 import { DashLg, PlusLg } from 'react-bootstrap-icons';
+import Select from 'components/common/select';
+import sns from '@seedao/sns-js';
 
 const Mask = styled.div`
   background: rgba(0, 0, 0, 0.3);
@@ -40,23 +40,31 @@ const CardHeader = styled.div`
   line-height: 1.5rem;
 `;
 
+const CardStyle = styled(Card)`
+  min-height: 400px;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+`;
+
 const CardBody = styled.div`
-  padding: 20px;
+  padding: 20px 20px 0;
+  flex: 1;
+  overflow-y: auto;
+  &::-webkit-scrollbar {
+    display: none;
+    width: 0;
+  }
 `;
 const CardFooter = styled.div`
-  padding: 0 20px 20px;
+  padding: 20px;
 `;
-const ItemBox = styled.div`
-  margin-bottom: 40px;
-  &:last-child {
-    margin-bottom: 0;
-  }
-  .title {
-    font-weight: bold;
-    margin-bottom: 10px;
-  }
+
+const InnerBox = styled.div`
+  height: 100%;
   ul {
     margin-top: 20px;
+    height: 100%;
     li {
       display: flex;
       align-items: center;
@@ -79,19 +87,17 @@ const ItemBox = styled.div`
   }
 `;
 
-const InnerBox = styled.div`
-  max-height: 400px;
-  overflow-y: auto;
-`;
+type InputUser = {
+  walletOrSNS: string;
+  isOnlyMember?: boolean;
+};
 
 interface Iprops {
   closeAdd: (refresh?: boolean) => void;
   id: string;
-  canUpdateMember: boolean;
-  canUpdateSponsor: boolean;
 }
 export default function Add(props: Iprops) {
-  const { closeAdd, id, canUpdateMember, canUpdateSponsor } = props;
+  const { closeAdd, id } = props;
   const { t } = useTranslation();
   const { dispatch } = useAuthContext();
   const { showToast, Toast } = useToast();
@@ -99,53 +105,71 @@ export default function Add(props: Iprops) {
   const [adminList, setAdminList] = useState<string[]>(['']);
   const [memberList, setMemberList] = useState<string[]>(['']);
 
-  const handleInput = (e: ChangeEvent, index: number, type: string) => {
+  const [lst, setLst] = useState<InputUser[]>([{ walletOrSNS: '' }]);
+
+  const handleInput = (e: ChangeEvent, index: number) => {
     const { value } = e.target as HTMLInputElement;
-    let arr: string[] = [];
-    if (type === 'member') {
-      arr = [...memberList];
-      arr[index] = value;
-      setMemberList(arr);
-    } else {
-      arr = [...adminList];
-      arr[index] = value;
-      setAdminList(arr);
-    }
+    let arr: InputUser[] = [...lst];
+    arr[index].walletOrSNS = value;
+    setLst(arr);
   };
 
-  const handleAddMember = () => {
-    const arr = [...memberList];
-    arr.push('');
-    setMemberList(arr);
+  const handleSelect = (value: boolean, index: number) => {
+    let arr: InputUser[] = [...lst];
+    arr[index].isOnlyMember = value;
+    setLst(arr);
   };
-  const handleAddAdmin = () => {
-    const arr = [...adminList];
-    arr.push('');
-    setAdminList(arr);
+
+  const handleAddItem = () => {
+    setLst([...lst, { walletOrSNS: '' }]);
   };
-  const removeMember = (index: number) => {
-    const arr = [...memberList];
+  const handleRemoveItem = (index: number) => {
+    const arr = [...lst];
     arr.splice(index, 1);
-    setMemberList(arr);
-  };
-  const removeAdmin = (index: number) => {
-    const arr = [...adminList];
-    arr.splice(index, 1);
-    setAdminList(arr);
+    setLst(arr);
   };
 
   const submitObject = async () => {
-    const _adminList_invalid = adminList.filter((item) => item && !ethers.utils.isAddress(item));
-    const _memberList_invalid = memberList.filter((item) => item && !ethers.utils.isAddress(item));
-    const _invalid_address = [..._adminList_invalid, ..._memberList_invalid];
+    const checkSNSlst: string[] = [];
+    const sns2walletMap = new Map<string, string>();
+    lst.forEach((item) => {
+      if (!ethers.utils.isAddress(item.walletOrSNS)) {
+        checkSNSlst.push(item.walletOrSNS);
+      }
+    });
 
-    if (_invalid_address.length) {
-      showToast(t('Msg.IncorrectAddress', { content: _invalid_address.join(', ') }), ToastType.Danger);
-      return;
+    if (checkSNSlst.length) {
+      try {
+        const notOkList: string[] = [];
+        const res = await sns.resolves(checkSNSlst);
+        for (let i = 0; i < res.length; i) {
+          const wallet = res[i];
+          sns2walletMap.set(checkSNSlst[i], wallet);
+          if (!wallet) {
+            notOkList.push(checkSNSlst[i]);
+          }
+        }
+        if (!!notOkList.length) {
+          showToast(t('Msg.IncorrectAddress', { content: notOkList.join(', ') }), ToastType.Danger);
+          return;
+        }
+      } catch (error) {
+        console.error('resolved failed', error);
+        return;
+      }
     }
 
-    const _adminList = adminList.filter((item) => item && ethers.utils.isAddress(item));
-    const _memberList = memberList.filter((item) => item && ethers.utils.isAddress(item));
+    const _adminList: string[] = [];
+    const _memberList: string[] = [];
+
+    lst.forEach((item) => {
+      const wallet = sns2walletMap.get(item.walletOrSNS) || item.walletOrSNS;
+      if (item.isOnlyMember) {
+        _memberList.push(wallet);
+      } else {
+        _adminList.push(wallet);
+      }
+    });
 
     try {
       const params: IUpdateStaffsParams = {
@@ -172,73 +196,51 @@ export default function Add(props: Iprops) {
     }
   };
 
+  const roleOptions = useMemo(() => {
+    return [
+      { label: t('Guild.Dominator'), value: false },
+      { label: t('Guild.Members'), value: true },
+    ];
+  }, [t]);
+
   return (
     <Mask>
-      <Card>
-        {Toast}
+      <CardStyle>
         <CardHeader>{t('Project.AddMember')}</CardHeader>
         <CardBody>
           <InnerBox>
-            {canUpdateSponsor && (
-              <ItemBox>
-                <div className="title">{t('Project.Dominator')}</div>
-                <ul>
-                  {adminList.map((item, index) => (
-                    <li key={`admin_${index}`}>
-                      <InputGroup>
-                        <Form.Control
-                          type="text"
-                          placeholder={t('Project.Dominator')}
-                          value={item}
-                          onChange={(e) => handleInput(e, index, 'admin')}
-                        />
-                      </InputGroup>
-                      {index === adminList.length - 1 && (
-                        <span className="iconForm" onClick={() => handleAddAdmin()}>
-                          <PlusLg />
-                        </span>
-                      )}
+            <ul>
+              {lst.map((item, index) => (
+                <li key={index}>
+                  <InputGroup>
+                    <Form.Control
+                      type="text"
+                      placeholder={'TODO: wallet or SNS'}
+                      value={item.walletOrSNS}
+                      onChange={(e) => handleInput(e, index)}
+                    />
+                  </InputGroup>
+                  <Select
+                    options={roleOptions}
+                    placeholder=""
+                    onChange={(value: any) => {
+                      handleSelect(value?.value, index);
+                    }}
+                  />
+                  {index === adminList.length - 1 && (
+                    <span className="iconForm" onClick={handleAddItem}>
+                      <PlusLg />
+                    </span>
+                  )}
 
-                      {!(!index && index === adminList.length - 1) && (
-                        <span className="iconForm" onClick={() => removeAdmin(index)}>
-                          <DashLg />
-                        </span>
-                      )}
-                    </li>
-                  ))}
-                </ul>
-              </ItemBox>
-            )}
-            {canUpdateMember && (
-              <ItemBox>
-                <div className="title">{t('Project.Others')}</div>
-                <ul>
-                  {memberList.map((item, index) => (
-                    <li key={`member_${index}`}>
-                      <InputGroup>
-                        <Form.Control
-                          type="text"
-                          placeholder={t('Project.Members')}
-                          value={item}
-                          onChange={(e) => handleInput(e, index, 'member')}
-                        />
-                      </InputGroup>
-                      {index === memberList.length - 1 && (
-                        <span className="iconForm" onClick={() => handleAddMember()}>
-                          <PlusLg />
-                        </span>
-                      )}
-
-                      {!(!index && index === memberList.length - 1) && (
-                        <span className="iconForm" onClick={() => removeMember(index)}>
-                          <DashLg />
-                        </span>
-                      )}
-                    </li>
-                  ))}
-                </ul>
-              </ItemBox>
-            )}
+                  {!(!index && index === adminList.length - 1) && (
+                    <span className="iconForm" onClick={() => handleRemoveItem(index)}>
+                      <DashLg />
+                    </span>
+                  )}
+                </li>
+              ))}
+            </ul>
           </InnerBox>
         </CardBody>
         <CardFooter>
@@ -249,7 +251,7 @@ export default function Add(props: Iprops) {
             {t('general.confirm')}
           </Button>
         </CardFooter>
-      </Card>
+      </CardStyle>
     </Mask>
   );
 }

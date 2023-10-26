@@ -17,6 +17,7 @@ import { formatNumber } from 'utils/number';
 import BgImg from '../../assets/images/homebg.png';
 import { Clipboard, Share, ChevronDown, ChevronUp, Pencil } from 'react-bootstrap-icons';
 import { ContainerPadding } from 'assets/styles/global';
+import { Link } from 'react-router-dom';
 
 const BoxOuter = styled.div`
   ${ContainerPadding};
@@ -367,6 +368,7 @@ export default function Index() {
                     <span>2</span>
                   </InfoItem>
                   <InfoItem className="detail">
+                    <Link to="/assets/register">登记</Link>
                     <div onClick={() => setShowVaultDetail(!showVaultDetail)}>
                       <span>{t('Assets.Detail')}</span>
                       {showVaultDetail ? <ChevronUp /> : <ChevronDown />}

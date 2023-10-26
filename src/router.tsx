@@ -7,8 +7,7 @@ import Home from './pages/home';
 // import Event from './pages/event';
 import Event from './pages/seeu-network';
 import Assets from './pages/assets';
-import Project from './pages/project';
-import Guild from './pages/guild';
+import RegisterAssets from './pages/assets/register';
 import Proposal from './pages/proposal';
 import ProposalCategory from './pages/proposal/category';
 import ProposalThread from './pages/proposal/thread';
@@ -23,12 +22,16 @@ import GuildInfo from './pages/guild/info';
 import CreateProject from './pages/create-project';
 import CreateGuild from './pages/create-guild';
 import Profile from './pages/user/profile';
+import ProfileEdit from './pages/user/profile/edit';
 import UserVault from './pages/user/vault';
 import CalendarPage from './pages/calendar';
 import RouterChecker from './utils/routerChecker';
 import Canny from './pages/canny';
 import Apps from './pages/Apps';
 import Resources from './pages/resources';
+import ExplorePage from './pages/explore';
+import Pub from './pages/Pub/Pub';
+import PubDetail from './pages/Pub/detail';
 
 export default function RouterLink() {
   return (
@@ -39,6 +42,7 @@ export default function RouterLink() {
           <Route path="/home" element={<Home />} />
 
           <Route path="/user/profile" element={<Profile />} />
+          <Route path="/user/profile/edit" element={<ProfileEdit />} />
           <Route path="/user/vault" element={<UserVault />} />
 
           <Route path="/event" element={<Event />} />
@@ -47,14 +51,16 @@ export default function RouterLink() {
           <Route path="/event/view" element={<EventView />} />
           <Route path="/event/edit" element={<EventEdit />} />
           <Route path="/online-event" element={<CalendarPage />} />
+          <Route path="/pub" element={<Pub />} />
+          <Route path="/pubDetail/:id" element={<PubDetail />} />
 
           <Route path="/assets" element={<Assets />} />
+          <Route path="/assets/register" element={<RegisterAssets />} />
+          <Route path="/explore" element={<ExplorePage />} />
 
-          <Route path="/project" element={<Project />} />
           <Route path="/project/info/:id" element={<ProjectInfo />} />
           <Route path="/create-project" element={<CreateProject />} />
 
-          <Route path="/guild" element={<Guild />} />
           <Route path="/guild/info/:id" element={<GuildInfo />} />
           <Route path="/create-guild" element={<CreateGuild />} />
 
