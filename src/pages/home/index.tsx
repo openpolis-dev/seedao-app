@@ -77,6 +77,10 @@ const LineBox = styled.div`
     font-size: 40px;
     font-weight: bold;
   }
+  .tips {
+    color: var(--home-center-color);
+    font-size: 16px;
+  }
   @media (max-width: 1024px) {
     .num {
       font-size: 24px;
@@ -234,7 +238,7 @@ export default function Home() {
           </dt>
           <dd>
             <div className="num">{sgnHolders}</div>
-            <div>{t('Home.SGNHolder')}</div>
+            <div className="tips">{t('Home.SGNHolder')}</div>
           </dd>
         </dl>
         <dl>
@@ -243,7 +247,7 @@ export default function Home() {
           </dt>
           <dd>
             <div className="num">{governNodes}</div>
-            <div>{t('Home.GovernNode')}</div>
+            <div className="tips">{t('Home.GovernNode')}</div>
           </dd>
         </dl>
         <dl>
@@ -252,47 +256,53 @@ export default function Home() {
           </dt>
           <dd>
             <div className="num">{sbtHolders}</div>
-            <div>{t('Home.SBTHolder')}</div>
+            <div className="tips">{t('Home.SBTHolder')}</div>
           </dd>
         </dl>
       </LineBox>
-      <ActiveBox>
-        <TitBox>{t('Home.Apps')}</TitBox>
-        <Row>
-          {events.map((item, idx) => (
-            <Col key={idx} sm={12} md={6} lg={4} xl={3}>
-              <AppCard {...item} />
-            </Col>
-          ))}
-        </Row>
-      </ActiveBox>
-      <CityBox>
-        <TitBox>{t('Home.Publicity')}</TitBox>
-        <LinkBox>
-          <Col onClick={() => window.open(CITY_HALL, '_blank')}>
-            <div className="inn fst">
-              <div className="lft">
-                <ShieldCheck />
-              </div>
-              <div>
-                <div className="tit">{t('Home.CityHall')}</div>
-                <div className="tBtm">{CITY_HALL}</div>
-              </div>
-            </div>
-          </Col>
-          <Col onClick={() => window.open(CITY_HALL_MEMBERS, '_blank')}>
-            <div className="inn snd">
-              <div className="lft">
-                <People />
-              </div>
-              <div>
-                <div className="tit">{t('Home.CityHallMembers')}</div>
-                <div className="tBtm">{CITY_HALL_MEMBERS}</div>
-              </div>
-            </div>
-          </Col>
-        </LinkBox>
-      </CityBox>
+      <Row>
+        <Col md={8}>
+          <ActiveBox>
+            <TitBox>{t('Home.Apps')}</TitBox>
+            <Row>
+              {events.map((item, idx) => (
+                <Col key={idx} sm={12} md={6} lg={6} xl={6}>
+                  <AppCard {...item} />
+                </Col>
+              ))}
+            </Row>
+          </ActiveBox>
+        </Col>
+        <Col md={4}>
+          <CityBox>
+            <TitBox>{t('Home.Publicity')}</TitBox>
+            <LinkBox>
+              <Col onClick={() => window.open(CITY_HALL, '_blank')}>
+                <div className="inn fst">
+                  <div className="lft">
+                    <ShieldCheck />
+                  </div>
+                  <div>
+                    <div className="tit">{t('Home.CityHall')}</div>
+                    <div className="tBtm">{CITY_HALL}</div>
+                  </div>
+                </div>
+              </Col>
+              <Col onClick={() => window.open(CITY_HALL_MEMBERS, '_blank')}>
+                <div className="inn snd">
+                  <div className="lft">
+                    <People />
+                  </div>
+                  <div>
+                    <div className="tit">{t('Home.CityHallMembers')}</div>
+                    <div className="tBtm">{CITY_HALL_MEMBERS}</div>
+                  </div>
+                </div>
+              </Col>
+            </LinkBox>
+          </CityBox>
+        </Col>
+      </Row>
     </Box>
   );
 }

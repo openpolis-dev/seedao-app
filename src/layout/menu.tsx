@@ -94,7 +94,7 @@ const Box = styled.div`
 `;
 
 const LftLi = styled.div<{ selected?: boolean }>`
-  padding: 13px 0;
+  padding: 15px 0;
   display: flex;
   align-items: center;
 
@@ -105,11 +105,13 @@ const LftLi = styled.div<{ selected?: boolean }>`
   .name {
     padding-left: 10px;
     padding-top: 3px;
+    font-family: 'Poppins-Medium';
+    ${(props) => props.selected && 'color: var(--bs-body-color_active);    font-family: Poppins-SemiBold;'}
   }
   //.icon {
   //  font-size: 20px;
   //}
-  ${(props) => props.selected && 'color: var(--bs-body-color_active);'}
+
   position: relative;
   .tooltip-content {
     position: absolute;
@@ -119,8 +121,8 @@ const LftLi = styled.div<{ selected?: boolean }>`
     left: 40px;
     top: 15px;
     white-space: nowrap;
-    background: #000;
-    color: #fff;
+    background: var(--bs-menu-hover);
+    color: var(--bs-body-color_active);
     z-index: 99;
     font-size: 12px;
   }
@@ -128,7 +130,7 @@ const LftLi = styled.div<{ selected?: boolean }>`
     content: '';
     position: absolute;
     border: 6px solid transparent;
-    border-bottom-color: #000;
+    border-bottom-color: var(--bs-menu-hover);
     top: 8px;
     left: -16px;
     transform: translateX(50%) rotate(-90deg);
