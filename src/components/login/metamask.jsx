@@ -13,12 +13,10 @@ import { Authorizer } from "casbin.js";
 import { readPermissionUrl } from "../../requests/user";
 import { WalletType } from "../../wallet/wallet";
 import { clearStorage } from "../../utils/auth";
-import { registerPush } from 'utils/serviceWorkerRegistration';
 import { SELECT_WALLET } from "../../utils/constant";
 import styled from "styled-components";
 import MetamaskIcon from "../../assets/images/wallet/metamask.png";
 import OneSignal from "react-onesignal";
-
 
 const WalletOption = styled.li`
   display: flex;

@@ -15,9 +15,9 @@ import { Authorizer } from "casbin.js";
 import { readPermissionUrl } from "../../requests/user";
 import { WalletType } from "../../wallet/wallet";
 import { SELECT_WALLET } from "../../utils/constant";
-import { registerPush } from 'utils/serviceWorkerRegistration';
 import JoyIdImg from "../../assets/images/wallet/joyid.png";
 import styled from "styled-components";
+import OneSignal from 'react-onesignal';
 
 
 const WalletOption = styled.li`
@@ -131,8 +131,11 @@ export default function Joyid(){
                 type: "joyid",
                 account:"account:"+account
             });
-            await registerPush();
-
+            try {
+              await OneSignal.login(account.toLocaleLowerCase());
+            } catch (error) {
+              console.error('OneSignal login error', error);
+            }
         }catch (e){
             console.error("LoginTo joyid",e)
             ReactGA.event("login_failed",{type: "joyid"});

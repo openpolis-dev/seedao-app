@@ -11,11 +11,10 @@ import { readPermissionUrl } from "../../requests/user";
 import { WalletType } from "../../wallet/wallet";
 import { SELECT_WALLET } from "../../utils/constant";
 import { clearStorage } from "../../utils/auth";
-import { registerPush } from 'utils/serviceWorkerRegistration';
 
 import styled from "styled-components";
 import UnipassIcon from "../../assets/images/wallet/unipass.svg";
-
+import OneSignal from 'react-onesignal';
 
 const WalletOption = styled.li`
   display: flex;
@@ -162,7 +161,11 @@ export default function Unipass(){
                 type: "unipass",
                 account:"account:"+account
             });
-            await registerPush();
+            try {
+              await OneSignal.login(account.toLocaleLowerCase());
+            } catch (error) {
+              console.error('OneSignal login error', error);
+            }
         }catch (e){
             console.error(e)
             ReactGA.event("login_failed",{type: "unipass"});
