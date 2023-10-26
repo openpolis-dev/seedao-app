@@ -120,33 +120,31 @@ export default function Register() {
 
   return (
     <OuterBox>
-      <Box>
-        <SectionBlock>
-          <div className="title">1. 选择项目/公会</div>
-          <Select
-            options={allSource}
-            placeholder=""
-            onChange={(value: any) => {
-              setSelectSource({ id: value?.value as number, type: value?.data });
-            }}
-          />
-        </SectionBlock>
-        <SectionBlock>
-          <div className="title">2. 登记信息</div>
-          <RegList />
-        </SectionBlock>
+      <SectionBlock>
+        <div className="title">1. 选择项目/公会</div>
+        <Select
+          options={allSource}
+          placeholder=""
+          onChange={(value: any) => {
+            setSelectSource({ id: value?.value as number, type: value?.data });
+          }}
+        />
+      </SectionBlock>
+      <SectionBlock>
+        <div className="title">2. 登记信息</div>
+        <RegList />
+      </SectionBlock>
 
-        <SectionBlock>
-          <div className="title">2. 填写登记说明</div>
-          <Form.Control
-            placeholder=""
-            as="textarea"
-            rows={5}
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-          />
-        </SectionBlock>
-      </Box>
+      <SectionBlock>
+        <div className="title">2. 填写登记说明</div>
+        <Form.Control
+          placeholder=""
+          as="textarea"
+          rows={5}
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+        />
+      </SectionBlock>
     </OuterBox>
   );
 }
@@ -155,12 +153,6 @@ const OuterBox = styled.div`
   box-sizing: border-box;
   min-height: 100%;
   ${ContainerPadding};
-`;
-
-const Box = styled.div`
-  min-height: 100%;
-  padding: 20px;
-  background-color: #fff;
   .btnBtm {
     margin-right: 20px;
   }

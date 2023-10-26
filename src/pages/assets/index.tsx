@@ -18,10 +18,10 @@ import { Button } from 'react-bootstrap';
 import { ChevronDown, ChevronUp, Pencil } from 'react-bootstrap-icons';
 import { ContainerPadding } from 'assets/styles/global';
 import { Link } from 'react-router-dom';
-import BalanceIcon from 'assets/images/vault/balance.svg';
-import WalletIcon from 'assets/images/vault/wallet.svg';
-import ChainIcon from 'assets/images/vault/chain.svg';
-import SignerIcon from 'assets/images/vault/signer.svg';
+import BalanceIcon from 'assets/Imgs/vault/balance.svg';
+import WalletIcon from 'assets/Imgs/vault/wallet.svg';
+import ChainIcon from 'assets/Imgs/vault/chain.svg';
+import SignerIcon from 'assets/Imgs/vault/signer.svg';
 import CopyIconSVG from 'components/svgs/copy';
 import ShareIconSVG from 'components/svgs/share';
 
