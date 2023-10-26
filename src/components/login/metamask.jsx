@@ -159,7 +159,11 @@ export default function  Metamask(){
             });
             const tokenstr = localStorage.getItem(SEEDAO_USER);
             // await registerPush();
-            OneSignal.login(address.toLocaleLowerCase());
+            try {
+                OneSignal.login(address.toLocaleLowerCase());
+            } catch (error) {
+                console.error("OneSignal login error",error)
+            }
         }catch (e){
             console.error("Login to",e)
             dispatch({ type: AppActionType.CLEAR_AUTH, payload: undefined });
