@@ -62,16 +62,22 @@ const Box = styled.div`
   &.unexpand {
     animation: 'unexpand' 0.1s ease;
     animation-fill-mode: forwards;
+    .liLine {
+      justify-content: center;
+    }
+    .topLi {
+      justify-content: center;
+    }
   }
   @keyframes expand {
     0% {
-      width: 65px;
+      width: 94px;
     }
     25% {
-      width: 70px;
+      width: 150px;
     }
     50% {
-      width: 80px;
+      width: 200px;
     }
     100% {
       width: 257px;
@@ -82,13 +88,13 @@ const Box = styled.div`
       width: 257px;
     }
     50% {
-      width: 80px;
+      width: 200px;
     }
     75% {
-      width: 70px;
+      width: 150px;
     }
     100% {
-      width: 65px;
+      width: 94px;
     }
   }
 `;
@@ -319,6 +325,7 @@ const MenuItem = ({ data, onSelectMenu, selected, open, theme }: IMenuItem) => {
     <LftLi
       onClick={() => onSelectMenu(data)}
       selected={selected}
+      className="liLine"
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
     >
@@ -369,7 +376,7 @@ export default function Menu({ isMedium }: { isMedium: boolean }) {
   return (
     <Box className={boxClassName}>
       <div>
-        <SwitchBox onClick={() => dispatch({ type: AppActionType.SET_EXPAND_MENU, payload: !open })}>
+        <SwitchBox className="topLi" onClick={() => dispatch({ type: AppActionType.SET_EXPAND_MENU, payload: !open })}>
           <img src={theme ? MenuSwitch : MenuSwitch} alt="" />
         </SwitchBox>
       </div>

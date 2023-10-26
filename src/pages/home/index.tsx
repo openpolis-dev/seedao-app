@@ -43,6 +43,8 @@ const TitBox = styled.div`
   font-weight: bold;
   font-size: 1.5rem;
   margin-bottom: 20px;
+  color: var(--bs-body-color_active);
+  font-family: 'Poppins-Bold';
   a {
     float: right;
     font-weight: normal;
@@ -103,15 +105,15 @@ const LinkBox = styled(Row)`
     border-radius: 10px;
     overflow: hidden;
     cursor: pointer;
-    background: #fff;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    background-color: var(--bs-box--background);
+    border: 1px solid var(--bs-border-color);
     padding: 30px 20px;
     box-sizing: border-box;
     display: flex;
     align-items: center;
+    margin-bottom: 24px;
   }
   .lft {
-    background: #eef1f7;
     border-radius: 100%;
     width: 40px;
     height: 40px;
@@ -119,7 +121,6 @@ const LinkBox = styled(Row)`
     align-items: center;
     justify-content: center;
     margin-right: 20px;
-    box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.1);
     font-size: 22px;
     font-weight: bold;
     color: var(--bs-primary);

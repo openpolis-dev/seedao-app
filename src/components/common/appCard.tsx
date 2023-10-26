@@ -39,7 +39,6 @@ export const AppIcon = styled.img`
 `;
 
 const AppCardStyle = styled.div`
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
   background-size: 100%;
   border-radius: 10px;
   overflow: hidden;
@@ -50,7 +49,8 @@ const AppCardStyle = styled.div`
   justify-content: center;
   gap: 15px;
   padding-block: 15px;
-  background-color: #fff;
+  background-color: var(--bs-box--background);
+  border: 1px solid var(--bs-border-color);
   margin-bottom: 20px;
   .iconBox {
     font-size: 24px;
