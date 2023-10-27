@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { Tab, Tabs } from 'react-bootstrap';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
 import Members from 'components/cityHallCom/members';
@@ -16,6 +15,7 @@ import BrandPanel from 'components/cityHallCom/brand';
 import TechPanel from 'components/cityHallCom/tech';
 import Management from 'components/cityHallCom/projectAudit';
 import Register from 'components/cityHallCom/register';
+import Tabbar from 'components/common/tabbar';
 
 const Box = styled.div`
   min-height: 100%;
@@ -33,22 +33,6 @@ const TopBox = styled.div`
   flex-direction: column;
 `;
 
-const TabsBox = styled(Tabs)`
-  flex-wrap: nowrap;
-  overflow-x: auto;
-  &::-webkit-scrollbar {
-    display: none;
-    width: 0;
-  }
-  .nav-item {
-    white-space: nowrap;
-  }
-  @media (max-width: 1024px) {
-    .nav {
-      flex-wrap: nowrap;
-    }
-  }
-`;
 export default function Index() {
   const { t } = useTranslation();
   const { dispatch } = useAuthContext();
@@ -89,24 +73,31 @@ export default function Index() {
   return canUseCityhall ? (
     <Box>
       <TopBox>
-        <TabsBox defaultActiveKey={0} onSelect={(e: any) => setCurrent(Number(e))}>
-          <Tab eventKey={0} title={t('city-hall.Members')} />
-          <Tab eventKey={1} title={t('city-hall.Governance')} />
-          <Tab eventKey={2} title={t('city-hall.Band')} />
-          <Tab eventKey={3} title={t('city-hall.Tech')} />
-          <Tab eventKey={4} title={t('city-hall.Push')} />
-          <Tab eventKey={5} title={t('city-hall.management')} />
-          <Tab eventKey={6} title={t('city-hall.Add')} />
-        </TabsBox>
+        <Tabbar
+          tabs={[
+            { key: 0, title: t('city-hall.Members') },
+            { key: 1, title: t('city-hall.Governance') },
+            { key: 2, title: t('city-hall.Band') },
+            { key: 3, title: t('city-hall.Tech') },
+            { key: 4, title: t('city-hall.Push') },
+            { key: 5, title: t('city-hall.management') },
+            { key: 6, title: t('city-hall.Add') },
+          ]}
+          defaultActiveKey={0}
+          onSelect={(v) => setCurrent(v as number)}
+        />
+
         {getFullContent()}
       </TopBox>
     </Box>
   ) : (
     <Box>
       <TopBox>
-        <TabsBox defaultActiveKey={0} onSelect={(e: any) => setCurrent(Number(e))}>
-          <Tab eventKey={0} title={t('city-hall.Members')} />
-        </TabsBox>
+        <Tabbar
+          tabs={[{ key: 0, title: t('city-hall.Members') }]}
+          defaultActiveKey={0}
+          onSelect={(v) => setCurrent(v as number)}
+        />
         {getShortContent()}
       </TopBox>
     </Box>
