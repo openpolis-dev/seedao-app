@@ -18,10 +18,14 @@ import { Button } from 'react-bootstrap';
 import { ChevronDown, ChevronUp, Pencil } from 'react-bootstrap-icons';
 import { ContainerPadding } from 'assets/styles/global';
 import { Link } from 'react-router-dom';
-import BalanceIcon from 'assets/Imgs/vault/balance.svg';
-import WalletIcon from 'assets/Imgs/vault/wallet.svg';
-import ChainIcon from 'assets/Imgs/vault/chain.svg';
-import SignerIcon from 'assets/Imgs/vault/signer.svg';
+import BalanceIconLight from 'assets/Imgs/light/vault/balance.svg';
+import WalletIconLight from 'assets/Imgs/light/vault/wallet.svg';
+import ChainIconLight from 'assets/Imgs/light/vault/chain.svg';
+import SignerIconLight from 'assets/Imgs/light/vault/signer.svg';
+import BalanceIconDark from 'assets/Imgs/dark/vault/balance.svg';
+import WalletIconDark from 'assets/Imgs/dark/vault/wallet.svg';
+import ChainIconDark from 'assets/Imgs/dark/vault/chain.svg';
+import SignerIconDark from 'assets/Imgs/dark/vault/signer.svg';
 import CopyIconSVG from 'components/svgs/copy';
 import ShareIconSVG from 'components/svgs/share';
 
@@ -135,7 +139,10 @@ type VaultInfoMap = {
 
 export default function Index() {
   const { t } = useTranslation();
-  const { dispatch } = useAuthContext();
+  const {
+    dispatch,
+    state: { theme },
+  } = useAuthContext();
   const { Toast, showToast } = useToast();
   const canUseCityhall = usePermission(PermissionAction.AssetsBudget, PermissionObject.Treasury);
 
@@ -313,7 +320,7 @@ export default function Index() {
             <div className="vaultInner">
               <InfoItem className="left">
                 <div>
-                  <IconStyle src={BalanceIcon} alt="" />
+                  <IconStyle src={theme ? BalanceIconDark : BalanceIconLight} alt="" />
                 </div>
                 <div className="info-right">
                   <div className="title">{t('Assets.TotalBalance')}</div>
@@ -323,7 +330,7 @@ export default function Index() {
               <div className="right">
                 <InfoItem>
                   <div>
-                    <IconStyle src={WalletIcon} alt="" />
+                    <IconStyle src={theme ? WalletIconDark : WalletIconLight} alt="" />
                   </div>
                   <div className="info-right">
                     <div className="title">{t('Assets.Wallet')}</div>
@@ -332,7 +339,7 @@ export default function Index() {
                 </InfoItem>
                 <InfoItem>
                   <div>
-                    <IconStyle src={SignerIcon} alt="" />
+                    <IconStyle src={theme ? SignerIconDark : SignerIconLight} alt="" />
                   </div>
                   <div className="info-right">
                     <div className="title">{t('Assets.MultiSign')}</div>
@@ -341,7 +348,7 @@ export default function Index() {
                 </InfoItem>
                 <InfoItem>
                   <div>
-                    <IconStyle src={ChainIcon} alt="" />
+                    <IconStyle src={theme ? ChainIconDark : ChainIconLight} alt="" />
                   </div>
                   <div className="info-right">
                     <div className="title">{t('Assets.Chain')}</div>

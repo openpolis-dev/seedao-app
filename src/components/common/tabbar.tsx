@@ -45,7 +45,7 @@ const TabbarStyle = styled.ul`
     padding-inline: 23px;
     &.selected {
       background-color: var(--bs-primary);
-      color: var(--bs-body-color_active);
+      color: #fff;
       font-size: 18px;
     }
     cursor: pointer;
