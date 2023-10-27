@@ -20,6 +20,7 @@ import GovernImgLight from '../../assets/Imgs/light/govern.png';
 import { useAuthContext } from '../../providers/authProvider';
 import ArrowImg from '../../assets/Imgs/arrow.png';
 import LinkImg from '../../assets/Imgs/link.svg';
+import { useNavigate } from 'react-router-dom';
 
 const CITY_HALL = 'https://seedao.notion.site/07c258913c5d4847b59271e2ae6f7c66';
 const CITY_HALL_MEMBERS = 'https://www.notion.so/3913d631d7bc49e1a0334140e3cd84f5';
@@ -27,7 +28,7 @@ const CITY_HALL_MEMBERS = 'https://www.notion.so/3913d631d7bc49e1a0334140e3cd84f
 const Box = styled.div`
   .lline {
     display: flex;
-    margin: 60px 20px 0;
+    margin: 60px 20px;
   }
 `;
 
@@ -61,6 +62,7 @@ const TitBox = styled.div`
   }
   .toGo {
     font-size: 14px;
+    cursor: pointer;
     img {
       margin-left: 5px;
     }
@@ -211,6 +213,8 @@ export default function Home() {
   const [onboardingHolders, setOnboardingHolders] = useState(0);
   const [onNewHolders, setNewHolders] = useState(0);
 
+  const navigate = useNavigate();
+
   const {
     state: { theme },
   } = useAuthContext();
@@ -272,6 +276,10 @@ export default function Home() {
     }
   }, []);
 
+  const togo = (url: string) => {
+    navigate(url);
+  };
+
   return (
     <Box>
       <BannerBox>
@@ -320,7 +328,7 @@ export default function Home() {
           <ActiveBox>
             <TitBox>
               <span>{t('Home.Apps')}</span>
-              <div className="toGo">
+              <div className="toGo" onClick={() => togo('/apps')}>
                 All events
                 <img src={ArrowImg} alt="" />
               </div>

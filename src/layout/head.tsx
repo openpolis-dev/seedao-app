@@ -210,17 +210,34 @@ export default function Header() {
     window.location.reload();
   };
 
+  useEffect(() => {
+    let theme = localStorage.getItem('theme');
+    console.error(theme);
+    if (theme) {
+      document.documentElement.setAttribute('data-bs-theme', theme);
+      dispatch({
+        type: AppActionType.SET_THEME,
+        payload: theme === 'dark',
+      });
+    }
+  }, []);
+
   const SwitchThemeFun = () => {
+    let themeStr = document.documentElement.getAttribute('data-bs-theme');
+    console.log(themeStr);
+    let str = '';
     //theme true dark
-    if (document.documentElement.getAttribute('data-bs-theme') === 'dark') {
-      document.documentElement.setAttribute('data-bs-theme', 'light');
+    if (themeStr === 'dark') {
+      str = 'light';
     } else {
-      document.documentElement.setAttribute('data-bs-theme', 'dark');
+      str = 'dark';
     }
     dispatch({
       type: AppActionType.SET_THEME,
-      payload: document.documentElement.getAttribute('data-bs-theme') === 'dark',
+      payload: str === 'dark',
     });
+    document.documentElement.setAttribute('data-bs-theme', str);
+    localStorage.setItem('theme', str);
   };
 
   return (

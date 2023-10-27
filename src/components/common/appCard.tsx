@@ -68,6 +68,10 @@ const AppCardStyle = styled.div`
   background-color: var(--bs-box--background);
   border: 1px solid var(--bs-border-color);
   margin-bottom: 20px;
+
+  &:hover {
+    background-color: var(--home-right_hover);
+  }
   .iconBox {
     img {
       width: 88px;
