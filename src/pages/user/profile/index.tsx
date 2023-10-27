@@ -17,6 +17,8 @@ import DiscordIcon from 'assets/images/discordNor.svg';
 import EmailIcon from 'assets/images/email.svg';
 import { formatNumber } from 'utils/number';
 import { Link } from 'react-router-dom';
+import getConfig from 'utils/envCofnig';
+const config = getConfig();
 
 const OuterBox = styled.div`
   min-height: 100%;
@@ -241,11 +243,13 @@ export default function Profile() {
           <InfoBox>
             <div className="wallet">
               <span>{sns || '-'}</span>
-              <TagBox>
-                <li>s4节点</li>
-                <li>s4节点</li>
-                <li>s4节点</li>
-              </TagBox>
+              {process.env.NODE_ENV === 'development' && (
+                <TagBox>
+                  <li>s4节点</li>
+                  <li>s4节点</li>
+                  <li>s4节点</li>
+                </TagBox>
+              )}
             </div>
             <div className="wallet">{userName}</div>
             <div className="wallet">
@@ -292,37 +296,41 @@ export default function Profile() {
         <BioBox>
           {t('My.Bio')}: {bio || '-'}
         </BioBox>
-        <ProgressOuter>
-          <FstLine>
-            <LevelBox>level 2</LevelBox>
-            <SCRBox>{formatNumber(50000)} SCR</SCRBox>
-          </FstLine>
-          <ProgressBox width="60">
-            <div className="inner" />
-          </ProgressBox>
-          <TipsBox>
-            <div>next level</div>
-            <div>{formatNumber(10000)} SCR</div>
-          </TipsBox>
-        </ProgressOuter>
-        <NftBox>
-          <div className="title">SEED</div>
-          <Row>
-            {[...Array(8)].map((item, index) => (
-              <Col key={index} sm={12} md={6} lg={3} xl={2}>
-                <img src={SeedIcon} alt="" />
-              </Col>
-            ))}
-          </Row>
-          <div className="title">SBT</div>
-          <Row>
-            {[...Array(8)].map((item, index) => (
-              <Col key={index} sm={12} md={6} lg={3} xl={2}>
-                <img src={SeedIcon} alt="" />
-              </Col>
-            ))}
-          </Row>
-        </NftBox>
+        {process.env.NODE_ENV === 'development' && (
+          <>
+            <ProgressOuter>
+              <FstLine>
+                <LevelBox>level 2</LevelBox>
+                <SCRBox>{formatNumber(50000)} SCR</SCRBox>
+              </FstLine>
+              <ProgressBox width="60">
+                <div className="inner" />
+              </ProgressBox>
+              <TipsBox>
+                <div>next level</div>
+                <div>{formatNumber(10000)} SCR</div>
+              </TipsBox>
+            </ProgressOuter>
+            <NftBox>
+              <div className="title">SEED</div>
+              <Row>
+                {[...Array(8)].map((item, index) => (
+                  <Col key={index} sm={12} md={6} lg={3} xl={2}>
+                    <img src={SeedIcon} alt="" />
+                  </Col>
+                ))}
+              </Row>
+              <div className="title">SBT</div>
+              <Row>
+                {[...Array(8)].map((item, index) => (
+                  <Col key={index} sm={12} md={6} lg={3} xl={2}>
+                    <img src={SeedIcon} alt="" />
+                  </Col>
+                ))}
+              </Row>
+            </NftBox>
+          </>
+        )}
       </CardBox>
     </OuterBox>
   );
