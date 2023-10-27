@@ -86,13 +86,13 @@ const CreatePushContent = () => {
           </FormLabel>
           <FormInput type="text" value={href} onChange={(e: any) => setHref(e.target.value)} />
         </FormGroup>
-        <FormGroup>
+        {/* <FormGroup>
           <div className="timer-group">
             <Form.Check type="checkbox" className="checkbox" />
             <div style={{ whiteSpace: 'nowrap' }}>{t('Push.Timer')}</div>
             <DatePickerStyle placeholder="" onChange={() => {}} dateTime={new Date()} />
           </div>
-        </FormGroup>
+        </FormGroup> */}
       </Form>
       <SubmitBox>
         <Button variant="primary" type="submit" onClick={handleCreate} disabled={createBtnDisabled}>
