@@ -18,9 +18,12 @@ export default function AppVersion({ open }: any) {
         <div>
           <span> {getConfig().REACT_APP_APP_VERSION}</span>
           {open && (
-            <span>
-              .Build{process.env.REACT_APP_BUILD_ID?.slice(0, 6)}.{process.env.REACT_APP_COMMIT_REF?.slice(0, 6)}
-            </span>
+            <>
+              <span>
+                {` `}
+                {process.env.REACT_APP_BUILD_ID?.slice(0, 6)}.{process.env.REACT_APP_COMMIT_REF?.slice(0, 6)}
+              </span>
+            </>
           )}
         </div>
       </VersionBox>
