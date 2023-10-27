@@ -76,6 +76,7 @@ const AppCardStyle = styled.div`
     img {
       width: 88px;
       height: 88px;
+      border-radius: 16px;
       object-fit: cover;
       object-position: center;
     }
