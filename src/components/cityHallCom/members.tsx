@@ -147,7 +147,7 @@ export default function Members(props: Iprops) {
         </TopBox>
       )}
       <ItemBox>
-        <TitleBox>{t('Guild.Dominator')}</TitleBox>
+        {/* <TitleBox>{t('Guild.Dominator')}</TitleBox> */}
         <Row>
           {adminArr.map((item, index) => (
             <UserCard
@@ -180,10 +180,8 @@ const TitleBox = styled.div`
 `;
 
 const TopBox = styled.div`
-  background: #f5f5f5;
   display: flex;
   justify-content: flex-end;
-  padding: 20px;
   margin-bottom: 30px;
   button {
     margin-left: 20px;

@@ -18,21 +18,15 @@ import Management from 'components/cityHallCom/projectAudit';
 import Register from 'components/cityHallCom/register';
 
 const Box = styled.div`
-  //position: relative;
   min-height: 100%;
   .tab-content {
-    padding: 0 0 30px !important;
     box-sizing: border-box;
   }
   ${ContainerPadding};
-`;
-const CardBox = styled.div`
-  background: #fff;
-  min-height: 100%;
+  color: var(--bs-body-color_active);
 `;
 
 const TopBox = styled.div`
-  padding: 20px;
   box-sizing: border-box;
   flex-grow: 1;
   display: flex;
@@ -94,31 +88,27 @@ export default function Index() {
 
   return canUseCityhall ? (
     <Box>
-      <CardBox>
-        <TopBox>
-          <TabsBox defaultActiveKey={0} onSelect={(e: any) => setCurrent(Number(e))}>
-            <Tab eventKey={0} title={t('city-hall.Members')} />
-            <Tab eventKey={1} title={t('city-hall.Governance')} />
-            <Tab eventKey={2} title={t('city-hall.Band')} />
-            <Tab eventKey={3} title={t('city-hall.Tech')} />
-            <Tab eventKey={4} title={t('city-hall.Push')} />
-            <Tab eventKey={5} title={t('city-hall.management')} />
-            <Tab eventKey={6} title={t('city-hall.Add')} />
-          </TabsBox>
-          {getFullContent()}
-        </TopBox>
-      </CardBox>
+      <TopBox>
+        <TabsBox defaultActiveKey={0} onSelect={(e: any) => setCurrent(Number(e))}>
+          <Tab eventKey={0} title={t('city-hall.Members')} />
+          <Tab eventKey={1} title={t('city-hall.Governance')} />
+          <Tab eventKey={2} title={t('city-hall.Band')} />
+          <Tab eventKey={3} title={t('city-hall.Tech')} />
+          <Tab eventKey={4} title={t('city-hall.Push')} />
+          <Tab eventKey={5} title={t('city-hall.management')} />
+          <Tab eventKey={6} title={t('city-hall.Add')} />
+        </TabsBox>
+        {getFullContent()}
+      </TopBox>
     </Box>
   ) : (
     <Box>
-      <CardBox>
-        <TopBox>
-          <TabsBox defaultActiveKey={0} onSelect={(e: any) => setCurrent(Number(e))}>
-            <Tab eventKey={0} title={t('city-hall.Members')} />
-          </TabsBox>
-          {getShortContent()}
-        </TopBox>
-      </CardBox>
+      <TopBox>
+        <TabsBox defaultActiveKey={0} onSelect={(e: any) => setCurrent(Number(e))}>
+          <Tab eventKey={0} title={t('city-hall.Members')} />
+        </TabsBox>
+        {getShortContent()}
+      </TopBox>
     </Box>
   );
 }
