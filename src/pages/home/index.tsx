@@ -19,6 +19,7 @@ import SbtImgLight from '../../assets/Imgs/light/sbt.png';
 import GovernImgLight from '../../assets/Imgs/light/govern.png';
 import { useAuthContext } from '../../providers/authProvider';
 import ArrowImg from '../../assets/Imgs/arrow.png';
+import LinkImg from '../../assets/Imgs/link.svg';
 
 const CITY_HALL = 'https://seedao.notion.site/07c258913c5d4847b59271e2ae6f7c66';
 const CITY_HALL_MEMBERS = 'https://www.notion.so/3913d631d7bc49e1a0334140e3cd84f5';
@@ -116,8 +117,18 @@ const LinkBox = styled(Row)`
     display: flex;
     align-items: center;
     margin-bottom: 24px;
+    position: relative;
+    .link {
+      position: absolute;
+      right: 20px;
+      top: 20px;
+      display: none;
+    }
     &:hover {
       background-color: var(--home-right_hover);
+      .link {
+        display: block;
+      }
     }
   }
   .lft {
@@ -142,6 +153,7 @@ const LinkBox = styled(Row)`
     font-size: 12px;
     word-break: break-all;
   }
+
   @media (max-width: 1024px) {
     .inn {
       margin-bottom: 20px;
@@ -334,6 +346,9 @@ export default function Home() {
             <LinkBox>
               <Col onClick={() => window.open(CITY_HALL, '_blank')}>
                 <div className="inn fst">
+                  <div className="link">
+                    <img src={LinkImg} alt="" />
+                  </div>
                   <div className="lft">
                     <img src={CityHallImg} alt="" />
                   </div>
@@ -345,6 +360,9 @@ export default function Home() {
               </Col>
               <Col onClick={() => window.open(CITY_HALL_MEMBERS, '_blank')}>
                 <div className="inn snd">
+                  <div className="link">
+                    <img src={LinkImg} alt="" />
+                  </div>
                   <div className="lft">
                     <img src={MembersImg} alt="" />
                   </div>
