@@ -11,7 +11,7 @@ import { SEEDAO_ACCOUNT, SEEDAO_USER, SEEDAO_USER_DATA, SELECT_WALLET } from '..
 import Avatar from 'components/common/avatar';
 import { Button, Form, Dropdown } from 'react-bootstrap';
 import LoginModal from 'components/modals/loginNew';
-import LogoImg from '../assets/images/logo.png';
+
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { List as ListIcon } from 'react-bootstrap-icons';
@@ -21,6 +21,13 @@ import { requestSetDeviceLanguage, getPushDevice } from 'requests/push';
 import { useDisconnect } from 'wagmi';
 import { mainnet } from 'wagmi/chains';
 import { Wallet, WalletType } from 'wallet/wallet';
+import OneSignal from 'react-onesignal';
+import LightImg from '../assets/Imgs/light.png';
+import MoonImg from '../assets/Imgs/moon.png';
+
+import LogoImg from '../assets/Imgs/light/logo.svg';
+import LogoImgDark from '../assets/Imgs/dark/logo.svg';
+import runOneSignal from 'utils/onesignal';
 
 export default function Header() {
   const { i18n } = useTranslation();
@@ -41,7 +48,7 @@ export default function Header() {
   const [lan, setLan] = useState('en');
 
   const {
-    state: { show_login_modal, language, expandMenu, userData, loading, account },
+    state: { show_login_modal, language, theme, userData, loading, account },
     dispatch,
   } = useAuthContext();
 
@@ -170,7 +177,14 @@ export default function Header() {
     },
   ];
 
-  const showWalletLogin = () => {
+  const showWalletLogin = async () => {
+    if (process.env.NODE_ENV === 'production') {
+      try {
+        runOneSignal();
+      } catch (error) {
+        console.error('init OneSignal failed', error);
+      }
+    }
     if (!hasGranted) {
       handlePermission().finally(() => {
         dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: true });
@@ -183,7 +197,7 @@ export default function Header() {
     navigate('/');
   };
 
-  const onClickLogout = () => {
+  const onClickLogout = async () => {
     disconnect();
     dispatch({ type: AppActionType.CLEAR_AUTH, payload: undefined });
     // localStorage.removeItem(SEEDAO_USER_DATA);
@@ -198,8 +212,39 @@ export default function Header() {
     dispatch({ type: AppActionType.SET_AUTHORIZER, payload: null });
     dispatch({ type: AppActionType.SET_WALLET_TYPE, payload: null });
     dispatch({ type: AppActionType.SET_ACCOUNT, payload: null });
+    await OneSignal.logout();
     toGo();
     window.location.reload();
+  };
+
+  useEffect(() => {
+    let theme = localStorage.getItem('theme');
+    console.error(theme);
+    if (theme) {
+      document.documentElement.setAttribute('data-bs-theme', theme);
+      dispatch({
+        type: AppActionType.SET_THEME,
+        payload: theme === 'dark',
+      });
+    }
+  }, []);
+
+  const SwitchThemeFun = () => {
+    let themeStr = document.documentElement.getAttribute('data-bs-theme');
+    console.log(themeStr);
+    let str = '';
+    //theme true dark
+    if (themeStr === 'dark') {
+      str = 'light';
+    } else {
+      str = 'dark';
+    }
+    dispatch({
+      type: AppActionType.SET_THEME,
+      payload: str === 'dark',
+    });
+    document.documentElement.setAttribute('data-bs-theme', str);
+    localStorage.setItem('theme', str);
   };
 
   return (
@@ -207,17 +252,21 @@ export default function Header() {
       {loading && <Loading />}
       <nav>
         <NavLeft>
-          <MenuExpandIcon
-            fontSize="30px"
-            onClick={() => dispatch({ type: AppActionType.SET_EXPAND_MENU, payload: !expandMenu })}
-          />
+          {/*<MenuExpandIcon*/}
+          {/*  fontSize="30px"*/}
+          {/*  onClick={() => dispatch({ type: AppActionType.SET_EXPAND_MENU, payload: !expandMenu })}*/}
+          {/*/>*/}
           <LogoIcon onClick={() => toGo()}>
-            <img src={LogoImg} alt="" />
+            <img src={theme ? LogoImgDark : LogoImg} alt="" />
           </LogoIcon>
         </NavLeft>
 
         <RightBox>
+          {/*<SwitchTheme>*/}
+          {/*  <img src={theme ? LightImg : MoonImg} alt="" onClick={() => SwitchThemeFun()} />*/}
+          {/*</SwitchTheme>*/}
           <Form.Select
+            data-bs-theme={theme ? 'dark' : 'light'}
             style={{ minWidth: '100px' }}
             value={getLanguages().find((item) => item.value === lan)?.value || getLanguages()[0].value}
             onChange={(event: any) => changeLang(event.target.value, true)}
@@ -231,7 +280,7 @@ export default function Header() {
 
           {isLogin && userData ? (
             <Dropdown>
-              <Dropdown.Toggle variant="success" className="dropBox">
+              <Dropdown.Toggle variant="primary" className="dropBox">
                 <Avatar user={userData} />
               </Dropdown.Toggle>
 
@@ -249,11 +298,22 @@ export default function Header() {
           )}
         </RightBox>
       </nav>
-      {/*{show_login_modal && <LoginModal />}*/}
       <LoginModal showModal={show_login_modal} />
     </HeadeStyle>
   );
 }
+
+const SwitchTheme = styled.div`
+  width: 25px;
+  height: 25px;
+  margin-right: 24px;
+  flex-shrink: 0;
+  cursor: pointer;
+  img {
+    width: 100%;
+    height: 100%;
+  }
+`;
 
 const HeadeStyle = styled.header`
   position: fixed;
@@ -261,10 +321,14 @@ const HeadeStyle = styled.header`
   left: 0;
   right: 0;
   z-index: 999;
-  background: #fff;
+  background: var(--bs-background);
+  border-bottom: 1px solid var(--bs-border-color);
+
+  .form-select:focus {
+    border-color: var(--bs-border-color-focus);
+  }
   nav {
-    box-shadow: rgba(44, 51, 73, 0.1) 0px 0.5rem 1rem 0px;
-    height: 80px;
+    height: 72px;
     padding: 0 20px;
     box-sizing: border-box;
     display: flex;
@@ -277,9 +341,6 @@ const HeadeStyle = styled.header`
   }
   .dropdown button {
     border-color: transparent !important;
-  }
-  .dropBtm {
-    border: 0;
   }
   .dropdown-item {
     border-bottom: 1px solid #eee;
@@ -308,7 +369,7 @@ const LogoIcon = styled.div`
   //width: 70px;
 
   img {
-    height: 65px;
+    height: 26px;
     cursor: pointer;
   }
 

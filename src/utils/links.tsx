@@ -1,13 +1,13 @@
-import { Calendar, Boxes, Receipt, Postcard, Grid1x2 } from 'react-bootstrap-icons';
+import { Calendar, Boxes, Receipt, Postcard, Grid1x2, CashCoin } from 'react-bootstrap-icons';
 // NOTE: choose icon from the library: https://icons.getbootstrap.com/
 import { AppIcon } from 'components/common/appCard';
 // Apps
-import MetaforoIcon from 'assets/images/apps/metaforo.png';
-import AaanyIcon from 'assets/images/apps/AAAny.svg';
-import DeschoolIcon from 'assets/images/apps/deschool.png';
-import DaolinkIcon from 'assets/images/apps/daolink.svg';
-import Cascad3Icon from 'assets/images/apps/cascad3.svg';
-import Wormhole3Icon from 'assets/images/apps/wormhole3.svg';
+import MetaforoIcon from '../assets/Imgs/home/Metaforo.png';
+import AaanyIcon from '../assets/Imgs/home/AAAny.png';
+import DeschoolIcon from '../assets/Imgs/home/Deschool.png';
+import DaolinkIcon from '../assets/Imgs/home/DAOlink.png';
+import Cascad3Icon from '../assets/Imgs/home/Cascad3.png';
+import Wormhole3Icon from '../assets/Imgs/home/Wormhole3.png';
 
 export default {
   seed: 'https://seed.seedao.xyz/',
@@ -50,49 +50,64 @@ export default {
       id: 'Deschool',
       name: 'Deschool',
       link: 'https://deschool.app/origin/plaza',
-      icon: <AppIcon src={DeschoolIcon} alt="" />,
+      icon: DeschoolIcon,
+      desc: '',
     },
     {
       id: 'AAAny',
       name: 'AAAny',
       link: 'https://apps.apple.com/ca/app/aaany-ask-anyone-anything/id6450619356',
-      icon: <AppIcon src={AaanyIcon} alt="" style={{ transform: 'scale(1.3)' }} />,
+      icon: AaanyIcon,
+      desc: '',
     },
     {
       id: 'Cascad3',
       name: 'Cascad3',
       link: 'https://www.cascad3.com/',
-      icon: <AppIcon src={Cascad3Icon} alt="" style={{ height: '20px' }} />,
+      icon: Cascad3Icon,
+      desc: '',
     },
     {
       id: 'DAOLink',
       name: 'DAOLink',
       link: 'https://app.daolink.space',
-      icon: <AppIcon src={DaolinkIcon} alt="" />,
+      icon: DaolinkIcon,
+      desc: '',
     },
     {
       id: 'Wormhole3',
       name: 'Wormhole3',
       link: 'https://alpha.wormhole3.io',
-      icon: <AppIcon src={Wormhole3Icon} alt="" style={{ height: '20px' }} />,
+      icon: Wormhole3Icon,
+      desc: '',
     },
     {
       id: 'Metaforo',
       name: 'Metaforo',
       link: 'https://www.metaforo.io',
-      icon: <AppIcon src={MetaforoIcon} alt="" />,
+      icon: MetaforoIcon,
+      desc: '',
     },
     {
       id: 'online',
       name: 'Home.OnlineEvent',
-      link: 'https://calendar.google.com/calendar/u/4?cid=YzcwNGNlNTA5ODUxMmIwYjBkNzA3MjJlNjQzMGFmNDIyMWUzYzllYmM2ZDFlNzJhYTcwYjgyYzgwYmI2OTk5ZkBncm91cC5jYWxlbmRhci5nb29nbGUuY29t',
+      link: 'https://calendar.google.com/calendar/u/0?cid=c2VlZGFvLnRlY2hAZ21haWwuY29t',
       icon: <Calendar />,
+      desc: '',
     },
     {
       id: 'offline',
       name: 'Home.OfflineEvent',
       link: 'https://seeu.network/',
       icon: <Grid1x2 />,
+      desc: '',
+    },
+    {
+      id: 'pub',
+      name: 'Home.pub',
+      link: 'https://seeu.network/',
+      icon: <CashCoin />,
+      desc: '',
     },
   ],
 };

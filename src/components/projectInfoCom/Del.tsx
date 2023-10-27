@@ -1,13 +1,13 @@
 import styled from 'styled-components';
+import { Card, Button } from 'react-bootstrap';
 import React from 'react';
-import { Button, Card } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { IUser } from 'type/user.type';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import { updateStaffs, IUpdateStaffsParams } from 'requests/project';
 import { DefaultAvatar } from 'utils/constant';
-// import Image from 'next/image';
 import useToast, { ToastType } from 'hooks/useToast';
+import { NameMapType } from 'hooks/useParseSNS';
 
 const Mask = styled.div`
   background: rgba(0, 0, 0, 0.3);
@@ -35,7 +35,6 @@ const Mask = styled.div`
     margin-block: 15px;
   }
 `;
-
 const CardHeader = styled.div`
   min-width: 500px;
   padding: 1rem 1.25rem;
@@ -51,19 +50,19 @@ const CardHeader = styled.div`
 `;
 
 const CardBody = styled.div`
-  padding: 20px;
+  padding: 0 20px 20px;
 `;
 const CardFooter = styled.div`
   padding: 0 20px 20px;
 `;
-
 const ItemBox = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  margin-top: 30px;
   width: 500px;
   gap: 10px;
+  border-bottom: 1px solid rgb(237, 241, 247);
+  padding-block: 10px;
   img {
     width: 40px;
     height: 40px;
@@ -78,9 +77,10 @@ interface Iprops {
   selectAdminArr: IUser[];
   selectMemArr: IUser[];
   id: string;
+  nameMap: NameMapType;
 }
 export default function Del(props: Iprops) {
-  const { closeRemove, selectAdminArr, selectMemArr, id } = props;
+  const { closeRemove, selectAdminArr, selectMemArr, id, nameMap } = props;
   const { t } = useTranslation();
   const { dispatch } = useAuthContext();
 
@@ -120,11 +120,7 @@ export default function Del(props: Iprops) {
           {selectAdminArr.map((item, index) => (
             <ItemBox key={index}>
               <div>
-                {item.avatar ? (
-                  <img src={item.avatar} style={{ width: '40px', height: '40px' }} />
-                ) : (
-                  <img src={DefaultAvatar} alt="" width="40px" height="40px" />
-                )}
+                <img src={item.avatar || DefaultAvatar} alt="" style={{ width: '40px', height: '40px' }} />
               </div>
               <div>
                 <div>{item.name}</div>
@@ -136,14 +132,10 @@ export default function Del(props: Iprops) {
           {selectMemArr.map((item, index) => (
             <ItemBox key={index}>
               <div>
-                {item.avatar ? (
-                  <img src={item.avatar} style={{ width: '40px', height: '40px' }} />
-                ) : (
-                  <img src={DefaultAvatar} alt="" width="40px" height="40px" />
-                )}
+                <img src={item.avatar || DefaultAvatar} alt="" style={{ width: '40px', height: '40px' }} />
               </div>
               <div>
-                <div>{item.name}</div>
+                <div>{(item.wallet && nameMap[item.wallet]) || item.name}</div>
                 <div>{item.wallet}</div>
               </div>
             </ItemBox>

@@ -16,16 +16,16 @@ import { useTranslation } from 'react-i18next';
 import { formatApplicationStatus } from 'utils/index';
 import useToast, { ToastType } from 'hooks/useToast';
 import Select from 'components/common/select';
+import { useNavigate } from 'react-router-dom';
+import ApplicationStatusTag from 'components/common/applicationStatusTag';
 
 const Box = styled.div``;
 const FirstLine = styled.div`
   display: flex;
-  //flex-direction: column;
-  margin: 40px 0 20px;
   align-items: center;
   flex-wrap: wrap;
-
-  //justify-content: space-between;
+  width: 100%;
+  justify-content: space-between;
 `;
 
 const TopLine = styled.ul`
@@ -44,12 +44,6 @@ const TopLine = styled.ul`
   }
 `;
 
-const TimeLine = styled.div`
-  display: flex;
-  align-items: center;
-  margin-bottom: 20px;
-`;
-
 const TimeBox = styled.div`
   display: flex;
   align-items: center;
@@ -64,7 +58,6 @@ const BorderBox = styled.div`
 `;
 
 const TopBox = styled.div`
-  background: #f5f5f5;
   display: flex;
   justify-content: flex-start;
   padding: 10px;
@@ -78,26 +71,19 @@ const TableBox = styled.div`
   width: 100%;
   overflow-x: auto;
   overflow-y: hidden;
-  table {
-    th {
-      background: transparent;
-      color: #6e6893;
-      border: 1px solid #d9d5ec;
-      border-left: none;
-      border-right: none;
-      border-radius: 0;
-    }
-    td {
-      border-bottom-color: #d9d5ec;
-    }
-    tr:hover td {
-      background: #f2f0f9;
-    }
-  }
+`;
+
+const SectionTitle = styled.div`
+  font-size: 24px;
+  margin-block: 24px;
+  font-family: Poppins-Bold, Poppins;
+  font-weight: bold;
+  color: var(--bs-body-color_active);
 `;
 
 export default function ProjectAudit() {
-  const { Toast, showToast } = useToast();
+  const { showToast } = useToast();
+  const navigate = useNavigate();
   const { t } = useTranslation();
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -252,96 +238,135 @@ export default function ProjectAudit() {
     return _is_select_all;
   }, [list, selectMap]);
 
+  const openCreate = (val: string) => {
+    if (val === 'project') navigate('/create-project');
+    if (val === 'guild') navigate('/create-guild');
+  };
+
   return (
     <Box>
       {loading && <Loading />}
-      {Toast}
-      <FirstLine>
-        <TopLine>
-          <li>
-            <span className="tit">{t('Project.State')}</span>
-            <Select
-              options={statusOption}
-              placeholder=""
-              onChange={(value: any) => {
-                setSelectStatus(value?.value);
-                setSelectMap({});
-              }}
-            />
-          </li>
-        </TopLine>
-        <TimeLine>
-          <TimeBox>
-            <BorderBox>
-              <RangeDatePickerStyle
-                placeholder={t('Project.RangeTime')}
-                onChange={changeDate}
-                startDate={startDate}
-                endDate={endDate}
+      <section>
+        <SectionTitle>{t('city-hall.create')}</SectionTitle>
+        <TopBox>
+          <CreateCard onClick={() => openCreate('project')}>{t('Project.create')}</CreateCard>
+          <CreateCard onClick={() => openCreate('guild')}>{t('Guild.create')}</CreateCard>
+        </TopBox>
+      </section>
+      <section>
+        <SectionTitle>{t('city-hall.closeProjectReview')}</SectionTitle>
+        <FirstLine>
+          <TopLine>
+            <li>
+              <span className="tit">{t('Project.State')}</span>
+              <Select
+                options={statusOption}
+                placeholder=""
+                onChange={(value: any) => {
+                  setSelectStatus(value?.value);
+                  setSelectMap({});
+                }}
               />
-            </BorderBox>
-          </TimeBox>
-          <Button onClick={handleExport} disabled={!selectOne}>
-            {t('Project.Export')}
-          </Button>
-        </TimeLine>
-      </FirstLine>
-      <TopBox>
-        <Button onClick={handleApprove} disabled={!selectOne}>
-          {t('city-hall.Pass')}
-        </Button>
-        <Button variant="outline-primary" onClick={handleReject} disabled={!selectOne}>
-          {t('city-hall.Reject')}
-        </Button>
-      </TopBox>
-      <TableBox>
-        {list.length ? (
-          <>
-            <table className="table" cellPadding="0" cellSpacing="0">
-              <thead>
-                <tr>
-                  <th>
-                    <Form.Check checked={ifSelectAll} onChange={(e) => onSelectAll(e.target.checked)}></Form.Check>
-                  </th>
-                  <th>{t('Project.Time')}</th>
-                  <th>{t('city-hall.ProjectName')}</th>
-                  <th>{t('city-hall.Content')}</th>
-                  <th>{t('Project.Note')}</th>
-                  <th>{t('Project.State')}</th>
-                  <th>{t('city-hall.Applicant')}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {list.map((item, index) => (
-                  <tr key={index}>
-                    <td>
-                      <Form.Check
-                        checked={!!selectMap[item.application_id]}
-                        onChange={(e) => onChangeCheckbox(e.target.checked, item.application_id, item.status)}
-                      ></Form.Check>
-                    </td>
-                    <td>{item.created_date}</td>
-                    <td>{item.budget_source}</td>
-                    <td>{t('city-hall.CloseProject')}</td>
-                    <td>{item.comment}</td>
-                    <td>{t(formatApplicationStatus(item.status, true))}</td>
-                    <td>{item.submitter_name || publicJs.AddressToShow(item.submitter_wallet)}</td>
+            </li>
+            <li>
+              <TimeBox>
+                <BorderBox>
+                  <RangeDatePickerStyle
+                    placeholder={t('Project.RangeTime')}
+                    onChange={changeDate}
+                    startDate={startDate}
+                    endDate={endDate}
+                  />
+                </BorderBox>
+              </TimeBox>
+              <Button onClick={handleExport} disabled={!selectOne}>
+                {t('Project.Export')}
+              </Button>
+            </li>
+          </TopLine>
+
+          <TopBox>
+            <Button onClick={handleApprove} disabled={!selectOne}>
+              {t('city-hall.Pass')}
+            </Button>
+            <Button variant="outline-primary" onClick={handleReject} disabled={!selectOne}>
+              {t('city-hall.Reject')}
+            </Button>
+          </TopBox>
+        </FirstLine>
+
+        <TableBox>
+          {list.length ? (
+            <>
+              <table className="table" cellPadding="0" cellSpacing="0">
+                <thead>
+                  <tr>
+                    <th>
+                      <Form.Check checked={ifSelectAll} onChange={(e) => onSelectAll(e.target.checked)}></Form.Check>
+                    </th>
+                    <th>{t('Project.Time')}</th>
+                    <th>{t('city-hall.ProjectName')}</th>
+                    <th>{t('city-hall.Content')}</th>
+                    <th>{t('Project.Note')}</th>
+                    <th>{t('Project.State')}</th>
+                    <th>{t('city-hall.Applicant')}</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-            <Page
-              itemsPerPage={pageSize}
-              total={total}
-              current={page - 1}
-              handleToPage={handlePage}
-              handlePageSize={handlePageSize}
-            />
-          </>
-        ) : (
-          <NoItem />
-        )}
-      </TableBox>
+                </thead>
+                <tbody>
+                  {list.map((item, index) => (
+                    <tr key={index}>
+                      <td>
+                        <Form.Check
+                          checked={!!selectMap[item.application_id]}
+                          onChange={(e) => onChangeCheckbox(e.target.checked, item.application_id, item.status)}
+                        ></Form.Check>
+                      </td>
+                      <td>{item.created_date}</td>
+                      <td>{item.budget_source}</td>
+                      <td>{t('city-hall.CloseProject')}</td>
+                      <td>{item.comment}</td>
+                      <td>
+                        <ApplicationStatusTag status={item.status} isProj={true} />
+                      </td>
+                      <td>{item.submitter_name || publicJs.AddressToShow(item.submitter_wallet)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <Page
+                itemsPerPage={pageSize}
+                total={total}
+                current={page - 1}
+                handleToPage={handlePage}
+                handlePageSize={handlePageSize}
+              />
+            </>
+          ) : (
+            <NoItem />
+          )}
+        </TableBox>
+      </section>
     </Box>
   );
 }
+
+const CreateCard = styled.div`
+  width: 190px;
+  background: var(--bs-box--background);
+  border: 1px solid var(--bs-border-color);
+  border-radius: 16px;
+  opacity: 1;
+  padding-block: 21px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  font-family: Poppins-Medium, Poppins;
+  color: var(--bs-body-color_active);
+  cursor: pointer;
+  margin-right: 24px;
+  &:hover {
+    background: var(--bs-menu-hover);
+  }
+`;

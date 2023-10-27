@@ -4,124 +4,95 @@ import { Row, Col } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import { GOV_NODE_CONTRACT, SGN_CONTRACT } from 'utils/constant';
-import BgImg from '../../assets/images/topBg.png';
-import HomeBg from '../../assets/images/homebg.png';
-import { People, ShieldCheck } from 'react-bootstrap-icons';
+
 import AppCard from 'components/common/appCard';
 import Links from 'utils/links';
+import BgImg from '../../assets/Imgs/home/banner.png';
+import CityHallImg from '../../assets/Imgs/home/cityHall.png';
+import MembersImg from '../../assets/Imgs/home/members.png';
+
+import SGNImg from '../../assets/Imgs/dark/sgnHome.png';
+import SbtImg from '../../assets/Imgs/dark/sbt.png';
+import GovernImg from '../../assets/Imgs/dark/govern.png';
+import SGNImgLight from '../../assets/Imgs/light/sgnHome.png';
+import SbtImgLight from '../../assets/Imgs/light/sbt.png';
+import GovernImgLight from '../../assets/Imgs/light/govern.png';
+import { useAuthContext } from '../../providers/authProvider';
+import ArrowImg from '../../assets/Imgs/arrow.png';
+import LinkImg from '../../assets/Imgs/link.svg';
+import { useNavigate } from 'react-router-dom';
 
 const CITY_HALL = 'https://seedao.notion.site/07c258913c5d4847b59271e2ae6f7c66';
 const CITY_HALL_MEMBERS = 'https://www.notion.so/3913d631d7bc49e1a0334140e3cd84f5';
 
 const Box = styled.div`
-  background: #f0f3f8;
+  .lline {
+    display: flex;
+    margin: 60px 20px;
+  }
 `;
 
 const BannerBox = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 6rem 2.5rem 4rem;
-  background: url(${BgImg}) no-repeat right;
+  height: 349px;
+  background: #19131f url(${BgImg}) no-repeat right center;
   background-size: auto 100%;
-  @media (max-width: 1024px) {
-    padding: 40px 25px 30px;
-    background: url(${BgImg}) no-repeat bottom right;
-    background-size: auto 80%;
-  }
-`;
-
-const LFtBox = styled.div`
-  width: 59%;
-  .tit {
-    font-size: 2.5rem;
-    font-weight: bold;
-    text-transform: uppercase;
-    line-height: 1.2em;
-    font-family: 'Jost-ExtraBold';
-    text-shadow: 5px 5px #f5f5f5;
-  }
-  .tips {
-    background: #fff;
-    padding: 2rem 1.5rem;
-    border-radius: 10px;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-    margin-top: 2rem;
-    width: 80%;
-    font-size: 1.2rem;
-    line-height: 1.4em;
-    span {
-      padding: 2px 5px;
-      font-weight: bold;
-      margin-right: 5px;
-      //background: #f1f1f1;
-    }
-  }
-  @media (min-width: 1780px) {
-    .tit {
-      font-size: 3.5rem;
-    }
-  }
-
-  @media (max-width: 1024px) {
-    .tit {
-      font-size: 30px;
-    }
-    .tips {
-      padding: 20px;
-      font-size: 14px;
-    }
-  }
+  border-radius: 16px;
+  box-sizing: border-box;
+  margin: 24px 32px 60px;
 `;
 
 const ActiveBox = styled.div`
-  margin: 0 2rem;
+  margin: 0 40px 0 0;
 `;
 
 const TitBox = styled.div`
-  font-weight: bold;
-  font-size: 1.5rem;
-  margin-bottom: 20px;
-  a {
-    float: right;
-    font-weight: normal;
-    font-size: 1rem;
-    text-decoration: underline;
-    cursor: pointer;
-  }
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 
-  @media (max-width: 1024px) {
-    font-size: 20px;
+  span {
+    font-weight: bold;
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    color: var(--bs-body-color_active);
+    font-family: 'Poppins-Bold';
+  }
+  .toGo {
+    font-size: 14px;
+    cursor: pointer;
+    img {
+      margin-left: 5px;
+    }
   }
 `;
 
 const LineBox = styled.div`
-  background: url(${HomeBg}) center no-repeat;
-  background-size: 100%;
-  background-attachment: fixed;
+  display: flex;
+  align-items: center;
+  width: 100%;
   margin-bottom: 16px;
-  .inner {
-    background: rgba(161, 110, 255, 0.7);
-    padding: 10px;
-  }
-  ul {
-    display: flex;
-    align-items: center;
-    width: 100%;
-  }
-  li {
+
+  dl {
     width: 33.33333%;
-    color: #fff;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.2rem;
+  }
+  img {
+    margin-right: 14px;
   }
   .num {
-    font-size: 3rem;
+    font-family: 'Poppins-SemiBold';
+    color: var(--bs-body-color_active);
+    font-size: 40px;
     font-weight: bold;
-    margin-right: 1.5rem;
-    font-family: 'Jost-Bold';
+  }
+  .tips {
+    color: var(--home-center-color);
+    font-size: 16px;
   }
   @media (max-width: 1024px) {
     .num {
@@ -131,29 +102,38 @@ const LineBox = styled.div`
 `;
 
 const CityBox = styled.div`
-  margin: 0 2rem;
+  margin: 0;
 `;
 
 const LinkBox = styled(Row)`
-  //display: flex;
-  //align-items: center;
-  //justify-content: space-between;
-  margin-bottom: 80px;
-  padding-left: 0;
-
+  display: flex;
+  flex-direction: column;
   .inn {
     border-radius: 10px;
     overflow: hidden;
     cursor: pointer;
-    background: #fff;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    background-color: var(--home-right);
+    border: 1px solid var(--bs-border-color);
     padding: 30px 20px;
     box-sizing: border-box;
     display: flex;
     align-items: center;
+    margin-bottom: 24px;
+    position: relative;
+    .link {
+      position: absolute;
+      right: 20px;
+      top: 20px;
+      display: none;
+    }
+    &:hover {
+      background-color: var(--home-right_hover);
+      .link {
+        display: block;
+      }
+    }
   }
   .lft {
-    background: #eef1f7;
     border-radius: 100%;
     width: 40px;
     height: 40px;
@@ -161,19 +141,21 @@ const LinkBox = styled(Row)`
     align-items: center;
     justify-content: center;
     margin-right: 20px;
-    box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.1);
     font-size: 22px;
     font-weight: bold;
     color: var(--bs-primary);
   }
   .tit {
-    font-size: 1.2rem;
+    font-size: 14px;
     margin-bottom: 5px;
-    font-weight: bold;
+    font-family: 'Poppins-SemiBold';
+    color: var(--bs-body-color_active);
   }
   .tBtm {
-    font-size: 0.8rem;
+    font-size: 12px;
+    word-break: break-all;
   }
+
   @media (max-width: 1024px) {
     .inn {
       margin-bottom: 20px;
@@ -183,6 +165,36 @@ const LinkBox = styled(Row)`
       font-size: 18px;
       margin-bottom: 0;
     }
+  }
+`;
+
+const FontBox = styled.div`
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  color: #fff;
+  width: 600px;
+  .tit {
+    font-size: 32px;
+    font-weight: bold;
+    text-transform: uppercase;
+    line-height: 54px;
+    letter-spacing: 2px;
+    .colorful {
+      display: inline-block;
+      color: green;
+      background-image: -webkit-gradient(linear, 0 0, 0 bottom, from(rgba(52, 48, 237, 1)), to(rgba(190, 121, 244, 1)));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    span {
+      font-family: 'Poppins-Bold' !important;
+    }
+  }
+  .tips {
+    margin-top: 5px;
+    font-size: 16px;
+    letter-spacing: 1px;
   }
 `;
 
@@ -200,6 +212,12 @@ export default function Home() {
   const [governNodes, setGovernNodes] = useState(0);
   const [onboardingHolders, setOnboardingHolders] = useState(0);
   const [onNewHolders, setNewHolders] = useState(0);
+
+  const navigate = useNavigate();
+
+  const {
+    state: { theme },
+  } = useAuthContext();
 
   const events = useMemo(() => {
     // @ts-ignore
@@ -258,72 +276,114 @@ export default function Home() {
     }
   }, []);
 
+  const togo = (url: string) => {
+    navigate(url);
+  };
+
   return (
     <Box>
       <BannerBox>
-        <LFtBox>
-          <div className="tit">{t('Home.Slogan')}</div>
-          <div className="tips">
-            <span>{t('Home.SloganVison')}:</span>
-            {t('Home.SloganDesc')}
+        <FontBox>
+          <div className="tit">
+            <span className="colorful">{t('Home.Slogan1')}</span>
+            <span>{t('Home.Slogan2')}</span>
+            <span className="colorful">{t('Home.Slogan3')}</span>
           </div>
-        </LFtBox>
+          <div className="tips">
+            {t('Home.SloganVison')}:{t('Home.SloganDesc')}
+          </div>
+        </FontBox>
       </BannerBox>
       <LineBox>
-        <div className="inner">
-          <ul>
-            <li>
-              <div className="num">{sgnHolders}</div>
-              <div>{t('Home.SGNHolder')}</div>
-            </li>
-            <li>
-              <div className="num">{governNodes}</div>
-              <div>{t('Home.GovernNode')}</div>
-            </li>
-            <li>
-              <div className="num">{sbtHolders}</div>
-              <div>{t('Home.SBTHolder')}</div>
-            </li>
-          </ul>
-        </div>
+        <dl>
+          <dt>
+            <img src={theme ? SGNImg : SGNImgLight} alt="" />
+          </dt>
+          <dd>
+            <div className="num">{sgnHolders}</div>
+            <div className="tips">{t('Home.SGNHolder')}</div>
+          </dd>
+        </dl>
+        <dl>
+          <dt>
+            <img src={theme ? GovernImg : GovernImgLight} alt="" />
+          </dt>
+          <dd>
+            <div className="num">{governNodes}</div>
+            <div className="tips">{t('Home.GovernNode')}</div>
+          </dd>
+        </dl>
+        <dl>
+          <dt>
+            <img src={theme ? SbtImg : SbtImgLight} alt="" />
+          </dt>
+          <dd>
+            <div className="num">{sbtHolders}</div>
+            <div className="tips">{t('Home.SBTHolder')}</div>
+          </dd>
+        </dl>
       </LineBox>
-      <ActiveBox>
-        <TitBox>{t('Home.Apps')}</TitBox>
-        <Row>
-          {events.map((item, idx) => (
-            <Col key={idx} sm={12} md={6} lg={4} xl={3}>
-              <AppCard {...item} />
-            </Col>
-          ))}
-        </Row>
-      </ActiveBox>
-      <CityBox>
-        <TitBox>{t('Home.Publicity')}</TitBox>
-        <LinkBox>
-          <Col onClick={() => window.open(CITY_HALL, '_blank')}>
-            <div className="inn fst">
-              <div className="lft">
-                <ShieldCheck />
+      <Row className="lline">
+        <Col md={8}>
+          <ActiveBox>
+            <TitBox>
+              <span>{t('Home.Apps')}</span>
+              <div className="toGo" onClick={() => togo('/apps')}>
+                All events
+                <img src={ArrowImg} alt="" />
               </div>
-              <div>
-                <div className="tit">{t('Home.CityHall')}</div>
-                <div className="tBtm">{CITY_HALL}</div>
+            </TitBox>
+            <Row>
+              {events.slice(0, 6).map((item, idx) => (
+                <Col key={idx} sm={12} md={6} lg={6} xl={6}>
+                  <AppCard {...item} />
+                </Col>
+              ))}
+            </Row>
+          </ActiveBox>
+        </Col>
+        <Col md={4}>
+          <CityBox>
+            <TitBox>
+              <span>{t('Home.Publicity')}</span>
+              <div className="toGo">
+                View all
+                <img src={ArrowImg} alt="" />
               </div>
-            </div>
-          </Col>
-          <Col onClick={() => window.open(CITY_HALL_MEMBERS, '_blank')}>
-            <div className="inn snd">
-              <div className="lft">
-                <People />
-              </div>
-              <div>
-                <div className="tit">{t('Home.CityHallMembers')}</div>
-                <div className="tBtm">{CITY_HALL_MEMBERS}</div>
-              </div>
-            </div>
-          </Col>
-        </LinkBox>
-      </CityBox>
+            </TitBox>
+            <LinkBox>
+              <Col onClick={() => window.open(CITY_HALL, '_blank')}>
+                <div className="inn fst">
+                  <div className="link">
+                    <img src={LinkImg} alt="" />
+                  </div>
+                  <div className="lft">
+                    <img src={CityHallImg} alt="" />
+                  </div>
+                  <div>
+                    <div className="tit">{t('Home.CityHall')}</div>
+                    <div className="tBtm">{CITY_HALL}</div>
+                  </div>
+                </div>
+              </Col>
+              <Col onClick={() => window.open(CITY_HALL_MEMBERS, '_blank')}>
+                <div className="inn snd">
+                  <div className="link">
+                    <img src={LinkImg} alt="" />
+                  </div>
+                  <div className="lft">
+                    <img src={MembersImg} alt="" />
+                  </div>
+                  <div>
+                    <div className="tit">{t('Home.CityHallMembers')}</div>
+                    <div className="tBtm">{CITY_HALL_MEMBERS}</div>
+                  </div>
+                </div>
+              </Col>
+            </LinkBox>
+          </CityBox>
+        </Col>
+      </Row>
     </Box>
   );
 }

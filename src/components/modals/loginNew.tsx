@@ -1,9 +1,10 @@
 import { useAuthContext, AppActionType } from 'providers/authProvider';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 
 import { useTranslation } from 'react-i18next';
-import { X } from 'react-bootstrap-icons';
+import CloseImg from '../../assets/Imgs/dark/close-circle.svg';
+import CloseImgLight from '../../assets/Imgs/light/close-circle.svg';
 
 import Metamask from '../login/metamask';
 import Unipass, { upProvider } from '../login/unipass';
@@ -20,7 +21,7 @@ export default function LoginModal({ showModal }: any) {
   const { t } = useTranslation();
 
   const {
-    state: { account, provider },
+    state: { account, provider, theme },
     dispatch,
   } = useAuthContext();
 
@@ -54,7 +55,7 @@ export default function LoginModal({ showModal }: any) {
       <Mask show={showModal}>
         <Modal>
           <span className="icon-close" onClick={() => closeModal()}>
-            <X />
+            <img src={theme ? CloseImg : CloseImgLight} alt="" />
           </span>
           <Title>{t('general.ConnectWallet')}</Title>
           <Metamask />
@@ -77,7 +78,7 @@ const Mask = styled.div<ShowProps>`
   z-index: 99;
   width: 100vw;
   height: 100vh;
-  background: rgba(45, 51, 46, 0.6);
+  background: var(--mask-bg);
   //display: flex;
   display: ${(props) => (props.show ? 'flex' : 'none')};
   justify-content: center;
@@ -85,19 +86,20 @@ const Mask = styled.div<ShowProps>`
 `;
 
 const Modal = styled.div`
-  width: 400px;
-  min-height: 260px;
+  width: 427px;
+  min-height: 354px;
   opacity: 1;
-  border-radius: 8px;
-  background: #fff linear-gradient(90deg, rgba(235, 255, 255, 0.6) 0%, rgba(230, 255, 255, 0) 100%);
-  padding: 40px 20px;
+  border-radius: 16px;
+  background: var(--bs-background);
+  border: 1px solid var(--bs-border-color);
+  padding: 40px 65px;
   position: relative;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   .icon-close {
     position: absolute;
-    right: 10px;
+    right: -50px;
     top: 10px;
     cursor: pointer;
     font-size: 24px;
@@ -105,8 +107,10 @@ const Modal = styled.div`
 `;
 
 const Title = styled.div`
-  font-size: 18px;
-  font-weight: 600;
+  font-size: 24px;
+  font-weight: bold;
   text-align: center;
-  margin-bottom: 16px;
+  margin-bottom: 38px;
+  font-family: 'Poppins-Bold';
+  color: var(--bs-body-color_active);
 `;

@@ -1,11 +1,12 @@
 import styled from 'styled-components';
 import { ContainerPadding } from '../assets/styles/global';
 import React, { useMemo } from 'react';
-import { Col, Row, Tab, Tabs } from 'react-bootstrap';
+import { Col, Row } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { Button } from 'react-bootstrap';
 import Links from 'utils/links';
 import AppCard, { EmptyAppCard } from 'components/common/appCard';
+import Tabbar from 'components/common/tabbar';
 
 const OuterBox = styled.div`
   min-height: 100%;
@@ -50,9 +51,7 @@ export default function Apps() {
       <InnerBox>
         <TitBox>
           <div className="titLft">
-            <Tabs defaultActiveKey={0}>
-              <Tab title={t('resources.all')} eventKey={0} />
-            </Tabs>
+            <Tabbar defaultActiveKey={0} tabs={[{ key: 0, title: t('resources.all') }]} />
           </div>
           <RhtBoxT>
             <Button onClick={() => window.open(Links.applyAppLink, '_target')}>{t('general.apply')}</Button>

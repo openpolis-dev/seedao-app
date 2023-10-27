@@ -13,33 +13,30 @@ import { Authorizer } from "casbin.js";
 import { readPermissionUrl } from "../../requests/user";
 import { WalletType } from "../../wallet/wallet";
 import { clearStorage } from "../../utils/auth";
-import { registerPush } from 'utils/serviceWorkerRegistration';
 import { SELECT_WALLET } from "../../utils/constant";
 import styled from "styled-components";
-import MetamaskIcon from "../../assets/images/wallet/metamask.png";
-
+import MetamaskIcon from "../../assets/Imgs/home/METAmask.svg";
+import OneSignal from "react-onesignal";
 
 const WalletOption = styled.li`
   display: flex;
   align-items: center;
-  gap: 10px;
-  justify-content: space-between;
-  padding: 10px 28px;
-  border-radius: 8px;
-  margin-block: 10px;
+  padding: 14px 28px;
+  border-radius: 16px;
+  margin-bottom: 16px;
   cursor: pointer;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-  border: 1px solid #f1f1f1;
-  background: #fff;
-  color: #000;
+  background:  var(--home-right);
+  color: var(--bs-body-color_active);
+  font-family: 'Poppins-SemiBold';
   font-weight: 600;
   font-size: 16px;
   &:hover {
-    background-color: #f5f5f5;
+    background-color: var(--home-right_hover);
   }
   img {
-    width: 28px;
-    height: 28px;
+    width:32px;
+    height: 32px;
+    margin-right: 20px;
   }
 `;
 
@@ -157,8 +154,12 @@ export default function  Metamask(){
                 account:"account:"+address
             });
             const tokenstr = localStorage.getItem(SEEDAO_USER);
-            await registerPush();
-
+            // await registerPush();
+            try {
+                await OneSignal.login(address.toLocaleLowerCase());
+            } catch (error) {
+                console.error("OneSignal login error",error)
+            }
         }catch (e){
             console.error("Login to",e)
             dispatch({ type: AppActionType.CLEAR_AUTH, payload: undefined });
@@ -177,9 +178,7 @@ export default function  Metamask(){
     }
 
     return<WalletOption onClick={() => onClick()}>
+        <img src={MetamaskIcon} alt="" />
         <span>MetaMask</span>
-        <span>
-                    <img src={MetamaskIcon} alt="" width="28px" height="28px" />
-                  </span>
     </WalletOption>
 }

@@ -14,7 +14,7 @@ export default function useParseSNS(wallet?: string) {
   return name;
 }
 
-type NameMapType = { [wallet: string]: string };
+export type NameMapType = { [wallet: string]: string };
 
 export function useParseSNSList(wallets: string[] = []) {
   const [nameMap, setNameMap] = useState<NameMapType>({});

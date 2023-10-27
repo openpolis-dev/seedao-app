@@ -3,19 +3,40 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { WindowPlus } from 'react-bootstrap-icons';
 
-const AppCard = ({ icon, name, link, id }: { icon: React.ReactElement; name: string; link: string; id: string }) => {
+const AppCard = ({
+  icon,
+  name,
+  link,
+  id,
+  desc,
+}: {
+  icon?: any;
+  name: string;
+  link: string;
+  id: string;
+  desc?: string;
+}) => {
   const navigate = useNavigate();
   const handleClickEvent = () => {
     if (id === 'online') {
       navigate('/online-event');
+    } else if (id === 'pub') {
+      navigate('/pub');
     } else {
       window.open(link, '_blank');
     }
   };
   return (
     <AppCardStyle className="boxBg" onClick={handleClickEvent}>
-      <div className="iconBox">{icon}</div>
-      <div>{name}</div>
+      <div className="iconBox">
+        <img src={icon} alt="" />
+      </div>
+      <div className="Rht">
+        <div className="title">{name}</div>
+        <div className="desc">
+          Our Vision:Creating an alternative human living space in cyberspace outside the region of the nation-states.
+        </div>
+      </div>
     </AppCardStyle>
   );
 };
@@ -27,6 +48,7 @@ export const EmptyAppCard = () => {
   return (
     <AppCardStyle>
       <div className="iconBox">{<WindowPlus />}</div>
+
       <div>{t('resources.wait2add')}</div>
     </AppCardStyle>
   );
@@ -37,21 +59,45 @@ export const AppIcon = styled.img`
 `;
 
 const AppCardStyle = styled.div`
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-  background-size: 100%;
-  border-radius: 10px;
+  padding: 24px;
+  border-radius: 16px;
   overflow: hidden;
   cursor: pointer;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 15px;
-  padding-block: 15px;
-  background-color: #fff;
+  background-color: var(--bs-box--background);
+  border: 1px solid var(--bs-border-color);
   margin-bottom: 20px;
+
+  &:hover {
+    background-color: var(--home-right_hover);
+  }
   .iconBox {
-    font-size: 24px;
+    img {
+      width: 88px;
+      height: 88px;
+      object-fit: cover;
+      object-position: center;
+    }
+  }
+  .Rht {
+    flex-grow: 1;
+    box-sizing: border-box;
+    padding-left: 12px;
+  }
+  .title {
+    color: var(--bs-body-color_active);
+    font-family: 'Poppins-SemiBold';
+    font-size: 16px;
+  }
+  .desc {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    margin-top: 8px;
+    font-size: 12px;
   }
 
   @media (max-width: 1024px) {

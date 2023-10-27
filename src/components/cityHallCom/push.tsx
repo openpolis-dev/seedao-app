@@ -62,14 +62,15 @@ const CreatePushContent = () => {
   }, [title, href]);
   return (
     <div style={{ flex: 1 }}>
+      <BlockTitle>创建推送</BlockTitle>
       <Form>
-        <FormGroup className="mb-3">
+        <FormGroup>
           <FormLabel>
             {t('Push.Title')} <span className="required">*</span>
           </FormLabel>
           <FormInput type="text" value={title} onChange={(e: any) => setTitle(e.target.value)} />
         </FormGroup>
-        <FormGroup className="mb-3">
+        <FormGroup>
           <FormLabel>{t('Push.Content')}</FormLabel>
           <FormInput
             className="form-control"
@@ -79,19 +80,21 @@ const CreatePushContent = () => {
             onChange={(e: any) => setContent(e.target.value)}
           />
         </FormGroup>
-        <FormGroup className="mb-3">
+        <FormGroup>
           <FormLabel>
             {t('Push.Href')} <span className="required">*</span>
           </FormLabel>
           <FormInput type="text" value={href} onChange={(e: any) => setHref(e.target.value)} />
         </FormGroup>
-        {/* <FormGroup className="mb-3">
-        <Form.Check type="checkbox" className="checkbox" />
-        <div style={{ whiteSpace: 'nowrap' }}>{t('Push.Timer')}</div>
-        <DatePickerStyle placeholder="" onChange={() => {}} dateTime={new Date()} />
-      </FormGroup> */}
+        {/* <FormGroup>
+          <div className="timer-group">
+            <Form.Check type="checkbox" className="checkbox" />
+            <div style={{ whiteSpace: 'nowrap' }}>{t('Push.Timer')}</div>
+            <DatePickerStyle placeholder="" onChange={() => {}} dateTime={new Date()} />
+          </div>
+        </FormGroup> */}
       </Form>
-      <SubmitBox className="mt-3">
+      <SubmitBox>
         <Button variant="primary" type="submit" onClick={handleCreate} disabled={createBtnDisabled}>
           {t('Push.Create')}
         </Button>
@@ -135,62 +138,65 @@ const PushHistoryContent = () => {
   }, [page, pageSize]);
 
   return (
-    <TableBox>
-      {list.length ? (
-        <>
-          <table className="table" cellPadding="0" cellSpacing="0">
-            <thead>
-              <tr>
-                <th>{t('Push.Title')}</th>
-                <th>{t('Push.Content')}</th>
-                <th>{t('Push.Href')}</th>
-                <th>{t('Push.Time')}</th>
-                {/* <th>{t('Push.Status')}</th> */}
-                <th>{t('Push.Creator')}</th>
-                {/* <th>{t('Push.Options')}</th> */}
-              </tr>
-            </thead>
-            <tbody>
-              {list.map((item) => (
-                <tr key={item.title}>
-                  <td>{item.title}</td>
-                  <td>{item.content}</td>
-                  <td>
-                    <a href={item.jump_url} target="_blank" rel="noreferrer">
-                      {item.jump_url?.slice(0, 10) + '...'}
-                    </a>
-                  </td>
-                  <td>{item.timeDisplay}</td>
-                  {/* <td>{formatPushStatus(item.status, t)}</td> */}
-                  <td>
-                    <div>
-                      <span>{publicJs.AddressToShow(item.creator_wallet)}</span>
-                    </div>
-                  </td>
-                  {/* <td>
+    <div>
+      <BlockTitle>推送记录</BlockTitle>
+      <TableBox>
+        {list.length ? (
+          <>
+            <table className="table" cellPadding="0" cellSpacing="0">
+              <thead>
+                <tr>
+                  <th>{t('Push.Title')}</th>
+                  <th>{t('Push.Content')}</th>
+                  <th>{t('Push.Href')}</th>
+                  <th>{t('Push.Time')}</th>
+                  {/* <th>{t('Push.Status')}</th> */}
+                  <th>{t('Push.Creator')}</th>
+                  {/* <th>{t('Push.Options')}</th> */}
+                </tr>
+              </thead>
+              <tbody>
+                {list.map((item) => (
+                  <tr key={item.title}>
+                    <td>{item.title}</td>
+                    <td>{item.content}</td>
+                    <td>
+                      <a href={item.jump_url} target="_blank" rel="noreferrer">
+                        {item.jump_url?.slice(0, 10) + '...'}
+                      </a>
+                    </td>
+                    <td>{item.timeDisplay}</td>
+                    {/* <td>{formatPushStatus(item.status, t)}</td> */}
+                    <td>
+                      <div>
+                        <span>{publicJs.AddressToShow(item.creator_wallet)}</span>
+                      </div>
+                    </td>
+                    {/* <td>
                     {item.status === PUSH_STATUS.WAITING && (
                       <Button size="sm" variant="outline-primary" onClick={() => handleCancel()}>
                         {t('general.cancel')}
                       </Button>
                     )}
                   </td> */}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <Page
-            itemsPerPage={pageSize}
-            total={total}
-            current={page - 1}
-            handleToPage={handlePage}
-            handlePageSize={handlePageSize}
-            dir="right"
-          />
-        </>
-      ) : (
-        <NoItem />
-      )}
-    </TableBox>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <Page
+              itemsPerPage={pageSize}
+              total={total}
+              current={page - 1}
+              handleToPage={handlePage}
+              handlePageSize={handlePageSize}
+              dir="right"
+            />
+          </>
+        ) : (
+          <NoItem />
+        )}
+      </TableBox>
+    </div>
   );
 };
 
@@ -204,7 +210,6 @@ export default function PushPanel({ id }: { id?: number }) {
 }
 
 const Box = styled.div`
-  padding: 20px 0;
   display: flex;
   gap: 40px;
   @media (max-width: 768px) {
@@ -213,17 +218,19 @@ const Box = styled.div`
 `;
 
 const FormGroup = styled(Form.Group)`
-  display: flex;
-  gap: 20px;
-  align-items: center;
   .checkbox {
     width: unset;
+  }
+  margin-bottom: 40px;
+  .timer-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
   }
 `;
 
 const FormLabel = styled(Form.Label)`
-  margin-bottom: unset;
-  width: 80px;
+  margin-bottom: 24px;
   font-family: unset;
   .required {
     color: darkred;
@@ -258,5 +265,16 @@ const TableBox = styled.div`
 `;
 
 const SubmitBox = styled.div`
-  text-align: right;
+  margin-top: 52px;
+  button {
+    min-width: 120px;
+  }
+`;
+
+const BlockTitle = styled.div`
+  font-size: 24px;
+  font-family: Poppins-Bold, Poppins;
+  font-weight: bold;
+  line-height: 30px;
+  margin-bottom: 39px;
 `;

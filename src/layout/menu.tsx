@@ -2,20 +2,45 @@ import { useMemo, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import {
-  House,
-  Grid1x2,
-  Calendar,
-  CashCoin,
-  PieChart,
-  People,
-  Box2Heart,
-  ShieldCheck,
-  Envelope,
-  ChatDots,
-  ViewList,
-  Boxes,
-} from 'react-bootstrap-icons';
+import MenuSwitch from '../assets/Imgs/darkMenu/menuSwitch.svg';
+import MenuSwitchLight from '../assets/Imgs/lightMenu/menuSwitch.svg';
+
+import HomeImg from '../assets/Imgs/darkMenu/home.svg';
+import HomeImgActive from '../assets/Imgs/darkMenu/home_active.png';
+import HomeImgLight from '../assets/Imgs/lightMenu/home.svg';
+
+import AppImg from '../assets/Imgs/darkMenu/App.svg';
+import AppImgActive from '../assets/Imgs/darkMenu/App_active.png';
+import AppImgLight from '../assets/Imgs/lightMenu/App.svg';
+
+import EventImg from '../assets/Imgs/darkMenu/event.svg';
+import EventImgActive from '../assets/Imgs/darkMenu/event_active.png';
+import EventImgLight from '../assets/Imgs/lightMenu/event.svg';
+
+import CalendarImg from '../assets/Imgs/darkMenu/calendar.svg';
+
+import CalendarImgLight from '../assets/Imgs/lightMenu/calendar.svg';
+
+import CreditImg from '../assets/Imgs/darkMenu/credit.svg';
+import CreditImgActive from '../assets/Imgs/darkMenu/credit_active.png';
+import CreditImgLight from '../assets/Imgs/lightMenu/credit.svg';
+
+import ExploreImg from '../assets/Imgs/darkMenu/explore.svg';
+import ExploreImgActive from '../assets/Imgs/darkMenu/explore_active.png';
+import ExploreImgLight from '../assets/Imgs/lightMenu/explore.svg';
+
+import CityHallImg from '../assets/Imgs/darkMenu/cityHall.svg';
+import CityHallImgActive from '../assets/Imgs/darkMenu/cityHall_active.png';
+import CityHallImgLight from '../assets/Imgs/lightMenu/cityHall.svg';
+
+import ApplyImg from '../assets/Imgs/darkMenu/Applynow.svg';
+import ApplyImgActive from '../assets/Imgs/darkMenu/Applynow_active.png';
+import ApplyImgLight from '../assets/Imgs/lightMenu/Applynow.svg';
+
+import GovernImg from '../assets/Imgs/darkMenu/govern.svg';
+import GovernImgActive from '../assets/Imgs/darkMenu/govern_active.png';
+import GovernImgLight from '../assets/Imgs/lightMenu/govern.svg';
+
 import React from 'react';
 import useCheckLogin from 'hooks/useCheckLogin';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
@@ -23,19 +48,20 @@ import { WalletType } from 'wallet/wallet';
 import AppVersion from '../components/version';
 
 const Box = styled.div`
-  background: #fff;
+  background: var(--bs-background);
+  border-right: 1px solid var(--bs-border-color);
   box-sizing: border-box;
   padding: 20px;
-  width: 65px;
+  width: 257px;
   flex-shrink: 0;
   position: relative;
+
   &.expand.float {
     position: absolute;
     z-index: 100;
     top: 60px;
     left: 0;
     height: calc(100% - 60px);
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
   }
   &.expand {
     animation: 'expand' 0.1s ease;
@@ -44,42 +70,48 @@ const Box = styled.div`
   &.unexpand {
     animation: 'unexpand' 0.1s ease;
     animation-fill-mode: forwards;
+    .liLine {
+      justify-content: center;
+    }
+    .topLi {
+      justify-content: center;
+    }
   }
   @keyframes expand {
     0% {
-      width: 65px;
+      width: 94px;
     }
     25% {
-      width: 70px;
+      width: 150px;
     }
     50% {
-      width: 80px;
+      width: 200px;
     }
     100% {
-      width: unset;
+      width: 257px;
     }
   }
   @keyframes unexpand {
     0% {
-      width: unset;
+      width: 257px;
     }
     50% {
-      width: 80px;
+      width: 200px;
     }
     75% {
-      width: 70px;
+      width: 150px;
     }
     100% {
-      width: 65px;
+      width: 94px;
     }
   }
 `;
 
 const LftLi = styled.div<{ selected?: boolean }>`
-  padding: 13px 0;
+  padding: 15px 0;
   display: flex;
   align-items: center;
-  border-bottom: 1px dashed #eee;
+
   white-space: nowrap;
   cursor: pointer;
   font-size: 14px;
@@ -87,22 +119,25 @@ const LftLi = styled.div<{ selected?: boolean }>`
   .name {
     padding-left: 10px;
     padding-top: 3px;
+    font-family: 'Poppins-Regular';
+    color: var(--menu-color);
+    ${(props) => props.selected && '   font-family: Poppins-SemiBold;'}
   }
-  .icon {
-    font-size: 20px;
-  }
-  ${(props) => props.selected && 'color: var(--bs-primary);'}
+  //.icon {
+  //  font-size: 20px;
+  //}
+
   position: relative;
   .tooltip-content {
     position: absolute;
     padding: 5px 12px;
     border-radius: 8px;
     transition: opacity 0.3s ease, visibility 0.3s ease;
-    left: 40px;
+    left: 60px;
     top: 15px;
     white-space: nowrap;
-    background: #000;
-    color: #fff;
+    background: var(--bs-menu-hover);
+    color: var(--bs-body-color_active);
     z-index: 99;
     font-size: 12px;
   }
@@ -110,16 +145,25 @@ const LftLi = styled.div<{ selected?: boolean }>`
     content: '';
     position: absolute;
     border: 6px solid transparent;
-    border-bottom-color: #000;
+    border-bottom-color: var(--bs-menu-hover);
     top: 8px;
     left: -16px;
     transform: translateX(50%) rotate(-90deg);
   }
 `;
 
+const SwitchBox = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 10px;
+  img {
+    cursor: pointer;
+  }
+`;
+
 type MenuItemType = {
   title: string;
-  icon: { name: React.ReactNode };
+  icon: any;
   link: { href: string };
   value?: string;
 };
@@ -127,28 +171,87 @@ type MenuItemType = {
 const items: MenuItemType[] = [
   {
     title: 'menus.Home',
-    icon: { name: <House /> },
+    icon: {
+      dark: {
+        nor: HomeImg,
+        active: HomeImgActive,
+      },
+      light: {
+        nor: HomeImgLight,
+        active: HomeImgActive,
+      },
+    },
     link: { href: '/home' },
   },
   {
     title: 'Home.Apps',
-    icon: { name: <Boxes /> },
+    icon: {
+      dark: {
+        nor: AppImg,
+        active: AppImgActive,
+      },
+      light: {
+        nor: AppImgLight,
+        active: AppImgActive,
+      },
+    },
     link: { href: '/apps' },
   },
   {
     title: 'menus.Event',
-    icon: { name: <Grid1x2 /> },
+    icon: {
+      dark: {
+        nor: EventImg,
+        active: EventImgActive,
+      },
+      light: {
+        nor: EventImgLight,
+        active: EventImgActive,
+      },
+    },
     link: { href: '/event' },
   },
   {
     title: 'Home.OnlineEvent',
-    icon: { name: <Calendar /> },
+    icon: {
+      dark: {
+        nor: CalendarImg,
+        active: HomeImgActive,
+      },
+      light: {
+        nor: CalendarImgLight,
+        active: HomeImgActive,
+      },
+    },
     link: { href: '/online-event' },
   },
   {
     title: 'menus.assets',
-    icon: { name: <CashCoin /> },
+    icon: {
+      dark: {
+        nor: CreditImg,
+        active: CreditImgActive,
+      },
+      light: {
+        nor: CreditImgLight,
+        active: CreditImgActive,
+      },
+    },
     link: { href: '/assets' },
+  },
+  {
+    title: 'menus.Explore',
+    icon: {
+      dark: {
+        nor: ExploreImg,
+        active: ExploreImgActive,
+      },
+      light: {
+        nor: ExploreImgLight,
+        active: ExploreImgActive,
+      },
+    },
+    link: { href: '/explore' },
   },
   // {
   //   title: 'menus.Project',
@@ -160,14 +263,32 @@ const items: MenuItemType[] = [
   //   icon: { name: <People /> },
   //   link: { href: '/guild' },
   // },
-  // {
-  //   title: 'menus.Proposal',
-  //   icon: { name: <Box2Heart /> },
-  //   link: { href: '/proposal' },
-  // },
+  {
+    title: 'menus.Proposal',
+    icon: {
+      dark: {
+        nor: GovernImg,
+        active: GovernImgActive,
+      },
+      light: {
+        nor: GovernImgLight,
+        active: GovernImgActive,
+      },
+    },
+    link: { href: '/proposal' },
+  },
   {
     title: 'menus.city-hall',
-    icon: { name: <ShieldCheck /> },
+    icon: {
+      dark: {
+        nor: CityHallImg,
+        active: CityHallImgActive,
+      },
+      light: {
+        nor: CityHallImgLight,
+        active: CityHallImgActive,
+      },
+    },
     link: { href: '/city-hall' },
   },
   // {
@@ -185,7 +306,16 @@ const items: MenuItemType[] = [
   // },
   {
     title: 'menus.Resources',
-    icon: { name: <ViewList /> },
+    icon: {
+      dark: {
+        nor: ApplyImg,
+        active: ApplyImgActive,
+      },
+      light: {
+        nor: ApplyImgLight,
+        active: ApplyImgActive,
+      },
+    },
     link: { href: '/resources' },
   },
 ];
@@ -195,18 +325,21 @@ interface IMenuItem {
   onSelectMenu: (m: MenuItemType) => void;
   selected?: boolean;
   open?: boolean;
+  theme: boolean;
 }
 
-const MenuItem = ({ data, onSelectMenu, selected, open }: IMenuItem) => {
+const MenuItem = ({ data, onSelectMenu, selected, open, theme }: IMenuItem) => {
   const [hover, setHover] = useState(false);
   return (
     <LftLi
       onClick={() => onSelectMenu(data)}
       selected={selected}
+      className="liLine"
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
     >
-      <span className="icon">{data.icon.name}</span>
+      {/*<span className="icon">{data.icon.name}</span>*/}
+      <img src={data.icon[theme ? 'dark' : 'light'][selected ? 'active' : 'nor']} alt="" />
       {open && <span className="name">{data.title}</span>}
       {!open && hover && <span className="tooltip-content">{data.title}</span>}
     </LftLi>
@@ -219,7 +352,7 @@ export default function Menu({ isMedium }: { isMedium: boolean }) {
   const { t } = useTranslation();
 
   const {
-    state: { wallet_type, account, expandMenu: open },
+    state: { wallet_type, account, expandMenu: open, theme },
     dispatch,
   } = useAuthContext();
 
@@ -251,11 +384,17 @@ export default function Menu({ isMedium }: { isMedium: boolean }) {
 
   return (
     <Box className={boxClassName}>
+      <div>
+        <SwitchBox className="topLi" onClick={() => dispatch({ type: AppActionType.SET_EXPAND_MENU, payload: !open })}>
+          <img src={theme ? MenuSwitch : MenuSwitchLight} alt="" />
+        </SwitchBox>
+      </div>
       {menuItemsFormat.map((item) => (
         <MenuItem
           open={open}
           key={item.title}
           data={item}
+          theme={theme}
           onSelectMenu={onSelectMenu}
           selected={pathname.startsWith(item.link.href)}
         />

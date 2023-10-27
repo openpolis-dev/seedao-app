@@ -5,10 +5,11 @@ import { getSeeuEventList } from 'requests/event';
 import Page from 'components/pagination';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import useToast, { ToastType } from 'hooks/useToast';
-import { Row, Col, Tabs, Tab } from 'react-bootstrap';
+import { Row, Col } from 'react-bootstrap';
 import { ContainerPadding } from '../../assets/styles/global';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
+import Tabbar from 'components/common/tabbar';
 
 interface IEventProps {
   startTime: string;
@@ -63,9 +64,7 @@ export default function SeeuNetwork() {
       <InnerBox>
         <TitBox>
           <div className="titLft">
-            <Tabs defaultActiveKey={0}>
-              <Tab title={t('event.events')} eventKey={0} />
-            </Tabs>
+            <Tabbar defaultActiveKey={0} tabs={[{ key: 0, title: t('event.events') }]} />
           </div>
         </TitBox>
         <Row>

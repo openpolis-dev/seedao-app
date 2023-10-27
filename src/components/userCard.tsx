@@ -12,6 +12,7 @@ import DiscordIcon from 'assets/images/discordNor.svg';
 import EmailIcon from 'assets/images/email.svg';
 import { Col } from 'react-bootstrap';
 import { useAuthContext } from '../providers/authProvider';
+import CopyIconSVG from 'components/svgs/copy';
 
 interface IUserProps {
   user: IUser;
@@ -39,11 +40,11 @@ export default function UserCard({ user, showEdit, onSelectUser, formatActive, s
           )}
 
           <div>
-            <div className="name">{sns || user.name}</div>
+            <div className="name">{sns || user.name}aaa.seedao</div>
             <div style={{ display: 'flex', gap: '5px' }}>
-              <span>{PublicJs.AddressToShow(user.wallet || '')}</span>
+              <span className="wallet">{PublicJs.AddressToShow(user.wallet || '')}</span>
               <CopyBox text={user.wallet || ''} dir="left">
-                <img src={copyIcon} alt="" style={{ position: 'relative', top: '-2px' }} />
+                <CopyIconSVG />
               </CopyBox>
             </div>
           </div>
@@ -90,17 +91,18 @@ const LinkBox = styled.div`
   }
 `;
 const UserCardBox = styled(Col)`
-  //margin-right: 2%;
-
   margin-bottom: 40px;
-
   .boxAll {
+    background-color: var(--bs-box--background);
+    border: 1px solid var(--bs-border-color);
     padding: 20px;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-    border-radius: 4px;
+    border-radius: 8px;
     overflow: hidden;
     box-sizing: border-box;
     height: 100%;
+    &:hover {
+      background-color: var(--home-right_hover);
+    }
   }
 
   .fst {
@@ -109,8 +111,12 @@ const UserCardBox = styled(Col)`
     position: relative;
   }
   .name {
-    font-size: 14px;
+    color: var(--bs-body-color);
+    font-size: 12px;
     word-break: break-all;
+  }
+  .wallet {
+    font-family: Poppins-SemiBold, Poppins;
   }
   img.avatar {
     width: 40px;

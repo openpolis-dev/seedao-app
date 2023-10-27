@@ -30,8 +30,8 @@ const Box = styled.div`
 
 const LayoutBottom = styled.div`
   width: 100%;
-  height: calc(100vh - 80px);
-  padding-top: 80px;
+  height: calc(100vh - 72px);
+  padding-top: 72px;
   flex-grow: 1;
   box-sizing: border-box;
   display: flex;
@@ -49,5 +49,5 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   flex-grow: 1;
-  background: #f0f3f8;
+  background: var(--bs-background);
 `;

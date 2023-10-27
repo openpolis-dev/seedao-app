@@ -20,7 +20,7 @@ const Box = styled.div<{ dir: string }>`
     width: 32px;
     height: 32px;
     display: inline-block;
-    margin: 0 4px;
+    margin-right: 8px;
   }
   .pagination {
     display: flex;
@@ -28,11 +28,8 @@ const Box = styled.div<{ dir: string }>`
   }
 
   .page-break {
-    width: 32px;
-    height: 32px;
     text-align: center;
     line-height: 32px;
-    margin-right: -4px;
   }
   .page-left {
     background: url(${LftImg}) no-repeat center !important;
@@ -47,7 +44,7 @@ const Box = styled.div<{ dir: string }>`
   .page-right {
     width: 32px;
     height: 32px;
-    background: #fff;
+    background: var(--bs-box-background);
     border: 0;
     text-align: center;
     line-height: 32px;
@@ -56,8 +53,10 @@ const Box = styled.div<{ dir: string }>`
     font-weight: 400;
     cursor: pointer;
     color: #616666;
-    border: 1px solid var(--bs-primary);
-    border-radius: 4px;
+    border-radius: 8px;
+    &:hover {
+      background: var(--bs-menu-hover);
+    }
   }
 
   .next {
@@ -108,11 +107,11 @@ const GoToBox = styled.div`
     background: transparent;
     text-align: center;
     font-size: 14px;
-    color: #000;
-    border: 1px solid var(--bs-primary);
+    border: unset;
     border-radius: 0;
-    border-top-left-radius: 3px;
-    border-bottom-left-radius: 3px;
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+    background-color: var(--bs-box-background);
 
     &:focus {
       outline: none;
