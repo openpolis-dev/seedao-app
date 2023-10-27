@@ -61,7 +61,7 @@ export default function Resources() {
             </Col>
           ))}
           <Col sm={12} md={6} lg={4} xl={3}>
-            <AppCard icon={SeedIcon} name="Seed" link={Links.seed} id="seed" />
+            <AppCard icon={SeedIcon} desc="" name="Seed" link={Links.seed} id="seed" />
           </Col>
           <Col sm={12} md={6} lg={4} xl={3}>
             <EmptyAppCard />
