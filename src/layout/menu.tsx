@@ -119,8 +119,9 @@ const LftLi = styled.div<{ selected?: boolean }>`
   .name {
     padding-left: 10px;
     padding-top: 3px;
-    font-family: 'Poppins-Medium';
-    ${(props) => props.selected && 'color: var(--bs-body-color_active);    font-family: Poppins-SemiBold;'}
+    font-family: 'Poppins-Regular';
+    color: var(--menu-color);
+    ${(props) => props.selected && '   font-family: Poppins-SemiBold;'}
   }
   //.icon {
   //  font-size: 20px;

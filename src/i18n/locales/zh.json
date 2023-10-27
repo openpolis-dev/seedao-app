@@ -27,7 +27,9 @@
     "apply": "申请"
   },
   "Home": {
-    "Slogan": "SeeDAO 是一个致力于连接 100 万 Web3 游民的数字城邦",
+    "Slogan1": "SeeDAO",
+    "Slogan2": "是一个致力于连接 100 万 Web3 游民的",
+    "Slogan3": "数字城邦",
     "SloganVison": "我们的愿景",
     "SloganDesc": "在基于地缘的民族国家之外，在赛博世界另建一片人类的生存空间",
     "Events": "活动",

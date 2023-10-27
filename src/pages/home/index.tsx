@@ -154,6 +154,36 @@ const LinkBox = styled(Row)`
   }
 `;
 
+const FontBox = styled.div`
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  color: #fff;
+  width: 600px;
+  .tit {
+    font-size: 32px;
+    font-weight: bold;
+    text-transform: uppercase;
+    line-height: 54px;
+    letter-spacing: 2px;
+    .colorful {
+      display: inline-block;
+      color: green;
+      background-image: -webkit-gradient(linear, 0 0, 0 bottom, from(rgba(52, 48, 237, 1)), to(rgba(190, 121, 244, 1)));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    span {
+      font-family: 'Poppins-Bold' !important;
+    }
+  }
+  .tips {
+    margin-top: 5px;
+    font-size: 16px;
+    letter-spacing: 1px;
+  }
+`;
+
 const getDatafromNftscan = (contract: string, base?: string) => {
   return axios.get(`${base || 'https://polygonapi.nftscan.com'}/api/v2/statistics/collection/${contract}`, {
     headers: {
@@ -233,13 +263,16 @@ export default function Home() {
   return (
     <Box>
       <BannerBox>
-        {/*<LFtBox>*/}
-        {/*  <div className="tit">{t('Home.Slogan')}</div>*/}
-        {/*  <div className="tips">*/}
-        {/*    <span>{t('Home.SloganVison')}:</span>*/}
-        {/*    {t('Home.SloganDesc')}*/}
-        {/*  </div>*/}
-        {/*</LFtBox>*/}
+        <FontBox>
+          <div className="tit">
+            <span className="colorful">{t('Home.Slogan1')}</span>
+            <span>{t('Home.Slogan2')}</span>
+            <span className="colorful">{t('Home.Slogan3')}</span>
+          </div>
+          <div className="tips">
+            {t('Home.SloganVison')}:{t('Home.SloganDesc')}
+          </div>
+        </FontBox>
       </BannerBox>
       <LineBox>
         <dl>
