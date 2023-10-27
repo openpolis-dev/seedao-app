@@ -30,7 +30,7 @@ export default function SeeSelect(props: any) {
 }
 
 const SelectStyle = styled(Select)`
-  min-width: 150px;
+  min-width: 185px;
   .react-select__input,
   .react-select__single-value {
     color: var(--bs-body-color_active) !important;
