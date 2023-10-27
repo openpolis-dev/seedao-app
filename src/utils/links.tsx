@@ -12,9 +12,27 @@ import Wormhole3Icon from '../assets/Imgs/home/Wormhole3.png';
 export default {
   seed: 'https://seed.seedao.xyz/',
   resource: [
-    { name: 'resources.calendar', link: 'https://tally.so/r/mKxkWD', id: 'calendar', icon: '', desc: 'Add events in community calendar.' },
-    { name: 'resources.brand', link: 'https://tally.so/r/w4QxNd', id: 'brand', icon: '', desc: 'Use SeeDAO branding resources.' },
-    { name: 'resources.community', link: 'https://tally.so/r/mBp09R', id: 'community', icon: '', desc: 'Share your idea in community weekly conf.' },
+    {
+      name: 'resources.calendar',
+      link: 'https://tally.so/r/mKxkWD',
+      id: 'calendar',
+      icon: '',
+      desc: 'Add events in community calendar.',
+    },
+    {
+      name: 'resources.brand',
+      link: 'https://tally.so/r/w4QxNd',
+      id: 'brand',
+      icon: '',
+      desc: 'Use SeeDAO branding resources.',
+    },
+    {
+      name: 'resources.community',
+      link: 'https://tally.so/r/mBp09R',
+      id: 'community',
+      icon: '',
+      desc: 'Share your idea in community weekly conf.',
+    },
   ],
   applyAppLink: 'https://tally.so/r/3XozzP',
   governance: [
@@ -22,22 +40,22 @@ export default {
       name: 'city-hall.communityReview',
       link: 'https://tally.so/forms/mBp09R/submissions',
       id: 'community',
-      icon: <Receipt />,
-      desc: 'Review the request of sharing in community weekly conf.'
+      icon: '',
+      desc: 'Review the request of sharing in community weekly conf.',
     },
     {
       name: 'city-hall.CalendarReview',
       link: 'https://tally.so/r/mKxkWD/submissions',
       id: 'calendar',
-      icon: <Calendar />,
-      desc: 'Review the request of adding events in community calendar.'
+      icon: '',
+      desc: 'Review the request of adding events in community calendar.',
     },
     {
       name: 'city-hall.AppReview',
       link: 'https://tally.so/forms/3XozzP/submissions',
       id: 'app',
-      icon: <Boxes />,
-      desc: 'Review the request of adding apps in SeeDAO App.'
+      icon: '',
+      desc: 'Review the request of adding apps in SeeDAO App.',
     },
   ],
   brand: [
@@ -45,8 +63,8 @@ export default {
       name: 'city-hall.brandReview',
       link: 'https://tally.so/forms/w4QxNd/submissions',
       id: 'brand',
-      icon: <Postcard />,
-      desc: 'Review the request of using SeeDAO branding resources.'
+      icon: '',
+      desc: 'Review the request of using SeeDAO branding resources.',
     },
   ],
   apps: [
