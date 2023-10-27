@@ -12,9 +12,9 @@ import Wormhole3Icon from '../assets/Imgs/home/Wormhole3.png';
 export default {
   seed: 'https://seed.seedao.xyz/',
   resource: [
-    { name: 'resources.calendar', link: 'https://tally.so/r/mKxkWD', id: 'calendar', icon: <Calendar /> },
-    { name: 'resources.brand', link: 'https://tally.so/r/w4QxNd', id: 'brand', icon: <Postcard /> },
-    { name: 'resources.community', link: 'https://tally.so/r/mBp09R', id: 'community', icon: <Receipt /> },
+    { name: 'resources.calendar', link: 'https://tally.so/r/mKxkWD', id: 'calendar', icon: '' },
+    { name: 'resources.brand', link: 'https://tally.so/r/w4QxNd', id: 'brand', icon: '' },
+    { name: 'resources.community', link: 'https://tally.so/r/mBp09R', id: 'community', icon: '' },
   ],
   applyAppLink: 'https://tally.so/r/3XozzP',
   governance: [
@@ -89,25 +89,25 @@ export default {
       desc: '',
     },
     {
-      id: 'online',
-      name: 'Home.OnlineEvent',
-      link: 'https://calendar.google.com/calendar/u/0?cid=c2VlZGFvLnRlY2hAZ21haWwuY29t',
-      icon: <Calendar />,
-      desc: '',
-    },
-    {
-      id: 'offline',
-      name: 'Home.OfflineEvent',
-      link: 'https://seeu.network/',
-      icon: <Grid1x2 />,
-      desc: '',
-    },
-    {
       id: 'pub',
       name: 'Home.pub',
       link: 'https://seeu.network/',
-      icon: <CashCoin />,
+      icon: '',
       desc: '',
     },
+    // {
+    //   id: 'online',
+    //   name: 'Home.OnlineEvent',
+    //   link: 'https://calendar.google.com/calendar/u/0?cid=c2VlZGFvLnRlY2hAZ21haWwuY29t',
+    //   icon: <Calendar />,
+    //   desc: '',
+    // },
+    // {
+    //   id: 'offline',
+    //   name: 'Home.OfflineEvent',
+    //   link: 'https://seeu.network/',
+    //   icon: <Grid1x2 />,
+    //   desc: '',
+    // },
   ],
 };

@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { WindowPlus } from 'react-bootstrap-icons';
+import DefaultImg from '../../assets/Imgs/light/sgnHome.png';
 
 const AppCard = ({
   icon,
@@ -29,7 +30,7 @@ const AppCard = ({
   return (
     <AppCardStyle className="boxBg" onClick={handleClickEvent}>
       <div className="iconBox">
-        <img src={icon} alt="" />
+        <img src={icon ? icon : DefaultImg} alt="" />
       </div>
       <div className="Rht">
         <div className="title">{name}</div>
@@ -47,9 +48,10 @@ export const EmptyAppCard = () => {
   const { t } = useTranslation();
   return (
     <AppCardStyle>
-      <div className="iconBox">{<WindowPlus />}</div>
-
-      <div>{t('resources.wait2add')}</div>
+      <div className="flexBox">
+        <div className="iconBox2">{<WindowPlus />}</div>
+        <div>{t('resources.wait2add')}</div>
+      </div>
     </AppCardStyle>
   );
 };
@@ -98,6 +100,18 @@ const AppCardStyle = styled.div`
     -webkit-box-orient: vertical;
     margin-top: 8px;
     font-size: 12px;
+  }
+  .flexBox {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+
+    .iconBox2 {
+      font-size: 42px;
+      text-align: center;
+    }
   }
 
   @media (max-width: 1024px) {
