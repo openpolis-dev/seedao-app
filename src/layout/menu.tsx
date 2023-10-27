@@ -124,7 +124,7 @@ const LftLi = styled.div<{ selected?: boolean }>`
     padding: 5px 12px;
     border-radius: 8px;
     transition: opacity 0.3s ease, visibility 0.3s ease;
-    left: 40px;
+    left: 60px;
     top: 15px;
     white-space: nowrap;
     background: var(--bs-menu-hover);

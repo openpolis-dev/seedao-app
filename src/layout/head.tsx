@@ -23,6 +23,7 @@ import { mainnet } from 'wagmi/chains';
 import { Wallet, WalletType } from 'wallet/wallet';
 import OneSignal from 'react-onesignal';
 import LightImg from '../assets/Imgs/light.png';
+import MoonImg from '../assets/Imgs/moon.png';
 
 import LogoImg from '../assets/images/logo.png';
 import LogoImgDark from '../assets/images/email.svg';
@@ -237,7 +238,7 @@ export default function Header() {
 
         <RightBox>
           <SwitchTheme>
-            <img src={LightImg} alt="" onClick={() => SwitchThemeFun()} />
+            <img src={theme ? LightImg : MoonImg} alt="" onClick={() => SwitchThemeFun()} />
           </SwitchTheme>
           <Form.Select
             data-bs-theme={theme ? 'dark' : 'light'}

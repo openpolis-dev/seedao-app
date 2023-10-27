@@ -8,6 +8,7 @@ import { GOV_NODE_CONTRACT, SGN_CONTRACT } from 'utils/constant';
 import { People, ShieldCheck } from 'react-bootstrap-icons';
 import AppCard from 'components/common/appCard';
 import Links from 'utils/links';
+import BgImg from '../../assets/Imgs/home/banner.png';
 
 import SGNImg from '../../assets/Imgs/dark/sgnHome.png';
 import SbtImg from '../../assets/Imgs/dark/sbt.png';
@@ -20,23 +21,27 @@ import { useAuthContext } from '../../providers/authProvider';
 const CITY_HALL = 'https://seedao.notion.site/07c258913c5d4847b59271e2ae6f7c66';
 const CITY_HALL_MEMBERS = 'https://www.notion.so/3913d631d7bc49e1a0334140e3cd84f5';
 
-const Box = styled.div``;
+const Box = styled.div`
+  .lline {
+    display: flex;
+    margin: 60px 20px 0;
+  }
+`;
 
 const BannerBox = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 6rem 2.5rem 4rem;
-
+  height: 349px;
+  background: #19131f url(${BgImg}) no-repeat right center;
   background-size: auto 100%;
-  @media (max-width: 1024px) {
-    padding: 40px 25px 30px;
-    background-size: auto 80%;
-  }
+  border-radius: 16px;
+  box-sizing: border-box;
+  margin: 24px 32px 60px;
 `;
 
 const ActiveBox = styled.div`
-  margin: 0 2rem;
+  margin: 0;
 `;
 
 const TitBox = styled.div`
@@ -91,16 +96,11 @@ const LineBox = styled.div`
 `;
 
 const CityBox = styled.div`
-  margin: 0 2rem;
+  margin: 0;
 `;
 
 const LinkBox = styled(Row)`
-  //display: flex;
-  //align-items: center;
-  //justify-content: space-between;
-  margin-bottom: 80px;
-  padding-left: 0;
-
+  display: flex;
   .inn {
     border-radius: 10px;
     overflow: hidden;
@@ -261,12 +261,12 @@ export default function Home() {
           </dd>
         </dl>
       </LineBox>
-      <Row>
+      <Row className="lline">
         <Col md={8}>
           <ActiveBox>
             <TitBox>{t('Home.Apps')}</TitBox>
             <Row>
-              {events.map((item, idx) => (
+              {events.slice(0, 6).map((item, idx) => (
                 <Col key={idx} sm={12} md={6} lg={6} xl={6}>
                   <AppCard {...item} />
                 </Col>
