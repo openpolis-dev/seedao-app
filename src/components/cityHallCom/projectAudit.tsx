@@ -353,6 +353,7 @@ export default function ProjectAudit() {
 const CreateCard = styled.div`
   width: 190px;
   background: var(--bs-box--background);
+  border: 1px solid var(--bs-border-color);
   border-radius: 16px;
   opacity: 1;
   padding-block: 21px;

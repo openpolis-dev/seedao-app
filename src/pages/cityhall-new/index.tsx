@@ -84,7 +84,7 @@ export default function Index() {
             { key: 3, title: t('city-hall.Tech') },
             { key: 4, title: t('city-hall.Push') },
             { key: 5, title: t('city-hall.management') },
-            { key: 6, title: t('city-hall.Add') },
+            // { key: 6, title: t('city-hall.Add') },
           ]}
           defaultActiveKey={0}
           onSelect={(v) => setCurrent(v as number)}
