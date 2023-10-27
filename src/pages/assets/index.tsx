@@ -207,7 +207,7 @@ export default function Index() {
 
   const getFloorPrice = async () => {
     try {
-      const url = 'https://restapi.nftscan.com/api/v2/statistics/collection/0x23fda8a873e9e46dbe51c78754dddccfbc41cfe1';
+      const url = 'https://restapi.nftscan.com/api/v2/statistics/collection/0x30093266e34a816a53e302be3e59a93b52792fd4';
       const res = await axios.get(url, {
         headers: {
           'X-API-KEY': 'laP3Go52WW4oBXdt7zhJ7aoj',

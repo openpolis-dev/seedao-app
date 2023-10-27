@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import getConfig from 'utils/envCofnig';
 
 export default function AppVersion({ open }: any) {
   const { t } = useTranslation();
@@ -15,11 +16,14 @@ export default function AppVersion({ open }: any) {
       <VersionBox className={open ? '' : 'lft'}>
         <FeedbackBox onClick={() => toGo()}>{t('menus.feedback')}</FeedbackBox>
         <div>
-          <span> {process.env.REACT_APP_APP_VERSION}</span>
+          <span> {getConfig().REACT_APP_APP_VERSION}</span>
           {open && (
-            <span>
-              .Build {process.env.REACT_APP_BUILD_ID?.slice(0, 6)}.{process.env.REACT_APP_COMMIT_REF?.slice(0, 6)}
-            </span>
+            <>
+              <span>
+                {` `}
+                {process.env.REACT_APP_BUILD_ID?.slice(0, 6)}.{process.env.REACT_APP_COMMIT_REF?.slice(0, 6)}
+              </span>
+            </>
           )}
         </div>
       </VersionBox>
