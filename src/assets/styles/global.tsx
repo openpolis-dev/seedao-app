@@ -37,6 +37,9 @@ const GlobalStyle = createGlobalStyle`
     white-space: nowrap;
 
   }
+
+
+
   .form-select,.btn{
     font-size: 14px;
     
@@ -166,6 +169,14 @@ const GlobalStyle = createGlobalStyle`
   /* svg color */
   .svg-stroke {
     stroke: var(--bs-svg-color) !important;
+  }
+  .dropdown-item{
+    border-bottom:0!important;
+ 
+  }
+  .dropdown-menu-show{
+    border:1px solid var(--bs-border-color)!important;
+    margin-top: 16px;
   }
 `;
 

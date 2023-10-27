@@ -334,9 +334,6 @@ const HeadeStyle = styled.header`
   .dropdown button {
     border-color: transparent !important;
   }
-  .dropBtm {
-    border: 0;
-  }
   .dropdown-item {
     border-bottom: 1px solid #eee;
     padding: 10px 0;
