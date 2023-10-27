@@ -12,9 +12,9 @@ import Wormhole3Icon from '../assets/Imgs/home/Wormhole3.png';
 export default {
   seed: 'https://seed.seedao.xyz/',
   resource: [
-    { name: 'resources.calendar', link: 'https://tally.so/r/mKxkWD', id: 'calendar', icon: '' },
-    { name: 'resources.brand', link: 'https://tally.so/r/w4QxNd', id: 'brand', icon: '' },
-    { name: 'resources.community', link: 'https://tally.so/r/mBp09R', id: 'community', icon: '' },
+    { name: 'resources.calendar', link: 'https://tally.so/r/mKxkWD', id: 'calendar', icon: '', desc: 'Add events in community calendar.' },
+    { name: 'resources.brand', link: 'https://tally.so/r/w4QxNd', id: 'brand', icon: '', desc: 'Use SeeDAO branding resources.' },
+    { name: 'resources.community', link: 'https://tally.so/r/mBp09R', id: 'community', icon: '', desc: 'Share your idea in community weekly conf.' },
   ],
   applyAppLink: 'https://tally.so/r/3XozzP',
   governance: [
@@ -23,18 +23,21 @@ export default {
       link: 'https://tally.so/forms/mBp09R/submissions',
       id: 'community',
       icon: <Receipt />,
+      desc: 'Review the request of sharing in community weekly conf.'
     },
     {
       name: 'city-hall.CalendarReview',
       link: 'https://tally.so/r/mKxkWD/submissions',
       id: 'calendar',
       icon: <Calendar />,
+      desc: 'Review the request of adding events in community calendar.'
     },
     {
       name: 'city-hall.AppReview',
       link: 'https://tally.so/forms/3XozzP/submissions',
       id: 'app',
       icon: <Boxes />,
+      desc: 'Review the request of adding apps in SeeDAO App.'
     },
   ],
   brand: [
@@ -43,6 +46,7 @@ export default {
       link: 'https://tally.so/forms/w4QxNd/submissions',
       id: 'brand',
       icon: <Postcard />,
+      desc: 'Review the request of using SeeDAO branding resources.'
     },
   ],
   apps: [
@@ -51,49 +55,49 @@ export default {
       name: 'Deschool',
       link: 'https://deschool.app/origin/plaza',
       icon: DeschoolIcon,
-      desc: '',
+      desc: 'DeSchool is building education infrastructure in Web3.',
     },
     {
       id: 'AAAny',
       name: 'AAAny',
       link: 'https://apps.apple.com/ca/app/aaany-ask-anyone-anything/id6450619356',
       icon: AaanyIcon,
-      desc: '',
+      desc: 'AAAny wants everyone to enjoy AMA. We offers a wealth of exclusive features to make your AMA experience joyful and efficient.',
     },
     {
       id: 'Cascad3',
       name: 'Cascad3',
       link: 'https://www.cascad3.com/',
       icon: Cascad3Icon,
-      desc: '',
+      desc: 'Co-create everything. Find your creative community.',
     },
     {
       id: 'DAOLink',
       name: 'DAOLink',
       link: 'https://app.daolink.space',
       icon: DaolinkIcon,
-      desc: '',
+      desc: 'DAOLink is a web3 cowork platform perfect for DAOs, remote teams, and digital nomads.',
     },
     {
       id: 'Wormhole3',
       name: 'Wormhole3',
       link: 'https://alpha.wormhole3.io',
       icon: Wormhole3Icon,
-      desc: '',
+      desc: 'A Wormhole From Web2 to Web3.',
     },
     {
       id: 'Metaforo',
       name: 'Metaforo',
       link: 'https://www.metaforo.io',
       icon: MetaforoIcon,
-      desc: '',
+      desc: 'Decisions get made by members, for members. Metaforo is the only community platform that supports quorum and quadratic token voting.',
     },
     {
       id: 'pub',
       name: 'Home.pub',
       link: 'https://seeu.network/',
       icon: '',
-      desc: '',
+      desc: 'The events hub for SeeDAO community.',
     },
     // {
     //   id: 'online',
