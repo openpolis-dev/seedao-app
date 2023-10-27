@@ -1,10 +1,10 @@
 import styled from 'styled-components';
 import { ContainerPadding } from 'assets/styles/global';
-import React, { useMemo, useState } from 'react';
-import { Col, Row, Tab, Tabs } from 'react-bootstrap';
+import React, { useState } from 'react';
 import Project from 'pages/project';
 import Guild from 'pages/guild';
 import { useTranslation } from 'react-i18next';
+import Tabbar from 'components/common/tabbar';
 
 export default function ExplorePage() {
   const { t } = useTranslation();
@@ -25,10 +25,14 @@ export default function ExplorePage() {
       <InnerBox>
         <TitBox>
           <div className="titLft">
-            <Tabs defaultActiveKey={0} onSelect={(e: any) => setKey(Number(e))}>
-              <Tab title={t('menus.Project')} eventKey={0} />
-              <Tab title={t('menus.Guild')} eventKey={1} />
-            </Tabs>
+            <Tabbar
+              tabs={[
+                { key: 0, title: t('menus.Project') },
+                { key: 1, title: t('menus.Guild') },
+              ]}
+              defaultActiveKey={0}
+              onSelect={(v: string | number) => setKey(v as number)}
+            />
           </div>
         </TitBox>
         {getContent()}

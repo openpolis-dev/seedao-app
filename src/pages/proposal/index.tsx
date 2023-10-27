@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import requests from 'requests';
 import { IBaseProposal } from 'type/proposal.type';
-import { Tabs, Tab } from 'react-bootstrap';
 import { useAuthContext, AppActionType } from 'providers/authProvider';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import ProposalCard from 'components/proposal/proposalCard';
 import ProposalSubNav from 'components/proposal/proposalSubNav';
 import { useTranslation } from 'react-i18next';
@@ -11,6 +10,7 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import MsgIcon from 'assets/images/proposal/message.png';
 import { ContainerPadding } from 'assets/styles/global';
 import { Link } from 'react-router-dom';
+import Tabbar from 'components/common/tabbar';
 
 export default function Index() {
   const {
@@ -60,7 +60,7 @@ export default function Index() {
     setOrderType(index === 0 ? 'latest' : 'old');
   };
 
-  const handleSelectTab = (index: string) => {
+  const handleSelectTab = (index: string | number) => {
     setActiveTab(Number(index));
   };
 
@@ -75,10 +75,20 @@ export default function Index() {
   return (
     <BoxOuter>
       <ProposalContainer>
-        <Tabs defaultActiveKey={activeTab} onSelect={(e: any) => handleSelectTab(e)}>
-          <Tab title={t('Proposal.AllCategories')} eventKey={0}></Tab>
-          <Tab title={t('Proposal.TheNeweset')} eventKey={1}></Tab>
-        </Tabs>
+        <Tabbar
+          tabs={[
+            {
+              key: 0,
+              title: t('Proposal.AllCategories'),
+            },
+            {
+              key: 1,
+              title: t('Proposal.TheNeweset'),
+            },
+          ]}
+          defaultActiveKey={activeTab}
+          onSelect={handleSelectTab}
+        />
         {activeTab === 0 ? (
           <div>
             {proposal_categories.map((category, index) => (

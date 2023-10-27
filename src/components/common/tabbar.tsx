@@ -12,7 +12,7 @@ export interface ITabItem {
 interface IProps {
   defaultActiveKey: TabKeyType;
   tabs: ITabItem[];
-  onSelect: (v: TabKeyType) => void;
+  onSelect?: (v: TabKeyType) => void;
 }
 
 export default function Tabbar({ defaultActiveKey, tabs, onSelect }: IProps) {
