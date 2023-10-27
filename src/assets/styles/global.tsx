@@ -114,6 +114,10 @@ const GlobalStyle = createGlobalStyle`
     td {
       font-size: 14px;
       padding: 20px;
+      color: var(--bs-body-color_a);
+      &.center {
+        text-align: center;
+      }
     }
     th, td {
       border-style: none;

@@ -302,5 +302,8 @@
     "wait2add": "待添加",
     "community": "社区大会分享申请",
     "brand": "品牌标识使用申请"
+  },
+  "application": {
+    "detailModalHeader": "详情"
   }
 }

@@ -302,5 +302,8 @@
     "wait2add": "Coming Soon",
     "community": "Community Conf Speech",
     "brand": "Branding"
+  },
+  "application": {
+    "detailModalHeader": "Detail"
   }
 }

@@ -14,7 +14,7 @@ interface Iprops {
 export default function ApplicationModal({ application, handleClose }: Iprops) {
   const { t } = useTranslation();
   return (
-    <ApplicationModalWrapper handleClose={handleClose} title={'详情'}>
+    <ApplicationModalWrapper handleClose={handleClose} title={t('application.detailModalHeader')}>
       <Content>
         <Block underline>
           <li>
@@ -62,7 +62,9 @@ export default function ApplicationModal({ application, handleClose }: Iprops) {
             <BlockLeft>{t('Project.TransactionID')}</BlockLeft>
             <BlockRight>
               {application.transactions?.map((item, index) => (
-                <p key={index}>{item}</p>
+                <TransactionTx key={index} href={`https://etherscan.io/tx/${item}`} target="_blank">
+                  {item.slice(0, 8) + '...' + item.slice(-8)}
+                </TransactionTx>
               ))}
             </BlockRight>
           </li>
@@ -119,4 +121,10 @@ const BlockRight = styled.div`
     border: 1px solid var(--bs-border-color);
     padding: 10px 16px;
   }
+`;
+
+const TransactionTx = styled.a`
+  display: block;
+  color: var(--bs-primary);
+  text-decoration: underline;
 `;

@@ -384,14 +384,14 @@ export default function AssetList() {
                         </CopyBox> */}
                       </div>
                     </td>
-                    <td>{formatNumber(item.credit_amount)}</td>
-                    <td>{formatNumber(item.token_amount)}</td>
+                    <td className="center">{formatNumber(item.credit_amount)}</td>
+                    <td className="center">{formatNumber(item.token_amount)}</td>
                     <td>{item.detailed_type}</td>
-                    <td>{item.budget_source}</td>
+                    <td className="center">{item.budget_source}</td>
                     <td>
                       <ApplicationStatusTag status={item.status} />
                     </td>
-                    <td>{item.submitter_name || publicJs.AddressToShow(item.submitter_wallet)}</td>
+                    <td className="center">{item.submitter_name || publicJs.AddressToShow(item.submitter_wallet)}</td>
                   </tr>
                 ))}
               </tbody>
