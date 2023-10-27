@@ -210,7 +210,6 @@ export default function PushPanel({ id }: { id?: number }) {
 }
 
 const Box = styled.div`
-  padding-block: 40px;
   display: flex;
   gap: 40px;
   @media (max-width: 768px) {

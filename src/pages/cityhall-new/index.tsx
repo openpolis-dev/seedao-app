@@ -33,6 +33,9 @@ const TopBox = styled.div`
   flex-direction: column;
 `;
 
+const Content = styled.div`
+  padding-block: 41px;
+`;
 export default function Index() {
   const { t } = useTranslation();
   const { dispatch } = useAuthContext();
@@ -86,8 +89,7 @@ export default function Index() {
           defaultActiveKey={0}
           onSelect={(v) => setCurrent(v as number)}
         />
-
-        {getFullContent()}
+        <Content>{getFullContent()}</Content>
       </TopBox>
     </Box>
   ) : (
@@ -98,7 +100,7 @@ export default function Index() {
           defaultActiveKey={0}
           onSelect={(v) => setCurrent(v as number)}
         />
-        {getShortContent()}
+        <Content>{getShortContent()}</Content>
       </TopBox>
     </Box>
   );
