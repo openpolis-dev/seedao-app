@@ -25,8 +25,9 @@ import OneSignal from 'react-onesignal';
 import LightImg from '../assets/Imgs/light.png';
 import MoonImg from '../assets/Imgs/moon.png';
 
-import LogoImg from '../assets/images/logo.png';
-import LogoImgDark from '../assets/images/email.svg';
+import LogoImg from '../assets/Imgs/light/logo.svg';
+import LogoImgDark from '../assets/Imgs/dark/logo.svg';
+import ArrowImg from '../assets/Imgs/arrow.png';
 
 export default function Header() {
   const { i18n } = useTranslation();
@@ -348,7 +349,7 @@ const LogoIcon = styled.div`
   //width: 70px;
 
   img {
-    height: 65px;
+    height: 26px;
     cursor: pointer;
   }
 

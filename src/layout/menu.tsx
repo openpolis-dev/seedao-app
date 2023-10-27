@@ -2,36 +2,44 @@ import { useMemo, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import MenuSwitch from '../assets/Imgs/menuDark.png';
-import HomeImg from '../assets/Imgs/darkMenu/home.png';
+import MenuSwitch from '../assets/Imgs/darkMenu/menuSwitch.svg';
+import MenuSwitchLight from '../assets/Imgs/lightMenu/menuSwitch.svg';
+
+import HomeImg from '../assets/Imgs/darkMenu/home.svg';
 import HomeImgActive from '../assets/Imgs/darkMenu/home_active.png';
-import HomeImgLight from '../assets/Imgs/lightMenu/home.png';
-import HomeImgLightActive from '../assets/Imgs/lightMenu/home_active.png';
+import HomeImgLight from '../assets/Imgs/lightMenu/home.svg';
 
-import EventImg from '../assets/Imgs/darkMenu/event.png';
+import AppImg from '../assets/Imgs/darkMenu/App.svg';
+import AppImgActive from '../assets/Imgs/darkMenu/App_active.png';
+import AppImgLight from '../assets/Imgs/lightMenu/App.svg';
+
+import EventImg from '../assets/Imgs/darkMenu/event.svg';
 import EventImgActive from '../assets/Imgs/darkMenu/event_active.png';
-import EventImgLight from '../assets/Imgs/lightMenu/event.png';
-import EventImgLightActive from '../assets/Imgs/lightMenu/event_active.png';
+import EventImgLight from '../assets/Imgs/lightMenu/event.svg';
 
-import CreditImg from '../assets/Imgs/darkMenu/credit.png';
+import CalendarImg from '../assets/Imgs/darkMenu/calendar.svg';
+
+import CalendarImgLight from '../assets/Imgs/lightMenu/calendar.svg';
+
+import CreditImg from '../assets/Imgs/darkMenu/credit.svg';
 import CreditImgActive from '../assets/Imgs/darkMenu/credit_active.png';
-import CreditImgLight from '../assets/Imgs/lightMenu/credit.png';
-import CreditImgLightActive from '../assets/Imgs/lightMenu/credit_active.png';
+import CreditImgLight from '../assets/Imgs/lightMenu/credit.svg';
 
-import ExploreImg from '../assets/Imgs/darkMenu/explore.png';
+import ExploreImg from '../assets/Imgs/darkMenu/explore.svg';
 import ExploreImgActive from '../assets/Imgs/darkMenu/explore_active.png';
-import ExploreImgLight from '../assets/Imgs/lightMenu/explore.png';
-import ExploreImgLightActive from '../assets/Imgs/lightMenu/explore_active.png';
+import ExploreImgLight from '../assets/Imgs/lightMenu/explore.svg';
 
-import CityHallImg from '../assets/Imgs/darkMenu/cityHall.png';
+import CityHallImg from '../assets/Imgs/darkMenu/cityHall.svg';
 import CityHallImgActive from '../assets/Imgs/darkMenu/cityHall_active.png';
-import CityHallImgLight from '../assets/Imgs/lightMenu/cityHall.png';
-import CityHallImgLightActive from '../assets/Imgs/lightMenu/cityHall_active.png';
+import CityHallImgLight from '../assets/Imgs/lightMenu/cityHall.svg';
 
-import GovernImg from '../assets/Imgs/darkMenu/govern.png';
+import ApplyImg from '../assets/Imgs/darkMenu/Applynow.svg';
+import ApplyImgActive from '../assets/Imgs/darkMenu/Applynow_active.png';
+import ApplyImgLight from '../assets/Imgs/lightMenu/Applynow.svg';
+
+import GovernImg from '../assets/Imgs/darkMenu/govern.svg';
 import GovernImgActive from '../assets/Imgs/darkMenu/govern_active.png';
-import GovernImgLight from '../assets/Imgs/lightMenu/govern.png';
-import GovernImgLightActive from '../assets/Imgs/lightMenu/govern_active.png';
+import GovernImgLight from '../assets/Imgs/lightMenu/govern.svg';
 
 import React from 'react';
 import useCheckLogin from 'hooks/useCheckLogin';
@@ -169,7 +177,7 @@ const items: MenuItemType[] = [
       },
       light: {
         nor: HomeImgLight,
-        active: HomeImgLightActive,
+        active: HomeImgActive,
       },
     },
     link: { href: '/home' },
@@ -178,12 +186,12 @@ const items: MenuItemType[] = [
     title: 'Home.Apps',
     icon: {
       dark: {
-        nor: HomeImg,
-        active: HomeImgActive,
+        nor: AppImg,
+        active: AppImgActive,
       },
       light: {
-        nor: HomeImgLight,
-        active: HomeImgLightActive,
+        nor: AppImgLight,
+        active: AppImgActive,
       },
     },
     link: { href: '/apps' },
@@ -197,7 +205,7 @@ const items: MenuItemType[] = [
       },
       light: {
         nor: EventImgLight,
-        active: EventImgLightActive,
+        active: EventImgActive,
       },
     },
     link: { href: '/event' },
@@ -206,12 +214,12 @@ const items: MenuItemType[] = [
     title: 'Home.OnlineEvent',
     icon: {
       dark: {
-        nor: HomeImg,
+        nor: CalendarImg,
         active: HomeImgActive,
       },
       light: {
-        nor: HomeImgLight,
-        active: HomeImgLightActive,
+        nor: CalendarImgLight,
+        active: HomeImgActive,
       },
     },
     link: { href: '/online-event' },
@@ -225,7 +233,7 @@ const items: MenuItemType[] = [
       },
       light: {
         nor: CreditImgLight,
-        active: CreditImgLightActive,
+        active: CreditImgActive,
       },
     },
     link: { href: '/assets' },
@@ -239,7 +247,7 @@ const items: MenuItemType[] = [
       },
       light: {
         nor: ExploreImgLight,
-        active: ExploreImgLightActive,
+        active: ExploreImgActive,
       },
     },
     link: { href: '/explore' },
@@ -263,7 +271,7 @@ const items: MenuItemType[] = [
       },
       light: {
         nor: GovernImgLight,
-        active: GovernImgLightActive,
+        active: GovernImgActive,
       },
     },
     link: { href: '/proposal' },
@@ -277,7 +285,7 @@ const items: MenuItemType[] = [
       },
       light: {
         nor: CityHallImgLight,
-        active: CityHallImgLightActive,
+        active: CityHallImgActive,
       },
     },
     link: { href: '/city-hall' },
@@ -299,12 +307,12 @@ const items: MenuItemType[] = [
     title: 'menus.Resources',
     icon: {
       dark: {
-        nor: HomeImg,
-        active: HomeImgActive,
+        nor: ApplyImg,
+        active: ApplyImgActive,
       },
       light: {
-        nor: HomeImgLight,
-        active: HomeImgLightActive,
+        nor: ApplyImgLight,
+        active: ApplyImgActive,
       },
     },
     link: { href: '/resources' },
@@ -377,7 +385,7 @@ export default function Menu({ isMedium }: { isMedium: boolean }) {
     <Box className={boxClassName}>
       <div>
         <SwitchBox className="topLi" onClick={() => dispatch({ type: AppActionType.SET_EXPAND_MENU, payload: !open })}>
-          <img src={theme ? MenuSwitch : MenuSwitch} alt="" />
+          <img src={theme ? MenuSwitch : MenuSwitchLight} alt="" />
         </SwitchBox>
       </div>
       {menuItemsFormat.map((item) => (

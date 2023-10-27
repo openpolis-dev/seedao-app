@@ -5,10 +5,11 @@ import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import { GOV_NODE_CONTRACT, SGN_CONTRACT } from 'utils/constant';
 
-import { People, ShieldCheck } from 'react-bootstrap-icons';
 import AppCard from 'components/common/appCard';
 import Links from 'utils/links';
 import BgImg from '../../assets/Imgs/home/banner.png';
+import CityHallImg from '../../assets/Imgs/home/cityHall.png';
+import MembersImg from '../../assets/Imgs/home/members.png';
 
 import SGNImg from '../../assets/Imgs/dark/sgnHome.png';
 import SbtImg from '../../assets/Imgs/dark/sbt.png';
@@ -17,6 +18,7 @@ import SGNImgLight from '../../assets/Imgs/light/sgnHome.png';
 import SbtImgLight from '../../assets/Imgs/light/sbt.png';
 import GovernImgLight from '../../assets/Imgs/light/govern.png';
 import { useAuthContext } from '../../providers/authProvider';
+import ArrowImg from '../../assets/Imgs/arrow.png';
 
 const CITY_HALL = 'https://seedao.notion.site/07c258913c5d4847b59271e2ae6f7c66';
 const CITY_HALL_MEMBERS = 'https://www.notion.so/3913d631d7bc49e1a0334140e3cd84f5';
@@ -41,25 +43,26 @@ const BannerBox = styled.div`
 `;
 
 const ActiveBox = styled.div`
-  margin: 0;
+  margin: 0 40px 0 0;
 `;
 
 const TitBox = styled.div`
-  font-weight: bold;
-  font-size: 1.5rem;
-  margin-bottom: 20px;
-  color: var(--bs-body-color_active);
-  font-family: 'Poppins-Bold';
-  a {
-    float: right;
-    font-weight: normal;
-    font-size: 1rem;
-    text-decoration: underline;
-    cursor: pointer;
-  }
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 
-  @media (max-width: 1024px) {
-    font-size: 20px;
+  span {
+    font-weight: bold;
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    color: var(--bs-body-color_active);
+    font-family: 'Poppins-Bold';
+  }
+  .toGo {
+    font-size: 14px;
+    img {
+      margin-left: 5px;
+    }
   }
 `;
 
@@ -101,17 +104,21 @@ const CityBox = styled.div`
 
 const LinkBox = styled(Row)`
   display: flex;
+  flex-direction: column;
   .inn {
     border-radius: 10px;
     overflow: hidden;
     cursor: pointer;
-    background-color: var(--bs-box--background);
+    background-color: var(--home-right);
     border: 1px solid var(--bs-border-color);
     padding: 30px 20px;
     box-sizing: border-box;
     display: flex;
     align-items: center;
     margin-bottom: 24px;
+    &:hover {
+      background-color: var(--home-right_hover);
+    }
   }
   .lft {
     border-radius: 100%;
@@ -126,12 +133,14 @@ const LinkBox = styled(Row)`
     color: var(--bs-primary);
   }
   .tit {
-    font-size: 1.2rem;
+    font-size: 14px;
     margin-bottom: 5px;
-    font-weight: bold;
+    font-family: 'Poppins-SemiBold';
+    color: var(--bs-body-color_active);
   }
   .tBtm {
-    font-size: 0.8rem;
+    font-size: 12px;
+    word-break: break-all;
   }
   @media (max-width: 1024px) {
     .inn {
@@ -264,7 +273,13 @@ export default function Home() {
       <Row className="lline">
         <Col md={8}>
           <ActiveBox>
-            <TitBox>{t('Home.Apps')}</TitBox>
+            <TitBox>
+              <span>{t('Home.Apps')}</span>
+              <div className="toGo">
+                All events
+                <img src={ArrowImg} alt="" />
+              </div>
+            </TitBox>
             <Row>
               {events.slice(0, 6).map((item, idx) => (
                 <Col key={idx} sm={12} md={6} lg={6} xl={6}>
@@ -276,12 +291,18 @@ export default function Home() {
         </Col>
         <Col md={4}>
           <CityBox>
-            <TitBox>{t('Home.Publicity')}</TitBox>
+            <TitBox>
+              <span>{t('Home.Publicity')}</span>
+              <div className="toGo">
+                View all
+                <img src={ArrowImg} alt="" />
+              </div>
+            </TitBox>
             <LinkBox>
               <Col onClick={() => window.open(CITY_HALL, '_blank')}>
                 <div className="inn fst">
                   <div className="lft">
-                    <ShieldCheck />
+                    <img src={CityHallImg} alt="" />
                   </div>
                   <div>
                     <div className="tit">{t('Home.CityHall')}</div>
@@ -292,7 +313,7 @@ export default function Home() {
               <Col onClick={() => window.open(CITY_HALL_MEMBERS, '_blank')}>
                 <div className="inn snd">
                   <div className="lft">
-                    <People />
+                    <img src={MembersImg} alt="" />
                   </div>
                   <div>
                     <div className="tit">{t('Home.CityHallMembers')}</div>

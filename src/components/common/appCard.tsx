@@ -83,6 +83,8 @@ const AppCardStyle = styled.div`
   }
   .title {
     color: var(--bs-body-color_active);
+    font-family: 'Poppins-SemiBold';
+    font-size: 16px;
   }
   .desc {
     overflow: hidden;

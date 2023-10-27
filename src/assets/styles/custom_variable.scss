@@ -14,6 +14,8 @@
   --bs-menu-hover:#F8F5FF;
   --home-center-color:#150F1C;
   --bs-svg-color: #1A1323;
+  --home-right:#F9F9F9;
+  --home-right_hover:#F8F5FF;
 }
 
 :root[data-bs-theme="dark"] {
@@ -29,4 +31,6 @@
   --bs-menu-hover:#261B46;
   --home-center-color:rgba(203,180,222,0.7);
   --bs-svg-color: #B0B0B0;
+  --home-right:#1A1323;
+  --home-right_hover:#261B46;
 }
