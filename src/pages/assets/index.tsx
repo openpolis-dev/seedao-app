@@ -355,15 +355,15 @@ export default function Index() {
                     <div className="num">2</div>
                   </div>
                 </InfoItem>
-                <InfoItem className="detail">
-                  <Link to="/assets/register">
+                <OptionBox>
+                  {/* <Link to="/assets/register">
                     <Button>登记</Button>
-                  </Link>
-                  <div onClick={() => setShowVaultDetail(!showVaultDetail)}>
+                  </Link> */}
+                  <Button variant="outline-primary" onClick={() => setShowVaultDetail(!showVaultDetail)}>
                     <span>{t('Assets.Detail')}</span>
                     {showVaultDetail ? <ChevronUp /> : <ChevronDown />}
-                  </div>
-                </InfoItem>
+                  </Button>
+                </OptionBox>
               </div>
             </div>
             {showVaultDetail && (
@@ -668,4 +668,25 @@ const DotIcon = styled.span`
   background: var(--bs-primary);
   border-radius: 50%;
   margin-right: 14px;
+`;
+
+const OptionBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  button {
+    min-width: 111px;
+    font-size: 14px;
+  }
+  button.btn-outline-primary {
+    border: 1px solid var(--bs-border-color);
+    background-color: var(--bs-box-background);
+    color: var(--bs-body-color_active) !important;
+    &:hover {
+      background-color: unset !important;
+    }
+    svg {
+      margin-left: 6px;
+    }
+  }
 `;
