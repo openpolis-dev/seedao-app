@@ -57,8 +57,8 @@ export enum AssetName {
 }
 
 // CONTRACTS
-// SGN
-export const SGN_CONTRACT = '0x23fda8a873e9e46dbe51c78754dddccfbc41cfe1';
+// SEED
+export const SEED_CONTRACT = '0x30093266e34a816a53e302be3e59a93b52792fd4';
 // SBT
 // ethereum
 export const GOV_NODE_CONTRACT = '0x9d34D407D8586478b3e4c39BE633ED3D7be1c80c';
