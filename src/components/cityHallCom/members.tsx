@@ -166,17 +166,11 @@ export default function Members(props: Iprops) {
   );
 }
 
-const Box = styled.div`
-  padding: 20px;
-`;
+const Box = styled.div``;
 
 const ItemBox = styled.div`
   display: flex;
   flex-direction: column;
-`;
-const TitleBox = styled.div`
-  font-weight: bold;
-  margin-bottom: 30px;
 `;
 
 const TopBox = styled.div`
