@@ -178,12 +178,13 @@ export default function Header() {
   ];
 
   const showWalletLogin = async () => {
-    try {
-      runOneSignal();
-    } catch (error) {
-      console.error('init OneSignal failed', error);
+    if (process.env.NODE_ENV === 'production') {
+      try {
+        runOneSignal();
+      } catch (error) {
+        console.error('init OneSignal failed', error);
+      }
     }
-    console.log('hasGranted:', hasGranted);
     if (!hasGranted) {
       handlePermission().finally(() => {
         dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: true });
