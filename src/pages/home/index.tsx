@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Row, Col } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
-import { GOV_NODE_CONTRACT, SGN_CONTRACT } from 'utils/constant';
+import { GOV_NODE_CONTRACT, SEED_CONTRACT } from 'utils/constant';
 
 import AppCard from 'components/common/appCard';
 import Links from 'utils/links';
@@ -208,7 +208,7 @@ const getDatafromNftscan = (contract: string, base?: string) => {
 
 export default function Home() {
   const { t } = useTranslation();
-  const [sgnHolders, setSgnHolders] = useState(0);
+  const [seedHolders, setSEEDHolders] = useState(0);
   const [governNodes, setGovernNodes] = useState(0);
   const [onboardingHolders, setOnboardingHolders] = useState(0);
   const [onNewHolders, setNewHolders] = useState(0);
@@ -225,15 +225,15 @@ export default function Home() {
   }, [t]);
 
   useEffect(() => {
-    const handleSgnHolders = async () => {
+    const handleSEEDHolders = async () => {
       try {
-        const res = await getDatafromNftscan(SGN_CONTRACT, 'https://restapi.nftscan.com');
-        setSgnHolders(res.data?.data?.items_total || 0);
+        const res = await getDatafromNftscan(SEED_CONTRACT, 'https://restapi.nftscan.com');
+        setSEEDHolders(res.data?.data?.items_total || 0);
       } catch (error) {
         console.error('[SBT] get sgn owners failed', error);
       }
     };
-    if (process.env.NODE_ENV !== 'development') handleSgnHolders();
+    if (process.env.NODE_ENV !== 'development') handleSEEDHolders();
   }, []);
 
   useEffect(() => {
@@ -300,7 +300,7 @@ export default function Home() {
             <img src={theme ? SGNImg : SGNImgLight} alt="" />
           </dt>
           <dd>
-            <div className="num">{sgnHolders}</div>
+            <div className="num">{seedHolders}</div>
             <div className="tips">{t('Home.SGNHolder')}</div>
           </dd>
         </dl>
