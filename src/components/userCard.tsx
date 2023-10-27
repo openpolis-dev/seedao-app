@@ -93,12 +93,16 @@ const LinkBox = styled.div`
 const UserCardBox = styled(Col)`
   margin-bottom: 40px;
   .boxAll {
-    background-color: var(--bs-box-background);
+    background-color: var(--bs-box--background);
+    border: 1px solid var(--bs-border-color);
     padding: 20px;
     border-radius: 8px;
     overflow: hidden;
     box-sizing: border-box;
     height: 100%;
+    &:hover {
+      background-color: var(--home-right_hover);
+    }
   }
 
   .fst {

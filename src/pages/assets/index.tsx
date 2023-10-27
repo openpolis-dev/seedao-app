@@ -54,12 +54,15 @@ const FirstLine = styled.ul`
     padding: 20px 25px;
     overflow: hidden;
     position: relative;
-    background-color: var(--bs-box-background);
-
+    background-color: var(--bs-box--background);
+    border: 1px solid var(--bs-border-color);
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    &:hover {
+      background-color: var(--home-right_hover);
+    }
 
     @media screen and (max-width: 1000px) {
       width: 48%;
@@ -496,7 +499,8 @@ const Vault = styled.div`
 `;
 
 const VaultOverview = styled.div`
-  background: var(--bs-box-background);
+  background: var(--bs-box--background);
+  border: 1px solid var(--bs-border-color);
   border-radius: 16px;
   overflow: hidden;
   .vaultInner {
@@ -680,7 +684,7 @@ const OptionBox = styled.div`
   }
   button.btn-outline-primary {
     border: 1px solid var(--bs-border-color);
-    background-color: var(--bs-box-background);
+    background-color: var(--bs-box--background);
     color: var(--bs-body-color_active) !important;
     &:hover {
       background-color: unset !important;
