@@ -43,7 +43,7 @@ const GlobalStyle = createGlobalStyle`
   }
   .btn-primary{
     color:#fff;
-    text-transform: uppercase;
+
     background: var(--bs-primary);
     border-color: var(--bs-primary);
     &:hover, &:focus-visible, &:active {

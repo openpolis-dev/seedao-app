@@ -27,7 +27,6 @@ import MoonImg from '../assets/Imgs/moon.png';
 
 import LogoImg from '../assets/Imgs/light/logo.svg';
 import LogoImgDark from '../assets/Imgs/dark/logo.svg';
-import ArrowImg from '../assets/Imgs/arrow.png';
 
 export default function Header() {
   const { i18n } = useTranslation();
@@ -291,7 +290,6 @@ export default function Header() {
           )}
         </RightBox>
       </nav>
-      {/*{show_login_modal && <LoginModal />}*/}
       <LoginModal showModal={show_login_modal} />
     </HeadeStyle>
   );
