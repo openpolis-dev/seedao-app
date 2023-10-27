@@ -1,4 +1,4 @@
-importScripts("https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.sw.js");
+importScripts('https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.sw.js');
 
 const MESSAGE_TYPE = {
   PROJECT_ADD: 'proj_staff_add',
@@ -9,9 +9,13 @@ const MESSAGE_TYPE = {
   CUSTOM: 'custom',
 };
 
+self.addEventListener('activate', function () {
+  console.log('[Service Worker Activated]');
+});
+
 self.addEventListener('notificationclick', async function (event) {
-  console.log('click event:', event);
-  console.log('notificationt:', event.notification);
+  console.log('-- click event:', event);
+  console.log('-- notificationt:', event.notification);
   const data = event.notification.data?.additionalData;
 
   if (data) {

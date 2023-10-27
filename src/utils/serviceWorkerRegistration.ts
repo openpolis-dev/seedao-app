@@ -71,16 +71,19 @@ function registerValidSW(swUrl: string, config?: any) {
     });
 }
 
-export function unregister(callback: any) {
+export async function unregister(callback?: any) {
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.ready
-      .then((registration) => {
-        registration.unregister();
-        callback && callback();
-      })
-      .catch((error) => {
-        console.error(error.message);
-      });
+    navigator.serviceWorker.getRegistrations().then(async function (registrations) {
+      for (let registration of registrations) {
+        console.log('registration:', registration, registration.active?.scriptURL);
+        if (registration.active?.scriptURL.includes('sw.js')) {
+          console.log('>> start to remove old service worker');
+          await registration.unregister();
+          console.log('>> removed old service worker');
+        }
+      }
+      callback && callback();
+    });
   }
 }
 

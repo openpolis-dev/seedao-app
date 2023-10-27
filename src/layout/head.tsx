@@ -27,6 +27,7 @@ import MoonImg from '../assets/Imgs/moon.png';
 
 import LogoImg from '../assets/Imgs/light/logo.svg';
 import LogoImgDark from '../assets/Imgs/dark/logo.svg';
+import runOneSignal from 'utils/onesignal';
 
 export default function Header() {
   const { i18n } = useTranslation();
@@ -176,7 +177,13 @@ export default function Header() {
     },
   ];
 
-  const showWalletLogin = () => {
+  const showWalletLogin = async () => {
+    try {
+      runOneSignal();
+    } catch (error) {
+      console.error('init OneSignal failed', error);
+    }
+    console.log('hasGranted:', hasGranted);
     if (!hasGranted) {
       handlePermission().finally(() => {
         dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: true });
