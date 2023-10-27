@@ -21,11 +21,11 @@ export default function ApplicationStatusTag({ status, isProj }: IProps) {
       case ApplicationStatus.Open:
         return [t('Project.ToBeReviewed'), '#f9b617'];
       case ApplicationStatus.Approved:
-        return [t('Project.ToBeIssued'), ''];
+        return [t('Project.ToBeIssued'), '#f9b617'];
       case ApplicationStatus.Rejected:
         return [t('Project.Rejected'), '#FF7193'];
       case ApplicationStatus.Processing:
-        return [t('Project.Sending'), ''];
+        return [t('Project.Sending'), '#2F8FFF'];
       case ApplicationStatus.Completed:
         return [t('Project.Sended'), '#1F9E14'];
       default:

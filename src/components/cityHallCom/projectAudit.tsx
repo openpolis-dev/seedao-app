@@ -17,15 +17,15 @@ import { formatApplicationStatus } from 'utils/index';
 import useToast, { ToastType } from 'hooks/useToast';
 import Select from 'components/common/select';
 import { useNavigate } from 'react-router-dom';
+import ApplicationStatusTag from 'components/common/applicationStatusTag';
 
 const Box = styled.div``;
 const FirstLine = styled.div`
   display: flex;
-  //flex-direction: column;
   align-items: center;
   flex-wrap: wrap;
-
-  //justify-content: space-between;
+  width: 100%;
+  justify-content: space-between;
 `;
 
 const TopLine = styled.ul`
@@ -44,12 +44,6 @@ const TopLine = styled.ul`
   }
 `;
 
-const TimeLine = styled.div`
-  display: flex;
-  align-items: center;
-  margin-bottom: 20px;
-`;
-
 const TimeBox = styled.div`
   display: flex;
   align-items: center;
@@ -64,7 +58,6 @@ const BorderBox = styled.div`
 `;
 
 const TopBox = styled.div`
-  background: #f5f5f5;
   display: flex;
   justify-content: flex-start;
   padding: 10px;
@@ -78,31 +71,18 @@ const TableBox = styled.div`
   width: 100%;
   overflow-x: auto;
   overflow-y: hidden;
-  table {
-    th {
-      background: transparent;
-      color: #6e6893;
-      border: 1px solid #d9d5ec;
-      border-left: none;
-      border-right: none;
-      border-radius: 0;
-    }
-    td {
-      border-bottom-color: #d9d5ec;
-    }
-    tr:hover td {
-      background: #f2f0f9;
-    }
-  }
 `;
 
 const SectionTitle = styled.div`
-  margin: 20px 0 20px;
-  font-weight: 600;
+  font-size: 24px;
+  margin-block: 24px;
+  font-family: Poppins-Bold, Poppins;
+  font-weight: bold;
+  color: var(--bs-body-color_active);
 `;
 
 export default function ProjectAudit() {
-  const { Toast, showToast } = useToast();
+  const { showToast } = useToast();
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [page, setPage] = useState(1);
@@ -266,16 +246,11 @@ export default function ProjectAudit() {
   return (
     <Box>
       {loading && <Loading />}
-      {Toast}
       <section>
         <SectionTitle>{t('city-hall.create')}</SectionTitle>
         <TopBox>
-          <Button variant="outline-primary" onClick={() => openCreate('project')}>
-            {t('Project.create')}
-          </Button>
-          <Button variant="outline-primary" onClick={() => openCreate('guild')}>
-            {t('Guild.create')}
-          </Button>
+          <CreateCard onClick={() => openCreate('project')}>{t('Project.create')}</CreateCard>
+          <CreateCard onClick={() => openCreate('guild')}>{t('Guild.create')}</CreateCard>
         </TopBox>
       </section>
       <section>
@@ -293,32 +268,33 @@ export default function ProjectAudit() {
                 }}
               />
             </li>
+            <li>
+              <TimeBox>
+                <BorderBox>
+                  <RangeDatePickerStyle
+                    placeholder={t('Project.RangeTime')}
+                    onChange={changeDate}
+                    startDate={startDate}
+                    endDate={endDate}
+                  />
+                </BorderBox>
+              </TimeBox>
+              <Button onClick={handleExport} disabled={!selectOne}>
+                {t('Project.Export')}
+              </Button>
+            </li>
           </TopLine>
-          <TimeLine>
-            <TimeBox>
-              <BorderBox>
-                <RangeDatePickerStyle
-                  placeholder={t('Project.RangeTime')}
-                  onChange={changeDate}
-                  startDate={startDate}
-                  endDate={endDate}
-                />
-              </BorderBox>
-            </TimeBox>
-            <Button onClick={handleExport} disabled={!selectOne}>
-              {t('Project.Export')}
+
+          <TopBox>
+            <Button onClick={handleApprove} disabled={!selectOne}>
+              {t('city-hall.Pass')}
             </Button>
-          </TimeLine>
+            <Button variant="outline-primary" onClick={handleReject} disabled={!selectOne}>
+              {t('city-hall.Reject')}
+            </Button>
+          </TopBox>
         </FirstLine>
 
-        <TopBox>
-          <Button onClick={handleApprove} disabled={!selectOne}>
-            {t('city-hall.Pass')}
-          </Button>
-          <Button variant="outline-primary" onClick={handleReject} disabled={!selectOne}>
-            {t('city-hall.Reject')}
-          </Button>
-        </TopBox>
         <TableBox>
           {list.length ? (
             <>
@@ -349,7 +325,9 @@ export default function ProjectAudit() {
                       <td>{item.budget_source}</td>
                       <td>{t('city-hall.CloseProject')}</td>
                       <td>{item.comment}</td>
-                      <td>{t(formatApplicationStatus(item.status, true))}</td>
+                      <td>
+                        <ApplicationStatusTag status={item.status} isProj={true} />
+                      </td>
                       <td>{item.submitter_name || publicJs.AddressToShow(item.submitter_wallet)}</td>
                     </tr>
                   ))}
@@ -371,3 +349,23 @@ export default function ProjectAudit() {
     </Box>
   );
 }
+
+const CreateCard = styled.div`
+  width: 190px;
+  background: var(--bs-box-background);
+  border-radius: 16px;
+  opacity: 1;
+  padding-block: 21px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  font-family: Poppins-Medium, Poppins;
+  color: var(--bs-body-color_active);
+  cursor: pointer;
+  margin-right: 24px;
+  &:hover {
+    background: var(--bs-menu-hover);
+  }
+`;
