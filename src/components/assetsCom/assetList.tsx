@@ -28,42 +28,36 @@ const TitBox = styled.div`
   font-weight: bold;
   line-height: 30px;
 `;
+
 const FirstLine = styled.div`
   display: flex;
-  //flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+  align-items: end;
   margin-bottom: 20px;
-  align-items: center;
-  flex-wrap: wrap;
-  //justify-content: space-between;
 `;
 
 const TopLine = styled.ul`
   display: flex;
-  align-items: center;
+  align-items: end;
   flex-wrap: wrap;
-
+  justify-content: space-between;
+  gap: 24px;
   li {
     display: flex;
-    align-items: center;
-    margin-right: 40px;
-    margin-bottom: 20px;
+    flex-direction: column;
+    > span {
+      margin-bottom: 10px;
+    }
     .tit {
       padding-right: 20px;
       white-space: nowrap;
     }
+    &.time-line {
+      flex-direction: row;
+      align-items: center;
+    }
   }
-`;
-
-const TimeLine = styled.div`
-  display: flex;
-  align-items: center;
-  margin-bottom: 20px;
-`;
-
-const TimeBox = styled.div`
-  display: flex;
-  align-items: center;
-  margin-right: 20px;
 `;
 
 const BorderBox = styled.div`
@@ -330,22 +324,22 @@ export default function AssetList() {
               }}
             />
           </li>
-          <TimeLine>
-            <TimeBox>
-              <BorderBox>
-                <RangeDatePickerStyle
-                  placeholder={t('Project.RangeTime')}
-                  onChange={changeDate}
-                  startDate={startDate}
-                  endDate={endDate}
-                />
-              </BorderBox>
-            </TimeBox>
-            <Button onClick={handleExport} disabled={!selectOne}>
-              {t('Project.Export')}
-            </Button>
-          </TimeLine>
+          <li className="time-line">
+            <BorderBox>
+              <RangeDatePickerStyle
+                placeholder={t('Project.RangeTime')}
+                onChange={changeDate}
+                startDate={startDate}
+                endDate={endDate}
+              />
+            </BorderBox>
+          </li>
         </TopLine>
+        <div>
+          <Button onClick={handleExport} disabled={!selectOne}>
+            {t('Project.Export')}
+          </Button>
+        </div>
       </FirstLine>
 
       <TableBox>
