@@ -34,9 +34,7 @@ const AppCard = ({
       </div>
       <div className="Rht">
         <div className="title">{name}</div>
-        <div className="desc">
-          Our Vision:Creating an alternative human living space in cyberspace outside the region of the nation-states.
-        </div>
+        <div className="desc">{desc}</div>
       </div>
     </AppCardStyle>
   );
