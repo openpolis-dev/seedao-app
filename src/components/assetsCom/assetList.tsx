@@ -19,6 +19,8 @@ import { useTranslation } from 'react-i18next';
 import { formatApplicationStatus } from 'utils/index';
 import Select from 'components/common/select';
 import { formatNumber } from 'utils/number';
+import ApplicationModal from 'components/modals/applicationModal';
+import ApplicationStatusTag from 'components/common/applicationStatusTag';
 
 const Box = styled.div``;
 const TitBox = styled.div`
@@ -96,6 +98,7 @@ export default function AssetList() {
   const [selectApplicant, setSelectApplicant] = useState<string>();
   const [allSource, setAllSource] = useState<ISelectItem[]>([]);
   const [selectSource, setSelectSource] = useState<{ id: number; type: 'project' | 'guild' }>();
+  const [detailDisplay, setDetailDisplay] = useState<IApplicationDisplay>();
 
   const statusOption = useMemo(() => {
     return [
@@ -282,6 +285,9 @@ export default function AssetList() {
 
   return (
     <Box>
+      {detailDisplay && (
+        <ApplicationModal application={detailDisplay} handleClose={() => setDetailDisplay(undefined)} />
+      )}
       {show && <ViewHash closeShow={closeShow} txs={show} />}
       {loading && <Loading />}
 
@@ -351,22 +357,18 @@ export default function AssetList() {
                   <th>
                     <Form.Check checked={ifSelectAll} onChange={(e) => onSelectAll(e.target.checked)} />
                   </th>
-                  <th>{t('Project.Time')}</th>
                   <th>{t('Project.Address')}</th>
                   <th>{t('Project.AddPoints')}</th>
                   <th>{t('Project.AddToken')}</th>
                   <th>{t('Project.Content')}</th>
                   <th>{t('Project.BudgetSource')}</th>
-                  <th>{t('Project.Note')}</th>
                   <th>{t('Project.State')}</th>
                   <th>{t('Project.Operator')}</th>
-                  <th>{t('Project.Auditor')}</th>
-                  <th>{t('Project.TransactionID')}</th>
                 </tr>
               </thead>
               <tbody>
                 {list.map((item) => (
-                  <tr key={item.application_id}>
+                  <tr key={item.application_id} onClick={() => setDetailDisplay(item)}>
                     <td>
                       <Form.Check
                         // status="Primary"
@@ -374,7 +376,6 @@ export default function AssetList() {
                         onChange={(e) => onChangeCheckbox(e.target.checked, item.application_id, item.status)}
                       ></Form.Check>
                     </td>
-                    <td>{item.created_date}</td>
                     <td>
                       <div>
                         <span>{publicJs.AddressToShow(item.target_user_wallet)}</span>
@@ -387,17 +388,10 @@ export default function AssetList() {
                     <td>{formatNumber(item.token_amount)}</td>
                     <td>{item.detailed_type}</td>
                     <td>{item.budget_source}</td>
-                    <td>{item.comment}</td>
-                    <td>{t(formatApplicationStatus(item.status))}</td>
-                    <td>{item.submitter_name || publicJs.AddressToShow(item.submitter_wallet)}</td>
-                    <td>{item.reviewer_name || publicJs.AddressToShow(item.reviewer_wallet)}</td>
                     <td>
-                      {item.status === ApplicationStatus.Completed && (
-                        <Button size="sm" variant="outline-primary" onClick={() => handleShow(item.transactions || [])}>
-                          {t('Project.View')}
-                        </Button>
-                      )}
+                      <ApplicationStatusTag status={item.status} />
                     </td>
+                    <td>{item.submitter_name || publicJs.AddressToShow(item.submitter_wallet)}</td>
                   </tr>
                 ))}
               </tbody>
