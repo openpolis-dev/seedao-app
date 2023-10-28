@@ -1,6 +1,6 @@
-import { InputGroup, Row, Col, Form, Button } from 'react-bootstrap';
+import { Row, Col, Button } from 'react-bootstrap';
 import styled from 'styled-components';
-import React, { ChangeEvent, useEffect, useState, FormEvent, useMemo } from 'react';
+import React, { ChangeEvent, useEffect, useState, FormEvent } from 'react';
 import requests from 'requests';
 import { useAuthContext, AppActionType } from 'providers/authProvider';
 import { useTranslation } from 'react-i18next';
@@ -17,8 +17,6 @@ import DiscordIcon from 'assets/images/discordNor.svg';
 import EmailIcon from 'assets/images/email.svg';
 import { formatNumber } from 'utils/number';
 import { Link } from 'react-router-dom';
-import getConfig from 'utils/envCofnig';
-const config = getConfig();
 
 const OuterBox = styled.div`
   min-height: 100%;
@@ -28,71 +26,20 @@ const OuterBox = styled.div`
 const HeadBox = styled.div`
   position: relative;
   display: flex;
-  gap: 30px;
   align-items: center;
   margin-bottom: 40px;
-`;
-const CardBox = styled.div`
-  background: #fff;
-  min-height: 100%;
-  padding: 20px 40px;
-  @media (max-width: 1024px) {
-    padding: 20px;
-  }
 `;
 const AvatarBox = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-`;
-
-const UlBox = styled.ul`
-  flex: 1;
-  li {
-    display: flex;
-    align-items: flex-start;
-    justify-content: flex-start;
-    margin-bottom: 20px;
-
-    .title {
-      margin-right: 20px;
-      line-height: 2.5em;
-      min-width: 70px;
-    }
+  border-radius: 100%;
+  overflow: hidden;
+  margin-right: 16px;
+  label {
+    margin-top: 0;
+    background: none;
   }
-  @media (max-width: 750px) {
-    li {
-      flex-direction: column;
-      margin-bottom: 10px;
-    }
-  }
-`;
-const InputBox = styled(InputGroup)`
-  max-width: 600px;
-  .wallet {
-    border: 1px solid #eee;
-    width: 100%;
-    border-radius: 0.25rem;
-    height: 40px;
-    padding: 0 1.125rem;
-    display: flex;
-    align-items: center;
-    overflow-x: auto;
-  }
-  .copy-content {
-    position: absolute;
-    right: -30px;
-    top: 8px;
-  }
-  @media (max-width: 1024px) {
-    max-width: 100%;
-  } ;
-`;
-const MidBox = styled.div`
-  display: flex;
-  justify-content: center;
-  padding-bottom: 40px;
-  gap: 60px;
 `;
 
 export default function Profile() {
@@ -112,68 +59,43 @@ export default function Profile() {
   const [avatar, setAvatar] = useState('');
   const [bio, setBio] = useState('');
 
-  const handleInput = (e: ChangeEvent, type: string) => {
-    const { value } = e.target as HTMLInputElement;
-    switch (type) {
-      case 'userName':
-        setUserName(value);
-        break;
-      case 'email':
-        setEmail(value);
-        break;
-      case 'discord':
-        setDiscord(value);
-        break;
-      case 'twitter':
-        setTwitter(value);
-        break;
-      case 'wechat':
-        setWechat(value);
-        break;
-      case 'mirror':
-        setMirror(value);
-        break;
-      case 'bio':
-        setBio(value);
-    }
-  };
-  const saveProfile = async () => {
-    const reg = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (email && !reg.test(email)) {
-      showToast(t('My.IncorrectEmail'), ToastType.Danger);
-      return;
-    }
-    if (mirror && mirror.indexOf('mirror.xyz') === -1) {
-      showToast(t('My.IncorrectMirror'), ToastType.Danger);
-      return;
-    }
-    if (twitter && !twitter.startsWith('https://twitter.com/')) {
-      showToast(t('My.IncorrectLink', { media: 'Twitter' }), ToastType.Danger);
-      return;
-    }
-
-    dispatch({ type: AppActionType.SET_LOADING, payload: true });
-    try {
-      const data = {
-        name: userName,
-        avatar,
-        email,
-        discord_profile: discord,
-        twitter_profile: twitter,
-        wechat,
-        mirror,
-        bio,
-      };
-      await requests.user.updateUser(data);
-      dispatch({ type: AppActionType.SET_USER_DATA, payload: { ...userData, ...data } });
-      showToast(t('My.ModifiedSuccess'), ToastType.Success);
-    } catch (error) {
-      console.error('updateUser failed', error);
-      showToast(t('My.ModifiedFailed'), ToastType.Danger);
-    } finally {
-      dispatch({ type: AppActionType.SET_LOADING, payload: false });
-    }
-  };
+  // const saveProfile = async () => {
+  //   const reg = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  //   if (email && !reg.test(email)) {
+  //     showToast(t('My.IncorrectEmail'), ToastType.Danger);
+  //     return;
+  //   }
+  //   if (mirror && mirror.indexOf('mirror.xyz') === -1) {
+  //     showToast(t('My.IncorrectMirror'), ToastType.Danger);
+  //     return;
+  //   }
+  //   if (twitter && !twitter.startsWith('https://twitter.com/')) {
+  //     showToast(t('My.IncorrectLink', { media: 'Twitter' }), ToastType.Danger);
+  //     return;
+  //   }
+  //
+  //   dispatch({ type: AppActionType.SET_LOADING, payload: true });
+  //   try {
+  //     const data = {
+  //       name: userName,
+  //       avatar,
+  //       email,
+  //       discord_profile: discord,
+  //       twitter_profile: twitter,
+  //       wechat,
+  //       mirror,
+  //       bio,
+  //     };
+  //     await requests.user.updateUser(data);
+  //     dispatch({ type: AppActionType.SET_USER_DATA, payload: { ...userData, ...data } });
+  //     showToast(t('My.ModifiedSuccess'), ToastType.Success);
+  //   } catch (error) {
+  //     console.error('updateUser failed', error);
+  //     showToast(t('My.ModifiedFailed'), ToastType.Danger);
+  //   } finally {
+  //     dispatch({ type: AppActionType.SET_LOADING, payload: false });
+  //   }
+  // };
 
   useEffect(() => {
     if (userData) {
@@ -220,38 +142,31 @@ export default function Profile() {
   return (
     <OuterBox>
       {Toast}
-      <CardBox>
+      <div>
+        <TitleBox>{t('My.MyProfile')}</TitleBox>
         <HeadBox>
           <AvatarBox>
-            <UploadBox htmlFor="fileUpload" onChange={(e) => updateLogo(e)}>
-              {!avatar && (
-                <div>
-                  <input id="fileUpload" type="file" hidden accept=".jpg, .jpeg, .png" />
-                  {<Upload />}
+            {!avatar && (
+              <div>
+                <input id="fileUpload" type="file" hidden accept=".jpg, .jpeg, .png" />
+                {<Upload />}
+              </div>
+            )}
+            {!!avatar && (
+              <ImgBox onClick={() => removeUrl()}>
+                <div className="del">
+                  <X className="iconTop" />
                 </div>
-              )}
-              {!!avatar && (
-                <ImgBox onClick={() => removeUrl()}>
-                  <div className="del">
-                    <X className="iconTop" />
-                  </div>
-                  <img src={avatar} alt="" />
-                </ImgBox>
-              )}
-            </UploadBox>
+                <img src={avatar} alt="" />
+              </ImgBox>
+            )}
           </AvatarBox>
           <InfoBox>
+            <div className="userName">{userName}</div>
             <div className="wallet">
               <span>{sns || '-'}</span>
-              {process.env.NODE_ENV === 'development' && (
-                <TagBox>
-                  <li>s4节点</li>
-                  <li>s4节点</li>
-                  <li>s4节点</li>
-                </TagBox>
-              )}
             </div>
-            <div className="wallet">{userName}</div>
+
             <div className="wallet">
               <div>{userData?.wallet}</div>
               {userData?.wallet && (
@@ -296,6 +211,15 @@ export default function Profile() {
         <BioBox>
           {t('My.Bio')}: {bio || '-'}
         </BioBox>
+        <div>
+          {process.env.NODE_ENV === 'development' && (
+            <TagBox>
+              <li>s4节点</li>
+              <li>s4节点</li>
+              <li>s4节点</li>
+            </TagBox>
+          )}
+        </div>
         {process.env.NODE_ENV === 'development' && (
           <>
             <ProgressOuter>
@@ -331,25 +255,27 @@ export default function Profile() {
             </NftBox>
           </>
         )}
-      </CardBox>
+      </div>
     </OuterBox>
   );
 }
 
-const UploadBox = styled.label`
-  background: #f8f8f8;
+const TitleBox = styled.div`
+  font-size: 24px;
+  font-family: Poppins-Bold;
+  color: var(--bs-body-color_active);
+  line-height: 30px;
+  margin-bottom: 40px;
+`;
+
+const ImgBox = styled.div`
   height: 100px;
   width: 100px;
-  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 4px;
-  margin-top: 20px;
-  font-family: 'Inter-Regular';
-  font-weight: 700;
-  font-size: 14px;
-  cursor: pointer;
+  position: relative;
+
   .iconRht {
     margin-right: 10px;
   }
@@ -357,15 +283,6 @@ const UploadBox = styled.label`
     max-width: 100%;
     max-height: 100%;
   }
-`;
-
-const ImgBox = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
   .del {
     display: none;
     position: absolute;
@@ -395,10 +312,15 @@ const ImgBox = styled.div`
 const InfoBox = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  .userName {
+    color: var(--bs-body-color_active);
+    font-size: 18px;
+    font-family: Poppins-SemiBold;
+    font-weight: 600;
+    line-height: 23px;
+  }
   .wallet {
     display: flex;
-    gap: 10px;
   }
 `;
 
