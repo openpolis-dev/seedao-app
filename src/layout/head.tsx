@@ -12,6 +12,8 @@ import Avatar from 'components/common/avatar';
 import { Button, Form, Dropdown } from 'react-bootstrap';
 import LoginModal from 'components/modals/loginNew';
 
+import Select from 'components/common/select';
+
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { List as ListIcon } from 'react-bootstrap-icons';
@@ -54,7 +56,7 @@ export default function Header() {
 
   const isLogin = useCheckLogin(account);
 
-  const changeLang = (v: string, select?: boolean) => {
+  const changeLang = (v: any, select?: boolean) => {
     setLan(v);
     dispatch({ type: AppActionType.SET_LAN, payload: v });
     localStorage.setItem('language', v);
@@ -76,6 +78,7 @@ export default function Header() {
         localStorage.setItem('language', lanInit.value);
         changeLang(lanInit.value);
       } else {
+        console.log(myLan);
         changeLang(myLan);
       }
     } else {
@@ -265,18 +268,13 @@ export default function Header() {
           <SwitchTheme>
             <img src={theme ? LightImg : MoonImg} alt="" onClick={() => SwitchThemeFun()} />
           </SwitchTheme>
-          <Form.Select
-            data-bs-theme={theme ? 'dark' : 'light'}
-            style={{ minWidth: '100px' }}
-            value={getLanguages().find((item) => item.value === lan)?.value || getLanguages()[0].value}
-            onChange={(event: any) => changeLang(event.target.value, true)}
-          >
-            {getLanguages().map((item) => (
-              <option key={item.value} value={item.value}>
-                {item.label}
-              </option>
-            ))}
-          </Form.Select>
+          <Select
+            options={getLanguages()}
+            onChange={(event: any) => changeLang(event.value, true)}
+            value={getLanguages().find((item) => item.value === lan) || getLanguages()[0]}
+            width="100px"
+            NotClear={true}
+          />
 
           {isLogin && userData ? (
             <Dropdown>

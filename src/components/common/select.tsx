@@ -2,10 +2,12 @@ import styled from 'styled-components';
 import Select from 'react-select';
 
 export default function SeeSelect(props: any) {
+  const { width, NotClear } = props;
   return (
     <SelectStyle
       className="react-select-container"
       classNamePrefix="react-select"
+      width={width}
       theme={(theme: any) => ({
         ...theme,
         colors: {
@@ -16,23 +18,29 @@ export default function SeeSelect(props: any) {
         },
       })}
       styles={{
-        control: (baseStyles, state) => ({
+        control: (baseStyles: any, state: any) => ({
           ...baseStyles,
           fontSize: '14px',
           backgroundColor: 'var(--bs-background)',
           borderColor: state.isFocused ? 'var(--bs-border-color-focus)' : 'var(--bs-border-color)',
         }),
       }}
-      isClearable
+      isClearable={!NotClear}
       {...props}
     />
   );
 }
 
-const SelectStyle = styled(Select)`
-  min-width: 185px;
+const SelectStyle = styled<any>(Select)`
+  //min-width: 185px;
+  min-width: ${(props) => (props.width ? props.width : '185px')};
   .react-select__input,
   .react-select__single-value {
+    color: var(--bs-body-color_active) !important;
+  }
+  .react-select__menu,
+  .react-select__option--is-selected {
+    font-size: 14px;
     color: var(--bs-body-color_active) !important;
   }
   .react-select__indicator-separator {
