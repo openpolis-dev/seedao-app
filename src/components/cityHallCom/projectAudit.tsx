@@ -79,7 +79,6 @@ const BorderBox = styled.div`
   &:hover {
     border-color: var(--bs-border-color-focus);
   }
-
   @media (max-width: 1050px) {
     width: unset;
   } ;

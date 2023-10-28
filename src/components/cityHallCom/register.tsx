@@ -23,54 +23,61 @@ import ExpandTable from './expandTable';
 const Box = styled.div`
   position: relative;
 `;
-const FirstLine = styled.div`
-  display: flex;
-  //flex-direction: column;
-  margin: 40px 0 20px;
-  align-items: center;
-  flex-wrap: wrap;
-
-  //justify-content: space-between;
-`;
-
 const TopLine = styled.ul`
   display: flex;
-  align-items: center;
   flex-wrap: wrap;
-  gap: 20px 40px;
-
+  gap: 18px;
   li {
-    display: flex;
-    align-items: center;
     .tit {
-      padding-right: 20px;
       white-space: nowrap;
+      margin-bottom: 16px;
     }
   }
-  @media (max-width: 1024px) {
-    gap: 20px;
-  } ;
-`;
-
-const TimeBox = styled.li`
-  gap: 20px;
 `;
 
 const BorderBox = styled.div`
-  border: 1px solid #eee;
-  padding: 2px 20px;
+  border: 1px solid var(--bs-border-color);
+  padding-inline: 16px;
   border-radius: 5px;
-  background: #f7f9fc;
+  width: 280px;
+  box-sizing: border-box;
+  height: 40px;
+  &:hover {
+    border-color: var(--bs-border-color-focus);
+  }
+  @media (max-width: 1240px) {
+    width: unset;
+  } ;
+`;
+
+const TimeBox = styled.div`
+  display: flex;
+  gap: 18px;
 `;
 
 const TopBox = styled.div`
-  background: #f0f3f8;
   display: flex;
-  justify-content: flex-start;
-  padding: 10px;
-  margin: 0 0 30px;
+  gap: 18px;
+  margin-top: 32px;
+  margin-bottom: 20px;
   button {
-    margin-left: 20px;
+    height: 40px;
+    min-width: 120px;
+    &.btn-outline-primary {
+      background-color: transparent;
+      color: #ff7193;
+      border-color: #ff7193;
+      &:hover,
+      &:active {
+        color: #ff7193 !important;
+        border-color: #ff7193 !important;
+        background-color: transparent !important;
+      }
+      &.disabled {
+        background-color: #b0b0b0;
+        color: #0d0c0f;
+      }
+    }
   }
 `;
 
@@ -79,22 +86,6 @@ const TableBox = styled.div`
   overflow-x: auto;
   overflow-y: hidden;
   padding-bottom: 3rem;
-  table {
-    th {
-      background: transparent;
-      color: #6e6893;
-      border: 1px solid #d9d5ec;
-      border-left: none;
-      border-right: none;
-      border-radius: 0;
-    }
-    td {
-      border-bottom-color: #d9d5ec;
-    }
-    tr:hover td {
-      background: #f2f0f9;
-    }
-  }
 `;
 
 export default function Register() {
@@ -330,11 +321,11 @@ export default function Register() {
         <ExpandTable handleClose={() => setShowMore(undefined)} />
       ) : (
         <>
-          <FirstLine>
+          <div>
             <TopLine>
               <li>
-                <span className="tit">{t('Project.BudgetSource')}</span>
-                <Select
+                <div className="tit">{t('Project.BudgetSource')}</div>
+                <FilterSelect
                   options={allSource}
                   placeholder=""
                   onChange={(value: any) => {
@@ -345,8 +336,8 @@ export default function Register() {
                 />
               </li>
               <li>
-                <span className="tit">{t('Project.Operator')}</span>
-                <Select
+                <div className="tit">{t('Project.Operator')}</div>
+                <FilterSelect
                   options={applicants}
                   placeholder=""
                   onChange={(value: ISelectItem) => {
@@ -356,29 +347,33 @@ export default function Register() {
                   }}
                 />
               </li>
-              <TimeBox>
-                <BorderBox>
-                  <RangeDatePickerStyle
-                    placeholder={t('Project.RangeTime')}
-                    onChange={changeDate}
-                    startDate={startDate}
-                    endDate={endDate}
-                  />
-                </BorderBox>
-                <Button onClick={handleExport} disabled={!selectOne}>
-                  {t('Project.Export')}
-                </Button>
-              </TimeBox>
+              <li>
+                <div className="tit">{t('Project.RangeTimeTitle')}</div>
+                <TimeBox>
+                  <BorderBox>
+                    <RangeDatePickerStyle
+                      placeholder={t('Project.RangeTime')}
+                      onChange={changeDate}
+                      startDate={startDate}
+                      endDate={endDate}
+                    />
+                  </BorderBox>
+                  <Button onClick={handleExport} disabled={!selectOne}>
+                    {t('Project.Export')}
+                  </Button>
+                </TimeBox>
+              </li>
             </TopLine>
-          </FirstLine>
-          <TopBox>
-            <Button onClick={handleApprove} disabled={!selectOne}>
-              {t('city-hall.Pass')}
-            </Button>
-            <Button variant="outline-primary" onClick={handleReject} disabled={!selectOne}>
-              {t('city-hall.Reject')}
-            </Button>
-          </TopBox>
+            <TopBox>
+              <Button onClick={handleApprove} disabled={!selectOne}>
+                {t('city-hall.Pass')}
+              </Button>
+              <Button variant="outline-primary" onClick={handleReject} disabled={!selectOne}>
+                {t('city-hall.Reject')}
+              </Button>
+            </TopBox>
+          </div>
+
           <TableBox>
             {list.length ? (
               <>
@@ -452,3 +447,10 @@ export default function Register() {
     </Box>
   );
 }
+
+const FilterSelect = styled(Select)`
+  width: 280px;
+  @media (max-width: 1240px) {
+    width: unset;
+  } ;
+`;
