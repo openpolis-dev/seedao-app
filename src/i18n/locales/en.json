@@ -115,6 +115,7 @@
     "Export": "Export",
     "Time": "Time",
     "RangeTime": "Start time - End time",
+    "RangeTimeTitle": "Time Range",
     "Auditor": "Auditor",
     "TransactionID": "Transaction ID",
     "View": "View",

@@ -6,10 +6,10 @@ import styled from 'styled-components';
 const Box = styled.div`
   width: 100%;
   box-sizing: border-box;
-  height: 34px;
+  height: 40px;
   .borderLess {
     width: 100%;
-    height: 34px;
+    height: 40px;
     border: 0;
     font-weight: 400;
     font-family: unset !important;

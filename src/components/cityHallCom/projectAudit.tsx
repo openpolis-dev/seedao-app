@@ -18,6 +18,11 @@ import useToast, { ToastType } from 'hooks/useToast';
 import Select from 'components/common/select';
 import { useNavigate } from 'react-router-dom';
 import ApplicationStatusTag from 'components/common/applicationStatusTag';
+import ProjectIconDark from 'assets/Imgs/dark/project.svg';
+import ProjectIconLight from 'assets/Imgs/light/project.svg';
+import GuildIconDark from 'assets/Imgs/dark/guild.svg';
+import GuildIconLight from 'assets/Imgs/light/guild.svg';
+import { useAuthContext } from 'providers/authProvider';
 
 const Box = styled.div``;
 const FirstLine = styled.div`
@@ -26,44 +31,82 @@ const FirstLine = styled.div`
   flex-wrap: wrap;
   width: 100%;
   justify-content: space-between;
+  margin-bottom: 20px;
+  @media (max-width: 1404px) {
+    flex-direction: column;
+    align-items: start;
+    gap: 16px;
+  }
 `;
 
 const TopLine = styled.ul`
   display: flex;
   align-items: center;
-  margin-bottom: 20px;
-
+  gap: 18px;
   li {
     display: flex;
     align-items: center;
-    margin-right: 40px;
-
     .tit {
-      padding-right: 20px;
+      padding-right: 8px;
     }
   }
+  button.btn-export {
+    min-width: 111px;
+    height: 40px;
+  }
+  @media (max-width: 880px) {
+    li {
+      flex-direction: column;
+      align-items: start;
+      gap: 10px;
+    }
+  } ;
 `;
 
 const TimeBox = styled.div`
   display: flex;
   align-items: center;
-  margin-right: 20px;
+  gap: 18px;
 `;
 
 const BorderBox = styled.div`
-  border: 1px solid #eee;
-  padding: 2px 20px;
+  border: 1px solid var(--bs-border-color);
+  padding-inline: 16px;
   border-radius: 5px;
-  background: #f7f9fc;
+  width: 280px;
+  box-sizing: border-box;
+  height: 40px;
+  &:hover {
+    border-color: var(--bs-border-color-focus);
+  }
+
+  @media (max-width: 1050px) {
+    width: unset;
+  } ;
 `;
 
 const TopBox = styled.div`
   display: flex;
   justify-content: flex-start;
-  padding: 10px;
-  margin: 0 0 30px;
+  gap: 16px;
   button {
-    margin-left: 20px;
+    height: 40px;
+    min-width: 120px;
+    &.btn-outline-primary {
+      background-color: transparent;
+      color: #ff7193;
+      border-color: #ff7193;
+      &:hover,
+      &:active {
+        color: #ff7193 !important;
+        border-color: #ff7193 !important;
+        background-color: transparent !important;
+      }
+      &.disabled {
+        background-color: #b0b0b0;
+        color: #0d0c0f;
+      }
+    }
   }
 `;
 
@@ -85,6 +128,9 @@ export default function ProjectAudit() {
   const { showToast } = useToast();
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const {
+    state: { theme },
+  } = useAuthContext();
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [total, setTotal] = useState(0);
@@ -249,8 +295,14 @@ export default function ProjectAudit() {
       <section>
         <SectionTitle>{t('city-hall.create')}</SectionTitle>
         <TopBox>
-          <CreateCard onClick={() => openCreate('project')}>{t('Project.create')}</CreateCard>
-          <CreateCard onClick={() => openCreate('guild')}>{t('Guild.create')}</CreateCard>
+          <CreateCard onClick={() => openCreate('project')}>
+            <img src={theme ? ProjectIconDark : ProjectIconLight} alt="" />
+            <span>{t('Project.create')}</span>
+          </CreateCard>
+          <CreateCard onClick={() => openCreate('guild')}>
+            <img src={theme ? GuildIconDark : GuildIconLight} alt="" />
+            <span>{t('Guild.create')}</span>
+          </CreateCard>
         </TopBox>
       </section>
       <section>
@@ -259,7 +311,7 @@ export default function ProjectAudit() {
           <TopLine>
             <li>
               <span className="tit">{t('Project.State')}</span>
-              <Select
+              <StateSelect
                 options={statusOption}
                 placeholder=""
                 onChange={(value: any) => {
@@ -269,6 +321,7 @@ export default function ProjectAudit() {
               />
             </li>
             <li>
+              <span className="tit">{t('Project.RangeTimeTitle')}</span>
               <TimeBox>
                 <BorderBox>
                   <RangeDatePickerStyle
@@ -278,10 +331,10 @@ export default function ProjectAudit() {
                     endDate={endDate}
                   />
                 </BorderBox>
+                <Button onClick={handleExport} disabled={!selectOne} className="btn-export">
+                  {t('Project.Export')}
+                </Button>
               </TimeBox>
-              <Button onClick={handleExport} disabled={!selectOne}>
-                {t('Project.Export')}
-              </Button>
             </li>
           </TopLine>
 
@@ -369,4 +422,11 @@ const CreateCard = styled.div`
   &:hover {
     background: var(--bs-menu-hover);
   }
+`;
+
+const StateSelect = styled(Select)`
+  width: 280px;
+  @media (max-width: 1050px) {
+    width: unset;
+  } ;
 `;

@@ -57,5 +57,6 @@ const SelectStyle = styled<any>(Select)`
   }
   .react-select__control {
     border-radius: 8px;
+    height: 40px !important;
   }
 `;

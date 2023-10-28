@@ -115,6 +115,7 @@
     "Export": "导出",
     "Time": "时间",
     "RangeTime": "开始时间 - 结束时间",
+    "RangeTimeTitle": "时间范围",
     "Auditor": "审核人",
     "TransactionID": "交易ID",
     "View": "查看",
