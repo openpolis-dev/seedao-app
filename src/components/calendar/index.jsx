@@ -57,7 +57,7 @@ const Box = styled.div`
 const API_KEY = "AIzaSyDyZO-Xhx71aD0Rpv8EcwY2N5rsdBWG8hA";
 let calendars = [
     {
-        calendarId: "c704ce5098512b0b0d70722e6430af4221e3c9ebc6d1e72aa70b82c80bb6999f@group.calendar.google.com",
+        calendarId: "seedao.tech@gmail.com",
         color: "#B241D1",
     },
 
