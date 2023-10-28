@@ -262,9 +262,9 @@ export default function Header() {
         </NavLeft>
 
         <RightBox>
-          {/*<SwitchTheme>*/}
-          {/*  <img src={theme ? LightImg : MoonImg} alt="" onClick={() => SwitchThemeFun()} />*/}
-          {/*</SwitchTheme>*/}
+          <SwitchTheme>
+            <img src={theme ? LightImg : MoonImg} alt="" onClick={() => SwitchThemeFun()} />
+          </SwitchTheme>
           <Form.Select
             data-bs-theme={theme ? 'dark' : 'light'}
             style={{ minWidth: '100px' }}
