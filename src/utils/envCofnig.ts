@@ -14,7 +14,11 @@ const DEVELOPMENT = {
   ...LOCAL,
   REACT_APP_ENV: 'test',
   REAT_APP_ONESIGNAL_ID: '135980e7-6778-4bf8-9aac-dabc7fbd8e31',
-  REACT_APP_APP_VERSION: `A ${VERSION}`,
+};
+
+const PREVIEW = {
+  ...DEVELOPMENT,
+  REACT_APP_BASE_ENDPOINT: 'https://preview-api.seedao.tech',
 };
 
 const PRODUCTION = {
@@ -29,6 +33,8 @@ export default function getConfig() {
   switch (process.env.REACT_APP_ENV_VERSION) {
     case 'prod':
       return PRODUCTION;
+    case 'preview':
+      return PREVIEW;
     case 'dev':
       return DEVELOPMENT;
     default:
