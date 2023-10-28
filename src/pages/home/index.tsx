@@ -329,7 +329,7 @@ export default function Home() {
             <TitBox>
               <span>{t('Home.Apps')}</span>
               <div className="toGo" onClick={() => togo('/apps')}>
-                All events
+                {t('Home.allEvents')}
                 <img src={ArrowImg} alt="" />
               </div>
             </TitBox>
@@ -347,7 +347,7 @@ export default function Home() {
             <TitBox>
               <span>{t('Home.Publicity')}</span>
               <div className="toGo">
-                View all
+                {t('Home.viewAll')}
                 <img src={ArrowImg} alt="" />
               </div>
             </TitBox>

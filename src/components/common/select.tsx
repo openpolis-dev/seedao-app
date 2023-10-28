@@ -38,6 +38,12 @@ const SelectStyle = styled<any>(Select)`
   .react-select__single-value {
     color: var(--bs-body-color_active) !important;
   }
+  .react-select__menu-list {
+    padding: 0;
+  }
+  .react-select__menu {
+    padding: 0;
+  }
   .react-select__menu,
   .react-select__option--is-selected {
     font-size: 14px;
