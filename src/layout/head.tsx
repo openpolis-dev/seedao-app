@@ -358,6 +358,19 @@ const HeadeStyle = styled.header`
       border-bottom: 0;
     }
   }
+  .dropBtm {
+    margin-top: 10px;
+    overflow: hidden;
+    padding: 0;
+  }
+  .dropdown-item {
+    color: var(--bs-body-color_active);
+
+    &:hover {
+      color: var(--bs-body-color_active);
+      background: var(--bs-menu-hover);
+    }
+  }
   @media (max-width: 1440px) {
     nav {
       height: 60px;
@@ -386,8 +399,4 @@ const NavLeft = styled.div`
   align-items: center;
   gap: 20px;
   padding-left: 20px;
-`;
-const MenuExpandIcon = styled(ListIcon)`
-  cursor: pointer;
-  color: #666;
 `;
