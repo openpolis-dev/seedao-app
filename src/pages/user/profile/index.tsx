@@ -17,6 +17,7 @@ import DiscordIcon from 'assets/images/discordNor.svg';
 import EmailIcon from 'assets/images/email.svg';
 import { formatNumber } from 'utils/number';
 import { Link } from 'react-router-dom';
+import CopyIconSVG from '../../../assets/Imgs/copy.svg';
 
 const OuterBox = styled.div`
   min-height: 100%;
@@ -154,24 +155,26 @@ export default function Profile() {
             )}
             {!!avatar && (
               <ImgBox onClick={() => removeUrl()}>
-                <div className="del">
-                  <X className="iconTop" />
-                </div>
                 <img src={avatar} alt="" />
               </ImgBox>
             )}
           </AvatarBox>
           <InfoBox>
             <div className="userName">{userName}</div>
-            <div className="wallet">
-              <span>{sns || '-'}</span>
-            </div>
+            {!!sns && (
+              <div className="wallet btm8">
+                <span>{sns || '-'}</span>
+                <CopyBox text={sns || ''} dir="left">
+                  <img src={CopyIconSVG} alt="" />
+                </CopyBox>
+              </div>
+            )}
 
             <div className="wallet">
-              <div>{userData?.wallet}</div>
+              <span>{userData?.wallet}</span>
               {userData?.wallet && (
                 <CopyBox text={userData?.wallet} dir="right">
-                  <img src={copyIcon} alt="" style={{ position: 'relative', top: '-2px' }} />
+                  <img src={CopyIconSVG} alt="" />
                 </CopyBox>
               )}
             </div>
@@ -180,6 +183,21 @@ export default function Profile() {
             <Button variant="primary">编辑</Button>
           </EditButton>
         </HeadBox>
+        {!!bio && (
+          <BioBox>
+            <div className="title">{t('My.Bio')}</div>
+            <div>{bio || '-'}</div>
+          </BioBox>
+        )}
+        <>
+          {process.env.NODE_ENV === 'development' && (
+            <TagBox>
+              {[...Array(13)].map((item, index) => (
+                <li key={`tag_${index}`}>s4节点</li>
+              ))}
+            </TagBox>
+          )}
+        </>
         <LinkBox>
           {twitter && (
             <a href={twitter} target="_blank" rel="noreferrer">
@@ -208,18 +226,7 @@ export default function Profile() {
             </a>
           )}
         </LinkBox>
-        <BioBox>
-          {t('My.Bio')}: {bio || '-'}
-        </BioBox>
-        <div>
-          {process.env.NODE_ENV === 'development' && (
-            <TagBox>
-              <li>s4节点</li>
-              <li>s4节点</li>
-              <li>s4节点</li>
-            </TagBox>
-          )}
-        </div>
+
         {process.env.NODE_ENV === 'development' && (
           <>
             <ProgressOuter>
@@ -318,9 +325,17 @@ const InfoBox = styled.div`
     font-family: Poppins-SemiBold;
     font-weight: 600;
     line-height: 23px;
+    margin-bottom: 16px;
   }
   .wallet {
     display: flex;
+    font-size: 14px;
+    span {
+      margin-right: 10px;
+    }
+  }
+  .btm8 {
+    margin-bottom: 8px;
   }
 `;
 
@@ -336,7 +351,19 @@ const NftBox = styled.section`
 `;
 
 const BioBox = styled.section`
-  margin-top: 20px;
+  margin: 20px 0 40px;
+  color: var(--bs-body-color_active);
+
+  width: 582px;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  .title {
+    font-size: 12px;
+    font-family: Poppins-SemiBold;
+    font-weight: 600;
+    line-height: 16px;
+  }
 `;
 
 const LinkBox = styled.div`
@@ -407,19 +434,63 @@ const TipsBox = styled.div`
 
 const TagBox = styled.ul`
   font-size: 12px;
-  margin-left: 8px;
+  flex-wrap: wrap;
   display: flex;
-  gap: 8px;
+  font-weight: 400;
+  width: 600px;
   li {
     border-radius: 5px;
     padding-inline: 10px;
-    border: 1px solid #ccc;
     line-height: 22px;
+    margin: 0 8px 15px 0;
+    color: #000;
+    &:nth-child(13n + 1) {
+      background: #ff7193;
+    }
+    &:nth-child(13n + 2) {
+      background: #20b18a;
+    }
+    &:nth-child(13n + 3) {
+      background: #f9b617;
+    }
+    &:nth-child(13n + 4) {
+      background: #2f8fff;
+    }
+    &:nth-child(13n + 5) {
+      background: #7b50d7;
+    }
+    &:nth-child(13n + 6) {
+      background: #dde106;
+    }
+    &:nth-child(13n + 7) {
+      background: #1f9e14;
+    }
+    &:nth-child(13n + 8) {
+      background: #fa9600;
+    }
+    &:nth-child(13n + 9) {
+      background: #ffa5ba;
+    }
+    &:nth-child(13n + 10) {
+      background: #c972ff;
+    }
+    &:nth-child(13n + 11) {
+      background: #ff5ae5;
+    }
+    &:nth-child(13n + 12) {
+      background: #149e7d;
+    }
+    &:nth-child(13n) {
+      background: #ff3f3f;
+    }
   }
 `;
 
 const EditButton = styled(Link)`
   position: absolute;
   right: 20px;
-  top: 20px;
+  top: 0;
+  .btn {
+    padding: 10px 30px;
+  }
 `;

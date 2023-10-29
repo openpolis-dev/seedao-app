@@ -4,7 +4,6 @@ import { IUser } from 'type/user.type';
 import CopyBox from 'components/copy';
 import { DefaultAvatar } from 'utils/constant';
 import PublicJs from 'utils/publicJs';
-import copyIcon from 'assets/images/copy.svg';
 import styled from 'styled-components';
 // import { useWeb3React } from '@web3-react/core';
 import TwitterIcon from 'assets/images/twitterNor.svg';

@@ -6,14 +6,23 @@ import styled from 'styled-components';
 import { useTranslation } from "react-i18next";
 
 const Box = styled.div`
-    background: #fff;
-    padding: 0 20px 40px;
-    box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+    background: var(--bs-background);
     .calendar-title{
-        font-family: 'Jost-ExtraBold';
+        font-family: 'Poppins-Bold';
+        font-size: 24px;
+        font-weight: bold;
+        color: var( --bs-body-color_active);
+        line-height: 32px;
+
     }
     .calendar-footer{
         display: none;
+    }
+    .day{
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        padding:7px 5px;
     }
     .tooltip{
 
@@ -66,7 +75,22 @@ let calendars = [
 let styles = {
     calendar: {
         borderWidth: "0",
-        background:"#fff"
+        background:"var(--bs-background)"
+    },
+    today:{
+        color:"#f00",
+        "&>span":{
+            background:"#ff0",
+            display:"flex",
+            alignItems:"center",
+            justifyContent:"center",
+            textAlign:"center",
+            borderRadius:32,
+            lineHeight:32,
+            padding:0,
+            width:32,
+            height:32
+        }
     },
     event:{
         fontSize:"12px"
@@ -81,10 +105,6 @@ let styles = {
         boxShadow:"0 5px 10px rgba(0,0,0,0.2)",
         borderWidth: "1px"
     },
-    today: css`
-    color: var(--bs-primary);
-    border: 1px solid var(--bs-primary);
-  `,
 };
 
 const language = "EN";
