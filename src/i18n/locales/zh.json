@@ -245,7 +245,11 @@
     "FloorPrice": "地板价",
     "CommunityVault": "社区金库",
     "CityHallVault": "市政厅金库",
-    "IncubatorVault": "孵化器金库"
+    "IncubatorVault": "孵化器金库",
+    "RegisterTitle": "注册信息",
+    "RegisterSelect": "选择项目/公会",
+    "RegisterList": "注册数据",
+    "RegisterIntro": "填写等级说明"
   },
   "My": {
     "MyProfile": "我的信息",

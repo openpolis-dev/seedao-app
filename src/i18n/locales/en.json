@@ -245,7 +245,11 @@
     "FloorPrice": "Floor price",
     "CommunityVault": "Community Vault",
     "CityHallVault": "CityHall Vault",
-    "IncubatorVault": "Incubator Vault"
+    "IncubatorVault": "Incubator Vault",
+    "RegisterTitle": "注册信息",
+    "RegisterSelect": "选择项目/公会",
+    "RegisterList": "注册数据",
+    "RegisterIntro": "填写等级说明"
   },
   "My": {
     "MyProfile": "My Profile",

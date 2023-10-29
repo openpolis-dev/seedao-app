@@ -161,10 +161,10 @@ export default function RegList() {
     <>
       <FirstBox>
         <RhtBox>
-          <Button variant="outline-primary" className="rhtBtn" onClick={downloadFile}>
+          <DownloadButton className="rhtBtn" onClick={downloadFile}>
             <Download />
             <span>{t('Project.DownloadForm')}</span>
-          </Button>
+          </DownloadButton>
           {chooseType === ChooseType.import && (
             <BtnBox htmlFor="fileUpload" onChange={(e) => updateFile(e)}>
               <input
@@ -219,21 +219,14 @@ const FirstBox = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 40px;
+  margin-bottom: 20px;
 `;
 
 const RhtBox = styled.div`
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  .rhtBtn {
-    margin-right: 20px;
-    display: flex;
-    align-items: center;
-    span {
-      padding-left: 10px;
-    }
-  }
 `;
 
 const OptionBox = styled.div`
@@ -272,5 +265,18 @@ const ErrorBox = styled.ul`
     span {
       margin-inline: 5px;
     }
+  }
+`;
+
+const DownloadButton = styled.button`
+  width: 189px;
+  height: 34px;
+  background: var(--bs-background);
+  border-radius: 8px;
+  opacity: 1;
+  border: 1px solid var(--bs-svg-color);
+  text-align: center;
+  span {
+    padding-left: 10px;
   }
 `;

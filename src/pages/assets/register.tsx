@@ -12,6 +12,8 @@ import useToast, { ToastType } from 'hooks/useToast';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import { ContainerPadding } from 'assets/styles/global';
 import Select from 'components/common/select';
+import BackIconSVG from 'components/svgs/back';
+import { Link } from 'react-router-dom';
 
 type ErrorDataType = {
   line: number;
@@ -120,23 +122,27 @@ export default function Register() {
 
   return (
     <OuterBox>
+      <BackBox to="/assets">
+        <BackIconSVG />
+        <span>{t('Assets.RegisterTitle')}</span>
+      </BackBox>
       <SectionBlock>
-        <div className="title">1. 选择项目/公会</div>
-        <Select
+        <div className="title">{t('Assets.RegisterSelect')}</div>
+        <SourceSelect
           options={allSource}
-          placeholder=""
+          placeholder="Search project/guild name"
           onChange={(value: any) => {
             setSelectSource({ id: value?.value as number, type: value?.data });
           }}
         />
       </SectionBlock>
       <SectionBlock>
-        <div className="title">2. 登记信息</div>
+        <div className="title">{t('Assets.RegisterList')}</div>
         <RegList />
       </SectionBlock>
 
       <SectionBlock>
-        <div className="title">2. 填写登记说明</div>
+        <div className="title">{t('Assets.RegisterIntro')}</div>
         <Form.Control
           placeholder=""
           as="textarea"
@@ -153,6 +159,7 @@ const OuterBox = styled.div`
   box-sizing: border-box;
   min-height: 100%;
   ${ContainerPadding};
+  font-size: 14px;
   .btnBtm {
     margin-right: 20px;
   }
@@ -161,6 +168,25 @@ const OuterBox = styled.div`
 const SectionBlock = styled.section`
   margin-top: 20px;
   .title {
-    margin-bottom: 20px;
+    margin-bottom: 16px;
+    line-height: 20px;
+    color: var(--bs-body-color_active);
   }
+`;
+
+const BackBox = styled(Link)`
+  padding: 10px 0 20px;
+  display: inline-flex;
+  align-items: center;
+  color: var(--bs-svg-color);
+  gap: 20px;
+  font-family: Poppins-SemiBold, Poppins;
+  font-weight: 600;
+  &:hover {
+    color: var(--bs-svg-color);
+  }
+`;
+
+const SourceSelect = styled(Select)`
+  width: 348px;
 `;

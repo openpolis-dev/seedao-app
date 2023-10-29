@@ -359,9 +359,9 @@ export default function Index() {
                   </div>
                 </InfoItem>
                 <OptionBox>
-                  {/* <Link to="/assets/register">
+                  <Link to="/assets/register">
                     <Button>登记</Button>
-                  </Link> */}
+                  </Link>
                   <Button variant="outline-primary" onClick={() => setShowVaultDetail(!showVaultDetail)}>
                     <span>{t('Assets.Detail')}</span>
                     {showVaultDetail ? <ChevronUp /> : <ChevronDown />}
