@@ -237,6 +237,7 @@ const OptionBox = styled.div`
 const BtnBox = styled.label`
   width: 137px;
   height: 34px;
+  box-sizing: border-box;
   color: var(--bs-primary);
   text-align: center;
   border: 1px solid var(--bs-primary);

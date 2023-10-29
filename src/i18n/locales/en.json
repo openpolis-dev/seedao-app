@@ -250,7 +250,8 @@
     "RegisterSelect": "选择项目/公会",
     "RegisterList": "注册数据",
     "RegisterIntro": "填写等级说明",
-    "RegisterAdd": "Add"
+    "RegisterAdd": "Add",
+    "RegisterSubmit": "Submit"
   },
   "My": {
     "MyProfile": "My Profile",
