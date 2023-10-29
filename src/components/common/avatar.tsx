@@ -1,15 +1,17 @@
 import styled from 'styled-components';
 import { IUser } from 'type/user.type';
 import PublicJs from 'utils/publicJs';
-import DefaultAvatar from 'assets/images/avatar.svg';
+// import DefaultAvatar from 'assets/images/avatar.svg';
 import useParseSNS from 'hooks/useParseSNS';
+import DefaultAvatar from '../../assets/Imgs/defaultAvatar.png';
 
 export default function Avatar({ user }: { user?: IUser }) {
   const sns = useParseSNS(user?.wallet);
+  console.log(sns, user?.name, PublicJs.AddressToShow(user?.wallet || ''));
   return (
     <AvatarStyle>
       <img src={user?.avatar || DefaultAvatar} alt="" />
-      <span>{sns || user?.name || PublicJs.AddressToShow(user?.wallet || '')}</span>
+      <span>{sns || user?.name || PublicJs.AddressToShow(user?.wallet || '') || 'USER'}</span>
     </AvatarStyle>
   );
 }

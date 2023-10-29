@@ -24,7 +24,8 @@
     "Loading": "Loading",
     "Copied": "Copied",
     "ConnectWallet": "Connect Wallet",
-    "apply": "Apply"
+    "apply": "Apply",
+    "edit": "Edit"
   },
   "Home": {
     "Slogan1": "SeeDAO",
@@ -274,7 +275,35 @@
     "IncorrectEmail": "Please enter the correct email information",
     "IncorrectGoogle": "Please enter the correct Google email",
     "IncorrectMirror": "Please enter the correct Mirror link",
-    "EmptySBT": "Not Owning SBT"
+    "EmptySBT": "Not Owning SBT",
+    "current": "Current",
+    "level": "Level",
+    "nextLevel": "Next Level"
+  },
+  "roles": {
+    "SGN_HOLDER": "SGN Holder",
+    "NODE_S1": "SeeDAO Node S1",
+    "NODE_S2": "SeeDAO Node S2",
+    "NODE_S3": "SeeDAO Node S3",
+    "NODE_S4": "SeeDAO Node S4",
+
+    "CITYHALL_S1": "Cityhall S1",
+    "CITYHALL_S2": "Cityhall S2",
+    "CITYHALL_S3": "Cityhall S3",
+    "CITYHALL_S4": "Cityhall S4",
+
+    "CONTRIBUTOR_L1": "L1 Contributor",
+    "CONTRIBUTOR_L2": "L2 Contributor",
+    "CONTRIBUTOR_L3": "L3 Contributor",
+    "CONTRIBUTOR_L4": "L4 Contributor",
+    "CONTRIBUTOR_L5": "L5 Contributor",
+    "CONTRIBUTOR_L6": "L6 Contributor",
+    "CONTRIBUTOR_L7": "L7 Contributor",
+    "CONTRIBUTOR_L8": "L8 Contributor",
+    "CONTRIBUTOR_L9": "L9 Contributor",
+
+    "SEEDAO_MEMBER": "SeeDAO Member",
+    "SEEDAO_ONBOARDING": "SeeDAO Onboarding"
   },
   "Msg": {
     "ProposalLinkMsg": "Require correct proposal link",

@@ -2,7 +2,9 @@ import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { WindowPlus } from 'react-bootstrap-icons';
-import DefaultImg from '../../assets/Imgs/light/sgnHome.png';
+import DefaultImg from '../../assets/Imgs/dark/default.png';
+import DefaultImgLight from '../../assets/Imgs/light/default.png';
+import { useAuthContext } from '../../providers/authProvider';
 
 const AppCard = ({
   icon,
@@ -18,6 +20,9 @@ const AppCard = ({
   desc?: string;
 }) => {
   const navigate = useNavigate();
+  const {
+    state: { theme },
+  } = useAuthContext();
   const handleClickEvent = () => {
     if (id === 'online') {
       navigate('/online-event');
@@ -30,7 +35,7 @@ const AppCard = ({
   return (
     <AppCardStyle className="boxBg" onClick={handleClickEvent}>
       <div className="iconBox">
-        <img src={icon ? icon : DefaultImg} alt="" />
+        <img src={icon ? icon : theme ? DefaultImg : DefaultImgLight} alt="" />
       </div>
       <div className="Rht">
         <div className="title">{name}</div>

@@ -35,7 +35,6 @@ const GlobalStyle = createGlobalStyle`
   }
   .btn{
     white-space: nowrap;
-
   }
   textarea{
     resize: none;
@@ -52,6 +51,7 @@ const GlobalStyle = createGlobalStyle`
     border-color: var(--bs-primary);
     &:hover, &:focus-visible, &:active {
       color:#fff !important;
+      background: var(--bs-primary-hover)!important;
     }
     &:disabled{
       background-color: rgb(230, 228, 235);

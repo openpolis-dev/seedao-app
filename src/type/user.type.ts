@@ -12,6 +12,11 @@ export interface IUser {
   wechat: string;
   mirror: string;
   assets: any[];
+  level?: any;
+  scr?: any;
+  sbt?: any;
+  seed?: any;
+  roles?: string[];
 }
 
 export interface IUserInfo {

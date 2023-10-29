@@ -1,5 +1,5 @@
 const AddressToShow = (address: string, num?: number) => {
-  if (!address) return '...';
+  if (!address) return '';
   const n = num || 4;
 
   const frontStr = address.substring(0, n);

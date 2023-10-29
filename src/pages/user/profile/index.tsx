@@ -1,16 +1,12 @@
-import { Row, Col, Button } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 import styled from 'styled-components';
-import React, { ChangeEvent, useEffect, useState, FormEvent } from 'react';
-import requests from 'requests';
-import { useAuthContext, AppActionType } from 'providers/authProvider';
+import React, { useEffect, useState } from 'react';
+import { useAuthContext } from 'providers/authProvider';
 import { useTranslation } from 'react-i18next';
-import useToast, { ToastType } from 'hooks/useToast';
-import { Upload, X } from 'react-bootstrap-icons';
+import useToast from 'hooks/useToast';
 import { ContainerPadding } from 'assets/styles/global';
 import useParseSNS from 'hooks/useParseSNS';
 import CopyBox from 'components/copy';
-import copyIcon from 'assets/images/copy.svg';
-import SeedIcon from 'assets/images/seed.png';
 
 import TwitterIcon from 'assets/images/twitterNor.svg';
 import DiscordIcon from 'assets/images/discordNor.svg';
@@ -18,9 +14,11 @@ import EmailIcon from 'assets/images/email.svg';
 import { formatNumber } from 'utils/number';
 import { Link } from 'react-router-dom';
 import CopyIconSVG from '../../../assets/Imgs/copy.svg';
+import defaultImg from '../../../assets/Imgs/defaultAvatar.png';
 
 const OuterBox = styled.div`
-  min-height: 100%;
+  margin-bottom: 50px;
+
   ${ContainerPadding};
 `;
 
@@ -46,7 +44,6 @@ const AvatarBox = styled.div`
 export default function Profile() {
   const {
     state: { userData },
-    dispatch,
   } = useAuthContext();
   const sns = useParseSNS(userData?.wallet);
   const { t } = useTranslation();
@@ -59,44 +56,10 @@ export default function Profile() {
   const [mirror, setMirror] = useState('');
   const [avatar, setAvatar] = useState('');
   const [bio, setBio] = useState('');
+  const [roles, setRoles] = useState<any[]>([]);
 
-  // const saveProfile = async () => {
-  //   const reg = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  //   if (email && !reg.test(email)) {
-  //     showToast(t('My.IncorrectEmail'), ToastType.Danger);
-  //     return;
-  //   }
-  //   if (mirror && mirror.indexOf('mirror.xyz') === -1) {
-  //     showToast(t('My.IncorrectMirror'), ToastType.Danger);
-  //     return;
-  //   }
-  //   if (twitter && !twitter.startsWith('https://twitter.com/')) {
-  //     showToast(t('My.IncorrectLink', { media: 'Twitter' }), ToastType.Danger);
-  //     return;
-  //   }
-  //
-  //   dispatch({ type: AppActionType.SET_LOADING, payload: true });
-  //   try {
-  //     const data = {
-  //       name: userName,
-  //       avatar,
-  //       email,
-  //       discord_profile: discord,
-  //       twitter_profile: twitter,
-  //       wechat,
-  //       mirror,
-  //       bio,
-  //     };
-  //     await requests.user.updateUser(data);
-  //     dispatch({ type: AppActionType.SET_USER_DATA, payload: { ...userData, ...data } });
-  //     showToast(t('My.ModifiedSuccess'), ToastType.Success);
-  //   } catch (error) {
-  //     console.error('updateUser failed', error);
-  //     showToast(t('My.ModifiedFailed'), ToastType.Danger);
-  //   } finally {
-  //     dispatch({ type: AppActionType.SET_LOADING, payload: false });
-  //   }
-  // };
+  const [sbt, setSbt] = useState<any[]>([]);
+  const [seed, setSeed] = useState<any[]>([]);
 
   useEffect(() => {
     if (userData) {
@@ -108,36 +71,97 @@ export default function Profile() {
       setWechat(userData.wechat);
       setMirror(userData.mirror);
       setBio(userData.bio);
+      setRoles(userData.roles!);
+
+      let sbtArr = userData.sbt;
+
+      const sbtFor = sbtArr.filter((item: any) => item.name && item.image_uri);
+      setSbt(sbtFor);
+      setSeed(userData.seed);
     }
   }, [userData]);
 
-  const getBase64 = (imgUrl: string) => {
-    window.URL = window.URL || window.webkitURL;
-    const xhr = new XMLHttpRequest();
-    xhr.open('get', imgUrl, true);
-    xhr.responseType = 'blob';
-    xhr.onload = function () {
-      if (this.status === 200) {
-        const blob = this.response;
-        const oFileReader = new FileReader();
-        oFileReader.onloadend = function (e) {
-          const { result } = e.target as any;
-          setAvatar(result);
-        };
-        oFileReader.readAsDataURL(blob);
-      }
-    };
-    xhr.send();
+  const switchRoles = (role: string) => {
+    let str: string = '';
+    switch (role) {
+      case 'SGN_HOLDER':
+        str = t('roles.SGN_HOLDER');
+        break;
+      case 'NODE_S1':
+        str = t('roles.NODE_S1');
+        break;
+      case 'NODE_S2':
+        str = t('roles.NODE_S2');
+        break;
+      case 'NODE_S3':
+        str = t('roles.NODE_S3');
+        break;
+      case 'NODE_S4':
+        str = t('roles.NODE_S4');
+        break;
+      case 'CITYHALL_S1':
+        str = t('roles.CITYHALL_S1');
+        break;
+      case 'CITYHALL_S2':
+        str = t('roles.CITYHALL_S2');
+        break;
+      case 'CITYHALL_S3':
+        str = t('roles.CITYHALL_S3');
+        break;
+      case 'CITYHALL_S4':
+        str = t('roles.CITYHALL_S4');
+        break;
+      case 'CONTRIBUTOR_L1':
+        str = t('roles.CONTRIBUTOR_L1');
+        break;
+      case 'CONTRIBUTOR_L2':
+        str = t('roles.CONTRIBUTOR_L2');
+        break;
+      case 'CONTRIBUTOR_L3':
+        str = t('roles.CONTRIBUTOR_L3');
+        break;
+      case 'CONTRIBUTOR_L4':
+        str = t('roles.CONTRIBUTOR_L4');
+        break;
+      case 'CONTRIBUTOR_L5':
+        str = t('roles.CONTRIBUTOR_L5');
+        break;
+      case 'CONTRIBUTOR_L6':
+        str = t('roles.CONTRIBUTOR_L6');
+        break;
+      case 'CONTRIBUTOR_L7':
+        str = t('roles.CONTRIBUTOR_L7');
+        break;
+      case 'CONTRIBUTOR_L8':
+        str = t('roles.CONTRIBUTOR_L8');
+        break;
+      case 'CONTRIBUTOR_L9':
+        str = t('roles.CONTRIBUTOR_L9');
+        break;
+      case 'SEEDAO_MEMBER':
+        str = t('roles.SEEDAO_MEMBER');
+        break;
+      case 'SEEDAO_ONBOARDING':
+        str = t('roles.SEEDAO_ONBOARDING');
+        break;
+      default:
+        str = role;
+        break;
+    }
+    return str;
   };
-
-  const updateLogo = (e: FormEvent) => {
-    const { files } = e.target as any;
-    const url = window.URL.createObjectURL(files[0]);
-    getBase64(url);
-  };
-
   const removeUrl = () => {
     setAvatar('');
+  };
+
+  const AddressToShow = (address: string) => {
+    if (!address) return '';
+
+    const frontStr = address.substring(0, 16);
+
+    const afterStr = address.substring(address.length - 4, address.length);
+
+    return `${frontStr}...${afterStr}`;
   };
 
   return (
@@ -147,17 +171,9 @@ export default function Profile() {
         <TitleBox>{t('My.MyProfile')}</TitleBox>
         <HeadBox>
           <AvatarBox>
-            {!avatar && (
-              <div>
-                <input id="fileUpload" type="file" hidden accept=".jpg, .jpeg, .png" />
-                {<Upload />}
-              </div>
-            )}
-            {!!avatar && (
-              <ImgBox onClick={() => removeUrl()}>
-                <img src={avatar} alt="" />
-              </ImgBox>
-            )}
+            <ImgBox onClick={() => removeUrl()}>
+              <img src={avatar ? avatar : defaultImg} alt="" />
+            </ImgBox>
           </AvatarBox>
           <InfoBox>
             <div className="userName">{userName}</div>
@@ -171,7 +187,7 @@ export default function Profile() {
             )}
 
             <div className="wallet">
-              <span>{userData?.wallet}</span>
+              <span>{AddressToShow(userData?.wallet!)}</span>
               {userData?.wallet && (
                 <CopyBox text={userData?.wallet} dir="right">
                   <img src={CopyIconSVG} alt="" />
@@ -180,7 +196,7 @@ export default function Profile() {
             </div>
           </InfoBox>
           <EditButton to="/user/profile/edit">
-            <Button variant="primary">编辑</Button>
+            <Button variant="primary">{t('general.edit')}</Button>
           </EditButton>
         </HeadBox>
         {!!bio && (
@@ -189,15 +205,12 @@ export default function Profile() {
             <div>{bio || '-'}</div>
           </BioBox>
         )}
-        <>
-          {process.env.NODE_ENV === 'development' && (
-            <TagBox>
-              {[...Array(13)].map((item, index) => (
-                <li key={`tag_${index}`}>s4节点</li>
-              ))}
-            </TagBox>
-          )}
-        </>
+
+        <TagBox>
+          {roles?.map((item, index) => (
+            <li key={`tag_${index}`}>{switchRoles(item)}</li>
+          ))}
+        </TagBox>
         <LinkBox>
           {twitter && (
             <a href={twitter} target="_blank" rel="noreferrer">
@@ -226,42 +239,53 @@ export default function Profile() {
             </a>
           )}
         </LinkBox>
-
-        {process.env.NODE_ENV === 'development' && (
-          <>
-            <ProgressOuter>
-              <FstLine>
-                <LevelBox>level 2</LevelBox>
-                <SCRBox>{formatNumber(50000)} SCR</SCRBox>
-              </FstLine>
+        <>
+          <ProgressOuter>
+            <div>
+              <Crt>
+                <div>{t('My.current')}</div>
+                <div className="num">{userData?.level?.upgrade_percent}%</div>
+              </Crt>
               <ProgressBox width="60">
                 <div className="inner" />
               </ProgressBox>
               <TipsBox>
-                <div>next level</div>
-                <div>{formatNumber(10000)} SCR</div>
+                <div>{t('My.nextLevel')}</div>
+                <div className="scr">{formatNumber(userData?.level?.scr_to_next_lv)} SCR</div>
               </TipsBox>
-            </ProgressOuter>
-            <NftBox>
+            </div>
+            <FstLine>
+              <LevelBox>
+                {t('My.level')} {userData?.level?.current_lv}
+              </LevelBox>
+              <SCRBox>{formatNumber(userData?.scr?.amount)} SCR</SCRBox>
+            </FstLine>
+          </ProgressOuter>
+          <NftBox>
+            <li>
               <div className="title">SEED</div>
-              <Row>
-                {[...Array(8)].map((item, index) => (
-                  <Col key={index} sm={12} md={6} lg={3} xl={2}>
-                    <img src={SeedIcon} alt="" />
-                  </Col>
+              <div className="ul">
+                {seed?.map((item, index) => (
+                  <div key={index} className="li">
+                    {' '}
+                    <img src={item.image_uri} alt="" />
+                  </div>
                 ))}
-              </Row>
+              </div>
+            </li>
+            <li>
               <div className="title">SBT</div>
-              <Row>
-                {[...Array(8)].map((item, index) => (
-                  <Col key={index} sm={12} md={6} lg={3} xl={2}>
-                    <img src={SeedIcon} alt="" />
-                  </Col>
+              <div className="ul">
+                {sbt?.map((item, index) => (
+                  <div key={index} className="li">
+                    {' '}
+                    <img src={item.image_uri} alt="" />
+                  </div>
                 ))}
-              </Row>
-            </NftBox>
-          </>
-        )}
+              </div>
+            </li>
+          </NftBox>
+        </>
       </>
     </OuterBox>
   );
@@ -339,14 +363,31 @@ const InfoBox = styled.div`
   }
 `;
 
-const NftBox = styled.section`
-  margin-block: 20px;
+const NftBox = styled.ul`
+  li {
+    margin-bottom: 40px;
+  }
+  .ul {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+  .li {
+    width: 120px;
+    height: 120px;
+    margin: 0 24px 24px 0;
+  }
   .title {
     margin-bottom: 20px;
+    color: var(--bs-body-color_active);
+    font-size: 16px;
   }
   img {
     width: 100%;
+
     margin-bottom: 20px;
+    border-radius: 16px;
   }
 `;
 
@@ -381,15 +422,14 @@ const LinkBox = styled.div`
 `;
 
 const ProgressBox = styled.div<{ width: number | string }>`
-  width: 100%;
-  height: 10px;
-  background: #fff;
-  border: 2px solid #000;
+  width: 320px;
+  height: 12px;
+  background: rgba(255, 113, 147, 0.21);
   border-radius: 10px;
   overflow: hidden;
   .inner {
-    height: 8px;
-    background: #000;
+    height: 10px;
+    background: #ff7193;
     width: ${(props) => props.width + '%'};
     border-radius: 8px;
   }
@@ -397,21 +437,19 @@ const ProgressBox = styled.div<{ width: number | string }>`
 
 const ProgressOuter = styled.div`
   display: flex;
-  flex-direction: column;
-  margin: 50px 0 20px;
-  width: 300px;
+  align-items: flex-start;
+  margin: 44px 0;
 `;
 
 const FstLine = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 10px;
+  margin: 40px 0 0 12px;
+  color: var(--bs-body-color_active);
 `;
 
 const LevelBox = styled.div`
-  background: #ff3231;
-  color: #fff;
   padding: 2px 10px;
   border-radius: 7px;
   text-transform: uppercase;
@@ -429,7 +467,13 @@ const TipsBox = styled.div`
   font-size: 12px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
+  color: var(--bs-body-color_active);
+  .scr {
+    margin-left: 8px;
+    font-size: 16px;
+    margin-bottom: -3px;
+  }
 `;
 
 const TagBox = styled.ul`
@@ -492,5 +536,18 @@ const EditButton = styled(Link)`
   top: 0;
   .btn {
     padding: 10px 30px;
+  }
+`;
+
+const Crt = styled.div`
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  color: var(--bs-body-color_active);
+  margin-bottom: 21px;
+  .num {
+    color: #ff7193;
+    font-size: 16px;
+    margin-left: 8px;
   }
 `;

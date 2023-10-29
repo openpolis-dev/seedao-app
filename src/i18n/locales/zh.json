@@ -24,7 +24,8 @@
     "Loading": "加载中",
     "Copied": "已复制",
     "ConnectWallet": "连接钱包",
-    "apply": "申请"
+    "apply": "申请",
+    "edit": "编辑"
   },
   "Home": {
     "Slogan1": "SeeDAO",
@@ -274,7 +275,35 @@
     "IncorrectEmail": "请填写正确的Email信息",
     "IncorrectGoogle": "请填写正确的Google email信息",
     "IncorrectMirror": "请填写正确的Mirror链接",
-    "EmptySBT": "您还未拥有SBT"
+    "EmptySBT": "您还未拥有SBT",
+    "current": "当前等级",
+    "level": "等级",
+    "nextLevel": "下一等级"
+  },
+  "roles": {
+    "SGN_HOLDER": "SGN持有者",
+    "NODE_S1": "节点S1",
+    "NODE_S2": "节点S2",
+    "NODE_S3": "节点S3",
+    "NODE_S4": "节点S4",
+
+    "CITYHALL_S1": "市政厅S1",
+    "CITYHALL_S2": "市政厅S2",
+    "CITYHALL_S3": "市政厅S3",
+    "CITYHALL_S4": "市政厅S4",
+
+    "CONTRIBUTOR_L1": "L1 贡献者",
+    "CONTRIBUTOR_L2": "L2 贡献者",
+    "CONTRIBUTOR_L3": "L3 贡献者",
+    "CONTRIBUTOR_L4": "L4 贡献者",
+    "CONTRIBUTOR_L5": "L5 贡献者",
+    "CONTRIBUTOR_L6": "L6 贡献者",
+    "CONTRIBUTOR_L7": "L7 贡献者",
+    "CONTRIBUTOR_L8": "L8 贡献者",
+    "CONTRIBUTOR_L9": "L9 贡献者",
+
+    "SEEDAO_MEMBER": "SeeDAO 成员",
+    "SEEDAO_ONBOARDING": "SeeDAO Onboarding"
   },
   "Msg": {
     "ProposalLinkMsg": "请填写正确提案链接",
