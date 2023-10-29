@@ -125,13 +125,15 @@ export default function Members(props: Iprops) {
       {showDel && <Del closeRemove={closeRemove} selectAdminArr={selectAdminArr} />}
       {canUpdateSponsor && (
         <TopBox>
-          <Button onClick={() => handleAdd()} disabled={edit}>
-            {t('Guild.AddMember')}
-          </Button>
           {!edit && (
-            <Button variant="outline-primary" onClick={() => handleDel()}>
-              {t('Guild.RemoveMember')}
-            </Button>
+            <>
+              <Button onClick={() => handleAdd()} disabled={edit}>
+                {t('Guild.AddMember')}
+              </Button>
+              <Button variant="outline-primary" onClick={() => handleDel()}>
+                {t('Guild.RemoveMember')}
+              </Button>
+            </>
           )}
           {edit && (
             <>
@@ -175,8 +177,6 @@ const ItemBox = styled.div`
 const TopBox = styled.div`
   display: flex;
   justify-content: flex-end;
-  margin-bottom: 30px;
-  button {
-    margin-left: 20px;
-  }
+  gap: 18px;
+  margin-bottom: 40px;
 `;

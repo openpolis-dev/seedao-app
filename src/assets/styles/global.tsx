@@ -64,7 +64,6 @@ const GlobalStyle = createGlobalStyle`
   .btn-outline-primary {
     height: 40px;
     border-color: var(--bs-body-color);
-    text-transform: uppercase;
     font-weight: bold;
     color: var(--bs-body-color);
     &:hover, &:focus-visible, &:active {
