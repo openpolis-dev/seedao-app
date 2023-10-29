@@ -18,11 +18,17 @@ const Box = styled.div`
     .calendar-footer{
         display: none;
     }
-    .day{
-        display: flex;
-        flex-direction: column;
-        align-items: flex-end;
-        padding:7px 5px;
+    .calendar-body{
+        margin-left: 1px;
+    }
+    .day-name{
+        font-family: 'Poppins-SemiBold';
+        background: var(--bs-box--background);
+        border: 0;
+        color: #B0B0B0;
+        height: 40px;
+        justify-content: center;
+        align-items: center;
     }
     .tooltip{
 
@@ -77,10 +83,19 @@ let styles = {
         borderWidth: "0",
         background:"var(--bs-background)"
     },
+    day:{
+        display: "flex",
+        flexDirection: "column",
+        alignItems:"flex-end",
+        padding:"7px 5px",
+        border:"1px solid var(--bs-border-color)",
+        marginTop:"-1px",
+        marginLeft:"-1px"
+    },
     today:{
-        color:"#f00",
+        color:"#fff",
         "&>span":{
-            background:"#ff0",
+            background:"var(--bs-primary)",
             display:"flex",
             alignItems:"center",
             justifyContent:"center",
