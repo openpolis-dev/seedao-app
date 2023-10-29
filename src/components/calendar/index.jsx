@@ -18,6 +18,7 @@ const Box = styled.div`
     .event-text{
         padding-top: 0;
         padding-left: 10px;
+        color:var(--bs-body-color_active) ;
     }
     .calendar-footer{
         display: none;
