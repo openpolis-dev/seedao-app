@@ -15,6 +15,10 @@ const Box = styled.div`
         line-height: 32px;
 
     }
+    .event-text{
+        padding-top: 0;
+        padding-left: 10px;
+    }
     .calendar-footer{
         display: none;
     }
