@@ -9,7 +9,7 @@ import styled from 'styled-components';
 import TwitterIcon from 'assets/Imgs/profile/Twitter.svg';
 import DiscordIcon from 'assets/Imgs/profile/discord.svg';
 import EmailIcon from 'assets/Imgs/profile/message.svg';
-import { Col } from 'react-bootstrap';
+import { Col, Form } from 'react-bootstrap';
 import { useAuthContext } from '../providers/authProvider';
 import CopyIconSVG from 'components/svgs/copy';
 import MultiClamp from 'react-multi-clamp';
@@ -53,7 +53,10 @@ export default function UserCard({ user, showEdit, onSelectUser, formatActive, s
               className={formatActive && formatActive(user.wallet || '') ? 'topRht active' : 'topRht'}
               onClick={() => onSelectUser && onSelectUser(user)}
             >
-              <div className="inner" />
+              <Form.Check
+                checked={formatActive && formatActive(user.wallet || '')}
+                onChange={() => onSelectUser && onSelectUser(user)}
+              />
             </div>
           )}
         </div>
@@ -106,11 +109,10 @@ const UserCardBox = styled(Col)`
   .boxAll {
     background-color: var(--bs-background);
     border: 1px solid var(--bs-border-color);
-    padding: 20px;
+    padding: 24px;
     border-radius: 8px;
     overflow: hidden;
     box-sizing: border-box;
-    height: 100%;
     .svg-stroke {
       stroke: var(--bs-body-color_active) !important;
     }
@@ -137,30 +139,8 @@ const UserCardBox = styled(Col)`
   }
   .topRht {
     position: absolute;
-    right: 0;
-    top: 0;
-    width: 20px;
-    height: 20px;
-    background: #f8f8f8;
-    border: 1px solid #ccc;
-    border-radius: 40px;
-    cursor: pointer;
-    //.inner{
-    //  display:none;
-    //  }
-  }
-  .active {
-    border: 1px solid #a16eff;
-    background: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    .inner {
-      width: 10px;
-      height: 10px;
-      background: #a16eff;
-      border-radius: 20px;
-    }
+    right: -8px;
+    top: -8px;
   }
 `;
 

@@ -98,8 +98,7 @@ export default function Members(props: Iprops) {
     setSelectAdminArr(arr);
   };
   const formatAdminActive = (num: string) => {
-    const arr = selectAdminArr.filter((item) => item.wallet === num);
-    return !!arr.length;
+    return !!selectAdminArr.find((item) => item.wallet === num);
   };
 
   const getUser = (wallet: string): IUser => {
