@@ -313,6 +313,12 @@
     "brand": "品牌标识使用申请"
   },
   "application": {
-    "detailModalHeader": "详情"
+    "detailModalHeader": "详情",
+    "Time": "时间",
+    "TotalAssets": "登记总资产",
+    "RegisterNote": "登记说明",
+    "RegisterSource": "项目/公会",
+    "Operator": "登记人",
+    "TotalCount": "共{{count}}条"
   }
 }

@@ -313,6 +313,12 @@
     "brand": "Branding"
   },
   "application": {
-    "detailModalHeader": "Detail"
+    "detailModalHeader": "Detail",
+    "Time": "Time",
+    "TotalAssets": "Total Assets",
+    "RegisterNote": "Note",
+    "RegisterSource": "Project / Guild",
+    "Operator": "Operator",
+    "TotalCount": "共{{count}}条"
   }
 }

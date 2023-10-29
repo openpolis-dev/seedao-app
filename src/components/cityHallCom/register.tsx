@@ -19,6 +19,7 @@ import { formatApplicationStatus } from 'utils/index';
 import Select from 'components/common/select';
 import { formatNumber } from 'utils/number';
 import ExpandTable from './expandTable';
+import ArrowIconSVG from 'components/svgs/back';
 
 const Box = styled.div`
   position: relative;
@@ -86,6 +87,13 @@ const TableBox = styled.div`
   overflow-x: auto;
   overflow-y: hidden;
   padding-bottom: 3rem;
+  td {
+    line-height: 40px;
+    .form-check-input {
+      position: relative;
+      top: 8px;
+    }
+  }
 `;
 
 export default function Register() {
@@ -380,21 +388,15 @@ export default function Register() {
                 <table className="table" cellPadding="0" cellSpacing="0">
                   <thead>
                     <tr>
-                      {/* <th>&nbsp;</th> */}
                       <th>
                         <Form.Check checked={ifSelectAll} onChange={(e) => onSelectAll(e.target.checked)} />
                       </th>
-                      <th>{t('Project.Time')}</th>
-                      <th>{t('Project.Address')}</th>
-                      <th>{t('Project.AddPoints')}</th>
-                      <th>{t('Project.AddToken')}</th>
-                      <th>{t('Project.Content')}</th>
-                      <th>{t('Project.BudgetSource')}</th>
-                      <th>{t('Project.Note')}</th>
-                      <th>{t('Project.State')}</th>
-                      <th>{t('Project.Operator')}</th>
-                      <th>{t('Project.Auditor')}</th>
-                      <th></th>
+                      <th>{t('application.Time')}</th>
+                      <th>{t('application.TotalAssets')}</th>
+                      <th>{t('application.RegisterNote')}</th>
+                      <th>{t('application.RegisterSource')}</th>
+                      <th>{t('application.Operator')}</th>
+                      <th>&nbsp;</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -407,24 +409,15 @@ export default function Register() {
                           />
                         </td>
                         <td>{item.created_date}</td>
-                        <td>
-                          <div>
-                            <span>{publicJs.AddressToShow(item.target_user_wallet)}</span>
-                            {/* <CopyBox text={item.target_user_wallet}>
-                        <EvaIcon name="clipboard-outline" />
-                      </CopyBox> */}
-                          </div>
-                        </td>
-                        <td>{formatNumber(item.credit_amount)}</td>
-                        <td>{formatNumber(item.token_amount)}</td>
-                        <td>{item.detailed_type}</td>
-                        <td>{item.budget_source}</td>
+                        <td>100ETH、1USD</td>
                         <td>{item.comment}</td>
-                        <td>{t(formatApplicationStatus(item.status))}</td>
+                        <td>{item.budget_source}</td>
                         <td>{item.submitter_name || publicJs.AddressToShow(item.submitter_wallet)}</td>
-                        <td>{item.reviewer_name || publicJs.AddressToShow(item.reviewer_wallet)}</td>
                         <td>
-                          <div onClick={() => setShowMore(1)}>more</div>
+                          <TotalCountButton onClick={() => setShowMore(1)}>
+                            {t('application.TotalCount', { count: 30 })}
+                            <ArrowIconSVG className="arrow" />
+                          </TotalCountButton>
                         </td>
                       </tr>
                     ))}
@@ -453,4 +446,19 @@ const FilterSelect = styled(Select)`
   @media (max-width: 1240px) {
     width: unset;
   } ;
+`;
+
+const TotalCountButton = styled.button`
+  min-width: 111px;
+  height: 40px;
+  background: var(--bs-background);
+  border-radius: 8px;
+  opacity: 1;
+  border: 1px solid var(--bs-svg-color);
+  text-align: center;
+  .arrow {
+    transform: rotate(180deg);
+    position: relative;
+    top: -1px;
+  }
 `;

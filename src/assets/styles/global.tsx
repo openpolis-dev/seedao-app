@@ -116,7 +116,7 @@ const GlobalStyle = createGlobalStyle`
     }
     td {
       font-size: 14px;
-      padding: 20px;
+      padding: 17px 10px;
       color: var(--bs-body-color_a);
       &.center {
         text-align: center;
