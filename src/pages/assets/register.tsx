@@ -14,6 +14,7 @@ import { ContainerPadding } from 'assets/styles/global';
 import Select from 'components/common/select';
 import BackIconSVG from 'components/svgs/back';
 import { Link } from 'react-router-dom';
+import { Button } from 'react-bootstrap';
 
 type ErrorDataType = {
   line: number;
@@ -151,6 +152,9 @@ export default function Register() {
           onChange={(e) => setContent(e.target.value)}
         />
       </SectionBlock>
+      <ButtonSection>
+        <Button variant="primary">{t('Assets.RegisterSubmit')}</Button>
+      </ButtonSection>
     </OuterBox>
   );
 }
@@ -171,6 +175,12 @@ const SectionBlock = styled.section`
     margin-bottom: 16px;
     line-height: 20px;
     color: var(--bs-body-color_active);
+  }
+`;
+
+const ButtonSection = styled(SectionBlock)`
+  button {
+    width: 120px;
   }
 `;
 

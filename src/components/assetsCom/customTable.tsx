@@ -76,7 +76,6 @@ const CustomTable = ({ updateList }: IProps) => {
       <table className="table" cellPadding="0" cellSpacing="0">
         <thead>
           <tr>
-            <th>&nbsp;</th>
             <th>SNS/钱包地址</th>
             <th>资产类型</th>
             <th>资产数量</th>
@@ -88,7 +87,6 @@ const CustomTable = ({ updateList }: IProps) => {
         <tbody>
           {list.map((item, index) => (
             <tr key={index}>
-              <td>{index + 1}</td>
               <td>
                 <Form.Control value={item.address} onChange={(e) => handleInput(e, index, 'address')} />
               </td>

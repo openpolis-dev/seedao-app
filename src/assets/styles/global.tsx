@@ -153,6 +153,9 @@ const GlobalStyle = createGlobalStyle`
     color: var(--bs-body-color_active);
     font-size: 14px;
   }
+  .form-control:hover {
+    border-color: var(--bs-border-color-focus);
+  }
   .form-control:focus {
     border-color: var(--bs-primary);
     color: var(--bs-body-color_active);
