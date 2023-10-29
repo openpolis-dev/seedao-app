@@ -3,7 +3,7 @@ import { Form } from 'react-bootstrap';
 import RegList from 'components/assetsCom/regList';
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ExcelObj } from 'type/project.type';
+import { IExcelObj } from 'type/project.type';
 import requests from 'requests';
 import { ApplicationType } from 'type/application.type';
 import { ICreateBudgeApplicationRequest } from 'requests/applications';
@@ -26,7 +26,7 @@ export default function Register() {
   const { dispatch } = useAuthContext();
   const { showToast } = useToast();
 
-  const [list, setList] = useState<ExcelObj[]>([]);
+  const [list, setList] = useState<IExcelObj[]>([]);
   const [errList, setErrList] = useState<ErrorDataType[]>([]);
   const [id, setId] = useState(1);
 
@@ -53,14 +53,14 @@ export default function Register() {
           comment: item.note || '',
           target_user_wallet: item.address,
         };
-        if (Number(item.points)) {
-          d.credit_amount = Number(item.points);
-          d.credit_asset_name = AssetName.Credit;
-        }
-        if (Number(item.token)) {
-          d.token_amount = Number(item.token);
-          d.token_asset_name = AssetName.Token;
-        }
+        // if (Number(item.points)) {
+        //   d.credit_amount = Number(item.points);
+        //   d.credit_asset_name = AssetName.Credit;
+        // }
+        // if (Number(item.token)) {
+        //   d.token_amount = Number(item.token);
+        //   d.token_asset_name = AssetName.Token;
+        // }
         return d;
       });
 
@@ -139,7 +139,7 @@ export default function Register() {
       </SectionBlock>
       <SectionBlock>
         <div className="title">{t('Assets.RegisterList')}</div>
-        <RegList />
+        <RegList list={list} setList={setList} />
       </SectionBlock>
 
       <SectionBlock>

@@ -5,6 +5,7 @@ import Select from 'components/common/select';
 import { Button, Form } from 'react-bootstrap';
 import { useState, FormEvent, useEffect } from 'react';
 import DeleteIcon from 'assets/Imgs/delete.svg';
+import AddIcon from 'assets/Imgs/add.svg';
 
 interface IProps {
   updateList: (data: IExcelObj[]) => void;
@@ -117,7 +118,10 @@ const CustomTable = ({ updateList }: IProps) => {
         </tbody>
       </table>
       <div>
-        <AddButton onClick={addOne}>{t('Assets.RegisterAdd')}</AddButton>
+        <AddButton onClick={addOne}>
+          <img src={AddIcon} alt="" />
+          {t('Assets.RegisterAdd')}
+        </AddButton>
       </div>
     </>
   );
@@ -137,10 +141,14 @@ const AssetSelect = styled(Select)`
 `;
 
 export const AddButton = styled.button<{ long?: boolean }>`
-  width: ${(props) => (props.long ? '137px' : 'unset')};
   height: 34px;
   background: #b0b0b0;
   border-radius: 8px;
   color: #0d0c0f;
   padding-inline: 10px;
+  border: none;
+  font-family: Poppins-SemiBold, Poppins;
+  img {
+    margin-right: 8px;
+  }
 `;

@@ -1,9 +1,6 @@
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
 import { IExcelObj } from 'type/project.type';
-import { ExclamationDiamond } from 'react-bootstrap-icons';
-import { Download } from 'react-bootstrap-icons';
-import { Button } from 'react-bootstrap';
 import { useState, FormEvent, ChangeEvent, useEffect } from 'react';
 import { ethers } from 'ethers';
 import * as XLSX from 'xlsx';
@@ -13,6 +10,9 @@ import CustomTable from './customTable';
 import ExcelTable from './excelTable';
 import NoItem from 'components/noItem';
 import { AddButton } from './customTable';
+import TableIconSVG from 'components/svgs/table';
+import AddIcon from 'assets/Imgs/add.svg';
+import DownloadIconSVG from 'components/svgs/download';
 
 type ErrorDataType = {
   line: number;
@@ -25,7 +25,12 @@ enum ChooseType {
   custom,
 }
 
-export default function RegList() {
+interface IProps {
+  list: IExcelObj[];
+  setList: (data: IExcelObj[]) => void;
+}
+
+export default function RegList({ list, setList }: IProps) {
   const { t } = useTranslation();
 
   const {
@@ -33,7 +38,6 @@ export default function RegList() {
   } = useAuthContext();
 
   const [errList, setErrList] = useState<ErrorDataType[]>([]);
-  const [list, setList] = useState<IExcelObj[]>([]);
 
   const [chooseType, setChooseType] = useState(ChooseType.default);
 
@@ -135,6 +139,7 @@ export default function RegList() {
             <EmptyBox />
             <OptionBox>
               <AddButton onClick={onClickAdd} long={true}>
+                <img src={AddIcon} alt="" />
                 {t('Assets.RegisterAdd')}
               </AddButton>
               <BtnBox htmlFor="fileUpload" onChange={(e) => updateFile(e)}>
@@ -147,7 +152,7 @@ export default function RegList() {
                     (event.target as any).value = null;
                   }}
                 />
-                <Download className="iconRht" />
+                <TableIconSVG />
                 <span>{t('Project.ImportForm').toUpperCase()}</span>
               </BtnBox>
             </OptionBox>
@@ -161,11 +166,11 @@ export default function RegList() {
       <FirstBox>
         <RhtBox>
           <DownloadButton className="rhtBtn" onClick={downloadFile}>
-            <Download />
+            <DownloadIconSVG />
             <span>{t('Project.DownloadForm')}</span>
           </DownloadButton>
           {chooseType === ChooseType.import && (
-            <BtnBox htmlFor="fileUpload" onChange={(e) => updateFile(e)}>
+            <BtnBox className="top-import" htmlFor="fileUpload" onChange={(e) => updateFile(e)}>
               <input
                 id="fileUpload"
                 accept=".xlsx, .xls, .csv"
@@ -175,7 +180,7 @@ export default function RegList() {
                   (event.target as any).value = null;
                 }}
               />
-              <Download className="iconRht" />
+              <TableIconSVG />
               <span>{t('Project.ImportForm').toUpperCase()}</span>
             </BtnBox>
           )}
@@ -225,6 +230,7 @@ const RhtBox = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-end;
+  gap: 16px;
 `;
 
 const OptionBox = styled.div`
@@ -235,24 +241,30 @@ const OptionBox = styled.div`
 `;
 
 const BtnBox = styled.label`
-  width: 137px;
   height: 34px;
   box-sizing: border-box;
   color: var(--bs-primary);
   text-align: center;
   border: 1px solid var(--bs-primary);
-  //height: 42px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 8px;
-  //font-family: 'Inter-Regular';
-  //font-weight: 700;
   font-size: 0.875rem;
   margin-right: 20px;
+  gap: 8px;
   cursor: pointer;
-  .iconRht {
-    margin-right: 10px;
+  padding-inline: 12px;
+  span {
+    font-family: Poppins-SemiBold, Poppins;
+  }
+  &.top-import {
+    background: var(--bs-background);
+    border: 1px solid var(--bs-svg-color);
+    color: var(--bs-svg-color);
+  }
+  .svg-stroke {
+    stroke: var(--bs-primary) !important;
   }
 `;
 
@@ -267,15 +279,16 @@ const ErrorBox = styled.ul`
 `;
 
 const DownloadButton = styled.button`
-  width: 189px;
   height: 34px;
   background: var(--bs-background);
+  color: var(--bs-svg-color);
   border-radius: 8px;
-  opacity: 1;
   border: 1px solid var(--bs-svg-color);
   text-align: center;
+  padding-inline: 12px;
   span {
     padding-left: 10px;
+    font-family: Poppins-SemiBold, Poppins;
   }
 `;
 
