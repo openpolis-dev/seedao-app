@@ -354,7 +354,7 @@ export default function AssetList() {
             <Table responsive>
               <thead>
                 <tr>
-                  <th>
+                  <th className="chech-th">
                     <Form.Check checked={ifSelectAll} onChange={(e) => onSelectAll(e.target.checked)} />
                   </th>
                   <th>{t('Project.Address')}</th>

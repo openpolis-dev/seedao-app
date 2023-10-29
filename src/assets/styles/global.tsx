@@ -117,6 +117,9 @@ const GlobalStyle = createGlobalStyle`
       padding: 20px;
       color: var(--bs-body-color);
       font-family: Poppins-SemiBold, Poppins;
+      &.chech-th {
+        padding-inline: 10px;
+      }
     }
     td {
       font-size: 14px;

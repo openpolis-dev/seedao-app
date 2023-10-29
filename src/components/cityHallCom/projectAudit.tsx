@@ -365,7 +365,7 @@ export default function ProjectAudit() {
               <table className="table" cellPadding="0" cellSpacing="0">
                 <thead>
                   <tr>
-                    <th>
+                    <th className="chech-th">
                       <Form.Check checked={ifSelectAll} onChange={(e) => onSelectAll(e.target.checked)}></Form.Check>
                     </th>
                     <th>{t('Project.Time')}</th>
