@@ -15,9 +15,12 @@ const Box = styled.div`
         line-height: 32px;
 
     }
+    .isEvent{
+        padding: 0 5px;
+    }
     .event-text{
         padding-top: 0;
-        padding-left: 10px;
+        padding-left: 14px;
         color:var(--bs-body-color_active) ;
     }
     .calendar-footer{
@@ -31,7 +34,7 @@ const Box = styled.div`
     }
     .day-name{
         font-family: 'Poppins-SemiBold';
-        background: var(--bs-box--background);
+        background: var(--home-right);
         border: 0;
         color: #B0B0B0;
         min-height: 40px;
