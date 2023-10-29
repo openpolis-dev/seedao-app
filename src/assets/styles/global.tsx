@@ -46,27 +46,31 @@ const GlobalStyle = createGlobalStyle`
   }
   .btn-primary{
     color:#fff;
-
+    height: 40px;
     background: var(--bs-primary);
     border-color: var(--bs-primary);
     &:hover, &:focus-visible, &:active {
       color:#fff !important;
       background: var(--bs-primary-hover)!important;
+      border-color: var(--bs-primary) !important;
     }
     &:disabled{
-      background-color: rgb(230, 228, 235);
+      background: var(--bs-primary);
       border-color: transparent;
-      color: rgba(143, 155, 179, 0.48);
+      opacity: 0.4;
     }
 
   }
   .btn-outline-primary {
+    height: 40px;
+    border-color: var(--bs-body-color);
     text-transform: uppercase;
-    background-color: rgba(161, 100, 255, 0.25);
     font-weight: bold;
+    color: var(--bs-body-color);
     &:hover, &:focus-visible, &:active {
-      background-color: rgba(161, 100, 255, 0.15) !important;
-      color: var(--bs-primary) !important;
+      background-color: transparent !important;
+      color: var(--bs-body-color) !important;
+      border-color: var(--bs-body-color) !important;
     }
   }
   .nav-tabs{
@@ -165,6 +169,7 @@ const GlobalStyle = createGlobalStyle`
   .form-check-input {
     width: 18px;
     height: 18px;
+    border-color: var(--bs-svg-color);
   }
   .form-check-input:focus {
     border-color: var(--bs-primary);
