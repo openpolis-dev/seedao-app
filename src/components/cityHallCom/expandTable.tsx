@@ -9,6 +9,7 @@ import { formatApplicationStatus } from 'utils/index';
 import { formatNumber } from 'utils/number';
 import { ChevronLeft } from 'react-bootstrap-icons';
 import { useNavigate } from 'react-router-dom';
+import BackIconSVG from 'components/svgs/back';
 
 export default function ExpandTable({ handleClose }: { handleClose: () => void }) {
   const { t } = useTranslation();
@@ -37,7 +38,9 @@ export default function ExpandTable({ handleClose }: { handleClose: () => void }
   return (
     <TableBox>
       <BackBox onClick={handleClose}>
-        <ChevronLeft className="back" />
+        <BackIcon>
+          <BackIconSVG />
+        </BackIcon>
         <span>{t('general.back')}</span>
       </BackBox>
       {list.length ? (
@@ -104,32 +107,29 @@ const TableBox = styled.div`
   position: absolute;
   left: 0;
   top: 0;
-  background-color: #fff;
   min-height: 100%;
-  table {
-    th {
-      background: transparent;
-      color: #6e6893;
-      border: 1px solid #d9d5ec;
-      border-left: none;
-      border-right: none;
-      border-radius: 0;
-    }
-    td {
-      border-bottom-color: #d9d5ec;
-    }
-    tr:hover td {
-      background: #f2f0f9;
-    }
-  }
 `;
 
 const BackBox = styled.div`
-  padding-bottom: 20px;
-  display: flex;
+  margin-bottom: 20px;
+  display: inline-flex;
   align-items: center;
+  gap: 20px;
   cursor: pointer;
-  .back {
-    margin-right: 10px;
+  color: var(--bs-primary);
+  font-family: Poppins-SemiBold, Poppins;
+  font-weight: 600;
+  color: var(--bs-body-color);
+`;
+
+const BackIcon = styled.span`
+  display: inline-block;
+  width: 32px;
+  height: 32px;
+  background-color: var(--bs-box-background);
+  border-radius: 8px;
+  text-align: center;
+  svg {
+    margin-top: 8px;
   }
 `;
