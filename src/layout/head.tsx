@@ -292,7 +292,7 @@ export default function Header() {
               </Dropdown.Menu>
             </Dropdown>
           ) : (
-            <Button onClick={showWalletLogin}>{t('menus.connectWallet')}</Button>
+            <ConnectButton onClick={showWalletLogin}>{t('menus.connectWallet')}</ConnectButton>
           )}
         </RightBox>
       </nav>
@@ -397,4 +397,8 @@ const NavLeft = styled.div`
   align-items: center;
   gap: 20px;
   padding-left: 20px;
+`;
+
+const ConnectButton = styled(Button)`
+  height: 40px;
 `;
