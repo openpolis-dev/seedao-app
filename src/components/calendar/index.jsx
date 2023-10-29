@@ -21,11 +21,15 @@ const Box = styled.div`
     .calendar-body{
         margin-left: 1px;
     }
+    .innerDay{
+        color:var(--bs-body-color_active) ;
+    }
     .day-name{
         font-family: 'Poppins-SemiBold';
         background: var(--bs-box--background);
         border: 0;
         color: #B0B0B0;
+        min-height: 40px;
         height: 40px;
         justify-content: center;
         align-items: center;
@@ -73,7 +77,7 @@ const API_KEY = "AIzaSyDyZO-Xhx71aD0Rpv8EcwY2N5rsdBWG8hA";
 let calendars = [
     {
         calendarId: "seedao.tech@gmail.com",
-        color: "#B241D1",
+        color: "#14FF00",
     },
 
 ];
@@ -90,7 +94,10 @@ let styles = {
         padding:"7px 5px",
         border:"1px solid var(--bs-border-color)",
         marginTop:"-1px",
-        marginLeft:"-1px"
+        marginLeft:"-1px",
+        minHeight:"120px",
+        color: "var(--bs-body-color_active)",
+        fontFamily: 'Poppins-SemiBold'
     },
     today:{
         color:"#fff",
@@ -111,7 +118,9 @@ let styles = {
         fontSize:"12px"
     },
     eventCircle:{
-        top:0
+        top:0,
+        width:"6px",
+        height:"6px"
     },
     tooltip:{
         width:"500px",
