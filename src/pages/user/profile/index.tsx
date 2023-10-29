@@ -8,9 +8,11 @@ import { ContainerPadding } from 'assets/styles/global';
 import useParseSNS from 'hooks/useParseSNS';
 import CopyBox from 'components/copy';
 
-import TwitterIcon from 'assets/images/twitterNor.svg';
-import DiscordIcon from 'assets/images/discordNor.svg';
-import EmailIcon from 'assets/images/email.svg';
+import TwitterIcon from '../../../assets/Imgs/profile/Twitter.svg';
+import DiscordIcon from '../../../assets/Imgs/profile/discord.svg';
+import WechatIcon from '../../../assets/Imgs/profile/wechat.svg';
+import MirrorImg from '../../../assets/Imgs/profile/mirror.svg';
+import EmailIcon from '../../../assets/Imgs/profile/message.svg';
 import { formatNumber } from 'utils/number';
 import { Link } from 'react-router-dom';
 import CopyIconSVG from '../../../assets/Imgs/copy.svg';
@@ -48,12 +50,8 @@ export default function Profile() {
   const sns = useParseSNS(userData?.wallet);
   const { t } = useTranslation();
   const { Toast, showToast } = useToast();
-  const [userName, setUserName] = useState('');
-  const [email, setEmail] = useState('');
-  const [discord, setDiscord] = useState('');
-  const [twitter, setTwitter] = useState('');
-  const [wechat, setWechat] = useState('');
-  const [mirror, setMirror] = useState('');
+  const [userName, setUserName] = useState<string | undefined>('');
+
   const [avatar, setAvatar] = useState('');
   const [bio, setBio] = useState('');
   const [roles, setRoles] = useState<any[]>([]);
@@ -63,13 +61,9 @@ export default function Profile() {
 
   useEffect(() => {
     if (userData) {
-      setUserName(userData.name);
+      setUserName(userData.nickname);
       setAvatar(userData.avatar);
-      setEmail(userData.email || '');
-      setDiscord(userData.discord_profile);
-      setTwitter(userData.twitter_profile);
-      setWechat(userData.wechat);
-      setMirror(userData.mirror);
+
       setBio(userData.bio);
       setRoles(userData.roles!);
 
@@ -154,13 +148,38 @@ export default function Profile() {
     setAvatar('');
   };
 
+  const returnSocial = (str: string, val?: string) => {
+    switch (str) {
+      case 'twitter':
+        return (
+          <a href={val} target="_blank">
+            <img src={TwitterIcon} alt="" />
+          </a>
+        );
+      case 'wechat':
+        return <img src={WechatIcon} alt="" />;
+      case 'email':
+        return (
+          <a href={`mailto:${val}`} target="_blank">
+            <img src={EmailIcon} alt="" />
+          </a>
+        );
+
+      case 'discord':
+        return <img src={DiscordIcon} alt="" />;
+      case 'mirror':
+        return (
+          <a href={val} target="_blank">
+            <img src={MirrorImg} alt="" />
+          </a>
+        );
+    }
+  };
+
   const AddressToShow = (address: string) => {
     if (!address) return '';
-
     const frontStr = address.substring(0, 16);
-
     const afterStr = address.substring(address.length - 4, address.length);
-
     return `${frontStr}...${afterStr}`;
   };
 
@@ -212,32 +231,14 @@ export default function Profile() {
           ))}
         </TagBox>
         <LinkBox>
-          {twitter && (
-            <a href={twitter} target="_blank" rel="noreferrer">
-              <img src={TwitterIcon} alt="" className="icon" width="20px" height="20px" />
-            </a>
-          )}
-          {discord && (
-            <CopyBox text={discord || ''} dir="right">
-              <img src={DiscordIcon} alt="" className="icon" width="20px" height="20px" />
-            </CopyBox>
-          )}
-          {email && (
-            <CopyBox text={email || ''}>
-              <img src={EmailIcon} alt="" className="icon" width="20px" height="20px" />
-            </CopyBox>
-          )}
-
-          {wechat && (
-            <a href={wechat} target="_blank" rel="noopener noreferrer" className="icon">
-              wehat
-            </a>
-          )}
-          {mirror && (
-            <a href={mirror} target="_blank" rel="noopener noreferrer" className="icon">
-              mirror
-            </a>
-          )}
+          {userData?.social_accounts?.map((item: any, index: number) => (
+            <li key={`sbtInner_${index}`}>
+              <span className="iconLft">{returnSocial(item.network, item.identity)}</span>
+            </li>
+          ))}
+          <li>
+            <span className="iconLft">{returnSocial('email', userData?.email)}</span>
+          </li>
         </LinkBox>
         <>
           <ProgressOuter>
@@ -407,14 +408,11 @@ const BioBox = styled.section`
   }
 `;
 
-const LinkBox = styled.div`
-  margin-top: 20px;
-  img {
-    width: 20px;
-    height: 20px;
-  }
-  .icon {
-    margin-inline: 5px !important;
+const LinkBox = styled.ul`
+  display: flex;
+  margin-top: 40px;
+  li {
+    margin-right: 16px;
   }
   .copy-content {
     display: inline-block;

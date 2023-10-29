@@ -1,15 +1,14 @@
 import { InputGroup, Button, Form } from 'react-bootstrap';
 import styled from 'styled-components';
-import React, { ChangeEvent, useEffect, useState, FormEvent, useMemo } from 'react';
+import React, { ChangeEvent, useEffect, useState, FormEvent } from 'react';
 import requests from 'requests';
 import { useAuthContext, AppActionType } from 'providers/authProvider';
 import { useTranslation } from 'react-i18next';
 import useToast, { ToastType } from 'hooks/useToast';
-import { Upload, X } from 'react-bootstrap-icons';
+import { X } from 'react-bootstrap-icons';
 import { ContainerPadding } from 'assets/styles/global';
 import useParseSNS from 'hooks/useParseSNS';
-import CopyBox from 'components/copy';
-import copyIcon from 'assets/images/copy.svg';
+import UploadImg from '../../../assets/Imgs/profile/upload.svg';
 
 const OuterBox = styled.div`
   ${ContainerPadding};
@@ -31,6 +30,11 @@ const AvatarBox = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  border-radius: 100%;
+  overflow: hidden;
+  label {
+    margin-top: 0;
+  }
 `;
 
 const UlBox = styled.ul`
@@ -98,7 +102,7 @@ export default function Profile() {
   const sns = useParseSNS(userData?.wallet);
   const { t } = useTranslation();
   const { Toast, showToast } = useToast();
-  const [userName, setUserName] = useState('');
+  const [userName, setUserName] = useState<string | undefined>('');
   const [email, setEmail] = useState('');
   const [discord, setDiscord] = useState('');
   const [twitter, setTwitter] = useState('');
@@ -150,7 +154,7 @@ export default function Profile() {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
       const data = {
-        name: userName,
+        name: userName!,
         avatar,
         email,
         discord_profile: discord,
@@ -172,13 +176,20 @@ export default function Profile() {
 
   useEffect(() => {
     if (userData) {
-      setUserName(userData.name);
+      setUserName(userData.nickname);
       setAvatar(userData.avatar);
       setEmail(userData.email || '');
-      setDiscord(userData.discord_profile);
-      setTwitter(userData.twitter_profile);
-      setWechat(userData.wechat);
-      setMirror(userData.mirror);
+
+      let mapArr = new Map();
+
+      userData.social_accounts.map((item: any) => {
+        mapArr.set(item.network, item.identity);
+      });
+      setTwitter(mapArr.get('twitter') ?? '');
+      setDiscord(mapArr.get('discord') ?? '');
+      setWechat(mapArr.get('wechat') ?? '');
+      setMirror(mapArr.get('mirror') ?? '');
+
       setBio(userData.bio);
     }
   }, [userData]);
@@ -223,7 +234,7 @@ export default function Profile() {
               {!avatar && (
                 <div>
                   <input id="fileUpload" type="file" hidden accept=".jpg, .jpeg, .png" />
-                  {<Upload />}
+                  {<img src={UploadImg} />}
                 </div>
               )}
               {!!avatar && (
@@ -236,17 +247,6 @@ export default function Profile() {
               )}
             </UploadBox>
           </AvatarBox>
-          <InfoBox>
-            <div className="wallet">{sns}</div>
-            <div className="wallet">
-              <div>{userData?.wallet}</div>
-              {userData?.wallet && (
-                <CopyBox text={userData?.wallet} dir="right">
-                  <img src={copyIcon} alt="" style={{ position: 'relative', top: '-2px' }} />
-                </CopyBox>
-              )}
-            </div>
-          </InfoBox>
         </HeadBox>
         <MidBox>
           <UlBox>
@@ -319,7 +319,7 @@ export default function Profile() {
 }
 
 const UploadBox = styled.label`
-  background: #f8f8f8;
+  background: var(--home-right);
   height: 100px;
   width: 100px;
   border-radius: 50%;

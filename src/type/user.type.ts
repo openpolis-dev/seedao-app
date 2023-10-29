@@ -1,6 +1,7 @@
 export interface IUser {
   id: string;
-  name: string;
+  name?: string;
+  nickname?: string | undefined;
   bio: string;
   avatar: string;
   email?: string;
@@ -14,6 +15,7 @@ export interface IUser {
   assets: any[];
   level?: any;
   scr?: any;
+  social_accounts?: any;
   sbt?: any;
   seed?: any;
   roles?: string[];
