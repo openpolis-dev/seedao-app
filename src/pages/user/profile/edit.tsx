@@ -7,8 +7,13 @@ import { useTranslation } from 'react-i18next';
 import useToast, { ToastType } from 'hooks/useToast';
 import { X } from 'react-bootstrap-icons';
 import { ContainerPadding } from 'assets/styles/global';
-import useParseSNS from 'hooks/useParseSNS';
 import UploadImg from '../../../assets/Imgs/profile/upload.svg';
+import userImg from '../../../assets/Imgs/profile/name.svg';
+import EmailImg from '../../../assets/Imgs/profile/email.svg';
+import DiscordImg from '../../../assets/Imgs/profile/discordIcon.svg';
+import TwitterImg from '../../../assets/Imgs/profile/twitterIcon.svg';
+import WechatImg from '../../../assets/Imgs/profile/wechatIcon.svg';
+import MirrorImg from '../../../assets/Imgs/profile/mirrorIcon.svg';
 
 const OuterBox = styled.div`
   ${ContainerPadding};
@@ -38,7 +43,7 @@ const AvatarBox = styled.div`
 `;
 
 const UlBox = styled.ul`
-  flex: 1;
+  width: 600px;
   li {
     display: flex;
     align-items: flex-start;
@@ -46,9 +51,19 @@ const UlBox = styled.ul`
     margin-bottom: 20px;
 
     .title {
-      margin-right: 20px;
-      line-height: 2.5em;
-      min-width: 70px;
+      margin-right: 16px;
+      margin-top: 8px;
+      min-width: 90px;
+      display: flex;
+      font-size: 14px;
+      color: var(--bs-body-color_active);
+    }
+    .icon {
+      margin-right: 10px;
+      img {
+        height: 16px;
+        line-height: 16px;
+      }
     }
   }
   @media (max-width: 750px) {
@@ -81,9 +96,7 @@ const InputBox = styled(InputGroup)`
 `;
 const MidBox = styled.div`
   display: flex;
-  justify-content: center;
   padding-bottom: 40px;
-  gap: 60px;
 `;
 
 const TitleBox = styled.div`
@@ -99,7 +112,6 @@ export default function Profile() {
     state: { userData },
     dispatch,
   } = useAuthContext();
-  const sns = useParseSNS(userData?.wallet);
   const { t } = useTranslation();
   const { Toast, showToast } = useToast();
   const [userName, setUserName] = useState<string | undefined>('');
@@ -251,7 +263,12 @@ export default function Profile() {
         <MidBox>
           <UlBox>
             <li>
-              <div className="title">{t('My.Name')}</div>
+              <div className="title">
+                <div className="icon">
+                  <img src={userImg} alt="" />
+                </div>
+                {t('My.Name')}
+              </div>
               <InputBox>
                 <Form.Control
                   type="text"
@@ -262,7 +279,12 @@ export default function Profile() {
               </InputBox>
             </li>
             <li>
-              <div className="title">{t('My.Bio')}</div>
+              <div className="title">
+                <div className="icon">
+                  <img src={userImg} alt="" />
+                </div>
+                {t('My.Bio')}
+              </div>
               <InputBox>
                 <Form.Control
                   placeholder=""
@@ -274,19 +296,34 @@ export default function Profile() {
               </InputBox>
             </li>
             <li>
-              <div className="title">{t('My.Email')}</div>
+              <div className="title">
+                <div className="icon">
+                  <img src={EmailImg} alt="" />
+                </div>
+                {t('My.Email')}
+              </div>
               <InputBox>
                 <Form.Control type="text" placeholder="" value={email} onChange={(e) => handleInput(e, 'email')} />
               </InputBox>
             </li>
             <li>
-              <div className="title">{t('My.Discord')}</div>
+              <div className="title">
+                <div className="icon">
+                  <img src={DiscordImg} alt="" />
+                </div>
+                {t('My.Discord')}
+              </div>
               <InputBox>
                 <Form.Control type="text" placeholder="" value={discord} onChange={(e) => handleInput(e, 'discord')} />
               </InputBox>
             </li>
             <li>
-              <div className="title">{t('My.Twitter')}</div>
+              <div className="title">
+                <div className="icon">
+                  <img src={TwitterImg} alt="" />
+                </div>
+                {t('My.Twitter')}
+              </div>
               <InputBox>
                 <Form.Control
                   type="text"
@@ -297,26 +334,47 @@ export default function Profile() {
               </InputBox>
             </li>
             <li>
-              <div className="title">{t('My.WeChat')}</div>
+              <div className="title">
+                <div className="icon">
+                  <img src={WechatImg} alt="" />
+                </div>
+                {t('My.WeChat')}
+              </div>
               <InputBox>
                 <Form.Control type="text" placeholder="" value={wechat} onChange={(e) => handleInput(e, 'wechat')} />
               </InputBox>
             </li>
             <li>
-              <div className="title">{t('My.Mirror')}</div>
+              <div className="title">
+                <div className="icon">
+                  <img src={MirrorImg} alt="" />
+                </div>
+                {t('My.Mirror')}
+              </div>
               <InputBox>
                 <Form.Control type="text" placeholder="" value={mirror} onChange={(e) => handleInput(e, 'mirror')} />
               </InputBox>
             </li>
+            <RhtLi>
+              <Button onClick={saveProfile}>{t('general.confirm')}</Button>
+            </RhtLi>
           </UlBox>
         </MidBox>
-        <div style={{ textAlign: 'center' }}>
-          <Button onClick={saveProfile}>{t('general.confirm')}</Button>
-        </div>
       </CardBox>
     </OuterBox>
   );
 }
+
+const RhtLi = styled.div`
+  width: 600px;
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 20px;
+  .btn {
+    padding: 10px 31px;
+    font-size: 14px;
+  }
+`;
 
 const UploadBox = styled.label`
   background: var(--home-right);
