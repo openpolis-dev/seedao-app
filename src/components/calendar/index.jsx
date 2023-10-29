@@ -25,7 +25,9 @@ const Box = styled.div`
     .event{
         &>div:first-child{
             padding:5px;
-            background: var(--home-right_hover);
+            &:hover{
+                background: var(--home-right_hover);
+            }
         }
     }
     .calendar-footer{
