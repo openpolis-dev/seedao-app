@@ -2,16 +2,17 @@ import React from 'react';
 import { IUser } from 'type/user.type';
 // import Image from 'next/image';
 import CopyBox from 'components/copy';
-import { DefaultAvatar } from 'utils/constant';
+import DefaultAvatar from 'assets/Imgs/defaultAvatar.png';
 import PublicJs from 'utils/publicJs';
 import styled from 'styled-components';
 // import { useWeb3React } from '@web3-react/core';
-import TwitterIcon from 'assets/images/twitterNor.svg';
-import DiscordIcon from 'assets/images/discordNor.svg';
-import EmailIcon from 'assets/images/email.svg';
+import TwitterIcon from 'assets/Imgs/profile/Twitter.svg';
+import DiscordIcon from 'assets/Imgs/profile/discord.svg';
+import EmailIcon from 'assets/Imgs/profile/message.svg';
 import { Col } from 'react-bootstrap';
 import { useAuthContext } from '../providers/authProvider';
 import CopyIconSVG from 'components/svgs/copy';
+import MultiClamp from 'react-multi-clamp';
 
 interface IUserProps {
   user: IUser;
@@ -39,8 +40,8 @@ export default function UserCard({ user, showEdit, onSelectUser, formatActive, s
           )}
 
           <div>
-            <div className="name">{sns || user.name}aaa.seedao</div>
-            <div style={{ display: 'flex', gap: '5px' }}>
+            <div className="name">{sns || user.name}</div>
+            <div style={{ display: 'flex', gap: '6px', marginTop: '8px' }}>
               <span className="wallet">{PublicJs.AddressToShow(user.wallet || '')}</span>
               <CopyBox text={user.wallet || ''} dir="left">
                 <CopyIconSVG />
@@ -56,20 +57,33 @@ export default function UserCard({ user, showEdit, onSelectUser, formatActive, s
             </div>
           )}
         </div>
+        <BioBox>
+          <MultiClamp
+            clamp={2}
+            splitByWords={false}
+            ellipsis={
+              <span>
+                <strong>...</strong>
+              </span>
+            }
+          >
+            {user.bio}
+          </MultiClamp>
+        </BioBox>
         <LinkBox>
           {user.twitter_profile && (
             <a href={user.twitter_profile} target="_blank" rel="noreferrer">
-              <img src={TwitterIcon} alt="" className="icon" width="20px" height="20px" />
+              <img src={TwitterIcon} alt="" className="icon" />
             </a>
           )}
           {user.discord_profile && (
             <CopyBox text={user.discord_profile || ''} dir="right">
-              <img src={DiscordIcon} alt="" className="icon" width="20px" height="20px" />
+              <img src={DiscordIcon} alt="" className="icon" />
             </CopyBox>
           )}
           {user.email && (
             <CopyBox text={user.email || ''}>
-              <img src={EmailIcon} alt="" className="icon" width="20px" height="20px" />
+              <img src={EmailIcon} alt="" className="icon" />
             </CopyBox>
           )}
         </LinkBox>
@@ -79,11 +93,9 @@ export default function UserCard({ user, showEdit, onSelectUser, formatActive, s
 }
 
 const LinkBox = styled.div`
-  margin-top: 20px;
+  margin-top: 10px;
   img {
-    width: 20px;
-    height: 20px;
-    margin-inline: 5px !important;
+    margin-right: 16px !important;
   }
   .copy-content {
     display: inline-block;
@@ -92,15 +104,15 @@ const LinkBox = styled.div`
 const UserCardBox = styled(Col)`
   margin-bottom: 40px;
   .boxAll {
-    background-color: var(--bs-box--background);
+    background-color: var(--bs-background);
     border: 1px solid var(--bs-border-color);
     padding: 20px;
     border-radius: 8px;
     overflow: hidden;
     box-sizing: border-box;
     height: 100%;
-    &:hover {
-      background-color: var(--home-right_hover);
+    .svg-stroke {
+      stroke: var(--bs-body-color_active) !important;
     }
   }
 
@@ -115,13 +127,12 @@ const UserCardBox = styled(Col)`
     word-break: break-all;
   }
   .wallet {
-    font-family: Poppins-SemiBold, Poppins;
+    font-family: Poppins-Medium, Poppins;
   }
   img.avatar {
-    width: 40px;
-    height: 40px;
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
-    border: 1px solid #edf1f7;
     margin-right: 20px;
   }
   .topRht {
@@ -151,4 +162,12 @@ const UserCardBox = styled(Col)`
       border-radius: 20px;
     }
   }
+`;
+
+const BioBox = styled.div`
+  font-size: 12px;
+  color: var(--bs-body-color);
+  line-height: 18px;
+  margin-top: 12px;
+  height: 38px;
 `;

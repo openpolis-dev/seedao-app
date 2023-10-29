@@ -40,6 +40,7 @@
     "react-i18next": "^13.2.2",
     "react-infinite-scroll-component": "^6.1.0",
     "react-markdown": "^8.0.7",
+    "react-multi-clamp": "^2.0.6",
     "react-onesignal": "^3.0.1",
     "react-paginate": "^8.2.0",
     "react-papaparse": "^4.1.0",
