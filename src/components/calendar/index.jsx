@@ -15,13 +15,18 @@ const Box = styled.div`
         line-height: 32px;
 
     }
-    .isEvent{
-        padding: 0 5px;
-    }
+
     .event-text{
         padding-top: 0;
         padding-left: 14px;
         color:var(--bs-body-color_active) ;
+    
+    }
+    .event{
+        &>div:first-child{
+            padding:5px;
+            background: var(--home-right_hover);
+        }
     }
     .calendar-footer{
         display: none;
@@ -99,7 +104,7 @@ let styles = {
         display: "flex",
         flexDirection: "column",
         alignItems:"flex-end",
-        padding:"7px 5px",
+        padding:"7px 0",
         border:"1px solid var(--bs-border-color)",
         marginTop:"-1px",
         marginLeft:"-1px",
