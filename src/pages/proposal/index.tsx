@@ -74,69 +74,67 @@ export default function Index() {
 
   return (
     <BoxOuter>
-      <ProposalContainer>
-        <Tabbar
-          tabs={[
-            {
-              key: 0,
-              title: t('Proposal.AllCategories'),
-            },
-            {
-              key: 1,
-              title: t('Proposal.TheNeweset'),
-            },
-          ]}
-          defaultActiveKey={activeTab}
-          onSelect={handleSelectTab}
-        />
-        {activeTab === 0 ? (
-          <div>
-            {proposal_categories.map((category, index) => (
-              <CategoryCard key={index}>
-                <div className="cate-name">
-                  <Link to={`/proposal/category/${category.category_id}`}>{category.name}</Link>
-                </div>
-                {!!category.children.length && (
-                  <SubCategoryCard>
-                    {category.children.map((subCategory) => (
-                      <a href={`/proposal/category/${subCategory.category_id}`} key={subCategory.category_id}>
-                        <SubCategoryItem>
-                          <img src={MsgIcon} alt="" width="24px" height="24px" />
+      <Tabbar
+        tabs={[
+          {
+            key: 0,
+            title: t('Proposal.AllCategories'),
+          },
+          {
+            key: 1,
+            title: t('Proposal.TheNeweset'),
+          },
+        ]}
+        defaultActiveKey={activeTab}
+        onSelect={handleSelectTab}
+      />
+      {activeTab === 0 ? (
+        <div>
+          {proposal_categories.map((category, index) => (
+            <CategoryCard key={index}>
+              <div className="cate-name">
+                <Link to={`/proposal/category/${category.category_id}`}>{category.name}</Link>
+              </div>
+              {!!category.children.length && (
+                <SubCategoryCard>
+                  {category.children.map((subCategory) => (
+                    <a href={`/proposal/category/${subCategory.category_id}`} key={subCategory.category_id}>
+                      <SubCategoryItem>
+                        <img src={MsgIcon} alt="" width="24px" height="24px" />
+                        <div>
+                          <div className="name">{subCategory.name}</div>
                           <div>
-                            <div className="name">{subCategory.name}</div>
-                            <div>
-                              <span>{subCategory.thread_count} topics</span>
-                            </div>
+                            <span>{subCategory.thread_count} topics</span>
                           </div>
-                        </SubCategoryItem>
-                      </a>
-                    ))}
-                  </SubCategoryCard>
-                )}
-              </CategoryCard>
-            ))}
-          </div>
-        ) : (
-          <>
-            <ProposalSubNav onSelect={handleChangeOrder} />
-            <div>
-              <InfiniteScroll
-                dataLength={proposals.length}
-                next={getAllProposals}
-                hasMore={hasMore}
-                scrollableTarget="scrollableDiv"
-                loader={<></>}
-              >
-                <ProposalBox>
-                  {proposals.map((proposal) => (
-                    <ProposalCard key={proposal.id} data={proposal} />
+                        </div>
+                      </SubCategoryItem>
+                    </a>
                   ))}
-                </ProposalBox>
-              </InfiniteScroll>
-            </div>
-          </>
-        )}
-      </ProposalContainer>
+                </SubCategoryCard>
+              )}
+            </CategoryCard>
+          ))}
+        </div>
+      ) : (
+        <>
+          <ProposalSubNav onSelect={handleChangeOrder} />
+          <div>
+            <InfiniteScroll
+              dataLength={proposals.length}
+              next={getAllProposals}
+              hasMore={hasMore}
+              scrollableTarget="scrollableDiv"
+              loader={<></>}
+            >
+              <ProposalBox>
+                {proposals.map((proposal) => (
+                  <ProposalCard key={proposal.id} data={proposal} />
+                ))}
+              </ProposalBox>
+            </InfiniteScroll>
+          </div>
+        </>
+      )}
     </BoxOuter>
   );
 }
@@ -144,12 +142,6 @@ export default function Index() {
 const BoxOuter = styled.div`
   min-height: 100%;
   ${ContainerPadding};
-`;
-
-const ProposalContainer = styled.div`
-  background: #fff;
-  padding: 20px;
-  min-height: 100%;
 `;
 
 const CategoryCard = styled.div`

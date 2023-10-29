@@ -13,12 +13,6 @@ const OuterBox = styled.div`
   ${ContainerPadding};
 `;
 
-const InnerBox = styled.div`
-  background: #fff;
-  padding: 20px;
-  min-height: 100%;
-`;
-
 const TitBox = styled.div`
   font-weight: bold;
   font-size: 1.5rem;
@@ -48,26 +42,24 @@ export default function Apps() {
 
   return (
     <OuterBox>
-      <InnerBox>
-        <TitBox>
-          <div className="titLft">
-            <Tabbar defaultActiveKey={0} tabs={[{ key: 0, title: t('resources.all') }]} />
-          </div>
-          <RhtBoxT>
-            <Button onClick={() => window.open(Links.applyAppLink, '_target')}>{t('general.apply')}</Button>
-          </RhtBoxT>
-        </TitBox>
-        <AppBox>
-          {events.map((item, idx) => (
-            <Col key={idx} sm={12} md={6} lg={4} xl={3}>
-              <AppCard {...item} />
-            </Col>
-          ))}
-          <Col sm={12} md={6} lg={4} xl={3}>
-            <EmptyAppCard />
+      <TitBox>
+        <div className="titLft">
+          <Tabbar defaultActiveKey={0} tabs={[{ key: 0, title: t('resources.all') }]} />
+        </div>
+        <RhtBoxT>
+          <Button onClick={() => window.open(Links.applyAppLink, '_target')}>{t('general.apply')}</Button>
+        </RhtBoxT>
+      </TitBox>
+      <AppBox>
+        {events.map((item, idx) => (
+          <Col key={idx} sm={12} md={6} lg={4} xl={3}>
+            <AppCard {...item} />
           </Col>
-        </AppBox>
-      </InnerBox>
+        ))}
+        <Col sm={12} md={6} lg={4} xl={3}>
+          <EmptyAppCard />
+        </Col>
+      </AppBox>
     </OuterBox>
   );
 }
