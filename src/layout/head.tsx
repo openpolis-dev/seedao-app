@@ -119,7 +119,7 @@ export default function Header() {
 
   const getUser = async () => {
     const res = await requests.user.getUser();
-    dispatch({ type: AppActionType.SET_USER_DATA, payload: res.data });
+    dispatch({ type: AppActionType.SET_USER_DATA, payload: res });
     initAuth();
   };
 

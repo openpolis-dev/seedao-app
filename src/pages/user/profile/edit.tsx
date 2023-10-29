@@ -12,7 +12,6 @@ import CopyBox from 'components/copy';
 import copyIcon from 'assets/images/copy.svg';
 
 const OuterBox = styled.div`
-  min-height: 100%;
   ${ContainerPadding};
 `;
 
@@ -23,9 +22,7 @@ const HeadBox = styled.div`
   margin-bottom: 40px;
 `;
 const CardBox = styled.div`
-  background: #fff;
   min-height: 100%;
-  padding: 20px 40px;
   @media (max-width: 1024px) {
     padding: 20px;
   }
@@ -83,6 +80,14 @@ const MidBox = styled.div`
   justify-content: center;
   padding-bottom: 40px;
   gap: 60px;
+`;
+
+const TitleBox = styled.div`
+  font-size: 24px;
+  font-family: Poppins-Bold;
+  color: var(--bs-body-color_active);
+  line-height: 30px;
+  margin-bottom: 40px;
 `;
 
 export default function Profile() {
@@ -211,6 +216,7 @@ export default function Profile() {
     <OuterBox>
       {Toast}
       <CardBox>
+        <TitleBox>{t('My.MyProfile')}</TitleBox>
         <HeadBox>
           <AvatarBox>
             <UploadBox htmlFor="fileUpload" onChange={(e) => updateLogo(e)}>
@@ -273,8 +279,6 @@ export default function Profile() {
                 <Form.Control type="text" placeholder="" value={email} onChange={(e) => handleInput(e, 'email')} />
               </InputBox>
             </li>
-          </UlBox>
-          <UlBox>
             <li>
               <div className="title">{t('My.Discord')}</div>
               <InputBox>
@@ -324,7 +328,6 @@ const UploadBox = styled.label`
   justify-content: center;
   border-radius: 4px;
   margin-top: 20px;
-  font-family: 'Inter-Regular';
   font-weight: 700;
   font-size: 14px;
   cursor: pointer;

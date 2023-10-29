@@ -143,7 +143,7 @@ export default function Profile() {
   return (
     <OuterBox>
       {Toast}
-      <div>
+      <>
         <TitleBox>{t('My.MyProfile')}</TitleBox>
         <HeadBox>
           <AvatarBox>
@@ -262,7 +262,7 @@ export default function Profile() {
             </NftBox>
           </>
         )}
-      </div>
+      </>
     </OuterBox>
   );
 }

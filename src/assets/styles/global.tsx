@@ -37,8 +37,9 @@ const GlobalStyle = createGlobalStyle`
     white-space: nowrap;
 
   }
-
-
+  textarea{
+    resize: none;
+  }
 
   .form-select,.btn{
     font-size: 14px;
