@@ -23,6 +23,8 @@ import ProjectIconLight from 'assets/Imgs/light/project.svg';
 import GuildIconDark from 'assets/Imgs/dark/guild.svg';
 import GuildIconLight from 'assets/Imgs/light/guild.svg';
 import { useAuthContext } from 'providers/authProvider';
+import usePermission from 'hooks/usePermission';
+import { PermissionObject, PermissionAction } from 'utils/constant';
 
 const Box = styled.div``;
 const FirstLine = styled.div`
@@ -139,6 +141,9 @@ export default function ProjectAudit() {
   const [loading, setLoading] = useState(false);
   const [selectStatus, setSelectStatus] = useState<ApplicationStatus>();
   const [selectMap, setSelectMap] = useState<{ [id: number]: ApplicationStatus | boolean }>({});
+
+  const canCreateProj = usePermission(PermissionAction.Create, PermissionObject.Project);
+  const canCreateGuild = usePermission(PermissionAction.Create, PermissionObject.Guild);
 
   const statusOption = useMemo(() => {
     return [
@@ -291,19 +296,26 @@ export default function ProjectAudit() {
   return (
     <Box>
       {loading && <Loading />}
-      <section>
-        <SectionTitle>{t('city-hall.create')}</SectionTitle>
-        <TopBox>
-          <CreateCard onClick={() => openCreate('project')}>
-            <img src={theme ? ProjectIconDark : ProjectIconLight} alt="" />
-            <span>{t('Project.create')}</span>
-          </CreateCard>
-          <CreateCard onClick={() => openCreate('guild')}>
-            <img src={theme ? GuildIconDark : GuildIconLight} alt="" />
-            <span>{t('Guild.create')}</span>
-          </CreateCard>
-        </TopBox>
-      </section>
+      {(canCreateProj || canCreateGuild) && (
+        <section>
+          <SectionTitle>{t('city-hall.create')}</SectionTitle>
+          <TopBox>
+            {canCreateProj && (
+              <CreateCard onClick={() => openCreate('project')}>
+                <img src={theme ? ProjectIconDark : ProjectIconLight} alt="" />
+                <span>{t('Project.create')}</span>
+              </CreateCard>
+            )}
+            {canCreateGuild && (
+              <CreateCard onClick={() => openCreate('guild')}>
+                <img src={theme ? GuildIconDark : GuildIconLight} alt="" />
+                <span>{t('Guild.create')}</span>
+              </CreateCard>
+            )}
+          </TopBox>
+        </section>
+      )}
+
       <section>
         <SectionTitle>{t('city-hall.closeProjectReview')}</SectionTitle>
         <FirstLine>

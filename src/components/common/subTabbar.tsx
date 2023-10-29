@@ -13,9 +13,10 @@ interface IProps {
   defaultActiveKey: TabKeyType;
   tabs: ITabItem[];
   onSelect?: (v: TabKeyType) => void;
+  [k: string]: any;
 }
 
-export default function Tabbar({ defaultActiveKey, tabs, onSelect }: IProps) {
+export default function SubTabbar({ defaultActiveKey, tabs, onSelect, ...rest }: IProps) {
   const [currentKey, setCurrentKey] = useState<TabKeyType>(defaultActiveKey || 0);
 
   const handleSelect = (k: TabKeyType) => {
@@ -24,31 +25,29 @@ export default function Tabbar({ defaultActiveKey, tabs, onSelect }: IProps) {
   };
 
   return (
-    <TabbarStyle>
+    <SubTabbarStyle {...rest}>
       {tabs.map((item) => (
         <li key={item.key} onClick={() => handleSelect(item.key)} className={item.key === currentKey ? 'selected' : ''}>
           {item.title}
         </li>
       ))}
-    </TabbarStyle>
+    </SubTabbarStyle>
   );
 }
 
-const TabbarStyle = styled.ul`
-  display: flex;
+const SubTabbarStyle = styled.ul`
+  display: inline-flex;
   align-items: center;
   font-size: 14px;
+  gap: 40px;
+  color: var(--bs-body-color);
   li {
-    border-radius: 17px;
-    height: 34px;
-    line-height: 34px;
-    padding-inline: 23px;
-    &.selected {
-      background-color: var(--bs-primary);
-      color: #fff;
-      font-size: 18px;
-    }
+    height: 30px;
+    line-height: 30px;
     cursor: pointer;
+    &.selected {
+      color: var(--bs-body-color_active);
+    }
   }
 
   flex-wrap: nowrap;
