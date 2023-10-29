@@ -149,9 +149,14 @@ const GlobalStyle = createGlobalStyle`
     border-radius: var(--bs-border-radius);
     transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
   }
+  .form-control {
+    color: var(--bs-body-color_active);
+    font-size: 14px;
+  }
   .form-control:focus {
-    border-color: rgb(161, 100, 255);
-    box-shadow: 0 0 0 0.25rem rgba(161, 100, 255, 0.25);
+    border-color: var(--bs-primary);
+    color: var(--bs-body-color_active);
+    box-shadow: 0 0 0 0.25rem rgba(82, 0, 255, .25);
   }
   .form-check-input {
     width: 18px;

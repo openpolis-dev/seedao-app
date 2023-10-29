@@ -15,18 +15,28 @@ const Box = styled.div`
   .sizeTop {
     margin-bottom: 10px;
   }
+  .text {
+    margin-top: 30px;
+    color: var(--bs-body-color_active);
+    font-size: 14px;
+  }
 `;
 
-export default function NoItem() {
+interface IProps {
+  text?: string;
+  [key: string]: any;
+}
+
+export default function NoItem({ text, ...rest }: IProps) {
   const {
     state: { theme },
   } = useAuthContext();
   return (
-    <Box>
+    <Box {...rest}>
       <div>
         <img src={theme ? EmptyDarkIcon : EmptyLightIcon} alt="" className="sizeTop" />
       </div>
-      <div>No Data</div>
+      <div className="text">{text || 'No Data'}</div>
     </Box>
   );
 }

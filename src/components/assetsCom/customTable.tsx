@@ -4,6 +4,7 @@ import { IExcelObj } from 'type/project.type';
 import Select from 'components/common/select';
 import { Button, Form } from 'react-bootstrap';
 import { useState, FormEvent, useEffect } from 'react';
+import DeleteIcon from 'assets/Imgs/delete.svg';
 
 interface IProps {
   updateList: (data: IExcelObj[]) => void;
@@ -92,7 +93,7 @@ const CustomTable = ({ updateList }: IProps) => {
                 <Form.Control value={item.address} onChange={(e) => handleInput(e, index, 'address')} />
               </td>
               <td>
-                <Select
+                <AssetSelect
                   options={[
                     { value: 'scr', label: 'SCR' },
                     { value: 'eth', label: 'ETH' },
@@ -111,17 +112,37 @@ const CustomTable = ({ updateList }: IProps) => {
                 <Form.Control value={item.note} onChange={(e) => handleInput(e, index, 'note')} />
               </td>
               <td>
-                <Button onClick={() => deleteOne(index)}>删除</Button>
+                <DeleteImg src={DeleteIcon} alt="" onClick={() => deleteOne(index)} />
               </td>
             </tr>
           ))}
         </tbody>
       </table>
       <div>
-        <Button onClick={addOne}>添加</Button>
+        <AddButton onClick={addOne}>{t('Assets.RegisterAdd')}</AddButton>
       </div>
     </>
   );
 };
 
 export default CustomTable;
+
+const DeleteImg = styled.img`
+  cursor: pointer;
+  position: relative;
+  top: 4px;
+`;
+
+const AssetSelect = styled(Select)`
+  width: 94px;
+  min-width: unset;
+`;
+
+export const AddButton = styled.button<{ long?: boolean }>`
+  width: ${(props) => (props.long ? '137px' : 'unset')};
+  height: 34px;
+  background: #b0b0b0;
+  border-radius: 8px;
+  color: #0d0c0f;
+  padding-inline: 10px;
+`;

@@ -11,6 +11,8 @@ import { AppActionType, useAuthContext } from 'providers/authProvider';
 import requests from 'requests';
 import CustomTable from './customTable';
 import ExcelTable from './excelTable';
+import NoItem from 'components/noItem';
+import { AddButton } from './customTable';
 
 type ErrorDataType = {
   line: number;
@@ -130,14 +132,11 @@ export default function RegList() {
       default:
         return (
           <TipsBox>
-            <div className="iconTop">
-              <ExclamationDiamond />
-            </div>
+            <EmptyBox />
             <OptionBox>
-              <Button onClick={onClickAdd}>
-                <Download className="iconRht" />
-                <span>添加</span>
-              </Button>
+              <AddButton onClick={onClickAdd} long={true}>
+                {t('Assets.RegisterAdd')}
+              </AddButton>
               <BtnBox htmlFor="fileUpload" onChange={(e) => updateFile(e)}>
                 <input
                   id="fileUpload"
@@ -204,8 +203,7 @@ export default function RegList() {
 const Box = styled.div``;
 
 const TipsBox = styled.div`
-  padding: 80px;
-  background: rgba(161, 100, 255, 0.08);
+  padding: 40px;
   margin-top: 10px;
   text-align: center;
   color: var(--bs-primary);
@@ -233,17 +231,20 @@ const OptionBox = styled.div`
   display: flex;
   gap: 16px;
   justify-content: center;
+  margin-top: 30px;
 `;
 
 const BtnBox = styled.label`
-  background: var(--bs-primary);
-  color: #fff;
+  width: 137px;
+  height: 34px;
+  color: var(--bs-primary);
+  text-align: center;
+  border: 1px solid var(--bs-primary);
   //height: 42px;
-  padding: 8px 25px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 4px;
+  border-radius: 8px;
   //font-family: 'Inter-Regular';
   //font-weight: 700;
   font-size: 0.875rem;
@@ -252,10 +253,6 @@ const BtnBox = styled.label`
   .iconRht {
     margin-right: 10px;
   }
-  &:hover {
-    background: var(--bs-primary);
-  }
-  width: 200px;
 `;
 
 const ErrorBox = styled.ul`
@@ -279,4 +276,8 @@ const DownloadButton = styled.button`
   span {
     padding-left: 10px;
   }
+`;
+
+const EmptyBox = styled(NoItem)`
+  padding: 0;
 `;
