@@ -33,6 +33,13 @@ export default {
       icon: '',
       desc: 'Share your idea in community weekly conf.',
     },
+    {
+      name: 'Home.pub',
+      link: 'https://tally.so/r/mDKbqb',
+      id: 'community',
+      icon: '',
+      desc: 'The events hub for SeeDAO community.',
+    },
   ],
   applyAppLink: 'https://tally.so/r/3XozzP',
   governance: [
@@ -56,6 +63,13 @@ export default {
       id: 'app',
       icon: '',
       desc: 'Review the request of adding apps in SeeDAO App.',
+    },
+    {
+      name: 'Home.pub',
+      link: 'https://www.notion.so/ab122e6e19f14ff5a212fb6e77d5b366?v=34760c2c81e648549f5a40a79dc3b198&pvs=4',
+      id: 'app',
+      icon: '',
+      desc: 'The events hub for SeeDAO community.',
     },
   ],
   brand: [
