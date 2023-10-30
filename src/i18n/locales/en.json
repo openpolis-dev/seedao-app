@@ -357,7 +357,8 @@
     "brandDesc": "Use SeeDAO branding resources."
   },
   "application": {
-    "detailModalHeader": "Detail",
+    "Register": "Register",
+    "DetailModalHeader": "Detail",
     "Time": "Time",
     "TotalAssets": "Total Assets",
     "RegisterNote": "Note",

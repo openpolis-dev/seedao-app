@@ -357,7 +357,8 @@
     "brandDesc": "Use SeeDAO branding resources."
   },
   "application": {
-    "detailModalHeader": "详情",
+    "Register": "Register",
+    "DetailModalHeader": "详情",
     "Time": "时间",
     "TotalAssets": "登记总资产",
     "RegisterNote": "登记说明",

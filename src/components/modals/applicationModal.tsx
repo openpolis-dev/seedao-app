@@ -14,7 +14,7 @@ interface Iprops {
 export default function ApplicationModal({ application, handleClose }: Iprops) {
   const { t } = useTranslation();
   return (
-    <ApplicationModalWrapper handleClose={handleClose} title={t('application.detailModalHeader')}>
+    <ApplicationModalWrapper handleClose={handleClose} title={t('application.DetailModalHeader')}>
       <Content>
         <Block underline>
           <li>

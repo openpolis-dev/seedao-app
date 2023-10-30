@@ -37,6 +37,9 @@ const FirstLine = styled.div`
   width: 100%;
   align-items: end;
   margin-bottom: 20px;
+  .btn-export {
+    min-width: 111px;
+  }
 `;
 
 const TopLine = styled.ul`
@@ -342,7 +345,7 @@ export default function AssetList() {
           </li>
         </TopLine>
         <div>
-          <Button onClick={handleExport} disabled={!selectOne}>
+          <Button onClick={handleExport} disabled={!selectOne} className="btn-export">
             {t('Project.Export')}
           </Button>
         </div>
