@@ -205,10 +205,15 @@
     "Governance": "治理",
     "Band": "品牌",
     "Tech": "技术",
-    "CalendarReview": "活动日历审核",
-    "AppReview": "城邦应用审核",
     "communityReview": "社区大会分享申请审核",
+    "reviewDesc": "Review the request of sharing in community weekly conf.",
+    "CalendarReview": "活动日历审核",
+    "calendarDesc": "Review the request of adding events in community calendar.",
+    "AppReview": "城邦应用审核",
+    "appDesc": "Review the request of adding apps in SeeDAO App.",
     "brandReview": "品牌标识使用申请审核",
+    "pub": "Bounty Pub",
+    "pubDesc": "The events hub for SeeDAO community.",
     "management": "管理",
     "create": "创建",
     "closeProjectReview": "项目关闭审核"
@@ -337,9 +342,19 @@
   "resources": {
     "all": "所有资源",
     "calendar": "申请日历",
+    "calendarDesc": "Add events in community calendar.",
     "wait2add": "待添加",
+    "brand": "品牌标识使用申请",
+    "brandDesc": "Use SeeDAO branding resources.",
     "community": "社区大会分享申请",
-    "brand": "品牌标识使用申请"
+    "communityDesc": "Share your idea in community weekly conf.",
+    "bounty": "Bounty Pub",
+    "BountyDesc": "The events hub for SeeDAO community.",
+    "seedDesc": "To claim your SeeDAO SEED NFT"
+  },
+  "brand": {
+    "brand": "品牌标识使用申请",
+    "brandDesc": "Use SeeDAO branding resources."
   },
   "application": {
     "detailModalHeader": "详情",
@@ -349,5 +364,15 @@
     "RegisterSource": "项目/公会",
     "Operator": "登记人",
     "TotalCount": "共{{count}}条"
+  },
+  "apps": {
+    "DeschoolDesc": "DeSchool is building education infrastructure in Web3.",
+    "AAAnyDesc": "AAAny wants everyone to enjoy AMA. We offers a wealth of exclusive features to make your AMA experience joyful and efficient.",
+    "Cascad3Desc": "Co-create everything. Find your creative community.",
+    "DAOLinkDesc": "DAOLink is a web3 cowork platform perfect for DAOs, remote teams, and digital nomads.",
+    "Wormhole3Desc": "A Wormhole From Web2 to Web3.",
+    "MetaforoDesc": "Decisions get made by members, for members. Metaforo is the only community platform that supports quorum and quadratic token voting.",
+    "bounty": "Bounty Pub",
+    "BountyDesc": "The events hub for SeeDAO community."
   }
 }

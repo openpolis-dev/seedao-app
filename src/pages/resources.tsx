@@ -5,8 +5,8 @@ import { Row, Col } from 'react-bootstrap';
 
 import { useTranslation } from 'react-i18next';
 import Links from 'utils/links';
-import SeedIcon from '../assets/images/seed.png';
-import AppCard, { AppIcon, EmptyAppCard } from 'components/common/appCard';
+
+import AppCard, { EmptyAppCard } from 'components/common/appCard';
 import Tabbar from 'components/common/tabbar';
 
 const OuterBox = styled.div`
@@ -16,12 +16,13 @@ const OuterBox = styled.div`
 
 const TitBox = styled.div`
   font-weight: bold;
-  font-size: 1.5rem;
+  font-size: 24px;
   margin-bottom: 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   position: relative;
+  color: var(--bs-body-color_active);
   .titLft {
     width: 100%;
   }
@@ -36,15 +37,16 @@ export default function Resources() {
 
   const resources = useMemo(() => {
     // @ts-ignore
-    return Links.resource.map((item) => ({ ...item, name: t(item.name) as string }));
+    return Links.resource.map((item) => ({ ...item, name: t(item.name) as string, desc: t(item.desc) as string }));
   }, [t]);
 
   return (
     <OuterBox>
       <TitBox>
-        <div className="titLft">
-          <Tabbar defaultActiveKey={0} tabs={[{ key: 0, title: t('resources.all') }]} />
-        </div>
+        {/*<div className="titLft">*/}
+        {/*  <Tabbar defaultActiveKey={0} tabs={[{ key: 0, title: t('resources.all') }]} />*/}
+        {/*</div>*/}
+        {t('resources.all')}
       </TitBox>
 
       <AppBox>
@@ -53,9 +55,6 @@ export default function Resources() {
             <AppCard {...item} />
           </Col>
         ))}
-        <Col sm={12} md={6} lg={4} xl={3}>
-          <AppCard icon={SeedIcon} desc="To claim your SeeDAO SEED NFT" name="Seed" link={Links.seed} id="seed" />
-        </Col>
         <Col sm={12} md={6} lg={4} xl={3}>
           <EmptyAppCard />
         </Col>

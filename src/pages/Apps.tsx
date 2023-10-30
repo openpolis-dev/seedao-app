@@ -15,12 +15,13 @@ const OuterBox = styled.div`
 
 const TitBox = styled.div`
   font-weight: bold;
-  font-size: 1.5rem;
+  font-size: 24px;
   margin-bottom: 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   position: relative;
+  color: var(--bs-body-color_active);
   .titLft {
     width: 100%;
   }
@@ -37,14 +38,15 @@ export default function Apps() {
 
   const events = useMemo(() => {
     // @ts-ignore
-    return Links.apps.map((item) => ({ ...item, name: t(item.name) as string }));
+    return Links.apps.map((item) => ({ ...item, name: t(item.name) as string, desc: t(item.desc) as string }));
   }, [t]);
 
   return (
     <OuterBox>
       <TitBox>
         <div className="titLft">
-          <Tabbar defaultActiveKey={0} tabs={[{ key: 0, title: t('resources.all') }]} />
+          {/*<Tabbar defaultActiveKey={0} tabs={[{ key: 0, title: t('resources.all') }]} />*/}
+          {t('resources.all')}
         </div>
         <RhtBoxT>
           <Button onClick={() => window.open(Links.applyAppLink, '_target')}>{t('general.apply')}</Button>

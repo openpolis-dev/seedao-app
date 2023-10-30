@@ -205,10 +205,15 @@
     "Governance": "Governance",
     "Band": "Branding",
     "Tech": "Tech",
-    "CalendarReview": "Calendar Review",
-    "AppReview": "App Review",
     "communityReview": "Community Conf Speech Review",
+    "reviewDesc": "Review the request of sharing in community weekly conf.",
+    "CalendarReview": "Calendar Review",
+    "calendarDesc": "Review the request of adding events in community calendar.",
+    "AppReview": "App Review",
+    "appDesc": "Review the request of adding apps in SeeDAO App.",
     "brandReview": "Branding Review",
+    "pub": "Bounty Pub",
+    "pubDesc": "The events hub for SeeDAO community.",
     "management": "Management",
     "create": "Create",
     "closeProjectReview": "Close project review"
@@ -337,9 +342,19 @@
   "resources": {
     "all": "All Resources",
     "calendar": "Calendar",
+    "calendarDesc": "Add events in community calendar.",
     "wait2add": "Coming Soon",
+    "brand": "Branding",
+    "brandDesc": "Use SeeDAO branding resources.",
     "community": "Community Conf Speech",
-    "brand": "Branding"
+    "communityDesc": "Share your idea in community weekly conf.",
+    "bounty": "Bounty Pub",
+    "BountyDesc": "The events hub for SeeDAO community.",
+    "seedDesc": "To claim your SeeDAO SEED NFT"
+  },
+  "brand": {
+    "brand": "Branding",
+    "brandDesc": "Use SeeDAO branding resources."
   },
   "application": {
     "detailModalHeader": "Detail",
@@ -348,6 +363,16 @@
     "RegisterNote": "Note",
     "RegisterSource": "Project / Guild",
     "Operator": "Operator",
-    "TotalCount": "共{{count}}条"
+    "TotalCount": "total {{count}}"
+  },
+  "apps": {
+    "DeschoolDesc": "DeSchool is building education infrastructure in Web3.",
+    "AAAnyDesc": "AAAny wants everyone to enjoy AMA. We offers a wealth of exclusive features to make your AMA experience joyful and efficient.",
+    "Cascad3Desc": "Co-create everything. Find your creative community.",
+    "DAOLinkDesc": "DAOLink is a web3 cowork platform perfect for DAOs, remote teams, and digital nomads.",
+    "Wormhole3Desc": "A Wormhole From Web2 to Web3.",
+    "MetaforoDesc": "Decisions get made by members, for members. Metaforo is the only community platform that supports quorum and quadratic token voting.",
+    "bounty": "Bounty Pub",
+    "BountyDesc": "The events hub for SeeDAO community."
   }
 }
