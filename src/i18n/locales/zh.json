@@ -366,6 +366,11 @@
     "Operator": "登记人",
     "TotalCount": "共{{count}}条"
   },
+  "members": {
+    "RemoveTitle": "移除成员",
+    "AddTitle": "添加成员",
+    "RemoveConfirm": "确定要移除以下成员？"
+  },
   "apps": {
     "DeschoolDesc": "DeSchool is building education infrastructure in Web3.",
     "AAAnyDesc": "AAAny wants everyone to enjoy AMA. We offers a wealth of exclusive features to make your AMA experience joyful and efficient.",
