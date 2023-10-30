@@ -28,7 +28,7 @@ const TitBox = styled.div`
 `;
 
 const AppBox = styled(Row)`
-  padding: 20px;
+  padding: 20px 0;
 `;
 
 export default function Resources() {
