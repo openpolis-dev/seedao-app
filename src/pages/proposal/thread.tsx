@@ -65,11 +65,11 @@ export default function Proposal() {
                 <div className="date">{formatDate(new Date(data?.updated_at || ''))}</div>
               </div>
             </User>
-            <MoreButton variant="outline-primary" onClick={lookMore}>
-              {t('Proposal.LookMore')}
-            </MoreButton>
+            <MoreButton onClick={lookMore}>{t('Proposal.LookMore')}</MoreButton>
+            <Content>
+              {enableQuill && data?.first_post.content && <QuillViewer content={data?.first_post.content} />}
+            </Content>
             {/* <div style={{ overflow: 'hidden' }}>{data?.first_post.content}</div> */}
-            {enableQuill && data?.first_post.content && <QuillViewer content={data?.first_post.content} />}
           </>
         )}
       </ProposalContainer>
@@ -83,19 +83,20 @@ const BoxOuter = styled.div`
 `;
 
 const ProposalContainer = styled.div`
-  background: #fff;
-  padding: 20px;
+  background: var(--bs-box-background);
+  border-radius: 16px;
+  padding: 24px;
   min-height: 100%;
   position: relative;
 `;
 
 const ProposalTitle = styled.div`
-  font-size: 30px;
-  font-weight: 600;
-  line-height: 1.5em;
+  font-size: 24px;
+  font-family: Poppins-Bold, Poppins;
+  font-weight: bold;
+  color: var(--bs-body-color_active);
   @media (max-width: 900px) {
     width: 80%;
-    font-size: 24px;
   }
 `;
 const User = styled.div`
@@ -117,8 +118,36 @@ const UserAvatar = styled.img`
   border-radius: 50%;
 `;
 
-const MoreButton = styled(Button)`
+const MoreButton = styled.button`
   position: absolute;
   right: 20px;
   top: 30px;
+  height: 24px;
+  padding-inline: 12px;
+  border-radius: 4px 4px 4px 4px;
+  opacity: 1;
+  border: 1px solid #0085ff;
+  color: #0085ff;
+  background-color: transparent;
+  font-size: 12px;
+`;
+
+const Content = styled.div`
+  h1 {
+    margin-top: 28px;
+    margin-bottom: 10px;
+    font-size: 24px;
+  }
+  ul,
+  ol {
+    margin-block: 12px;
+    padding-inline-start: 40px;
+  }
+  img {
+    max-height: 600px;
+  }
+  p {
+    margin-top: 10px;
+    margin-bottom: 16px;
+  }
 `;
