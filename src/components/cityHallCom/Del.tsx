@@ -82,7 +82,7 @@ export default function Del(props: Iprops) {
   };
 
   return (
-    <RemoveMemberModalWrapper title={t('members.RemoveTitle')}>
+    <RemoveMemberModalWrapper title={t('members.RemoveTitle')} handleClose={closeRemove}>
       <CardText>{t('members.RemoveConfirm')}</CardText>
       <CardBody>
         {selectAdminArr.map((item, index) => (
@@ -91,7 +91,7 @@ export default function Del(props: Iprops) {
               <img src={item.avatar || DefaultAvatar} alt="" />
             </div>
             <div>
-              <div className="name">{item.name}asdfas</div>
+              <div className="name">{item.name}</div>
               <div className="wallet">{item.wallet}</div>
             </div>
           </ItemBox>
