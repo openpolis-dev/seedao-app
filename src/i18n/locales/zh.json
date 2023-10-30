@@ -369,7 +369,8 @@
   "members": {
     "RemoveTitle": "移除成员",
     "AddTitle": "添加成员",
-    "RemoveConfirm": "确定要移除以下成员？"
+    "RemoveConfirm": "确定要移除以下成员？",
+    "AddressName": "SNS/地址"
   },
   "apps": {
     "DeschoolDesc": "DeSchool is building education infrastructure in Web3.",
