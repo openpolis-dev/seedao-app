@@ -1,7 +1,7 @@
 import React from "react";
 import Calendar from "@ericz1803/react-google-calendar";
-import { css } from "@emotion/react";
 import styled from 'styled-components';
+import CopyC from "../../assets/Imgs/copyCalendar.svg";
 
 import { useTranslation } from "react-i18next";
 
@@ -55,34 +55,65 @@ const Box = styled.div`
             top:-36px;
         }
         h2{
-            font-size: 20px;
-            padding: 10px;
-            background: #f0f3f8;
+            font-size: 16px;
+            padding: 9px 14px;
+            background: var(--bs-primary);
+            color: #Fff;
+            border-radius: 8px;
         }
         .display-linebreak{
+            color: var(--bs-body-color_active);
             width: 100%;
             white-space: nowrap;
-            padding: 10px;
-            border-bottom: 1px solid #eee;
+            padding:16px 10px;
+            background: var(--bs-background);
+            border-bottom: 1px solid var( --bs-border-color);
         }
         .location{
-            border-bottom: 1px solid #eee;
+            //border-bottom: 1px solid var( --bs-border-color);;
             padding-bottom: 10px;
+            color: var(--bs-body-color_active);
+           align-items: flex-start;
+            border-bottom: 0;
+            &>div:first-child{
+                margin-top: 5px;
+            }
+            
         }
         .description{
+            color: var(--bs-body-color_active);
             align-items: flex-start;
-            border-bottom: 1px solid #eee;
             padding-bottom: 20px;
         }
         .calendarName{
-            border-bottom: 1px solid #eee;
-            background: #f0f3f8;
-            margin-top: -13px;
+            //border-bottom: 1px solid var( --bs-border-color);
+            background: var(--home-right);
+            color: var(--bs-body-color_active);
+            //margin-top: -13px;
             padding: 10px;
         }
-        a:hover{
-            color: var(--bs-primary)
+        a{
+            text-align: right;
+            width: 100%;
+            display: inline-block;
+            color: var(--bs-body-color_active);
+            &::before{
+               content: "";
+              display: inline-block;
+              width: 24px;
+              height:24px;
+              background-image: url(${CopyC});
+              background-size: cover;
+              margin-right:9px;
+              margin-bottom: -7px;
+            }
+            &:hover{
+                color: var(--bs-primary);
+            }
         }
+        //a:hover{
+        //    color: var(--bs-primary)
+        //}
         
     }
     
@@ -138,11 +169,11 @@ let styles = {
         height:"6px"
     },
     tooltip:{
-        width:"500px",
+        width:"560px",
+        boxSizing:"border-box",
         padding:"40px 20px 20px",
-        background: "#fff",
-        boxShadow:"0 5px 10px rgba(0,0,0,0.2)",
-        borderWidth: "1px"
+        background: "var(--bs-background)",
+        border: "1px solid var( --bs-border-color)"
     },
 };
 

@@ -156,8 +156,7 @@ export default function Profile() {
             <img src={TwitterIcon} alt="" />
           </a>
         );
-      case 'wechat':
-        return <img src={WechatIcon} alt="" />;
+
       case 'email':
         return (
           <a href={`mailto:${val}`} target="_blank">
@@ -165,14 +164,18 @@ export default function Profile() {
           </a>
         );
 
-      case 'discord':
-        return <img src={DiscordIcon} alt="" />;
       case 'mirror':
         return (
           <a href={val} target="_blank">
             <img src={MirrorImg} alt="" />
           </a>
         );
+      case 'discord':
+      // return <img src={DiscordIcon} alt="" />;
+
+      case 'wechat':
+        return '';
+      // return (<img src={WechatIcon} alt="" />);
     }
   };
 
@@ -231,11 +234,15 @@ export default function Profile() {
           ))}
         </TagBox>
         <LinkBox>
-          {userData?.social_accounts?.map((item: any, index: number) => (
-            <li key={`sbtInner_${index}`}>
-              <span className="iconLft">{returnSocial(item.network, item.identity)}</span>
-            </li>
-          ))}
+          {userData?.social_accounts?.map((item: any, index: number) =>
+            returnSocial(item.network, item.identity) ? (
+              <li key={`sbtInner_${index}`}>
+                <span className="iconLft">{returnSocial(item.network, item.identity)}</span>
+              </li>
+            ) : (
+              <></>
+            ),
+          )}
           <li>
             <span className="iconLft">{returnSocial('email', userData?.email)}</span>
           </li>
