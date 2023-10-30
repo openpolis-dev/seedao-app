@@ -61,11 +61,15 @@ export default function ApplicationModal({ application, handleClose }: Iprops) {
           <li>
             <BlockLeft>{t('Project.TransactionID')}</BlockLeft>
             <BlockRight>
-              {application.transactions?.map((item, index) => (
-                <TransactionTx key={index} href={`https://etherscan.io/tx/${item}`} target="_blank">
-                  {item.slice(0, 8) + '...' + item.slice(-8)}
-                </TransactionTx>
-              ))}
+              {application.transactions?.map((item, index) => {
+                return item ? (
+                  <TransactionTx key={index} href={`https://etherscan.io/tx/${item}`} target="_blank">
+                    {item.slice(0, 8) + '...' + item.slice(-8)}
+                  </TransactionTx>
+                ) : (
+                  <></>
+                );
+              })}
             </BlockRight>
           </li>
           <li>
