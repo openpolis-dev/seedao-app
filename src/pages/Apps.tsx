@@ -65,5 +65,5 @@ export default function Apps() {
 }
 
 const AppBox = styled(Row)`
-  padding: 20px;
+  padding: 20px 0;
 `;
