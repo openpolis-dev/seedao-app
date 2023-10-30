@@ -10,8 +10,8 @@ export default function Avatar({ user }: { user?: IUser }) {
   console.log(sns, user?.name, PublicJs.AddressToShow(user?.wallet || ''));
   return (
     <AvatarStyle>
-      <img src={user?.avatar || DefaultAvatar} alt="" />
       <span>{sns || user?.name || PublicJs.AddressToShow(user?.wallet || '') || 'USER'}</span>
+      <img src={user?.avatar || DefaultAvatar} alt="" />
     </AvatarStyle>
   );
 }
