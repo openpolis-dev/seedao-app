@@ -61,27 +61,25 @@ export default function SeeuNetwork() {
   }, [pageCur, pageSize]);
   return (
     <OuterBox>
-      <InnerBox>
-        <TitBox>
-          <div className="titLft">
-            <Tabbar defaultActiveKey={0} tabs={[{ key: 0, title: t('event.events') }]} />
-          </div>
-        </TitBox>
-        <Row>
-          {lst.map((item, idx) => (
-            <Col key={idx} sm={12} md={6} lg={3} xl={3} style={{ marginBottom: '30px' }}>
-              <Link to={`/event/view?id=${item.id}`}>
-                <EventCard item={item} />
-              </Link>
-            </Col>
-          ))}
-        </Row>
-        {total > pageSize && (
-          <PageBox>
-            <Page itemsPerPage={pageSize} total={total} current={pageCur - 1} handleToPage={handlePage} />
-          </PageBox>
-        )}
-      </InnerBox>
+      <TitBox>
+        <div className="titLft">
+          <Tabbar defaultActiveKey={0} tabs={[{ key: 0, title: t('event.events') }]} />
+        </div>
+      </TitBox>
+      <Row>
+        {lst.map((item, idx) => (
+          <Col key={idx} sm={12} md={6} lg={3} xl={3} style={{ marginBottom: '30px' }}>
+            <Link to={`/event/view?id=${item.id}`}>
+              <EventCard item={item} />
+            </Link>
+          </Col>
+        ))}
+      </Row>
+      {total > pageSize && (
+        <PageBox>
+          <Page itemsPerPage={pageSize} total={total} current={pageCur - 1} handleToPage={handlePage} />
+        </PageBox>
+      )}
     </OuterBox>
   );
 }
@@ -93,12 +91,10 @@ const PageBox = styled.div`
 const OuterBox = styled.div`
   min-height: 100%;
   ${ContainerPadding};
-`;
-
-const InnerBox = styled.div`
-  background: #fff;
-  padding: 20px;
-  min-height: 100%;
+  .itemBox {
+    background-color: var(--bs-box-background);
+    border: 1px solid var(--bs-border-color);
+  }
   .item-content {
     h5,
     h6 {
