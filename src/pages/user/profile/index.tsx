@@ -254,7 +254,7 @@ export default function Profile() {
                 <div>{t('My.current')}</div>
                 <div className="num">{userData?.level?.upgrade_percent}%</div>
               </Crt>
-              <ProgressBox width="60">
+              <ProgressBox width={userData?.level?.upgrade_percent}>
                 <div className="inner" />
               </ProgressBox>
               <TipsBox>
