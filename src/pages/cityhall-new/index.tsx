@@ -80,7 +80,7 @@ export default function Index() {
           tabs={[
             { key: 0, title: t('city-hall.Members') },
             { key: 1, title: t('city-hall.Governance') },
-            { key: 2, title: t('city-hall.Band') },
+            { key: 2, title: t('city-hall.Brand') },
             { key: 3, title: t('city-hall.Tech') },
             { key: 4, title: t('city-hall.Push') },
             { key: 5, title: t('city-hall.management') },
