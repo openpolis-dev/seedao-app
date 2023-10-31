@@ -13,7 +13,6 @@ import Info from 'components/projectInfoCom/info';
 import EditInfo from 'components/projectInfoCom/edit';
 
 const OuterBox = styled.div`
-  min-height: 100%;
   ${ContainerPadding};
   @media (max-width: 1024px) {
     .nav {
@@ -27,17 +26,13 @@ const OuterBox = styled.div`
 
 const Box = styled.div`
   position: relative;
-  min-height: 100%;
-  background: #fff;
 `;
 
 const Content = styled.div`
   box-sizing: border-box;
-  padding: 20px;
 `;
 
 const BackBox = styled.div`
-  padding: 20px 20px 0;
   display: flex;
   align-items: center;
   .back {

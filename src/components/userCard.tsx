@@ -79,11 +79,11 @@ export default function UserCard({ user, showEdit, onSelectUser, formatActive, s
               <img src={TwitterIcon} alt="" className="icon" />
             </a>
           )}
-          {user.discord_profile && (
-            <CopyBox text={user.discord_profile || ''} dir="right">
-              <img src={DiscordIcon} alt="" className="icon" />
-            </CopyBox>
-          )}
+          {/*{user.discord_profile && (*/}
+          {/*  <CopyBox text={user.discord_profile || ''} dir="right">*/}
+          {/*    <img src={DiscordIcon} alt="" className="icon" />*/}
+          {/*  </CopyBox>*/}
+          {/*)}*/}
           {user.email && (
             <CopyBox text={user.email || ''}>
               <img src={EmailIcon} alt="" className="icon" />

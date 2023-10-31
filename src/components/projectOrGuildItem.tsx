@@ -6,95 +6,92 @@ const Item = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
   cursor: pointer;
-  img {
-    width: 100%;
-  }
   .title {
-    font-size: 14px;
-    line-height: 1.5em;
-    height: 20px;
+    font-size: 16px;
+    font-family: Poppins-SemiBold;
+    font-weight: 600;
+    color: var(--font-color-title);
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
-    margin: 15px;
+    margin-bottom: 8px;
   }
 `;
 const CardBox = styled.div`
-  border: 1px solid #f1f1f1;
-  margin-bottom: 40px;
+  margin-bottom: 24px;
   box-sizing: border-box;
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 16px;
+  background: var(--bs-box-background);
+  padding: 14px;
 `;
 const ImageBox = styled.div`
-  border-radius: 12px 12px 0 0;
-  overflow: hidden;
   width: 100%;
-
+  margin-bottom: 8px;
   img {
-    width: 100%;
+    width: 68px;
+    height: 68px;
+    border-radius: 16px;
+    object-fit: cover;
   }
 `;
-const Photo = styled.div`
-  display: flex !important;
+
+const Desc = styled.div`
   overflow: hidden;
-  .aspect {
-    padding-bottom: 100%;
-    height: 0;
-    flex-grow: 1 !important;
-  }
-  .content {
-    width: 100%;
-    margin-left: -100% !important;
-    max-width: 100% !important;
-    flex-grow: 1 !important;
-    position: relative;
-  }
-  .innerImg {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    left: 0;
-    top: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: #f5f5f5;
-    img {
-      width: 100%;
-    }
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  margin-bottom: 8px;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 18px;
+  min-height: 36px;
+`;
+
+const MemBox = styled.div`
+  display: flex;
+  align-items: flex-end;
+
+  width: 69px;
+  height: 18px;
+  font-size: 12px;
+  font-weight: 400;
+  color: #8d57ff;
+  line-height: 18px;
+  span {
+    margin-right: 5px;
   }
 `;
+
 interface Iprops {
   data: {
     id: number;
     logo: string;
     name: string;
+    intro: string;
+    desc: string;
+    members: string[];
   };
   onClickItem: (id: number) => void;
 }
 
 export default function ProjectOrGuildItem({ data, onClickItem }: Iprops) {
+  console.log(data);
   return (
     <Col xs={12} sm={6} md={4} lg={3} xl={2}>
       <CardBox>
         <Item onClick={() => onClickItem(data.id)}>
           <ImageBox>
-            <Photo>
-              <div className="aspect" />
-              <div className="content">
-                <div className="innerImg">
-                  <img src={data.logo} alt="" />
-                </div>
-              </div>
-            </Photo>
+            <img src={data.logo} alt="" />
           </ImageBox>
           <div className="title">{data.name}</div>
+          <Desc>{data.desc}</Desc>
+          <MemBox>
+            <span>{data?.members?.length}</span> members
+          </MemBox>
         </Item>
       </CardBox>
     </Col>
