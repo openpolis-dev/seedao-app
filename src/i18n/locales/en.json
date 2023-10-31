@@ -359,7 +359,9 @@
     "Media": "Media Resources",
     "MediaDesc": "Request to use SeeDAO media resources.",
     "App": "Polis Apps",
-    "AppDesc": "Request to add your app in SeeDAO Polis App."
+    "AppDesc": "Request to add your app in SeeDAO Polis App.",
+    "Incubator": "Incubator",
+    "IncubatorDesc": "Apply to join SeeDAO Incubator."
   },
   "application": {
     "Register": "Register",

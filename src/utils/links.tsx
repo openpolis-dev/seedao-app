@@ -39,17 +39,24 @@ export default {
     },
     {
       name: 'resources.Media',
-      link: 'https://seed.seedao.xyz/',
+      link: 'https://tally.so/r/wzMRBE',
       id: 'Media',
       icon: '',
       desc: 'resources.MediaDesc',
     },
     {
       name: 'resources.App',
-      link: 'https://seed.seedao.xyz/',
+      link: 'https://tally.so/r/3XozzP',
       id: 'Apps',
       icon: '',
       desc: 'resources.AppDesc',
+    },
+    {
+      name: 'resources.Incubator',
+      link: 'https://tally.so/r/wAr0Q0',
+      id: 'Apps',
+      icon: '',
+      desc: 'resources.IncubatorDesc',
     },
     {
       name: 'resources.Seed',

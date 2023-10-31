@@ -356,7 +356,9 @@
     "Media": "媒体资源申请",
     "MediaDesc": "申请使用SeeDAO媒体资源",
     "App": "城邦应用申请",
-    "AppDesc": "申请添加新的城邦应用"
+    "AppDesc": "申请添加新的城邦应用",
+    "Incubator": "SeeDAO孵化器申请",
+    "IncubatorDesc": "申请加入SeeDAO孵化器"
   },
   "application": {
     "Register": "Register",
