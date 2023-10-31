@@ -46,7 +46,7 @@ export default function Apps() {
       <TitBox>
         <div className="titLft">
           {/*<Tabbar defaultActiveKey={0} tabs={[{ key: 0, title: t('resources.all') }]} />*/}
-          {t('resources.all')}
+          {t('Home.Apps')}
         </div>
         <RhtBoxT>
           <Button onClick={() => window.open(Links.applyAppLink, '_target')}>{t('general.apply')}</Button>
