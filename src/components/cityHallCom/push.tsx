@@ -156,8 +156,8 @@ const PushHistoryContent = () => {
                 </tr>
               </thead>
               <tbody>
-                {list.map((item) => (
-                  <tr key={item.title}>
+                {list.map((item, index) => (
+                  <tr key={index}>
                     <td>{item.title}</td>
                     <td>{item.content}</td>
                     <td>
