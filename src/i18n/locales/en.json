@@ -385,6 +385,8 @@
     "Wormhole3Desc": "A Wormhole From Web2 to Web3.",
     "MetaforoDesc": "Decisions get made by members, for members. Metaforo is the only community platform that supports quorum and quadratic token voting.",
     "Pub": "SeeDAO Pub",
-    "PubDesc": "The events hub for SeeDAO community."
+    "PubDesc": "The events hub for SeeDAO community.",
+    "SeeU": "SeeU Network",
+    "SeeUDesc": "SeeU Network is a decentralized social network that allows users to create and manage their own communities."
   }
 }

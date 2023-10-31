@@ -145,7 +145,7 @@ export default {
     {
       id: 'Metaforo',
       name: 'Metaforo',
-      link: 'https://www.metaforo.io',
+      link: 'https://forum.seedao.xyz/',
       icon: MetaforoIcon,
       desc: 'apps.MetaforoDesc',
     },
@@ -163,12 +163,12 @@ export default {
     //   icon: <Calendar />,
     //   desc: '',
     // },
-    // {
-    //   id: 'offline',
-    //   name: 'Home.OfflineEvent',
-    //   link: 'https://seeu.network/',
-    //   icon: <Grid1x2 />,
-    //   desc: '',
-    // },
+    {
+      id: 'seeu',
+      name: 'apps.SeeU',
+      link: 'https://seeu.network/',
+      icon: '',
+      desc: 'apps.SeeUDesc',
+    },
   ],
 };
