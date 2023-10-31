@@ -218,6 +218,8 @@
     "BrandReviewDesc": "审核品牌标识使用的申请",
     "MediaReview": "媒体资源审核",
     "MediaReviewDesc": "审核媒体资源使用的申请",
+    "SeedReview": "SEED获取审核",
+    "SeedReviewDesc": "审核SEED获取的申请",
     "management": "管理",
     "create": "创建",
     "closeProjectReview": "项目关闭审核"

@@ -113,6 +113,15 @@ export default {
       desc: 'city-hall.MediaReviewDesc',
     },
   ],
+  tech: [
+    {
+      name: 'city-hall.SeedReview',
+      link: '',
+      id: 'seed',
+      icon: '',
+      desc: 'city-hall.SeedReviewDesc',
+    },
+  ],
   apps: [
     {
       id: 'Deschool',
