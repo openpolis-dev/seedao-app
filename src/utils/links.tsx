@@ -38,6 +38,20 @@ export default {
       desc: 'resources.PubDesc',
     },
     {
+      name: 'resources.Media',
+      link: 'https://seed.seedao.xyz/',
+      id: 'Media',
+      icon: '',
+      desc: 'resources.MediaDesc',
+    },
+    {
+      name: 'resources.App',
+      link: 'https://seed.seedao.xyz/',
+      id: 'Apps',
+      icon: '',
+      desc: 'resources.AppDesc',
+    },
+    {
       name: 'resources.Seed',
       link: 'https://seed.seedao.xyz/',
       id: 'Seed',

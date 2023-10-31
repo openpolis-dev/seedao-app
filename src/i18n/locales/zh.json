@@ -293,12 +293,10 @@
     "NODE_S2": "节点S2",
     "NODE_S3": "节点S3",
     "NODE_S4": "节点S4",
-
     "CITYHALL_S1": "市政厅S1",
     "CITYHALL_S2": "市政厅S2",
     "CITYHALL_S3": "市政厅S3",
     "CITYHALL_S4": "市政厅S4",
-
     "CONTRIBUTOR_L1": "L1 贡献者",
     "CONTRIBUTOR_L2": "L2 贡献者",
     "CONTRIBUTOR_L3": "L3 贡献者",
@@ -308,7 +306,6 @@
     "CONTRIBUTOR_L7": "L7 贡献者",
     "CONTRIBUTOR_L8": "L8 贡献者",
     "CONTRIBUTOR_L9": "L9 贡献者",
-
     "SEEDAO_MEMBER": "SeeDAO 成员",
     "SEEDAO_ONBOARDING": "SeeDAO Onboarding"
   },
@@ -343,17 +340,21 @@
   },
   "resources": {
     "all": "所有资源",
-    "calendar": "申请日历",
-    "CalendarReviewDesc": "申请向社区日历添加日历信息",
     "wait2add": "待添加",
-    "brand": "品牌标识使用申请",
+    "calendar": "社区日历申请",
+    "CalendarReviewDesc": "申请向社区日历添加日历信息",
+    "brand": "品牌标识申请",
     "brandDesc": "申请使用 SeeDAO 品牌标识",
-    "community": "社区大会分享申请",
+    "community": "社区大会申请",
     "communityDesc": "申请在社区大会分享想法和信息",
-    "Pub": "酒馆",
+    "Pub": "酒馆加入申请",
     "PubDesc": "申请向酒馆添加需要发布的信息",
-    "Seed": "SEED",
-    "SeedDesc": "申请获取SeeDAO Seed NFT"
+    "Seed": "SEED获取申请",
+    "SeedDesc": "申请获取SeeDAO Seed NFT",
+    "Media": "媒体资源申请",
+    "MediaDesc": "申请使用SeeDAO媒体资源",
+    "App": "城邦应用申请",
+    "AppDesc": "申请添加新的城邦应用"
   },
   "brand": {
     "brand": "品牌标识使用申请",

@@ -353,7 +353,11 @@
     "Pub": "Pub",
     "PubDesc": "The events hub for SeeDAO community.",
     "Seed": "SEED",
-    "SeedDesc": "To claim your SeeDAO SEED NFT"
+    "SeedDesc": "To claim your SeeDAO SEED NFT",
+    "Media": "Media Resources",
+    "MediaDesc": "Request to use SeeDAO media resources.",
+    "App": "Polis Apps",
+    "AppDesc": "Request to add your app in SeeDAO Polis App."
   },
   "brand": {
     "brand": "Branding",
