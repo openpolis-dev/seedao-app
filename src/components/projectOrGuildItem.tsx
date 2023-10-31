@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Col } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 
 const Item = styled.div`
   display: flex;
@@ -79,7 +80,7 @@ interface Iprops {
 }
 
 export default function ProjectOrGuildItem({ data, onClickItem }: Iprops) {
-  console.log(data);
+  const { t } = useTranslation();
   return (
     <Col xs={12} sm={6} md={4} lg={3} xl={2}>
       <CardBox>
@@ -88,7 +89,7 @@ export default function ProjectOrGuildItem({ data, onClickItem }: Iprops) {
             <img src={data.logo} alt="" />
           </ImageBox>
           <div className="title">{data.name}</div>
-          <Desc>{data.desc}</Desc>
+          <Desc>{data.desc ? data.desc : t('Project.ProjectOrGuildItem')}</Desc>
           <MemBox>
             <span>{data?.members?.length}</span> members
           </MemBox>

@@ -63,10 +63,10 @@ export default function Index() {
         title: t('Project.AllProjects'),
         key: 0,
       },
-      {
-        title: t('Project.Closed'),
-        key: 1,
-      },
+      // {
+      //   title: t('Project.Closed'),
+      //   key: 1,
+      // },
     ];
     if (isLogin) {
       _list.push({

@@ -90,14 +90,14 @@ export default function InfoPage() {
           <ChevronLeft className="back" onClick={handleBack} />
           <div>
             <span>{detail?.name}</span>
-            {canAuditApplication && !isEdit && <PencilSquare onClick={() => setIsEdit(true)} className="edit" />}
+            {/*{canAuditApplication && !isEdit && <PencilSquare onClick={() => setIsEdit(true)} className="edit" />}*/}
           </div>
         </BackBox>
         <Content>
           {isEdit ? (
             <EditInfo detail={detail} onUpdate={handleUpadte} />
           ) : (
-            <Info detail={detail} onUpdate={handleUpadte} />
+            <Info detail={detail} onUpdate={handleUpadte} handleEdit={() => setIsEdit(true)} />
           )}
         </Content>
       </Box>

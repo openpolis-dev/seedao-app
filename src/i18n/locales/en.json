@@ -56,6 +56,7 @@
     "LookMore": "Look More"
   },
   "Project": {
+    "ProjectOrGuildItem": "ProjectOrGuildItem tips ProjectOrGuildItem tips",
     "create": "Create Project",
     "createSuccess": "Create Successfully",
     "createFailed": "Create Failed",

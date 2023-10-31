@@ -229,9 +229,7 @@ export default function Members(props: Iprops) {
   );
 }
 
-const Box = styled.div`
-  padding: 20px;
-`;
+const Box = styled.div``;
 
 const ItemBox = styled.div`
   display: flex;

@@ -56,6 +56,7 @@
     "LookMore": "查看更多"
   },
   "Project": {
+    "ProjectOrGuildItem": "ProjectOrGuildItem tips ProjectOrGuildItem tips",
     "create": "创建项目",
     "createSuccess": "创建成功",
     "createFailed": "创建失败",
