@@ -221,7 +221,7 @@ export default function Home() {
 
   const events = useMemo(() => {
     // @ts-ignore
-    return Links.apps.map((item) => ({ ...item, name: t(item.name) as string }));
+    return Links.apps.map((item) => ({ ...item, name: t(item.name) as string, desc: t(item.desc) as string }));
   }, [t]);
 
   useEffect(() => {
