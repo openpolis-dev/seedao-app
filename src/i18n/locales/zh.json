@@ -45,7 +45,7 @@
     "GovernNode": "治理节点",
     "Apps": "应用",
     "OnlineEvent": "日历",
-    "pub": "Bounty Pub",
+    "Pub": "酒馆",
     "OfflineEvent": "线下活动"
   },
   "Proposal": {
@@ -204,17 +204,18 @@
     "SendSuccess": "已发放",
     "Push": "全员推送",
     "Governance": "治理",
-    "Band": "品牌",
+    "Brand": "品牌",
     "Tech": "技术",
-    "communityReview": "社区大会分享申请审核",
-    "reviewDesc": "Review the request of sharing in community weekly conf.",
-    "CalendarReview": "活动日历审核",
-    "calendarDesc": "Review the request of adding events in community calendar.",
+    "CommunityReview": "社区大会分享审核",
+    "CommunityReviewDesc": "审核社区大会进行分享的申请",
+    "CalendarReview": "社区日历审核",
+    "CalendarReviewDesc": "审核添加社区日历的申请",
     "AppReview": "城邦应用审核",
-    "appDesc": "Review the request of adding apps in SeeDAO App.",
-    "brandReview": "品牌标识使用申请审核",
-    "pub": "Bounty Pub",
-    "pubDesc": "The events hub for SeeDAO community.",
+    "AppReviewDesc": "审核添加城邦应用的申请",
+    "BrandReview": "品牌标识审核",
+    "BrandReviewDesc": "审核品牌标识使用的申请",
+    "PubReview": "酒馆审核",
+    "PubReviewDesc": "审核添加的酒馆信息的申请",
     "management": "管理",
     "create": "创建",
     "closeProjectReview": "项目关闭审核"
@@ -343,15 +344,16 @@
   "resources": {
     "all": "所有资源",
     "calendar": "申请日历",
-    "calendarDesc": "Add events in community calendar.",
+    "CalendarReviewDesc": "申请向社区日历添加日历信息",
     "wait2add": "待添加",
     "brand": "品牌标识使用申请",
-    "brandDesc": "Use SeeDAO branding resources.",
+    "brandDesc": "申请使用 SeeDAO 品牌标识",
     "community": "社区大会分享申请",
-    "communityDesc": "Share your idea in community weekly conf.",
-    "bounty": "Bounty Pub",
-    "BountyDesc": "The events hub for SeeDAO community.",
-    "seedDesc": "To claim your SeeDAO SEED NFT"
+    "communityDesc": "申请在社区大会分享想法和信息",
+    "Pub": "酒馆",
+    "PubDesc": "申请向酒馆添加需要发布的信息",
+    "Seed": "SEED",
+    "SeedDesc": "申请获取SeeDAO Seed NFT"
   },
   "brand": {
     "brand": "品牌标识使用申请",
@@ -380,7 +382,7 @@
     "DAOLinkDesc": "DAOLink is a web3 cowork platform perfect for DAOs, remote teams, and digital nomads.",
     "Wormhole3Desc": "A Wormhole From Web2 to Web3.",
     "MetaforoDesc": "Decisions get made by members, for members. Metaforo is the only community platform that supports quorum and quadratic token voting.",
-    "bounty": "Bounty Pub",
-    "BountyDesc": "The events hub for SeeDAO community."
+    "Pub": "SeeDAO Pub",
+    "PubDesc": "The events hub for SeeDAO community."
   }
 }
