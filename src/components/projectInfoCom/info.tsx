@@ -5,6 +5,12 @@ import Members from './members';
 import ReactMarkdown from 'react-markdown';
 import { updateMembers } from 'requests/project';
 import { Button } from 'react-bootstrap';
+import React, { useState } from 'react';
+import { AppActionType, useAuthContext } from 'providers/authProvider';
+import requests from 'requests';
+import { useParams } from 'react-router-dom';
+import CloseTips from './closeTips';
+import CloseSuccess from './closeSuccess';
 
 interface Iprops {
   detail: ReTurnProject | undefined;
@@ -13,6 +19,10 @@ interface Iprops {
 }
 export default function Info({ detail, onUpdate, handleEdit }: Iprops) {
   const { t } = useTranslation();
+  const [show, setShow] = useState(false);
+  const { id } = useParams();
+  const { dispatch } = useAuthContext();
+  const [showSuccess, setShowSuccess] = useState(false);
 
   const handleClosePro = async () => {
     setShow(false);
@@ -21,18 +31,30 @@ export default function Info({ detail, onUpdate, handleEdit }: Iprops) {
       await requests.application.createCloseProjectApplication(Number(id as string));
       dispatch({ type: AppActionType.SET_LOADING, payload: null });
       setShowSuccess(true);
+
       // reset project status
-      updateProjectStatus(ProjectStatus.Pending);
+      // updateProjectStatus(ProjectStatus.Pending);
     } catch (e) {
       console.error(e);
-      showToast(JSON.stringify(e), ToastType.Danger);
+      // showToast(JSON.stringify(e), ToastType.Danger);
       dispatch({ type: AppActionType.SET_LOADING, payload: null });
       closeModal();
     }
   };
+  const closeModal = () => {
+    setShow(false);
+  };
+  const handleShow = () => {
+    setShow(true);
+  };
 
+  const closeSuccess = () => {
+    setShowSuccess(false);
+  };
   return (
     <>
+      {show && <CloseTips closeModal={closeModal} handleClosePro={handleClosePro} />}
+      {showSuccess && <CloseSuccess closeModal={closeSuccess} />}
       <TopBox>
         <TopImg>
           <img src={detail?.logo} alt="" />
@@ -52,7 +74,7 @@ export default function Info({ detail, onUpdate, handleEdit }: Iprops) {
         </TopInfo>
         <div>
           <Button onClick={() => handleEdit()}>Edit project</Button>
-          <TextButton>Close project</TextButton>
+          <TextButton onClick={() => handleShow()}>Close project</TextButton>
         </div>
       </TopBox>
       <ContentBox>

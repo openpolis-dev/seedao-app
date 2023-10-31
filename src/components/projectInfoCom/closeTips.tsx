@@ -19,28 +19,30 @@ const Mask = styled.div`
   }
 `;
 const InnerBox = styled.div`
-  width: 400px;
+  width: 450px;
 `;
 
 const CardHeader = styled.div`
-  min-width: 500px;
-  padding: 1rem 1.25rem;
-  border-bottom: 1px solid rgb(237, 241, 247);
-  border-top-left-radius: 0.25rem;
-  border-top-right-radius: 0.25rem;
-  color: rgb(34, 43, 69);
-  font-family: Inter-Regular, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif,
-    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
-  font-size: 0.9375rem;
+  font-size: 16px;
+  font-family: Poppins-SemiBold;
   font-weight: 600;
-  line-height: 1.5rem;
+  color: var(--bs-body-color_active);
+  line-height: 22px;
+  padding: 20px 0 24px;
+  text-align: center;
 `;
 
 const CardBody = styled.div`
-  padding: 20px;
+  padding: 0 20px 25px;
 `;
 const CardFooter = styled.div`
-  padding: 0 20px 20px;
+  padding: 0 20px 43px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  .btn {
+    width: 110px;
+  }
 `;
 interface Iprops {
   closeModal: () => void;
