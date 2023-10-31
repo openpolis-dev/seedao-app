@@ -212,10 +212,12 @@
     "CalendarReviewDesc": "Review the request of adding events in community calendar.",
     "AppReview": "App Review",
     "AppReviewDesc": "Review the request of adding apps in SeeDAO App.",
-    "BrandReview": "Branding Review",
-    "BrandReviewDesc": "Review the request of using SeeDAO branding resources.",
     "PubReview": "Pub",
     "PubReviewDesc": "Review the request of adding info in Pub.",
+    "BrandReview": "Branding Review",
+    "BrandReviewDesc": "Review the request of using SeeDAO branding resources.",
+    "MediaReview": "Media Resources",
+    "MediaReviewDesc": "Request to use SeeDAO media resources.",
     "management": "Management",
     "create": "Create",
     "closeProjectReview": "Close project review"
@@ -358,10 +360,6 @@
     "MediaDesc": "Request to use SeeDAO media resources.",
     "App": "Polis Apps",
     "AppDesc": "Request to add your app in SeeDAO Polis App."
-  },
-  "brand": {
-    "brand": "Branding",
-    "brandDesc": "Use SeeDAO branding resources."
   },
   "application": {
     "Register": "Register",
