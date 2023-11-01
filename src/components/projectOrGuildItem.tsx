@@ -2,6 +2,14 @@ import React from 'react';
 import styled from 'styled-components';
 import { Col } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
+const Box = styled.div`
+  width: 19.2%;
+  margin-right: 1%;
+  float: left;
+  &:nth-child(5n) {
+    margin-right: 0;
+  }
+`;
 
 const Item = styled.div`
   display: flex;
@@ -9,6 +17,7 @@ const Item = styled.div`
   justify-content: center;
   cursor: pointer;
   .title {
+    padding-top: 9px;
     font-size: 16px;
     font-family: Poppins-SemiBold;
     font-weight: 600;
@@ -30,7 +39,6 @@ const CardBox = styled.div`
 `;
 const ImageBox = styled.div`
   width: 100%;
-  margin-bottom: 8px;
   img {
     width: 68px;
     height: 68px;
@@ -82,7 +90,7 @@ interface Iprops {
 export default function ProjectOrGuildItem({ data, onClickItem }: Iprops) {
   const { t } = useTranslation();
   return (
-    <Col xs={12} sm={6} md={4} lg={3} xl={2}>
+    <Box>
       <CardBox>
         <Item onClick={() => onClickItem(data.id)}>
           <ImageBox>
@@ -91,10 +99,10 @@ export default function ProjectOrGuildItem({ data, onClickItem }: Iprops) {
           <div className="title">{data.name}</div>
           <Desc>{data.desc ? data.desc : t('Project.ProjectOrGuildItem')}</Desc>
           <MemBox>
-            <span>{data?.members?.length}</span> members
+            <span>{data?.members?.length}</span> {t('Project.Members')}
           </MemBox>
         </Item>
       </CardBox>
-    </Col>
+    </Box>
   );
 }

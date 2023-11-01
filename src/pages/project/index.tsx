@@ -27,6 +27,14 @@ const ItemBox = styled.div`
   overflow-x: hidden;
 `;
 
+const ListBox = styled.div`
+  &:after {
+    content: '';
+    display: block;
+    clear: both;
+  }
+`;
+
 export interface listObj {
   title: string;
   key: number;
@@ -127,11 +135,11 @@ export default function Index() {
       <SubTabbarStyle defaultActiveKey={0} tabs={list} onSelect={(v: string | number) => setCurrent(v as number)} />
       <div>
         <ItemBox>
-          <Row>
+          <ListBox>
             {proList.map((item) => (
               <ProjectOrGuildItem key={item.id} data={item} onClickItem={openDetail} />
             ))}
-          </Row>
+          </ListBox>
         </ItemBox>
         {!proList.length && <NoItem />}
         {total > pageSize && (
