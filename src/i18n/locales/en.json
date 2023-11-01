@@ -381,7 +381,8 @@
     "TransactionID": "Transaction ID",
     "AddressName": "SNS/Address",
     "AssetAmount": "Asset Amount",
-    "AssetType": "Asset Type"
+    "AssetType": "Asset Type",
+    "ExportAll": "Export All"
   },
   "members": {
     "RemoveTitle": "Remove Member",

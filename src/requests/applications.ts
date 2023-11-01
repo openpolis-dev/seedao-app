@@ -205,3 +205,12 @@ export const createApplicationBundles = (data: ICreateApplicantBundle) => {
 export const getSeasons = (): Promise<ResponseData<ISeason[]>> => {
   return request.get(`/seasons/`);
 };
+
+// approve
+export const approveBundleByID = (bundle_id: number) => {
+  return request.post(`${BUNDLE_PATH_PREFIX}${bundle_id}/approve`);
+};
+// reject
+export const rejectBundleByID = (bundle_id: number) => {
+  return request.post(`${BUNDLE_PATH_PREFIX}${bundle_id}/reject`);
+};

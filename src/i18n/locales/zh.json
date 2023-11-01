@@ -381,7 +381,8 @@
     "TransactionID": "交易ID",
     "AddressName": "SNS/地址",
     "AssetAmount": "资产数量",
-    "AssetType": "资产类型"
+    "AssetType": "资产类型",
+    "ExportAll": "导出全部"
   },
   "members": {
     "RemoveTitle": "移除成员",

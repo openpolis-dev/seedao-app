@@ -20,6 +20,7 @@ import { formatNumber } from 'utils/number';
 import ExpandTable from './expandTable';
 import ArrowIconSVG from 'components/svgs/back';
 import useQuerySNS from 'hooks/useQuerySNS';
+import useSeasons from 'hooks/useSeasons';
 
 const Box = styled.div`
   position: relative;
@@ -36,24 +37,17 @@ const TopLine = styled.ul`
   }
 `;
 
-const BorderBox = styled.div`
-  border: 1px solid var(--bs-border-color);
-  padding-inline: 16px;
-  border-radius: 5px;
-  width: 280px;
-  box-sizing: border-box;
-  height: 40px;
-  &:hover {
-    border-color: var(--bs-border-color-focus);
-  }
-  @media (max-width: 1240px) {
-    width: unset;
-  } ;
-`;
+const BorderBox = styled.div``;
 
 const TimeBox = styled.div`
   display: flex;
   gap: 18px;
+  button.btn {
+    border-color: var(--bs-primary);
+    color: var(--bs-primary);
+    &:disabled {
+    }
+  }
 `;
 
 const TopBox = styled.div`
@@ -102,18 +96,19 @@ export default function Register() {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [total, setTotal] = useState(100);
-  const [startDate, setStartDate] = useState<Date>();
-  const [endDate, setEndData] = useState<Date>();
   const [list, setList] = useState<IApplicantBundleDisplay[]>([]);
   const [selectMap, setSelectMap] = useState<{ [id: number]: ApplicationStatus | boolean }>({});
   const [loading, setLoading] = useState(false);
 
   const [allSource, setAllSource] = useState<ISelectItem[]>([]);
   const [selectSource, setSelectSource] = useState<{ id: number; type: 'project' | 'guild' }>();
-  const [selectStatus, setSelectStatus] = useState<ApplicationStatus>();
   const [applicants, setApplicants] = useState<ISelectItem[]>([]);
   const [selectApplicant, setSelectApplicant] = useState<string>();
   const [showMore, setShowMore] = useState<IApplicationDisplay[]>();
+
+  // season
+  const seasons = useSeasons();
+  const [selectSeason, setSelectSeason] = useState<number>();
 
   const { getMultiSNS } = useQuerySNS();
 
@@ -124,16 +119,8 @@ export default function Register() {
     setPageSize(num);
   };
 
-  const changeDate = (rg: Date[]) => {
-    setStartDate(rg[0]);
-    setEndData(rg[1]);
-    if ((rg[0] && rg[1]) || (!rg[0] && !rg[1])) {
-      setSelectMap({});
-      setPage(1);
-    }
-  };
-  const onChangeCheckbox = (value: boolean, id: number, status: ApplicationStatus) => {
-    setSelectMap({ ...selectMap, [id]: value && status });
+  const onChangeCheckbox = (value: boolean, id: number) => {
+    setSelectMap({ ...selectMap, [id]: value });
   };
 
   const getProjects = async () => {
@@ -206,10 +193,6 @@ export default function Register() {
       //   state: ApplicationStatus.Open,
     };
     if (selectApplicant) queryData.applicant = selectApplicant;
-    if (startDate && endDate) {
-      queryData.start_date = formatDate(startDate);
-      queryData.end_date = formatDate(endDate);
-    }
     if (selectSource && selectSource.type) {
       queryData.entity_id = selectSource.id;
       queryData.entity = selectSource.type;
@@ -259,12 +242,10 @@ export default function Register() {
       setLoading(false);
     }
   };
-  console.log('list:', list);
 
   useEffect(() => {
-    const selectOrClearDate = (startDate && endDate) || (!startDate && !endDate);
-    selectOrClearDate && getRecords();
-  }, [selectStatus, selectApplicant, selectSource, page, pageSize, startDate, endDate]);
+    getRecords();
+  }, [selectApplicant, selectSource, page, pageSize]);
 
   const getSelectIds = (): number[] => {
     const ids = Object.keys(selectMap);
@@ -282,7 +263,8 @@ export default function Register() {
     setLoading(true);
     try {
       const select_ids = getSelectIds();
-      await requests.application.approveApplications(select_ids);
+      // await requests.application.approveApplications(select_ids);
+      await requests.application.approveBundleByID(select_ids[0]);
       getRecords();
       showToast(t('Msg.ApproveSuccess'), ToastType.Success);
       setSelectMap({});
@@ -298,7 +280,7 @@ export default function Register() {
     setLoading(true);
     try {
       const select_ids = getSelectIds();
-      await requests.application.rejectApplications(select_ids);
+      await requests.application.rejectBundleByID(select_ids[0]);
       getRecords();
       setSelectMap({});
       showToast(t('Msg.ApproveSuccess'), ToastType.Success);
@@ -325,7 +307,7 @@ export default function Register() {
   const onSelectAll = (v: boolean) => {
     const newMap = { ...selectMap };
     list.forEach((item) => {
-      newMap[item.id] = v && item.status;
+      newMap[item.id] = v;
     });
     setSelectMap(newMap);
   };
@@ -361,7 +343,7 @@ export default function Register() {
           <div>
             <TopLine>
               <li>
-                <div className="tit">{t('Project.BudgetSource')}</div>
+                <div className="tit">{t('application.BudgetSource')}</div>
                 <FilterSelect
                   options={allSource}
                   placeholder=""
@@ -373,7 +355,7 @@ export default function Register() {
                 />
               </li>
               <li>
-                <div className="tit">{t('Project.Operator')}</div>
+                <div className="tit">{t('application.Operator')}</div>
                 <FilterSelect
                   options={applicants}
                   placeholder=""
@@ -385,18 +367,24 @@ export default function Register() {
                 />
               </li>
               <li>
-                <div className="tit">{t('Project.RangeTimeTitle')}</div>
+                <div className="tit">{t('application.Season')}</div>
                 <TimeBox>
                   <BorderBox>
-                    <RangeDatePickerStyle
-                      placeholder={t('Project.RangeTime')}
-                      onChange={changeDate}
-                      startDate={startDate}
-                      endDate={endDate}
+                    <Select
+                      width="90px"
+                      options={seasons}
+                      placeholder=""
+                      NotClear={true}
+                      onChange={(value: any) => {
+                        setSelectSeason(value?.value);
+                        setSelectMap({});
+                        setPage(1);
+                      }}
                     />
                   </BorderBox>
-                  <Button onClick={handleExport} disabled={!selectOne}>
-                    {t('Project.Export')}
+
+                  <Button onClick={handleExport} disabled={!selectOne} variant="outlined">
+                    {t('application.ExportAll')}
                   </Button>
                 </TimeBox>
               </li>
@@ -435,7 +423,7 @@ export default function Register() {
                         <td>
                           <Form.Check
                             checked={!!selectMap[item.id]}
-                            onChange={(e: any) => onChangeCheckbox(e.target.checked, item.id, item.status)}
+                            onChange={(e: any) => onChangeCheckbox(e.target.checked, item.id)}
                           />
                         </td>
                         <td>{item.created_date}</td>
