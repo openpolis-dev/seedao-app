@@ -6,7 +6,7 @@ import Page from 'components/pagination';
 import RangeDatePickerStyle from 'components/rangeDatePicker';
 // import { Checkbox } from '@paljs/ui/Checkbox';
 import requests from 'requests';
-import { IApplicationDisplay, ApplicationStatus } from 'type/application.type';
+import { IApplicantBundleDisplay, ApplicationStatus, IApplicationDisplay } from 'type/application.type';
 import Loading from 'components/loading';
 import { formatDate, formatTime } from 'utils/time';
 import utils from 'utils/publicJs';
@@ -104,7 +104,7 @@ export default function Register() {
   const [total, setTotal] = useState(100);
   const [startDate, setStartDate] = useState<Date>();
   const [endDate, setEndData] = useState<Date>();
-  const [list, setList] = useState<IApplicationDisplay[]>([]);
+  const [list, setList] = useState<IApplicantBundleDisplay[]>([]);
   const [selectMap, setSelectMap] = useState<{ [id: number]: ApplicationStatus | boolean }>({});
   const [loading, setLoading] = useState(false);
 
@@ -113,7 +113,7 @@ export default function Register() {
   const [selectStatus, setSelectStatus] = useState<ApplicationStatus>();
   const [applicants, setApplicants] = useState<ISelectItem[]>([]);
   const [selectApplicant, setSelectApplicant] = useState<string>();
-  const [showMore, setShowMore] = useState<number>();
+  const [showMore, setShowMore] = useState<IApplicationDisplay[]>();
 
   const handlePage = (num: number) => {
     setPage(num + 1);
@@ -213,7 +213,7 @@ export default function Register() {
       queryData.entity = selectSource.type;
     }
     try {
-      const res = await requests.application.getApplications(
+      const res = await requests.application.getApplicationBundle(
         {
           page,
           size: pageSize,
@@ -226,7 +226,12 @@ export default function Register() {
       setList(
         res.data.rows.map((item) => ({
           ...item,
-          created_date: formatTime(item.created_at),
+          created_date: formatTime(item.submit_date),
+          records: item.records.map((record) => ({
+            ...record,
+            created_date: formatTime(record.created_at),
+            transactions: record.transaction_ids.split(','),
+          })),
         })),
       );
     } catch (error) {
@@ -300,7 +305,7 @@ export default function Register() {
   const onSelectAll = (v: boolean) => {
     const newMap = { ...selectMap };
     list.forEach((item) => {
-      newMap[item.application_id] = v && item.status;
+      newMap[item.bundle_id] = v && item.status;
     });
     setSelectMap(newMap);
   };
@@ -313,7 +318,7 @@ export default function Register() {
   const ifSelectAll = useMemo(() => {
     let _is_select_all = true;
     for (const item of list) {
-      if (!selectMap[item.application_id]) {
+      if (!selectMap[item.bundle_id]) {
         _is_select_all = false;
         break;
       }
@@ -326,7 +331,7 @@ export default function Register() {
       {loading && <Loading />}
       {Toast}
       {showMore ? (
-        <ExpandTable handleClose={() => setShowMore(undefined)} />
+        <ExpandTable handleClose={() => setShowMore(undefined)} list={showMore} />
       ) : (
         <>
           <div>
@@ -401,21 +406,21 @@ export default function Register() {
                   </thead>
                   <tbody>
                     {list.map((item) => (
-                      <tr key={item.application_id}>
+                      <tr key={item.bundle_id}>
                         <td>
                           <Form.Check
-                            checked={!!selectMap[item.application_id]}
-                            onChange={(e: any) => onChangeCheckbox(e.target.checked, item.application_id, item.status)}
+                            checked={!!selectMap[item.bundle_id]}
+                            onChange={(e: any) => onChangeCheckbox(e.target.checked, item.bundle_id, item.status)}
                           />
                         </td>
                         <td>{item.created_date}</td>
                         <td>100ETH、1USD</td>
                         <td>{item.comment}</td>
                         <td>{item.budget_source}</td>
-                        <td>{item.submitter_name || publicJs.AddressToShow(item.submitter_wallet)}</td>
+                        <td>{publicJs.AddressToShow(item.submitter_wallet)}</td>
                         <td>
-                          <TotalCountButton onClick={() => setShowMore(1)}>
-                            {t('application.TotalCount', { count: 30 })}
+                          <TotalCountButton onClick={() => setShowMore(item.records)}>
+                            {t('application.TotalCount', { count: item.records.length })}
                             <ArrowIconSVG className="arrow" />
                           </TotalCountButton>
                         </td>

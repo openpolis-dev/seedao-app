@@ -5,8 +5,7 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { IExcelObj } from 'type/project.type';
 import requests from 'requests';
-import { ApplicationType } from 'type/application.type';
-import { ICreateBudgeApplicationRequest } from 'requests/applications';
+import { ApplicationType, ApplicationEntity } from 'type/application.type';
 import { AssetName } from 'utils/constant';
 import useToast, { ToastType } from 'hooks/useToast';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
@@ -41,30 +40,25 @@ export default function Register() {
   };
 
   const handleCreate = async () => {
+    // check and convert sns
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
 
     try {
-      const data: ICreateBudgeApplicationRequest[] = list.map((item) => {
-        const d: ICreateBudgeApplicationRequest = {
-          type: ApplicationType.NewReward,
-          entity: 'guild',
-          entity_id: id,
-          detailed_type: item.content || '',
-          comment: item.note || '',
-          target_user_wallet: item.address,
-        };
-        // if (Number(item.points)) {
-        //   d.credit_amount = Number(item.points);
-        //   d.credit_asset_name = AssetName.Credit;
-        // }
-        // if (Number(item.token)) {
-        //   d.token_amount = Number(item.token);
-        //   d.token_asset_name = AssetName.Token;
-        // }
-        return d;
-      });
-
-      await requests.application.createBudgetApplications(data);
+      const data = {
+        entity_type: ApplicationEntity.Guild,
+        entity_id: id,
+        comment: '',
+        records: list.map((item) => ({ wallet: '', asset_name: '', asset_amount: 0 })),
+      };
+      // if (Number(item.points)) {
+      //   d.credit_amount = Number(item.points);
+      //   d.credit_asset_name = AssetName.Credit;
+      // }
+      // if (Number(item.token)) {
+      //   d.token_amount = Number(item.token);
+      //   d.token_asset_name = AssetName.Token;
+      // }
+      await requests.application.createApplicationBundles(data);
       Clear();
       showToast(t('Guild.SubmitSuccess'), ToastType.Success);
     } catch (error) {
@@ -153,7 +147,9 @@ export default function Register() {
         />
       </SectionBlock>
       <ButtonSection>
-        <Button variant="primary">{t('Assets.RegisterSubmit')}</Button>
+        <Button variant="primary" onClick={handleCreate}>
+          {t('Assets.RegisterSubmit')}
+        </Button>
       </ButtonSection>
     </OuterBox>
   );

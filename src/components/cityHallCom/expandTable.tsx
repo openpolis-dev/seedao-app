@@ -1,39 +1,20 @@
 import styled from 'styled-components';
 import React, { useEffect, useState } from 'react';
-import Page from 'components/pagination';
 import { IApplicationDisplay } from 'type/application.type';
 import NoItem from 'components/noItem';
 import publicJs from 'utils/publicJs';
 import { useTranslation } from 'react-i18next';
 import { formatApplicationStatus } from 'utils/index';
 import { formatNumber } from 'utils/number';
-import { ChevronLeft } from 'react-bootstrap-icons';
-import { useNavigate } from 'react-router-dom';
 import BackIconSVG from 'components/svgs/back';
 
-export default function ExpandTable({ handleClose }: { handleClose: () => void }) {
+interface IProps {
+  list: IApplicationDisplay[];
+  handleClose: () => void;
+}
+
+export default function ExpandTable({ list, handleClose }: IProps) {
   const { t } = useTranslation();
-  const navigate = useNavigate();
-
-  const [list, setList] = useState<IApplicationDisplay[]>([]);
-  const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
-  const [total, setTotal] = useState(100);
-
-  const getRecords = () => {
-    // TODO get records
-  };
-
-  useEffect(() => {
-    getRecords();
-  }, [page, pageSize]);
-
-  const handlePage = (num: number) => {
-    setPage(num + 1);
-  };
-  const handlePageSize = (num: number) => {
-    setPageSize(num);
-  };
 
   return (
     <TableBox>
@@ -84,13 +65,6 @@ export default function ExpandTable({ handleClose }: { handleClose: () => void }
               ))}
             </tbody>
           </table>
-          <Page
-            itemsPerPage={pageSize}
-            total={total}
-            current={page - 1}
-            handleToPage={handlePage}
-            handlePageSize={handlePageSize}
-          />
         </>
       ) : (
         <NoItem />
