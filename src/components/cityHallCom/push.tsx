@@ -122,7 +122,7 @@ const PushHistoryContent = () => {
   useEffect(() => {
     const getList = async () => {
       try {
-        const { data } = await getPushList({ page, size: pageSize, sort_field: '', sort_order: 'desc' });
+        const { data } = await getPushList({ page, size: pageSize, sort_field: 'created_at', sort_order: 'desc' });
         setTotal(data.total);
         setList(
           data.rows.map((item) => ({
