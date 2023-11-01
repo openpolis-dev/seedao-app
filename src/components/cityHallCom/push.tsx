@@ -62,7 +62,7 @@ const CreatePushContent = () => {
   }, [title, href]);
   return (
     <div style={{ flex: 1 }}>
-      <BlockTitle>创建推送</BlockTitle>
+      <BlockTitle>{t('Push.CreatePush')}</BlockTitle>
       <Form>
         <FormGroup>
           <FormLabel>
@@ -139,7 +139,7 @@ const PushHistoryContent = () => {
 
   return (
     <div>
-      <BlockTitle>推送记录</BlockTitle>
+      <BlockTitle>{t('Push.History')}</BlockTitle>
       <TableBox>
         {list.length ? (
           <>
