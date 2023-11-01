@@ -39,13 +39,23 @@ const FirstLine = styled.div`
   .btn-export {
     min-width: 111px;
   }
+  @media (max-width: 1100px) {
+    justify-content: flex-start;
+    flex-direction: column;
+    gap: 20px;
+    align-items: start;
+  }
+  @media (max-width: 1000px) {
+    justify-content: space-between;
+    flex-direction: row;
+    align-items: end;
+  }
 `;
 
 const TopLine = styled.ul`
   display: flex;
   align-items: end;
   flex-wrap: wrap;
-  justify-content: space-between;
   gap: 24px;
   li {
     display: flex;
@@ -57,6 +67,9 @@ const TopLine = styled.ul`
       padding-right: 20px;
       white-space: nowrap;
     }
+  }
+  @media (max-width: 1100px) {
+    width: 100%;
   }
 `;
 
@@ -269,6 +282,10 @@ export default function AssetList() {
     return _is_select_all;
   }, [list, selectMap]);
 
+  const formatSNS = (name: string) => {
+    return name?.startsWith('0x') ? publicJs.AddressToShow(name) : name;
+  };
+
   return (
     <Box>
       {detailDisplay && (
@@ -362,16 +379,12 @@ export default function AssetList() {
                         onChange={(e) => onChangeCheckbox(e.target.checked, item.application_id, item.status)}
                       />
                     </td>
-                    <td>
-                      <div>
-                        <span>{publicJs.AddressToShow(item.target_user_wallet)}</span>
-                      </div>
-                    </td>
+                    <td>{formatSNS(item.receiver_name || '')}</td>
                     <td className="center">{item.asset_display}</td>
                     <td className="center">{item.season_name}</td>
                     <td>{item.detailed_type}</td>
                     <td className="center">{item.budget_source}</td>
-                    <td className="center">{publicJs.AddressToShow(item.submitter_wallet)}</td>
+                    <td className="center">{formatSNS(item.submitter_name)}</td>
                     <td>
                       <ApplicationStatusTag status={item.status} />
                     </td>
