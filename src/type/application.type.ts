@@ -67,19 +67,21 @@ export interface IApplicationBundleRecord {
 }
 
 export interface IApplicantBundle {
-  bundle_id: number;
-  entity_id: number;
-  budget_source: string;
+  id: number;
   comment: string;
   records: IApplicationDisplay[];
   submit_date: number;
-  season: string;
+  season_name: string;
   status: ApplicationStatus;
-  submitter_wallet: string;
+  submitter: string;
+  entity: { id: number; name: string; type: string };
+  assets: { name: string; amount: string }[];
 }
 
 export interface IApplicantBundleDisplay extends IApplicantBundle {
   created_date: string;
+  submitter_name: string;
+  assets_display: string[];
 }
 
 export interface ISeason {

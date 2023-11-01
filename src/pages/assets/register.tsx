@@ -27,10 +27,9 @@ export default function Register() {
 
   const [list, setList] = useState<IExcelObj[]>([]);
   const [errList, setErrList] = useState<ErrorDataType[]>([]);
-  const [id, setId] = useState(1);
 
   const [allSource, setAllSource] = useState<ISelectItem[]>([]);
-  const [selectSource, setSelectSource] = useState<{ id: number; type: 'project' | 'guild' }>();
+  const [selectSource, setSelectSource] = useState<{ id: number; type: ApplicationEntity }>();
 
   const [content, setContent] = useState('');
 
@@ -40,24 +39,27 @@ export default function Register() {
   };
 
   const handleCreate = async () => {
+    if (!selectSource) {
+      return;
+    }
     // check and convert sns
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
 
     try {
       const data = {
-        entity_type: ApplicationEntity.Guild,
-        entity_id: id,
-        comment: '',
-        records: list.map((item) => ({ wallet: '', asset_name: '', asset_amount: 0 })),
+        entity: selectSource.type,
+        entity_id: selectSource.id,
+        comment: content,
+        records: list.map((item) => ({
+          amount: Number(item.amount),
+          asset_name: item.assetType,
+          comment: item.content,
+          detailed_type: item.note,
+          entity: selectSource.type,
+          entity_id: selectSource.id,
+          target_user_wallet: item.address,
+        })),
       };
-      // if (Number(item.points)) {
-      //   d.credit_amount = Number(item.points);
-      //   d.credit_asset_name = AssetName.Credit;
-      // }
-      // if (Number(item.token)) {
-      //   d.token_amount = Number(item.token);
-      //   d.token_asset_name = AssetName.Token;
-      // }
       await requests.application.createApplicationBundles(data);
       Clear();
       showToast(t('Guild.SubmitSuccess'), ToastType.Success);
@@ -80,7 +82,7 @@ export default function Register() {
       return res.data.rows.map((item) => ({
         label: item.name,
         value: item.id,
-        data: 'project',
+        data: ApplicationEntity.Project,
       }));
     } catch (error) {
       console.error('getProjects in city-hall failed: ', error);
@@ -98,7 +100,7 @@ export default function Register() {
       return res.data.rows.map((item) => ({
         label: item.name,
         value: item.id,
-        data: 'guild',
+        data: ApplicationEntity.Guild,
       }));
     } catch (error) {
       console.error('getGuilds in city-hall failed: ', error);

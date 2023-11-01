@@ -6,6 +6,7 @@ import { Button, Form } from 'react-bootstrap';
 import { useState, FormEvent, useEffect } from 'react';
 import DeleteIcon from 'assets/Imgs/delete.svg';
 import AddIcon from 'assets/Imgs/add.svg';
+import { AssetName } from 'utils/constant';
 
 interface IProps {
   updateList: (data: IExcelObj[]) => void;
@@ -77,11 +78,11 @@ const CustomTable = ({ updateList }: IProps) => {
       <table className="table" cellPadding="0" cellSpacing="0">
         <thead>
           <tr>
-            <th>SNS/钱包地址</th>
-            <th>资产类型</th>
-            <th>资产数量</th>
-            <th>{t('Project.Content')}</th>
-            <th>{t('Project.Note')}</th>
+            <th>{t('application.AddressName')}</th>
+            <th>{t('application.AssetType')}</th>
+            <th>{t('application.AssetAmount')}</th>
+            <th>{t('application.Content')}</th>
+            <th>{t('application.RegisterNote')}</th>
             <th></th>
           </tr>
         </thead>
@@ -92,17 +93,23 @@ const CustomTable = ({ updateList }: IProps) => {
                 <Form.Control value={item.address} onChange={(e) => handleInput(e, index, 'address')} />
               </td>
               <td>
-                <AssetSelect
+                <Select
+                  width="120px"
                   options={[
-                    { value: 'scr', label: 'SCR' },
-                    { value: 'eth', label: 'ETH' },
+                    { value: AssetName.Credit, label: AssetName.Credit },
+                    { value: AssetName.Token, label: AssetName.Token },
                   ]}
                   placeholder=""
                   onChange={(value: any) => handleSelect(value?.value, index)}
                 />
               </td>
               <td>
-                <Form.Control value={item.amount} onChange={(e) => handleInput(e, index, 'amount')} />
+                <Form.Control
+                  style={{ width: '120px' }}
+                  type="number"
+                  value={item.amount}
+                  onChange={(e) => handleInput(e, index, 'amount')}
+                />
               </td>
               <td>
                 <Form.Control value={item.content} onChange={(e) => handleInput(e, index, 'content')} />
@@ -133,11 +140,6 @@ const DeleteImg = styled.img`
   cursor: pointer;
   position: relative;
   top: 4px;
-`;
-
-const AssetSelect = styled(Select)`
-  width: 94px;
-  min-width: unset;
 `;
 
 export const AddButton = styled.button<{ long?: boolean }>`

@@ -261,7 +261,7 @@
     "RegisterTitle": "注册信息",
     "RegisterSelect": "选择项目/公会",
     "RegisterList": "注册数据",
-    "RegisterIntro": "填写等级说明",
+    "RegisterIntro": "填写登记说明",
     "RegisterAdd": "添加",
     "RegisterSubmit": "提交"
   },
@@ -378,7 +378,10 @@
     "BudgetSource": "预算来源",
     "State": "状态",
     "Content": "事项内容",
-    "TransactionID": "交易ID"
+    "TransactionID": "交易ID",
+    "AddressName": "SNS/地址",
+    "AssetAmount": "资产数量",
+    "AssetType": "资产类型"
   },
   "members": {
     "RemoveTitle": "移除成员",

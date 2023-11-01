@@ -1,12 +1,10 @@
 import styled from 'styled-components';
-import React, { useEffect, useState } from 'react';
 import { IApplicationDisplay } from 'type/application.type';
 import NoItem from 'components/noItem';
 import publicJs from 'utils/publicJs';
 import { useTranslation } from 'react-i18next';
-import { formatApplicationStatus } from 'utils/index';
-import { formatNumber } from 'utils/number';
 import BackIconSVG from 'components/svgs/back';
+import ApplicationStatusTag from 'components/common/applicationStatusTag';
 
 interface IProps {
   list: IApplicationDisplay[];
@@ -15,7 +13,9 @@ interface IProps {
 
 export default function ExpandTable({ list, handleClose }: IProps) {
   const { t } = useTranslation();
-
+  const formatSNS = (name: string) => {
+    return name?.startsWith('0x') ? publicJs.AddressToShow(name) : name;
+  };
   return (
     <TableBox>
       <BackBox onClick={handleClose}>
@@ -29,38 +29,27 @@ export default function ExpandTable({ list, handleClose }: IProps) {
           <table className="table" cellPadding="0" cellSpacing="0">
             <thead>
               <tr>
-                <th>{t('Project.Time')}</th>
-                <th>{t('Project.Address')}</th>
-                <th>{t('Project.AddPoints')}</th>
-                <th>{t('Project.AddToken')}</th>
-                <th>{t('Project.Content')}</th>
-                <th>{t('Project.BudgetSource')}</th>
-                <th>{t('Project.Note')}</th>
-                <th>{t('Project.State')}</th>
-                <th>{t('Project.Operator')}</th>
-                <th>{t('Project.Auditor')}</th>
+                <th>{t('application.Receiver')}</th>
+                <th className="center">{t('application.AddAssets')}</th>
+                <th className="center">{t('application.Season')}</th>
+                <th>{t('application.Content')}</th>
+                <th className="center">{t('application.BudgetSource')}</th>
+                <th className="center">{t('application.Operator')}</th>
+                <th>{t('application.State')}</th>
               </tr>
             </thead>
             <tbody>
               {list.map((item) => (
                 <tr key={item.application_id}>
-                  <td>{item.created_date}</td>
-                  <td>
-                    <div>
-                      <span>{publicJs.AddressToShow(item.target_user_wallet)}</span>
-                      {/* <CopyBox text={item.target_user_wallet}>
-                        <EvaIcon name="clipboard-outline" />
-                      </CopyBox> */}
-                    </div>
-                  </td>
-                  <td>{formatNumber(item.credit_amount)}</td>
-                  <td>{formatNumber(item.token_amount)}</td>
+                  <td>{formatSNS(item.receiver_name || '')}</td>
+                  <td className="center">{item.asset_display}</td>
+                  <td className="center">{item.season_name}</td>
                   <td>{item.detailed_type}</td>
-                  <td>{item.budget_source}</td>
-                  <td>{item.comment}</td>
-                  <td>{t(formatApplicationStatus(item.status))}</td>
-                  <td>{item.submitter_name || publicJs.AddressToShow(item.submitter_wallet)}</td>
-                  <td>{item.reviewer_name || publicJs.AddressToShow(item.reviewer_wallet)}</td>
+                  <td className="center">{item.budget_source}</td>
+                  <td className="center">{formatSNS(item.submitter_name)}</td>
+                  <td>
+                    <ApplicationStatusTag status={item.status} />
+                  </td>
                 </tr>
               ))}
             </tbody>

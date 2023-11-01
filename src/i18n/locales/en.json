@@ -297,12 +297,10 @@
     "NODE_S2": "SeeDAO Node S2",
     "NODE_S3": "SeeDAO Node S3",
     "NODE_S4": "SeeDAO Node S4",
-
     "CITYHALL_S1": "Cityhall S1",
     "CITYHALL_S2": "Cityhall S2",
     "CITYHALL_S3": "Cityhall S3",
     "CITYHALL_S4": "Cityhall S4",
-
     "CONTRIBUTOR_L1": "L1 Contributor",
     "CONTRIBUTOR_L2": "L2 Contributor",
     "CONTRIBUTOR_L3": "L3 Contributor",
@@ -312,7 +310,6 @@
     "CONTRIBUTOR_L7": "L7 Contributor",
     "CONTRIBUTOR_L8": "L8 Contributor",
     "CONTRIBUTOR_L9": "L9 Contributor",
-
     "SEEDAO_MEMBER": "SeeDAO Member",
     "SEEDAO_ONBOARDING": "SeeDAO Onboarding"
   },
@@ -379,9 +376,12 @@
     "AddAssets": "Add Assets",
     "Season": "Season",
     "BudgetSource": "Budget Source",
-    "State":"State",
+    "State": "State",
     "Content": "Content",
-    "TransactionID": "Transaction ID"
+    "TransactionID": "Transaction ID",
+    "AddressName": "SNS/Address",
+    "AssetAmount": "Asset Amount",
+    "AssetType": "Asset Type"
   },
   "members": {
     "RemoveTitle": "Remove Member",

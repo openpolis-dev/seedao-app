@@ -175,15 +175,25 @@ export const getApplicationBundle = (
   });
 };
 
-export type ApplicantBundleRecord = {
-  wallet: string;
+// export type ApplicantBundleRecord = {
+//   wallet: string;
+//   asset_name: string;
+//   asset_amount: number;
+// };
+
+type ApplicantBundleRecord = {
+  amount: number;
   asset_name: string;
-  asset_amount: number;
+  comment: string;
+  detailed_type: string;
+  entity: string;
+  entity_id: number;
+  target_user_wallet: string;
 };
 
 interface ICreateApplicantBundle {
   entity_id: number;
-  entity_type: ApplicationEntity;
+  entity: ApplicationEntity;
   comment: string;
   records: ApplicantBundleRecord[];
 }

@@ -15,11 +15,11 @@ import NoItem from 'components/noItem';
 import publicJs from 'utils/publicJs';
 import { useTranslation } from 'react-i18next';
 import useToast, { ToastType } from 'hooks/useToast';
-import { formatApplicationStatus } from 'utils/index';
 import Select from 'components/common/select';
 import { formatNumber } from 'utils/number';
 import ExpandTable from './expandTable';
 import ArrowIconSVG from 'components/svgs/back';
+import useQuerySNS from 'hooks/useQuerySNS';
 
 const Box = styled.div`
   position: relative;
@@ -114,6 +114,8 @@ export default function Register() {
   const [applicants, setApplicants] = useState<ISelectItem[]>([]);
   const [selectApplicant, setSelectApplicant] = useState<string>();
   const [showMore, setShowMore] = useState<IApplicationDisplay[]>();
+
+  const { getMultiSNS } = useQuerySNS();
 
   const handlePage = (num: number) => {
     setPage(num + 1);
@@ -223,6 +225,17 @@ export default function Register() {
         queryData,
       );
       setTotal(res.data.total);
+
+      const _wallets = new Set<string>();
+      res.data.rows.forEach((item) => {
+        item.records.forEach((r) => {
+          _wallets.add(r.submitter_wallet?.toLocaleLowerCase());
+          _wallets.add(r.reviewer_wallet?.toLocaleLowerCase());
+          _wallets.add(r.target_user_wallet?.toLocaleLowerCase());
+        });
+      });
+      const sns_map = await getMultiSNS(Array.from(_wallets));
+
       setList(
         res.data.rows.map((item) => ({
           ...item,
@@ -231,7 +244,13 @@ export default function Register() {
             ...record,
             created_date: formatTime(record.created_at),
             transactions: record.transaction_ids.split(','),
+            asset_display: formatNumber(Number(record.amount)) + ' ' + record.asset_name,
+            submitter_name: sns_map.get(record.submitter_wallet?.toLocaleLowerCase()) as string,
+            reviewer_name: sns_map.get(record.reviewer_wallet?.toLocaleLowerCase()) as string,
+            receiver_name: sns_map.get(record.target_user_wallet?.toLocaleLowerCase()) as string,
           })),
+          submitter_name: sns_map.get(item.submitter?.toLocaleLowerCase()) as string,
+          assets_display: item.assets.map((a) => `${formatNumber(Number(a.amount))} ${a.name}`),
         })),
       );
     } catch (error) {
@@ -240,6 +259,7 @@ export default function Register() {
       setLoading(false);
     }
   };
+  console.log('list:', list);
 
   useEffect(() => {
     const selectOrClearDate = (startDate && endDate) || (!startDate && !endDate);
@@ -305,7 +325,7 @@ export default function Register() {
   const onSelectAll = (v: boolean) => {
     const newMap = { ...selectMap };
     list.forEach((item) => {
-      newMap[item.bundle_id] = v && item.status;
+      newMap[item.id] = v && item.status;
     });
     setSelectMap(newMap);
   };
@@ -318,13 +338,17 @@ export default function Register() {
   const ifSelectAll = useMemo(() => {
     let _is_select_all = true;
     for (const item of list) {
-      if (!selectMap[item.bundle_id]) {
+      if (!selectMap[item.id]) {
         _is_select_all = false;
         break;
       }
     }
     return _is_select_all;
   }, [list, selectMap]);
+
+  const formatSNS = (name: string) => {
+    return name?.startsWith('0x') ? publicJs.AddressToShow(name) : name;
+  };
 
   return (
     <Box>
@@ -397,6 +421,7 @@ export default function Register() {
                         <Form.Check checked={ifSelectAll} onChange={(e) => onSelectAll(e.target.checked)} />
                       </th>
                       <th>{t('application.Time')}</th>
+                      <th>{t('application.Season')}</th>
                       <th>{t('application.TotalAssets')}</th>
                       <th>{t('application.RegisterNote')}</th>
                       <th>{t('application.RegisterSource')}</th>
@@ -406,18 +431,23 @@ export default function Register() {
                   </thead>
                   <tbody>
                     {list.map((item) => (
-                      <tr key={item.bundle_id}>
+                      <tr key={item.id}>
                         <td>
                           <Form.Check
-                            checked={!!selectMap[item.bundle_id]}
-                            onChange={(e: any) => onChangeCheckbox(e.target.checked, item.bundle_id, item.status)}
+                            checked={!!selectMap[item.id]}
+                            onChange={(e: any) => onChangeCheckbox(e.target.checked, item.id, item.status)}
                           />
                         </td>
                         <td>{item.created_date}</td>
-                        <td>100ETH、1USD</td>
+                        <td>{item.season_name}</td>
+                        <td>
+                          {item.assets_display.map((asset, idx) => (
+                            <div key={idx}>{asset}</div>
+                          ))}
+                        </td>
                         <td>{item.comment}</td>
-                        <td>{item.budget_source}</td>
-                        <td>{publicJs.AddressToShow(item.submitter_wallet)}</td>
+                        <td>{item.entity.name}</td>
+                        <td>{formatSNS(item.submitter_name)}</td>
                         <td>
                           <TotalCountButton onClick={() => setShowMore(item.records)}>
                             {t('application.TotalCount', { count: item.records.length })}
