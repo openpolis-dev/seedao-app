@@ -14,6 +14,7 @@ export default function GovernancePanel() {
   const { t } = useTranslation();
 
   const lst = useMemo(() => {
+    console.log(Links.governance);
     // @ts-ignore
     return Links.governance.map((item) => ({ ...item, name: t(item.name) as string, desc: t(item.desc) as string }));
   }, [t]);

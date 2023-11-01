@@ -76,6 +76,20 @@ export default {
       desc: 'city-hall.CommunityReviewDesc',
     },
     {
+      name: 'city-hall.BrandReview',
+      link: 'https://tally.so/forms/3XozzP/submissions',
+      id: 'community',
+      icon: '',
+      desc: 'city-hall.BrandReviewDesc',
+    },
+    {
+      name: 'city-hall.MediaReview',
+      link: 'https://tally.so/forms/wzMRBE/submissions',
+      id: 'community',
+      icon: '',
+      desc: 'city-hall.MediaReviewDesc',
+    },
+    {
       name: 'city-hall.CalendarReview',
       link: 'https://tally.so/r/mKxkWD/submissions',
       id: 'calendar',
@@ -92,7 +106,7 @@ export default {
     {
       name: 'city-hall.PubReview',
       link: 'https://www.notion.so/ab122e6e19f14ff5a212fb6e77d5b366?v=34760c2c81e648549f5a40a79dc3b198&pvs=4',
-      id: 'pub',
+      id: 'community',
       icon: '',
       desc: 'city-hall.PubReviewDesc',
     },
