@@ -57,6 +57,7 @@ export interface IApplicationDisplay extends IApplication {
   asset_display?: string;
   submitter_name: string;
   reviewer_name: string;
+  receiver_name?: string;
 }
 
 export interface IApplicationBundleRecord {

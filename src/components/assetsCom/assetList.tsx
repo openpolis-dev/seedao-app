@@ -19,6 +19,7 @@ import { formatNumber } from 'utils/number';
 import ApplicationModal from 'components/modals/applicationModal';
 import ApplicationStatusTag from 'components/common/applicationStatusTag';
 import useSeasons from 'hooks/useSeasons';
+import useQuerySNS from 'hooks/useQuerySNS';
 
 const Box = styled.div``;
 const TitBox = styled.div`
@@ -96,6 +97,8 @@ export default function AssetList() {
       { label: t(formatApplicationStatus(ApplicationStatus.Completed)), value: ApplicationStatus.Completed },
     ];
   }, [t]);
+
+  const { getMultiSNS } = useQuerySNS();
 
   const handlePage = (num: number) => {
     setPage(num + 1);
@@ -196,11 +199,22 @@ export default function AssetList() {
         queryData,
       );
       setTotal(res.data.total);
-      const _list = res.data.rows.map((item) => ({
+      const _wallets = new Set<string>();
+      res.data.rows.forEach((item) => {
+        _wallets.add(item.target_user_wallet);
+        _wallets.add(item.submitter_wallet);
+        _wallets.add(item.reviewer_wallet);
+      });
+      const sns_map = await getMultiSNS(Array.from(_wallets));
+
+      const _list = res.data.rows.map((item, idx) => ({
         ...item,
         created_date: formatTime(item.created_at),
         transactions: item.transaction_ids.split(','),
         asset_display: formatNumber(Number(item.amount)) + ' ' + item.asset_name,
+        submitter_name: sns_map.get(item.submitter_wallet?.toLocaleLowerCase()) as string,
+        reviewer_name: sns_map.get(item.reviewer_wallet?.toLocaleLowerCase()) as string,
+        receiver_name: sns_map.get(item.target_user_wallet?.toLocaleLowerCase()) as string,
       }));
       setList(_list);
     } catch (error) {

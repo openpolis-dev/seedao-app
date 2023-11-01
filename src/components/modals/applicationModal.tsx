@@ -19,7 +19,7 @@ export default function ApplicationModal({ application, handleClose }: Iprops) {
         <Block underline>
           <li>
             <BlockLeft>{t('application.Receiver')}</BlockLeft>
-            <BlockRight>{application.target_user_wallet}</BlockRight>
+            <BlockRight>{application.receiver_name}</BlockRight>
           </li>
           <li>
             <BlockLeft>{t('application.AddAssets')}</BlockLeft>
@@ -45,11 +45,11 @@ export default function ApplicationModal({ application, handleClose }: Iprops) {
           </li>
           <li>
             <BlockLeft>{t('Project.Operator')}</BlockLeft>
-            <BlockRight>{application.submitter_name || application.submitter_wallet}</BlockRight>
+            <BlockRight>{application.submitter_name}</BlockRight>
           </li>
           <li>
             <BlockLeft>{t('application.Auditor')}</BlockLeft>
-            <BlockRight>{application.reviewer_name || application.reviewer_wallet}</BlockRight>
+            <BlockRight>{application.reviewer_name}</BlockRight>
           </li>
         </Block>
         <Block>

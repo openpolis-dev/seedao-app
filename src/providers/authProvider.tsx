@@ -18,6 +18,7 @@ interface IState {
   expandMenu: boolean;
   provider?: any;
   theme: boolean;
+  snsMap: Map<string, string>;
 }
 
 export enum AppActionType {
@@ -34,6 +35,7 @@ export enum AppActionType {
   SET_EXPAND_MENU = 'set_expand_menu',
   SET_PROVIDER = 'set_provider',
   SET_THEME = 'set_theme',
+  SET_SNS_MAP = 'set_sns_map',
 }
 
 interface IAction {
@@ -63,6 +65,7 @@ const INIT_STATE: IState = {
   ],
   language: '',
   loading: null,
+  snsMap: new Map(),
 };
 
 const AuthContext = createContext<{
@@ -114,6 +117,8 @@ const reducer = (state: IState, action: IAction): IState => {
       return { ...state, language: action.payload };
     case AppActionType.SET_WALLET_TYPE:
       return { ...state, wallet_type: action.payload };
+    case AppActionType.SET_SNS_MAP:
+      return { ...state, snsMap: action.payload };
     default:
       throw new Error(`Unknown type: ${action.type}`);
   }
