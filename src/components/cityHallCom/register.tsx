@@ -409,11 +409,11 @@ export default function Register() {
                         <Form.Check checked={ifSelectAll} onChange={(e) => onSelectAll(e.target.checked)} />
                       </th>
                       <th>{t('application.Time')}</th>
-                      <th>{t('application.Season')}</th>
-                      <th>{t('application.TotalAssets')}</th>
+                      <th className="center">{t('application.Season')}</th>
+                      <th className="center">{t('application.TotalAssets')}</th>
                       <th>{t('application.RegisterNote')}</th>
-                      <th>{t('application.RegisterSource')}</th>
-                      <th>{t('application.Operator')}</th>
+                      <th className="center">{t('application.RegisterSource')}</th>
+                      <th className="center">{t('application.Operator')}</th>
                       <th>&nbsp;</th>
                     </tr>
                   </thead>
@@ -427,15 +427,15 @@ export default function Register() {
                           />
                         </td>
                         <td>{item.created_date}</td>
-                        <td>{item.season_name}</td>
-                        <td>
+                        <td className="center">{item.season_name}</td>
+                        <td className="center">
                           {item.assets_display.map((asset, idx) => (
                             <div key={idx}>{asset}</div>
                           ))}
                         </td>
                         <td>{item.comment}</td>
-                        <td>{item.entity.name}</td>
-                        <td>{formatSNS(item.submitter_name)}</td>
+                        <td className="center">{item.entity.name}</td>
+                        <td className="center">{formatSNS(item.submitter_name)}</td>
                         <td>
                           <TotalCountButton onClick={() => setShowMore(item.records)}>
                             {t('application.TotalCount', { count: item.records.length })}
