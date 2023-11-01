@@ -440,6 +440,7 @@ const BackBox = styled.div`
   display: inline-flex;
   align-items: center;
   margin-bottom: 48px;
+  cursor: pointer;
 
   svg {
     margin-right: 10px;

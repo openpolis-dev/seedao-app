@@ -43,6 +43,7 @@ const PlusButtonStyle = styled.span`
   display: inline-block;
   width: 40px;
   height: 40px;
+  cursor: pointer;
 
   background: var(--bs-box-background);
   border-radius: 8px;
