@@ -195,7 +195,7 @@ export default function Profile() {
 
       let mapArr = new Map();
 
-      userData.social_accounts.map((item: any) => {
+      userData.social_accounts?.map((item: any) => {
         mapArr.set(item.network, item.identity);
       });
       setTwitter(mapArr.get('twitter') ?? '');

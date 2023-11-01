@@ -69,7 +69,7 @@ export default function Profile() {
 
       let sbtArr = userData.sbt;
 
-      const sbtFor = sbtArr.filter((item: any) => item.name && item.image_uri);
+      const sbtFor = sbtArr?.filter((item: any) => item.name && item.image_uri);
       setSbt(sbtFor);
       setSeed(userData.seed);
     }
@@ -243,9 +243,11 @@ export default function Profile() {
               <></>
             ),
           )}
-          <li>
-            <span className="iconLft">{returnSocial('email', userData?.email)}</span>
-          </li>
+          {userData?.email && (
+            <li>
+              <span className="iconLft">{returnSocial('email', userData?.email)}</span>
+            </li>
+          )}
         </LinkBox>
         <>
           <ProgressOuter>
@@ -254,7 +256,7 @@ export default function Profile() {
                 <div>{t('My.current')}</div>
                 <div className="num">{userData?.level?.upgrade_percent}%</div>
               </Crt>
-              <ProgressBox width={userData?.level?.upgrade_percent}>
+              <ProgressBox width={userData?.level?.upgrade_percent ? userData?.level?.upgrade_percent : 0}>
                 <div className="inner" />
               </ProgressBox>
               <TipsBox>
@@ -270,28 +272,32 @@ export default function Profile() {
             </FstLine>
           </ProgressOuter>
           <NftBox>
-            <li>
-              <div className="title">SEED</div>
-              <div className="ul">
-                {seed?.map((item, index) => (
-                  <div key={index} className="li">
-                    {' '}
-                    <img src={item.image_uri} alt="" />
-                  </div>
-                ))}
-              </div>
-            </li>
-            <li>
-              <div className="title">SBT</div>
-              <div className="ul">
-                {sbt?.map((item, index) => (
-                  <div key={index} className="li">
-                    {' '}
-                    <img src={item.image_uri} alt="" />
-                  </div>
-                ))}
-              </div>
-            </li>
+            {!!seed?.length && (
+              <li>
+                <div className="title">SEED</div>
+                <div className="ul">
+                  {seed?.map((item, index) => (
+                    <div key={index} className="li">
+                      {' '}
+                      <img src={item.image_uri} alt="" />
+                    </div>
+                  ))}
+                </div>
+              </li>
+            )}
+            {!!sbt?.length && (
+              <li>
+                <div className="title">SBT</div>
+                <div className="ul">
+                  {sbt?.map((item, index) => (
+                    <div key={index} className="li">
+                      {' '}
+                      <img src={item.image_uri} alt="" />
+                    </div>
+                  ))}
+                </div>
+              </li>
+            )}
           </NftBox>
         </>
       </>
