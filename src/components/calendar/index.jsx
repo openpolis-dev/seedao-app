@@ -1,7 +1,8 @@
 import React from "react";
 import Calendar from "@ericz1803/react-google-calendar";
 import styled from 'styled-components';
-import CopyC from "../../assets/Imgs/copyCalendar.svg";
+import CopyC from "../../assets/Imgs/dark/copyCalendar.svg";
+import CopyCLight from "../../assets/Imgs/light/copyCalendar.svg";
 
 import { useTranslation } from "react-i18next";
 
@@ -102,7 +103,7 @@ const Box = styled.div`
               display: inline-block;
               width: 24px;
               height:24px;
-              background-image: url(${CopyC});
+              background-image: url(${props=>props.theme === "true"?CopyC:CopyCLight});
               background-size: cover;
               margin-right:9px;
               margin-bottom: -7px;
@@ -179,11 +180,10 @@ let styles = {
 
 const language = "EN";
 
-export default function CalendarBox(){
+export default function CalendarBox({theme}){
     const { t } = useTranslation();
-
 return (
-  <Box>
+  <Box theme={JSON.stringify(theme)}>
     <Calendar apiKey={API_KEY} calendars={calendars} styles={styles} language={language} showFooter={false} />
   </Box>
 );
