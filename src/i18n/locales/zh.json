@@ -370,7 +370,15 @@
     "RegisterNote": "登记说明",
     "RegisterSource": "项目/公会",
     "Operator": "登记人",
-    "TotalCount": "共{{count}}条"
+    "Receiver": "接收人",
+    "Auditor": "审核人",
+    "TotalCount": "共{{count}}条",
+    "AddAssets": "增加资产",
+    "Season": "季度",
+    "BudgetSource": "预算来源",
+    "State": "状态",
+    "Content": "事项内容",
+    "TransactionID": "交易ID"
   },
   "members": {
     "RemoveTitle": "移除成员",

@@ -373,7 +373,15 @@
     "RegisterNote": "Note",
     "RegisterSource": "Project / Guild",
     "Operator": "Operator",
-    "TotalCount": "total {{count}}"
+    "Receiver": "Receiver",
+    "Auditor": "Auditor",
+    "TotalCount": "total {{count}}",
+    "AddAssets": "Add Assets",
+    "Season": "Season",
+    "BudgetSource": "Budget Source",
+    "State":"State",
+    "Content": "Content",
+    "TransactionID": "Transaction ID"
   },
   "members": {
     "RemoveTitle": "Remove Member",

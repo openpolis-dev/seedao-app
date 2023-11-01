@@ -3,9 +3,6 @@ import { Button, Form, Table } from 'react-bootstrap';
 
 import React, { useState, useEffect, useMemo } from 'react';
 import Page from 'components/pagination';
-import ViewHash from '../projectInfoCom/viewHash';
-import RangeDatePickerStyle from 'components/rangeDatePicker';
-// import { Checkbox } from '@paljs/ui/Checkbox';
 import requests from 'requests';
 import { IQueryParams } from 'requests/applications';
 import { IApplicationDisplay, ApplicationStatus } from 'type/application.type';
@@ -13,7 +10,7 @@ import utils from 'utils/publicJs';
 import NoItem from 'components/noItem';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import Loading from 'components/loading';
-import { formatDate, formatTime } from 'utils/time';
+import { formatTime } from 'utils/time';
 import publicJs from 'utils/publicJs';
 import { useTranslation } from 'react-i18next';
 import { formatApplicationStatus } from 'utils/index';
@@ -58,20 +55,6 @@ const TopLine = styled.ul`
       padding-right: 20px;
       white-space: nowrap;
     }
-    &.time-line {
-      flex-direction: row;
-      align-items: center;
-    }
-  }
-`;
-
-const BorderBox = styled.div`
-  border-radius: 8px;
-  opacity: 1;
-  border: 1px solid var(--bs-border-color);
-  padding: 2px 20px;
-  &:hover {
-    border-color: var(--bs-border-color-focus);
   }
 `;
 
@@ -91,9 +74,6 @@ export default function AssetList() {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [total, setTotal] = useState(0);
-  const [show, setShow] = useState<string[]>();
-  const [startDate, setStartDate] = useState<Date>();
-  const [endDate, setEndData] = useState<Date>();
   const [list, setList] = useState<IApplicationDisplay[]>([]);
   const [selectStatus, setSelectStatus] = useState<ApplicationStatus>();
   const [selectMap, setSelectMap] = useState<{ [id: number]: ApplicationStatus | boolean }>({});
@@ -119,21 +99,7 @@ export default function AssetList() {
   const handlePageSize = (num: number) => {
     setPageSize(num);
   };
-  const handleShow = (data: string[]) => {
-    setShow(data);
-  };
-  const closeShow = () => {
-    setShow(undefined);
-  };
 
-  const changeDate = (rg: Date[]) => {
-    setStartDate(rg[0]);
-    setEndData(rg[1]);
-    if ((rg[0] && rg[1]) || (!rg[0] && !rg[1])) {
-      setSelectMap({});
-      setPage(1);
-    }
-  };
   const onChangeCheckbox = (value: boolean, id: number, status: ApplicationStatus) => {
     setSelectMap({ ...selectMap, [id]: value && status });
   };
@@ -208,10 +174,10 @@ export default function AssetList() {
       const queryData: IQueryParams = {};
       if (selectStatus) queryData.state = selectStatus;
       if (selectApplicant) queryData.applicant = selectApplicant;
-      if (startDate && endDate) {
-        queryData.start_date = formatDate(startDate);
-        queryData.end_date = formatDate(endDate);
-      }
+      // if (startDate && endDate) {
+      //   queryData.start_date = formatDate(startDate);
+      //   queryData.end_date = formatDate(endDate);
+      // }
       if (selectSource && selectSource.type) {
         queryData.entity_id = selectSource.id;
         queryData.entity = selectSource.type;
@@ -231,6 +197,7 @@ export default function AssetList() {
         ...item,
         created_date: formatTime(item.created_at),
         transactions: item.transaction_ids.split(','),
+        asset_display: formatNumber(Number(item.amount)) + ' ' + item.asset_name,
       }));
       setList(_list);
     } catch (error) {
@@ -241,9 +208,8 @@ export default function AssetList() {
   };
 
   useEffect(() => {
-    const selectOrClearDate = (startDate && endDate) || (!startDate && !endDate);
-    selectOrClearDate && getRecords();
-  }, [selectStatus, selectApplicant, page, pageSize, startDate, endDate, selectSource]);
+    getRecords();
+  }, [selectStatus, selectApplicant, page, pageSize, selectSource]);
 
   const getSelectIds = (): number[] => {
     const ids = Object.keys(selectMap);
@@ -291,7 +257,6 @@ export default function AssetList() {
       {detailDisplay && (
         <ApplicationModal application={detailDisplay} handleClose={() => setDetailDisplay(undefined)} />
       )}
-      {show && <ViewHash closeShow={closeShow} txs={show} />}
       {loading && <Loading />}
 
       <TitBox>{t('Project.Record')}</TitBox>
@@ -310,7 +275,7 @@ export default function AssetList() {
             />
           </li>
           <li>
-            <span className="tit">{t('Project.BudgetSource')}</span>
+            <span className="tit">{t('application.BudgetSource')}</span>
             <Select
               options={allSource}
               placeholder=""
@@ -322,7 +287,7 @@ export default function AssetList() {
             />
           </li>
           <li>
-            <span className="tit">{t('Project.Operator')}</span>
+            <span className="tit">{t('application.Operator')}</span>
             <Select
               options={applicants}
               placeholder=""
@@ -333,15 +298,17 @@ export default function AssetList() {
               }}
             />
           </li>
-          <li className="time-line">
-            <BorderBox>
-              <RangeDatePickerStyle
-                placeholder={t('Project.RangeTime')}
-                onChange={changeDate}
-                startDate={startDate}
-                endDate={endDate}
-              />
-            </BorderBox>
+          <li>
+            <span className="tit">{t('application.Season')}</span>
+            <Select
+              options={applicants}
+              placeholder=""
+              onChange={(value: any) => {
+                setSelectApplicant(value?.value);
+                setSelectMap({});
+                setPage(1);
+              }}
+            />
           </li>
         </TopLine>
         <div>
@@ -360,13 +327,13 @@ export default function AssetList() {
                   <th className="chech-th">
                     <Form.Check checked={ifSelectAll} onChange={(e) => onSelectAll(e.target.checked)} />
                   </th>
-                  <th>{t('Project.Address')}</th>
-                  <th>{t('Project.AddPoints')}</th>
-                  <th>{t('Project.AddToken')}</th>
-                  <th>{t('Project.Content')}</th>
-                  <th>{t('Project.BudgetSource')}</th>
-                  <th>{t('Project.State')}</th>
-                  <th>{t('Project.Operator')}</th>
+                  <th>{t('application.Receiver')}</th>
+                  <th>{t('application.AddAssets')}</th>
+                  <th>{t('application.Season')}</th>
+                  <th>{t('application.Content')}</th>
+                  <th>{t('application.BudgetSource')}</th>
+                  <th>{t('application.State')}</th>
+                  <th>{t('application.Operator')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -374,27 +341,23 @@ export default function AssetList() {
                   <tr key={item.application_id} onClick={() => setDetailDisplay(item)}>
                     <td>
                       <Form.Check
-                        // status="Primary"
                         checked={!!selectMap[item.application_id]}
                         onChange={(e) => onChangeCheckbox(e.target.checked, item.application_id, item.status)}
-                      ></Form.Check>
+                      />
                     </td>
                     <td>
                       <div>
                         <span>{publicJs.AddressToShow(item.target_user_wallet)}</span>
-                        {/* <CopyBox text={item.target_user_wallet}>
-                          <>复制</>
-                        </CopyBox> */}
                       </div>
                     </td>
-                    <td className="center">{formatNumber(item.credit_amount)}</td>
-                    <td className="center">{formatNumber(item.token_amount)}</td>
+                    <td>{item.asset_display}</td>
+                    <td>{item.season_name}</td>
                     <td>{item.detailed_type}</td>
                     <td className="center">{item.budget_source}</td>
                     <td>
                       <ApplicationStatusTag status={item.status} />
                     </td>
-                    <td className="center">{item.submitter_name || publicJs.AddressToShow(item.submitter_wallet)}</td>
+                    <td className="center">{publicJs.AddressToShow(item.submitter_wallet)}</td>
                   </tr>
                 ))}
               </tbody>

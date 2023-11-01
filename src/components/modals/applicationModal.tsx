@@ -18,32 +18,27 @@ export default function ApplicationModal({ application, handleClose }: Iprops) {
       <Content>
         <Block underline>
           <li>
-            <BlockLeft>{t('Project.Address')}</BlockLeft>
+            <BlockLeft>{t('application.Receiver')}</BlockLeft>
             <BlockRight>{application.target_user_wallet}</BlockRight>
           </li>
           <li>
-            <BlockLeft>{t('Project.AddPoints')}</BlockLeft>
-            <BlockRight>{formatNumber(application.credit_amount)}</BlockRight>
+            <BlockLeft>{t('application.AddAssets')}</BlockLeft>
+            <BlockRight>{application.asset_display}</BlockRight>
           </li>
           <li>
-            <BlockLeft>{t('Project.AddToken')}</BlockLeft>
-            <BlockRight>{formatNumber(application.token_amount)}</BlockRight>
-          </li>
-
-          <li>
-            <BlockLeft>{t('Project.BudgetSource')}</BlockLeft>
+            <BlockLeft>{t('application.BudgetSource')}</BlockLeft>
             <BlockRight>{application.budget_source}</BlockRight>
           </li>
           <li>
-            <BlockLeft className="text-field-label">{t('Project.Content')}</BlockLeft>
+            <BlockLeft className="text-field-label">{t('application.Content')}</BlockLeft>
             <BlockRight className="text-field">{application.detailed_type}</BlockRight>
           </li>
           <li>
-            <BlockLeft className="text-field-label">{t('Project.Note')}</BlockLeft>
+            <BlockLeft className="text-field-label">{t('application.RegisterNote')}</BlockLeft>
             <BlockRight className="text-field">{application.comment}</BlockRight>
           </li>
           <li>
-            <BlockLeft>{t('Project.State')}</BlockLeft>
+            <BlockLeft>{t('application.State')}</BlockLeft>
             <BlockRight>
               <ApplicationStatusTag status={application.status} />
             </BlockRight>
@@ -53,13 +48,13 @@ export default function ApplicationModal({ application, handleClose }: Iprops) {
             <BlockRight>{application.submitter_name || application.submitter_wallet}</BlockRight>
           </li>
           <li>
-            <BlockLeft>{t('Project.Auditor')}</BlockLeft>
+            <BlockLeft>{t('application.Auditor')}</BlockLeft>
             <BlockRight>{application.reviewer_name || application.reviewer_wallet}</BlockRight>
           </li>
         </Block>
         <Block>
           <li>
-            <BlockLeft>{t('Project.TransactionID')}</BlockLeft>
+            <BlockLeft>{t('application.TransactionID')}</BlockLeft>
             <BlockRight>
               {application.transactions?.map((item, index) => {
                 return item ? (
