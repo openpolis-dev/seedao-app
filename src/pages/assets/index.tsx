@@ -423,11 +423,9 @@ export default function Index() {
               <LiTitle>{t('Assets.SupplySCR')}</LiTitle>
             </LiHead>
             <div className="num">{formatNumber(Number(totalSCR))}</div>
-            {/* <div style={{ textAlign: 'left' }}>
-              <p className="tips">
-                ≈ {formatNumber(Number(SCRValue.toFixed(2)))} U 1SCR ≈ {SCR_PRICE} U
-              </p>
-            </div> */}
+            <div style={{ textAlign: 'left' }}>
+              <p className="tips">{/* ≈ {formatNumber(Number(SCRValue.toFixed(2)))} U 1SCR ≈ {SCR_PRICE} U */}</p>
+            </div>
           </li>
           <li className="center">
             <LiHead>
