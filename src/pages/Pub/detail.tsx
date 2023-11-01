@@ -13,13 +13,14 @@ const PageStyle = styled.div`
 `;
 
 const Box = styled.div`
-  background: #fff;
-  padding: 40px 20px;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+  width: 900px;
+  color: var(--bs-body-color_active);
+  position: relative;
 `;
 
 const Title = styled.div`
-  font-size: 20px;
+  font-size: 24px;
+  font-family: 'Poppins-SemiBold';
 `;
 const ContentBox = styled.div`
   margin-top: 40px;
@@ -38,7 +39,16 @@ const TagBox = styled.div`
   color: #fff;
   padding: 3px 10px;
   border-radius: 5px;
-  opacity: 0.5;
+
+  &.str1 {
+    background: #b0b0b0;
+  }
+  &.str2 {
+    background: var(--bs-primary);
+  }
+  &.str3 {
+    background: #00a92f;
+  }
 `;
 
 const TypeBox = styled(TagBox)`
@@ -72,7 +82,6 @@ const TypeBox = styled(TagBox)`
 const LinkBox = styled.div`
   a {
     margin-right: 20px;
-    text-decoration: underline;
     color: var(--bs-primary);
   }
 `;
@@ -84,7 +93,31 @@ const BackBox = styled.div`
   cursor: pointer;
   .iconTop {
     margin-right: 10px;
+    color: var(--bs-body-color);
+    font-size: 12px;
   }
+  span {
+    color: var(--bs-body-color);
+    font-size: 12px;
+  }
+`;
+
+const ImgBox = styled.div`
+  width: 100%;
+  margin-bottom: 36px;
+  img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 16px;
+  }
+`;
+
+const TopRht = styled.div`
+  position: absolute;
+  right: 0;
+  font-size: 12px;
 `;
 
 export default function PubDetail() {
@@ -94,6 +127,7 @@ export default function PubDetail() {
 
   const [title, setTitle] = useState('');
   const [status, setStatus] = useState('');
+  const [imgUrl, setImgUrl] = useState('');
   const [tag, setTag] = useState([]);
   const [desc, setDesc] = useState('');
   const [reward, setReward] = useState('');
@@ -162,6 +196,7 @@ export default function PubDetail() {
       let detail = detailInfo.data[id]?.value.properties;
       const titleStr = detail?.title[0][0] ?? '';
       setTitle(titleStr);
+      setImgUrl(detailInfo.data[id]?.value.format?.page_cover);
 
       setStatus(detail?.['ArpA'][0][0] ?? '');
       setTag(detail?.['GJ=R'][0] ?? []);
@@ -191,14 +226,36 @@ export default function PubDetail() {
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }
   };
+
+  const returnStatus = (str: string) => {
+    let cStr = '';
+    switch (str.trim()) {
+      case '已归档':
+        cStr = 'str1';
+        break;
+      case '已认领':
+        cStr = 'str2';
+        break;
+      case '招募中':
+      default:
+        cStr = 'str3';
+        break;
+    }
+    return cStr;
+  };
   return (
     <PageStyle>
       <Box>
         <BackBox onClick={() => navigate(-1)}>
           <ChevronLeft className="iconTop" />
-          <span>{t('general.back')}</span>
+          <span>{title}</span>
         </BackBox>
-
+        <ImgBox>
+          <img src={`https://www.notion.so${imgUrl}`} alt="" />
+        </ImgBox>
+        <TopRht>
+          <TagBox className={returnStatus(status)}> {status}</TagBox>
+        </TopRht>
         <Title>{title}</Title>
         <ContentBox>
           <Row>
@@ -215,12 +272,6 @@ export default function PubDetail() {
             <Col md={2}>任务说明</Col>
             <Col md={10}>
               <pre>{desc}</pre>
-            </Col>
-          </Row>
-          <Row>
-            <Col md={2}>悬赏状态</Col>
-            <Col md={10}>
-              <TagBox> {status}</TagBox>
             </Col>
           </Row>
           <Row>

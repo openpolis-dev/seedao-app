@@ -14,29 +14,25 @@ const PageStyle = styled.div`
 `;
 
 const Box = styled.div`
-  background: #fff;
-  padding: 40px 20px;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
   .col-md-3 {
-    margin-bottom: 20px;
+    margin-bottom: 24px;
   }
 `;
 const InnerBox = styled.ul`
-  background: #fff;
-  box-shadow: rgba(44, 51, 73, 0.1) 0px 0.5rem 1rem 0px;
-  border-radius: 20px;
+  background: var(--bs-box-background);
+  border-radius: 16px;
   box-sizing: border-box;
   height: 100%;
 
   .imgBox {
     width: 100%;
-    height: 140px;
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;
     overflow: hidden;
     img {
       width: 100%;
       height: 100%;
+      min-height: 140px;
       object-position: center;
       object-fit: cover;
     }
@@ -52,7 +48,7 @@ const InnerBox = styled.ul`
       overflow: hidden;
       text-overflow: ellipsis;
       display: -webkit-box;
-      -webkit-line-clamp: 2;
+      -webkit-line-clamp: 1;
       -webkit-box-orient: vertical;
     }
   }
@@ -65,9 +61,8 @@ const Tit = styled.li`
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
-  min-height: 70px;
-  background: #f5f5f5;
-  padding: 10px;
+  color: var(--bs-body-color_active);
+  font-family: 'Poppins-SemiBold';
 `;
 
 const TagBox = styled.div`
@@ -76,16 +71,22 @@ const TagBox = styled.div`
   color: #fff;
   padding: 3px 10px;
   border-radius: 5px;
-  opacity: 0.5;
-  &.active {
-    opacity: 1;
+
+  &.str1 {
+    background: #b0b0b0;
+  }
+  &.str2 {
+    background: var(--bs-primary);
+  }
+  &.str3 {
+    background: #00a92f;
   }
 `;
 
 const TypeBox = styled(TagBox)`
-  padding: 3px 5px;
+  padding: 3px 10px;
   opacity: 1;
-  margin: 0 10px 10px 0;
+  margin: 5px 10px 10px 0;
   color: #000;
   &.type1 {
     background: rgb(250, 222, 201);
@@ -199,6 +200,23 @@ export default function Pub() {
     navigate(`/pubDetail/${id}`);
   };
 
+  const returnStatus = (str: string) => {
+    let cStr = '';
+    switch (str.trim()) {
+      case '已归档':
+        cStr = 'str1';
+        break;
+      case '已认领':
+        cStr = 'str2';
+        break;
+      case '招募中':
+      default:
+        cStr = 'str3';
+        break;
+    }
+    return cStr;
+  };
+
   return (
     <PageStyle>
       <Box>
@@ -213,18 +231,19 @@ export default function Pub() {
           {list.map((item: any, index) => (
             <Col md={3} key={index} onClick={() => ToGo(item.id)}>
               <InnerBox>
-                {/*<div className="imgBox">*/}
-                {/*  <img src="https://seedao-store.s3-us-east-2.amazonaws.com/seeu/su8JtN3BUjBpE2yrGWzK98.jpg" alt="" />*/}
-                {/*</div>*/}
+                <div className="imgBox">
+                  <img
+                    src="https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F619174d0-2125-4cf1-b6af-1f661d73dd19%2Fbanner_1920x1080.jpg?id=7f4920bb-2ad7-41d7-a016-a6afa14aa9ce&table=block&spaceId=5a4585f0-41bf-46b1-8321-4c9d55abc37a&width=550&userId=6fa9ac45-fb72-4109-81ad-54cbd7bb6315&cache=v2"
+                    alt=""
+                  />
+                </div>
                 <ul className="btm">
                   <Tit>{item['悬赏名称']}</Tit>
                   {item['悬赏状态'] && (
                     <li>
-                      <TagBox className={item['悬赏状态'] === '招募中' ? 'active' : ''}>{item['悬赏状态']}</TagBox>
+                      <TagBox className={returnStatus(item['悬赏状态'])}>{item['悬赏状态']}</TagBox>
                     </li>
                   )}
-
-                  <li>招募截止时间：{item['招募截止时间']}</li>
                   <li>
                     {item['悬赏类型'] &&
                       (item['悬赏类型'] as any).map((innerItem: string, innerIndex: number) => (
@@ -233,6 +252,8 @@ export default function Pub() {
                         </TypeBox>
                       ))}
                   </li>
+                  <li>招募截止时间：{item['招募截止时间']}</li>
+
                   <li className="line2">{item['贡献报酬']}</li>
                 </ul>
               </InnerBox>
