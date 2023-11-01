@@ -306,17 +306,17 @@ export default function Profile() {
                 <Form.Control type="text" placeholder="" value={email} onChange={(e) => handleInput(e, 'email')} />
               </InputBox>
             </li>
-            <li>
-              <div className="title">
-                <div className="icon">
-                  <img src={DiscordImg} alt="" />
-                </div>
-                {t('My.Discord')}
-              </div>
-              <InputBox>
-                <Form.Control type="text" placeholder="" value={discord} onChange={(e) => handleInput(e, 'discord')} />
-              </InputBox>
-            </li>
+            {/*<li>*/}
+            {/*  <div className="title">*/}
+            {/*    <div className="icon">*/}
+            {/*      <img src={DiscordImg} alt="" />*/}
+            {/*    </div>*/}
+            {/*    {t('My.Discord')}*/}
+            {/*  </div>*/}
+            {/*  <InputBox>*/}
+            {/*    <Form.Control type="text" placeholder="" value={discord} onChange={(e) => handleInput(e, 'discord')} />*/}
+            {/*  </InputBox>*/}
+            {/*</li>*/}
             <li>
               <div className="title">
                 <div className="icon">
@@ -333,17 +333,17 @@ export default function Profile() {
                 />
               </InputBox>
             </li>
-            <li>
-              <div className="title">
-                <div className="icon">
-                  <img src={WechatImg} alt="" />
-                </div>
-                {t('My.WeChat')}
-              </div>
-              <InputBox>
-                <Form.Control type="text" placeholder="" value={wechat} onChange={(e) => handleInput(e, 'wechat')} />
-              </InputBox>
-            </li>
+            {/*<li>*/}
+            {/*  <div className="title">*/}
+            {/*    <div className="icon">*/}
+            {/*      <img src={WechatImg} alt="" />*/}
+            {/*    </div>*/}
+            {/*    {t('My.WeChat')}*/}
+            {/*  </div>*/}
+            {/*  <InputBox>*/}
+            {/*    <Form.Control type="text" placeholder="" value={wechat} onChange={(e) => handleInput(e, 'wechat')} />*/}
+            {/*  </InputBox>*/}
+            {/*</li>*/}
             <li>
               <div className="title">
                 <div className="icon">
