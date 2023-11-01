@@ -14,6 +14,7 @@ import DiscordImg from '../../../assets/Imgs/profile/discordIcon.svg';
 import TwitterImg from '../../../assets/Imgs/profile/twitterIcon.svg';
 import WechatImg from '../../../assets/Imgs/profile/wechatIcon.svg';
 import MirrorImg from '../../../assets/Imgs/profile/mirrorIcon.svg';
+import DescImg from '../../../assets/Imgs/profile/desc.svg';
 
 const OuterBox = styled.div`
   ${ContainerPadding};
@@ -281,7 +282,7 @@ export default function Profile() {
             <li>
               <div className="title">
                 <div className="icon">
-                  <img src={userImg} alt="" />
+                  <img src={DescImg} alt="" />
                 </div>
                 {t('My.Bio')}
               </div>
@@ -428,15 +429,5 @@ const ImgBox = styled.div`
     .del {
       display: flex;
     }
-  }
-`;
-
-const InfoBox = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  .wallet {
-    display: flex;
-    gap: 10px;
   }
 `;
