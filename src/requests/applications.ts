@@ -1,9 +1,17 @@
 // City Hall Module API
 import request, { ResponseData, getBaseURL } from './http';
-import { ApplicationStatus, ApplicationType, IApplication } from 'type/application.type';
+import {
+  ApplicationStatus,
+  ApplicationType,
+  IApplication,
+  IApplicantBundle,
+  ApplicationEntity,
+  ISeason,
+} from 'type/application.type';
 import { AssetName } from 'utils/constant';
 
 const PATH_PREFIX = '/applications/';
+const BUNDLE_PATH_PREFIX = '/app_bundles/';
 
 export const getApplicationById = (application_id: number): Promise<ResponseData<IApplication>> => {
   return request.get(`${PATH_PREFIX}${application_id}`);
@@ -15,6 +23,7 @@ export interface IQueryApplicationsParams {
   applicant?: string;
   user_wallet?: string;
   state?: ApplicationStatus;
+  season_id?: number;
 }
 
 export interface IQueryParams extends IQueryApplicationsParams {
@@ -152,4 +161,37 @@ interface IApplicant {
 // applicants
 export const getApplicants = (data?: IApplicantRequest): Promise<ResponseData<IApplicant[]>> => {
   return request.get(`/apps_applicants`, data);
+};
+
+// bundle
+export const getApplicationBundle = (
+  data: IPageParams,
+  queryData: IQueryParams,
+): Promise<ResponseData<IPageResponse<IApplicantBundle>>> => {
+  return request.get(`${BUNDLE_PATH_PREFIX}`, {
+    ...data,
+    type: ApplicationType.NewReward,
+    ...queryData,
+  });
+};
+
+export type ApplicantBundleRecord = {
+  wallet: string;
+  asset_name: string;
+  asset_amount: number;
+};
+
+interface ICreateApplicantBundle {
+  entity_id: number;
+  entity_type: ApplicationEntity;
+  comment: string;
+  records: ApplicantBundleRecord[];
+}
+
+export const createApplicationBundles = (data: ICreateApplicantBundle) => {
+  return request.post(`${BUNDLE_PATH_PREFIX}`, data);
+};
+
+export const getSeasons = (): Promise<ResponseData<ISeason[]>> => {
+  return request.get(`/seasons/`);
 };

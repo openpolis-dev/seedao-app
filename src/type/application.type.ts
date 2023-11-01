@@ -58,3 +58,32 @@ export interface IApplicationDisplay extends IApplication {
   submitter_name: string;
   reviewer_name: string;
 }
+
+export interface IApplicationBundleRecord {
+  wallet: string;
+  asset_name: string;
+  asset_amount: number;
+}
+
+export interface IApplicantBundle {
+  bundle_id: number;
+  entity_id: number;
+  budget_source: string;
+  comment: string;
+  records: IApplicationDisplay[];
+  submit_date: number;
+  season: string;
+  status: ApplicationStatus;
+  submitter_wallet: string;
+}
+
+export interface IApplicantBundleDisplay extends IApplicantBundle {
+  created_date: string;
+}
+
+export interface ISeason {
+  id: number;
+  name: string;
+  start_date: string;
+  end_at: string;
+}

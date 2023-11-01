@@ -114,7 +114,7 @@ const GlobalStyle = createGlobalStyle`
       border-right: none;
       border-radius: 0;
       white-space: nowrap;
-      padding: 20px;
+      padding: 20px 10px;
       color: var(--bs-body-color);
       font-family: Poppins-SemiBold, Poppins;
       &.chech-th {
@@ -125,12 +125,13 @@ const GlobalStyle = createGlobalStyle`
       font-size: 14px;
       padding: 17px 10px;
       color: var(--bs-body-color_a);
-      &.center {
-        text-align: center;
-      }
+      
     }
     th, td {
       border-style: none;
+      &.center {
+        text-align: center;
+      }
     }
     tr:hover td {
       background: var(--bs-box-background);

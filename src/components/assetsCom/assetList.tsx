@@ -18,6 +18,7 @@ import Select from 'components/common/select';
 import { formatNumber } from 'utils/number';
 import ApplicationModal from 'components/modals/applicationModal';
 import ApplicationStatusTag from 'components/common/applicationStatusTag';
+import useSeasons from 'hooks/useSeasons';
 
 const Box = styled.div``;
 const TitBox = styled.div`
@@ -82,6 +83,9 @@ export default function AssetList() {
   const [allSource, setAllSource] = useState<ISelectItem[]>([]);
   const [selectSource, setSelectSource] = useState<{ id: number; type: 'project' | 'guild' }>();
   const [detailDisplay, setDetailDisplay] = useState<IApplicationDisplay>();
+  // season
+  const seasons = useSeasons();
+  const [selectSeason, setSelectSeason] = useState<number>();
 
   const statusOption = useMemo(() => {
     return [
@@ -174,10 +178,9 @@ export default function AssetList() {
       const queryData: IQueryParams = {};
       if (selectStatus) queryData.state = selectStatus;
       if (selectApplicant) queryData.applicant = selectApplicant;
-      // if (startDate && endDate) {
-      //   queryData.start_date = formatDate(startDate);
-      //   queryData.end_date = formatDate(endDate);
-      // }
+      if (selectSeason) {
+        queryData.season_id = selectSeason;
+      }
       if (selectSource && selectSource.type) {
         queryData.entity_id = selectSource.id;
         queryData.entity = selectSource.type;
@@ -209,7 +212,7 @@ export default function AssetList() {
 
   useEffect(() => {
     getRecords();
-  }, [selectStatus, selectApplicant, page, pageSize, selectSource]);
+  }, [selectSeason, selectStatus, selectApplicant, page, pageSize, selectSource]);
 
   const getSelectIds = (): number[] => {
     const ids = Object.keys(selectMap);
@@ -301,10 +304,10 @@ export default function AssetList() {
           <li>
             <span className="tit">{t('application.Season')}</span>
             <Select
-              options={applicants}
+              options={seasons}
               placeholder=""
               onChange={(value: any) => {
-                setSelectApplicant(value?.value);
+                setSelectSeason(value?.value);
                 setSelectMap({});
                 setPage(1);
               }}
@@ -328,12 +331,12 @@ export default function AssetList() {
                     <Form.Check checked={ifSelectAll} onChange={(e) => onSelectAll(e.target.checked)} />
                   </th>
                   <th>{t('application.Receiver')}</th>
-                  <th>{t('application.AddAssets')}</th>
-                  <th>{t('application.Season')}</th>
+                  <th className="center">{t('application.AddAssets')}</th>
+                  <th className="center">{t('application.Season')}</th>
                   <th>{t('application.Content')}</th>
-                  <th>{t('application.BudgetSource')}</th>
+                  <th className="center">{t('application.BudgetSource')}</th>
+                  <th className="center">{t('application.Operator')}</th>
                   <th>{t('application.State')}</th>
-                  <th>{t('application.Operator')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -350,14 +353,14 @@ export default function AssetList() {
                         <span>{publicJs.AddressToShow(item.target_user_wallet)}</span>
                       </div>
                     </td>
-                    <td>{item.asset_display}</td>
-                    <td>{item.season_name}</td>
+                    <td className="center">{item.asset_display}</td>
+                    <td className="center">{item.season_name}</td>
                     <td>{item.detailed_type}</td>
                     <td className="center">{item.budget_source}</td>
+                    <td className="center">{publicJs.AddressToShow(item.submitter_wallet)}</td>
                     <td>
                       <ApplicationStatusTag status={item.status} />
                     </td>
-                    <td className="center">{publicJs.AddressToShow(item.submitter_wallet)}</td>
                   </tr>
                 ))}
               </tbody>
