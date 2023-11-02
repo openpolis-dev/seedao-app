@@ -11,7 +11,7 @@ import MsgIcon from 'assets/Imgs/message.svg';
 import { ContainerPadding } from 'assets/styles/global';
 import { Link } from 'react-router-dom';
 import Tabbar from 'components/common/tabbar';
-import ArrowIconSVG from 'components/svgs/back';
+import ArrowIconSVG from 'components/svgs/rightArrow';
 
 export default function Index() {
   const {
@@ -234,9 +234,8 @@ const CategoryName = styled(Link)`
     color: var(--bs-body-color_active);
   }
   svg {
-    transform: rotate(180deg) scale(0.6);
     position: relative;
     top: -6px;
-    left: -1px;
+    left: 3px;
   }
 `;
