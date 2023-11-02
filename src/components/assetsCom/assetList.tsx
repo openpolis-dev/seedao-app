@@ -20,6 +20,7 @@ import ApplicationModal from 'components/modals/applicationModal';
 import ApplicationStatusTag from 'components/common/applicationStatusTag';
 import useSeasons from 'hooks/useSeasons';
 import useQuerySNS from 'hooks/useQuerySNS';
+import useBudgetSource from 'hooks/useBudgetSource';
 
 const Box = styled.div``;
 const TitBox = styled.div`
@@ -94,7 +95,8 @@ export default function AssetList() {
   const [selectMap, setSelectMap] = useState<{ [id: number]: ApplicationStatus | boolean }>({});
   const [applicants, setApplicants] = useState<ISelectItem[]>([]);
   const [selectApplicant, setSelectApplicant] = useState<string>();
-  const [allSource, setAllSource] = useState<ISelectItem[]>([]);
+  // budget source
+  const allSource = useBudgetSource();
   const [selectSource, setSelectSource] = useState<{ id: number; type: 'project' | 'guild' }>();
   const [detailDisplay, setDetailDisplay] = useState<IApplicationDisplay>();
   // season
@@ -124,49 +126,6 @@ export default function AssetList() {
     setSelectMap({ ...selectMap, [id]: value && status });
   };
 
-  const getProjects = async () => {
-    try {
-      const res = await requests.project.getProjects({
-        page: 1,
-        size: 1000,
-        sort_order: 'desc',
-        sort_field: 'created_at',
-      });
-      return res.data.rows.map((item) => ({
-        label: item.name,
-        value: item.id,
-        data: 'project',
-      }));
-    } catch (error) {
-      console.error('getProjects in city-hall failed: ', error);
-      return [];
-    }
-  };
-  const getGuilds = async () => {
-    try {
-      const res = await requests.guild.getProjects({
-        page: 1,
-        size: 1000,
-        sort_order: 'desc',
-        sort_field: 'created_at',
-      });
-      return res.data.rows.map((item) => ({
-        label: item.name,
-        value: item.id,
-        data: 'guild',
-      }));
-    } catch (error) {
-      console.error('getGuilds in city-hall failed: ', error);
-      return [];
-    }
-  };
-
-  const getSources = async () => {
-    const projects = await getProjects();
-    const guilds = await getGuilds();
-    setAllSource([...projects, ...guilds]);
-  };
-
   const getApplicants = async () => {
     try {
       const res = await requests.application.getApplicants();
@@ -179,10 +138,6 @@ export default function AssetList() {
       console.error('getApplicants error', error);
     }
   };
-
-  useEffect(() => {
-    getSources();
-  }, []);
 
   useEffect(() => {
     getApplicants();

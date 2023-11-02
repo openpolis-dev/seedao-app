@@ -1,12 +1,11 @@
 import styled from 'styled-components';
 import { Form } from 'react-bootstrap';
 import RegList from 'components/assetsCom/regList';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { IExcelObj } from 'type/project.type';
 import requests from 'requests';
-import { ApplicationType, ApplicationEntity } from 'type/application.type';
-import { AssetName } from 'utils/constant';
+import { ApplicationEntity } from 'type/application.type';
 import useToast, { ToastType } from 'hooks/useToast';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import { ContainerPadding } from 'assets/styles/global';
@@ -14,6 +13,7 @@ import Select from 'components/common/select';
 import BackIconSVG from 'components/svgs/back';
 import { Link } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
+import useBudgetSource from 'hooks/useBudgetSource';
 
 type ErrorDataType = {
   line: number;
@@ -28,7 +28,7 @@ export default function Register() {
   const [list, setList] = useState<IExcelObj[]>([]);
   const [errList, setErrList] = useState<ErrorDataType[]>([]);
 
-  const [allSource, setAllSource] = useState<ISelectItem[]>([]);
+  const allSource = useBudgetSource();
   const [selectSource, setSelectSource] = useState<{ id: number; type: ApplicationEntity }>();
 
   const [content, setContent] = useState('');
@@ -70,52 +70,6 @@ export default function Register() {
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }
   };
-
-  const getProjects = async () => {
-    try {
-      const res = await requests.project.getProjects({
-        page: 1,
-        size: 1000,
-        sort_order: 'desc',
-        sort_field: 'created_at',
-      });
-      return res.data.rows.map((item) => ({
-        label: item.name,
-        value: item.id,
-        data: ApplicationEntity.Project,
-      }));
-    } catch (error) {
-      console.error('getProjects in city-hall failed: ', error);
-      return [];
-    }
-  };
-  const getGuilds = async () => {
-    try {
-      const res = await requests.guild.getProjects({
-        page: 1,
-        size: 1000,
-        sort_order: 'desc',
-        sort_field: 'created_at',
-      });
-      return res.data.rows.map((item) => ({
-        label: item.name,
-        value: item.id,
-        data: ApplicationEntity.Guild,
-      }));
-    } catch (error) {
-      console.error('getGuilds in city-hall failed: ', error);
-      return [];
-    }
-  };
-
-  useEffect(() => {
-    const getSources = async () => {
-      const projects = await getProjects();
-      const guilds = await getGuilds();
-      setAllSource([...projects, ...guilds]);
-    };
-    getSources();
-  }, []);
 
   return (
     <OuterBox>

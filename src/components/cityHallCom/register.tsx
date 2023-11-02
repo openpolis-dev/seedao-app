@@ -1,14 +1,11 @@
 import styled from 'styled-components';
 import { Button, Form } from 'react-bootstrap';
-// import Select from '@paljs/ui/Select';
 import React, { useEffect, useMemo, useState } from 'react';
 import Page from 'components/pagination';
-import RangeDatePickerStyle from 'components/rangeDatePicker';
-// import { Checkbox } from '@paljs/ui/Checkbox';
 import requests from 'requests';
 import { IApplicantBundleDisplay, ApplicationStatus, IApplicationDisplay } from 'type/application.type';
 import Loading from 'components/loading';
-import { formatDate, formatTime } from 'utils/time';
+import { formatTime } from 'utils/time';
 import utils from 'utils/publicJs';
 import { IQueryParams } from 'requests/applications';
 import NoItem from 'components/noItem';
@@ -21,6 +18,7 @@ import ExpandTable from './expandTable';
 import ArrowIconSVG from 'components/svgs/back';
 import useQuerySNS from 'hooks/useQuerySNS';
 import useSeasons from 'hooks/useSeasons';
+import useBudgetSource from 'hooks/useBudgetSource';
 
 const Box = styled.div`
   position: relative;
@@ -100,7 +98,8 @@ export default function Register() {
   const [selectMap, setSelectMap] = useState<{ [id: number]: ApplicationStatus | boolean }>({});
   const [loading, setLoading] = useState(false);
 
-  const [allSource, setAllSource] = useState<ISelectItem[]>([]);
+  // budget source
+  const allSource = useBudgetSource();
   const [selectSource, setSelectSource] = useState<{ id: number; type: 'project' | 'guild' }>();
   const [applicants, setApplicants] = useState<ISelectItem[]>([]);
   const [selectApplicant, setSelectApplicant] = useState<string>();
@@ -123,49 +122,6 @@ export default function Register() {
     setSelectMap({ ...selectMap, [id]: value });
   };
 
-  const getProjects = async () => {
-    try {
-      const res = await requests.project.getProjects({
-        page: 1,
-        size: 100,
-        sort_order: 'desc',
-        sort_field: 'created_at',
-      });
-      return res.data.rows.map((item) => ({
-        label: item.name,
-        value: item.id,
-        data: 'project',
-      }));
-    } catch (error) {
-      console.error('getProjects in city-hall failed: ', error);
-      return [];
-    }
-  };
-  const getGuilds = async () => {
-    try {
-      const res = await requests.guild.getProjects({
-        page: 1,
-        size: 100,
-        sort_order: 'desc',
-        sort_field: 'created_at',
-      });
-      return res.data.rows.map((item) => ({
-        label: item.name,
-        value: item.id,
-        data: 'guild',
-      }));
-    } catch (error) {
-      console.error('getGuilds in city-hall failed: ', error);
-      return [];
-    }
-  };
-
-  const getSources = async () => {
-    const projects = await getProjects();
-    const guilds = await getGuilds();
-    setAllSource([...projects, ...guilds]);
-  };
-
   const getApplicants = async () => {
     try {
       const res = await requests.application.getApplicants();
@@ -181,10 +137,6 @@ export default function Register() {
 
   useEffect(() => {
     getApplicants();
-  }, []);
-
-  useEffect(() => {
-    getSources();
   }, []);
 
   const getRecords = async () => {
