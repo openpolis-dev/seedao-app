@@ -149,6 +149,9 @@ export default function Register() {
       queryData.entity_id = selectSource.id;
       queryData.entity = selectSource.type;
     }
+    if (selectSeason) {
+      queryData.season_id = selectSeason;
+    }
     try {
       const res = await requests.application.getApplicationBundle(
         {
