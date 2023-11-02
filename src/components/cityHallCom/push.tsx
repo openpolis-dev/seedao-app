@@ -116,28 +116,27 @@ const PushHistoryContent = () => {
   const { t } = useTranslation();
   const [list, setList] = useState<IPushDisplay[]>([]);
   const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+  const [pageSize] = useState(10);
   const [hasMore, setHasMore] = useState(false);
   const [showRecord, setShowRecord] = useState<IPushDisplay>();
 
-  const handlePage = (num: number) => {
-    setPage(num + 1);
+  const handleCancel = () => {
+    // TODO
   };
-  const handlePageSize = (num: number) => {
-    setPageSize(num);
-  };
-
-  const handleCancel = () => {};
   const getList = async () => {
     try {
       const { data } = await getPushList({ page, size: pageSize, sort_field: 'created_at', sort_order: 'desc' });
-      setList(
-        data.rows.map((item) => ({
+      const _list = [
+        ...list,
+        ...data.rows.map((item) => ({
           ...item,
           timeDisplay: formatTime(new Date(item.created_at).getTime()),
         })),
-      );
-      setHasMore(data.rows.length >= pageSize);
+      ];
+      setList(_list);
+      setHasMore(_list.length < data.total);
+      setPage(page + 1);
+      console.log(data.rows.length, data.rows.length >= pageSize);
     } catch (error) {
       console.error(error);
     }
@@ -158,7 +157,7 @@ const PushHistoryContent = () => {
             next={getList}
             hasMore={hasMore}
             scrollableTarget="push-scroll"
-            loader={<></>}
+            loader={<LoadingBottom>{t('general.Loading')}</LoadingBottom>}
           >
             {list.map((item, idx) => (
               <PushItem key={idx} onClick={() => setShowRecord(item)}>
@@ -207,8 +206,12 @@ export default function PushPanel({ id }: { id?: number }) {
 }
 
 const PushContentBox = styled.div`
-  height: calc(100vh - 300px);
-  overflow: auto;
+  height: calc(100vh - 280px);
+  overflow-y: auto;
+  &::-webkit-scrollbar {
+    display: none;
+    width: 0;
+  }
 `;
 
 const Box = styled.div`
@@ -272,4 +275,11 @@ const PushItem = styled.div`
 
 const CreateBox = styled.div`
   width: 576px;
+`;
+
+const LoadingBottom = styled.div`
+  text-align: center;
+  font-size: 14px;
+  line-height: 22px;
+  color: var(--bs-body-color);
 `;
