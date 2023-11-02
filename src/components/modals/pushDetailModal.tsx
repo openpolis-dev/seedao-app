@@ -5,10 +5,11 @@ import { useTranslation } from 'react-i18next';
 
 interface IProps {
   data: IPushDisplay;
+  sns: string;
   handleClose: () => void;
 }
 
-export default function PushDetailModal({ data, handleClose }: IProps) {
+export default function PushDetailModal({ sns, data, handleClose }: IProps) {
   const { t } = useTranslation();
   return (
     <PushModal handleClose={handleClose}>
@@ -25,7 +26,7 @@ export default function PushDetailModal({ data, handleClose }: IProps) {
       </PushItemTop>
       <PushItemBottom>
         <PushItemBottomLeft>
-          <div className="name">111</div>
+          <div className="name">{sns}</div>
           <div className="date">{data.timeDisplay}</div>
         </PushItemBottomLeft>
         <StatusTag>{t('Push.Pushed')}</StatusTag>
