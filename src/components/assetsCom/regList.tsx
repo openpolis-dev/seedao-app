@@ -14,11 +14,6 @@ import TableIconSVG from 'components/svgs/table';
 import AddIcon from 'assets/Imgs/add.svg';
 import DownloadIconSVG from 'components/svgs/download';
 
-type ErrorDataType = {
-  line: number;
-  errorKeys: string[];
-};
-
 enum ChooseType {
   default = 0,
   import,
@@ -37,8 +32,6 @@ export default function RegList({ list, setList }: IProps) {
     state: { language },
   } = useAuthContext();
 
-  const [errList, setErrList] = useState<ErrorDataType[]>([]);
-
   const [chooseType, setChooseType] = useState(ChooseType.default);
 
   const updateFile = (e: FormEvent) => {
@@ -46,8 +39,6 @@ export default function RegList({ list, setList }: IProps) {
     const { files } = e.target as any;
     const fileReader = new FileReader();
     fileReader.readAsBinaryString(files[0]);
-
-    const _errs: ErrorDataType[] = [];
 
     (fileReader as any).onload = (event: ChangeEvent) => {
       try {
@@ -68,43 +59,21 @@ export default function RegList({ list, setList }: IProps) {
               console.log(index, item);
               if (index !== 0) {
                 const vals = item.split(',');
-                const [address, points, token, content, note] = vals;
+                const [address, assetType, amount, content, note] = vals;
                 objs.push({
                   address,
-                  points,
-                  token,
+                  assetType,
+                  amount,
                   content,
                   note,
                 });
-                const _is_valid_address = ethers.utils.isAddress(address);
-                const _token_val = Number(token);
-                const _is_valid_token = !!_token_val && _token_val > 0;
-                const _credit_val = Number(points);
-                const _is_valid_credit = !!_credit_val && _credit_val > 0;
-                const e: ErrorDataType = { line: index, errorKeys: [] };
-
-                if (!_is_valid_address) {
-                  e.errorKeys.push('Address');
-                }
-                if (!_is_valid_token && !_is_valid_credit) {
-                  e.errorKeys.push('PointsOrToken');
-                } else if (!_is_valid_token && (isNaN(_token_val) || _token_val < 0)) {
-                  e.errorKeys.push('Token');
-                } else if (!_is_valid_credit && (isNaN(_credit_val) || _credit_val < 0)) {
-                  e.errorKeys.push('Credit');
-                }
-                if (e.errorKeys.length) {
-                  _errs.push(e);
-                }
               }
             });
 
             data = objs;
           }
         }
-
         setList(data);
-        setErrList(_errs);
 
         console.log('Upload file successful!');
       } catch (e) {
@@ -186,20 +155,6 @@ export default function RegList({ list, setList }: IProps) {
           )}
         </RhtBox>
       </FirstBox>
-      {!!errList.length && (
-        <ErrorBox>
-          <li>{t('Msg.ImportFailed')}:</li>
-          {errList.map((item) => (
-            <li key={item.line}>
-              #{item.line}{' '}
-              {item.errorKeys.map((ekey) => (
-                //   @ts-ignore
-                <span key={ekey}>{t('Project.ImportError', { key: t(`Project.${ekey}`) })}</span>
-              ))}
-            </li>
-          ))}
-        </ErrorBox>
-      )}
       <Box>{getTableContent()}</Box>
     </>
   );
@@ -265,16 +220,6 @@ const BtnBox = styled.label`
   }
   .svg-stroke {
     stroke: var(--bs-primary) !important;
-  }
-`;
-
-const ErrorBox = styled.ul`
-  li {
-    color: red;
-    line-height: 24px;
-    span {
-      margin-inline: 5px;
-    }
   }
 `;
 

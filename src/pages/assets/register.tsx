@@ -16,6 +16,7 @@ import { Button } from 'react-bootstrap';
 import useBudgetSource from 'hooks/useBudgetSource';
 import { ethers } from 'ethers';
 import sns from '@seedao/sns-js';
+import { AssetName } from 'utils/constant';
 
 type ErrorDataType = {
   line: number;
@@ -49,10 +50,12 @@ export default function Register() {
       if (!item.address) {
         err.errorKeys.push(t('Msg.RequiredWallet'));
       }
-      if (!item.assetType) {
+      if (!item.assetType || (item.assetType !== AssetName.Credit && item.assetType !== AssetName.Token)) {
         err.errorKeys.push(t('Msg.SelectAssetType'));
       }
-      if (!item.amount || Number(item.amount) <= 0) {
+      const _amount = Number(item.amount);
+
+      if (isNaN(_amount) || _amount <= 0) {
         err.errorKeys.push(t('Msg.AssetAmountError'));
       }
       if (err.errorKeys.length > 0) {
