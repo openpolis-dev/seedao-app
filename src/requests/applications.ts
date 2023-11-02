@@ -210,7 +210,13 @@ export const getSeasons = (): Promise<ResponseData<ISeason[]>> => {
 export const approveBundleByID = (bundle_id: number) => {
   return request.post(`${BUNDLE_PATH_PREFIX}${bundle_id}/approve`);
 };
+export const approveBundles = (bundle_ids: number[]) => {
+  return request.post('/app_bundle_approve', bundle_ids);
+};
 // reject
 export const rejectBundleByID = (bundle_id: number) => {
   return request.post(`${BUNDLE_PATH_PREFIX}${bundle_id}/reject`);
+};
+export const rejectBundles = (bundle_ids: number[]) => {
+  return request.post('/app_bundle_reject', bundle_ids);
 };

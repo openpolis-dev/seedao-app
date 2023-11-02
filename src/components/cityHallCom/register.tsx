@@ -263,8 +263,7 @@ export default function Register() {
     setLoading(true);
     try {
       const select_ids = getSelectIds();
-      // await requests.application.approveApplications(select_ids);
-      await requests.application.approveBundleByID(select_ids[0]);
+      await requests.application.approveBundles(select_ids);
       getRecords();
       showToast(t('Msg.ApproveSuccess'), ToastType.Success);
       setSelectMap({});
@@ -280,7 +279,7 @@ export default function Register() {
     setLoading(true);
     try {
       const select_ids = getSelectIds();
-      await requests.application.rejectBundleByID(select_ids[0]);
+      await requests.application.rejectBundles(select_ids);
       getRecords();
       setSelectMap({});
       showToast(t('Msg.ApproveSuccess'), ToastType.Success);
