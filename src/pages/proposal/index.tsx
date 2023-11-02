@@ -159,13 +159,16 @@ const CategoryCard = styled.div`
 `;
 
 const SubCategoryCard = styled.div`
+  width: 100%;
   display: flex;
-  justify-content: space-between;
   flex-wrap: wrap;
   padding: 10px;
   background-color: var(--bs-box-background);
   border: 1px solid var(--bs-border-color);
   border-radius: 16px;
+  > a {
+    width: 25%;
+  }
 `;
 
 const SubCategoryItem = styled.div`
@@ -219,10 +222,10 @@ const CategoryName = styled(Link)`
   gap: 8px;
   margin-bottom: 17px;
   .dot {
-    width: 8px;
-    height: 8px;
+    width: 4px;
+    height: 18px;
     background: #14ff00;
-    border-radius: 50%;
+    border-radius: 17px;
   }
   .name {
     font-size: 18px;
