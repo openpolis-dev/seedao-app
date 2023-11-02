@@ -12,6 +12,15 @@ import useToast, { ToastType } from 'hooks/useToast';
 import { createPush, getPushList } from 'requests/push';
 import { formatTime } from 'utils/time';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import PushDetailModal, {
+  PushItemTop,
+  PushItemBottom,
+  PushItemTitle,
+  PushItemContent,
+  JumpBox,
+  StatusTag,
+  PushItemBottomLeft,
+} from 'components/modals/pushDetailModal';
 
 enum PUSH_TAB {
   CREATE = 1,
@@ -109,6 +118,7 @@ const PushHistoryContent = () => {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [hasMore, setHasMore] = useState(false);
+  const [showRecord, setShowRecord] = useState<IPushDisplay>();
 
   const handlePage = (num: number) => {
     setPage(num + 1);
@@ -139,9 +149,10 @@ const PushHistoryContent = () => {
 
   return (
     <div>
+      {showRecord && <PushDetailModal data={showRecord} handleClose={() => setShowRecord(undefined)} />}
       <BlockTitle>{t('Push.History')}</BlockTitle>
       {list.length ? (
-        <>
+        <PushContentBox id="push-scroll">
           <InfiniteScroll
             dataLength={list.length}
             next={getList}
@@ -149,38 +160,36 @@ const PushHistoryContent = () => {
             scrollableTarget="push-scroll"
             loader={<></>}
           >
-            <TableBox id="push-scroll">
-              {list.map((item, idx) => (
-                <PushItem key={idx}>
-                  <PushItemTop>
-                    <PushItemTitle>{item.title}</PushItemTitle>
-                    <PushItemContent>{item.content}</PushItemContent>
-                    <JumpBox>
-                      {t('Push.Href')}
-                      {`: `}
-                      <a href={item.jump_url} target="_blank" rel="noopener noreferrer">
-                        {item.jump_url}
-                      </a>
-                    </JumpBox>
-                  </PushItemTop>
+            {list.map((item, idx) => (
+              <PushItem key={idx} onClick={() => setShowRecord(item)}>
+                <PushItemTop>
+                  <PushItemTitle className="clip">{item.title}</PushItemTitle>
+                  <PushItemContent className="clip">{item.content}</PushItemContent>
+                  <JumpBox className="clip">
+                    {t('Push.Href')}
+                    {`: `}
+                    <a href={item.jump_url} target="_blank" rel="noopener noreferrer">
+                      {item.jump_url}
+                    </a>
+                  </JumpBox>
+                </PushItemTop>
 
-                  <PushItemBottom>
-                    <PushItemBottomLeft>
-                      <div className="name">111</div>
-                      <div className="date">{item.timeDisplay}</div>
-                    </PushItemBottomLeft>
-                    <StatusTag>{t('Push.Pushed')}</StatusTag>
-                    {/* {item.status === PUSH_STATUS.WAITING && (
+                <PushItemBottom>
+                  <PushItemBottomLeft>
+                    <div className="name">111</div>
+                    <div className="date">{item.timeDisplay}</div>
+                  </PushItemBottomLeft>
+                  <StatusTag>{t('Push.Pushed')}</StatusTag>
+                  {/* {item.status === PUSH_STATUS.WAITING && (
                         <Button size="sm" variant="outline-primary" onClick={() => handleCancel()}>
                           {t('general.cancel')}
                         </Button>
                       )} */}
-                  </PushItemBottom>
-                </PushItem>
-              ))}
-            </TableBox>
+                </PushItemBottom>
+              </PushItem>
+            ))}
           </InfiniteScroll>
-        </>
+        </PushContentBox>
       ) : (
         <NoItem />
       )}
@@ -197,10 +206,16 @@ export default function PushPanel({ id }: { id?: number }) {
   );
 }
 
+const PushContentBox = styled.div`
+  height: calc(100vh - 300px);
+  overflow: auto;
+`;
+
 const Box = styled.div`
   display: flex;
   gap: 40px;
   justify-content: space-between;
+  height: 100%;
   @media (max-width: 768px) {
     flex-direction: column;
   }
@@ -230,12 +245,6 @@ const FormInput = styled(Form.Control)`
   min-width: 200px;
 `;
 
-const TableBox = styled.ul`
-  width: 100%;
-  /* height: calc(100vh - 250px);
-  overflow: auto; */
-`;
-
 const SubmitBox = styled.div`
   margin-top: 52px;
   button {
@@ -251,73 +260,14 @@ const BlockTitle = styled.div`
   margin-bottom: 39px;
 `;
 
-const PushItem = styled.li`
+const PushItem = styled.div`
+  cursor: pointer;
   width: 480px;
-  height: 178px;
+  min-height: 178px;
   background: var(--bs-box--background);
   border-radius: 16px;
   border: 1px solid var(--bs-border-color);
   margin-bottom: 25px;
-`;
-
-const PushItemTop = styled.div`
-  padding: 16px 24px;
-`;
-
-const PushItemBottom = styled.div`
-  border-top: 1px solid var(--bs-border-color);
-  display: flex;
-  justify-content: space-between;
-  padding: 9px 24px;
-  align-items: center;
-`;
-
-const PushItemTitle = styled.div`
-  font-size: 16px;
-  font-family: Poppins-SemiBold, Poppins;
-  font-weight: 600;
-  color: var(--bs-body-color_active);
-  line-height: 22px;
-`;
-
-const PushItemContent = styled.div`
-  font-size: 14px;
-  line-height: 20px;
-  color: var(--bs-body-color);
-  margin-block: 8px;
-`;
-
-const JumpBox = styled.div`
-  font-size: 14px;
-  font-family: Poppins-Bold, Poppins;
-  font-weight: bold;
-  color: var(--bs-body-color);
-  a {
-    color: #0085ff;
-  }
-`;
-
-const StatusTag = styled.span`
-  display: inline-block;
-  padding-inline: 8px;
-  line-height: 20px;
-
-  background: #b0b0b0;
-  border-radius: 6px;
-  font-size: 12px;
-  color: #000;
-  text-align: center;
-`;
-
-const PushItemBottomLeft = styled.div`
-  .name {
-    font-size: 14px;
-    color: var(--bs-body-color_active);
-  }
-  .date {
-    font-size: 12px;
-    color: var(--bs-body-color);
-  }
 `;
 
 const CreateBox = styled.div`

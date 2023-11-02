@@ -24,21 +24,17 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
 const Box = styled.div`
   height: 100vh;
-  display: flex;
-  flex-direction: column;
 `;
 
 const LayoutBottom = styled.div`
   width: 100%;
-  height: calc(100vh - 72px);
+  height: 100vh;
   padding-top: 72px;
-  flex-grow: 1;
   box-sizing: border-box;
   display: flex;
   align-items: stretch;
   position: relative;
   @media (max-width: 1440px) {
-    height: calc(100vh - 60px);
     padding-top: 60px;
   }
 `;
