@@ -313,9 +313,9 @@ export default function AssetList() {
             <Table responsive>
               <thead>
                 <tr>
-                  <th className="chech-th">
+                  {/* <th className="chech-th">
                     <Form.Check checked={ifSelectAll} onChange={(e) => onSelectAll(e.target.checked)} />
-                  </th>
+                  </th> */}
                   <th>{t('application.Receiver')}</th>
                   <th className="center">{t('application.AddAssets')}</th>
                   <th className="center">{t('application.Season')}</th>
@@ -328,12 +328,12 @@ export default function AssetList() {
               <tbody>
                 {list.map((item) => (
                   <tr key={item.application_id} onClick={() => setDetailDisplay(item)}>
-                    <td>
+                    {/* <td>
                       <Form.Check
                         checked={!!selectMap[item.application_id]}
                         onChange={(e) => onChangeCheckbox(e.target.checked, item.application_id, item.status)}
                       />
-                    </td>
+                    </td> */}
                     <td>{formatSNS(item.receiver_name || '')}</td>
                     <td className="center">{item.asset_display}</td>
                     <td className="center">{item.season_name}</td>
