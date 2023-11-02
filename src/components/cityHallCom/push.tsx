@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import DatePickerStyle from 'components/datePicker';
-import Page from 'components/pagination';
 import NoItem from 'components/noItem';
 import publicJs from 'utils/publicJs';
 import { PUSH_STATUS, IPushDisplay } from 'type/push.type';
@@ -12,6 +11,7 @@ import { AppActionType, useAuthContext } from 'providers/authProvider';
 import useToast, { ToastType } from 'hooks/useToast';
 import { createPush, getPushList } from 'requests/push';
 import { formatTime } from 'utils/time';
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 enum PUSH_TAB {
   CREATE = 1,
@@ -61,7 +61,7 @@ const CreatePushContent = () => {
     return !title || !href || !title.trim() || !href.trim();
   }, [title, href]);
   return (
-    <div style={{ flex: 1 }}>
+    <CreateBox>
       <BlockTitle>{t('Push.CreatePush')}</BlockTitle>
       <Form>
         <FormGroup>
@@ -99,7 +99,7 @@ const CreatePushContent = () => {
           {t('Push.Create')}
         </Button>
       </SubmitBox>
-    </div>
+    </CreateBox>
   );
 };
 
@@ -108,7 +108,7 @@ const PushHistoryContent = () => {
   const [list, setList] = useState<IPushDisplay[]>([]);
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-  const [total, setTotal] = useState(100);
+  const [hasMore, setHasMore] = useState(false);
 
   const handlePage = (num: number) => {
     setPage(num + 1);
@@ -118,84 +118,72 @@ const PushHistoryContent = () => {
   };
 
   const handleCancel = () => {};
+  const getList = async () => {
+    try {
+      const { data } = await getPushList({ page, size: pageSize, sort_field: 'created_at', sort_order: 'desc' });
+      setList(
+        data.rows.map((item) => ({
+          ...item,
+          timeDisplay: formatTime(new Date(item.created_at).getTime()),
+        })),
+      );
+      setHasMore(data.rows.length >= pageSize);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   useEffect(() => {
-    const getList = async () => {
-      try {
-        const { data } = await getPushList({ page, size: pageSize, sort_field: 'created_at', sort_order: 'desc' });
-        setTotal(data.total);
-        setList(
-          data.rows.map((item) => ({
-            ...item,
-            timeDisplay: formatTime(new Date(item.created_at).getTime()),
-          })),
-        );
-      } catch (error) {
-        console.error(error);
-      }
-    };
     getList();
-  }, [page, pageSize]);
+  }, []);
 
   return (
     <div>
       <BlockTitle>{t('Push.History')}</BlockTitle>
-      <TableBox>
-        {list.length ? (
-          <>
-            <table className="table" cellPadding="0" cellSpacing="0">
-              <thead>
-                <tr>
-                  <th>{t('Push.Title')}</th>
-                  <th>{t('Push.Content')}</th>
-                  <th>{t('Push.Href')}</th>
-                  <th>{t('Push.Time')}</th>
-                  {/* <th>{t('Push.Status')}</th> */}
-                  <th>{t('Push.Creator')}</th>
-                  {/* <th>{t('Push.Options')}</th> */}
-                </tr>
-              </thead>
-              <tbody>
-                {list.map((item, index) => (
-                  <tr key={index}>
-                    <td>{item.title}</td>
-                    <td>{item.content}</td>
-                    <td>
-                      <a href={item.jump_url} target="_blank" rel="noreferrer">
-                        {item.jump_url?.slice(0, 10) + '...'}
+      {list.length ? (
+        <>
+          <InfiniteScroll
+            dataLength={list.length}
+            next={getList}
+            hasMore={hasMore}
+            scrollableTarget="push-scroll"
+            loader={<></>}
+          >
+            <TableBox id="push-scroll">
+              {list.map((item, idx) => (
+                <PushItem key={idx}>
+                  <PushItemTop>
+                    <PushItemTitle>{item.title}</PushItemTitle>
+                    <PushItemContent>{item.content}</PushItemContent>
+                    <JumpBox>
+                      {t('Push.Href')}
+                      {`: `}
+                      <a href={item.jump_url} target="_blank" rel="noopener noreferrer">
+                        {item.jump_url}
                       </a>
-                    </td>
-                    <td>{item.timeDisplay}</td>
-                    {/* <td>{formatPushStatus(item.status, t)}</td> */}
-                    <td>
-                      <div>
-                        <span>{publicJs.AddressToShow(item.creator_wallet)}</span>
-                      </div>
-                    </td>
-                    {/* <td>
-                    {item.status === PUSH_STATUS.WAITING && (
-                      <Button size="sm" variant="outline-primary" onClick={() => handleCancel()}>
-                        {t('general.cancel')}
-                      </Button>
-                    )}
-                  </td> */}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            <Page
-              itemsPerPage={pageSize}
-              total={total}
-              current={page - 1}
-              handleToPage={handlePage}
-              handlePageSize={handlePageSize}
-              dir="right"
-            />
-          </>
-        ) : (
-          <NoItem />
-        )}
-      </TableBox>
+                    </JumpBox>
+                  </PushItemTop>
+
+                  <PushItemBottom>
+                    <PushItemBottomLeft>
+                      <div className="name">111</div>
+                      <div className="date">{item.timeDisplay}</div>
+                    </PushItemBottomLeft>
+                    <StatusTag>{t('Push.Pushed')}</StatusTag>
+                    {/* {item.status === PUSH_STATUS.WAITING && (
+                        <Button size="sm" variant="outline-primary" onClick={() => handleCancel()}>
+                          {t('general.cancel')}
+                        </Button>
+                      )} */}
+                  </PushItemBottom>
+                </PushItem>
+              ))}
+            </TableBox>
+          </InfiniteScroll>
+        </>
+      ) : (
+        <NoItem />
+      )}
     </div>
   );
 };
@@ -212,6 +200,7 @@ export default function PushPanel({ id }: { id?: number }) {
 const Box = styled.div`
   display: flex;
   gap: 40px;
+  justify-content: space-between;
   @media (max-width: 768px) {
     flex-direction: column;
   }
@@ -241,27 +230,10 @@ const FormInput = styled(Form.Control)`
   min-width: 200px;
 `;
 
-const TableBox = styled.div`
+const TableBox = styled.ul`
   width: 100%;
-  overflow-x: auto;
-  overflow-y: hidden;
-  flex: 2;
-  table {
-    th {
-      background: transparent;
-      color: #6e6893;
-      border: 1px solid #d9d5ec;
-      border-left: none;
-      border-right: none;
-      border-radius: 0;
-    }
-    td {
-      border-bottom-color: #d9d5ec;
-    }
-    tr:hover td {
-      background: #f2f0f9;
-    }
-  }
+  /* height: calc(100vh - 250px);
+  overflow: auto; */
 `;
 
 const SubmitBox = styled.div`
@@ -277,4 +249,77 @@ const BlockTitle = styled.div`
   font-weight: bold;
   line-height: 30px;
   margin-bottom: 39px;
+`;
+
+const PushItem = styled.li`
+  width: 480px;
+  height: 178px;
+  background: var(--bs-box--background);
+  border-radius: 16px;
+  border: 1px solid var(--bs-border-color);
+  margin-bottom: 25px;
+`;
+
+const PushItemTop = styled.div`
+  padding: 16px 24px;
+`;
+
+const PushItemBottom = styled.div`
+  border-top: 1px solid var(--bs-border-color);
+  display: flex;
+  justify-content: space-between;
+  padding: 9px 24px;
+  align-items: center;
+`;
+
+const PushItemTitle = styled.div`
+  font-size: 16px;
+  font-family: Poppins-SemiBold, Poppins;
+  font-weight: 600;
+  color: var(--bs-body-color_active);
+  line-height: 22px;
+`;
+
+const PushItemContent = styled.div`
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--bs-body-color);
+  margin-block: 8px;
+`;
+
+const JumpBox = styled.div`
+  font-size: 14px;
+  font-family: Poppins-Bold, Poppins;
+  font-weight: bold;
+  color: var(--bs-body-color);
+  a {
+    color: #0085ff;
+  }
+`;
+
+const StatusTag = styled.span`
+  display: inline-block;
+  padding-inline: 8px;
+  line-height: 20px;
+
+  background: #b0b0b0;
+  border-radius: 6px;
+  font-size: 12px;
+  color: #000;
+  text-align: center;
+`;
+
+const PushItemBottomLeft = styled.div`
+  .name {
+    font-size: 14px;
+    color: var(--bs-body-color_active);
+  }
+  .date {
+    font-size: 12px;
+    color: var(--bs-body-color);
+  }
+`;
+
+const CreateBox = styled.div`
+  width: 576px;
 `;
