@@ -41,4 +41,8 @@ export interface IBaseProposal {
   };
   updated_at: string;
   tags: ProposalTag[];
+  user_title?: {
+    name: string;
+    background: string;
+  };
 }

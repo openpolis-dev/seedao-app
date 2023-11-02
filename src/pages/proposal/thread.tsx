@@ -61,7 +61,10 @@ export default function Proposal() {
                 <UserAvatar src={data?.user.photo_url} alt="" />
               </div>
               <div className="right">
-                <div className="name">{data?.user.username}</div>
+                <div className="name">
+                  <div>{data?.user.username}</div>
+                  {data.user_title?.name && <UserTag bg={data.user_title.background}>{data.user_title?.name}</UserTag>}
+                </div>
                 <div className="date">{formatDate(new Date(data?.updated_at || ''))}</div>
               </div>
             </User>
@@ -104,7 +107,11 @@ const User = styled.div`
   gap: 10px;
   margin-block: 16px;
   .name {
-    font-weight: 500;
+    font-size: 14px;
+    font-family: Poppins-SemiBold, Poppins;
+    color: var(--bs-body-color_active);
+    display: inline-flex;
+    align-items: center;
   }
   .date {
     font-size: 13px;
@@ -133,6 +140,8 @@ const MoreButton = styled.button`
 `;
 
 const Content = styled.div`
+  color: var(--bs-body-color_active);
+  max-width: 750px;
   h1 {
     margin-top: 28px;
     margin-bottom: 10px;
@@ -150,4 +159,16 @@ const Content = styled.div`
     margin-top: 10px;
     margin-bottom: 16px;
   }
+`;
+
+const UserTag = styled.span<{ bg: string }>`
+  padding-inline: 8px;
+  height: 20px;
+  line-height: 20px;
+  display: inline-block;
+  font-size: 12px;
+  color: #000;
+  background-color: ${(props) => props.bg};
+  border-radius: 6px;
+  margin-left: 8px;
 `;
