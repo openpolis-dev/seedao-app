@@ -14,6 +14,8 @@ import BackIconSVG from 'components/svgs/back';
 import { Link } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
 import useBudgetSource from 'hooks/useBudgetSource';
+import { ethers } from 'ethers';
+import sns from '@seedao/sns-js';
 
 type ErrorDataType = {
   line: number;
@@ -26,7 +28,6 @@ export default function Register() {
   const { showToast } = useToast();
 
   const [list, setList] = useState<IExcelObj[]>([]);
-  const [errList, setErrList] = useState<ErrorDataType[]>([]);
 
   const allSource = useBudgetSource();
   const [selectSource, setSelectSource] = useState<{ id: number; type: ApplicationEntity }>();
@@ -35,10 +36,94 @@ export default function Register() {
 
   const Clear = () => {
     setList([]);
-    setErrList([]);
+    setSelectSource(undefined);
+    setContent('');
+  };
+  const checkInvalidData = () => {
+    const err_list: ErrorDataType[] = [];
+    list.forEach((item, i) => {
+      const err: ErrorDataType = {
+        line: i + 1,
+        errorKeys: [],
+      };
+      if (!item.address) {
+        err.errorKeys.push(t('Msg.RequiredWallet'));
+      }
+      if (!item.assetType) {
+        err.errorKeys.push(t('Msg.SelectAssetType'));
+      }
+      if (!item.amount || Number(item.amount) <= 0) {
+        err.errorKeys.push(t('Msg.AssetAmountError'));
+      }
+      if (err.errorKeys.length > 0) {
+        err_list.push(err);
+      }
+    });
+    console.log(err_list);
+    if (err_list.length) {
+      let msgs: string[] = [];
+      err_list.forEach((item) => msgs.push(`L${item.line}: ${item.errorKeys.join(', ')}`));
+      return msgs.join('\n');
+    }
+
+    return undefined;
+  };
+
+  const checkWallet = async () => {
+    const err_list: ErrorDataType[] = [];
+    const sns_set: Set<string> = new Set();
+    list.forEach((item, i) => {
+      const err: ErrorDataType = {
+        line: i + 1,
+        errorKeys: [],
+      };
+      if (item.address.endsWith('.seedao')) {
+        sns_set.add(item.address);
+      } else if (!item.address.startsWith('0x')) {
+        err.errorKeys.push(t('Msg.SNSError'));
+      } else if (!ethers.utils.isAddress(item.address)) {
+        err.errorKeys.push(t('Msg.RequiredWallet'));
+      }
+      if (err.errorKeys.length > 0) {
+        err_list.push(err);
+      }
+    });
+    if (err_list.length) {
+      let msgs: string[] = [];
+      err_list.forEach((item) => msgs.push(`L${item.line}: ${item.errorKeys.join(', ')}`));
+      return msgs.join('\n');
+    }
+    const err_sns_list: string[] = [];
+    try {
+      const sns_list = Array.from(sns_set);
+      const result = await sns.resolves(sns_list);
+      result.forEach((item, i) => {
+        if (!item) {
+          err_sns_list.push(sns_list[i]);
+        }
+      });
+    } catch (error) {
+      console.error(error);
+    }
+    if (err_sns_list.length) {
+      return `${t('Msg.SNSError')}: ${err_sns_list.join(', ')}`;
+    }
+    // check SNS
+    return undefined;
   };
 
   const handleCreate = async () => {
+    let msg: string | undefined;
+    msg = checkInvalidData();
+    if (msg) {
+      showToast(msg, ToastType.Danger, { autoClose: false });
+      return;
+    }
+    msg = await checkWallet();
+    if (msg) {
+      showToast(msg, ToastType.Danger, { autoClose: false });
+      return;
+    }
     if (!selectSource) {
       return;
     }
@@ -103,7 +188,11 @@ export default function Register() {
         />
       </SectionBlock>
       <ButtonSection>
-        <Button variant="primary" onClick={handleCreate}>
+        <Button
+          variant="primary"
+          onClick={handleCreate}
+          disabled={!list.length || !selectSource || !content || !content.trim()}
+        >
           {t('Assets.RegisterSubmit')}
         </Button>
       </ButtonSection>

@@ -50,7 +50,6 @@ const CustomTable = ({ updateList }: IProps) => {
     setList(_list);
   };
 
-  console.log(list);
   const addOne = () => {
     setList([
       ...list,
