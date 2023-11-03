@@ -4,6 +4,13 @@ import styled from 'styled-components';
 import CopyC from "../../assets/Imgs/dark/copyCalendar.svg";
 import CopyCLight from "../../assets/Imgs/light/copyCalendar.svg";
 
+import ArrLft from "../../assets/Imgs/dark/arrLft.svg";
+import ArrRht from "../../assets/Imgs/dark/arrRht.svg";
+
+import ArrLftLight from "../../assets/Imgs/light/arrLft.svg";
+import ArrRhtLight from "../../assets/Imgs/light/arrRht.svg";
+
+
 import { useTranslation } from "react-i18next";
 
 const Box = styled.div`
@@ -17,9 +24,45 @@ const Box = styled.div`
 
     }
 
+    .calendar-header{
+        .calendar-navigate{
+            opacity: 1;
+            width: 32px;
+            height: 32px;
+            overflow: hidden;
+            cursor: pointer;
+            overflow: hidden;
+            position: relative;
+        }
+        &>div:first-child{
+            &::after {
+                position: absolute;
+                z-index: 1;
+                left: 0;
+                top: 0;
+                content: "";
+                width: 32px;
+                height: 32px;
+                background: url(${props=>props.theme === "true"?ArrLft:ArrLftLight});
+            }
+
+        }
+        &>div:last-child{
+            &::after {
+                position: absolute;
+                z-index: 1;
+                left: 0;
+                top: 0;
+                content: "";
+                width: 32px;
+                height: 32px;
+                background: url(${props=>props.theme === "true"?ArrRht:ArrRhtLight});
+            }
+        }
+    }
     .event-text{
         padding-top: 0;
-        padding-left: 14px;
+        padding-left: 18px;
         color:var(--bs-body-color_active) ;
     
     }
@@ -172,8 +215,8 @@ let styles = {
     },
     eventCircle:{
         top:0,
-        width:"6px",
-        height:"6px"
+        width:"10px",
+        height:"10px"
     },
     tooltip:{
         width:"560px",

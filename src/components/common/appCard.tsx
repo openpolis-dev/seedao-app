@@ -120,6 +120,7 @@ const AppCardStyle = styled.div`
     color: #1a1323;
     line-height: 18px;
     margin-top: 8px;
+    color: var(--bs-body-color_active);
   }
 
   @media (max-width: 1024px) {
