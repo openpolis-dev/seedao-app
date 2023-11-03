@@ -7,7 +7,7 @@ import useToast from 'hooks/useToast';
 import { ContainerPadding } from 'assets/styles/global';
 import useParseSNS from 'hooks/useParseSNS';
 import CopyBox from 'components/copy';
-
+import GithubImg from '../../../assets/Imgs/profile/github.svg';
 import TwitterIcon from '../../../assets/Imgs/profile/Twitter.svg';
 import DiscordIcon from '../../../assets/Imgs/profile/discord.svg';
 import WechatIcon from '../../../assets/Imgs/profile/wechat.svg';
@@ -58,20 +58,25 @@ export default function Profile() {
 
   const [sbt, setSbt] = useState<any[]>([]);
   const [seed, setSeed] = useState<any[]>([]);
+  const [wallet, setWallet] = useState();
+  const [detail, setDetail] = useState<any>();
 
   useEffect(() => {
     if (userData) {
-      setUserName(userData.nickname);
-      setAvatar(userData.avatar);
+      let detail = (userData as any).data;
+      setDetail(detail);
+      setUserName(detail.nickname);
+      setAvatar(detail.avatar);
+      setWallet(detail.wallet);
 
-      setBio(userData.bio);
-      setRoles(userData.roles!);
+      setBio(detail.bio);
+      setRoles(detail.roles!);
 
-      let sbtArr = userData.sbt;
+      let sbtArr = detail.sbt;
 
       const sbtFor = sbtArr?.filter((item: any) => item.name && item.image_uri);
       setSbt(sbtFor);
-      setSeed(userData.seed);
+      setSeed(detail.seed);
     }
   }, [userData]);
 
@@ -170,6 +175,12 @@ export default function Profile() {
             <img src={MirrorImg} alt="" />
           </a>
         );
+      case 'github':
+        return (
+          <a href={val} target="_blank">
+            <img src={GithubImg} alt="" />
+          </a>
+        );
       case 'discord':
       // return <img src={DiscordIcon} alt="" />;
 
@@ -209,9 +220,9 @@ export default function Profile() {
             )}
 
             <div className="wallet">
-              <span>{AddressToShow(userData?.wallet!)}</span>
-              {userData?.wallet && (
-                <CopyBox text={userData?.wallet} dir="right">
+              <span>{AddressToShow(wallet!)}</span>
+              {wallet && (
+                <CopyBox text={wallet!} dir="right">
                   <img src={CopyIconSVG} alt="" />
                 </CopyBox>
               )}
@@ -234,7 +245,7 @@ export default function Profile() {
           ))}
         </TagBox>
         <LinkBox>
-          {userData?.social_accounts?.map((item: any, index: number) =>
+          {detail?.social_accounts?.map((item: any, index: number) =>
             returnSocial(item.network, item.identity) ? (
               <li key={`sbtInner_${index}`}>
                 <span className="iconLft">{returnSocial(item.network, item.identity)}</span>
@@ -243,9 +254,9 @@ export default function Profile() {
               <></>
             ),
           )}
-          {userData?.email && (
+          {detail?.email && (
             <li>
-              <span className="iconLft">{returnSocial('email', userData?.email)}</span>
+              <span className="iconLft">{returnSocial('email', detail?.email)}</span>
             </li>
           )}
         </LinkBox>
@@ -254,21 +265,21 @@ export default function Profile() {
             <div>
               <Crt>
                 <div>{t('My.current')}</div>
-                <div className="num">{userData?.level?.upgrade_percent}%</div>
+                <div className="num">{detail?.level?.upgrade_percent}%</div>
               </Crt>
-              <ProgressBox width={userData?.level?.upgrade_percent ? userData?.level?.upgrade_percent : 0}>
+              <ProgressBox width={detail?.level?.upgrade_percent ? detail?.level?.upgrade_percent : 0}>
                 <div className="inner" />
               </ProgressBox>
               <TipsBox>
                 <div>{t('My.nextLevel')}</div>
-                <div className="scr">{formatNumber(userData?.level?.scr_to_next_lv)} SCR</div>
+                <div className="scr">{formatNumber(detail?.level?.scr_to_next_lv)} SCR</div>
               </TipsBox>
             </div>
             <FstLine>
               <LevelBox>
-                {t('My.level')} {userData?.level?.current_lv}
+                {t('My.level')} {detail?.level?.current_lv}
               </LevelBox>
-              <SCRBox>{formatNumber(userData?.scr?.amount)} SCR</SCRBox>
+              <SCRBox>{formatNumber(detail?.scr?.amount)} SCR</SCRBox>
             </FstLine>
           </ProgressOuter>
           <NftBox>

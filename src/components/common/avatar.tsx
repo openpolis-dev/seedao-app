@@ -7,7 +7,6 @@ import DefaultAvatar from '../../assets/Imgs/defaultAvatarT.png';
 
 export default function Avatar({ user }: { user?: IUser }) {
   const sns = useParseSNS(user?.wallet);
-  console.log(user);
   return (
     <AvatarStyle>
       <span>{sns || user?.name || PublicJs.AddressToShow(user?.wallet || '')}</span>

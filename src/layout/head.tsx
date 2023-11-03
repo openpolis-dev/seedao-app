@@ -222,7 +222,6 @@ export default function Header() {
 
   useEffect(() => {
     let theme = localStorage.getItem('theme');
-    console.error(theme);
     if (theme) {
       document.documentElement.setAttribute('data-bs-theme', theme);
       dispatch({
@@ -279,7 +278,7 @@ export default function Header() {
           {isLogin && userData ? (
             <Dropdown>
               <Dropdown.Toggle variant="primary" className="dropBox">
-                <Avatar user={userData} />
+                <Avatar user={(userData as any).data} />
               </Dropdown.Toggle>
 
               <Dropdown.Menu className="dropBtm">

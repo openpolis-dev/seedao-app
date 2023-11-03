@@ -7,6 +7,7 @@ import { Button } from 'react-bootstrap';
 import Links from 'utils/links';
 import AppCard, { EmptyAppCard } from 'components/common/appCard';
 import Tabbar from 'components/common/tabbar';
+import { useAuthContext } from '../providers/authProvider';
 
 const OuterBox = styled.div`
   min-height: 100%;
@@ -35,6 +36,9 @@ const RhtBoxT = styled.div`
 
 export default function Apps() {
   const { t } = useTranslation();
+  const {
+    state: { theme },
+  } = useAuthContext();
 
   const events = useMemo(() => {
     // @ts-ignore
@@ -59,7 +63,7 @@ export default function Apps() {
           </Col>
         ))}
         <Col sm={12} md={6} lg={4} xl={3}>
-          <EmptyAppCard />
+          <EmptyAppCard theme={theme} />
         </Col>
       </AppBox>
     </OuterBox>
