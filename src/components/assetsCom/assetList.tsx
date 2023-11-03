@@ -235,7 +235,8 @@ export default function AssetList() {
   }, [list, selectMap]);
 
   const formatSNS = (name: string) => {
-    return name?.startsWith('0x') ? publicJs.AddressToShow(name) : name;
+    return name;
+    // return name?.startsWith('0x') ? publicJs.AddressToShow(name) : name;
   };
 
   return (
@@ -330,12 +331,14 @@ export default function AssetList() {
                         onChange={(e) => onChangeCheckbox(e.target.checked, item.application_id, item.status)}
                       />
                     </td> */}
-                    <td>{formatSNS(item.receiver_name || '')}</td>
+                    <td style={{ width: '20%' }}>{formatSNS(item.receiver_name || '')}</td>
                     <td className="center">{item.asset_display}</td>
                     <td className="center">{item.season_name}</td>
                     <td>{item.detailed_type}</td>
                     <td className="center">{item.budget_source}</td>
-                    <td className="center">{formatSNS(item.submitter_name)}</td>
+                    <td className="center" style={{ width: '20%' }}>
+                      {formatSNS(item.submitter_name)}
+                    </td>
                     <td>
                       <ApplicationStatusTag status={item.status} />
                     </td>
