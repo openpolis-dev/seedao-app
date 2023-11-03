@@ -75,7 +75,11 @@ const LineBox = styled.div`
   align-items: center;
   width: 100%;
   margin-bottom: 16px;
-
+  .rhtLine {
+    width: 1px;
+    height: 80px;
+    background: var(--line-home);
+  }
   dl {
     width: 33.33333%;
     display: flex;
@@ -305,6 +309,7 @@ export default function Home() {
             <div className="tips">{t('Home.SGNHolder')}</div>
           </dd>
         </dl>
+        <div className="rhtLine" />
         <dl>
           <dt>
             <img src={theme ? GovernImg : GovernImgLight} alt="" />
@@ -314,6 +319,7 @@ export default function Home() {
             <div className="tips">{t('Home.GovernNode')}</div>
           </dd>
         </dl>
+        <div className="rhtLine" />
         <dl>
           <dt>
             <img src={theme ? SbtImg : SbtImgLight} alt="" />
