@@ -12,7 +12,6 @@ import CameraIconSVG from 'components/svgs/camera';
 import CloseTips from './closeTips';
 import CloseSuccess from './closeSuccess';
 import { createCloseProjectApplication } from 'requests/applications';
-import { useNavigate } from 'react-router-dom';
 
 const config = {
   toobars: [
@@ -42,7 +41,6 @@ const config = {
 
 export default function EditProject({ detail, onUpdate }: { detail: ReTurnProject | undefined; onUpdate: () => void }) {
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const { showToast } = useToast();
   const {
     dispatch,
@@ -331,8 +329,9 @@ const TopBox = styled.section`
 `;
 
 const IntroBox = styled.div`
-  .cm-scroller {
-    background: #f7f9fc;
+  .cm-scroller,
+  .md-editor-preview-wrapper {
+    background: var(--bs-background);
   }
 `;
 

@@ -4,6 +4,8 @@ import { ReTurnProject } from 'type/project.type';
 import Members from './members';
 import ReactMarkdown from 'react-markdown';
 import { Button } from 'react-bootstrap';
+import usePermission from 'hooks/usePermission';
+import { PermissionObject, PermissionAction } from 'utils/constant';
 
 interface Iprops {
   detail: ReTurnProject | undefined;
@@ -12,6 +14,11 @@ interface Iprops {
 }
 export default function Info({ detail, onUpdate, handleEdit }: Iprops) {
   const { t } = useTranslation();
+  const canAuditApplication = usePermission(
+    PermissionAction.CreateApplication,
+    PermissionObject.ProjPrefix + detail?.id,
+  );
+
   return (
     <>
       <TopBox>
@@ -31,9 +38,11 @@ export default function Info({ detail, onUpdate, handleEdit }: Iprops) {
             ))}
           </ProposalBox>
         </TopInfo>
-        <div>
-          <Button onClick={() => handleEdit()}>{t('general.edit')}</Button>
-        </div>
+        {canAuditApplication && (
+          <div>
+            <Button onClick={() => handleEdit()}>{t('general.edit')}</Button>
+          </div>
+        )}
       </TopBox>
       <ContentBox>
         <div>{t('Project.Intro')}</div>
