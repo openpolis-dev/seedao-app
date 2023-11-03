@@ -15,6 +15,7 @@ import { useAuthContext } from '../providers/authProvider';
 import CopyIconSVG from 'components/svgs/copy';
 import MultiClamp from 'react-multi-clamp';
 import { useTranslation } from 'react-i18next';
+import SocialIcon, { SocaialType } from 'components/common/socialIcon';
 
 interface IUserProps {
   user: IUser;
@@ -73,34 +74,10 @@ export default function UserCard({ user, showEdit, onSelectUser, formatActive, s
           </MultiClamp>
         </BioBox>
         <LinkBox>
-          {user.twitter_profile ? (
-            <a href={user.twitter_profile} target="_blank" rel="noreferrer">
-              <img src={TwitterIcon} alt="" />
-            </a>
-          ) : (
-            <img src={TwitterIcon} alt="" className="icon" />
-          )}
-          {user.mirror ? (
-            <a href={`mailto:${user.mirror}`} target="_blank" rel="noreferrer">
-              <img src={MirrorImg} alt="" />
-            </a>
-          ) : (
-            <img src={MirrorImg} alt="" className="icon" />
-          )}
-          {user.email ? (
-            <a href={`mailto:${user.email}`} target="_blank" rel="noreferrer">
-              <img src={EmailIcon} alt="" />
-            </a>
-          ) : (
-            <img src={EmailIcon} alt="" className="icon" />
-          )}
-          {user.github ? (
-            <a href={`mailto:${user.github}`} target="_blank" rel="noreferrer">
-              <img src={GithubIcon} alt="" />
-            </a>
-          ) : (
-            <img src={GithubIcon} alt="" className="icon" />
-          )}
+          <SocialIcon type={SocaialType.Twitter} value={user.twitter_profile} />
+          <SocialIcon type={SocaialType.Mirror} value={user.mirror} />
+          <SocialIcon type={SocaialType.Email} value={user.email ? `mailto:${user.email}` : ''} />
+          <SocialIcon type={SocaialType.Github} value={user.github} />
         </LinkBox>
       </div>
     </UserCardBox>
