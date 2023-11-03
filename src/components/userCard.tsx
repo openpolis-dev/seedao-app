@@ -151,7 +151,7 @@ const UserCardBox = styled(Col)`
 
 const BioBox = styled.div`
   font-size: 12px;
-  color: var(--bs-body-color);
+  color: var(--bs-body-color_active);
   line-height: 18px;
   margin-top: 12px;
   height: 38px;
