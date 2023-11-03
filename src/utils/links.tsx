@@ -6,6 +6,7 @@ import DaolinkIcon from '../assets/Imgs/home/DAOlink.png';
 import Cascad3Icon from '../assets/Imgs/home/Cascad3.png';
 import Wormhole3Icon from '../assets/Imgs/home/Wormhole3.png';
 import SeedIcon from '../assets/images/seed.png';
+import SeeUImg from '../assets/Imgs/home/seeuNetwork.jpg';
 
 export default {
   resource: [
@@ -211,7 +212,7 @@ export default {
       id: 'seeu',
       name: 'apps.SeeU',
       link: 'https://seeu.network/',
-      icon: '',
+      icon: SeeUImg,
       desc: 'apps.SeeUDesc',
     },
   ],
