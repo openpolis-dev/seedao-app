@@ -7,7 +7,7 @@ import useToast from 'hooks/useToast';
 import { ContainerPadding } from 'assets/styles/global';
 import useParseSNS from 'hooks/useParseSNS';
 import CopyBox from 'components/copy';
-import GithubImg from '../../../assets/Imgs/profile/github.svg';
+import GithubImg from '../../../assets/Imgs/profile/Github2.svg';
 import TwitterIcon from '../../../assets/Imgs/profile/Twitter.svg';
 import DiscordIcon from '../../../assets/Imgs/profile/discord.svg';
 import WechatIcon from '../../../assets/Imgs/profile/wechat.svg';
