@@ -36,8 +36,8 @@ export default function Info({ detail, onUpdate, handleEdit }: Iprops) {
               <ProposalBox>
                 {detail?.proposals.map((item, index) => (
                   <li key={index}>
-                    <a href={item} target="_blank" rel="noopener noreferrer">
-                      {`SIP-${index + 1}`}
+                    <a href={`https://forum.seedao.xyz/thread/${item}`} target="_blank" rel="noopener noreferrer">
+                      {`SIP-${item}`}
                     </a>
                   </li>
                 ))}
