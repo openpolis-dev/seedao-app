@@ -38,6 +38,7 @@ const AppCard = ({
     <AppCardStyle className="boxBg" onClick={handleClickEvent}>
       <div className="iconBox">
         <img src={icon ? icon : theme ? DefaultImg : DefaultImgLight} alt="" />
+        <div className="inner" />
       </div>
       <div className="Rht">
         <div className="title">{name}</div>
@@ -79,10 +80,27 @@ const AppCardStyle = styled.div`
     background-color: var(--home-right_hover);
   }
   .iconBox {
-    img {
+    border-radius: 16px;
+
+    overflow: hidden;
+    width: 88px;
+    height: 88px;
+    flex-shrink: 0;
+    position: relative;
+    .inner {
+      background: #fff;
       width: 88px;
       height: 88px;
-      border-radius: 16px;
+      position: absolute;
+      left: 0;
+      top: 0;
+      border-radius: 17px;
+    }
+    img {
+      position: relative;
+      z-index: 99;
+      width: 88px;
+      height: 88px;
       object-fit: cover;
       object-position: center;
     }

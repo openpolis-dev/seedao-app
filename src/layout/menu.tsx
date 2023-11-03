@@ -18,7 +18,7 @@ import EventImgActive from '../assets/Imgs/darkMenu/event_active.png';
 import EventImgLight from '../assets/Imgs/lightMenu/event.svg';
 
 import CalendarImg from '../assets/Imgs/darkMenu/calendar.svg';
-
+import CalendarActive from '../assets/Imgs/darkMenu/calendar_active.png';
 import CalendarImgLight from '../assets/Imgs/lightMenu/calendar.svg';
 
 import CreditImg from '../assets/Imgs/darkMenu/credit.svg';
@@ -123,6 +123,9 @@ const LftLi = styled.div<{ selected?: boolean }>`
     color: var(--menu-color);
     ${(props) => props.selected && '   font-family: Poppins-SemiBold;'}
   }
+  img {
+    width: 24px;
+  }
   //.icon {
   //  font-size: 20px;
   //}
@@ -216,11 +219,11 @@ const items: MenuItemType[] = [
     icon: {
       dark: {
         nor: CalendarImg,
-        active: HomeImgActive,
+        active: CalendarActive,
       },
       light: {
         nor: CalendarImgLight,
-        active: HomeImgActive,
+        active: CalendarActive,
       },
     },
     link: { href: '/online-event' },
