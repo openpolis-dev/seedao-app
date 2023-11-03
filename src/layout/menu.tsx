@@ -396,7 +396,10 @@ export default function Menu({ isMedium }: { isMedium: boolean }) {
           data={item}
           theme={theme}
           onSelectMenu={onSelectMenu}
-          selected={pathname.startsWith(item.link.href)}
+          selected={
+            pathname.startsWith(item.link.href) ||
+            (item.link.href.startsWith('/explore') && (pathname.includes('project') || pathname.includes('guild')))
+          }
         />
       ))}
       {!isMedium && <AppVersion open={open} />}
