@@ -36,10 +36,10 @@ export default function ProposalSubNav({ onSelect }: IProps) {
 
 const SubNav = styled.nav`
   display: flex;
-  margin-block: 20px;
+  margin-top: 14px;
+  margin-bottom: 24px;
   display: flex;
   justify-content: space-between;
-  padding-inline: 20px;
   align-items: center;
 `;
 

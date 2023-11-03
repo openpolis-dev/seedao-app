@@ -151,7 +151,7 @@ const BoxOuter = styled.div`
 `;
 
 const ContentBox = styled.div`
-  margin-top: 60px;
+  margin-top: 24px;
 `;
 
 const CategoryCard = styled.div`
@@ -190,11 +190,7 @@ const SubCategoryItem = styled.div`
   }
 `;
 
-const ProposalBox = styled.div`
-  & > div {
-    margin: 20px;
-  }
-`;
+const ProposalBox = styled.div``;
 
 const IconBox = styled.span`
   display: inline-block;

@@ -29,8 +29,8 @@ export default function ProposalNav({ navs }: { navs: ICatergoryNav[] }) {
 
 const Nav = styled.ul`
   display: flex;
+  line-height: 30px;
   font-weight: 600;
-  margin-bottom: 20px;
   color: var(--bs-body-color);
   font-size: 14px;
   li:last-child {

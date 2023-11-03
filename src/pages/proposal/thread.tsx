@@ -91,6 +91,7 @@ const ProposalContainer = styled.div`
   padding: 24px;
   min-height: 100%;
   position: relative;
+  margin-top: 19px;
 `;
 
 const ProposalTitle = styled.div`
