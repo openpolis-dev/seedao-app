@@ -12,7 +12,6 @@ import { ContainerPadding } from 'assets/styles/global';
 import { MdEditor } from 'md-editor-rt';
 import BackIconSVG from 'components/svgs/back';
 import PlusMinusButton from 'components/common/buttons';
-import UploadImg from 'assets/Imgs/profile/upload.svg';
 import CameraIconSVG from 'components/svgs/camera';
 
 const config = {
@@ -63,7 +62,6 @@ export default function CreateProject() {
   const [url, setUrl] = useState('');
   const [intro, setIntro] = useState('');
   const [lan, setLan] = useState('');
-  const [showUpload, setShowUpload] = useState(false);
 
   useEffect(() => {
     const localLan = language === 'zh' ? 'zh-CN' : 'en-US';
@@ -233,15 +231,19 @@ export default function CreateProject() {
     setUrl('');
   };
 
+  const handleBack = () => {
+    navigate('/city-hall');
+  };
+
   return (
     <OuterBox>
-      <BackBox onClick={() => navigate('/city-hall')}>
+      <BackBox onClick={handleBack}>
         <BackIconSVG />
         <span> {t('Project.create')}</span>
       </BackBox>
       <CardBody>
         <BtnBox htmlFor="fileUpload" onChange={(e) => updateLogo(e)}>
-          <ImgBox onMouseEnter={() => !showUpload && setShowUpload(true)} onMouseLeave={() => setShowUpload(false)}>
+          <ImgBox>
             <img src={url} alt="" />
             <UpladBox className="upload">
               <input id="fileUpload" type="file" hidden accept=".jpg, .jpeg, .png, .svg" />
@@ -361,7 +363,7 @@ export default function CreateProject() {
             >
               {t('general.confirm')}
             </Button>
-            <CancelButton> {t('general.cancel')}</CancelButton>
+            <CancelButton onClick={handleBack}> {t('general.cancel')}</CancelButton>
           </BtmBox>
         </RightContent>
       </CardBody>
