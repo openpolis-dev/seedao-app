@@ -232,7 +232,7 @@ export default function Members(props: Iprops) {
                 <img className="avatar" src={item.avatar || DefaultAvatar} alt="" />
               </ImgBox>
               <div>
-                <div className="snsBox">{nameMap[item?.wallet || ''] || PublicJs.AddressToShow(item.wallet || '')}</div>
+                <div className="snsBox">{nameMap[item?.wallet] || PublicJs.AddressToShow(item.wallet || '')}</div>
               </div>
             </InnerBox>
           ))}
