@@ -127,7 +127,7 @@ export default function Index() {
   };
 
   const openDetail = (id: number) => {
-    navigate(`/project/info/${id}`);
+    // navigate(`/project/info/${id}`);
   };
 
   return (
