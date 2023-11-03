@@ -51,7 +51,7 @@ export default function CreateProject() {
     state: { language },
   } = useAuthContext();
   const [adminList, setAdminList] = useState(['']);
-  const [memberList, setMemberList] = useState(['']);
+  const [memberList, setMemberList] = useState<string[]>([]);
   const [proList, setProList] = useState(['']);
   const [token, setToken] = useState<number>();
 
