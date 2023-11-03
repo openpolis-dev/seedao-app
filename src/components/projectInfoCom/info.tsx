@@ -23,6 +23,7 @@ export default function Info({ detail, onUpdate, handleEdit }: Iprops) {
     <>
       {/*{show && <CloseTips closeModal={closeModal} handleClosePro={handleClosePro} />}*/}
       {/*{showSuccess && <CloseSuccess closeModal={closeSuccess} />}*/}
+
       <FlexLine>
         <AllBox>
           <TopBox>
@@ -54,7 +55,8 @@ export default function Info({ detail, onUpdate, handleEdit }: Iprops) {
           </LastLine>
         </AllBox>
         {/*<div>*/}
-        <Button onClick={() => handleEdit()}>{t('Project.Edit')}</Button>
+
+        {canAuditApplication && <Button onClick={() => handleEdit()}>{t('Project.Edit')}</Button>}
         {/*<TextButton onClick={() => handleShow()}>Close project</TextButton>*/}
         {/*</div>*/}
       </FlexLine>
