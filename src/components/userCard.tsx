@@ -9,6 +9,7 @@ import styled from 'styled-components';
 import TwitterIcon from 'assets/Imgs/social/twitter.svg';
 import MirrorImg from 'assets/Imgs/social/mirror.svg';
 import EmailIcon from 'assets/Imgs/social/email.svg';
+import GithubIcon from 'assets/Imgs/social/github.svg';
 import { Col, Form } from 'react-bootstrap';
 import { useAuthContext } from '../providers/authProvider';
 import CopyIconSVG from 'components/svgs/copy';
@@ -92,6 +93,13 @@ export default function UserCard({ user, showEdit, onSelectUser, formatActive, s
             </a>
           ) : (
             <img src={EmailIcon} alt="" className="icon" />
+          )}
+          {user.github ? (
+            <a href={`mailto:${user.github}`} target="_blank" rel="noreferrer">
+              <img src={GithubIcon} alt="" />
+            </a>
+          ) : (
+            <img src={GithubIcon} alt="" className="icon" />
           )}
         </LinkBox>
       </div>

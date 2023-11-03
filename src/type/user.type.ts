@@ -5,6 +5,7 @@ export interface IUser {
   bio: string;
   avatar: string;
   email?: string;
+  github?: string;
   created_at?: string;
   updated_at?: string;
   wallet?: string;
