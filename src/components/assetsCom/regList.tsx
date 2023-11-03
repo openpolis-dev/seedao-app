@@ -134,10 +134,10 @@ export default function RegList({ list, setList }: IProps) {
     <>
       <FirstBox>
         <RhtBox>
-          <DownloadButton className="rhtBtn" onClick={downloadFile}>
+          {/* <DownloadButton className="rhtBtn" onClick={downloadFile}>
             <DownloadIconSVG />
             <span>{t('Project.DownloadForm')}</span>
-          </DownloadButton>
+          </DownloadButton> */}
           {chooseType === ChooseType.import && (
             <BtnBox className="top-import" htmlFor="fileUpload" onChange={(e) => updateFile(e)}>
               <input
