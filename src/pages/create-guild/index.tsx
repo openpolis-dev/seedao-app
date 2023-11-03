@@ -464,6 +464,7 @@ const BtnBox = styled.label`
   font-weight: 700;
   font-size: 14px;
   position: relative;
+  overflow: hidden;
   .iconRht {
     margin-right: 10px;
   }

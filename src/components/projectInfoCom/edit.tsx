@@ -6,62 +6,13 @@ import { UpdateInfo } from 'requests/project';
 import { InfoObj, ReTurnProject } from 'type/project.type';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import useToast, { ToastType } from 'hooks/useToast';
-import { useNavigate } from 'react-router-dom';
-import { DashLg, PlusLg, Upload, X } from 'react-bootstrap-icons';
 import { MdEditor } from 'md-editor-rt';
-
-const BtmBox = styled.div`
-  margin-top: 50px;
-  display: flex;
-  gap: 20px;
-`;
-
-const UlBox = styled.ul`
-  li {
-    display: flex;
-    align-items: flex-start;
-    justify-content: flex-start;
-    margin-bottom: 20px;
-
-    .title {
-      margin-right: 20px;
-      line-height: 2.5em;
-      min-width: 180px;
-      background: #f8f8f8;
-      padding: 0 20px;
-      font-size: 14px;
-    }
-  }
-  @media (max-width: 750px) {
-    li {
-      flex-direction: column;
-      .title {
-        margin-bottom: 10px;
-      }
-    }
-  }
-`;
-
-const InputBox = styled(InputGroup)`
-  width: 600px;
-  margin-right: 20px;
-`;
-
-const ItemBox = styled.div`
-  margin-bottom: 10px;
-  display: flex;
-  align-items: center;
-  .titleLft {
-    margin-right: 10px;
-    width: 50px;
-  }
-  .iconForm {
-    color: var(--bs-primary);
-    font-size: 20px;
-    margin-right: 10px;
-    cursor: pointer;
-  }
-`;
+import PlusMinusButton from 'components/common/buttons';
+import CameraIconSVG from 'components/svgs/camera';
+import CloseTips from './closeTips';
+import CloseSuccess from './closeSuccess';
+import { createCloseProjectApplication } from 'requests/applications';
+import { useNavigate } from 'react-router-dom';
 
 const config = {
   toobars: [
@@ -91,6 +42,7 @@ const config = {
 
 export default function EditProject({ detail, onUpdate }: { detail: ReTurnProject | undefined; onUpdate: () => void }) {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const { showToast } = useToast();
   const {
     dispatch,
@@ -105,6 +57,9 @@ export default function EditProject({ detail, onUpdate }: { detail: ReTurnProjec
 
   const [lan, setLan] = useState('');
 
+  const [show, setShow] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+
   useEffect(() => {
     const localLan = language === 'zh' ? 'zh-CN' : 'en-US';
     setLan(localLan);
@@ -115,6 +70,7 @@ export default function EditProject({ detail, onUpdate }: { detail: ReTurnProjec
       setProName(detail.name);
       setDesc(detail.desc);
       setUrl(detail.logo);
+      setIntro(detail.intro);
       setProList(detail.proposals.map((item) => `https://forum.seedao.xyz/thread/${item}`));
     }
   }, [detail]);
@@ -230,127 +186,173 @@ export default function EditProject({ detail, onUpdate }: { detail: ReTurnProjec
     getBase64(url);
   };
 
-  return (
-    <>
-      <TopBox>
-        <UploadBox htmlFor="fileUpload" onChange={(e) => updateLogo(e)}>
-          {!url && (
-            <div>
-              <input id="fileUpload" type="file" hidden accept=".jpg, .jpeg, .png, .svg" />
-              <Upload className="uploadIcon" />
-              <span> {t('Project.upload')}</span>
-            </div>
-          )}
-          {!!url && (
-            <ImgBox>
-              <div className="del" onClick={() => setUrl('')}>
-                <X />
-              </div>
-              <img src={url} alt="" />
-            </ImgBox>
-          )}
-        </UploadBox>
-      </TopBox>
-      <UlBox>
-        <li>
-          <div className="title">{t('Project.ProjectName')}</div>
-          <InputBox>
-            <Form.Control
-              type="text"
-              placeholder={t('Project.ProjectName')}
-              value={proName}
-              onChange={(e) => handleInput(e, 0, 'proName')}
-            />
-          </InputBox>
-        </li>
-        <li>
-          <div className="title">{t('Project.AssociatedProposal')}</div>
-          <div>
-            {proList.map((item, index) => (
-              <ItemBox key={`mem_${index}`}>
-                <InputBox>
-                  <Form.Control
-                    type="text"
-                    placeholder={`${t('Project.AssociatedProposal')}, eg. https://forum.seedao.xyz/thread...`}
-                    value={item}
-                    onChange={(e) => handleInput(e, index, 'proposal')}
-                  />
-                </InputBox>
-                {index === proList.length - 1 && (
-                  <span className="iconForm" onClick={() => handleAdd('proposal')}>
-                    <PlusLg />
-                  </span>
-                )}
+  const closeModal = () => {
+    setShow(false);
+  };
+  const handleShow = () => {
+    setShow(true);
+  };
 
-                {!(!index && index === proList.length - 1) && (
-                  <span className="iconForm" onClick={() => removeItem(index, 'proposal')}>
-                    <DashLg />
-                  </span>
-                )}
-              </ItemBox>
-            ))}
-          </div>
-        </li>
-        <li>
-          <div className="title">{t('Project.Desc')}</div>
-          <InputBox>
-            <Form.Control
-              placeholder=""
-              as="textarea"
-              rows={5}
-              value={desc}
-              onChange={(e) => handleInput(e, 0, 'desc')}
-            />
-          </InputBox>
-        </li>
-        <li>
-          <div className="title">{t('Project.Intro')}</div>
-          <IntroBox>
-            <MdEditor
-              modelValue={intro}
-              onChange={(val) => {
-                setIntro(val);
-              }}
-              toolbars={config.toobars as any}
-              language={lan}
-              codeStyleReverse={false}
-              noUploadImg
-            />
-          </IntroBox>
-        </li>
-      </UlBox>
+  const closeSuccess = () => {
+    setShowSuccess(false);
+    onUpdate();
+  };
+
+  const handleClosePro = async () => {
+    if (!detail) {
+      return;
+    }
+    setShow(false);
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    try {
+      await createCloseProjectApplication(detail.id);
+      dispatch({ type: AppActionType.SET_LOADING, payload: null });
+      setShowSuccess(true);
+
+      // reset project status
+      // updateProjectStatus(ProjectStatus.Pending);
+    } catch (e) {
+      console.error(e);
+      // showToast(JSON.stringify(e), ToastType.Danger);
+      dispatch({ type: AppActionType.SET_LOADING, payload: null });
+      closeModal();
+    }
+  };
+
+  return (
+    <EditPage>
+      <MainContent>
+        <TopBox>
+          <BtnBox htmlFor="fileUpload" onChange={(e) => updateLogo(e)}>
+            <ImgBox>
+              <img src={url} alt="" />
+              <UpladBox className="upload">
+                <input id="fileUpload" type="file" hidden accept=".jpg, .jpeg, .png, .svg" />
+                <CameraIconSVG />
+                <UploadImgText>{t('Project.upload')}</UploadImgText>
+              </UpladBox>
+            </ImgBox>
+            {!url && (
+              <UpladBox>
+                <input id="fileUpload" type="file" hidden accept=".jpg, .jpeg, .png, .svg" />
+                <CameraIconSVG />
+                <UploadImgText>{t('Project.upload')}</UploadImgText>
+              </UpladBox>
+            )}
+          </BtnBox>
+        </TopBox>
+        <UlBox>
+          <li>
+            <div className="title">{t('Project.ProjectName')}</div>
+            <InputBox>
+              <Form.Control
+                type="text"
+                placeholder={t('Project.ProjectName')}
+                value={proName}
+                onChange={(e) => handleInput(e, 0, 'proName')}
+              />
+            </InputBox>
+          </li>
+          <li>
+            <div className="title">{t('Project.AssociatedProposal')}</div>
+            <div>
+              {proList.map((item, index) => (
+                <ItemBox key={`mem_${index}`}>
+                  <InputBox>
+                    <Form.Control
+                      type="text"
+                      placeholder={`${t('Project.AssociatedProposal')}, eg. https://forum.seedao.xyz/thread...`}
+                      value={item}
+                      onChange={(e) => handleInput(e, index, 'proposal')}
+                    />
+                  </InputBox>
+                  <PlusMinusButton
+                    showMinus={!(!index && index === proList.length - 1)}
+                    showPlus={index === proList.length - 1}
+                    onClickMinus={() => removeItem(index, 'proposal')}
+                    onClickPlus={() => handleAdd('proposal')}
+                  />
+                </ItemBox>
+              ))}
+            </div>
+          </li>
+          <li>
+            <div className="title">{t('Project.Desc')}</div>
+            <InputBox>
+              <Form.Control
+                placeholder=""
+                as="textarea"
+                rows={5}
+                value={desc}
+                onChange={(e) => handleInput(e, 0, 'desc')}
+              />
+            </InputBox>
+          </li>
+          <li>
+            <div className="title">{t('Project.Intro')}</div>
+            <IntroBox>
+              <MdEditor
+                modelValue={intro}
+                onChange={(val) => {
+                  setIntro(val);
+                }}
+                toolbars={config.toobars as any}
+                language={lan}
+                codeStyleReverse={false}
+                noUploadImg
+              />
+            </IntroBox>
+          </li>
+        </UlBox>
+      </MainContent>
       <BtmBox>
-        <Button variant="outline-primary" className="btnBtm">
-          {t('general.cancel')}
-        </Button>
         <Button
           onClick={() => handleSubmit()}
           disabled={proName?.length === 0 || url?.length === 0 || (proList?.length === 1 && proList[0]?.length === 0)}
         >
           {t('general.confirm')}
         </Button>
+        <TextButton onClick={() => handleShow()}>Close project</TextButton>
       </BtmBox>
-    </>
+      {show && <CloseTips closeModal={closeModal} handleClosePro={handleClosePro} />}
+      {showSuccess && <CloseSuccess closeModal={closeSuccess} />}
+    </EditPage>
   );
 }
+
+const EditPage = styled.div`
+  padding-top: 40px;
+  display: flex;
+  justify-content: space-between;
+`;
 
 const TopBox = styled.section`
   display: flex;
 `;
 
-const UploadBox = styled.label`
-  background: #f8f8f8;
-  height: 200px;
-  width: 200px;
+const IntroBox = styled.div`
+  .cm-scroller {
+    background: #f7f9fc;
+  }
+`;
+
+const MainContent = styled.div`
+  display: flex;
+  gap: 32px;
+`;
+
+const BtnBox = styled.label`
+  background: var(--bs-box--background);
+  height: 110px;
+  width: 110px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 4px;
-  margin-top: 20px;
-  font-family: 'Inter-Regular';
+  border-radius: 16px;
   font-weight: 700;
   font-size: 14px;
-  margin-bottom: 40px;
+  position: relative;
+  overflow: hidden;
   .iconRht {
     margin-right: 10px;
   }
@@ -371,26 +373,85 @@ const ImgBox = styled.div`
   align-items: center;
   justify-content: center;
   position: relative;
-  .del {
-    position: absolute;
-    right: -15px;
-    top: -15px;
-    z-index: 999;
-    border-radius: 100%;
-    background: #a16eff;
-    color: #fff;
-    width: 30px;
-    height: 30px;
+  .upload {
+    display: none;
+  }
+  &:hover .upload {
     display: flex;
-    align-items: center;
-    justify-content: center;
+  }
+`;
+
+const UpladBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  cursor: pointer;
+`;
+
+const UploadImgText = styled.p`
+  font-size: 8px;
+  font-family: Poppins-Regular, Poppins;
+  font-weight: 400;
+  color: var(--bs-svg-color);
+  line-height: 12px;
+`;
+
+const BtmBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+`;
+
+const UlBox = styled.ul`
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  li {
+    .title {
+      font-size: 16px;
+      font-family: Poppins-SemiBold, Poppins;
+      font-weight: 600;
+      color: var(--bs-body-color_active);
+      line-height: 22px;
+      margin-bottom: 14px;
+    }
+  }
+`;
+
+const InputBox = styled(InputGroup)`
+  width: 600px;
+  margin-right: 20px;
+`;
+
+const ItemBox = styled.div`
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  .titleLft {
+    margin-right: 10px;
+    width: 50px;
+  }
+  .iconForm {
+    color: var(--bs-primary);
     font-size: 20px;
+    margin-right: 10px;
     cursor: pointer;
   }
 `;
 
-const IntroBox = styled.div`
-  .cm-scroller {
-    background: #f7f9fc;
-  }
+const TextButton = styled.div`
+  margin-top: 20px;
+  font-size: 14px;
+  font-family: Poppins-Medium;
+  font-weight: 500;
+  line-height: 20px;
+  text-align: center;
+  cursor: pointer;
 `;

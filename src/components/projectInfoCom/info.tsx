@@ -3,14 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { ReTurnProject } from 'type/project.type';
 import Members from './members';
 import ReactMarkdown from 'react-markdown';
-import { updateMembers } from 'requests/project';
 import { Button } from 'react-bootstrap';
-import React, { useState } from 'react';
-import { AppActionType, useAuthContext } from 'providers/authProvider';
-import requests from 'requests';
-import { useParams } from 'react-router-dom';
-import CloseTips from './closeTips';
-import CloseSuccess from './closeSuccess';
 
 interface Iprops {
   detail: ReTurnProject | undefined;
@@ -19,42 +12,8 @@ interface Iprops {
 }
 export default function Info({ detail, onUpdate, handleEdit }: Iprops) {
   const { t } = useTranslation();
-  const [show, setShow] = useState(false);
-  const { id } = useParams();
-  const { dispatch } = useAuthContext();
-  const [showSuccess, setShowSuccess] = useState(false);
-
-  const handleClosePro = async () => {
-    setShow(false);
-    dispatch({ type: AppActionType.SET_LOADING, payload: true });
-    try {
-      await requests.application.createCloseProjectApplication(Number(id as string));
-      dispatch({ type: AppActionType.SET_LOADING, payload: null });
-      setShowSuccess(true);
-
-      // reset project status
-      // updateProjectStatus(ProjectStatus.Pending);
-    } catch (e) {
-      console.error(e);
-      // showToast(JSON.stringify(e), ToastType.Danger);
-      dispatch({ type: AppActionType.SET_LOADING, payload: null });
-      closeModal();
-    }
-  };
-  const closeModal = () => {
-    setShow(false);
-  };
-  const handleShow = () => {
-    setShow(true);
-  };
-
-  const closeSuccess = () => {
-    setShowSuccess(false);
-  };
   return (
     <>
-      {show && <CloseTips closeModal={closeModal} handleClosePro={handleClosePro} />}
-      {showSuccess && <CloseSuccess closeModal={closeSuccess} />}
       <TopBox>
         <TopImg>
           <img src={detail?.logo} alt="" />
@@ -73,12 +32,11 @@ export default function Info({ detail, onUpdate, handleEdit }: Iprops) {
           </ProposalBox>
         </TopInfo>
         <div>
-          <Button onClick={() => handleEdit()}>Edit project</Button>
-          <TextButton onClick={() => handleShow()}>Close project</TextButton>
+          <Button onClick={() => handleEdit()}>{t('general.edit')}</Button>
         </div>
       </TopBox>
       <ContentBox>
-        <div>介绍</div>
+        <div>{t('Project.Intro')}</div>
         <ReactMarkdown>{detail?.intro || ''}</ReactMarkdown>
       </ContentBox>
       <Members detail={detail} updateProject={onUpdate} />
@@ -137,16 +95,6 @@ const ProposalBox = styled.ul`
       color: #0085ff;
     }
   }
-`;
-
-const TextButton = styled.div`
-  margin-top: 20px;
-  font-size: 14px;
-  font-family: Poppins-Medium;
-  font-weight: 500;
-  line-height: 20px;
-  text-align: center;
-  cursor: pointer;
 `;
 
 const ContentBox = styled.div`
