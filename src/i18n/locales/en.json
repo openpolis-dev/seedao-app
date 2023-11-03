@@ -58,6 +58,7 @@
   "Project": {
     "ProjectOrGuildItem": "ProjectOrGuildItem tips ProjectOrGuildItem tips",
     "create": "Create Project",
+    "Edit": "Edit Project",
     "createSuccess": "Create Successfully",
     "createFailed": "Create Failed",
     "AllProjects": "All Projects",

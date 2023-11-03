@@ -21,43 +21,76 @@ export default function Info({ detail, onUpdate, handleEdit }: Iprops) {
 
   return (
     <>
-      <TopBox>
-        <TopImg>
-          <img src={detail?.logo} alt="" />
-        </TopImg>
-        <TopInfo>
-          <TitleBox>{detail?.name}</TitleBox>
-          <div className="desc">{detail?.desc}</div>
-          <ProposalBox>
-            {detail?.proposals.map((item, index) => (
-              <li key={index}>
-                <a href={item} target="_blank" rel="noopener noreferrer">
-                  {`SIP-${index + 1}`}
-                </a>
-              </li>
-            ))}
-          </ProposalBox>
-        </TopInfo>
-        {canAuditApplication && (
-          <div>
-            <Button onClick={() => handleEdit()}>{t('general.edit')}</Button>
-          </div>
-        )}
-      </TopBox>
-      <ContentBox>
-        <div>{t('Project.Intro')}</div>
-        <ReactMarkdown>{detail?.intro || ''}</ReactMarkdown>
-      </ContentBox>
-      <Members detail={detail} updateProject={onUpdate} />
+      {/*{show && <CloseTips closeModal={closeModal} handleClosePro={handleClosePro} />}*/}
+      {/*{showSuccess && <CloseSuccess closeModal={closeSuccess} />}*/}
+      <FlexLine>
+        <AllBox>
+          <TopBox>
+            <TopImg>
+              <img src={detail?.logo} alt="" />
+            </TopImg>
+            <TopInfo>
+              <TitleBox>{detail?.name}</TitleBox>
+              <div className="desc">{detail?.desc}</div>
+              <ProposalBox>
+                {detail?.proposals.map((item, index) => (
+                  <li key={index}>
+                    <a href={item} target="_blank" rel="noopener noreferrer">
+                      {`SIP-${index + 1}`}
+                    </a>
+                  </li>
+                ))}
+              </ProposalBox>
+            </TopInfo>
+          </TopBox>
+          <LastLine>
+            <LftBox>
+              <Members detail={detail} updateProject={onUpdate} />
+            </LftBox>
+
+            <ContentBox>
+              <ReactMarkdown>{detail?.intro || ''}</ReactMarkdown>
+            </ContentBox>
+          </LastLine>
+        </AllBox>
+        {/*<div>*/}
+        <Button onClick={() => handleEdit()}>{t('Project.Edit')}</Button>
+        {/*<TextButton onClick={() => handleShow()}>Close project</TextButton>*/}
+        {/*</div>*/}
+      </FlexLine>
     </>
   );
 }
 
+const AllBox = styled.div`
+  flex-grow: 1;
+  margin-right: 18px;
+`;
+
+const FlexLine = styled.div`
+  display: flex;
+  align-items: flex-start;
+`;
+
+const LastLine = styled.div`
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  margin-top: 60px;
+  flex-shrink: 0;
+`;
+
+const LftBox = styled.div`
+  background: var(--bs-box--background);
+  width: 246px;
+  border-radius: 16px;
+  box-sizing: border-box;
+  padding: 24px;
+`;
+
 const TopBox = styled.div`
   display: flex;
   margin-top: 46px;
-  padding-bottom: 37px;
-  border-bottom: 1px solid var(--bs-border-color);
 `;
 
 const TopImg = styled.div`
@@ -107,15 +140,13 @@ const ProposalBox = styled.ul`
 `;
 
 const ContentBox = styled.div`
-  line-height: 1.2em;
-  padding-top: 40px;
-  margin-top: 20px;
-  h2 {
-    padding: 1rem 0;
-  }
-  p {
-    padding: 0 -0px 1rem;
-  }
+  border-radius: 16px;
+  background: var(--bs-box--background);
+  padding: 24px;
+  flex-grow: 1;
+  margin-left: 16px;
+  color: var(--bs-body-color_active);
+
   img {
     max-width: 100%;
   }

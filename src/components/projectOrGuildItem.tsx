@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Col } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 const Box = styled.div`
   width: 19.2%;
@@ -34,8 +33,12 @@ const CardBox = styled.div`
   margin-bottom: 24px;
   box-sizing: border-box;
   border-radius: 16px;
-  background: var(--bs-box-background);
+  background: var(--bs-box--background);
+  box-shadow: ${(props) => (props.theme === 'true' ? 'none' : '2px 4px 4px 0px rgba(211,206,221,0.1)')};
   padding: 14px;
+  &:hover {
+    background: var(--home-right_hover);
+  }
 `;
 const ImageBox = styled.div`
   width: 100%;
@@ -63,13 +66,11 @@ const Desc = styled.div`
 const MemBox = styled.div`
   display: flex;
   align-items: flex-end;
-
-  width: 69px;
-  height: 18px;
   font-size: 12px;
   font-weight: 400;
   color: #8d57ff;
   line-height: 18px;
+  margin-bottom: 10px;
   span {
     margin-right: 5px;
   }
@@ -84,14 +85,15 @@ interface Iprops {
     desc: string;
     members: string[];
   };
+  theme?: boolean;
   onClickItem: (id: number) => void;
 }
 
-export default function ProjectOrGuildItem({ data, onClickItem }: Iprops) {
+export default function ProjectOrGuildItem({ data, onClickItem, theme }: Iprops) {
   const { t } = useTranslation();
   return (
     <Box>
-      <CardBox>
+      <CardBox theme={JSON.stringify(theme)}>
         <Item onClick={() => onClickItem(data.id)}>
           <ImageBox>
             <img src={data.logo} alt="" />

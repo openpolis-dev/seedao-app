@@ -43,7 +43,7 @@ export interface listObj {
 export default function Index() {
   const { t } = useTranslation();
   const {
-    state: { language, account },
+    state: { language, account, theme },
     dispatch,
   } = useAuthContext();
   const isLogin = useCheckLogin(account);
@@ -132,12 +132,15 @@ export default function Index() {
 
   return (
     <Box>
-      <SubTabbarStyle defaultActiveKey={0} tabs={list} onSelect={(v: string | number) => setCurrent(v as number)} />
+      {list.length > 1 && (
+        <SubTabbarStyle defaultActiveKey={0} tabs={list} onSelect={(v: string | number) => setCurrent(v as number)} />
+      )}
+
       <div>
         <ItemBox>
           <ListBox>
             {proList.map((item) => (
-              <ProjectOrGuildItem key={item.id} data={item} onClickItem={openDetail} />
+              <ProjectOrGuildItem key={item.id} data={item} onClickItem={openDetail} theme={theme} />
             ))}
           </ListBox>
         </ItemBox>
