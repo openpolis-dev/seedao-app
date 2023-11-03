@@ -82,10 +82,7 @@ const TableBox = styled.div`
 `;
 
 export default function AssetList() {
-  const {
-    state: { loading },
-    dispatch,
-  } = useAuthContext();
+  const { dispatch } = useAuthContext();
   const { t } = useTranslation();
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -246,7 +243,6 @@ export default function AssetList() {
       {detailDisplay && (
         <ApplicationModal application={detailDisplay} handleClose={() => setDetailDisplay(undefined)} />
       )}
-      {loading && <Loading />}
 
       <TitBox>{t('Project.Record')}</TitBox>
       <FirstLine>
