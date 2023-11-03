@@ -194,7 +194,7 @@ export default function CreateProject() {
     try {
       await createProjects(obj);
       showToast(t('Project.createSuccess'), ToastType.Success);
-      navigate('/project');
+      navigate('/explore');
     } catch (error) {
       showToast(t('Project.createFailed'), ToastType.Danger);
     } finally {
@@ -354,8 +354,7 @@ export default function CreateProject() {
                 (credit && credit < 0) ||
                 (token && token < 0) ||
                 (adminList?.length === 1 && adminList[0]?.length === 0) ||
-                (proList?.length === 1 && proList[0]?.length === 0) ||
-                (memberList?.length === 1 && memberList[0]?.length === 0)
+                (proList?.length === 1 && proList[0]?.length === 0)
               }
             >
               {t('general.confirm')}

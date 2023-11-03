@@ -348,7 +348,7 @@ export default function CreateGuild() {
     try {
       await createProjects(obj);
       showToast(t('Guild.createSuccess'), ToastType.Success);
-      navigate('/guild');
+      navigate('/explore');
     } catch (error) {
       showToast(t('Guild.createFailed'), ToastType.Danger);
     } finally {
@@ -549,8 +549,7 @@ export default function CreateGuild() {
                   (credit && credit < 0) ||
                   (token && token < 0) ||
                   (adminList?.length === 1 && adminList[0]?.length === 0) ||
-                  (proList?.length === 1 && proList[0]?.length === 0) ||
-                  (memberList?.length === 1 && memberList[0]?.length === 0)
+                  (proList?.length === 1 && proList[0]?.length === 0)
                 }
               >
                 {t('general.confirm')}
