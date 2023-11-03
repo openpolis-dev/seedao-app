@@ -337,9 +337,9 @@ export default function Register() {
                     />
                   </BorderBox>
 
-                  <Button onClick={handleExport} disabled={!selectOne} variant="outlined">
+                  {/* <Button onClick={handleExport} disabled={!selectOne} variant="outlined">
                     {t('application.ExportAll')}
-                  </Button>
+                  </Button> */}
                 </TimeBox>
               </li>
             </TopLine>
