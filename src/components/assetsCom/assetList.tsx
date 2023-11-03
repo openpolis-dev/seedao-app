@@ -235,8 +235,8 @@ export default function AssetList() {
   }, [list, selectMap]);
 
   const formatSNS = (name: string) => {
-    return name;
-    // return name?.startsWith('0x') ? publicJs.AddressToShow(name) : name;
+    console.log('name', name);
+    return name?.startsWith('0x') ? publicJs.AddressToShow(name, 6) : name;
   };
 
   return (
@@ -313,13 +313,21 @@ export default function AssetList() {
                   {/* <th className="chech-th">
                     <Form.Check checked={ifSelectAll} onChange={(e) => onSelectAll(e.target.checked)} />
                   </th> */}
-                  <th>{t('application.Receiver')}</th>
-                  <th className="center">{t('application.AddAssets')}</th>
-                  <th className="center">{t('application.Season')}</th>
+                  <th style={{ width: '160px' }}>{t('application.Receiver')}</th>
+                  <th className="center" style={{ width: '200px' }}>
+                    {t('application.AddAssets')}
+                  </th>
+                  <th className="center" style={{ width: '200px' }}>
+                    {t('application.Season')}
+                  </th>
                   <th>{t('application.Content')}</th>
-                  <th className="center">{t('application.BudgetSource')}</th>
-                  <th className="center">{t('application.Operator')}</th>
-                  <th>{t('application.State')}</th>
+                  <th className="center" style={{ width: '200px' }}>
+                    {t('application.BudgetSource')}
+                  </th>
+                  <th className="center" style={{ width: '200px' }}>
+                    {t('application.Operator')}
+                  </th>
+                  <th style={{ width: '200px' }}>{t('application.State')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -331,15 +339,21 @@ export default function AssetList() {
                         onChange={(e) => onChangeCheckbox(e.target.checked, item.application_id, item.status)}
                       />
                     </td> */}
-                    <td style={{ width: '20%' }}>{formatSNS(item.receiver_name || '')}</td>
-                    <td className="center">{item.asset_display}</td>
-                    <td className="center">{item.season_name}</td>
+                    <td style={{ width: '140px' }}>{formatSNS(item.receiver_name || '')}</td>
+                    <td className="center" style={{ width: '200px' }}>
+                      {item.asset_display}
+                    </td>
+                    <td className="center" style={{ width: '200px' }}>
+                      {item.season_name}
+                    </td>
                     <td>{item.detailed_type}</td>
-                    <td className="center">{item.budget_source}</td>
-                    <td className="center" style={{ width: '20%' }}>
+                    <td className="center" style={{ width: '200px' }}>
+                      {item.budget_source}
+                    </td>
+                    <td className="center" style={{ width: '200px' }}>
                       {formatSNS(item.submitter_name)}
                     </td>
-                    <td>
+                    <td style={{ width: '200px' }}>
                       <ApplicationStatusTag status={item.status} />
                     </td>
                   </tr>
