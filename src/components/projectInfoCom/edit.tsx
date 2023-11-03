@@ -44,7 +44,7 @@ export default function EditProject({ detail, onUpdate }: { detail: ReTurnProjec
   const { showToast } = useToast();
   const {
     dispatch,
-    state: { language },
+    state: { language, theme },
   } = useAuthContext();
   const [proList, setProList] = useState(['']);
 
@@ -294,6 +294,7 @@ export default function EditProject({ detail, onUpdate }: { detail: ReTurnProjec
                 onChange={(val) => {
                   setIntro(val);
                 }}
+                theme={theme ? 'dark' : 'light'}
                 toolbars={config.toobars as any}
                 language={lan}
                 codeStyleReverse={false}
