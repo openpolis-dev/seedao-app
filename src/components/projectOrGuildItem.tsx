@@ -84,6 +84,7 @@ interface Iprops {
     intro: string;
     desc: string;
     members: string[];
+    sponsors: string[];
   };
   theme?: boolean;
   onClickItem: (id: number) => void;
@@ -101,7 +102,7 @@ export default function ProjectOrGuildItem({ data, onClickItem, theme }: Iprops)
           <div className="title">{data.name}</div>
           <Desc>{data.desc ? data.desc : t('Project.ProjectOrGuildItem')}</Desc>
           <MemBox>
-            <span>{data?.members?.length}</span> {t('Project.Members')}
+            <span>{data?.members?.length + data?.sponsors?.length}</span> {t('Project.Members')}
           </MemBox>
         </Item>
       </CardBox>
