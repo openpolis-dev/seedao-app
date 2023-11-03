@@ -123,6 +123,23 @@ export default function Members(props: Iprops) {
     <Box>
       {show && <Add closeAdd={closeAdd} canUpdateSponsor={canUpdateSponsor} />}
       {showDel && <Del closeRemove={closeRemove} selectAdminArr={selectAdminArr} />}
+
+      <ItemBox>
+        {/* <TitleBox>{t('Guild.Dominator')}</TitleBox> */}
+        <Row>
+          {adminArr.map((item, index) => (
+            <UserCard
+              key={index}
+              user={getUser(item)}
+              onSelectUser={handleAdminSelect}
+              formatActive={formatAdminActive}
+              showEdit={edit && canUpdateSponsor}
+              sns={nameMap[getUser(item)?.wallet || '']}
+            />
+          ))}
+        </Row>
+      </ItemBox>
+      {!adminArr.length && <NoItem />}
       {canUpdateSponsor && (
         <TopBox>
           {!edit && (
@@ -147,22 +164,6 @@ export default function Members(props: Iprops) {
           )}
         </TopBox>
       )}
-      <ItemBox>
-        {/* <TitleBox>{t('Guild.Dominator')}</TitleBox> */}
-        <Row>
-          {adminArr.map((item, index) => (
-            <UserCard
-              key={index}
-              user={getUser(item)}
-              onSelectUser={handleAdminSelect}
-              formatActive={formatAdminActive}
-              showEdit={edit && canUpdateSponsor}
-              sns={nameMap[getUser(item)?.wallet || '']}
-            />
-          ))}
-        </Row>
-      </ItemBox>
-      {!adminArr.length && <NoItem />}
     </Box>
   );
 }
@@ -176,7 +177,7 @@ const ItemBox = styled.div`
 
 const TopBox = styled.div`
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-start;
   gap: 18px;
-  margin-bottom: 40px;
+  margin-top: 6px;
 `;

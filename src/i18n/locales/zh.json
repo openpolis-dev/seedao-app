@@ -289,7 +289,9 @@
     "EmptySBT": "您还未拥有SBT",
     "current": "当前等级",
     "level": "等级",
-    "nextLevel": "下一等级"
+    "nextLevel": "下一等级" ,
+    "DefaultName": "TA没有留下昵称",
+    "DefaultBio": "TA很神秘哦，并没有介绍自己"
   },
   "roles": {
     "SGN_HOLDER": "SGN持有者",

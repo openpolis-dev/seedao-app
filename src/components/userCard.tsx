@@ -6,13 +6,14 @@ import DefaultAvatar from 'assets/Imgs/defaultAvatar.png';
 import PublicJs from 'utils/publicJs';
 import styled from 'styled-components';
 // import { useWeb3React } from '@web3-react/core';
-import TwitterIcon from 'assets/Imgs/profile/Twitter.svg';
-import DiscordIcon from 'assets/Imgs/profile/discord.svg';
-import EmailIcon from 'assets/Imgs/profile/message.svg';
+import TwitterIcon from 'assets/Imgs/social/twitter.svg';
+import MirrorImg from 'assets/Imgs/social/mirror.svg';
+import EmailIcon from 'assets/Imgs/social/email.svg';
 import { Col, Form } from 'react-bootstrap';
 import { useAuthContext } from '../providers/authProvider';
 import CopyIconSVG from 'components/svgs/copy';
 import MultiClamp from 'react-multi-clamp';
+import { useTranslation } from 'react-i18next';
 
 interface IUserProps {
   user: IUser;
@@ -29,24 +30,21 @@ export default function UserCard({ user, showEdit, onSelectUser, formatActive, s
     state: { account },
   } = useAuthContext();
 
+  const { t } = useTranslation();
+
   return (
     <UserCardBox sm={12} md={6} lg={4} xl={3}>
       <div className="boxAll">
         <div className="fst">
-          {user.avatar ? (
-            <img className="avatar" src={user.avatar} alt="" />
-          ) : (
-            <img className="avatar" src={DefaultAvatar} alt="" width="40px" height="40px" />
-          )}
-
+          <img className="avatar" src={user.avatar || DefaultAvatar} alt="" />
           <div>
-            <div className="name">{sns || user.name}</div>
-            <div style={{ display: 'flex', gap: '6px', marginTop: '8px' }}>
-              <span className="wallet">{PublicJs.AddressToShow(user.wallet || '')}</span>
+            <div style={{ display: 'flex', gap: '6px', marginBottom: '8px' }}>
+              <span className="wallet">{sns || PublicJs.AddressToShow(user.wallet || '')}</span>
               <CopyBox text={user.wallet || ''} dir="left">
                 <CopyIconSVG />
               </CopyBox>
             </div>
+            <div className="name">{user.name || t('My.DefaultName')}</div>
           </div>
           {showEdit && account?.toLowerCase() !== user.wallet?.toLowerCase() && (
             <div
@@ -70,24 +68,30 @@ export default function UserCard({ user, showEdit, onSelectUser, formatActive, s
               </span>
             }
           >
-            {user.bio}
+            {user.bio || t('My.DefaultBio')}
           </MultiClamp>
         </BioBox>
         <LinkBox>
-          {user.twitter_profile && (
+          {user.twitter_profile ? (
             <a href={user.twitter_profile} target="_blank" rel="noreferrer">
-              <img src={TwitterIcon} alt="" className="icon" />
+              <img src={TwitterIcon} alt="" />
             </a>
+          ) : (
+            <img src={TwitterIcon} alt="" className="icon" />
           )}
-          {/*{user.discord_profile && (*/}
-          {/*  <CopyBox text={user.discord_profile || ''} dir="right">*/}
-          {/*    <img src={DiscordIcon} alt="" className="icon" />*/}
-          {/*  </CopyBox>*/}
-          {/*)}*/}
-          {user.email && (
-            <CopyBox text={user.email || ''}>
-              <img src={EmailIcon} alt="" className="icon" />
-            </CopyBox>
+          {user.mirror ? (
+            <a href={`mailto:${user.mirror}`} target="_blank" rel="noreferrer">
+              <img src={MirrorImg} alt="" />
+            </a>
+          ) : (
+            <img src={MirrorImg} alt="" className="icon" />
+          )}
+          {user.email ? (
+            <a href={`mailto:${user.email}`} target="_blank" rel="noreferrer">
+              <img src={EmailIcon} alt="" />
+            </a>
+          ) : (
+            <img src={EmailIcon} alt="" className="icon" />
           )}
         </LinkBox>
       </div>
@@ -97,19 +101,19 @@ export default function UserCard({ user, showEdit, onSelectUser, formatActive, s
 
 const LinkBox = styled.div`
   margin-top: 10px;
-  img {
-    margin-right: 16px !important;
-  }
   .copy-content {
     display: inline-block;
   }
+  .icon {
+    opacity: 0.4;
+  }
 `;
 const UserCardBox = styled(Col)`
-  margin-bottom: 40px;
+  margin-bottom: 24px;
   .boxAll {
     background-color: var(--bs-background);
     border: 1px solid var(--bs-border-color);
-    padding: 24px;
+    padding: 14px;
     border-radius: 8px;
     overflow: hidden;
     box-sizing: border-box;

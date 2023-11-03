@@ -65,7 +65,7 @@ const GlobalStyle = createGlobalStyle`
     height: 40px;
     border-color: var(--bs-body-color);
     font-weight: bold;
-    color: var(--bs-body-color);
+    color: var(--bs-body-color_active);
     &:hover, &:focus-visible, &:active {
       background-color: transparent !important;
       color: var(--bs-body-color) !important;
