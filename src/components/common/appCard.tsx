@@ -2,7 +2,11 @@ import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { WindowPlus } from 'react-bootstrap-icons';
-import DefaultImg from '../../assets/Imgs/light/sgnHome.png';
+import DefaultImg from '../../assets/Imgs/dark/default.png';
+import DefaultImgLight from '../../assets/Imgs/light/default.png';
+import { useAuthContext } from '../../providers/authProvider';
+import AddImg from '../../assets/Imgs/dark/add.svg';
+import AddImgLight from '../../assets/Imgs/light/add.svg';
 
 const AppCard = ({
   icon,
@@ -18,6 +22,9 @@ const AppCard = ({
   desc?: string;
 }) => {
   const navigate = useNavigate();
+  const {
+    state: { theme },
+  } = useAuthContext();
   const handleClickEvent = () => {
     if (id === 'online') {
       navigate('/online-event');
@@ -30,7 +37,8 @@ const AppCard = ({
   return (
     <AppCardStyle className="boxBg" onClick={handleClickEvent}>
       <div className="iconBox">
-        <img src={icon ? icon : DefaultImg} alt="" />
+        <img src={icon ? icon : theme ? DefaultImg : DefaultImgLight} alt="" />
+        <div className="inner" />
       </div>
       <div className="Rht">
         <div className="title">{name}</div>
@@ -42,21 +50,19 @@ const AppCard = ({
 
 export default AppCard;
 
-export const EmptyAppCard = () => {
+export const EmptyAppCard = ({ theme }: any) => {
   const { t } = useTranslation();
   return (
     <AppCardStyle>
       <div className="flexBox">
-        <div className="iconBox2">{<WindowPlus />}</div>
-        <div>{t('resources.wait2add')}</div>
+        <div className="iconBox2">
+          <img src={theme ? AddImg : AddImgLight} alt="" />
+        </div>
+        <div className="tips">{t('resources.wait2add')}</div>
       </div>
     </AppCardStyle>
   );
 };
-
-export const AppIcon = styled.img`
-  height: 30px;
-`;
 
 const AppCardStyle = styled.div`
   padding: 24px;
@@ -68,15 +74,33 @@ const AppCardStyle = styled.div`
   background-color: var(--bs-box--background);
   border: 1px solid var(--bs-border-color);
   margin-bottom: 20px;
+  min-height: 136px;
 
   &:hover {
     background-color: var(--home-right_hover);
   }
   .iconBox {
-    img {
+    border-radius: 16px;
+
+    overflow: hidden;
+    width: 88px;
+    height: 88px;
+    flex-shrink: 0;
+    position: relative;
+    .inner {
+      background: #fff;
       width: 88px;
       height: 88px;
-      border-radius: 16px;
+      position: absolute;
+      left: 0;
+      top: 0;
+      border-radius: 17px;
+    }
+    img {
+      position: relative;
+      z-index: 99;
+      width: 88px;
+      height: 88px;
       object-fit: cover;
       object-position: center;
     }
@@ -106,11 +130,15 @@ const AppCardStyle = styled.div`
     justify-content: center;
     align-items: center;
     width: 100%;
-
-    .iconBox2 {
-      font-size: 42px;
-      text-align: center;
-    }
+  }
+  .tips {
+    font-size: 12px;
+    font-family: Poppins-Regular;
+    font-weight: 400;
+    color: #1a1323;
+    line-height: 18px;
+    margin-top: 8px;
+    color: var(--bs-body-color_active);
   }
 
   @media (max-width: 1024px) {

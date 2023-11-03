@@ -1,60 +1,31 @@
 import styled from 'styled-components';
-import { Card, Button } from 'react-bootstrap';
-import React from 'react';
+import { Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { IUser } from 'type/user.type';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
-import { updateStaffs, IUpdateStaffsParams } from 'requests/guild';
-import { DefaultAvatar } from 'utils/constant';
+import DefaultAvatar from 'assets/Imgs/defaultAvatar.png';
 import useToast, { ToastType } from 'hooks/useToast';
 import { updateMembers } from 'requests/cityHall';
+import BasicModal from 'components/modals/basicModal';
 
-const Mask = styled.div`
-  background: rgba(0, 0, 0, 0.3);
-  width: 100vw;
-  height: 100vh;
-  position: fixed;
-  z-index: 99;
-  left: 0;
-  top: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  .btnBtm {
-    margin-right: 20px;
-  }
-  dl,
-  dt,
-  dd {
-    padding: 0;
-    margin: 0;
-  }
-  .title {
-    font-weight: bold;
-    margin-block: 15px;
-  }
-`;
-
-const CardHeader = styled.div`
-  min-width: 500px;
-  padding: 1rem 1.25rem;
-  border-bottom: 1px solid rgb(237, 241, 247);
-  border-top-left-radius: 0.25rem;
-  border-top-right-radius: 0.25rem;
-  color: rgb(34, 43, 69);
-  font-family: Inter-Regular, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif,
-    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
-  font-size: 0.9375rem;
-  font-weight: 600;
-  line-height: 1.5rem;
+const CardText = styled.div`
+  font-size: 14px;
+  color: var(--bs-body-color_active);
+  line-height: 24px;
+  margin-bottom: 24px;
 `;
 
 const CardBody = styled.div`
-  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
 `;
 const CardFooter = styled.div`
-  padding: 0 20px 20px;
+  text-align: center;
+  margin-top: 40px;
+  button {
+    width: 110px;
+  }
 `;
 
 const ItemBox = styled.div`
@@ -62,13 +33,21 @@ const ItemBox = styled.div`
   align-items: center;
   justify-content: flex-start;
   width: 500px;
-  gap: 10px;
+  gap: 12px;
   img {
-    width: 40px;
-    height: 40px;
+    width: 44px;
+    height: 44px;
     border-radius: 50%;
-    border: 1px solid #edf1f7;
-    margin-right: 20px;
+  }
+  .name {
+    font-size: 12px;
+    color: var(--bs-body-color);
+    line-height: 18px;
+  }
+  .wallet {
+    font-size: 14px;
+    line-height: 20px;
+    margin-top: 5px;
   }
 `;
 
@@ -78,11 +57,11 @@ interface Iprops {
   selectMemArr?: IUser[];
 }
 export default function Del(props: Iprops) {
-  const { closeRemove, selectAdminArr, selectMemArr } = props;
+  const { closeRemove, selectAdminArr } = props;
   const { t } = useTranslation();
   const { dispatch } = useAuthContext();
 
-  const { Toast, showToast } = useToast();
+  const { showToast } = useToast();
 
   const submitUpdate = async () => {
     const params = {
@@ -103,35 +82,31 @@ export default function Del(props: Iprops) {
   };
 
   return (
-    <Mask>
-      <Card>
-        {Toast}
-        <CardHeader>{t('Guild.RemoveMember')}</CardHeader>
-        <CardBody>
-          {!!selectAdminArr.length && <div className="title">{t('Guild.Dominator')}</div>}
-          {selectAdminArr.map((item, index) => (
-            <ItemBox key={index}>
-              <div>
-                {item.avatar ? (
-                  <img src={item.avatar} style={{ width: '40px', height: '40px' }} />
-                ) : (
-                  <img src={DefaultAvatar} alt="" width="40px" height="40px" />
-                )}
-              </div>
-              <div>
-                <div>{item.name}</div>
-                <div>{item.wallet}</div>
-              </div>
-            </ItemBox>
-          ))}
-        </CardBody>
-        <CardFooter>
-          <Button variant="outline-primary" className="btnBtm" onClick={() => closeRemove()}>
-            {t('general.cancel')}
-          </Button>
-          <Button onClick={() => submitUpdate()}> {t('general.confirm')}</Button>
-        </CardFooter>
-      </Card>
-    </Mask>
+    <RemoveMemberModalWrapper title={t('members.RemoveTitle')} handleClose={closeRemove}>
+      <CardText>{t('members.RemoveConfirm')}</CardText>
+      <CardBody>
+        {selectAdminArr.map((item, index) => (
+          <ItemBox key={index}>
+            <div>
+              <img src={item.avatar || DefaultAvatar} alt="" />
+            </div>
+            <div>
+              <div className="name">{item.name}</div>
+              <div className="wallet">{item.wallet}</div>
+            </div>
+          </ItemBox>
+        ))}
+      </CardBody>
+      <CardFooter>
+        <Button variant="outline-primary" className="btnBtm" onClick={() => closeRemove()}>
+          {t('general.cancel')}
+        </Button>
+        <Button onClick={() => submitUpdate()}> {t('general.confirm')}</Button>
+      </CardFooter>
+    </RemoveMemberModalWrapper>
   );
 }
+
+const RemoveMemberModalWrapper = styled(BasicModal)`
+  width: 470px;
+`;

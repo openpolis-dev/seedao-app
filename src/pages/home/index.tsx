@@ -26,6 +26,7 @@ const CITY_HALL = 'https://seedao.notion.site/07c258913c5d4847b59271e2ae6f7c66';
 const CITY_HALL_MEMBERS = 'https://www.notion.so/3913d631d7bc49e1a0334140e3cd84f5';
 
 const Box = styled.div`
+  background: var(--bs-background);
   .lline {
     display: flex;
     margin: 60px 20px;
@@ -74,7 +75,11 @@ const LineBox = styled.div`
   align-items: center;
   width: 100%;
   margin-bottom: 16px;
-
+  .rhtLine {
+    width: 1px;
+    height: 80px;
+    background: var(--line-home);
+  }
   dl {
     width: 33.33333%;
     display: flex;
@@ -221,7 +226,7 @@ export default function Home() {
 
   const events = useMemo(() => {
     // @ts-ignore
-    return Links.apps.map((item) => ({ ...item, name: t(item.name) as string }));
+    return Links.apps.map((item) => ({ ...item, name: t(item.name) as string, desc: t(item.desc) as string }));
   }, [t]);
 
   useEffect(() => {
@@ -304,6 +309,7 @@ export default function Home() {
             <div className="tips">{t('Home.SGNHolder')}</div>
           </dd>
         </dl>
+        <div className="rhtLine" />
         <dl>
           <dt>
             <img src={theme ? GovernImg : GovernImgLight} alt="" />
@@ -313,6 +319,7 @@ export default function Home() {
             <div className="tips">{t('Home.GovernNode')}</div>
           </dd>
         </dl>
+        <div className="rhtLine" />
         <dl>
           <dt>
             <img src={theme ? SbtImg : SbtImgLight} alt="" />
@@ -329,7 +336,7 @@ export default function Home() {
             <TitBox>
               <span>{t('Home.Apps')}</span>
               <div className="toGo" onClick={() => togo('/apps')}>
-                All events
+                {t('Home.allEvents')}
                 <img src={ArrowImg} alt="" />
               </div>
             </TitBox>
@@ -347,7 +354,7 @@ export default function Home() {
             <TitBox>
               <span>{t('Home.Publicity')}</span>
               <div className="toGo">
-                View all
+                {t('Home.viewAll')}
                 <img src={ArrowImg} alt="" />
               </div>
             </TitBox>

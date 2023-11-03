@@ -15,7 +15,7 @@ export default function BrandPanel() {
 
   const lst = useMemo(() => {
     // @ts-ignore
-    return Links.brand.map((item) => ({ ...item, name: t(item.name) as string }));
+    return Links.brand.map((item) => ({ ...item, name: t(item.name) as string, desc: t(item.desc) as string }));
   }, [t]);
   return (
     <div>

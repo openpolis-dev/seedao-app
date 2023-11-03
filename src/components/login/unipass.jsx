@@ -13,7 +13,7 @@ import { SELECT_WALLET } from "../../utils/constant";
 import { clearStorage } from "../../utils/auth";
 
 import styled from "styled-components";
-import UnipassIcon from "../../assets/images/wallet/unipass.svg";
+import UnipassIcon from "../../assets/Imgs/home/Unipass.svg";
 import OneSignal from 'react-onesignal';
 
 const WalletOption = styled.li`

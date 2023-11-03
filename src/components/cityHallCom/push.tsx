@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import DatePickerStyle from 'components/datePicker';
-import Page from 'components/pagination';
 import NoItem from 'components/noItem';
 import publicJs from 'utils/publicJs';
 import { PUSH_STATUS, IPushDisplay } from 'type/push.type';
@@ -12,6 +11,17 @@ import { AppActionType, useAuthContext } from 'providers/authProvider';
 import useToast, { ToastType } from 'hooks/useToast';
 import { createPush, getPushList } from 'requests/push';
 import { formatTime } from 'utils/time';
+import InfiniteScroll from 'react-infinite-scroll-component';
+import PushDetailModal, {
+  PushItemTop,
+  PushItemBottom,
+  PushItemTitle,
+  PushItemContent,
+  JumpBox,
+  StatusTag,
+  PushItemBottomLeft,
+} from 'components/modals/pushDetailModal';
+import sns from '@seedao/sns-js';
 
 enum PUSH_TAB {
   CREATE = 1,
@@ -61,8 +71,8 @@ const CreatePushContent = () => {
     return !title || !href || !title.trim() || !href.trim();
   }, [title, href]);
   return (
-    <div style={{ flex: 1 }}>
-      <BlockTitle>创建推送</BlockTitle>
+    <CreateBox>
+      <BlockTitle>{t('Push.CreatePush')}</BlockTitle>
       <Form>
         <FormGroup>
           <FormLabel>
@@ -99,7 +109,7 @@ const CreatePushContent = () => {
           {t('Push.Create')}
         </Button>
       </SubmitBox>
-    </div>
+    </CreateBox>
   );
 };
 
@@ -107,95 +117,112 @@ const PushHistoryContent = () => {
   const { t } = useTranslation();
   const [list, setList] = useState<IPushDisplay[]>([]);
   const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
-  const [total, setTotal] = useState(100);
+  const [pageSize] = useState(10);
+  const [hasMore, setHasMore] = useState(false);
+  const [showRecord, setShowRecord] = useState<IPushDisplay>();
+  const [wallet2snsMap] = useState<{ [k: string]: string }>({});
 
-  const handlePage = (num: number) => {
-    setPage(num + 1);
+  const handleCancel = () => {
+    // TODO
   };
-  const handlePageSize = (num: number) => {
-    setPageSize(num);
+  const getList = async () => {
+    try {
+      const { data } = await getPushList({ page, size: pageSize, sort_field: 'created_at', sort_order: 'desc' });
+      const _list = [
+        ...list,
+        ...data.rows.map((item) => ({
+          ...item,
+          timeDisplay: formatTime(new Date(item.created_at).getTime()),
+        })),
+      ];
+      setList(_list);
+      setHasMore(_list.length < data.total);
+      setPage(page + 1);
+      const _wallets: string[] = [];
+      _list.forEach((item) => {
+        const _wallet = item.creator_wallet.toLocaleLowerCase();
+        if (!wallet2snsMap[_wallet]) {
+          _wallets.push(_wallet);
+        }
+      });
+      if (_wallets.length) {
+        try {
+          const res = await sns.names(_wallets);
+          const _map = { ...wallet2snsMap };
+          res.forEach((r, idx) => {
+            _map[_wallets[idx]] = r || publicJs.AddressToShow(_wallets[idx]);
+          });
+        } catch (error) {
+          console.error('parse sns failed', error);
+        }
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
-
-  const handleCancel = () => {};
 
   useEffect(() => {
-    const getList = async () => {
-      try {
-        const { data } = await getPushList({ page, size: pageSize, sort_field: '', sort_order: 'desc' });
-        setTotal(data.total);
-        setList(
-          data.rows.map((item) => ({
-            ...item,
-            timeDisplay: formatTime(new Date(item.created_at).getTime()),
-          })),
-        );
-      } catch (error) {
-        console.error(error);
-      }
-    };
     getList();
-  }, [page, pageSize]);
+  }, []);
 
   return (
     <div>
-      <BlockTitle>推送记录</BlockTitle>
-      <TableBox>
-        {list.length ? (
-          <>
-            <table className="table" cellPadding="0" cellSpacing="0">
-              <thead>
-                <tr>
-                  <th>{t('Push.Title')}</th>
-                  <th>{t('Push.Content')}</th>
-                  <th>{t('Push.Href')}</th>
-                  <th>{t('Push.Time')}</th>
-                  {/* <th>{t('Push.Status')}</th> */}
-                  <th>{t('Push.Creator')}</th>
-                  {/* <th>{t('Push.Options')}</th> */}
-                </tr>
-              </thead>
-              <tbody>
-                {list.map((item) => (
-                  <tr key={item.title}>
-                    <td>{item.title}</td>
-                    <td>{item.content}</td>
-                    <td>
-                      <a href={item.jump_url} target="_blank" rel="noreferrer">
-                        {item.jump_url?.slice(0, 10) + '...'}
-                      </a>
-                    </td>
-                    <td>{item.timeDisplay}</td>
-                    {/* <td>{formatPushStatus(item.status, t)}</td> */}
-                    <td>
-                      <div>
-                        <span>{publicJs.AddressToShow(item.creator_wallet)}</span>
-                      </div>
-                    </td>
-                    {/* <td>
-                    {item.status === PUSH_STATUS.WAITING && (
-                      <Button size="sm" variant="outline-primary" onClick={() => handleCancel()}>
-                        {t('general.cancel')}
-                      </Button>
-                    )}
-                  </td> */}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            <Page
-              itemsPerPage={pageSize}
-              total={total}
-              current={page - 1}
-              handleToPage={handlePage}
-              handlePageSize={handlePageSize}
-              dir="right"
-            />
-          </>
-        ) : (
-          <NoItem />
-        )}
-      </TableBox>
+      {showRecord && (
+        <PushDetailModal
+          data={showRecord}
+          handleClose={() => setShowRecord(undefined)}
+          sns={
+            wallet2snsMap[showRecord.creator_wallet.toLocaleLowerCase()] ||
+            publicJs.AddressToShow(showRecord.creator_wallet)
+          }
+        />
+      )}
+      <BlockTitle>{t('Push.History')}</BlockTitle>
+      {list.length ? (
+        <PushContentBox id="push-scroll">
+          <InfiniteScroll
+            dataLength={list.length}
+            next={getList}
+            hasMore={hasMore}
+            scrollableTarget="push-scroll"
+            loader={<LoadingBottom>{t('general.Loading')}</LoadingBottom>}
+          >
+            {list.map((item, idx) => (
+              <PushItem key={idx} onClick={() => setShowRecord(item)}>
+                <PushItemTop>
+                  <PushItemTitle className="clip">{item.title}</PushItemTitle>
+                  <PushItemContent className="clip">{item.content}</PushItemContent>
+                  <JumpBox className="clip">
+                    {t('Push.Href')}
+                    {`: `}
+                    <a href={item.jump_url} target="_blank" rel="noopener noreferrer">
+                      {item.jump_url}
+                    </a>
+                  </JumpBox>
+                </PushItemTop>
+
+                <PushItemBottom>
+                  <PushItemBottomLeft>
+                    <div className="name">
+                      {wallet2snsMap[item.creator_wallet.toLocaleLowerCase()] ||
+                        publicJs.AddressToShow(item.creator_wallet)}
+                    </div>
+                    <div className="date">{item.timeDisplay}</div>
+                  </PushItemBottomLeft>
+                  <StatusTag>{t('Push.Pushed')}</StatusTag>
+                  {/* {item.status === PUSH_STATUS.WAITING && (
+                        <Button size="sm" variant="outline-primary" onClick={() => handleCancel()}>
+                          {t('general.cancel')}
+                        </Button>
+                      )} */}
+                </PushItemBottom>
+              </PushItem>
+            ))}
+          </InfiniteScroll>
+        </PushContentBox>
+      ) : (
+        <NoItem />
+      )}
     </div>
   );
 };
@@ -209,9 +236,20 @@ export default function PushPanel({ id }: { id?: number }) {
   );
 }
 
+const PushContentBox = styled.div`
+  height: calc(100vh - 280px);
+  overflow-y: auto;
+  &::-webkit-scrollbar {
+    display: none;
+    width: 0;
+  }
+`;
+
 const Box = styled.div`
   display: flex;
   gap: 40px;
+  justify-content: space-between;
+  height: 100%;
   @media (max-width: 768px) {
     flex-direction: column;
   }
@@ -241,29 +279,6 @@ const FormInput = styled(Form.Control)`
   min-width: 200px;
 `;
 
-const TableBox = styled.div`
-  width: 100%;
-  overflow-x: auto;
-  overflow-y: hidden;
-  flex: 2;
-  table {
-    th {
-      background: transparent;
-      color: #6e6893;
-      border: 1px solid #d9d5ec;
-      border-left: none;
-      border-right: none;
-      border-radius: 0;
-    }
-    td {
-      border-bottom-color: #d9d5ec;
-    }
-    tr:hover td {
-      background: #f2f0f9;
-    }
-  }
-`;
-
 const SubmitBox = styled.div`
   margin-top: 52px;
   button {
@@ -277,4 +292,25 @@ const BlockTitle = styled.div`
   font-weight: bold;
   line-height: 30px;
   margin-bottom: 39px;
+`;
+
+const PushItem = styled.div`
+  cursor: pointer;
+  width: 480px;
+  min-height: 178px;
+  background: var(--bs-box--background);
+  border-radius: 16px;
+  border: 1px solid var(--bs-border-color);
+  margin-bottom: 25px;
+`;
+
+const CreateBox = styled.div`
+  width: 576px;
+`;
+
+const LoadingBottom = styled.div`
+  text-align: center;
+  font-size: 14px;
+  line-height: 22px;
+  color: var(--bs-body-color);
 `;

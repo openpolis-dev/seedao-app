@@ -76,9 +76,7 @@ export default function ProposalCategory() {
   );
 }
 
-const NavBox = styled.div`
-  padding: 20px 20px 0;
-`;
+const NavBox = styled.div``;
 const BoxOuter = styled.div`
   //padding: 40px;
   min-height: 100%;
@@ -93,9 +91,4 @@ const CategoryPage = styled.div`
   }
 `;
 
-const ProposalBox = styled.div`
-  & > div {
-    //margin-inline: 20px;
-    margin: 20px;
-  }
-`;
+const ProposalBox = styled.div``;

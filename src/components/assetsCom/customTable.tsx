@@ -4,6 +4,9 @@ import { IExcelObj } from 'type/project.type';
 import Select from 'components/common/select';
 import { Button, Form } from 'react-bootstrap';
 import { useState, FormEvent, useEffect } from 'react';
+import DeleteIcon from 'assets/Imgs/delete.svg';
+import AddIcon from 'assets/Imgs/add.svg';
+import { AssetName } from 'utils/constant';
 
 interface IProps {
   updateList: (data: IExcelObj[]) => void;
@@ -47,7 +50,6 @@ const CustomTable = ({ updateList }: IProps) => {
     setList(_list);
   };
 
-  console.log(list);
   const addOne = () => {
     setList([
       ...list,
@@ -75,34 +77,43 @@ const CustomTable = ({ updateList }: IProps) => {
       <table className="table" cellPadding="0" cellSpacing="0">
         <thead>
           <tr>
-            <th>&nbsp;</th>
-            <th>SNS/钱包地址</th>
-            <th>资产类型</th>
-            <th>资产数量</th>
-            <th>{t('Project.Content')}</th>
-            <th>{t('Project.Note')}</th>
+            <th>{t('application.AddressName')}</th>
+            <th style={{ width: '120px' }}>{t('application.AssetType')}</th>
+            <th style={{ width: '140px' }}>{t('application.AssetAmount')}</th>
+            <th>{t('application.Content')}</th>
+            <th>{t('application.RegisterNote')}</th>
             <th></th>
           </tr>
         </thead>
         <tbody>
           {list.map((item, index) => (
             <tr key={index}>
-              <td>{index + 1}</td>
-              <td>
-                <Form.Control value={item.address} onChange={(e) => handleInput(e, index, 'address')} />
+              <td style={{ width: '380px' }}>
+                <Form.Control
+                  style={{ width: '368px' }}
+                  value={item.address}
+                  onChange={(e) => handleInput(e, index, 'address')}
+                />
               </td>
-              <td>
-                <Select
+              <td style={{ width: '120px' }}>
+                <AssetSelect
+                  width="80px"
                   options={[
-                    { value: 'scr', label: 'SCR' },
-                    { value: 'eth', label: 'ETH' },
+                    { value: AssetName.Credit, label: AssetName.Credit },
+                    { value: AssetName.Token, label: AssetName.Token },
                   ]}
                   placeholder=""
+                  NotClear={true}
                   onChange={(value: any) => handleSelect(value?.value, index)}
                 />
               </td>
-              <td>
-                <Form.Control value={item.amount} onChange={(e) => handleInput(e, index, 'amount')} />
+              <td style={{ width: '140px' }}>
+                <Form.Control
+                  style={{ width: '120px' }}
+                  type="number"
+                  value={item.amount}
+                  onChange={(e) => handleInput(e, index, 'amount')}
+                />
               </td>
               <td>
                 <Form.Control value={item.content} onChange={(e) => handleInput(e, index, 'content')} />
@@ -111,17 +122,43 @@ const CustomTable = ({ updateList }: IProps) => {
                 <Form.Control value={item.note} onChange={(e) => handleInput(e, index, 'note')} />
               </td>
               <td>
-                <Button onClick={() => deleteOne(index)}>删除</Button>
+                <DeleteImg src={DeleteIcon} alt="" onClick={() => deleteOne(index)} />
               </td>
             </tr>
           ))}
         </tbody>
       </table>
       <div>
-        <Button onClick={addOne}>添加</Button>
+        <AddButton onClick={addOne}>
+          <img src={AddIcon} alt="" />
+          {t('Assets.RegisterAdd')}
+        </AddButton>
       </div>
     </>
   );
 };
 
 export default CustomTable;
+
+const DeleteImg = styled.img`
+  cursor: pointer;
+  position: relative;
+  top: 4px;
+`;
+
+export const AddButton = styled.button<{ long?: boolean }>`
+  height: 34px;
+  background: #b0b0b0;
+  border-radius: 8px;
+  color: #0d0c0f;
+  padding-inline: 10px;
+  border: none;
+  font-family: Poppins-SemiBold, Poppins;
+  img {
+    margin-right: 8px;
+  }
+`;
+
+const AssetSelect = styled(Select)`
+  width: 100px;
+`;

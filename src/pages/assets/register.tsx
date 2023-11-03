@@ -1,17 +1,22 @@
 import styled from 'styled-components';
 import { Form } from 'react-bootstrap';
 import RegList from 'components/assetsCom/regList';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ExcelObj } from 'type/project.type';
+import { IExcelObj } from 'type/project.type';
 import requests from 'requests';
-import { ApplicationType } from 'type/application.type';
-import { ICreateBudgeApplicationRequest } from 'requests/applications';
-import { AssetName } from 'utils/constant';
+import { ApplicationEntity } from 'type/application.type';
 import useToast, { ToastType } from 'hooks/useToast';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import { ContainerPadding } from 'assets/styles/global';
 import Select from 'components/common/select';
+import BackIconSVG from 'components/svgs/back';
+import { Link } from 'react-router-dom';
+import { Button } from 'react-bootstrap';
+import useBudgetSource from 'hooks/useBudgetSource';
+import { ethers } from 'ethers';
+import sns from '@seedao/sns-js';
+import { AssetName } from 'utils/constant';
 
 type ErrorDataType = {
   line: number;
@@ -23,45 +28,127 @@ export default function Register() {
   const { dispatch } = useAuthContext();
   const { showToast } = useToast();
 
-  const [list, setList] = useState<ExcelObj[]>([]);
-  const [errList, setErrList] = useState<ErrorDataType[]>([]);
-  const [id, setId] = useState(1);
+  const [list, setList] = useState<IExcelObj[]>([]);
 
-  const [allSource, setAllSource] = useState<ISelectItem[]>([]);
-  const [selectSource, setSelectSource] = useState<{ id: number; type: 'project' | 'guild' }>();
+  const allSource = useBudgetSource();
+  const [selectSource, setSelectSource] = useState<{ id: number; type: ApplicationEntity }>();
 
   const [content, setContent] = useState('');
 
   const Clear = () => {
     setList([]);
-    setErrList([]);
+    setSelectSource(undefined);
+    setContent('');
+  };
+  const checkInvalidData = () => {
+    const err_list: ErrorDataType[] = [];
+    list.forEach((item, i) => {
+      const err: ErrorDataType = {
+        line: i + 1,
+        errorKeys: [],
+      };
+      if (!item.address) {
+        err.errorKeys.push(t('Msg.RequiredWallet'));
+      }
+      if (!item.assetType || (item.assetType !== AssetName.Credit && item.assetType !== AssetName.Token)) {
+        err.errorKeys.push(t('Msg.SelectAssetType'));
+      }
+      const _amount = Number(item.amount);
+
+      if (isNaN(_amount) || _amount <= 0) {
+        err.errorKeys.push(t('Msg.AssetAmountError'));
+      }
+      if (err.errorKeys.length > 0) {
+        err_list.push(err);
+      }
+    });
+    console.log(err_list);
+    if (err_list.length) {
+      let msgs: string[] = [];
+      err_list.forEach((item) => msgs.push(`L${item.line}: ${item.errorKeys.join(', ')}`));
+      return msgs.join('\n');
+    }
+
+    return undefined;
+  };
+
+  const checkWallet = async () => {
+    const err_list: ErrorDataType[] = [];
+    const sns_set: Set<string> = new Set();
+    list.forEach((item, i) => {
+      const err: ErrorDataType = {
+        line: i + 1,
+        errorKeys: [],
+      };
+      if (item.address.endsWith('.seedao')) {
+        sns_set.add(item.address);
+      } else if (!item.address.startsWith('0x')) {
+        err.errorKeys.push(t('Msg.SNSError'));
+      } else if (!ethers.utils.isAddress(item.address)) {
+        err.errorKeys.push(t('Msg.RequiredWallet'));
+      }
+      if (err.errorKeys.length > 0) {
+        err_list.push(err);
+      }
+    });
+    if (err_list.length) {
+      let msgs: string[] = [];
+      err_list.forEach((item) => msgs.push(`L${item.line}: ${item.errorKeys.join(', ')}`));
+      return msgs.join('\n');
+    }
+    const err_sns_list: string[] = [];
+    try {
+      const sns_list = Array.from(sns_set);
+      const result = await sns.resolves(sns_list);
+      result.forEach((item, i) => {
+        if (!item) {
+          err_sns_list.push(sns_list[i]);
+        }
+      });
+    } catch (error) {
+      console.error(error);
+    }
+    if (err_sns_list.length) {
+      return `${t('Msg.SNSError')}: ${err_sns_list.join(', ')}`;
+    }
+    // check SNS
+    return undefined;
   };
 
   const handleCreate = async () => {
+    let msg: string | undefined;
+    msg = checkInvalidData();
+    if (msg) {
+      showToast(msg, ToastType.Danger, { autoClose: false });
+      return;
+    }
+    msg = await checkWallet();
+    if (msg) {
+      showToast(msg, ToastType.Danger, { autoClose: false });
+      return;
+    }
+    if (!selectSource) {
+      return;
+    }
+    // check and convert sns
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
 
     try {
-      const data: ICreateBudgeApplicationRequest[] = list.map((item) => {
-        const d: ICreateBudgeApplicationRequest = {
-          type: ApplicationType.NewReward,
-          entity: 'guild',
-          entity_id: id,
-          detailed_type: item.content || '',
-          comment: item.note || '',
+      const data = {
+        entity: selectSource.type,
+        entity_id: selectSource.id,
+        comment: content,
+        records: list.map((item) => ({
+          amount: Number(item.amount),
+          asset_name: item.assetType,
+          comment: item.content,
+          detailed_type: item.note,
+          entity: selectSource.type,
+          entity_id: selectSource.id,
           target_user_wallet: item.address,
-        };
-        if (Number(item.points)) {
-          d.credit_amount = Number(item.points);
-          d.credit_asset_name = AssetName.Credit;
-        }
-        if (Number(item.token)) {
-          d.token_amount = Number(item.token);
-          d.token_asset_name = AssetName.Token;
-        }
-        return d;
-      });
-
-      await requests.application.createBudgetApplications(data);
+        })),
+      };
+      await requests.application.createApplicationBundles(data);
       Clear();
       showToast(t('Guild.SubmitSuccess'), ToastType.Success);
     } catch (error) {
@@ -72,71 +159,29 @@ export default function Register() {
     }
   };
 
-  const getProjects = async () => {
-    try {
-      const res = await requests.project.getProjects({
-        page: 1,
-        size: 1000,
-        sort_order: 'desc',
-        sort_field: 'created_at',
-      });
-      return res.data.rows.map((item) => ({
-        label: item.name,
-        value: item.id,
-        data: 'project',
-      }));
-    } catch (error) {
-      console.error('getProjects in city-hall failed: ', error);
-      return [];
-    }
-  };
-  const getGuilds = async () => {
-    try {
-      const res = await requests.guild.getProjects({
-        page: 1,
-        size: 1000,
-        sort_order: 'desc',
-        sort_field: 'created_at',
-      });
-      return res.data.rows.map((item) => ({
-        label: item.name,
-        value: item.id,
-        data: 'guild',
-      }));
-    } catch (error) {
-      console.error('getGuilds in city-hall failed: ', error);
-      return [];
-    }
-  };
-
-  useEffect(() => {
-    const getSources = async () => {
-      const projects = await getProjects();
-      const guilds = await getGuilds();
-      setAllSource([...projects, ...guilds]);
-    };
-    getSources();
-  }, []);
-
   return (
     <OuterBox>
+      <BackBox to="/assets">
+        <BackIconSVG />
+        <span>{t('Assets.RegisterTitle')}</span>
+      </BackBox>
       <SectionBlock>
-        <div className="title">1. 选择项目/公会</div>
-        <Select
+        <div className="title">{t('Assets.RegisterSelect')}</div>
+        <SourceSelect
           options={allSource}
-          placeholder=""
+          placeholder="Search project/guild name"
           onChange={(value: any) => {
             setSelectSource({ id: value?.value as number, type: value?.data });
           }}
         />
       </SectionBlock>
       <SectionBlock>
-        <div className="title">2. 登记信息</div>
-        <RegList />
+        <div className="title">{t('Assets.RegisterList')}</div>
+        <RegList list={list} setList={setList} />
       </SectionBlock>
 
       <SectionBlock>
-        <div className="title">2. 填写登记说明</div>
+        <div className="title">{t('Assets.RegisterIntro')}</div>
         <Form.Control
           placeholder=""
           as="textarea"
@@ -145,6 +190,15 @@ export default function Register() {
           onChange={(e) => setContent(e.target.value)}
         />
       </SectionBlock>
+      <ButtonSection>
+        <Button
+          variant="primary"
+          onClick={handleCreate}
+          disabled={!list.length || !selectSource || !content || !content.trim()}
+        >
+          {t('Assets.RegisterSubmit')}
+        </Button>
+      </ButtonSection>
     </OuterBox>
   );
 }
@@ -153,6 +207,7 @@ const OuterBox = styled.div`
   box-sizing: border-box;
   min-height: 100%;
   ${ContainerPadding};
+  font-size: 14px;
   .btnBtm {
     margin-right: 20px;
   }
@@ -161,6 +216,31 @@ const OuterBox = styled.div`
 const SectionBlock = styled.section`
   margin-top: 20px;
   .title {
-    margin-bottom: 20px;
+    margin-bottom: 16px;
+    line-height: 20px;
+    color: var(--bs-body-color_active);
   }
+`;
+
+const ButtonSection = styled(SectionBlock)`
+  button {
+    width: 120px;
+  }
+`;
+
+const BackBox = styled(Link)`
+  padding: 10px 0 20px;
+  display: inline-flex;
+  align-items: center;
+  color: var(--bs-svg-color);
+  gap: 20px;
+  font-family: Poppins-SemiBold, Poppins;
+  font-weight: 600;
+  &:hover {
+    color: var(--bs-svg-color);
+  }
+`;
+
+const SourceSelect = styled(Select)`
+  width: 348px;
 `;

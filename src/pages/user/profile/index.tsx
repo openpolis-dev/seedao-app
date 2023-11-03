@@ -1,355 +1,337 @@
-import { InputGroup, Row, Col, Form, Button } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 import styled from 'styled-components';
-import React, { ChangeEvent, useEffect, useState, FormEvent, useMemo } from 'react';
-import requests from 'requests';
-import { useAuthContext, AppActionType } from 'providers/authProvider';
+import React, { useEffect, useState } from 'react';
+import { useAuthContext } from 'providers/authProvider';
 import { useTranslation } from 'react-i18next';
-import useToast, { ToastType } from 'hooks/useToast';
-import { Upload, X } from 'react-bootstrap-icons';
+import useToast from 'hooks/useToast';
 import { ContainerPadding } from 'assets/styles/global';
 import useParseSNS from 'hooks/useParseSNS';
 import CopyBox from 'components/copy';
-import copyIcon from 'assets/images/copy.svg';
-import SeedIcon from 'assets/images/seed.png';
-
-import TwitterIcon from 'assets/images/twitterNor.svg';
-import DiscordIcon from 'assets/images/discordNor.svg';
-import EmailIcon from 'assets/images/email.svg';
+import GithubImg from '../../../assets/Imgs/profile/Github2.svg';
+import TwitterIcon from '../../../assets/Imgs/profile/Twitter.svg';
+import DiscordIcon from '../../../assets/Imgs/profile/discord.svg';
+import WechatIcon from '../../../assets/Imgs/profile/wechat.svg';
+import MirrorImg from '../../../assets/Imgs/profile/mirror.svg';
+import EmailIcon from '../../../assets/Imgs/profile/message.svg';
 import { formatNumber } from 'utils/number';
 import { Link } from 'react-router-dom';
-import getConfig from 'utils/envCofnig';
-const config = getConfig();
+import CopyIconSVG from '../../../assets/Imgs/copy.svg';
+import defaultImg from '../../../assets/Imgs/defaultAvatar.png';
 
 const OuterBox = styled.div`
-  min-height: 100%;
+  margin-bottom: 50px;
+
   ${ContainerPadding};
 `;
 
 const HeadBox = styled.div`
   position: relative;
   display: flex;
-  gap: 30px;
   align-items: center;
   margin-bottom: 40px;
-`;
-const CardBox = styled.div`
-  background: #fff;
-  min-height: 100%;
-  padding: 20px 40px;
-  @media (max-width: 1024px) {
-    padding: 20px;
-  }
 `;
 const AvatarBox = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-`;
-
-const UlBox = styled.ul`
-  flex: 1;
-  li {
-    display: flex;
-    align-items: flex-start;
-    justify-content: flex-start;
-    margin-bottom: 20px;
-
-    .title {
-      margin-right: 20px;
-      line-height: 2.5em;
-      min-width: 70px;
-    }
+  border-radius: 100%;
+  overflow: hidden;
+  margin-right: 16px;
+  label {
+    margin-top: 0;
+    background: none;
   }
-  @media (max-width: 750px) {
-    li {
-      flex-direction: column;
-      margin-bottom: 10px;
-    }
-  }
-`;
-const InputBox = styled(InputGroup)`
-  max-width: 600px;
-  .wallet {
-    border: 1px solid #eee;
-    width: 100%;
-    border-radius: 0.25rem;
-    height: 40px;
-    padding: 0 1.125rem;
-    display: flex;
-    align-items: center;
-    overflow-x: auto;
-  }
-  .copy-content {
-    position: absolute;
-    right: -30px;
-    top: 8px;
-  }
-  @media (max-width: 1024px) {
-    max-width: 100%;
-  } ;
-`;
-const MidBox = styled.div`
-  display: flex;
-  justify-content: center;
-  padding-bottom: 40px;
-  gap: 60px;
 `;
 
 export default function Profile() {
   const {
     state: { userData },
-    dispatch,
   } = useAuthContext();
   const sns = useParseSNS(userData?.wallet);
   const { t } = useTranslation();
   const { Toast, showToast } = useToast();
-  const [userName, setUserName] = useState('');
-  const [email, setEmail] = useState('');
-  const [discord, setDiscord] = useState('');
-  const [twitter, setTwitter] = useState('');
-  const [wechat, setWechat] = useState('');
-  const [mirror, setMirror] = useState('');
+  const [userName, setUserName] = useState<string | undefined>('');
+
   const [avatar, setAvatar] = useState('');
   const [bio, setBio] = useState('');
+  const [roles, setRoles] = useState<any[]>([]);
 
-  const handleInput = (e: ChangeEvent, type: string) => {
-    const { value } = e.target as HTMLInputElement;
-    switch (type) {
-      case 'userName':
-        setUserName(value);
-        break;
-      case 'email':
-        setEmail(value);
-        break;
-      case 'discord':
-        setDiscord(value);
-        break;
-      case 'twitter':
-        setTwitter(value);
-        break;
-      case 'wechat':
-        setWechat(value);
-        break;
-      case 'mirror':
-        setMirror(value);
-        break;
-      case 'bio':
-        setBio(value);
-    }
-  };
-  const saveProfile = async () => {
-    const reg = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (email && !reg.test(email)) {
-      showToast(t('My.IncorrectEmail'), ToastType.Danger);
-      return;
-    }
-    if (mirror && mirror.indexOf('mirror.xyz') === -1) {
-      showToast(t('My.IncorrectMirror'), ToastType.Danger);
-      return;
-    }
-    if (twitter && !twitter.startsWith('https://twitter.com/')) {
-      showToast(t('My.IncorrectLink', { media: 'Twitter' }), ToastType.Danger);
-      return;
-    }
-
-    dispatch({ type: AppActionType.SET_LOADING, payload: true });
-    try {
-      const data = {
-        name: userName,
-        avatar,
-        email,
-        discord_profile: discord,
-        twitter_profile: twitter,
-        wechat,
-        mirror,
-        bio,
-      };
-      await requests.user.updateUser(data);
-      dispatch({ type: AppActionType.SET_USER_DATA, payload: { ...userData, ...data } });
-      showToast(t('My.ModifiedSuccess'), ToastType.Success);
-    } catch (error) {
-      console.error('updateUser failed', error);
-      showToast(t('My.ModifiedFailed'), ToastType.Danger);
-    } finally {
-      dispatch({ type: AppActionType.SET_LOADING, payload: false });
-    }
-  };
+  const [sbt, setSbt] = useState<any[]>([]);
+  const [seed, setSeed] = useState<any[]>([]);
+  const [wallet, setWallet] = useState();
+  const [detail, setDetail] = useState<any>();
 
   useEffect(() => {
     if (userData) {
-      setUserName(userData.name);
-      setAvatar(userData.avatar);
-      setEmail(userData.email || '');
-      setDiscord(userData.discord_profile);
-      setTwitter(userData.twitter_profile);
-      setWechat(userData.wechat);
-      setMirror(userData.mirror);
-      setBio(userData.bio);
+      let detail = (userData as any).data;
+      setDetail(detail);
+      setUserName(detail.nickname);
+      setAvatar(detail.avatar);
+      setWallet(detail.wallet);
+
+      setBio(detail.bio);
+      setRoles(detail.roles!);
+
+      let sbtArr = detail.sbt;
+
+      const sbtFor = sbtArr?.filter((item: any) => item.name && item.image_uri);
+      setSbt(sbtFor);
+      setSeed(detail.seed);
     }
   }, [userData]);
 
-  const getBase64 = (imgUrl: string) => {
-    window.URL = window.URL || window.webkitURL;
-    const xhr = new XMLHttpRequest();
-    xhr.open('get', imgUrl, true);
-    xhr.responseType = 'blob';
-    xhr.onload = function () {
-      if (this.status === 200) {
-        const blob = this.response;
-        const oFileReader = new FileReader();
-        oFileReader.onloadend = function (e) {
-          const { result } = e.target as any;
-          setAvatar(result);
-        };
-        oFileReader.readAsDataURL(blob);
-      }
-    };
-    xhr.send();
+  const switchRoles = (role: string) => {
+    let str: string = '';
+    switch (role) {
+      case 'SGN_HOLDER':
+        str = t('roles.SGN_HOLDER');
+        break;
+      case 'NODE_S1':
+        str = t('roles.NODE_S1');
+        break;
+      case 'NODE_S2':
+        str = t('roles.NODE_S2');
+        break;
+      case 'NODE_S3':
+        str = t('roles.NODE_S3');
+        break;
+      case 'NODE_S4':
+        str = t('roles.NODE_S4');
+        break;
+      case 'CITYHALL_S1':
+        str = t('roles.CITYHALL_S1');
+        break;
+      case 'CITYHALL_S2':
+        str = t('roles.CITYHALL_S2');
+        break;
+      case 'CITYHALL_S3':
+        str = t('roles.CITYHALL_S3');
+        break;
+      case 'CITYHALL_S4':
+        str = t('roles.CITYHALL_S4');
+        break;
+      case 'CONTRIBUTOR_L1':
+        str = t('roles.CONTRIBUTOR_L1');
+        break;
+      case 'CONTRIBUTOR_L2':
+        str = t('roles.CONTRIBUTOR_L2');
+        break;
+      case 'CONTRIBUTOR_L3':
+        str = t('roles.CONTRIBUTOR_L3');
+        break;
+      case 'CONTRIBUTOR_L4':
+        str = t('roles.CONTRIBUTOR_L4');
+        break;
+      case 'CONTRIBUTOR_L5':
+        str = t('roles.CONTRIBUTOR_L5');
+        break;
+      case 'CONTRIBUTOR_L6':
+        str = t('roles.CONTRIBUTOR_L6');
+        break;
+      case 'CONTRIBUTOR_L7':
+        str = t('roles.CONTRIBUTOR_L7');
+        break;
+      case 'CONTRIBUTOR_L8':
+        str = t('roles.CONTRIBUTOR_L8');
+        break;
+      case 'CONTRIBUTOR_L9':
+        str = t('roles.CONTRIBUTOR_L9');
+        break;
+      case 'SEEDAO_MEMBER':
+        str = t('roles.SEEDAO_MEMBER');
+        break;
+      case 'SEEDAO_ONBOARDING':
+        str = t('roles.SEEDAO_ONBOARDING');
+        break;
+      default:
+        str = role;
+        break;
+    }
+    return str;
   };
-
-  const updateLogo = (e: FormEvent) => {
-    const { files } = e.target as any;
-    const url = window.URL.createObjectURL(files[0]);
-    getBase64(url);
-  };
-
   const removeUrl = () => {
     setAvatar('');
+  };
+
+  const returnSocial = (str: string, val?: string) => {
+    switch (str) {
+      case 'twitter':
+        return (
+          <a href={val} target="_blank">
+            <img src={TwitterIcon} alt="" />
+          </a>
+        );
+
+      case 'email':
+        return (
+          <a href={`mailto:${val}`} target="_blank">
+            <img src={EmailIcon} alt="" />
+          </a>
+        );
+
+      case 'mirror':
+        return (
+          <a href={val} target="_blank">
+            <img src={MirrorImg} alt="" />
+          </a>
+        );
+      case 'github':
+        return (
+          <a href={val} target="_blank">
+            <img src={GithubImg} alt="" />
+          </a>
+        );
+      case 'discord':
+      // return <img src={DiscordIcon} alt="" />;
+
+      case 'wechat':
+        return '';
+      // return (<img src={WechatIcon} alt="" />);
+    }
+  };
+
+  const AddressToShow = (address: string) => {
+    if (!address) return '';
+    const frontStr = address.substring(0, 16);
+    const afterStr = address.substring(address.length - 4, address.length);
+    return `${frontStr}...${afterStr}`;
   };
 
   return (
     <OuterBox>
       {Toast}
-      <CardBox>
+      <>
+        <TitleBox>{t('My.MyProfile')}</TitleBox>
         <HeadBox>
           <AvatarBox>
-            <UploadBox htmlFor="fileUpload" onChange={(e) => updateLogo(e)}>
-              {!avatar && (
-                <div>
-                  <input id="fileUpload" type="file" hidden accept=".jpg, .jpeg, .png" />
-                  {<Upload />}
-                </div>
-              )}
-              {!!avatar && (
-                <ImgBox onClick={() => removeUrl()}>
-                  <div className="del">
-                    <X className="iconTop" />
-                  </div>
-                  <img src={avatar} alt="" />
-                </ImgBox>
-              )}
-            </UploadBox>
+            <ImgBox onClick={() => removeUrl()}>
+              <img src={avatar ? avatar : defaultImg} alt="" />
+            </ImgBox>
           </AvatarBox>
           <InfoBox>
+            <div className="userName">{userName}</div>
+            {!!sns && (
+              <div className="wallet btm8">
+                <span>{sns || '-'}</span>
+                <CopyBox text={sns || ''} dir="left">
+                  <img src={CopyIconSVG} alt="" />
+                </CopyBox>
+              </div>
+            )}
+
             <div className="wallet">
-              <span>{sns || '-'}</span>
-              {process.env.NODE_ENV === 'development' && (
-                <TagBox>
-                  <li>s4节点</li>
-                  <li>s4节点</li>
-                  <li>s4节点</li>
-                </TagBox>
-              )}
-            </div>
-            <div className="wallet">{userName}</div>
-            <div className="wallet">
-              <div>{userData?.wallet}</div>
-              {userData?.wallet && (
-                <CopyBox text={userData?.wallet} dir="right">
-                  <img src={copyIcon} alt="" style={{ position: 'relative', top: '-2px' }} />
+              <span>{AddressToShow(wallet!)}</span>
+              {wallet && (
+                <CopyBox text={wallet!} dir="right">
+                  <img src={CopyIconSVG} alt="" />
                 </CopyBox>
               )}
             </div>
           </InfoBox>
           <EditButton to="/user/profile/edit">
-            <Button variant="primary">编辑</Button>
+            <Button variant="primary">{t('general.edit')}</Button>
           </EditButton>
         </HeadBox>
-        <LinkBox>
-          {twitter && (
-            <a href={twitter} target="_blank" rel="noreferrer">
-              <img src={TwitterIcon} alt="" className="icon" width="20px" height="20px" />
-            </a>
-          )}
-          {discord && (
-            <CopyBox text={discord || ''} dir="right">
-              <img src={DiscordIcon} alt="" className="icon" width="20px" height="20px" />
-            </CopyBox>
-          )}
-          {email && (
-            <CopyBox text={email || ''}>
-              <img src={EmailIcon} alt="" className="icon" width="20px" height="20px" />
-            </CopyBox>
-          )}
+        {!!bio && (
+          <BioBox>
+            <div className="title">{t('My.Bio')}</div>
+            <div>{bio || '-'}</div>
+          </BioBox>
+        )}
 
-          {wechat && (
-            <a href={wechat} target="_blank" rel="noopener noreferrer" className="icon">
-              wehat
-            </a>
+        <TagBox>
+          {roles?.map((item, index) => (
+            <li key={`tag_${index}`}>{switchRoles(item)}</li>
+          ))}
+        </TagBox>
+        <LinkBox>
+          {detail?.social_accounts?.map((item: any, index: number) =>
+            returnSocial(item.network, item.identity) ? (
+              <li key={`sbtInner_${index}`}>
+                <span className="iconLft">{returnSocial(item.network, item.identity)}</span>
+              </li>
+            ) : (
+              <></>
+            ),
           )}
-          {mirror && (
-            <a href={mirror} target="_blank" rel="noopener noreferrer" className="icon">
-              mirror
-            </a>
+          {detail?.email && (
+            <li>
+              <span className="iconLft">{returnSocial('email', detail?.email)}</span>
+            </li>
           )}
         </LinkBox>
-        <BioBox>
-          {t('My.Bio')}: {bio || '-'}
-        </BioBox>
-        {process.env.NODE_ENV === 'development' && (
-          <>
-            <ProgressOuter>
-              <FstLine>
-                <LevelBox>level 2</LevelBox>
-                <SCRBox>{formatNumber(50000)} SCR</SCRBox>
-              </FstLine>
-              <ProgressBox width="60">
+        <>
+          <ProgressOuter>
+            <div>
+              <Crt>
+                <div>{t('My.current')}</div>
+                <div className="num">{detail?.level?.upgrade_percent}%</div>
+              </Crt>
+              <ProgressBox width={detail?.level?.upgrade_percent ? detail?.level?.upgrade_percent : 0}>
                 <div className="inner" />
               </ProgressBox>
               <TipsBox>
-                <div>next level</div>
-                <div>{formatNumber(10000)} SCR</div>
+                <div>{t('My.nextLevel')}</div>
+                <div className="scr">{formatNumber(detail?.level?.scr_to_next_lv)} SCR</div>
               </TipsBox>
-            </ProgressOuter>
-            <NftBox>
-              <div className="title">SEED</div>
-              <Row>
-                {[...Array(8)].map((item, index) => (
-                  <Col key={index} sm={12} md={6} lg={3} xl={2}>
-                    <img src={SeedIcon} alt="" />
-                  </Col>
-                ))}
-              </Row>
-              <div className="title">SBT</div>
-              <Row>
-                {[...Array(8)].map((item, index) => (
-                  <Col key={index} sm={12} md={6} lg={3} xl={2}>
-                    <img src={SeedIcon} alt="" />
-                  </Col>
-                ))}
-              </Row>
-            </NftBox>
-          </>
-        )}
-      </CardBox>
+            </div>
+            <FstLine>
+              <LevelBox>
+                {t('My.level')} {detail?.level?.current_lv}
+              </LevelBox>
+              <SCRBox>{formatNumber(detail?.scr?.amount)} SCR</SCRBox>
+            </FstLine>
+          </ProgressOuter>
+          <NftBox>
+            {!!seed?.length && (
+              <li>
+                <div className="title">SEED</div>
+                <div className="ul">
+                  {seed?.map((item, index) => (
+                    <div key={index} className="li">
+                      {' '}
+                      <img src={item.image_uri} alt="" />
+                    </div>
+                  ))}
+                </div>
+              </li>
+            )}
+            {!!sbt?.length && (
+              <li>
+                <div className="title">SBT</div>
+                <div className="ul">
+                  {sbt?.map((item, index) => (
+                    <div key={index} className="li">
+                      {' '}
+                      <img src={item.image_uri} alt="" />
+                    </div>
+                  ))}
+                </div>
+              </li>
+            )}
+          </NftBox>
+        </>
+      </>
     </OuterBox>
   );
 }
 
-const UploadBox = styled.label`
-  background: #f8f8f8;
+const TitleBox = styled.div`
+  font-size: 24px;
+  font-family: Poppins-Bold;
+  color: var(--bs-body-color_active);
+  line-height: 30px;
+  margin-bottom: 40px;
+`;
+
+const ImgBox = styled.div`
   height: 100px;
   width: 100px;
-  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 4px;
-  margin-top: 20px;
-  font-family: 'Inter-Regular';
-  font-weight: 700;
-  font-size: 14px;
-  cursor: pointer;
+  position: relative;
+
   .iconRht {
     margin-right: 10px;
   }
@@ -357,15 +339,6 @@ const UploadBox = styled.label`
     max-width: 100%;
     max-height: 100%;
   }
-`;
-
-const ImgBox = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
   .del {
     display: none;
     position: absolute;
@@ -395,36 +368,75 @@ const ImgBox = styled.div`
 const InfoBox = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  .userName {
+    color: var(--bs-body-color_active);
+    font-size: 18px;
+    font-family: Poppins-SemiBold;
+    font-weight: 600;
+    line-height: 23px;
+    margin-bottom: 16px;
+  }
   .wallet {
     display: flex;
-    gap: 10px;
+    font-size: 14px;
+    span {
+      margin-right: 10px;
+    }
+  }
+  .btm8 {
+    margin-bottom: 8px;
   }
 `;
 
-const NftBox = styled.section`
-  margin-block: 20px;
+const NftBox = styled.ul`
+  li {
+    margin-bottom: 40px;
+  }
+  .ul {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+  .li {
+    width: 120px;
+    height: 120px;
+    margin: 0 24px 24px 0;
+  }
   .title {
     margin-bottom: 20px;
+    color: var(--bs-body-color_active);
+    font-size: 16px;
   }
   img {
     width: 100%;
+
     margin-bottom: 20px;
+    border-radius: 16px;
   }
 `;
 
 const BioBox = styled.section`
-  margin-top: 20px;
+  margin: 20px 0 40px;
+  color: var(--bs-body-color_active);
+
+  width: 582px;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  .title {
+    font-size: 12px;
+    font-family: Poppins-SemiBold;
+    font-weight: 600;
+    line-height: 16px;
+  }
 `;
 
-const LinkBox = styled.div`
-  margin-top: 20px;
-  img {
-    width: 20px;
-    height: 20px;
-  }
-  .icon {
-    margin-inline: 5px !important;
+const LinkBox = styled.ul`
+  display: flex;
+  margin-top: 40px;
+  li {
+    margin-right: 16px;
   }
   .copy-content {
     display: inline-block;
@@ -432,15 +444,14 @@ const LinkBox = styled.div`
 `;
 
 const ProgressBox = styled.div<{ width: number | string }>`
-  width: 100%;
-  height: 10px;
-  background: #fff;
-  border: 2px solid #000;
+  width: 320px;
+  height: 12px;
+  background: rgba(255, 113, 147, 0.21);
   border-radius: 10px;
   overflow: hidden;
   .inner {
-    height: 8px;
-    background: #000;
+    height: 10px;
+    background: #ff7193;
     width: ${(props) => props.width + '%'};
     border-radius: 8px;
   }
@@ -448,21 +459,19 @@ const ProgressBox = styled.div<{ width: number | string }>`
 
 const ProgressOuter = styled.div`
   display: flex;
-  flex-direction: column;
-  margin: 50px 0 20px;
-  width: 300px;
+  align-items: flex-start;
+  margin: 44px 0;
 `;
 
 const FstLine = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 10px;
+  margin: 40px 0 0 12px;
+  color: var(--bs-body-color_active);
 `;
 
 const LevelBox = styled.div`
-  background: #ff3231;
-  color: #fff;
   padding: 2px 10px;
   border-radius: 7px;
   text-transform: uppercase;
@@ -480,24 +489,87 @@ const TipsBox = styled.div`
   font-size: 12px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
+  color: var(--bs-body-color_active);
+  .scr {
+    margin-left: 8px;
+    font-size: 16px;
+    margin-bottom: -3px;
+  }
 `;
 
 const TagBox = styled.ul`
   font-size: 12px;
-  margin-left: 8px;
+  flex-wrap: wrap;
   display: flex;
-  gap: 8px;
+  font-weight: 400;
+  width: 600px;
   li {
     border-radius: 5px;
     padding-inline: 10px;
-    border: 1px solid #ccc;
     line-height: 22px;
+    margin: 0 8px 15px 0;
+    color: #000;
+    &:nth-child(13n + 1) {
+      background: #ff7193;
+    }
+    &:nth-child(13n + 2) {
+      background: #20b18a;
+    }
+    &:nth-child(13n + 3) {
+      background: #f9b617;
+    }
+    &:nth-child(13n + 4) {
+      background: #2f8fff;
+    }
+    &:nth-child(13n + 5) {
+      background: #7b50d7;
+    }
+    &:nth-child(13n + 6) {
+      background: #dde106;
+    }
+    &:nth-child(13n + 7) {
+      background: #1f9e14;
+    }
+    &:nth-child(13n + 8) {
+      background: #fa9600;
+    }
+    &:nth-child(13n + 9) {
+      background: #ffa5ba;
+    }
+    &:nth-child(13n + 10) {
+      background: #c972ff;
+    }
+    &:nth-child(13n + 11) {
+      background: #ff5ae5;
+    }
+    &:nth-child(13n + 12) {
+      background: #149e7d;
+    }
+    &:nth-child(13n) {
+      background: #ff3f3f;
+    }
   }
 `;
 
 const EditButton = styled(Link)`
   position: absolute;
   right: 20px;
-  top: 20px;
+  top: 0;
+  .btn {
+    padding: 10px 30px;
+  }
+`;
+
+const Crt = styled.div`
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  color: var(--bs-body-color_active);
+  margin-bottom: 21px;
+  .num {
+    color: #ff7193;
+    font-size: 16px;
+    margin-left: 8px;
+  }
 `;

@@ -15,7 +15,7 @@ export default function AppVersion({ open }: any) {
     <>
       <VersionBox className={open ? '' : 'lft'}>
         <FeedbackBox onClick={() => toGo()}>{t('menus.feedback')}</FeedbackBox>
-        <div>
+        <a href="https://docs.seedao.tech/seedao-app/updates" target="_blank" rel="noreferrer">
           <span> {getConfig().REACT_APP_APP_VERSION}</span>
           {open && (
             <>
@@ -25,7 +25,7 @@ export default function AppVersion({ open }: any) {
               </span>
             </>
           )}
-        </div>
+        </a>
       </VersionBox>
     </>
   );

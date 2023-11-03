@@ -1,9 +1,6 @@
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
 import { IExcelObj } from 'type/project.type';
-import { ExclamationDiamond } from 'react-bootstrap-icons';
-import { Download } from 'react-bootstrap-icons';
-import { Button } from 'react-bootstrap';
 import { useState, FormEvent, ChangeEvent, useEffect } from 'react';
 import { ethers } from 'ethers';
 import * as XLSX from 'xlsx';
@@ -11,11 +8,11 @@ import { AppActionType, useAuthContext } from 'providers/authProvider';
 import requests from 'requests';
 import CustomTable from './customTable';
 import ExcelTable from './excelTable';
-
-type ErrorDataType = {
-  line: number;
-  errorKeys: string[];
-};
+import NoItem from 'components/noItem';
+import { AddButton } from './customTable';
+import TableIconSVG from 'components/svgs/table';
+import AddIcon from 'assets/Imgs/add.svg';
+import DownloadIconSVG from 'components/svgs/download';
 
 enum ChooseType {
   default = 0,
@@ -23,15 +20,17 @@ enum ChooseType {
   custom,
 }
 
-export default function RegList() {
+interface IProps {
+  list: IExcelObj[];
+  setList: (data: IExcelObj[]) => void;
+}
+
+export default function RegList({ list, setList }: IProps) {
   const { t } = useTranslation();
 
   const {
     state: { language },
   } = useAuthContext();
-
-  const [errList, setErrList] = useState<ErrorDataType[]>([]);
-  const [list, setList] = useState<IExcelObj[]>([]);
 
   const [chooseType, setChooseType] = useState(ChooseType.default);
 
@@ -40,8 +39,6 @@ export default function RegList() {
     const { files } = e.target as any;
     const fileReader = new FileReader();
     fileReader.readAsBinaryString(files[0]);
-
-    const _errs: ErrorDataType[] = [];
 
     (fileReader as any).onload = (event: ChangeEvent) => {
       try {
@@ -62,43 +59,21 @@ export default function RegList() {
               console.log(index, item);
               if (index !== 0) {
                 const vals = item.split(',');
-                const [address, points, token, content, note] = vals;
+                const [address, assetType, amount, content, note] = vals;
                 objs.push({
                   address,
-                  points,
-                  token,
+                  assetType,
+                  amount,
                   content,
                   note,
                 });
-                const _is_valid_address = ethers.utils.isAddress(address);
-                const _token_val = Number(token);
-                const _is_valid_token = !!_token_val && _token_val > 0;
-                const _credit_val = Number(points);
-                const _is_valid_credit = !!_credit_val && _credit_val > 0;
-                const e: ErrorDataType = { line: index, errorKeys: [] };
-
-                if (!_is_valid_address) {
-                  e.errorKeys.push('Address');
-                }
-                if (!_is_valid_token && !_is_valid_credit) {
-                  e.errorKeys.push('PointsOrToken');
-                } else if (!_is_valid_token && (isNaN(_token_val) || _token_val < 0)) {
-                  e.errorKeys.push('Token');
-                } else if (!_is_valid_credit && (isNaN(_credit_val) || _credit_val < 0)) {
-                  e.errorKeys.push('Credit');
-                }
-                if (e.errorKeys.length) {
-                  _errs.push(e);
-                }
               }
             });
 
             data = objs;
           }
         }
-
         setList(data);
-        setErrList(_errs);
 
         console.log('Upload file successful!');
       } catch (e) {
@@ -130,14 +105,12 @@ export default function RegList() {
       default:
         return (
           <TipsBox>
-            <div className="iconTop">
-              <ExclamationDiamond />
-            </div>
+            <EmptyBox />
             <OptionBox>
-              <Button onClick={onClickAdd}>
-                <Download className="iconRht" />
-                <span>添加</span>
-              </Button>
+              <AddButton onClick={onClickAdd} long={true}>
+                <img src={AddIcon} alt="" />
+                {t('Assets.RegisterAdd')}
+              </AddButton>
               <BtnBox htmlFor="fileUpload" onChange={(e) => updateFile(e)}>
                 <input
                   id="fileUpload"
@@ -148,7 +121,7 @@ export default function RegList() {
                     (event.target as any).value = null;
                   }}
                 />
-                <Download className="iconRht" />
+                <TableIconSVG />
                 <span>{t('Project.ImportForm').toUpperCase()}</span>
               </BtnBox>
             </OptionBox>
@@ -161,12 +134,12 @@ export default function RegList() {
     <>
       <FirstBox>
         <RhtBox>
-          <Button variant="outline-primary" className="rhtBtn" onClick={downloadFile}>
-            <Download />
+          {/* <DownloadButton className="rhtBtn" onClick={downloadFile}>
+            <DownloadIconSVG />
             <span>{t('Project.DownloadForm')}</span>
-          </Button>
+          </DownloadButton> */}
           {chooseType === ChooseType.import && (
-            <BtnBox htmlFor="fileUpload" onChange={(e) => updateFile(e)}>
+            <BtnBox className="top-import" htmlFor="fileUpload" onChange={(e) => updateFile(e)}>
               <input
                 id="fileUpload"
                 accept=".xlsx, .xls, .csv"
@@ -176,26 +149,12 @@ export default function RegList() {
                   (event.target as any).value = null;
                 }}
               />
-              <Download className="iconRht" />
+              <TableIconSVG />
               <span>{t('Project.ImportForm').toUpperCase()}</span>
             </BtnBox>
           )}
         </RhtBox>
       </FirstBox>
-      {!!errList.length && (
-        <ErrorBox>
-          <li>{t('Msg.ImportFailed')}:</li>
-          {errList.map((item) => (
-            <li key={item.line}>
-              #{item.line}{' '}
-              {item.errorKeys.map((ekey) => (
-                //   @ts-ignore
-                <span key={ekey}>{t('Project.ImportError', { key: t(`Project.${ekey}`) })}</span>
-              ))}
-            </li>
-          ))}
-        </ErrorBox>
-      )}
       <Box>{getTableContent()}</Box>
     </>
   );
@@ -204,8 +163,7 @@ export default function RegList() {
 const Box = styled.div``;
 
 const TipsBox = styled.div`
-  padding: 80px;
-  background: rgba(161, 100, 255, 0.08);
+  padding: 40px;
   margin-top: 10px;
   text-align: center;
   color: var(--bs-primary);
@@ -219,58 +177,66 @@ const FirstBox = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 40px;
+  margin-bottom: 20px;
 `;
 
 const RhtBox = styled.div`
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  .rhtBtn {
-    margin-right: 20px;
-    display: flex;
-    align-items: center;
-    span {
-      padding-left: 10px;
-    }
-  }
+  gap: 16px;
 `;
 
 const OptionBox = styled.div`
   display: flex;
   gap: 16px;
   justify-content: center;
+  margin-top: 30px;
 `;
 
 const BtnBox = styled.label`
-  background: var(--bs-primary);
-  color: #fff;
-  //height: 42px;
-  padding: 8px 25px;
+  height: 34px;
+  box-sizing: border-box;
+  color: var(--bs-primary);
+  text-align: center;
+  border: 1px solid var(--bs-primary);
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 4px;
-  //font-family: 'Inter-Regular';
-  //font-weight: 700;
+  border-radius: 8px;
   font-size: 0.875rem;
   margin-right: 20px;
+  gap: 8px;
   cursor: pointer;
-  .iconRht {
-    margin-right: 10px;
+  padding-inline: 12px;
+  span {
+    font-family: Poppins-SemiBold, Poppins;
   }
-  &:hover {
-    background: var(--bs-primary);
+  &.top-import {
+    background: var(--bs-background);
+    border: 1px solid var(--bs-svg-color);
+    color: var(--bs-svg-color);
   }
-  width: 200px;
+  .svg-stroke {
+    stroke: var(--bs-primary) !important;
+  }
 `;
 
-const ErrorBox = styled.ul`
-  li {
-    color: red;
-    line-height: 24px;
-    span {
-      margin-inline: 5px;
-    }
+const DownloadButton = styled.button`
+  height: 34px;
+  background: var(--bs-background);
+  color: var(--bs-svg-color);
+  border-radius: 8px;
+  border: 1px solid var(--bs-svg-color);
+  text-align: center;
+  padding-inline: 12px;
+  span {
+    padding-left: 10px;
+    font-family: Poppins-SemiBold, Poppins;
   }
+`;
+
+const EmptyBox = styled(NoItem)`
+  padding: 0;
 `;

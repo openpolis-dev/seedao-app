@@ -18,7 +18,7 @@ import EventImgActive from '../assets/Imgs/darkMenu/event_active.png';
 import EventImgLight from '../assets/Imgs/lightMenu/event.svg';
 
 import CalendarImg from '../assets/Imgs/darkMenu/calendar.svg';
-
+import CalendarActive from '../assets/Imgs/darkMenu/calendar_active.png';
 import CalendarImgLight from '../assets/Imgs/lightMenu/calendar.svg';
 
 import CreditImg from '../assets/Imgs/darkMenu/credit.svg';
@@ -52,7 +52,7 @@ const Box = styled.div`
   border-right: 1px solid var(--bs-border-color);
   box-sizing: border-box;
   padding: 20px;
-  width: 193px;
+  width: 153px;
   flex-shrink: 0;
   position: relative;
 
@@ -82,24 +82,24 @@ const Box = styled.div`
       width: 94px;
     }
     25% {
-      width: 150px;
+      width: 110px;
     }
     50% {
-      width: 180px;
+      width: 130px;
     }
     100% {
-      width: 193px;
+      width: 153px;
     }
   }
   @keyframes unexpand {
     0% {
-      width: 193px;
+      width: 153px;
     }
     50% {
-      width: 180px;
+      width: 130px;
     }
     75% {
-      width: 150px;
+      width: 110px;
     }
     100% {
       width: 94px;
@@ -122,6 +122,9 @@ const LftLi = styled.div<{ selected?: boolean }>`
     font-family: 'Poppins-Regular';
     color: var(--menu-color);
     ${(props) => props.selected && '   font-family: Poppins-SemiBold;'}
+  }
+  img {
+    width: 24px;
   }
   //.icon {
   //  font-size: 20px;
@@ -216,11 +219,11 @@ const items: MenuItemType[] = [
     icon: {
       dark: {
         nor: CalendarImg,
-        active: HomeImgActive,
+        active: CalendarActive,
       },
       light: {
         nor: CalendarImgLight,
-        active: HomeImgActive,
+        active: CalendarActive,
       },
     },
     link: { href: '/online-event' },
@@ -396,7 +399,10 @@ export default function Menu({ isMedium }: { isMedium: boolean }) {
           data={item}
           theme={theme}
           onSelectMenu={onSelectMenu}
-          selected={pathname.startsWith(item.link.href)}
+          selected={
+            pathname.startsWith(item.link.href) ||
+            (item.link.href.startsWith('/explore') && (pathname.includes('project') || pathname.includes('guild')))
+          }
         />
       ))}
       {!isMedium && <AppVersion open={open} />}

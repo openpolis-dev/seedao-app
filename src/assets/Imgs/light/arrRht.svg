@@ -1,0 +1,13 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Group 930">
+<g id="Rectangle 1299">
+<rect width="32" height="32" rx="8" transform="matrix(-1 0 0 1 32 0)" fill="#F9F9F9"/>
+<rect x="-0.5" y="0.5" width="31" height="31" rx="7.5" transform="matrix(-1 0 0 1 31 0)" stroke="#D9D9D9" stroke-opacity="0.5"/>
+</g>
+<g id="vuesax/linear/arrow-left">
+<g id="arrow-left">
+<path id="Vector" d="M13.9998 21.2801L18.3464 16.9334C18.8598 16.4201 18.8598 15.5801 18.3464 15.0668L13.9998 10.7201" stroke="#BBBBBB" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+</g>
+</g>
+</svg>

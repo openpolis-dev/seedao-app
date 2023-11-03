@@ -8,166 +8,11 @@ import { AppActionType, useAuthContext } from 'providers/authProvider';
 import useToast, { ToastType } from 'hooks/useToast';
 import { AssetName } from 'utils/constant';
 import { useNavigate } from 'react-router-dom';
-import { ChevronLeft, PlusLg, DashLg, Upload, X } from 'react-bootstrap-icons';
 import { ContainerPadding } from 'assets/styles/global';
 import { MdEditor } from 'md-editor-rt';
-
-const OuterBox = styled.div`
-  box-sizing: border-box;
-  min-height: 100%;
-  ${ContainerPadding};
-`;
-
-const Box = styled.div`
-  min-height: 100%;
-  .btnBtm {
-    margin-right: 20px;
-  }
-`;
-
-const CardBox = styled.div`
-  background: #fff;
-  height: 100%;
-  box-sizing: border-box;
-  padding: 20px;
-`;
-
-const CardHeader = styled.div`
-  padding: 1rem 1.25rem;
-  border-bottom: 1px solid rgb(237, 241, 247);
-  border-top-left-radius: 0.25rem;
-  border-top-right-radius: 0.25rem;
-  color: rgb(34, 43, 69);
-  font-family: Inter-Regular, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif,
-    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
-  font-size: 0.9375rem;
-  font-weight: 600;
-  line-height: 1.5rem;
-`;
-
-const CardBody = styled.div``;
-
-const BtmBox = styled.div`
-  margin-top: 50px;
-`;
-
-const UlBox = styled.ul`
-  li {
-    display: flex;
-    align-items: flex-start;
-    justify-content: flex-start;
-    margin-bottom: 20px;
-
-    .title {
-      margin-right: 20px;
-      line-height: 2.5em;
-      min-width: 180px;
-      background: #f8f8f8;
-      padding: 0 20px;
-      font-size: 14px;
-    }
-  }
-  @media (max-width: 750px) {
-    li {
-      flex-direction: column;
-      .title {
-        margin-bottom: 10px;
-      }
-    }
-  }
-`;
-
-const InputBox = styled(InputGroup)`
-  width: 600px;
-  margin-right: 20px;
-  @media (max-width: 1024px) {
-    width: 350px;
-  }
-`;
-
-const ItemBox = styled.div`
-  margin-bottom: 10px;
-  display: flex;
-  align-items: center;
-  .titleLft {
-    margin-right: 10px;
-    width: 50px;
-    font-size: 14px;
-  }
-  .iconForm {
-    color: var(--bs-primary);
-    font-size: 20px;
-    margin-right: 10px;
-    cursor: pointer;
-  }
-`;
-
-const BackBox = styled.div`
-  width: 100%;
-  padding: 10px 0 20px;
-  display: inline-flex;
-  align-items: center;
-
-  .back {
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-  }
-  .iconTop {
-    margin-right: 10px;
-  }
-`;
-
-const BtnBox = styled.label`
-  background: #f8f8f8;
-  height: 200px;
-  width: 200px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 4px;
-  margin-top: 20px;
-  font-family: 'Inter-Regular';
-  font-weight: 700;
-  font-size: 14px;
-  margin-bottom: 40px;
-  .iconRht {
-    margin-right: 10px;
-  }
-  img {
-    max-width: 100%;
-    max-height: 100%;
-  }
-  .uploadIcon {
-    font-size: 20px;
-    margin-right: 10px;
-  }
-`;
-
-const ImgBox = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  .del {
-    position: absolute;
-    right: -15px;
-    top: -15px;
-    z-index: 999;
-    border-radius: 100%;
-    background: #a16eff;
-    color: #fff;
-    width: 30px;
-    height: 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 20px;
-    cursor: pointer;
-  }
-`;
+import BackIconSVG from 'components/svgs/back';
+import PlusMinusButton from 'components/common/buttons';
+import CameraIconSVG from 'components/svgs/camera';
 
 const config = {
   toobars: [
@@ -200,13 +45,13 @@ export default function CreateProject() {
 
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const { Toast, showToast } = useToast();
+  const { showToast } = useToast();
   const {
     dispatch,
     state: { language },
   } = useAuthContext();
   const [adminList, setAdminList] = useState(['']);
-  const [memberList, setMemberList] = useState(['']);
+  const [memberList, setMemberList] = useState<string[]>([]);
   const [proList, setProList] = useState(['']);
   const [token, setToken] = useState<number>();
 
@@ -349,7 +194,7 @@ export default function CreateProject() {
     try {
       await createProjects(obj);
       showToast(t('Project.createSuccess'), ToastType.Success);
-      navigate('/project');
+      navigate('/explore');
     } catch (error) {
       showToast(t('Project.createFailed'), ToastType.Danger);
     } finally {
@@ -382,191 +227,304 @@ export default function CreateProject() {
     getBase64(url);
   };
 
-  const removeUrl = () => {
-    setUrl('');
+  const handleBack = () => {
+    navigate('/city-hall');
   };
 
   return (
     <OuterBox>
-      <Box>
-        {Toast}
-        <CardBox>
-          <BackBox onClick={() => navigate(-1)}>
-            <ChevronLeft className="iconTop" />
-            <span> {t('Project.create')}</span>
-          </BackBox>
-          <CardBody>
-            <BtnBox htmlFor="fileUpload" onChange={(e) => updateLogo(e)}>
-              {!url && (
-                <div>
-                  <input id="fileUpload" type="file" hidden accept=".jpg, .jpeg, .png, .svg" />
-                  <Upload className="uploadIcon" />
-                  <span> {t('Project.upload')}</span>
-                </div>
-              )}
-              {!!url && (
-                <ImgBox>
-                  <div className="del" onClick={() => removeUrl()}>
-                    <X />
-                    {/*<EvaIcon name="close-outline" status="Control" />*/}
-                  </div>
-                  <img src={url} alt="" />
-                </ImgBox>
-              )}
-            </BtnBox>
-            <UlBox>
-              <li>
-                <div className="title">{t('Project.ProjectName')}</div>
-                <InputBox>
-                  <Form.Control
-                    type="text"
-                    placeholder={t('Project.ProjectName')}
-                    value={proName}
-                    onChange={(e) => handleInput(e, 0, 'proName')}
-                  />
-                </InputBox>
-              </li>
+      <BackBox onClick={handleBack}>
+        <BackIconSVG />
+        <span> {t('Project.create')}</span>
+      </BackBox>
+      <CardBody>
+        <BtnBox htmlFor="fileUpload" onChange={(e) => updateLogo(e)}>
+          <ImgBox>
+            <img src={url} alt="" />
+            <UpladBox className="upload">
+              <input id="fileUpload" type="file" hidden accept=".jpg, .jpeg, .png, .svg" />
+              <CameraIconSVG />
+              <UploadImgText>{t('Project.upload')}</UploadImgText>
+            </UpladBox>
+          </ImgBox>
+          {!url && (
+            <UpladBox>
+              <input id="fileUpload" type="file" hidden accept=".jpg, .jpeg, .png, .svg" />
+              <CameraIconSVG />
+              <UploadImgText>{t('Project.upload')}</UploadImgText>
+            </UpladBox>
+          )}
+        </BtnBox>
+        <RightContent>
+          <UlBox>
+            <li>
+              <div className="title">{t('Project.ProjectName')}</div>
+              <InputBox>
+                <Form.Control
+                  type="text"
+                  placeholder={t('Project.ProjectName')}
+                  value={proName}
+                  onChange={(e) => handleInput(e, 0, 'proName')}
+                />
+              </InputBox>
+            </li>
 
-              <li>
-                <div className="title">{t('Project.AssociatedProposal')}</div>
-                <div>
-                  {proList.map((item, index) => (
-                    <ItemBox key={`mem_${index}`}>
-                      <InputBox>
-                        <Form.Control
-                          type="text"
-                          placeholder={`${t('Project.AssociatedProposal')}, eg. https://forum.seedao.xyz/thread...`}
-                          value={item}
-                          onChange={(e) => handleInput(e, index, 'proposal')}
-                        />
-                      </InputBox>
-                      {index === proList.length - 1 && (
-                        <span className="iconForm" onClick={() => handleAdd('proposal')}>
-                          <PlusLg />
-                        </span>
-                      )}
+            <li>
+              <div className="title">{t('Project.Desc')}</div>
+              <DescInputBox>
+                <Form.Control
+                  placeholder=""
+                  as="textarea"
+                  rows={2}
+                  value={desc}
+                  onChange={(e) => handleInput(e, 0, 'desc')}
+                />
+              </DescInputBox>
+            </li>
 
-                      {!(!index && index === proList.length - 1) && (
-                        <span className="iconForm" onClick={() => removeItem(index, 'proposal')}>
-                          <DashLg />
-                        </span>
-                      )}
-                    </ItemBox>
-                  ))}
-                </div>
-              </li>
-              <li>
-                <div className="title">{t('Project.Dominator')}</div>
-                <div>
-                  {adminList.map((item, index) => (
-                    <ItemBox key={`mem_${index}`}>
-                      <InputBox>
-                        <Form.Control
-                          type="text"
-                          placeholder={t('Project.Dominator')}
-                          value={item}
-                          onChange={(e) => handleInput(e, index, 'admin')}
-                        />
-                      </InputBox>
-                      {index === adminList.length - 1 && (
-                        <span className="iconForm" onClick={() => handleAdd('admin')}>
-                          <PlusLg />
-                        </span>
-                      )}
+            <li>
+              <div className="title">{t('Project.AssociatedProposal')}</div>
+              <div>
+                {proList.map((item, index) => (
+                  <ItemBox key={`mem_${index}`}>
+                    <ProposalInputBox>
+                      <Form.Control
+                        type="text"
+                        placeholder={`${t('Project.AssociatedProposal')}, eg. https://forum.seedao.xyz/thread...`}
+                        value={item}
+                        onChange={(e) => handleInput(e, index, 'proposal')}
+                      />
+                    </ProposalInputBox>
+                    <PlusMinusButton
+                      showMinus={!(!index && index === proList.length - 1)}
+                      showPlus={index === proList.length - 1}
+                      onClickMinus={() => removeItem(index, 'proposal')}
+                      onClickPlus={() => handleAdd('proposal')}
+                    />
+                  </ItemBox>
+                ))}
+              </div>
+            </li>
+            <li>
+              <div className="title">{t('Project.Dominator')}</div>
+              <div>
+                {adminList.map((item, index) => (
+                  <ItemBox key={`mem_${index}`}>
+                    <MemberInputBox>
+                      <Form.Control
+                        type="text"
+                        placeholder={t('Project.Dominator')}
+                        value={item}
+                        onChange={(e) => handleInput(e, index, 'admin')}
+                      />
+                    </MemberInputBox>
+                    <PlusMinusButton
+                      showMinus={!(!index && index === adminList.length - 1)}
+                      showPlus={index === adminList.length - 1}
+                      onClickMinus={() => removeItem(index, 'admin')}
+                      onClickPlus={() => handleAdd('admin')}
+                    />
+                  </ItemBox>
+                ))}
+              </div>
+            </li>
 
-                      {!(!index && index === adminList.length - 1) && (
-                        <span className="iconForm" onClick={() => removeItem(index, 'admin')}>
-                          <DashLg />
-                        </span>
-                      )}
-                    </ItemBox>
-                  ))}
-                </div>
-              </li>
-              <li>
-                <div className="title">{t('Project.Members')}</div>
-                <div>
-                  {memberList.map((item, index) => (
-                    <ItemBox key={`mem_${index}`}>
-                      <InputBox>
-                        <Form.Control
-                          type="text"
-                          placeholder={t('Project.Members')}
-                          value={item}
-                          onChange={(e) => handleInput(e, index, 'member')}
-                        />
-                      </InputBox>
-                      {index === memberList.length - 1 && (
-                        <span className="iconForm" onClick={() => handleAdd('member')}>
-                          <PlusLg />
-                        </span>
-                      )}
-
-                      {!(!index && index === memberList.length - 1) && (
-                        <span className="iconForm" onClick={() => removeItem(index, 'member')}>
-                          <DashLg />
-                        </span>
-                      )}
-                    </ItemBox>
-                  ))}
-                </div>
-              </li>
-              <li>
-                <div className="title">{t('Project.Desc')}</div>
-                <InputBox>
-                  <Form.Control
-                    placeholder=""
-                    as="textarea"
-                    rows={5}
-                    value={desc}
-                    onChange={(e) => handleInput(e, 0, 'desc')}
-                  />
-                </InputBox>
-              </li>
-              <li>
-                <div className="title">{t('Project.Intro')}</div>
-                <IntroBox>
-                  <MdEditor
-                    modelValue={intro}
-                    onChange={(val) => {
-                      setIntro(val);
-                    }}
-                    toolbars={config.toobars as any}
-                    language={lan}
-                    codeStyleReverse={false}
-                    noUploadImg
-                  />
-                </IntroBox>
-              </li>
-            </UlBox>
-            <BtmBox>
-              <Button variant="outline-primary" className="btnBtm">
-                {t('general.cancel')}
-              </Button>
-              <Button
-                onClick={() => handleSubmit()}
-                disabled={
-                  proName?.length === 0 ||
-                  url?.length === 0 ||
-                  (credit && credit < 0) ||
-                  (token && token < 0) ||
-                  (adminList?.length === 1 && adminList[0]?.length === 0) ||
-                  (proList?.length === 1 && proList[0]?.length === 0) ||
-                  (memberList?.length === 1 && memberList[0]?.length === 0)
-                }
-              >
-                {t('general.confirm')}
-              </Button>
-            </BtmBox>
-          </CardBody>
-        </CardBox>
-      </Box>
+            <li>
+              <div className="title">{t('Project.Intro')}</div>
+              <IntroBox>
+                <MdEditor
+                  modelValue={intro}
+                  onChange={(val) => {
+                    setIntro(val);
+                  }}
+                  toolbars={config.toobars as any}
+                  language={lan}
+                  codeStyleReverse={false}
+                  noUploadImg
+                />
+              </IntroBox>
+            </li>
+          </UlBox>
+          <BtmBox>
+            <Button
+              onClick={() => handleSubmit()}
+              disabled={
+                proName?.length === 0 ||
+                url?.length === 0 ||
+                (credit && credit < 0) ||
+                (token && token < 0) ||
+                (adminList?.length === 1 && adminList[0]?.length === 0) ||
+                (proList?.length === 1 && proList[0]?.length === 0)
+              }
+            >
+              {t('general.confirm')}
+            </Button>
+            <CancelButton onClick={handleBack}> {t('general.cancel')}</CancelButton>
+          </BtmBox>
+        </RightContent>
+      </CardBody>
     </OuterBox>
   );
 }
 
-const IntroBox = styled.div`
-  .cm-scroller {
-    background: #f7f9fc;
+const OuterBox = styled.div`
+  box-sizing: border-box;
+  min-height: 100%;
+  ${ContainerPadding};
+`;
+
+const CardBody = styled.div`
+  display: flex;
+  gap: 32px;
+  padding-bottom: 100px;
+`;
+
+const BtmBox = styled.div`
+  margin-top: 24px;
+  button {
+    width: 76px;
+    height: 34px;
+    font-size: 14px;
   }
+  button:first-child {
+    margin-right: 16px;
+  }
+`;
+
+const UlBox = styled.ul`
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  li {
+    .title {
+      font-size: 16px;
+      font-family: Poppins-SemiBold, Poppins;
+      font-weight: 600;
+      color: var(--bs-body-color_active);
+      line-height: 22px;
+      margin-bottom: 14px;
+    }
+  }
+`;
+
+const InputBox = styled(InputGroup)`
+  width: 576px;
+  height: 40px;
+  @media (max-width: 870px) {
+    width: 400px;
+  }
+`;
+
+const DescInputBox = styled(InputBox)`
+  height: 78px;
+`;
+
+const ProposalInputBox = styled(InputBox)`
+  width: 480px;
+`;
+
+const MemberInputBox = styled(InputBox)`
+  width: 480px;
+`;
+
+const ItemBox = styled.div`
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+`;
+
+const BackBox = styled.div`
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  margin-bottom: 48px;
+  cursor: pointer;
+
+  svg {
+    margin-right: 10px;
+  }
+`;
+
+const BtnBox = styled.label`
+  background: var(--bs-box--background);
+  height: 110px;
+  width: 110px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16px;
+  font-weight: 700;
+  font-size: 14px;
+  position: relative;
+  overflow: hidden;
+  .iconRht {
+    margin-right: 10px;
+  }
+  img {
+    max-width: 100%;
+    max-height: 100%;
+  }
+  .uploadIcon {
+    font-size: 20px;
+    margin-right: 10px;
+  }
+`;
+
+const CancelButton = styled.button`
+  background: #b0b0b0;
+  height: 34px;
+  border: none;
+  border-radius: 8px;
+`;
+
+const ImgBox = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  .upload {
+    display: none;
+  }
+  &:hover .upload {
+    display: flex;
+  }
+`;
+
+const IntroBox = styled.div`
+  .cm-scroller,
+  .md-editor-preview-wrapper {
+    background: var(--bs-background);
+  }
+`;
+
+const RightContent = styled.div`
+  width: 576px;
+  @media (max-width: 870px) {
+    width: 400px;
+  }
+`;
+
+const UpladBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  cursor: pointer;
+`;
+
+const UploadImgText = styled.p`
+  font-size: 8px;
+  font-family: Poppins-Regular, Poppins;
+  font-weight: 400;
+  color: var(--bs-svg-color);
+  line-height: 12px;
 `;

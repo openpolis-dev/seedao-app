@@ -22,21 +22,19 @@ export default function ExplorePage() {
   };
   return (
     <OuterBox>
-      <InnerBox>
-        <TitBox>
-          <div className="titLft">
-            <Tabbar
-              tabs={[
-                { key: 0, title: t('menus.Project') },
-                { key: 1, title: t('menus.Guild') },
-              ]}
-              defaultActiveKey={0}
-              onSelect={(v: string | number) => setKey(v as number)}
-            />
-          </div>
-        </TitBox>
-        {getContent()}
-      </InnerBox>
+      <TitBox>
+        <div className="titLft">
+          <Tabbar
+            tabs={[
+              { key: 0, title: t('menus.Project') },
+              { key: 1, title: t('menus.Guild') },
+            ]}
+            defaultActiveKey={0}
+            onSelect={(v: string | number) => setKey(v as number)}
+          />
+        </div>
+      </TitBox>
+      {getContent()}
     </OuterBox>
   );
 }
@@ -44,12 +42,6 @@ export default function ExplorePage() {
 const OuterBox = styled.div`
   min-height: 100%;
   ${ContainerPadding};
-`;
-
-const InnerBox = styled.div`
-  background: #fff;
-  padding: 20px;
-  min-height: 100%;
 `;
 
 const TitBox = styled.div`

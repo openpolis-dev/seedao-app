@@ -1,9 +1,11 @@
 export interface IUser {
   id: string;
-  name: string;
+  name?: string;
+  nickname?: string | undefined;
   bio: string;
   avatar: string;
   email?: string;
+  github?: string;
   created_at?: string;
   updated_at?: string;
   wallet?: string;
@@ -12,6 +14,12 @@ export interface IUser {
   wechat: string;
   mirror: string;
   assets: any[];
+  level?: any;
+  scr?: any;
+  social_accounts?: any;
+  sbt?: any;
+  seed?: any;
+  roles?: string[];
 }
 
 export interface IUserInfo {

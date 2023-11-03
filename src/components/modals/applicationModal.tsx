@@ -14,58 +14,57 @@ interface Iprops {
 export default function ApplicationModal({ application, handleClose }: Iprops) {
   const { t } = useTranslation();
   return (
-    <ApplicationModalWrapper handleClose={handleClose} title={t('application.detailModalHeader')}>
+    <ApplicationModalWrapper handleClose={handleClose} title={t('application.DetailModalHeader')}>
       <Content>
         <Block underline>
           <li>
-            <BlockLeft>{t('Project.Address')}</BlockLeft>
-            <BlockRight>{application.target_user_wallet}</BlockRight>
+            <BlockLeft>{t('application.Receiver')}</BlockLeft>
+            <BlockRight>{application.receiver_name}</BlockRight>
           </li>
           <li>
-            <BlockLeft>{t('Project.AddPoints')}</BlockLeft>
-            <BlockRight>{formatNumber(application.credit_amount)}</BlockRight>
+            <BlockLeft>{t('application.AddAssets')}</BlockLeft>
+            <BlockRight>{application.asset_display}</BlockRight>
           </li>
           <li>
-            <BlockLeft>{t('Project.AddToken')}</BlockLeft>
-            <BlockRight>{formatNumber(application.token_amount)}</BlockRight>
-          </li>
-
-          <li>
-            <BlockLeft>{t('Project.BudgetSource')}</BlockLeft>
+            <BlockLeft>{t('application.BudgetSource')}</BlockLeft>
             <BlockRight>{application.budget_source}</BlockRight>
           </li>
           <li>
-            <BlockLeft className="text-field-label">{t('Project.Content')}</BlockLeft>
+            <BlockLeft className="text-field-label">{t('application.Content')}</BlockLeft>
             <BlockRight className="text-field">{application.detailed_type}</BlockRight>
           </li>
           <li>
-            <BlockLeft className="text-field-label">{t('Project.Note')}</BlockLeft>
+            <BlockLeft className="text-field-label">{t('application.RegisterNote')}</BlockLeft>
             <BlockRight className="text-field">{application.comment}</BlockRight>
           </li>
           <li>
-            <BlockLeft>{t('Project.State')}</BlockLeft>
+            <BlockLeft>{t('application.State')}</BlockLeft>
             <BlockRight>
               <ApplicationStatusTag status={application.status} />
             </BlockRight>
           </li>
           <li>
             <BlockLeft>{t('Project.Operator')}</BlockLeft>
-            <BlockRight>{application.submitter_name || application.submitter_wallet}</BlockRight>
+            <BlockRight>{application.submitter_name}</BlockRight>
           </li>
           <li>
-            <BlockLeft>{t('Project.Auditor')}</BlockLeft>
-            <BlockRight>{application.reviewer_name || application.reviewer_wallet}</BlockRight>
+            <BlockLeft>{t('application.Auditor')}</BlockLeft>
+            <BlockRight>{application.reviewer_name}</BlockRight>
           </li>
         </Block>
         <Block>
           <li>
-            <BlockLeft>{t('Project.TransactionID')}</BlockLeft>
+            <BlockLeft>{t('application.TransactionID')}</BlockLeft>
             <BlockRight>
-              {application.transactions?.map((item, index) => (
-                <TransactionTx key={index} href={`https://etherscan.io/tx/${item}`} target="_blank">
-                  {item.slice(0, 8) + '...' + item.slice(-8)}
-                </TransactionTx>
-              ))}
+              {application.transactions?.map((item, index) => {
+                return item ? (
+                  <TransactionTx key={index} href={`https://etherscan.io/tx/${item}`} target="_blank">
+                    {item.slice(0, 8) + '...' + item.slice(-8)}
+                  </TransactionTx>
+                ) : (
+                  <></>
+                );
+              })}
             </BlockRight>
           </li>
           <li>

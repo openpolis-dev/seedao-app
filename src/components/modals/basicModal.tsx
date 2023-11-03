@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import CloseIcon from 'assets/Imgs/close.svg';
 
 interface Iprops {
-  title: string;
+  title?: string;
   handleClose?: () => void;
   children?: React.ReactNode;
   [key: string]: any;
@@ -12,12 +12,12 @@ export default function BasicModal({ title, handleClose, children, ...rest }: Ip
   return (
     <Mask>
       <CardBox {...rest}>
-        <HeaderBox className="modal-header">
-          <HeaderTitle>{title}</HeaderTitle>
-          <div className="rht" onClick={() => handleClose && handleClose()}>
-            <img src={CloseIcon} alt="" />
-          </div>
-        </HeaderBox>
+        <img className="btn-close-modal" src={CloseIcon} alt="" onClick={() => handleClose && handleClose()} />
+        {title && (
+          <HeaderBox className="modal-header">
+            <HeaderTitle>{title}</HeaderTitle>
+          </HeaderBox>
+        )}
         {children}
       </CardBox>
     </Mask>
@@ -45,6 +45,13 @@ const CardBox = styled.div`
   border-radius: 16px;
   border: 1px solid var(--bs-border-color);
   padding: 20px 34px 40px;
+  position: relative;
+  .btn-close-modal {
+    cursor: pointer;
+    position: absolute;
+    right: -48px;
+    top: 0;
+  }
 `;
 
 const HeaderBox = styled.div`
@@ -55,12 +62,6 @@ const HeaderBox = styled.div`
   font-weight: 600;
   color: var(--bs-body-color_active);
   margin-bottom: 24px;
-  .rht {
-    cursor: pointer;
-    position: absolute;
-    right: -82px;
-    top: -20px;
-  }
 `;
 
 const HeaderTitle = styled.div`

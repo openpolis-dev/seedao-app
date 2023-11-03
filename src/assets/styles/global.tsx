@@ -35,10 +35,10 @@ const GlobalStyle = createGlobalStyle`
   }
   .btn{
     white-space: nowrap;
-
   }
-
-
+  textarea{
+    resize: none;
+  }
 
   .form-select,.btn{
     font-size: 14px;
@@ -46,26 +46,30 @@ const GlobalStyle = createGlobalStyle`
   }
   .btn-primary{
     color:#fff;
-
+    height: 40px;
     background: var(--bs-primary);
     border-color: var(--bs-primary);
     &:hover, &:focus-visible, &:active {
       color:#fff !important;
+      background: var(--bs-primary-hover)!important;
+      border-color: var(--bs-primary) !important;
     }
     &:disabled{
-      background-color: rgb(230, 228, 235);
+      background: var(--bs-primary);
       border-color: transparent;
-      color: rgba(143, 155, 179, 0.48);
+      opacity: 0.4;
     }
 
   }
   .btn-outline-primary {
-    text-transform: uppercase;
-    background-color: rgba(161, 100, 255, 0.25);
+    height: 40px;
+    border-color: var(--bs-body-color);
     font-weight: bold;
+    color: var(--bs-body-color_active);
     &:hover, &:focus-visible, &:active {
-      background-color: rgba(161, 100, 255, 0.15) !important;
-      color: var(--bs-primary) !important;
+      background-color: transparent !important;
+      color: var(--bs-body-color) !important;
+      border-color: var(--bs-body-color) !important;
     }
   }
   .nav-tabs{
@@ -110,20 +114,24 @@ const GlobalStyle = createGlobalStyle`
       border-right: none;
       border-radius: 0;
       white-space: nowrap;
-      padding: 20px;
+      padding: 20px 10px;
       color: var(--bs-body-color);
       font-family: Poppins-SemiBold, Poppins;
+      &.chech-th {
+        padding-inline: 10px;
+      }
     }
     td {
       font-size: 14px;
-      padding: 20px;
+      padding: 17px 10px;
       color: var(--bs-body-color_a);
-      &.center {
-        text-align: center;
-      }
+      
     }
     th, td {
       border-style: none;
+      &.center {
+        text-align: center;
+      }
     }
     tr:hover td {
       background: var(--bs-box-background);
@@ -149,13 +157,22 @@ const GlobalStyle = createGlobalStyle`
     border-radius: var(--bs-border-radius);
     transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
   }
+  .form-control {
+    color: var(--bs-body-color_active);
+    font-size: 14px;
+  }
+  .form-control:hover {
+    border-color: var(--bs-border-color-focus);
+  }
   .form-control:focus {
-    border-color: rgb(161, 100, 255);
-    box-shadow: 0 0 0 0.25rem rgba(161, 100, 255, 0.25);
+    border-color: var(--bs-primary);
+    color: var(--bs-body-color_active);
+    box-shadow: 0 0 0 0.25rem rgba(82, 0, 255, .25);
   }
   .form-check-input {
     width: 18px;
     height: 18px;
+    border-color: var(--bs-svg-color);
   }
   .form-check-input:focus {
     border-color: var(--bs-primary);
@@ -169,6 +186,9 @@ const GlobalStyle = createGlobalStyle`
   /* svg color */
   .svg-stroke {
     stroke: var(--bs-svg-color) !important;
+  }
+  .svg-fill {
+    fill: var(--bs-svg-color) !important;
   }
   .dropdown-item{
     border-bottom:0!important;

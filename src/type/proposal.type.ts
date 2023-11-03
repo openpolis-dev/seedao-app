@@ -35,10 +35,14 @@ export interface IBaseProposal {
     photo_url: string;
     user_title: {
       name: string;
-      background: '#2ecc71';
+      background: string;
     };
     username: string;
   };
   updated_at: string;
   tags: ProposalTag[];
+  user_title?: {
+    name: string;
+    background: string;
+  };
 }

@@ -8,23 +8,21 @@ import { AppActionType, useAuthContext } from '../../providers/authProvider';
 import { useTranslation } from 'react-i18next';
 import Links from '../../utils/links';
 import { ChevronLeft } from 'react-bootstrap-icons';
+import { publicList } from '../../requests/publicData';
+import Page from '../../components/pagination';
 
 const PageStyle = styled.div`
   ${ContainerPadding};
 `;
 
 const Box = styled.div`
-  background: #fff;
-  padding: 40px 20px;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
   .col-md-3 {
-    margin-bottom: 20px;
+    margin-bottom: 24px;
   }
 `;
 const InnerBox = styled.ul`
-  background: #fff;
-  box-shadow: rgba(44, 51, 73, 0.1) 0px 0.5rem 1rem 0px;
-  border-radius: 20px;
+  background: var(--bs-box-background);
+  border-radius: 16px;
   box-sizing: border-box;
   height: 100%;
 
@@ -37,6 +35,7 @@ const InnerBox = styled.ul`
     img {
       width: 100%;
       height: 100%;
+      min-height: 140px;
       object-position: center;
       object-fit: cover;
     }
@@ -52,7 +51,7 @@ const InnerBox = styled.ul`
       overflow: hidden;
       text-overflow: ellipsis;
       display: -webkit-box;
-      -webkit-line-clamp: 2;
+      -webkit-line-clamp: 1;
       -webkit-box-orient: vertical;
     }
   }
@@ -65,9 +64,8 @@ const Tit = styled.li`
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
-  min-height: 70px;
-  background: #f5f5f5;
-  padding: 10px;
+  color: var(--bs-body-color_active);
+  font-family: 'Poppins-SemiBold';
 `;
 
 const TagBox = styled.div`
@@ -76,16 +74,22 @@ const TagBox = styled.div`
   color: #fff;
   padding: 3px 10px;
   border-radius: 5px;
-  opacity: 0.5;
-  &.active {
-    opacity: 1;
+
+  &.str1 {
+    background: #b0b0b0;
+  }
+  &.str2 {
+    background: var(--bs-primary);
+  }
+  &.str3 {
+    background: #00a92f;
   }
 `;
 
 const TypeBox = styled(TagBox)`
-  padding: 3px 5px;
+  padding: 3px 10px;
   opacity: 1;
-  margin: 0 10px 10px 0;
+  margin: 5px 10px 10px 0;
   color: #000;
   &.type1 {
     background: rgb(250, 222, 201);
@@ -134,30 +138,38 @@ export default function Pub() {
   const [list, setList] = useState([]);
   const { t } = useTranslation();
 
-  const secretKey = 'secret_gnVFq5NWrDHY481DoMPwaCLuo6GDvGw7s31xOxdQNkR';
+  const [pageCur, setPageCur] = useState(1);
+  const [pageSize, setPageSize] = useState(12);
+  const [total, setTotal] = useState(1);
 
   useEffect(() => {
     getList();
-  }, []);
+  }, [pageCur]);
+
+  const handlePage = (num: number) => {
+    setPageCur(num + 1);
+  };
 
   const getList = async () => {
-    //
-    // try{
-    //   let result = await axios.get(`https://api.notion.com/v1/databases/73d83a0a-258d-4ac5-afa5-7a997114755a`,{
-    //     headers:{
-    //       Authorization: `Bearer ${secretKey}`,
-    //       'Notion-Version': '2022-06-28'
-    //     }
-    //   });
-    //   console.log(result);
-    // }catch (e){
-    //
-    // }
+    const obj: any = {
+      page: pageCur,
+      size: pageSize,
+      // sort_order: 'desc',
+      // sort_field: 'created_at',
+    };
 
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
-      let result = await axios.get(`https://notion-api.splitbee.io/v1/table/73d83a0a-258d-4ac5-afa5-7a997114755a`);
-      setList(result.data);
+      // let result = await axios.get(`https://notion-api.splitbee.io/v1/table/73d83a0a-258d-4ac5-afa5-7a997114755a`);
+
+      let result = await publicList(obj);
+
+      const { rows, page, size, total } = result.data;
+
+      setList(rows);
+      setPageSize(size);
+      setTotal(total);
+      setPageCur(page);
     } catch (e: any) {
       console.error(e);
     } finally {
@@ -199,6 +211,23 @@ export default function Pub() {
     navigate(`/pubDetail/${id}`);
   };
 
+  const returnStatus = (str: string) => {
+    let cStr = '';
+    switch (str?.trim()) {
+      case '已归档':
+        cStr = 'str1';
+        break;
+      case '已认领':
+        cStr = 'str2';
+        break;
+      case '招募中':
+      default:
+        cStr = 'str3';
+        break;
+    }
+    return cStr;
+  };
+
   return (
     <PageStyle>
       <Box>
@@ -210,35 +239,42 @@ export default function Pub() {
           <Button onClick={() => window.open('https://tally.so/r/mDKbqb', '_target')}>{t('general.apply')}</Button>
         </FlexBox>
         <Row>
-          {list.map((item: any, index) => (
+          {list?.map((item: any, index) => (
             <Col md={3} key={index} onClick={() => ToGo(item.id)}>
               <InnerBox>
-                {/*<div className="imgBox">*/}
-                {/*  <img src="https://seedao-store.s3-us-east-2.amazonaws.com/seeu/su8JtN3BUjBpE2yrGWzK98.jpg" alt="" />*/}
-                {/*</div>*/}
+                <div className="imgBox">
+                  <img src={item?.cover?.file?.url || item?.cover?.external.url} alt="" />
+                </div>
                 <ul className="btm">
-                  <Tit>{item['悬赏名称']}</Tit>
-                  {item['悬赏状态'] && (
+                  <Tit>{item.properties['悬赏名称']?.title[0]?.plain_text}</Tit>
+                  {item.properties['悬赏状态']?.select?.name && (
                     <li>
-                      <TagBox className={item['悬赏状态'] === '招募中' ? 'active' : ''}>{item['悬赏状态']}</TagBox>
+                      <TagBox className={returnStatus(item.properties['悬赏状态']?.select?.name)}>
+                        {item.properties['悬赏状态']?.select?.name}
+                      </TagBox>
                     </li>
                   )}
-
-                  <li>招募截止时间：{item['招募截止时间']}</li>
                   <li>
-                    {item['悬赏类型'] &&
-                      (item['悬赏类型'] as any).map((innerItem: string, innerIndex: number) => (
-                        <TypeBox key={`${index}_${innerIndex}`} className={returnColor(innerItem)}>
-                          {innerItem}
+                    {!!item.properties['悬赏类型']?.multi_select?.length &&
+                      (item.properties['悬赏类型']?.multi_select as any).map((innerItem: any, innerIndex: number) => (
+                        <TypeBox key={`${index}_${innerIndex}`} className={returnColor(innerItem.name)}>
+                          {innerItem?.name}
                         </TypeBox>
                       ))}
                   </li>
-                  <li className="line2">{item['贡献报酬']}</li>
+                  <li>招募截止时间：{item.properties['招募截止时间']?.rich_text[0]?.plain_text}</li>
+
+                  <li className="line2">{item.properties['贡献报酬']?.rich_text[0]?.plain_text}</li>
                 </ul>
               </InnerBox>
             </Col>
           ))}
         </Row>
+        {total > pageSize && (
+          <div>
+            <Page itemsPerPage={pageSize} total={total} current={pageCur - 1} handleToPage={handlePage} />
+          </div>
+        )}
       </Box>
     </PageStyle>
   );

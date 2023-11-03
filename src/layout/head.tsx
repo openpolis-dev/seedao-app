@@ -12,6 +12,8 @@ import Avatar from 'components/common/avatar';
 import { Button, Form, Dropdown } from 'react-bootstrap';
 import LoginModal from 'components/modals/loginNew';
 
+import Select from 'components/common/select';
+
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { List as ListIcon } from 'react-bootstrap-icons';
@@ -54,7 +56,7 @@ export default function Header() {
 
   const isLogin = useCheckLogin(account);
 
-  const changeLang = (v: string, select?: boolean) => {
+  const changeLang = (v: any, select?: boolean) => {
     setLan(v);
     dispatch({ type: AppActionType.SET_LAN, payload: v });
     localStorage.setItem('language', v);
@@ -76,6 +78,7 @@ export default function Header() {
         localStorage.setItem('language', lanInit.value);
         changeLang(lanInit.value);
       } else {
+        console.log(myLan);
         changeLang(myLan);
       }
     } else {
@@ -116,7 +119,7 @@ export default function Header() {
 
   const getUser = async () => {
     const res = await requests.user.getUser();
-    dispatch({ type: AppActionType.SET_USER_DATA, payload: res.data });
+    dispatch({ type: AppActionType.SET_USER_DATA, payload: res });
     initAuth();
   };
 
@@ -219,7 +222,6 @@ export default function Header() {
 
   useEffect(() => {
     let theme = localStorage.getItem('theme');
-    console.error(theme);
     if (theme) {
       document.documentElement.setAttribute('data-bs-theme', theme);
       dispatch({
@@ -265,23 +267,18 @@ export default function Header() {
           {/*<SwitchTheme>*/}
           {/*  <img src={theme ? LightImg : MoonImg} alt="" onClick={() => SwitchThemeFun()} />*/}
           {/*</SwitchTheme>*/}
-          <Form.Select
-            data-bs-theme={theme ? 'dark' : 'light'}
-            style={{ minWidth: '100px' }}
-            value={getLanguages().find((item) => item.value === lan)?.value || getLanguages()[0].value}
-            onChange={(event: any) => changeLang(event.target.value, true)}
-          >
-            {getLanguages().map((item) => (
-              <option key={item.value} value={item.value}>
-                {item.label}
-              </option>
-            ))}
-          </Form.Select>
+          <Select
+            options={getLanguages()}
+            onChange={(event: any) => changeLang(event.value, true)}
+            value={getLanguages().find((item) => item.value === lan) || getLanguages()[0]}
+            width="100px"
+            NotClear={true}
+          />
 
           {isLogin && userData ? (
             <Dropdown>
               <Dropdown.Toggle variant="primary" className="dropBox">
-                <Avatar user={userData} />
+                <Avatar user={(userData as any).data} />
               </Dropdown.Toggle>
 
               <Dropdown.Menu className="dropBtm">
@@ -294,7 +291,7 @@ export default function Header() {
               </Dropdown.Menu>
             </Dropdown>
           ) : (
-            <Button onClick={showWalletLogin}>{t('menus.connectWallet')}</Button>
+            <ConnectButton onClick={showWalletLogin}>{t('menus.connectWallet')}</ConnectButton>
           )}
         </RightBox>
       </nav>
@@ -358,6 +355,19 @@ const HeadeStyle = styled.header`
       border-bottom: 0;
     }
   }
+  .dropBtm {
+    margin-top: 10px;
+    overflow: hidden;
+    padding: 0;
+  }
+  .dropdown-item {
+    color: var(--bs-body-color_active);
+
+    &:hover {
+      color: var(--bs-body-color_active);
+      background: var(--bs-menu-hover);
+    }
+  }
   @media (max-width: 1440px) {
     nav {
       height: 60px;
@@ -387,7 +397,7 @@ const NavLeft = styled.div`
   gap: 20px;
   padding-left: 20px;
 `;
-const MenuExpandIcon = styled(ListIcon)`
-  cursor: pointer;
-  color: #666;
+
+const ConnectButton = styled(Button)`
+  height: 40px;
 `;

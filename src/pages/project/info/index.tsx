@@ -2,18 +2,14 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { getProjectById } from 'requests/project';
 import { ReTurnProject } from 'type/project.type';
-import { useTranslation } from 'react-i18next';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
-import usePermission from 'hooks/usePermission';
-import { PermissionObject, PermissionAction } from 'utils/constant';
 import { useNavigate, useParams } from 'react-router-dom';
-import { ChevronLeft, PencilSquare } from 'react-bootstrap-icons';
 import { ContainerPadding } from 'assets/styles/global';
 import Info from 'components/projectInfoCom/info';
 import EditInfo from 'components/projectInfoCom/edit';
+import BackIconSVG from 'components/svgs/back';
 
 const OuterBox = styled.div`
-  min-height: 100%;
   ${ContainerPadding};
   @media (max-width: 1024px) {
     .nav {
@@ -27,39 +23,26 @@ const OuterBox = styled.div`
 
 const Box = styled.div`
   position: relative;
-  min-height: 100%;
-  background: #fff;
 `;
 
 const Content = styled.div`
   box-sizing: border-box;
-  padding: 20px;
 `;
 
 const BackBox = styled.div`
-  padding: 20px 20px 0;
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  .back {
-    margin-right: 10px;
-    cursor: pointer;
-  }
-  .edit {
-    margin-left: 10px;
-    cursor: pointer;
-  }
+  cursor: pointer;
+  gap: 10px;
+  color: var(--bs-body-color);
 `;
 
 export default function InfoPage() {
-  const { t } = useTranslation();
-
   const { dispatch } = useAuthContext();
 
   const { id } = useParams();
   const navigate = useNavigate();
   const [detail, setDetail] = useState<ReTurnProject | undefined>();
-
-  const canAuditApplication = usePermission(PermissionAction.CreateApplication, PermissionObject.ProjPrefix + id);
 
   const [isEdit, setIsEdit] = useState(false);
 
@@ -91,18 +74,15 @@ export default function InfoPage() {
   return (
     <OuterBox>
       <Box>
-        <BackBox>
-          <ChevronLeft className="back" onClick={handleBack} />
-          <div>
-            <span>{detail?.name}</span>
-            {canAuditApplication && !isEdit && <PencilSquare onClick={() => setIsEdit(true)} className="edit" />}
-          </div>
+        <BackBox onClick={handleBack}>
+          <BackIconSVG />
+          <span>{detail?.name}</span>
         </BackBox>
         <Content>
           {isEdit ? (
             <EditInfo detail={detail} onUpdate={handleUpadte} />
           ) : (
-            <Info detail={detail} onUpdate={handleUpadte} />
+            <Info detail={detail} onUpdate={handleUpadte} handleEdit={() => setIsEdit(true)} />
           )}
         </Content>
       </Box>

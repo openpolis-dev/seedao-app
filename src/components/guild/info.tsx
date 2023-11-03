@@ -3,13 +3,22 @@ import { useTranslation } from 'react-i18next';
 import { ReTurnProject } from 'type/project.type';
 import Members from './members';
 import ReactMarkdown from 'react-markdown';
+import usePermission from 'hooks/usePermission';
+import { PermissionObject, PermissionAction } from 'utils/constant';
+import { Button } from 'react-bootstrap';
 
 interface Iprops {
   detail: ReTurnProject | undefined;
   onUpdate: () => void;
+  handleEdit: () => void;
 }
-export default function Info({ detail, onUpdate }: Iprops) {
+export default function Info({ detail, onUpdate, handleEdit }: Iprops) {
   const { t } = useTranslation();
+  const canAuditApplication = usePermission(
+    PermissionAction.CreateApplication,
+    PermissionObject.GuildPrefix + detail?.id,
+  );
+
   return (
     <>
       <TopBox>
@@ -20,18 +29,23 @@ export default function Info({ detail, onUpdate }: Iprops) {
           <ProposalBox>
             {detail?.proposals.map((item, index) => (
               <li key={index}>
-                <a href={item} target="_blank" rel="noopener noreferrer">
-                  {`关联提案${index + 1}`}
+                <a href={`https://forum.seedao.xyz/thread/${item}`} target="_blank" rel="noopener noreferrer">
+                  {`SIP-${item}`}
                 </a>
               </li>
             ))}
           </ProposalBox>
           <div className="desc">{detail?.desc}</div>
         </TopInfo>
+        {canAuditApplication && (
+          <div>
+            <Button onClick={() => handleEdit()}>{t('general.edit')}</Button>
+          </div>
+        )}
       </TopBox>
       <Members detail={detail} updateProject={onUpdate} />
       <ContentBox>
-        <div>介绍</div>
+        <div>{t('Guild.Intro')}</div>
         <ReactMarkdown>{detail?.intro || ''}</ReactMarkdown>
       </ContentBox>
     </>

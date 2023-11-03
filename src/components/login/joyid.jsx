@@ -4,7 +4,7 @@ import {
     signMessageWithRedirect,
     signMessageCallback,
 } from "@joyid/evm";
-import React, {useEffect, useState} from "react";
+import React, {useEffect} from "react";
 import {ethers} from "ethers";
 import {createSiweMessage} from "../../utils/sign";
 import {useNavigate} from "react-router-dom";
@@ -15,7 +15,7 @@ import { Authorizer } from "casbin.js";
 import { readPermissionUrl } from "../../requests/user";
 import { WalletType } from "../../wallet/wallet";
 import { SELECT_WALLET } from "../../utils/constant";
-import JoyIdImg from "../../assets/images/wallet/joyid.png";
+import JoyIdImg from "../../assets/Imgs/home/JOYID.svg";
 import styled from "styled-components";
 import OneSignal from 'react-onesignal';
 

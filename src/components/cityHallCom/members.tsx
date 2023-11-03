@@ -98,8 +98,7 @@ export default function Members(props: Iprops) {
     setSelectAdminArr(arr);
   };
   const formatAdminActive = (num: string) => {
-    const arr = selectAdminArr.filter((item) => item.wallet === num);
-    return !!arr.length;
+    return !!selectAdminArr.find((item) => item.wallet === num);
   };
 
   const getUser = (wallet: string): IUser => {
@@ -124,28 +123,7 @@ export default function Members(props: Iprops) {
     <Box>
       {show && <Add closeAdd={closeAdd} canUpdateSponsor={canUpdateSponsor} />}
       {showDel && <Del closeRemove={closeRemove} selectAdminArr={selectAdminArr} />}
-      {canUpdateSponsor && (
-        <TopBox>
-          <Button onClick={() => handleAdd()} disabled={edit}>
-            {t('Guild.AddMember')}
-          </Button>
-          {!edit && (
-            <Button variant="outline-primary" onClick={() => handleDel()}>
-              {t('Guild.RemoveMember')}
-            </Button>
-          )}
-          {edit && (
-            <>
-              <Button onClick={() => closeDel()} disabled={!selectAdminArr.length}>
-                {t('general.confirm')}
-              </Button>
-              <Button variant="outline-primary" onClick={() => closeRemove()}>
-                {t('general.cancel')}
-              </Button>
-            </>
-          )}
-        </TopBox>
-      )}
+
       <ItemBox>
         {/* <TitleBox>{t('Guild.Dominator')}</TitleBox> */}
         <Row>
@@ -162,6 +140,30 @@ export default function Members(props: Iprops) {
         </Row>
       </ItemBox>
       {!adminArr.length && <NoItem />}
+      {canUpdateSponsor && (
+        <TopBox>
+          {!edit && (
+            <>
+              <Button onClick={() => handleAdd()} disabled={edit}>
+                {t('Guild.AddMember')}
+              </Button>
+              <Button variant="outline-primary" onClick={() => handleDel()}>
+                {t('Guild.RemoveMember')}
+              </Button>
+            </>
+          )}
+          {edit && (
+            <>
+              <Button onClick={() => closeDel()} disabled={!selectAdminArr.length}>
+                {t('general.confirm')}
+              </Button>
+              <Button variant="outline-primary" onClick={() => closeRemove()}>
+                {t('general.cancel')}
+              </Button>
+            </>
+          )}
+        </TopBox>
+      )}
     </Box>
   );
 }
@@ -175,9 +177,7 @@ const ItemBox = styled.div`
 
 const TopBox = styled.div`
   display: flex;
-  justify-content: flex-end;
-  margin-bottom: 30px;
-  button {
-    margin-left: 20px;
-  }
+  justify-content: flex-start;
+  gap: 18px;
+  margin-top: 6px;
 `;

@@ -39,7 +39,7 @@ const CardBox = styled.div`
   height: 100%;
 `;
 
-const FirstLine = styled.ul`
+const FirstLine = styled.ul<{ border: string }>`
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -55,7 +55,7 @@ const FirstLine = styled.ul`
     overflow: hidden;
     position: relative;
     background-color: var(--bs-box--background);
-    border: 1px solid var(--bs-border-color);
+    border: ${(props) => props.border};
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
@@ -311,6 +311,10 @@ export default function Index() {
     getVaultsInfo();
   }, []);
 
+  const borderStyle = useMemo(() => {
+    return theme ? 'unset' : '1px solid var(--bs-border-color)';
+  }, [theme]);
+
   return (
     <BoxOuter>
       {Toast}
@@ -319,7 +323,7 @@ export default function Index() {
       )}
       <CardBox>
         <Vault>
-          <VaultOverview>
+          <VaultOverview border={borderStyle}>
             <div className="vaultInner">
               <InfoItem className="left">
                 <div>
@@ -359,9 +363,9 @@ export default function Index() {
                   </div>
                 </InfoItem>
                 <OptionBox>
-                  {/* <Link to="/assets/register">
-                    <Button>登记</Button>
-                  </Link> */}
+                  <Link to="/assets/register">
+                    <Button>{t('application.Register')}</Button>
+                  </Link>
                   <Button variant="outline-primary" onClick={() => setShowVaultDetail(!showVaultDetail)}>
                     <span>{t('Assets.Detail')}</span>
                     {showVaultDetail ? <ChevronUp /> : <ChevronDown />}
@@ -413,16 +417,14 @@ export default function Index() {
             )}
           </VaultOverview>
         </Vault>
-        <FirstLine>
+        <FirstLine border={borderStyle}>
           <li>
             <LiHead>
               <LiTitle>{t('Assets.SupplySCR')}</LiTitle>
             </LiHead>
             <div className="num">{formatNumber(Number(totalSCR))}</div>
             <div style={{ textAlign: 'left' }}>
-              <p className="tips">
-                ≈ {formatNumber(Number(SCRValue.toFixed(2)))} U 1SCR ≈ {SCR_PRICE} U
-              </p>
+              <p className="tips">{/* ≈ {formatNumber(Number(SCRValue.toFixed(2)))} U 1SCR ≈ {SCR_PRICE} U */}</p>
             </div>
           </li>
           <li className="center">
@@ -498,9 +500,9 @@ const Vault = styled.div`
   //background: #fff;
 `;
 
-const VaultOverview = styled.div`
+const VaultOverview = styled.div<{ border: string }>`
   background: var(--bs-box--background);
-  border: 1px solid var(--bs-border-color);
+  border: ${(props) => props.border};
   border-radius: 16px;
   overflow: hidden;
   .vaultInner {
