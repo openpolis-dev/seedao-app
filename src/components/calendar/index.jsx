@@ -78,7 +78,6 @@ const Box = styled.div`
         display: none;
     }
     .calendar-body{
-        margin-left: 1px;
     }
     .innerDay{
         color:var(--bs-body-color_active) ;
@@ -173,7 +172,7 @@ const API_KEY = "AIzaSyDyZO-Xhx71aD0Rpv8EcwY2N5rsdBWG8hA";
 let calendars = [
     {
         calendarId: "seedao.tech@gmail.com",
-        color: "#14FF00",
+        color: "#1F9E14",
     },
 
 ];
@@ -193,7 +192,10 @@ let styles = {
         marginLeft:"-1px",
         minHeight:"120px",
         color: "var(--bs-body-color_active)",
-        fontFamily: 'Poppins-SemiBold'
+        fontFamily: 'Poppins-SemiBold',
+        "&:nth-child(7n)":{
+            borderRight:"1px solid var(--bs-border-color)"
+        }
     },
     today:{
         color:"#fff",
