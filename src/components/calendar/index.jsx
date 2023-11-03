@@ -85,6 +85,12 @@ const Box = styled.div`
             color: var(--bs-body-color_active);
             align-items: flex-start;
             padding-bottom: 20px;
+            max-height:250px;
+            overflow-y: auto;
+
+            &>div:nth-child(2){
+               white-space: pre-wrap;
+            }
         }
         .calendarName{
             //border-bottom: 1px solid var( --bs-border-color);

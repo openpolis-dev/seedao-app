@@ -8,6 +8,8 @@ import { AppActionType, useAuthContext } from '../../providers/authProvider';
 import { useTranslation } from 'react-i18next';
 import Links from '../../utils/links';
 import { ChevronLeft } from 'react-bootstrap-icons';
+import { publicList } from '../../requests/publicData';
+import Page from '../../components/pagination';
 
 const PageStyle = styled.div`
   ${ContainerPadding};
@@ -26,6 +28,7 @@ const InnerBox = styled.ul`
 
   .imgBox {
     width: 100%;
+    height: 140px;
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;
     overflow: hidden;
@@ -135,30 +138,38 @@ export default function Pub() {
   const [list, setList] = useState([]);
   const { t } = useTranslation();
 
-  const secretKey = 'secret_gnVFq5NWrDHY481DoMPwaCLuo6GDvGw7s31xOxdQNkR';
+  const [pageCur, setPageCur] = useState(1);
+  const [pageSize, setPageSize] = useState(12);
+  const [total, setTotal] = useState(1);
 
   useEffect(() => {
     getList();
-  }, []);
+  }, [pageCur]);
+
+  const handlePage = (num: number) => {
+    setPageCur(num + 1);
+  };
 
   const getList = async () => {
-    //
-    // try{
-    //   let result = await axios.get(`https://api.notion.com/v1/databases/73d83a0a-258d-4ac5-afa5-7a997114755a`,{
-    //     headers:{
-    //       Authorization: `Bearer ${secretKey}`,
-    //       'Notion-Version': '2022-06-28'
-    //     }
-    //   });
-    //   console.log(result);
-    // }catch (e){
-    //
-    // }
+    const obj: any = {
+      page: pageCur,
+      size: pageSize,
+      // sort_order: 'desc',
+      // sort_field: 'created_at',
+    };
 
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
-      let result = await axios.get(`https://notion-api.splitbee.io/v1/table/73d83a0a-258d-4ac5-afa5-7a997114755a`);
-      setList(result.data);
+      // let result = await axios.get(`https://notion-api.splitbee.io/v1/table/73d83a0a-258d-4ac5-afa5-7a997114755a`);
+
+      let result = await publicList(obj);
+
+      const { rows, page, size, total } = result.data;
+
+      setList(rows);
+      setPageSize(size);
+      setTotal(total);
+      setPageCur(page);
     } catch (e: any) {
       console.error(e);
     } finally {
@@ -202,7 +213,7 @@ export default function Pub() {
 
   const returnStatus = (str: string) => {
     let cStr = '';
-    switch (str.trim()) {
+    switch (str?.trim()) {
       case '已归档':
         cStr = 'str1';
         break;
@@ -228,38 +239,42 @@ export default function Pub() {
           <Button onClick={() => window.open('https://tally.so/r/mDKbqb', '_target')}>{t('general.apply')}</Button>
         </FlexBox>
         <Row>
-          {list.map((item: any, index) => (
+          {list?.map((item: any, index) => (
             <Col md={3} key={index} onClick={() => ToGo(item.id)}>
               <InnerBox>
                 <div className="imgBox">
-                  <img
-                    src="https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F619174d0-2125-4cf1-b6af-1f661d73dd19%2Fbanner_1920x1080.jpg?id=7f4920bb-2ad7-41d7-a016-a6afa14aa9ce&table=block&spaceId=5a4585f0-41bf-46b1-8321-4c9d55abc37a&width=550&userId=6fa9ac45-fb72-4109-81ad-54cbd7bb6315&cache=v2"
-                    alt=""
-                  />
+                  <img src={item?.cover?.file?.url || item?.cover?.external.url} alt="" />
                 </div>
                 <ul className="btm">
-                  <Tit>{item['悬赏名称']}</Tit>
-                  {item['悬赏状态'] && (
+                  <Tit>{item.properties['悬赏名称']?.title[0]?.plain_text}</Tit>
+                  {item.properties['悬赏状态']?.select?.name && (
                     <li>
-                      <TagBox className={returnStatus(item['悬赏状态'])}>{item['悬赏状态']}</TagBox>
+                      <TagBox className={returnStatus(item.properties['悬赏状态']?.select?.name)}>
+                        {item.properties['悬赏状态']?.select?.name}
+                      </TagBox>
                     </li>
                   )}
                   <li>
-                    {item['悬赏类型'] &&
-                      (item['悬赏类型'] as any).map((innerItem: string, innerIndex: number) => (
-                        <TypeBox key={`${index}_${innerIndex}`} className={returnColor(innerItem)}>
-                          {innerItem}
+                    {!!item.properties['悬赏类型']?.multi_select?.length &&
+                      (item.properties['悬赏类型']?.multi_select as any).map((innerItem: any, innerIndex: number) => (
+                        <TypeBox key={`${index}_${innerIndex}`} className={returnColor(innerItem.name)}>
+                          {innerItem?.name}
                         </TypeBox>
                       ))}
                   </li>
-                  <li>招募截止时间：{item['招募截止时间']}</li>
+                  <li>招募截止时间：{item.properties['招募截止时间']?.rich_text[0]?.plain_text}</li>
 
-                  <li className="line2">{item['贡献报酬']}</li>
+                  <li className="line2">{item.properties['贡献报酬']?.rich_text[0]?.plain_text}</li>
                 </ul>
               </InnerBox>
             </Col>
           ))}
         </Row>
+        {total > pageSize && (
+          <div>
+            <Page itemsPerPage={pageSize} total={total} current={pageCur - 1} handleToPage={handlePage} />
+          </div>
+        )}
       </Box>
     </PageStyle>
   );

@@ -21,6 +21,7 @@
   --menu-color:#1A1323;
   --font-color-title:#1A1323;
   --mask-bg:rgba(255,255,255,0.7);
+  --rht-bg:#fafafa;
 }
 
 :root[data-bs-theme="dark"] {
@@ -41,5 +42,5 @@
   --home-right_hover:#261B46;
   --menu-color:#B0B0B0;
   --mask-bg:rgba(0,0,0,0.7);
-
+  --rht-bg:#0D0C0F;
 }

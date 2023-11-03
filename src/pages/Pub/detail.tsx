@@ -1,12 +1,13 @@
 import styled from 'styled-components';
 import { ContainerPadding } from '../../assets/styles/global';
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Row, Col } from 'react-bootstrap';
 import { AppActionType, useAuthContext } from '../../providers/authProvider';
 import { ChevronLeft } from 'react-bootstrap-icons';
 import { useTranslation } from 'react-i18next';
+import { pubDetail } from '../../requests/publicData';
+import axios from 'axios';
 
 const PageStyle = styled.div`
   ${ContainerPadding};
@@ -147,7 +148,7 @@ export default function PubDetail() {
 
   const returnColor = (str: string) => {
     let colorStr = '';
-    switch (str.trim()) {
+    switch (str?.trim()) {
       case '项目招募 | Project Recruitment':
       case '项目招募':
         colorStr = 'type1';
@@ -175,45 +176,49 @@ export default function PubDetail() {
     return colorStr;
   };
 
-  const flattenArray = (arr: any[]) => {
-    let flattened: any[] = [];
-
-    arr.forEach((item) => {
-      if (Array.isArray(item)) {
-        flattened = flattened.concat(flattenArray(item));
-      } else {
-        flattened.push(item);
-      }
-    });
-
-    return flattened;
-  };
+  // const flattenArray = (arr: any[]) => {
+  //   let flattened: any[] = [];
+  //
+  //   arr.forEach((item) => {
+  //     if (Array.isArray(item)) {
+  //       flattened = flattened.concat(flattenArray(item));
+  //     } else {
+  //       flattened.push(item);
+  //     }
+  //   });
+  //
+  //   return flattened;
+  // };
 
   const getDetail = async (id: string) => {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
-      let detailInfo = await getInfo(id);
-      let detail = detailInfo.data[id]?.value.properties;
-      const titleStr = detail?.title[0][0] ?? '';
+      // let detailInfo = await getInfo(id);
+      let detailInfo = await pubDetail(id);
+      let detail = detailInfo.data.properties;
+      const titleStr = detail?.['悬赏名称'].title[0].text.content ?? '';
       setTitle(titleStr);
-      setImgUrl(detailInfo.data[id]?.value.format?.page_cover);
+      let url = detailInfo?.data?.cover?.file?.url || detailInfo?.data?.cover?.external.url;
+      setImgUrl(url);
 
-      setStatus(detail?.['ArpA'][0][0] ?? '');
-      setTag(detail?.['GJ=R'][0] ?? []);
-      setDesc(detail?.['Bzg@'][0][0] ?? '');
-      setReward(detail?.['_zm^'][0][0] ?? '');
-      setJd(detail?.['~B<}'][0][0] ?? '');
-      setTime(detail?.['iSkG'][0][0] ?? '');
+      setStatus(detail?.['悬赏状态']?.select?.name ?? '');
+      setTag(detail?.['悬赏类型']?.multi_select ?? []);
 
-      let contactArr = detail?.['ax\\\\'];
-      const flattenedArray = flattenArray(contactArr);
-      const contactList = flattenedArray.filter(
-        (item) => item.length > 30 && item !== '5a4585f0-41bf-46b1-8321-4c9d55abc37a',
-      );
+      setDesc(detail?.['任务说明'].rich_text[0].text.content ?? '');
+      setReward(detail?.['贡献报酬']?.rich_text[0]?.plain_text);
+      setJd(detail?.['技能要求'].rich_text[0].text.content ?? '');
+      setTime(detail?.['招募截止时间']?.rich_text[0]?.plain_text ?? '');
+
+      let contactArr = detail?.['对接人']?.rich_text;
+      // const contactList = flattenedArray.filter(
+      //   (item) => item.length > 30 && item !== '5a4585f0-41bf-46b1-8321-4c9d55abc37a',
+      // );
 
       let arr: any[] = [];
-      contactList.map(async (item) => {
-        let rt = await getInfo(item);
+      contactArr.map(async (item: any) => {
+        let idStr = item.mention.page.id;
+        console.log(idStr);
+        let rt = await getInfo(idStr);
         arr.push({
           name: rt?.data[item]?.value.properties.title[0][0] ?? '',
           id: item.replace(/-/g, ''),
@@ -229,7 +234,7 @@ export default function PubDetail() {
 
   const returnStatus = (str: string) => {
     let cStr = '';
-    switch (str.trim()) {
+    switch (str?.trim()) {
       case '已归档':
         cStr = 'str1';
         break;
@@ -251,7 +256,7 @@ export default function PubDetail() {
           <span>{title}</span>
         </BackBox>
         <ImgBox>
-          <img src={`https://www.notion.so${imgUrl}`} alt="" />
+          <img src={imgUrl} alt="" />
         </ImgBox>
         <TopRht>
           <TagBox className={returnStatus(status)}> {status}</TagBox>
@@ -261,9 +266,9 @@ export default function PubDetail() {
           <Row>
             <Col md={2}>悬赏类型</Col>
             <Col md={10}>
-              {tag.map((item, index) => (
-                <TypeBox key={index} className={returnColor(item)}>
-                  {item}
+              {tag.map((item: any, index) => (
+                <TypeBox key={index} className={returnColor(item.name)}>
+                  {item.name}
                 </TypeBox>
               ))}
             </Col>
@@ -288,23 +293,23 @@ export default function PubDetail() {
             <Col md={2}>招募截止时间</Col>
             <Col md={10}>{time}</Col>
           </Row>
-          <Row>
-            <Col md={2}>👫 对接人</Col>
-            <Col md={10}>
-              <LinkBox>
-                {contact.map((item: any, index) => (
-                  <a
-                    href={`https://www.notion.so/${item.id}`}
-                    target="_blank"
-                    rel="noreferrer"
-                    key={`contact_${index}`}
-                  >
-                    {item.name}
-                  </a>
-                ))}
-              </LinkBox>
-            </Col>
-          </Row>
+          {/*  /!*<Row>*!/*/}
+          {/*  /!*  <Col md={2}>👫 对接人</Col>*!/*/}
+          {/*  /!*  <Col md={10}>*!/*/}
+          {/*  /!*    <LinkBox>*!/*/}
+          {/*  /!*      {contact.map((item: any, index) => (*!/*/}
+          {/*  /!*        <a*!/*/}
+          {/*  /!*          href={`https://www.notion.so/${item.id}`}*!/*/}
+          {/*  /!*          target="_blank"*!/*/}
+          {/*  /!*          rel="noreferrer"*!/*/}
+          {/*  /!*          key={`contact_${index}`}*!/*/}
+          {/*  /!*        >*!/*/}
+          {/*  /!*          {item.name}*!/*/}
+          {/*  /!*        </a>*!/*/}
+          {/*  /!*      ))}*!/*/}
+          {/*  /!*    </LinkBox>*!/*/}
+          {/*  /!*  </Col>*!/*/}
+          {/*  /!*</Row>*!/*/}
         </ContentBox>
       </Box>
     </PageStyle>

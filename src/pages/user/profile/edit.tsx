@@ -15,6 +15,7 @@ import TwitterImg from '../../../assets/Imgs/profile/twitterIcon.svg';
 import WechatImg from '../../../assets/Imgs/profile/wechatIcon.svg';
 import MirrorImg from '../../../assets/Imgs/profile/mirrorIcon.svg';
 import DescImg from '../../../assets/Imgs/profile/desc.svg';
+import GithubImg from '../../../assets/Imgs/profile/github.svg';
 
 const OuterBox = styled.div`
   ${ContainerPadding};
@@ -120,6 +121,7 @@ export default function Profile() {
   const [discord, setDiscord] = useState('');
   const [twitter, setTwitter] = useState('');
   const [wechat, setWechat] = useState('');
+  const [github, setGithub] = useState('');
   const [mirror, setMirror] = useState('');
   const [avatar, setAvatar] = useState('');
   const [bio, setBio] = useState('');
@@ -144,6 +146,9 @@ export default function Profile() {
         break;
       case 'mirror':
         setMirror(value);
+        break;
+      case 'github':
+        setGithub(value);
         break;
       case 'bio':
         setBio(value);
@@ -173,6 +178,7 @@ export default function Profile() {
         discord_profile: discord,
         twitter_profile: twitter,
         wechat,
+        github_profile: github,
         mirror,
         bio,
       };
@@ -202,6 +208,7 @@ export default function Profile() {
       setDiscord(mapArr.get('discord') ?? '');
       setWechat(mapArr.get('wechat') ?? '');
       setMirror(mapArr.get('mirror') ?? '');
+      setGithub(mapArr.get('github') ?? '');
 
       setBio(userData.bio);
     }
@@ -356,8 +363,19 @@ export default function Profile() {
                 <Form.Control type="text" placeholder="" value={mirror} onChange={(e) => handleInput(e, 'mirror')} />
               </InputBox>
             </li>
+            <li>
+              <div className="title">
+                <div className="icon">
+                  <img src={GithubImg} alt="" />
+                </div>
+                {t('My.Github')}
+              </div>
+              <InputBox>
+                <Form.Control type="text" placeholder="" value={github} onChange={(e) => handleInput(e, 'github')} />
+              </InputBox>
+            </li>
             <RhtLi>
-              <Button onClick={saveProfile}>{t('general.confirm')}</Button>
+              <Button onClick={() => saveProfile()}>{t('general.confirm')}</Button>
             </RhtLi>
           </UlBox>
         </MidBox>

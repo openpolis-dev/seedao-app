@@ -52,7 +52,7 @@ const Box = styled.div`
   border-right: 1px solid var(--bs-border-color);
   box-sizing: border-box;
   padding: 20px;
-  width: 193px;
+  width: 153px;
   flex-shrink: 0;
   position: relative;
 
@@ -82,24 +82,24 @@ const Box = styled.div`
       width: 94px;
     }
     25% {
-      width: 150px;
+      width: 110px;
     }
     50% {
-      width: 180px;
+      width: 130px;
     }
     100% {
-      width: 193px;
+      width: 153px;
     }
   }
   @keyframes unexpand {
     0% {
-      width: 193px;
+      width: 153px;
     }
     50% {
-      width: 180px;
+      width: 130px;
     }
     75% {
-      width: 150px;
+      width: 110px;
     }
     100% {
       width: 94px;
