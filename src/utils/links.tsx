@@ -17,13 +17,6 @@ export default {
       desc: 'resources.CalendarReviewDesc',
     },
     {
-      name: 'resources.brand',
-      link: 'https://tally.so/r/w4QxNd',
-      id: 'brand',
-      icon: '',
-      desc: 'resources.brandDesc',
-    },
-    {
       name: 'resources.community',
       link: 'https://tally.so/r/mBp09R',
       id: 'community',
@@ -52,6 +45,20 @@ export default {
       desc: 'resources.AppDesc',
     },
     {
+      name: 'resources.Project',
+      link: 'https://tally.so/r/w2AWlp',
+      id: 'Projects',
+      icon: '',
+      desc: 'resources.ProjectDesc',
+    },
+    {
+      name: 'resources.Guild',
+      link: 'https://tally.so/r/3NXjRW',
+      id: 'Guilds',
+      icon: '',
+      desc: 'resources.GuildDesc',
+    },
+    {
       name: 'resources.Incubator',
       link: 'https://tally.so/r/wAr0Q0',
       id: 'Apps',
@@ -76,13 +83,6 @@ export default {
       desc: 'city-hall.CommunityReviewDesc',
     },
     {
-      name: 'city-hall.BrandReview',
-      link: 'https://tally.so/forms/3XozzP/submissions',
-      id: 'community',
-      icon: '',
-      desc: 'city-hall.BrandReviewDesc',
-    },
-    {
       name: 'city-hall.MediaReview',
       link: 'https://tally.so/forms/wzMRBE/submissions',
       id: 'community',
@@ -104,6 +104,20 @@ export default {
       desc: 'city-hall.AppReviewDesc',
     },
     {
+      name: 'city-hall.ProjectReview',
+      link: 'https://tally.so/forms/w2AWlp/submissions',
+      id: 'project',
+      icon: '',
+      desc: 'city-hall.ProjectReviewDesc',
+    },
+    {
+      name: 'city-hall.GuildReview',
+      link: 'https://tally.so/forms/3NXjRW/submissions',
+      id: 'guild',
+      icon: '',
+      desc: 'city-hall.GuildReviewDesc',
+    },
+    {
       name: 'city-hall.PubReview',
       link: 'https://www.notion.so/ab122e6e19f14ff5a212fb6e77d5b366?v=34760c2c81e648549f5a40a79dc3b198&pvs=4',
       id: 'community',
@@ -112,13 +126,13 @@ export default {
     },
   ],
   brand: [
-    {
-      name: 'city-hall.BrandReview',
-      link: 'https://tally.so/forms/w4QxNd/submissions',
-      id: 'brand',
-      icon: '',
-      desc: 'city-hall.BrandReviewDesc',
-    },
+    // {
+    //   name: 'city-hall.BrandReview',
+    //   link: 'https://tally.so/forms/w4QxNd/submissions',
+    //   id: 'brand',
+    //   icon: '',
+    //   desc: 'city-hall.BrandReviewDesc',
+    // },
     {
       name: 'city-hall.MediaReview',
       link: 'https://tally.so/forms/wzMRBE/submissions',
