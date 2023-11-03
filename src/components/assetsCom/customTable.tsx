@@ -78,8 +78,8 @@ const CustomTable = ({ updateList }: IProps) => {
         <thead>
           <tr>
             <th>{t('application.AddressName')}</th>
-            <th>{t('application.AssetType')}</th>
-            <th>{t('application.AssetAmount')}</th>
+            <th style={{ width: '120px' }}>{t('application.AssetType')}</th>
+            <th style={{ width: '140px' }}>{t('application.AssetAmount')}</th>
             <th>{t('application.Content')}</th>
             <th>{t('application.RegisterNote')}</th>
             <th></th>
@@ -88,21 +88,26 @@ const CustomTable = ({ updateList }: IProps) => {
         <tbody>
           {list.map((item, index) => (
             <tr key={index}>
-              <td>
-                <Form.Control value={item.address} onChange={(e) => handleInput(e, index, 'address')} />
+              <td style={{ width: '380px' }}>
+                <Form.Control
+                  style={{ width: '368px' }}
+                  value={item.address}
+                  onChange={(e) => handleInput(e, index, 'address')}
+                />
               </td>
-              <td>
-                <Select
-                  width="120px"
+              <td style={{ width: '120px' }}>
+                <AssetSelect
+                  width="80px"
                   options={[
                     { value: AssetName.Credit, label: AssetName.Credit },
                     { value: AssetName.Token, label: AssetName.Token },
                   ]}
                   placeholder=""
+                  NotClear={true}
                   onChange={(value: any) => handleSelect(value?.value, index)}
                 />
               </td>
-              <td>
+              <td style={{ width: '140px' }}>
                 <Form.Control
                   style={{ width: '120px' }}
                   type="number"
@@ -152,4 +157,8 @@ export const AddButton = styled.button<{ long?: boolean }>`
   img {
     margin-right: 8px;
   }
+`;
+
+const AssetSelect = styled(Select)`
+  width: 100px;
 `;
