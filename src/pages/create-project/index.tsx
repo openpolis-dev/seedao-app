@@ -8,11 +8,12 @@ import { AppActionType, useAuthContext } from 'providers/authProvider';
 import useToast, { ToastType } from 'hooks/useToast';
 import { AssetName } from 'utils/constant';
 import { useNavigate } from 'react-router-dom';
-import { ChevronLeft, PlusLg, DashLg, Upload, X } from 'react-bootstrap-icons';
 import { ContainerPadding } from 'assets/styles/global';
 import { MdEditor } from 'md-editor-rt';
 import BackIconSVG from 'components/svgs/back';
 import PlusMinusButton from 'components/common/buttons';
+import UploadImg from 'assets/Imgs/profile/upload.svg';
+import CameraIconSVG from 'components/svgs/camera';
 
 const config = {
   toobars: [
@@ -62,6 +63,7 @@ export default function CreateProject() {
   const [url, setUrl] = useState('');
   const [intro, setIntro] = useState('');
   const [lan, setLan] = useState('');
+  const [showUpload, setShowUpload] = useState(false);
 
   useEffect(() => {
     const localLan = language === 'zh' ? 'zh-CN' : 'en-US';
@@ -239,20 +241,20 @@ export default function CreateProject() {
       </BackBox>
       <CardBody>
         <BtnBox htmlFor="fileUpload" onChange={(e) => updateLogo(e)}>
-          {!url && (
-            <div>
+          <ImgBox onMouseEnter={() => !showUpload && setShowUpload(true)} onMouseLeave={() => setShowUpload(false)}>
+            <img src={url} alt="" />
+            <UpladBox className="upload">
               <input id="fileUpload" type="file" hidden accept=".jpg, .jpeg, .png, .svg" />
-              <Upload className="uploadIcon" />
-              <span> {t('Project.upload')}</span>
-            </div>
-          )}
-          {!!url && (
-            <ImgBox>
-              <div className="del" onClick={() => removeUrl()}>
-                <X />
-              </div>
-              <img src={url} alt="" />
-            </ImgBox>
+              <CameraIconSVG />
+              <UploadImgText>{t('Project.upload')}</UploadImgText>
+            </UpladBox>
+          </ImgBox>
+          {!url && (
+            <UpladBox>
+              <input id="fileUpload" type="file" hidden accept=".jpg, .jpeg, .png, .svg" />
+              <CameraIconSVG />
+              <UploadImgText>{t('Project.upload')}</UploadImgText>
+            </UpladBox>
           )}
         </BtnBox>
         <RightContent>
@@ -447,16 +449,16 @@ const BackBox = styled.div`
 `;
 
 const BtnBox = styled.label`
-  background: #f8f8f8;
+  background: var(--bs-box--background);
   height: 110px;
   width: 110px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 4px;
-  font-family: 'Inter-Regular';
+  border-radius: 16px;
   font-weight: 700;
   font-size: 14px;
+  position: relative;
   .iconRht {
     margin-right: 10px;
   }
@@ -484,21 +486,11 @@ const ImgBox = styled.div`
   align-items: center;
   justify-content: center;
   position: relative;
-  .del {
-    position: absolute;
-    right: -15px;
-    top: -15px;
-    z-index: 999;
-    border-radius: 100%;
-    background: #a16eff;
-    color: #fff;
-    width: 30px;
-    height: 30px;
+  .upload {
+    display: none;
+  }
+  &:hover .upload {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 20px;
-    cursor: pointer;
   }
 `;
 
@@ -514,4 +506,26 @@ const RightContent = styled.div`
   @media (max-width: 870px) {
     width: 400px;
   }
+`;
+
+const UpladBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  cursor: pointer;
+`;
+
+const UploadImgText = styled.p`
+  font-size: 8px;
+  font-family: Poppins-Regular, Poppins;
+  font-weight: 400;
+  color: var(--bs-svg-color);
+  line-height: 12px;
 `;

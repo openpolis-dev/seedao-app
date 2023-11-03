@@ -45,7 +45,7 @@ const PlusButtonStyle = styled.span`
   height: 40px;
   cursor: pointer;
 
-  background: var(--bs-box-background);
+  background: var(--bs-box--background);
   border-radius: 8px;
   text-align: center;
   svg {

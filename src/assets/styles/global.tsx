@@ -187,6 +187,9 @@ const GlobalStyle = createGlobalStyle`
   .svg-stroke {
     stroke: var(--bs-svg-color) !important;
   }
+  .svg-fill {
+    fill: var(--bs-svg-color) !important;
+  }
   .dropdown-item{
     border-bottom:0!important;
  
