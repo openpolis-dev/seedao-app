@@ -56,6 +56,7 @@ export default function Members(props: Iprops) {
 
   useEffect(() => {
     if (!id || !detail) return;
+    console.log(detail);
     getDetail();
   }, [id, detail]);
 
@@ -80,21 +81,22 @@ export default function Members(props: Iprops) {
     const members = detail?.members || [];
     const sponsors = detail?.sponsors || [];
     let mArr = members.map((m) => m.toLowerCase());
-    let Mlist = mArr.map((item: string) => getUser(item));
-
     setMemberArr(mArr);
-    setMemberList([...Mlist]);
 
     let sArr = sponsors.map((m) => m.toLowerCase());
-    let sList = sArr.map((item: string) => getUser(item));
 
     setAdminArr(sArr);
-    setAdminList([...sList]);
-
-    console.log('===========list', [...sList]);
 
     getUsersInfo(Array.from(new Set([...members, ...sponsors])));
   };
+
+  useEffect(() => {
+    let Mlist = memberArr.map((item: string) => getUser(item));
+    setMemberList([...Mlist]);
+
+    let sList = adminArr.map((item: string) => getUser(item));
+    setAdminList([...sList]);
+  }, [memberArr, adminArr, userMap]);
 
   const handleDel = () => {
     setEdit(true);
