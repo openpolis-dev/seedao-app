@@ -47,9 +47,10 @@ export default function SocialIcon({ type, value }: IProps) {
     );
   } else {
     return (
-      <IconDisbaledBox theme={theme}>
+      <IconDisbaledBox theme={theme ? 'dark' : 'light'}>
         <img src={icon} alt="" />
-        <span>{t('members.NotRegister')}</span>
+        <span className="tooltip">{t('members.NotRegister')}</span>
+        <span className="arrow"></span>
       </IconDisbaledBox>
     );
   }
@@ -57,17 +58,18 @@ export default function SocialIcon({ type, value }: IProps) {
 
 const IconHrefBox = styled.a``;
 
-const IconDisbaledBox = styled.div<{ theme: boolean }>`
+const IconDisbaledBox = styled.div<{ theme: string }>`
   display: inline-block;
   position: relative;
-  &:hover span {
+  &:hover .tooltip,
+  &:hover .arrow {
     display: inline-block;
   }
 
   img {
     opacity: 0.4;
   }
-  span {
+  .tooltip {
     display: none;
     position: absolute;
     padding-inline: 11px;
@@ -78,22 +80,23 @@ const IconDisbaledBox = styled.div<{ theme: boolean }>`
     transform: translateX(-50%);
 
     white-space: nowrap;
-    background: ${({ theme }) => (theme ? '#1A1323' : '#fff')};
-    color: ${({ theme }) => (theme ? '#fff' : '#0D0C0F')};
+    background: ${({ theme }) => (theme === 'light' ? '#1A1323' : '#fff')};
+    color: ${({ theme }) => (theme === 'light' ? '#fff' : '#0D0C0F')};
     z-index: 99;
     font-size: 14px;
     font-family: Poppins-Medium, Poppins;
     font-weight: 500;
-    color: ${({ theme }) => (theme ? '#fff' : '#1A1323')};
+    color: ${({ theme }) => (theme === 'light' ? '#fff' : '#1A1323')};
     line-height: 30px;
-    &::before {
-      content: '';
-      position: absolute;
-      border: 6px solid transparent;
-      border-bottom-color: ${({ theme }) => (theme ? '#1A1323' : '#fff')};
-      top: -10px;
-      left: 50%;
-      transform: translateX(-3px);
-    }
+  }
+  .arrow {
+    display: none;
+    position: absolute;
+    bottom: -8px;
+    left: 3px;
+    transform: translateX(50%);
+    padding: 4px;
+    background: ${({ theme }) => (theme === 'light' ? '#1A1323' : '#fff')};
+    clip-path: polygon(50% 0%, 0 100%, 100% 100%);
   }
 `;
