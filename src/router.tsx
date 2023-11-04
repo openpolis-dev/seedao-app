@@ -27,7 +27,7 @@ import CalendarPage from './pages/calendar';
 import RouterChecker from './utils/routerChecker';
 import Canny from './pages/canny';
 import Apps from './pages/Apps';
-import Resources from './pages/resources';
+import Resources from './pages/resouces/resources';
 import ExplorePage from './pages/explore';
 import Pub from './pages/Pub/Pub';
 import PubDetail from './pages/Pub/detail';

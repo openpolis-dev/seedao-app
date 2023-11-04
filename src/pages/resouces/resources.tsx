@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { ContainerPadding } from '../assets/styles/global';
+import { ContainerPadding } from '../../assets/styles/global';
 import { useMemo } from 'react';
 import { Row, Col } from 'react-bootstrap';
 
@@ -8,7 +8,7 @@ import Links from 'utils/links';
 
 import AppCard, { EmptyAppCard } from 'components/common/appCard';
 import Tabbar from 'components/common/tabbar';
-import { useAuthContext } from '../providers/authProvider';
+import { useAuthContext } from '../../providers/authProvider';
 
 const OuterBox = styled.div`
   min-height: 100%;
@@ -49,7 +49,7 @@ const AppBox = styled(Row)`
     align-items: center;
     justify-content: center;
     .inner {
-      background: var(--home-right);
+      background: #fff;
       width: 44px;
       height: 44px;
       border-radius: 8px;

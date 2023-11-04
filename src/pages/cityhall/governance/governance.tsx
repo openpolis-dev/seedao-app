@@ -24,7 +24,7 @@ const AppBox = styled(Row)`
     align-items: center;
     justify-content: center;
     .inner {
-      background: var(--home-right);
+      background: #fff;
       width: 44px;
       height: 44px;
       border-radius: 8px;
