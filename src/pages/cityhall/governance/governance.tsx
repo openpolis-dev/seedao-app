@@ -4,7 +4,7 @@ import { Row, Col } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import Links from 'utils/links';
 import AppCard, { EmptyAppCard } from 'components/common/appCard';
-import { useAuthContext } from '../../providers/authProvider';
+import { useAuthContext } from 'providers/authProvider';
 
 const AppBox = styled(Row)`
   div[class^='col'] {
@@ -34,7 +34,7 @@ const AppBox = styled(Row)`
   }
 `;
 
-export default function GovernancePanel() {
+export default function GovernancePage() {
   const { t } = useTranslation();
   const {
     state: { theme },

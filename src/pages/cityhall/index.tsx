@@ -4,7 +4,7 @@ import usePermission from 'hooks/usePermission';
 import { PermissionAction, PermissionObject } from 'utils/constant';
 import PushPanel from 'components/cityHallCom/push';
 import { ContainerPadding } from 'assets/styles/global';
-import GovernancePanel from 'components/cityHallCom/Governance';
+import GovernancePage from './governance/governance';
 import BrandPanel from 'components/cityHallCom/brand';
 import TechPanel from 'components/cityHallCom/tech';
 import Members from 'components/cityHallCom/members';
@@ -72,7 +72,7 @@ export default function Index() {
           <Routes>
             <Route path="/" element={<Navigate to="members" />} />
             <Route path="members" element={<Members />} />
-            <Route path="governance" element={<GovernancePanel />} />
+            <Route path="governance" element={<GovernancePage />} />
             <Route path="brand" element={<BrandPanel />} />
             <Route path="tech" element={<TechPanel />} />
             <Route path="notification" element={<PushPanel />} />
