@@ -365,7 +365,7 @@ export default function Index() {
                 </InfoItem>
                 <OptionBox>
                   <Link to="/assets/register">
-                    <Button>{t('application.Register')}</Button>
+                    <Button style={{ height: '36px' }}>{t('application.Register')}</Button>
                   </Link>
                   <DetailButton onClick={() => setShowVaultDetail(!showVaultDetail)}>
                     <span>{t('Assets.Detail')}</span>
