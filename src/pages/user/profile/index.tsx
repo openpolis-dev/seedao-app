@@ -250,9 +250,7 @@ export default function Profile() {
               <li key={`sbtInner_${index}`}>
                 <span className="iconLft">{returnSocial(item.network, item.identity)}</span>
               </li>
-            ) : (
-              <></>
-            ),
+            ) : null,
           )}
           {detail?.email && (
             <li>

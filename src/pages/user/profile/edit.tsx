@@ -16,6 +16,7 @@ import WechatImg from '../../../assets/Imgs/profile/wechatIcon.svg';
 import MirrorImg from '../../../assets/Imgs/profile/mirrorIcon.svg';
 import DescImg from '../../../assets/Imgs/profile/desc.svg';
 import GithubImg from '../../../assets/Imgs/profile/github.svg';
+import { useNavigate } from 'react-router-dom';
 
 const OuterBox = styled.div`
   ${ContainerPadding};
@@ -126,6 +127,7 @@ export default function Profile() {
   const [avatar, setAvatar] = useState('');
   const [bio, setBio] = useState('');
 
+  const navigate = useNavigate();
   const handleInput = (e: ChangeEvent, type: string) => {
     const { value } = e.target as HTMLInputElement;
     switch (type) {
@@ -185,6 +187,7 @@ export default function Profile() {
       await requests.user.updateUser(data);
       dispatch({ type: AppActionType.SET_USER_DATA, payload: { ...userData, ...data } });
       showToast(t('My.ModifiedSuccess'), ToastType.Success);
+      navigate('/user/profile');
     } catch (error) {
       console.error('updateUser failed', error);
       showToast(t('My.ModifiedFailed'), ToastType.Danger);
@@ -195,13 +198,15 @@ export default function Profile() {
 
   useEffect(() => {
     if (userData) {
-      setUserName(userData.nickname);
-      setAvatar(userData.avatar);
-      setEmail(userData.email || '');
+      const detail = (userData as any).data;
+
+      setUserName(detail.nickname);
+      setAvatar(detail.avatar);
+      setEmail(detail.email || '');
 
       let mapArr = new Map();
 
-      userData.social_accounts?.map((item: any) => {
+      detail.social_accounts?.map((item: any) => {
         mapArr.set(item.network, item.identity);
       });
       setTwitter(mapArr.get('twitter') ?? '');
@@ -210,7 +215,7 @@ export default function Profile() {
       setMirror(mapArr.get('mirror') ?? '');
       setGithub(mapArr.get('github') ?? '');
 
-      setBio(userData.bio);
+      setBio(detail.bio);
     }
   }, [userData]);
 
