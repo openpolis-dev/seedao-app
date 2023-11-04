@@ -49,6 +49,7 @@ const FirstLine = styled.ul<{ border: string }>`
   flex-wrap: wrap;
   margin-bottom: 40px;
   li {
+    position: relative;
     width: 23%;
     height: 153px;
     border-radius: 16px;
@@ -427,6 +428,7 @@ export default function Index() {
             <div style={{ textAlign: 'left' }}>
               <p className="tips">{/* ≈ {formatNumber(Number(SCRValue.toFixed(2)))} U 1SCR ≈ {SCR_PRICE} U */}</p>
             </div>
+            <BorderDecoration color="#FF86CB" />
           </li>
           <li className="center">
             <LiHead>
@@ -436,6 +438,7 @@ export default function Index() {
             <div className="tips">
               {t('Assets.FloorPrice')} : <span>{nftData.floorPrice} ETH</span>
             </div>
+            <BorderDecoration color="#FFB842" />
           </li>
           <li>
             <LiHead>
@@ -452,6 +455,7 @@ export default function Index() {
                 </span>
               )}
             </AssetBox>
+            <BorderDecoration color="#03DACD" />
           </li>
           <li className="center">
             <LiHead>
@@ -470,6 +474,7 @@ export default function Index() {
                 </span>
               )}
             </AssetBox>
+            <BorderDecoration color="#4378FF" />
           </li>
         </FirstLine>
 
@@ -707,4 +712,15 @@ const DetailButton = styled.button`
   .svg-fill {
     fill: var(--bs-body-color) !important;
   }
+`;
+
+const BorderDecoration = styled.div<{ color: string }>`
+  width: 8px;
+  height: calc(100% - 48px);
+  box-sizing: border-box;
+  background-color: ${(props) => props.color};
+  position: absolute;
+  top: 24px;
+  left: 0%;
+  border-radius: 0 100px 100px 0;
 `;
