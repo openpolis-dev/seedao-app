@@ -61,7 +61,7 @@ export default function Profile() {
   const [wallet, setWallet] = useState();
   const [detail, setDetail] = useState<any>();
 
-  useEffect(() => {
+  const getDetail = () => {
     if (userData) {
       let detail = (userData as any).data;
       setDetail(detail);
@@ -78,6 +78,16 @@ export default function Profile() {
       setSbt(sbtFor);
       setSeed(detail.seed);
     }
+  };
+
+  useEffect(() => {
+    if (!userData) return;
+    getDetail();
+  }, []);
+
+  useEffect(() => {
+    if (!userData) return;
+    getDetail();
   }, [userData]);
 
   const switchRoles = (role: string) => {

@@ -187,11 +187,14 @@ export default function Profile() {
       await requests.user.updateUser(data);
       dispatch({ type: AppActionType.SET_USER_DATA, payload: { ...userData, ...data } });
       showToast(t('My.ModifiedSuccess'), ToastType.Success);
-      navigate('/user/profile');
+      setTimeout(() => {
+        navigate('/user/profile');
+        dispatch({ type: AppActionType.SET_LOADING, payload: false });
+        window.location.reload();
+      }, 1000);
     } catch (error) {
       console.error('updateUser failed', error);
       showToast(t('My.ModifiedFailed'), ToastType.Danger);
-    } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }
   };
