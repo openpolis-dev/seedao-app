@@ -72,7 +72,8 @@ const AppCardStyle = styled.div`
   display: flex;
   align-items: center;
   background-color: var(--bs-box--background);
-  border: 1px solid var(--bs-border-color);
+  border: 1px solid var(--border-box);
+  box-shadow: var(--box-shadow);
   margin-bottom: 20px;
   min-height: 116px;
 

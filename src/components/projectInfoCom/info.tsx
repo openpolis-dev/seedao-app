@@ -44,7 +44,9 @@ export default function Info({ detail, onUpdate, handleEdit }: Iprops) {
         </TopBox>
         <LastLine>
           <LftBox>
-            <Members detail={detail} updateProject={onUpdate} />
+            <InnerLft>
+              <Members detail={detail} updateProject={onUpdate} />
+            </InnerLft>
           </LftBox>
 
           <ContentBox>
@@ -84,9 +86,13 @@ const LastLine = styled.div`
 `;
 
 const LftBox = styled.div`
-  background: var(--bs-box--background);
   width: 246px;
+`;
+
+const InnerLft = styled.div`
+  background: var(--bs-box--background);
   border-radius: 16px;
+  width: 246px;
   box-sizing: border-box;
   padding: 24px;
 `;

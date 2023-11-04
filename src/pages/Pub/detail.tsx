@@ -130,6 +130,7 @@ const FlexBox = styled.div`
   //border: 1px solid var(--bs-border-color);
   background: var(--bs-box--background);
   box-shadow: var(--box-shadow);
+  border: 1px solid var(--border-box);
   border-radius: 16px;
   padding: 24px;
 `;

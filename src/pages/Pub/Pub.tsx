@@ -51,6 +51,8 @@ const UlBox = styled.div`
 
 const InnerBox = styled.ul`
   background: var(--bs-box-background);
+  box-shadow: var(--box-shadow);
+
   border-radius: 16px;
   box-sizing: border-box;
   height: 100%;

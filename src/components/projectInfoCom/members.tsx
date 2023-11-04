@@ -294,6 +294,6 @@ const TopBox = styled.div`
 `;
 
 const BlockTitle = styled.div`
-  margin: 20px 0 20px;
   font-weight: 600;
+  color: var(--bs-body-color_active);
 `;
