@@ -401,7 +401,8 @@
     "RemoveTitle": "移除成员",
     "AddTitle": "添加成员",
     "RemoveConfirm": "确定要移除以下成员？",
-    "AddressName": "SNS/地址"
+    "AddressName": "SNS/地址",
+    "NotRegister": "未登记"
   },
   "apps": {
     "DeschoolDesc": "DeSchool is building education infrastructure in Web3.",

@@ -100,7 +100,6 @@ const UserCardBox = styled(Col)`
     border: 1px solid var(--bs-border-color);
     padding: 14px;
     border-radius: 8px;
-    overflow: hidden;
     box-sizing: border-box;
     height: 100%;
     .svg-stroke {
