@@ -11,7 +11,7 @@ import { useAuthContext } from '../providers/authProvider';
 import CopyIconSVG from 'components/svgs/copy';
 import MultiClamp from 'react-multi-clamp';
 import { useTranslation } from 'react-i18next';
-import SocailIconBox from 'components/common/socialIcon';
+import SocialIconBox from 'components/common/socialIcon';
 
 interface IUserProps {
   user: IUser;
@@ -69,7 +69,7 @@ export default function UserCard({ user, showEdit, onSelectUser, formatActive, s
             {user.bio || t('My.DefaultBio')}
           </MultiClamp>
         </BioBox>
-        <SocailIconBox user={user} />
+        <SocialIconBox user={user} />
       </div>
     </UserCardBox>
   );

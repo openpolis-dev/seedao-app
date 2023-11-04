@@ -57,7 +57,7 @@ export function SocialIcon({ type, value }: IProps) {
   }
 }
 
-export default function SocailIconBox({ user }: { user: IUser }) {
+export default function SocialIconBox({ user }: { user: IUser }) {
   return (
     <LinkBox>
       <SocialIcon type={SocaialType.Twitter} value={user.twitter_profile} />
