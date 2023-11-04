@@ -116,7 +116,7 @@ export default function Del(props: Iprops) {
         {Toast}
         <CardHeader>{t('Guild.RemoveMember')}</CardHeader>
         <CardBody>
-          {!!selectAdminArr.length && <div className="title">{t('Guild.Dominator')}</div>}
+          {!!selectAdminArr.length && <div className="title">{t('Guild.Moderator')}</div>}
           {selectAdminArr.map((item, index) => (
             <ItemBox key={index}>
               <div>

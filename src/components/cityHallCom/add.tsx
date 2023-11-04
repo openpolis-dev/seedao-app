@@ -125,7 +125,7 @@ export default function Add(props: Iprops) {
                 <LeftInputBox>
                   <Form.Control
                     type="text"
-                    // placeholder={t('Project.Dominator')}
+                    // placeholder={t('Project.Moderator')}
                     value={item}
                     onChange={(e) => handleInput(e, index)}
                   />

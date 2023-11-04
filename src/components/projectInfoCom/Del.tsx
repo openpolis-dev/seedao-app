@@ -116,7 +116,7 @@ export default function Del(props: Iprops) {
         {Toast}
         <CardHeader>{t('Project.RemoveMember')}</CardHeader>
         <CardBody>
-          {!!selectAdminArr.length && <div className="title">{t('Project.Dominator')}</div>}
+          {!!selectAdminArr.length && <div className="title">{t('Project.Moderator')}</div>}
           {selectAdminArr.map((item, index) => (
             <ItemBox key={index}>
               <div>

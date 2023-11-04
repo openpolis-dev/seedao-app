@@ -306,14 +306,14 @@ export default function CreateProject() {
               </div>
             </li>
             <li>
-              <div className="title">{t('Project.Dominator')}</div>
+              <div className="title">{t('Project.Moderator')}</div>
               <div>
                 {adminList.map((item, index) => (
                   <ItemBox key={`mem_${index}`}>
                     <MemberInputBox>
                       <Form.Control
                         type="text"
-                        placeholder={t('Project.Dominator')}
+                        placeholder={t('Project.Moderator')}
                         value={item}
                         onChange={(e) => handleInput(e, index, 'admin')}
                       />

@@ -300,14 +300,14 @@ export default function CreateGuild() {
               </div>
             </li>
             <li>
-              <div className="title">{t('Guild.Dominator')}</div>
+              <div className="title">{t('Guild.Moderator')}</div>
               <div>
                 {adminList.map((item, index) => (
                   <ItemBox key={`mem_${index}`}>
                     <MemberInputBox>
                       <Form.Control
                         type="text"
-                        placeholder={t('Guild.Dominator')}
+                        placeholder={t('Guild.Moderator')}
                         value={item}
                         onChange={(e) => handleInput(e, index, 'admin')}
                       />

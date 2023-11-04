@@ -198,7 +198,7 @@ export default function Add(props: Iprops) {
 
   const roleOptions = useMemo(() => {
     return [
-      { label: t('Project.Dominator'), value: false },
+      { label: t('Project.Moderator'), value: false },
       { label: t('Project.Members'), value: true },
     ];
   }, [t]);

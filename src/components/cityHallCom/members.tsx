@@ -129,7 +129,7 @@ export default function Members() {
       {showDel && <Del closeRemove={closeRemove} selectAdminArr={selectAdminArr} />}
 
       <ItemBox>
-        {/* <TitleBox>{t('Guild.Dominator')}</TitleBox> */}
+        {/* <TitleBox>{t('Guild.Moderator')}</TitleBox> */}
         <Row>
           {adminArr.map((item, index) => (
             <UserCard

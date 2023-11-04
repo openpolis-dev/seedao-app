@@ -224,7 +224,7 @@ export default function Members(props: Iprops) {
               </ImgBox>
               <div>
                 <div className="snsBox">{nameMap[item?.wallet] || PublicJs.AddressToShow(item.wallet || '')}</div>
-                <div className="tagBox">{t('Project.Dominator')}</div>
+                <div className="tagBox">{t('Project.Moderator')}</div>
               </div>
             </InnerBox>
           ))}
