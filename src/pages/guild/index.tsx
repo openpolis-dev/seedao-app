@@ -124,7 +124,7 @@ export default function Index() {
   };
 
   const openDetail = (id: number) => {
-    // navigate(`/guild/info/${id}`);
+    navigate(`/guild/info/${id}`);
   };
 
   return (

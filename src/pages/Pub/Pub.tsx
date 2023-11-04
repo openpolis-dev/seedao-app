@@ -240,7 +240,7 @@ export default function Pub() {
         </FlexBox>
         <Row>
           {list?.map((item: any, index) => (
-            <Col md={3} key={index} onClick={() => ToGo(item.id)}>
+            <Col md={2} key={index} onClick={() => ToGo(item.id)}>
               <InnerBox>
                 <div className="imgBox">
                   <img src={item?.cover?.file?.url || item?.cover?.external.url} alt="" />
