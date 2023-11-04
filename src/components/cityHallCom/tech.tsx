@@ -6,8 +6,31 @@ import Links from 'utils/links';
 import AppCard, { EmptyAppCard } from 'components/common/appCard';
 
 const AppBox = styled(Row)`
-  padding-inline: 20px;
-  padding-top: 10px;
+  div[class^='col'] {
+    min-height: 96px;
+    display: flex;
+    margin-bottom: 24px;
+  }
+  .boxApp {
+    align-items: flex-start;
+    padding: 16px;
+  }
+  .iconBox {
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+    .inner {
+      background: var(--home-right);
+      width: 44px;
+      height: 44px;
+      border-radius: 8px;
+    }
+    img {
+      width: 44px;
+      height: 44px;
+      border-radius: 8px;
+    }
+  }
 `;
 
 export default function TechPanel() {
