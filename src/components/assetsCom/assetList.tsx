@@ -235,7 +235,6 @@ export default function AssetList() {
   }, [list, selectMap]);
 
   const formatSNS = (name: string) => {
-    console.log('name', name);
     return name?.startsWith('0x') ? publicJs.AddressToShow(name, 6) : name;
   };
 

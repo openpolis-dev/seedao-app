@@ -26,7 +26,9 @@
   --line-home:#E9EBED;
   --box-shadow:2px 4px 4px 0px rgba(211,206,221,0.1);
   --border-box:none;
-  // NOTE： 以下为个别组件的配色，如有其他组件也有同样需求再看是否合并变更名字
+  --table-header: #F5F5F5;
+  --table-border: rgba(217, 217, 217, 0.5);;
+  --bs-table-bg: transparent;
   --bs-d-button-bg: #F9F9F9;
   --bs-d-button-border: rgba(217, 217, 217, 0.5);
 
@@ -55,7 +57,9 @@
   --line-home:#0D0C0F;
   --box-shadow: none;
   --border-box:#29282F;
-  // NOTE： 以下为个别组件的配色，如有其他组件也有同样需求再看是否合并变更名字
+  --table-header: #161518;
+  --table-border: #29282F;
+  --bs-table-bg: transparent;
   --bs-d-button-bg: #1A1323;
   --bs-d-button-border: #29282F;
 }
