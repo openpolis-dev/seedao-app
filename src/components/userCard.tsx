@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { IUser } from 'type/user.type';
 // import Image from 'next/image';
 import CopyBox from 'components/copy';
@@ -25,13 +25,17 @@ export default function UserCard({ user, showEdit, onSelectUser, formatActive, s
   // const { account } = useWeb3React();
 
   const {
-    state: { account },
+    state: { account, theme },
   } = useAuthContext();
 
   const { t } = useTranslation();
 
+  const borderStyle = useMemo(() => {
+    return theme ? '1px solid #29282F' : 'unset';
+  }, [theme]);
+
   return (
-    <UserCardBox sm={12} md={6} lg={4} xl={3}>
+    <UserCardBox sm={12} md={6} lg={4} xl={3} border={borderStyle}>
       <div className="boxAll">
         <div className="fst">
           <img className="avatar" src={user.avatar || DefaultAvatar} alt="" />
@@ -75,15 +79,19 @@ export default function UserCard({ user, showEdit, onSelectUser, formatActive, s
   );
 }
 
-const UserCardBox = styled(Col)`
+const UserCardBox = styled(Col)<{ border: string }>`
   margin-bottom: 24px;
   .boxAll {
-    background-color: var(--bs-background);
-    border: 1px solid var(--bs-border-color);
+    background: var(--bs-box--background);
+    border: ${(props) => props.border};
     padding: 14px;
     border-radius: 8px;
     box-sizing: border-box;
+    box-shadow: var(--box-shadow);
     height: 100%;
+    &:hover {
+      background: var(--bs-menu-hover);
+    }
     .svg-stroke {
       stroke: var(--bs-body-color_active) !important;
     }
