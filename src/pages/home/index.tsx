@@ -48,6 +48,16 @@ const BannerBox = styled.div`
 
 const ActiveBox = styled.div`
   margin: 0 40px 0 0;
+
+  div[class^='col'] {
+    min-height: 116px;
+    display: flex;
+    margin-bottom: 24px;
+  }
+  .boxApp {
+    border: 1px solid var(--bs-border-color);
+    box-shadow: none;
+  }
 `;
 
 const TitBox = styled.div`

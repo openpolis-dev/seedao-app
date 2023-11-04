@@ -8,6 +8,7 @@ import Links from 'utils/links';
 
 import AppCard, { EmptyAppCard } from 'components/common/appCard';
 import Tabbar from 'components/common/tabbar';
+import { useAuthContext } from '../providers/authProvider';
 
 const OuterBox = styled.div`
   min-height: 100%;
@@ -30,10 +31,40 @@ const TitBox = styled.div`
 
 const AppBox = styled(Row)`
   padding: 20px 0;
+
+  div[class^='col'] {
+    min-height: 96px;
+    display: flex;
+    margin-bottom: 24px;
+  }
+  .boxApp {
+    align-items: flex-start;
+    padding: 16px;
+  }
+  .iconBox {
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+    .inner {
+      background: var(--home-right);
+      width: 44px;
+      height: 44px;
+      border-radius: 8px;
+    }
+    img {
+      width: 44px;
+      height: 44px;
+      border-radius: 8px;
+    }
+  }
 `;
 
 export default function Resources() {
   const { t } = useTranslation();
+
+  const {
+    state: { theme },
+  } = useAuthContext();
 
   const resources = useMemo(() => {
     // @ts-ignore
@@ -56,7 +87,7 @@ export default function Resources() {
           </Col>
         ))}
         <Col sm={12} md={6} lg={4} xl={3}>
-          <EmptyAppCard />
+          <EmptyAppCard theme={theme} />
         </Col>
       </AppBox>
     </OuterBox>

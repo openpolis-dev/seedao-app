@@ -4,14 +4,41 @@ import { Row, Col } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import Links from 'utils/links';
 import AppCard, { EmptyAppCard } from 'components/common/appCard';
+import { useAuthContext } from '../../providers/authProvider';
 
 const AppBox = styled(Row)`
-  padding-inline: 20px;
-  padding-top: 10px;
+  div[class^='col'] {
+    min-height: 96px;
+    display: flex;
+    margin-bottom: 24px;
+  }
+  .boxApp {
+    align-items: flex-start;
+    padding: 16px;
+  }
+  .iconBox {
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+    .inner {
+      background: var(--home-right);
+      width: 44px;
+      height: 44px;
+      border-radius: 8px;
+    }
+    img {
+      width: 44px;
+      height: 44px;
+      border-radius: 8px;
+    }
+  }
 `;
 
 export default function GovernancePanel() {
   const { t } = useTranslation();
+  const {
+    state: { theme },
+  } = useAuthContext();
 
   const lst = useMemo(() => {
     console.log(Links.governance);
@@ -28,7 +55,7 @@ export default function GovernancePanel() {
           </Col>
         ))}
         <Col sm={12} md={6} lg={4} xl={3}>
-          <EmptyAppCard />
+          <EmptyAppCard theme={theme} />
         </Col>
       </AppBox>
     </div>

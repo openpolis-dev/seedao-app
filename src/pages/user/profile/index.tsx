@@ -204,7 +204,7 @@ export default function Profile() {
         <TitleBox>{t('My.MyProfile')}</TitleBox>
         <HeadBox>
           <AvatarBox>
-            <ImgBox onClick={() => removeUrl()}>
+            <ImgBox>
               <img src={avatar ? avatar : defaultImg} alt="" />
             </ImgBox>
           </AvatarBox>

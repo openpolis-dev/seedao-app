@@ -35,7 +35,7 @@ const AppCard = ({
     }
   };
   return (
-    <AppCardStyle className="boxBg" onClick={handleClickEvent}>
+    <AppCardStyle className="boxApp" onClick={handleClickEvent}>
       <div className="iconBox">
         <img src={icon ? icon : theme ? DefaultImg : DefaultImgLight} alt="" />
         <div className="inner" />
@@ -74,8 +74,8 @@ const AppCardStyle = styled.div`
   background-color: var(--bs-box--background);
   border: 1px solid var(--border-box);
   box-shadow: var(--box-shadow);
-  margin-bottom: 20px;
-  min-height: 116px;
+  width: 100%;
+  height: 100%;
 
   &:hover {
     background-color: var(--home-right_hover);

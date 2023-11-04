@@ -396,9 +396,10 @@ const RhtLi = styled.div`
 `;
 
 const UploadBox = styled.label`
-  background: var(--home-right);
-  height: 100px;
-  width: 100px;
+  background: var(--bs-box--background);
+  box-shadow: var(--box-shadow);
+  height: 80px;
+  width: 80px;
   border-radius: 50%;
   display: flex;
   align-items: center;
