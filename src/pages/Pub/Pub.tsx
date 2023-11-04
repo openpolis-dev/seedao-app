@@ -15,11 +15,40 @@ const PageStyle = styled.div`
   ${ContainerPadding};
 `;
 
-const Box = styled.div`
-  .col-md-3 {
+const Box = styled.div``;
+
+const UlBox = styled.div`
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin-right: -20px;
+  .libox {
+    width: 16.6666667%;
+    padding-right: 20px;
     margin-bottom: 24px;
+    flex-shrink: 0;
+    &:last-child {
+      margin-right: auto;
+    }
+  }
+  @media (max-width: 1700px) {
+    .libox {
+      width: 20%;
+    }
+  }
+  @media (max-width: 1500px) {
+    .libox {
+      width: 25%;
+    }
+  }
+  @media (max-width: 1200px) {
+    .libox {
+      width: 33.333333%;
+    }
   }
 `;
+
 const InnerBox = styled.ul`
   background: var(--bs-box-background);
   border-radius: 16px;
@@ -139,7 +168,7 @@ export default function Pub() {
   const { t } = useTranslation();
 
   const [pageCur, setPageCur] = useState(1);
-  const [pageSize, setPageSize] = useState(12);
+  const [pageSize, setPageSize] = useState(30);
   const [total, setTotal] = useState(1);
 
   useEffect(() => {
@@ -238,9 +267,9 @@ export default function Pub() {
           </BackBox>
           <Button onClick={() => window.open('https://tally.so/r/mDKbqb', '_target')}>{t('general.apply')}</Button>
         </FlexBox>
-        <Row>
+        <UlBox>
           {list?.map((item: any, index) => (
-            <Col md={2} key={index} onClick={() => ToGo(item.id)}>
+            <li className="libox" key={index} onClick={() => ToGo(item.id)}>
               <InnerBox>
                 <div className="imgBox">
                   <img src={item?.cover?.file?.url || item?.cover?.external.url} alt="" />
@@ -267,9 +296,9 @@ export default function Pub() {
                   <li className="line2">{item.properties['贡献报酬']?.rich_text[0]?.plain_text}</li>
                 </ul>
               </InnerBox>
-            </Col>
+            </li>
           ))}
-        </Row>
+        </UlBox>
         {total > pageSize && (
           <div>
             <Page itemsPerPage={pageSize} total={total} current={pageCur - 1} handleToPage={handlePage} />

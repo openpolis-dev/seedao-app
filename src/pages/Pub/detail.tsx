@@ -11,12 +11,16 @@ import axios from 'axios';
 
 const PageStyle = styled.div`
   ${ContainerPadding};
+  min-height: 100%;
 `;
 
 const Box = styled.div`
   width: 900px;
   color: var(--bs-body-color_active);
   position: relative;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
 `;
 
 const Title = styled.div`
@@ -105,7 +109,7 @@ const BackBox = styled.div`
 
 const ImgBox = styled.div`
   width: 100%;
-  margin-bottom: 36px;
+  margin-bottom: 14px;
   img {
     width: 100%;
     height: 200px;
@@ -117,8 +121,21 @@ const ImgBox = styled.div`
 
 const TopRht = styled.div`
   position: absolute;
-  right: 0;
+  right: 24px;
   font-size: 12px;
+`;
+
+const FlexBox = styled.div`
+  flex-grow: 1;
+  //border: 1px solid var(--bs-border-color);
+  background: var(--bs-box--background);
+  box-shadow: var(--box-shadow);
+  border-radius: 16px;
+  padding: 24px;
+`;
+
+const PreBox = styled.div`
+  white-space: pre-wrap;
 `;
 
 export default function PubDetail() {
@@ -258,59 +275,61 @@ export default function PubDetail() {
         <ImgBox>
           <img src={imgUrl} alt="" />
         </ImgBox>
-        <TopRht>
-          <TagBox className={returnStatus(status)}> {status}</TagBox>
-        </TopRht>
-        <Title>{title}</Title>
-        <ContentBox>
-          <Row>
-            <Col md={2}>悬赏类型</Col>
-            <Col md={10}>
-              {tag.map((item: any, index) => (
-                <TypeBox key={index} className={returnColor(item.name)}>
-                  {item.name}
-                </TypeBox>
-              ))}
-            </Col>
-          </Row>
-          <Row>
-            <Col md={2}>任务说明</Col>
-            <Col md={10}>
-              <pre>{desc}</pre>
-            </Col>
-          </Row>
-          <Row>
-            <Col md={2}>贡献报酬</Col>
-            <Col md={10}>{reward}</Col>
-          </Row>
-          <Row>
-            <Col md={2}>技能要求</Col>
-            <Col md={10}>
-              <pre>{jd}</pre>
-            </Col>
-          </Row>
-          <Row>
-            <Col md={2}>招募截止时间</Col>
-            <Col md={10}>{time}</Col>
-          </Row>
-          {/*  /!*<Row>*!/*/}
-          {/*  /!*  <Col md={2}>👫 对接人</Col>*!/*/}
-          {/*  /!*  <Col md={10}>*!/*/}
-          {/*  /!*    <LinkBox>*!/*/}
-          {/*  /!*      {contact.map((item: any, index) => (*!/*/}
-          {/*  /!*        <a*!/*/}
-          {/*  /!*          href={`https://www.notion.so/${item.id}`}*!/*/}
-          {/*  /!*          target="_blank"*!/*/}
-          {/*  /!*          rel="noreferrer"*!/*/}
-          {/*  /!*          key={`contact_${index}`}*!/*/}
-          {/*  /!*        >*!/*/}
-          {/*  /!*          {item.name}*!/*/}
-          {/*  /!*        </a>*!/*/}
-          {/*  /!*      ))}*!/*/}
-          {/*  /!*    </LinkBox>*!/*/}
-          {/*  /!*  </Col>*!/*/}
-          {/*  /!*</Row>*!/*/}
-        </ContentBox>
+        <FlexBox>
+          <TopRht>
+            <TagBox className={returnStatus(status)}> {status}</TagBox>
+          </TopRht>
+          <Title>{title}</Title>
+          <ContentBox>
+            <Row>
+              <Col md={2}>悬赏类型</Col>
+              <Col md={10}>
+                {tag.map((item: any, index) => (
+                  <TypeBox key={index} className={returnColor(item.name)}>
+                    {item.name}
+                  </TypeBox>
+                ))}
+              </Col>
+            </Row>
+            <Row>
+              <Col md={2}>任务说明</Col>
+              <Col md={10}>
+                <PreBox>{desc}</PreBox>
+              </Col>
+            </Row>
+            <Row>
+              <Col md={2}>贡献报酬</Col>
+              <Col md={10}>{reward}</Col>
+            </Row>
+            <Row>
+              <Col md={2}>技能要求</Col>
+              <Col md={10}>
+                <PreBox>{jd}</PreBox>
+              </Col>
+            </Row>
+            <Row>
+              <Col md={2}>招募截止时间</Col>
+              <Col md={10}>{time}</Col>
+            </Row>
+            {/*<Row>*/}
+            {/*  <Col md={2}>👫 对接人</Col>*/}
+            {/*  <Col md={10}>*/}
+            {/*    <LinkBox>*/}
+            {/*      {contact.map((item: any, index) => (*/}
+            {/*        <a*/}
+            {/*          href={`https://www.notion.so/${item.id}`}*/}
+            {/*          target="_blank"*/}
+            {/*          rel="noreferrer"*/}
+            {/*          key={`contact_${index}`}*/}
+            {/*        >*/}
+            {/*          {item.name}*/}
+            {/*        </a>*/}
+            {/*      ))}*/}
+            {/*    </LinkBox>*/}
+            {/*  </Col>*/}
+            {/*</Row>*/}
+          </ContentBox>
+        </FlexBox>
       </Box>
     </PageStyle>
   );
