@@ -16,6 +16,7 @@ import { useParams } from 'react-router-dom';
 import { useParseSNSList } from 'hooks/useParseSNS';
 import DefaultAvatar from '../../assets/Imgs/defaultAvatar.png';
 import PublicJs from '../../utils/publicJs';
+import InviteImg from '../../assets/Imgs/person-plus.svg';
 
 interface Iprops {
   detail: ReTurnProject | undefined;
@@ -186,6 +187,10 @@ export default function Members(props: Iprops) {
       {/*)}*/}
       <TopBox>
         <BlockTitle>{t('Project.Members')}</BlockTitle>
+        <AdeBox>
+          <img src={InviteImg} alt="" />
+          {t('Project.invite')}
+        </AdeBox>
 
         {/*{(canUpdateMember || canUpdateSponsor) && (*/}
         {/*  <div>*/}
@@ -279,6 +284,17 @@ const Box = styled.div``;
 const ItemBox = styled.div`
   display: flex;
   flex-direction: column;
+`;
+
+const AdeBox = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  border-radius: 8px;
+  border: 1px solid var(--bs-border-color);
+  padding: 0 8px;
+  cursor: pointer;
 `;
 const TitleBox = styled.div`
   margin-bottom: 30px;

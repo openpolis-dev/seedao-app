@@ -77,6 +77,7 @@
     "ProjectInformation": "Project Information",
     "ProjectProposal": "Project Proposal",
     "Add": "Add",
+    "invite": "invite",
     "Asset": "Asset",
     "CloseProject": "Close Project",
     "HasBeenUsedAndRemains": "{{used}} has been used and {{remain}} remains",

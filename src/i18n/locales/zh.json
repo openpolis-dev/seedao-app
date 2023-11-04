@@ -77,6 +77,7 @@
     "ProjectInformation": "项目信息",
     "ProjectProposal": "项目提案",
     "Add": "登记",
+    "invite": "邀请",
     "Asset": "资产",
     "CloseProject": "关闭项目",
     "HasBeenUsedAndRemains": "已使用{{used}}，剩余{{remain}}",
