@@ -338,7 +338,7 @@ export default function AssetList() {
                         onChange={(e) => onChangeCheckbox(e.target.checked, item.application_id, item.status)}
                       />
                     </td> */}
-                    <td style={{ width: '140px' }}>{formatSNS(item.receiver_name || '')}</td>
+                    <td>{item.receiver_name || ''}</td>
                     <td className="center" style={{ width: '200px' }}>
                       {item.asset_display}
                     </td>
