@@ -345,7 +345,9 @@ export default function AssetList() {
                     <td className="center" style={{ width: '200px' }}>
                       {item.season_name}
                     </td>
-                    <td>{item.detailed_type}</td>
+                    <td>
+                      <BudgetContent>{item.detailed_type}</BudgetContent>
+                    </td>
                     <td className="center" style={{ width: '200px' }}>
                       {item.budget_source}
                     </td>
@@ -374,3 +376,11 @@ export default function AssetList() {
     </Box>
   );
 }
+
+const BudgetContent = styled.div`
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+`;
