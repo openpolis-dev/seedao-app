@@ -15,6 +15,9 @@ import usePermission from 'hooks/usePermission';
 import UserCard from 'components/userCard';
 import { useParams } from 'react-router-dom';
 import { useParseSNSList } from 'hooks/useParseSNS';
+import InviteImg from '../../assets/Imgs/person-plus.svg';
+import DefaultAvatar from '../../assets/Imgs/defaultAvatar.png';
+import PublicJs from '../../utils/publicJs';
 
 interface Iprops {
   detail: ReTurnProject | undefined;
@@ -42,6 +45,9 @@ export default function Members(props: Iprops) {
   const [selectMemArr, setSelectMemArr] = useState<IUser[]>([]);
   const [memberArr, setMemberArr] = useState<string[]>([]);
   const [adminArr, setAdminArr] = useState<string[]>([]);
+
+  const [memberList, setMemberList] = useState<any[]>([]);
+  const [adminList, setAdminList] = useState<any[]>([]);
 
   const [userMap, setUserMap] = useState<UserMap>({});
 
@@ -75,10 +81,23 @@ export default function Members(props: Iprops) {
   const getDetail = async () => {
     const members = detail?.members || [];
     const sponsors = detail?.sponsors || [];
-    setMemberArr(members.map((m) => m.toLowerCase()));
-    setAdminArr(sponsors.map((m) => m.toLowerCase()));
+    let mArr = members.map((m) => m.toLowerCase());
+    setMemberArr(mArr);
+
+    let sArr = sponsors.map((m) => m.toLowerCase());
+
+    setAdminArr(sArr);
+
     getUsersInfo(Array.from(new Set([...members, ...sponsors])));
   };
+
+  useEffect(() => {
+    let Mlist = memberArr.map((item: string) => getUser(item));
+    setMemberList([...Mlist]);
+
+    let sList = adminArr.map((item: string) => getUser(item));
+    setAdminList([...sList]);
+  }, [memberArr, adminArr, userMap]);
 
   const handleDel = () => {
     setEdit(true);
@@ -155,87 +174,126 @@ export default function Members(props: Iprops) {
 
   return (
     <Box>
-      {show && <Add closeAdd={closeAdd} id={id as string} />}
-      {showDel && (
-        <Del
-          id={id as string}
-          nameMap={nameMap}
-          closeRemove={closeRemove}
-          selectAdminArr={selectAdminArr}
-          selectMemArr={selectMemArr}
-        />
-      )}
+      {/*{show && <Add closeAdd={closeAdd} id={id as string} />}*/}
+      {/*{showDel && (*/}
+      {/*  <Del*/}
+      {/*    id={id as string}*/}
+      {/*    nameMap={nameMap}*/}
+      {/*    closeRemove={closeRemove}*/}
+      {/*    selectAdminArr={selectAdminArr}*/}
+      {/*    selectMemArr={selectMemArr}*/}
+      {/*  />*/}
+      {/*)}*/}
       <TopBox>
         <BlockTitle>{t('Guild.Members')}</BlockTitle>
-
-        {(canUpdateMember || canUpdateSponsor) && (
-          <div>
-            <Button onClick={() => handleAdd()} disabled={edit}>
-              {t('Guild.AddMember')}
-            </Button>
-            {!edit && (
-              <Button variant="outline-primary" onClick={() => handleDel()}>
-                {t('Guild.RemoveMember')}
-              </Button>
-            )}
-            {edit && (
-              <>
-                <Button onClick={() => closeDel()} disabled={removeButtonDisabled}>
-                  {t('general.confirm')}
-                </Button>
-                <Button variant="outline-primary" onClick={() => closeRemove()}>
-                  {t('general.cancel')}
-                </Button>
-              </>
-            )}
-          </div>
-        )}
+        <AdeBox>
+          <img src={InviteImg} alt="" />
+          {t('Project.invite')}
+        </AdeBox>
+        {/*{(canUpdateMember || canUpdateSponsor) && (*/}
+        {/*  <div>*/}
+        {/*    <Button onClick={() => handleAdd()} disabled={edit}>*/}
+        {/*      {t('Guild.AddMember')}*/}
+        {/*    </Button>*/}
+        {/*    {!edit && (*/}
+        {/*      <Button variant="outline-primary" onClick={() => handleDel()}>*/}
+        {/*        {t('Guild.RemoveMember')}*/}
+        {/*      </Button>*/}
+        {/*    )}*/}
+        {/*    {edit && (*/}
+        {/*      <>*/}
+        {/*        <Button onClick={() => closeDel()} disabled={removeButtonDisabled}>*/}
+        {/*          {t('general.confirm')}*/}
+        {/*        </Button>*/}
+        {/*        <Button variant="outline-primary" onClick={() => closeRemove()}>*/}
+        {/*          {t('general.cancel')}*/}
+        {/*        </Button>*/}
+        {/*      </>*/}
+        {/*    )}*/}
+        {/*  </div>*/}
+        {/*)}*/}
       </TopBox>
 
       <ItemBox>
-        <TitleBox>{t('Guild.Dominator')}</TitleBox>
-        <Row>
-          {adminArr.map((item, index) => (
-            <UserCard
-              key={index}
-              user={getUser(item)}
-              onSelectUser={handleAdminSelect}
-              formatActive={formatAdminActive}
-              showEdit={edit && canUpdateSponsor}
-              sns={nameMap[getUser(item)?.wallet || '']}
-            />
+        <div>
+          {adminList.map((item, index) => (
+            <InnerBox key={`admin_${index}`}>
+              <ImgBox>
+                <img className="avatar" src={item.avatar || DefaultAvatar} alt="" />
+              </ImgBox>
+              <div>
+                <div className="snsBox">{nameMap[item?.wallet] || PublicJs.AddressToShow(item.wallet || '')}</div>
+                <div className="tagBox">{t('Project.Dominator')}</div>
+              </div>
+            </InnerBox>
           ))}
-        </Row>
-      </ItemBox>
-      {!adminArr.length && <NoItem />}
+        </div>
 
-      <ItemBox>
-        <TitleBox>{t('Guild.Others')}</TitleBox>
-        <Row>
-          {memberArr.map((item, index) => (
-            <UserCard
-              key={index}
-              user={getUser(item)}
-              onSelectUser={handleMemSelect}
-              formatActive={formatMemActive}
-              showEdit={edit && canUpdateMember}
-              sns={nameMap[getUser(item)?.wallet || '']}
-            />
+        <div>
+          {memberList.map((item, index) => (
+            <InnerBox key={`user_${index}`}>
+              <ImgBox>
+                <img className="avatar" src={item.avatar || DefaultAvatar} alt="" />
+              </ImgBox>
+              <div>
+                <div className="snsBox">{nameMap[item?.wallet] || PublicJs.AddressToShow(item.wallet || '')}</div>
+              </div>
+            </InnerBox>
           ))}
-        </Row>
+        </div>
       </ItemBox>
-      {!memberArr.length && <NoItem />}
     </Box>
   );
 }
 
-const Box = styled.div`
-  padding: 20px;
+const InnerBox = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: 26px;
+  .snsBox {
+    color: var(--bs-body-color_active);
+    font-size: 14px;
+    font-family: Poppins-SemiBold;
+    font-weight: 600;
+    line-height: 18px;
+    word-break: break-all;
+  }
+  .tagBox {
+    background: #2dc45e;
+    border-radius: 6px;
+    padding: 0 8px;
+    color: #000;
+    font-size: 12px;
+    margin-top: 8px;
+  }
 `;
+
+const ImgBox = styled.div`
+  margin-right: 12px;
+  img {
+    width: 44px;
+    height: 44px;
+    border-radius: 44px;
+  }
+`;
+
+const Box = styled.div``;
 
 const ItemBox = styled.div`
   display: flex;
   flex-direction: column;
+`;
+
+const AdeBox = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  border-radius: 8px;
+  border: 1px solid var(--bs-border-color);
+  padding: 0 8px;
+  cursor: pointer;
 `;
 const TitleBox = styled.div`
   margin-bottom: 30px;
@@ -251,6 +309,6 @@ const TopBox = styled.div`
 `;
 
 const BlockTitle = styled.div`
-  margin: 20px 0 20px;
   font-weight: 600;
+  color: var(--bs-body-color_active);
 `;

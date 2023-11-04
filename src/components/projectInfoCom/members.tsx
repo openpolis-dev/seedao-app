@@ -57,7 +57,6 @@ export default function Members(props: Iprops) {
 
   useEffect(() => {
     if (!id || !detail) return;
-    console.log(detail);
     getDetail();
   }, [id, detail]);
 

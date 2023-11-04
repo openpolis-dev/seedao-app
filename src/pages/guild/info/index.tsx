@@ -24,10 +24,15 @@ const OuterBox = styled.div`
 
 const Box = styled.div`
   position: relative;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
 `;
 
 const Content = styled.div`
   box-sizing: border-box;
+  flex-grow: 1;
+  display: flex;
 `;
 
 const BackBox = styled.div`
