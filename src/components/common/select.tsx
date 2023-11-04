@@ -53,7 +53,7 @@ const SelectStyle = styled<any>(Select)`
     display: none;
   }
   .react-select__indicator svg path {
-    fill: var(--bs-svg-color);
+    fill: var(--bs-body-color);
   }
   .react-select__control {
     border-radius: 8px;

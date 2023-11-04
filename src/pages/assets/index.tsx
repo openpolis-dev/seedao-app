@@ -62,6 +62,7 @@ const FirstLine = styled.ul<{ border: string }>`
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    box-shadow: var(--box-shadow);
     &:hover {
       background-color: var(--home-right_hover);
     }
@@ -314,7 +315,7 @@ export default function Index() {
   }, []);
 
   const borderStyle = useMemo(() => {
-    return theme ? 'unset' : '1px solid var(--bs-border-color)';
+    return theme ? '1px solid #29282F' : 'unset';
   }, [theme]);
 
   return (
@@ -511,6 +512,7 @@ const VaultOverview = styled.div<{ border: string }>`
   border: ${(props) => props.border};
   border-radius: 16px;
   overflow: hidden;
+  box-shadow: var(--box-shadow);
   .vaultInner {
     display: flex;
     justify-content: space-between;
