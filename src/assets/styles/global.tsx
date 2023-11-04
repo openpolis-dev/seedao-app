@@ -129,8 +129,7 @@ const GlobalStyle = createGlobalStyle`
     td {
       font-size: 14px;
       height: 74px;
-      line-height: 54px;
-      padding-inline: 10px;
+      padding: 10px;
       box-sizing: border-box;
       color: var(--bs-body-color_a);
       background-color: var(--rht-bg);
