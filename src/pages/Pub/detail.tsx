@@ -226,20 +226,16 @@ export default function PubDetail() {
       setReward(detail?.['贡献报酬']?.rich_text[0]?.plain_text);
       setJd(detail?.['技能要求'].rich_text[0].text.content ?? '');
       setTime(detail?.['招募截止时间']?.rich_text[0]?.plain_text ?? '');
-
-      let contactArr = detail?.['对接人']?.rich_text;
-      // const contactList = flattenedArray.filter(
-      //   (item) => item.length > 30 && item !== '5a4585f0-41bf-46b1-8321-4c9d55abc37a',
-      // );
+      let contactArr = detail?.['👫 对接人']?.rich_text;
 
       let arr: any[] = [];
       contactArr.map(async (item: any) => {
         let idStr = item.mention.page.id;
-        console.log(idStr);
         let rt = await getInfo(idStr);
+
         arr.push({
-          name: rt?.data[item]?.value.properties.title[0][0] ?? '',
-          id: item.replace(/-/g, ''),
+          name: rt?.data[idStr]?.value.properties.title[0][0] ?? '',
+          id: idStr.replace(/-/g, ''),
         });
         setContact([...arr]);
       });
@@ -312,23 +308,23 @@ export default function PubDetail() {
               <Col md={2}>招募截止时间</Col>
               <Col md={10}>{time}</Col>
             </Row>
-            {/*<Row>*/}
-            {/*  <Col md={2}>👫 对接人</Col>*/}
-            {/*  <Col md={10}>*/}
-            {/*    <LinkBox>*/}
-            {/*      {contact.map((item: any, index) => (*/}
-            {/*        <a*/}
-            {/*          href={`https://www.notion.so/${item.id}`}*/}
-            {/*          target="_blank"*/}
-            {/*          rel="noreferrer"*/}
-            {/*          key={`contact_${index}`}*/}
-            {/*        >*/}
-            {/*          {item.name}*/}
-            {/*        </a>*/}
-            {/*      ))}*/}
-            {/*    </LinkBox>*/}
-            {/*  </Col>*/}
-            {/*</Row>*/}
+            <Row>
+              <Col md={2}>👫 对接人</Col>
+              <Col md={10}>
+                <LinkBox>
+                  {contact.map((item: any, index) => (
+                    <a
+                      href={`https://www.notion.so/${item.id}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      key={`contact_${index}`}
+                    >
+                      {item.name}
+                    </a>
+                  ))}
+                </LinkBox>
+              </Col>
+            </Row>
           </ContentBox>
         </FlexBox>
       </Box>
