@@ -65,11 +65,11 @@ const GlobalStyle = createGlobalStyle`
     height: 40px;
     border-color: var(--bs-body-color);
     font-weight: bold;
-    color: var(--bs-body-color_active);
+    color: var(--bs-body-color);
     &:hover, &:focus-visible, &:active {
       background-color: transparent !important;
-      color: var(--bs-body-color) !important;
-      border-color: var(--bs-body-color) !important;
+      color: var(--bs-body-color_active) !important;
+      border-color: var(--bs-body-color_active) !important;
     }
   }
   .nav-tabs{

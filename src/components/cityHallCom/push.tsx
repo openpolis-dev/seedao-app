@@ -247,10 +247,17 @@ const PushContentBox = styled.div`
 
 const Box = styled.div`
   display: flex;
-  gap: 40px;
-  justify-content: space-between;
+  gap: 186px;
   height: 100%;
-  @media (max-width: 768px) {
+  @media (max-width: 1240px) {
+    justify-content: space-between;
+    gap: 100px;
+  }
+  @media (max-width: 1000px) {
+    gap: 40px;
+  }
+
+  @media (max-width: 860px) {
     flex-direction: column;
   }
 `;
@@ -300,12 +307,16 @@ const PushItem = styled.div`
   min-height: 178px;
   background: var(--bs-box--background);
   border-radius: 16px;
-  border: 1px solid var(--bs-border-color);
+  border: 1px solid var(--bs-border-color_opacity);
+  box-shadow: var(--box-shadow);
   margin-bottom: 25px;
 `;
 
 const CreateBox = styled.div`
   width: 576px;
+  @media (max-width: 860px) {
+    width: 480px;
+  }
 `;
 
 const LoadingBottom = styled.div`
