@@ -34,7 +34,7 @@ const CardBox = styled.div`
   box-sizing: border-box;
   border-radius: 16px;
   background: var(--bs-box--background);
-  box-shadow: ${(props) => (props.theme === 'true' ? 'none' : '2px 4px 4px 0px rgba(211,206,221,0.1)')};
+  box-shadow: var(--box-shadow) !important;
   padding: 14px;
   &:hover {
     background: var(--home-right_hover);
@@ -86,15 +86,14 @@ interface Iprops {
     members: string[];
     sponsors: string[];
   };
-  theme?: boolean;
   onClickItem: (id: number) => void;
 }
 
-export default function ProjectOrGuildItem({ data, onClickItem, theme }: Iprops) {
+export default function ProjectOrGuildItem({ data, onClickItem }: Iprops) {
   const { t } = useTranslation();
   return (
     <Box>
-      <CardBox theme={JSON.stringify(theme)}>
+      <CardBox>
         <Item onClick={() => onClickItem(data.id)}>
           <ImageBox>
             <img src={data.logo} alt="" />

@@ -140,7 +140,7 @@ export default function Index() {
         <ItemBox>
           <ListBox>
             {proList.map((item) => (
-              <ProjectOrGuildItem key={item.id} data={item} onClickItem={openDetail} theme={theme} />
+              <ProjectOrGuildItem key={item.id} data={item} onClickItem={openDetail} />
             ))}
           </ListBox>
         </ItemBox>
