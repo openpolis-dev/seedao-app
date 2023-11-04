@@ -6,16 +6,12 @@ import DefaultAvatar from 'assets/Imgs/defaultAvatar.png';
 import PublicJs from 'utils/publicJs';
 import styled from 'styled-components';
 // import { useWeb3React } from '@web3-react/core';
-import TwitterIcon from 'assets/Imgs/social/twitter.svg';
-import MirrorImg from 'assets/Imgs/social/mirror.svg';
-import EmailIcon from 'assets/Imgs/social/email.svg';
-import GithubIcon from 'assets/Imgs/social/github.svg';
 import { Col, Form } from 'react-bootstrap';
 import { useAuthContext } from '../providers/authProvider';
 import CopyIconSVG from 'components/svgs/copy';
 import MultiClamp from 'react-multi-clamp';
 import { useTranslation } from 'react-i18next';
-import SocialIcon, { SocaialType } from 'components/common/socialIcon';
+import SocailIconBox from 'components/common/socialIcon';
 
 interface IUserProps {
   user: IUser;
@@ -73,26 +69,12 @@ export default function UserCard({ user, showEdit, onSelectUser, formatActive, s
             {user.bio || t('My.DefaultBio')}
           </MultiClamp>
         </BioBox>
-        <LinkBox>
-          <SocialIcon type={SocaialType.Twitter} value={user.twitter_profile} />
-          <SocialIcon type={SocaialType.Mirror} value={user.mirror} />
-          <SocialIcon type={SocaialType.Email} value={user.email ? `mailto:${user.email}` : ''} />
-          <SocialIcon type={SocaialType.Github} value={user.github} />
-        </LinkBox>
+        <SocailIconBox user={user} />
       </div>
     </UserCardBox>
   );
 }
 
-const LinkBox = styled.div`
-  margin-top: 10px;
-  .copy-content {
-    display: inline-block;
-  }
-  .icon {
-    opacity: 0.4;
-  }
-`;
 const UserCardBox = styled(Col)`
   margin-bottom: 24px;
   .boxAll {
@@ -138,5 +120,6 @@ const BioBox = styled.div`
   color: var(--bs-body-color_active);
   line-height: 18px;
   margin-top: 12px;
+  margin-bottom: 10px;
   height: 38px;
 `;

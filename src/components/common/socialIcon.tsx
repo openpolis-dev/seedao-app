@@ -7,6 +7,7 @@ import GithubIcon from 'assets/Imgs/social/github.svg';
 import { useMemo } from 'react';
 import { useAuthContext } from 'providers/authProvider';
 import { useTranslation } from 'react-i18next';
+import { IUser } from 'type/user.type';
 
 export enum SocaialType {
   Twitter = 1,
@@ -20,7 +21,7 @@ interface IProps {
   value?: string;
 }
 
-export default function SocialIcon({ type, value }: IProps) {
+export function SocialIcon({ type, value }: IProps) {
   const {
     state: { theme },
   } = useAuthContext();
@@ -55,6 +56,19 @@ export default function SocialIcon({ type, value }: IProps) {
     );
   }
 }
+
+export default function SocailIconBox({ user }: { user: IUser }) {
+  return (
+    <LinkBox>
+      <SocialIcon type={SocaialType.Twitter} value={user.twitter_profile} />
+      <SocialIcon type={SocaialType.Mirror} value={user.mirror} />
+      <SocialIcon type={SocaialType.Email} value={user.email ? `mailto:${user.email}` : ''} />
+      <SocialIcon type={SocaialType.Github} value={user.github} />
+    </LinkBox>
+  );
+}
+
+const LinkBox = styled.div``;
 
 const IconHrefBox = styled.a``;
 
