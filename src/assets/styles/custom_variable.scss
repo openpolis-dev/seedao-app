@@ -23,6 +23,9 @@
   --mask-bg:rgba(255,255,255,0.7);
   --rht-bg:#fafafa;
   --line-home:#E9EBED;
+  // NOTE： 以下为个别组件的配色，如有其他组件也有同样需求再看是否合并变更名字
+  --bs-d-button-bg: #F9F9F9;
+  --bs-d-button-border: rgba(217, 217, 217, 0.5);
 }
 
 :root[data-bs-theme="dark"] {
@@ -45,4 +48,7 @@
   --mask-bg:rgba(0,0,0,0.7);
   --rht-bg:#0D0C0F;
   --line-home:#0D0C0F;
+  // NOTE： 以下为个别组件的配色，如有其他组件也有同样需求再看是否合并变更名字
+  --bs-d-button-bg: #1A1323;
+  --bs-d-button-border: #29282F;
 }

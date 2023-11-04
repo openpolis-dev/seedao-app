@@ -28,6 +28,7 @@ import ChainIconDark from 'assets/Imgs/dark/vault/chain.svg';
 import SignerIconDark from 'assets/Imgs/dark/vault/signer.svg';
 import CopyIconSVG from 'components/svgs/copy';
 import ShareIconSVG from 'components/svgs/share';
+import ArrowIconSVG from 'components/svgs/downArrow';
 
 const BoxOuter = styled.div`
   ${ContainerPadding};
@@ -366,10 +367,10 @@ export default function Index() {
                   <Link to="/assets/register">
                     <Button>{t('application.Register')}</Button>
                   </Link>
-                  <Button variant="outline-primary" onClick={() => setShowVaultDetail(!showVaultDetail)}>
+                  <DetailButton onClick={() => setShowVaultDetail(!showVaultDetail)}>
                     <span>{t('Assets.Detail')}</span>
-                    {showVaultDetail ? <ChevronUp /> : <ChevronDown />}
-                  </Button>
+                    <ArrowIconSVG style={{ transform: showVaultDetail ? 'rotate(180deg)' : 'unset' }} />
+                  </DetailButton>
                 </OptionBox>
               </div>
             </div>
@@ -691,8 +692,19 @@ const OptionBox = styled.div`
     &:hover {
       background-color: unset !important;
     }
-    svg {
-      margin-left: 6px;
-    }
+  }
+`;
+
+const DetailButton = styled.button`
+  min-width: 111px;
+  font-size: 14px;
+  height: 36px;
+  background: var(--bs-d-button-bg);
+  border-radius: 8px;
+  opacity: 1;
+  border: 1px solid var(--bs-d-button-border);
+  color: var(--bs-body-color_active);
+  .svg-fill {
+    fill: var(--bs-body-color) !important;
   }
 `;
