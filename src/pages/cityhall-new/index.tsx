@@ -1,11 +1,5 @@
-import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
-import Members from 'components/cityHallCom/members';
-import Proposal from 'components/cityHallCom/proposal';
-import { AppActionType, useAuthContext } from 'providers/authProvider';
-import { getCityHallDetail } from 'requests/cityHall';
-import { ReTurnProject } from 'type/project.type';
 import usePermission from 'hooks/usePermission';
 import { PermissionAction, PermissionObject } from 'utils/constant';
 import PushPanel from 'components/cityHallCom/push';
@@ -13,9 +7,10 @@ import { ContainerPadding } from 'assets/styles/global';
 import GovernancePanel from 'components/cityHallCom/Governance';
 import BrandPanel from 'components/cityHallCom/brand';
 import TechPanel from 'components/cityHallCom/tech';
-import Management from 'components/cityHallCom/projectAudit';
-import Register from 'components/cityHallCom/register';
+import Members from 'components/cityHallCom/members';
 import Tabbar from 'components/common/tabbar';
+import { Route, Routes, useNavigate, Navigate } from 'react-router-dom';
+import { useMemo } from 'react';
 
 const Box = styled.div`
   min-height: 100%;
@@ -36,71 +31,53 @@ const TopBox = styled.div`
 const Content = styled.div`
   padding-block: 41px;
 `;
-export default function Index() {
-  const { t } = useTranslation();
-  const { dispatch } = useAuthContext();
-  const [detail, setDetail] = useState<ReTurnProject | undefined>();
-  const [current, setCurrent] = useState<number>(0);
 
+enum SubPage {
+  Members = 1,
+  Governance,
+  Brand,
+  Tech,
+  Push,
+}
+
+export default function Index() {
+  const navigate = useNavigate();
+  const { t } = useTranslation();
   const canUseCityhall = usePermission(PermissionAction.AuditApplication, PermissionObject.ProjectAndGuild);
 
-  useEffect(() => {
-    getDetail();
-  }, []);
+  const tabs = useMemo(() => {
+    return canUseCityhall
+      ? [
+          { key: SubPage.Members, title: t('city-hall.Members'), path: 'members' },
+          { key: SubPage.Governance, title: t('city-hall.Governance'), path: 'governance' },
+          { key: SubPage.Brand, title: t('city-hall.Brand'), path: 'brand' },
+          { key: SubPage.Tech, title: t('city-hall.Tech'), path: 'tech' },
+          { key: SubPage.Push, title: t('city-hall.Push'), path: 'notification' },
+        ]
+      : [{ key: SubPage.Members, title: t('city-hall.Members'), path: 'members' }];
+  }, [canUseCityhall, t]);
 
-  const getDetail = async () => {
-    dispatch({ type: AppActionType.SET_LOADING, payload: true });
-    const dt = await getCityHallDetail();
-    dispatch({ type: AppActionType.SET_LOADING, payload: null });
-    setDetail(dt.data);
+  const handleChangeSubPage = (v: number | string) => {
+    const t = tabs.find((t) => t.key === v);
+    if (t) {
+      navigate(`/city-hall/${t.path}`);
+    }
   };
 
-  const getFullContent = () => {
-    return (
-      [
-        <Members detail={detail} updateProject={getDetail} />,
-        <GovernancePanel />,
-        <BrandPanel />,
-        <TechPanel />,
-        <PushPanel id={detail?.id} />,
-        <Management />,
-        <Register />,
-      ][current] || <></>
-    );
-  };
-
-  const getShortContent = () => {
-    return [<Members detail={detail} updateProject={getDetail} />][current] || <></>;
-  };
-
-  return canUseCityhall ? (
+  return (
     <Box>
       <TopBox>
-        <Tabbar
-          tabs={[
-            { key: 0, title: t('city-hall.Members') },
-            { key: 1, title: t('city-hall.Governance') },
-            { key: 2, title: t('city-hall.Brand') },
-            { key: 3, title: t('city-hall.Tech') },
-            { key: 4, title: t('city-hall.Push') },
-            { key: 5, title: t('city-hall.management') },
-            { key: 6, title: t('city-hall.Add') },
-          ]}
-          defaultActiveKey={0}
-          onSelect={(v) => setCurrent(v as number)}
-        />
-        <Content>{getFullContent()}</Content>
-      </TopBox>
-    </Box>
-  ) : (
-    <Box>
-      <TopBox>
-        <Tabbar
-          tabs={[{ key: 0, title: t('city-hall.Members') }]}
-          defaultActiveKey={0}
-          onSelect={(v) => setCurrent(v as number)}
-        />
-        <Content>{getShortContent()}</Content>
+        <Tabbar tabs={tabs} defaultActiveKey={SubPage.Members} onSelect={handleChangeSubPage} />
+        <Content>
+          <Routes>
+            <Route path="/" element={<Navigate to="members" />} />
+            <Route path="members" element={<Members />} />
+            <Route path="governance" element={<GovernancePanel />} />
+            <Route path="brand" element={<BrandPanel />} />
+            <Route path="tech" element={<TechPanel />} />
+            <Route path="notification" element={<PushPanel />} />
+          </Routes>
+        </Content>
       </TopBox>
     </Box>
   );

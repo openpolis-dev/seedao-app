@@ -67,7 +67,7 @@ export default function RouterLink() {
           <Route path="/proposal" element={<Proposal />} />
           <Route path="/proposal/category/:id" element={<ProposalCategory />} />
           <Route path="/proposal/thread/:id" element={<ProposalThread />} />
-          <Route path="/city-hall" element={<CityHall />} />
+          <Route path="/city-hall/*" element={<CityHall />} />
           <Route path="/chat" element={<Chat />} />
           <Route path="/feedback" element={<Canny />} />
         </Routes>

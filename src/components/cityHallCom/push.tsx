@@ -227,7 +227,7 @@ const PushHistoryContent = () => {
   );
 };
 
-export default function PushPanel({ id }: { id?: number }) {
+export default function PushPanel() {
   return (
     <Box>
       <CreatePushContent />
