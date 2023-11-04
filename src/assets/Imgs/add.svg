@@ -1,9 +1,1 @@
-<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g id="vuesax/linear/add-square">
-<g id="add-square">
-<path id="Vector" d="M5.33301 8H10.6663" stroke="#0D0C0F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-<path id="Vector_2" d="M8 10.6666V5.33325" stroke="#0D0C0F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-<path id="Vector_3" d="M5.99967 14.6666H9.99967C13.333 14.6666 14.6663 13.3333 14.6663 9.99992V5.99992C14.6663 2.66659 13.333 1.33325 9.99967 1.33325H5.99967C2.66634 1.33325 1.33301 2.66659 1.33301 5.99992V9.99992C1.33301 13.3333 2.66634 14.6666 5.99967 14.6666Z" stroke="#0D0C0F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-</g>
-</g>
-</svg>
+<svg fill="none" height="16" viewBox="0 0 16 16" width="16" xmlns="http://www.w3.org/2000/svg"><g stroke="#0d0c0f" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><path d="m5.33301 8h5.33329"/><path d="m8 10.6666v-5.33335"/><path d="m5.99967 14.6666h4c3.33333 0 4.66663-1.3333 4.66663-4.66668v-4c0-3.33333-1.3333-4.66667-4.66663-4.66667h-4c-3.33333 0-4.66666 1.33334-4.66666 4.66667v4c0 3.33338 1.33333 4.66668 4.66666 4.66668z"/></g></svg>

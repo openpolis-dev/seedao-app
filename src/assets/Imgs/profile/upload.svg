@@ -1,11 +1,1 @@
-<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g id="Pho">
-<g id="gallery-export">
-<path id="Vector" d="M5.99935 6.66667C6.73573 6.66667 7.33268 6.06971 7.33268 5.33333C7.33268 4.59695 6.73573 4 5.99935 4C5.26297 4 4.66602 4.59695 4.66602 5.33333C4.66602 6.06971 5.26297 6.66667 5.99935 6.66667Z" stroke="#B0B0B0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-<path id="Vector_2" d="M8.66732 1.3335H6.00065C2.66732 1.3335 1.33398 2.66683 1.33398 6.00016V10.0002C1.33398 13.3335 2.66732 14.6668 6.00065 14.6668H10.0007C13.334 14.6668 14.6673 13.3335 14.6673 10.0002V6.66683" stroke="#B0B0B0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-<path id="Vector_3" d="M12 5.3335V1.3335L13.3333 2.66683" stroke="#B0B0B0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-<path id="Vector_4" d="M11.9993 1.3335L10.666 2.66683" stroke="#B0B0B0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-<path id="Vector_5" d="M1.7793 12.6335L5.06596 10.4269C5.59263 10.0735 6.35263 10.1135 6.82596 10.5202L7.04596 10.7135C7.56596 11.1602 8.40596 11.1602 8.92596 10.7135L11.6993 8.33354C12.2193 7.88687 13.0593 7.88687 13.5793 8.33354L14.666 9.26687" stroke="#B0B0B0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-</g>
-</g>
-</svg>
+<svg fill="none" height="16" viewBox="0 0 16 16" width="16" xmlns="http://www.w3.org/2000/svg"><g stroke="#b0b0b0" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><path d="m5.99935 6.66667c.73638 0 1.33333-.59696 1.33333-1.33334s-.59695-1.33333-1.33333-1.33333-1.33333.59695-1.33333 1.33333.59695 1.33334 1.33333 1.33334z"/><path d="m8.66732 1.3335h-2.66667c-3.33333 0-4.66667 1.33333-4.66667 4.66666v4.00004c0 3.3333 1.33334 4.6666 4.66667 4.6666h4.00005c3.3333 0 4.6666-1.3333 4.6666-4.6666v-3.33337"/><path d="m12 5.3335v-4l1.3333 1.33333"/><path d="m11.9993 1.3335-1.3333 1.33333"/><path d="m1.7793 12.6335 3.28666-2.2066c.52667-.3534 1.28667-.3134 1.76.0933l.22.1933c.52.4467 1.36.4467 1.88 0l2.77334-2.37996c.52-.44667 1.36-.44667 1.88 0l1.0867.93333"/></g></svg>

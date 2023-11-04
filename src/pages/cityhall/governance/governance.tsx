@@ -20,6 +20,9 @@ const AppBox = styled(Row)`
     width: 44px;
     height: 44px;
     border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     .inner {
       background: var(--home-right);
       width: 44px;
@@ -27,8 +30,8 @@ const AppBox = styled(Row)`
       border-radius: 8px;
     }
     img {
-      width: 44px;
-      height: 44px;
+      width: 24px;
+      height: 24px;
       border-radius: 8px;
     }
   }

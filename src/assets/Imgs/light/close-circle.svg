@@ -1,11 +1,1 @@
-<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g id="close-circle">
-<g id="close-circle_2">
-<g id="close-circle_3">
-<path id="Vector" d="M12 22C17.5 22 22 17.5 22 12C22 6.5 17.5 2 12 2C6.5 2 2 6.5 2 12C2 17.5 6.5 22 12 22Z" stroke="#1A1323" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-<path id="Vector_2" d="M9.16992 14.83L14.8299 9.17004" stroke="#1A1323" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-<path id="Vector_3" d="M14.8299 14.83L9.16992 9.17004" stroke="#1A1323" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-</g>
-</g>
-</g>
-</svg>
+<svg fill="none" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><g stroke="#1a1323" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><path d="m12 22c5.5 0 10-4.5 10-10s-4.5-10-10-10-10 4.5-10 10 4.5 10 10 10z"/><path d="m9.16992 14.83 5.65998-5.65996"/><path d="m14.8299 14.83-5.65998-5.65996"/></g></svg>

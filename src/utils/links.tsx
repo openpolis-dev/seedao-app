@@ -8,62 +8,75 @@ import Wormhole3Icon from '../assets/Imgs/home/Wormhole3.png';
 import SeedIcon from '../assets/images/seed.png';
 import SeeUImg from '../assets/Imgs/home/seeuNetwork.jpg';
 
+import RImg1 from '../assets/Imgs/resources/1.png';
+import RImg2 from '../assets/Imgs/resources/2.png';
+import RImg3 from '../assets/Imgs/resources/3.png';
+import RImg4 from '../assets/Imgs/resources/4.png';
+import RImg5 from '../assets/Imgs/resources/5.png';
+import RImg6 from '../assets/Imgs/resources/6.png';
+import RImg7 from '../assets/Imgs/resources/7.png';
+import RImg8 from '../assets/Imgs/resources/8.png';
+import RImg9 from '../assets/Imgs/resources/9.png';
+import RImg10 from '../assets/Imgs/resources/10.png';
+import RImg11 from '../assets/Imgs/resources/11.png';
+import RImg12 from '../assets/Imgs/resources/12.png';
+
 export default {
   resource: [
     {
       name: 'resources.calendar',
       link: 'https://tally.so/r/mKxkWD',
       id: 'calendar',
-      icon: '',
+      icon: RImg1,
       desc: 'resources.CalendarReviewDesc',
     },
     {
       name: 'resources.community',
       link: 'https://tally.so/r/mBp09R',
       id: 'community',
-      icon: '',
+      icon: RImg2,
       desc: 'resources.communityDesc',
     },
     {
       name: 'resources.Pub',
       link: 'https://tally.so/r/mDKbqb',
       id: 'community',
-      icon: '',
+      icon: RImg3,
       desc: 'resources.PubDesc',
     },
     {
       name: 'resources.Media',
       link: 'https://tally.so/r/wzMRBE',
       id: 'Media',
-      icon: '',
+      icon: RImg4,
       desc: 'resources.MediaDesc',
     },
     {
       name: 'resources.App',
       link: 'https://tally.so/r/3XozzP',
       id: 'Apps',
-      icon: '',
+      icon: RImg5,
       desc: 'resources.AppDesc',
     },
     {
       name: 'resources.Project',
       link: 'https://tally.so/r/w2AWlp',
       id: 'Projects',
-      icon: '',
+      icon: RImg6,
       desc: 'resources.ProjectDesc',
     },
     {
       name: 'resources.Guild',
       link: 'https://tally.so/r/3NXjRW',
       id: 'Guilds',
-      icon: '',
+      icon: RImg7,
       desc: 'resources.GuildDesc',
     },
     {
       name: 'resources.Incubator',
       link: 'https://tally.so/r/wAr0Q0',
       id: 'Apps',
-      icon: '',
+      icon: RImg8,
       desc: 'resources.IncubatorDesc',
     },
     {
@@ -80,49 +93,49 @@ export default {
       name: 'city-hall.CommunityReview',
       link: 'https://tally.so/forms/mBp09R/submissions',
       id: 'community',
-      icon: '',
+      icon: RImg9,
       desc: 'city-hall.CommunityReviewDesc',
     },
     {
       name: 'city-hall.MediaReview',
       link: 'https://tally.so/forms/wzMRBE/submissions',
       id: 'community',
-      icon: '',
+      icon: RImg10,
       desc: 'city-hall.MediaReviewDesc',
     },
     {
       name: 'city-hall.CalendarReview',
       link: 'https://tally.so/r/mKxkWD/submissions',
       id: 'calendar',
-      icon: '',
+      icon: RImg11,
       desc: 'city-hall.CalendarReviewDesc',
     },
     {
       name: 'city-hall.AppReview',
       link: 'https://tally.so/forms/3XozzP/submissions',
       id: 'app',
-      icon: '',
+      icon: RImg12,
       desc: 'city-hall.AppReviewDesc',
     },
     {
       name: 'city-hall.ProjectReview',
       link: 'https://tally.so/forms/w2AWlp/submissions',
       id: 'project',
-      icon: '',
+      icon: RImg5,
       desc: 'city-hall.ProjectReviewDesc',
     },
     {
       name: 'city-hall.GuildReview',
       link: 'https://tally.so/forms/3NXjRW/submissions',
       id: 'guild',
-      icon: '',
+      icon: RImg1,
       desc: 'city-hall.GuildReviewDesc',
     },
     {
       name: 'city-hall.PubReview',
       link: 'https://www.notion.so/ab122e6e19f14ff5a212fb6e77d5b366?v=34760c2c81e648549f5a40a79dc3b198&pvs=4',
       id: 'community',
-      icon: '',
+      icon: RImg3,
       desc: 'city-hall.PubReviewDesc',
     },
   ],
@@ -138,7 +151,7 @@ export default {
       name: 'city-hall.MediaReview',
       link: 'https://tally.so/forms/wzMRBE/submissions',
       id: 'media',
-      icon: '',
+      icon: RImg4,
       desc: 'city-hall.MediaReviewDesc',
     },
   ],
@@ -147,7 +160,7 @@ export default {
       name: 'city-hall.SeedReview',
       link: '',
       id: 'seed',
-      icon: '',
+      icon: RImg5,
       desc: 'city-hall.SeedReviewDesc',
     },
   ],

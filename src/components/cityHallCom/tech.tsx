@@ -4,6 +4,7 @@ import { Row, Col } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import Links from 'utils/links';
 import AppCard, { EmptyAppCard } from 'components/common/appCard';
+import { useAuthContext } from '../../providers/authProvider';
 
 const AppBox = styled(Row)`
   div[class^='col'] {
@@ -19,6 +20,9 @@ const AppBox = styled(Row)`
     width: 44px;
     height: 44px;
     border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     .inner {
       background: var(--home-right);
       width: 44px;
@@ -26,8 +30,8 @@ const AppBox = styled(Row)`
       border-radius: 8px;
     }
     img {
-      width: 44px;
-      height: 44px;
+      width: 24px;
+      height: 24px;
       border-radius: 8px;
     }
   }
@@ -35,6 +39,10 @@ const AppBox = styled(Row)`
 
 export default function TechPanel() {
   const { t } = useTranslation();
+
+  const {
+    state: { theme },
+  } = useAuthContext();
 
   const lst = useMemo(() => {
     // @ts-ignore
@@ -49,7 +57,7 @@ export default function TechPanel() {
           </Col>
         ))}
         <Col sm={12} md={6} lg={4} xl={3}>
-          <EmptyAppCard />
+          <EmptyAppCard theme={theme} />
         </Col>
       </AppBox>
     </div>
