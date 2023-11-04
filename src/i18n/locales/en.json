@@ -46,7 +46,8 @@
     "Apps": "Apps",
     "OnlineEvent": "Calendar",
     "Pub": "Pub",
-    "OfflineEvent": "Offline Events"
+    "OfflineEvent": "Offline Events",
+    "proposal": "Proposal"
   },
   "Proposal": {
     "AllCategories": "All Categories",

@@ -20,58 +20,57 @@ export default function Info({ detail, onUpdate, handleEdit }: Iprops) {
   );
 
   return (
-    <>
+    <FlexLine>
       {/*{show && <CloseTips closeModal={closeModal} handleClosePro={handleClosePro} />}*/}
       {/*{showSuccess && <CloseSuccess closeModal={closeSuccess} />}*/}
+      <AllBox>
+        <TopBox>
+          <TopImg>
+            <img src={detail?.logo} alt="" />
+          </TopImg>
+          <TopInfo>
+            <TitleBox>{detail?.name}</TitleBox>
+            <div className="desc">{detail?.desc}</div>
+            <ProposalBox>
+              {detail?.proposals.map((item, index) => (
+                <li key={index}>
+                  <a href={`https://forum.seedao.xyz/thread/${item}`} target="_blank" rel="noopener noreferrer">
+                    {`SIP-${item}`}
+                  </a>
+                </li>
+              ))}
+            </ProposalBox>
+          </TopInfo>
+        </TopBox>
+        <LastLine>
+          <LftBox>
+            <Members detail={detail} updateProject={onUpdate} />
+          </LftBox>
 
-      <FlexLine>
-        <AllBox>
-          <TopBox>
-            <TopImg>
-              <img src={detail?.logo} alt="" />
-            </TopImg>
-            <TopInfo>
-              <TitleBox>{detail?.name}</TitleBox>
-              <div className="desc">{detail?.desc}</div>
-              <ProposalBox>
-                {detail?.proposals.map((item, index) => (
-                  <li key={index}>
-                    <a href={`https://forum.seedao.xyz/thread/${item}`} target="_blank" rel="noopener noreferrer">
-                      {`SIP-${item}`}
-                    </a>
-                  </li>
-                ))}
-              </ProposalBox>
-            </TopInfo>
-          </TopBox>
-          <LastLine>
-            <LftBox>
-              <Members detail={detail} updateProject={onUpdate} />
-            </LftBox>
+          <ContentBox>
+            <ReactMarkdown>{detail?.intro || ''}</ReactMarkdown>
+          </ContentBox>
+        </LastLine>
+      </AllBox>
+      {/*<div>*/}
 
-            <ContentBox>
-              <ReactMarkdown>{detail?.intro || ''}</ReactMarkdown>
-            </ContentBox>
-          </LastLine>
-        </AllBox>
-        {/*<div>*/}
-
-        {canAuditApplication && <Button onClick={() => handleEdit()}>{t('Project.Edit')}</Button>}
-        {/*<TextButton onClick={() => handleShow()}>Close project</TextButton>*/}
-        {/*</div>*/}
-      </FlexLine>
-    </>
+      {canAuditApplication && <Button onClick={() => handleEdit()}>{t('Project.Edit')}</Button>}
+      {/*<TextButton onClick={() => handleShow()}>Close project</TextButton>*/}
+      {/*</div>*/}
+    </FlexLine>
   );
 }
 
 const AllBox = styled.div`
   flex-grow: 1;
   margin-right: 18px;
+  width: 100%;
 `;
 
 const FlexLine = styled.div`
   display: flex;
-  align-items: flex-start;
+  align-items: stretch;
+  width: 100%;
 `;
 
 const LastLine = styled.div`
@@ -79,7 +78,9 @@ const LastLine = styled.div`
   align-items: stretch;
   justify-content: space-between;
   margin-top: 60px;
+  padding-bottom: 60px;
   flex-shrink: 0;
+  min-height: calc(100% - 200px);
 `;
 
 const LftBox = styled.div`

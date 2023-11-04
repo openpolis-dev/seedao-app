@@ -65,7 +65,7 @@ export const EmptyAppCard = ({ theme }: any) => {
 };
 
 const AppCardStyle = styled.div`
-  padding: 24px;
+  padding: 14px;
   border-radius: 16px;
   overflow: hidden;
   cursor: pointer;
@@ -74,7 +74,7 @@ const AppCardStyle = styled.div`
   background-color: var(--bs-box--background);
   border: 1px solid var(--bs-border-color);
   margin-bottom: 20px;
-  min-height: 136px;
+  min-height: 116px;
 
   &:hover {
     background-color: var(--home-right_hover);

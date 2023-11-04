@@ -46,7 +46,8 @@
     "Apps": "应用",
     "OnlineEvent": "日历",
     "Pub": "酒馆",
-    "OfflineEvent": "线下活动"
+    "OfflineEvent": "线下活动",
+    "proposal": "提案"
   },
   "Proposal": {
     "AllCategories": "分类",

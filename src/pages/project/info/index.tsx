@@ -11,6 +11,7 @@ import BackIconSVG from 'components/svgs/back';
 
 const OuterBox = styled.div`
   ${ContainerPadding};
+  min-height: 100%;
   @media (max-width: 1024px) {
     .nav {
       flex-wrap: nowrap;
@@ -23,10 +24,15 @@ const OuterBox = styled.div`
 
 const Box = styled.div`
   position: relative;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
 `;
 
 const Content = styled.div`
   box-sizing: border-box;
+  flex-grow: 1;
+  display: flex;
 `;
 
 const BackBox = styled.div`
