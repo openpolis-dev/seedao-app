@@ -19,6 +19,7 @@ import EventEdit from './pages/event/edit';
 import ProjectInfo from './pages/project/info';
 import ProjectEdit from './pages/project/edit';
 import GuildInfo from './pages/guild/info';
+import GuildEdit from './pages/guild/edit';
 import CreateProject from './pages/create-project';
 import CreateGuild from './pages/create-guild';
 import Profile from './pages/user/profile';
@@ -64,6 +65,7 @@ export default function RouterLink() {
           <Route path="/create-project" element={<CreateProject />} />
 
           <Route path="/guild/info/:id" element={<GuildInfo />} />
+          <Route path="/guild/edit/:id" element={<GuildEdit />} />
           <Route path="/create-guild" element={<CreateGuild />} />
 
           <Route path="/proposal" element={<Proposal />} />
