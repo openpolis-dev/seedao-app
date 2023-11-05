@@ -109,9 +109,7 @@ export default function Members(props: Iprops) {
     setShow(false);
     refresh && updateProject();
   };
-  const handleAdd = () => {
-    setShow(true);
-  };
+
   const closeRemove = (refresh?: boolean) => {
     setShowDel(false);
     setEdit(false);
@@ -174,7 +172,7 @@ export default function Members(props: Iprops) {
 
   return (
     <Box>
-      {/*{show && <Add closeAdd={closeAdd} id={id as string} />}*/}
+      {show && <Add closeAdd={closeAdd} id={id as string} />}
       {/*{showDel && (*/}
       {/*  <Del*/}
       {/*    id={id as string}*/}
@@ -186,10 +184,12 @@ export default function Members(props: Iprops) {
       {/*)}*/}
       <TopBox>
         <BlockTitle>{t('Project.Members')}</BlockTitle>
-        <AdeBox>
-          <img src={InviteImg} alt="" />
-          {t('Project.invite')}
-        </AdeBox>
+        {(canUpdateMember || canUpdateSponsor) && (
+          <AdeBox onClick={() => setShow(true)}>
+            <img src={InviteImg} alt="" />
+            {t('Project.invite')}
+          </AdeBox>
+        )}
 
         {/*{(canUpdateMember || canUpdateSponsor) && (*/}
         {/*  <div>*/}

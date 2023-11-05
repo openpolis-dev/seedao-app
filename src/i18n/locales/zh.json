@@ -159,6 +159,8 @@
     "Others": "其他成员",
     "RemoveMember": "移除成员",
     "AddMember": "添加成员",
+    "AddMemberAddress": "SNS/地址",
+    "MemberRole": "角色",
     "Nickname": "昵称",
     "changeBudgetSuccess": "修改预算成功",
     "changeProName": "修改公会名称成功",
@@ -346,7 +348,8 @@
     "AssetAmountError": "资产数量错误",
     "RequiredWallet": "SNS/地址错误",
     "SNSError": "SNS错误",
-    "RepeatProposal": "重复的提案链接"
+    "RepeatProposal": "重复的提案链接",
+    "SelectRole": "请选择角色"
   },
   "event": {
     "events": "活动",
