@@ -19,7 +19,6 @@ enum UserRole {
 
 type InputUser = {
   walletOrSNS: string;
-  isOnlyMember?: boolean;
   role: UserRole;
 };
 
@@ -42,9 +41,9 @@ export default function Add(props: Iprops) {
     setLst(arr);
   };
 
-  const handleSelect = (value: boolean, index: number) => {
+  const handleSelect = (value: UserRole, index: number) => {
     let arr: InputUser[] = [...lst];
-    arr[index].isOnlyMember = value;
+    arr[index].role = value;
     setLst(arr);
   };
 
@@ -61,22 +60,26 @@ export default function Add(props: Iprops) {
     const checkSNSlst: string[] = [];
     const sns2walletMap = new Map<string, string>();
     for (const item of lst) {
-      if (!ethers.utils.isAddress(item.walletOrSNS)) {
-        checkSNSlst.push(item.walletOrSNS);
-      } else if (!item.walletOrSNS.endsWith('.seedao')) {
-        showToast(t('Msg.IncorrectAddress', { content: item.walletOrSNS }), ToastType.Danger);
-        return;
-      } else if (!item.role) {
+      if (!item.role) {
         showToast(t('Msg.SelectRole'), ToastType.Danger);
         return;
       }
+      if (!ethers.utils.isAddress(item.walletOrSNS)) {
+        if (!item.walletOrSNS.endsWith('.seedao')) {
+          showToast(t('Msg.IncorrectAddress', { content: item.walletOrSNS }), ToastType.Danger);
+          return;
+        } else {
+          checkSNSlst.push(item.walletOrSNS);
+        }
+      }
     }
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
 
     if (checkSNSlst.length) {
       try {
         const notOkList: string[] = [];
         const res = await sns.resolves(checkSNSlst);
-        for (let i = 0; i < res.length; i) {
+        for (let i = 0; i < res.length; i++) {
           const wallet = res[i];
           sns2walletMap.set(checkSNSlst[i], wallet);
           if (!wallet) {
@@ -89,16 +92,16 @@ export default function Add(props: Iprops) {
         }
       } catch (error) {
         console.error('resolved failed', error);
+        dispatch({ type: AppActionType.SET_LOADING, payload: false });
         return;
       }
     }
-
     const _adminList: string[] = [];
     const _memberList: string[] = [];
 
     lst.forEach((item) => {
       const wallet = sns2walletMap.get(item.walletOrSNS) || item.walletOrSNS;
-      if (item.isOnlyMember) {
+      if (item.role === UserRole.Member) {
         _memberList.push(wallet);
       } else {
         _adminList.push(wallet);
@@ -116,7 +119,6 @@ export default function Add(props: Iprops) {
         params['members'] = _memberList;
       }
 
-      dispatch({ type: AppActionType.SET_LOADING, payload: true });
       await updateStaffs(id as string, params);
       showToast(t('Project.addMemberSuccess'), ToastType.Success);
       dispatch({ type: AppActionType.SET_LOADING, payload: null });
@@ -132,8 +134,8 @@ export default function Add(props: Iprops) {
 
   const roleOptions = useMemo(() => {
     return [
-      { label: t('Project.Moderator'), value: false },
-      { label: t('Project.Members'), value: true },
+      { label: t('Project.Moderator'), value: UserRole.Admin },
+      { label: t('Project.Members'), value: UserRole.Member },
     ];
   }, [t]);
 
