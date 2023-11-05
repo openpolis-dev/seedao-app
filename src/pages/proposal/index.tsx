@@ -111,7 +111,9 @@ export default function Index() {
                         </IconBox>
                         <div>
                           <div className="name">{subCategory.name}</div>
-                          <div className="topics">{subCategory.thread_count} topics</div>
+                          <div className="topics">
+                            {subCategory.thread_count} {t('Proposal.Topics')}
+                          </div>
                         </div>
                       </SubCategoryItem>
                     </a>

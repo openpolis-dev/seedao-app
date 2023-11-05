@@ -54,7 +54,8 @@
     "TheNeweset": "Latest",
     "CreateProposal": "Create Proposal",
     "TheOldest": "Oldest",
-    "LookMore": "Look More"
+    "LookMore": "Look More",
+    "Topics": "topics"
   },
   "Project": {
     "ProjectOrGuildItem": "ProjectOrGuildItem tips ProjectOrGuildItem tips",
