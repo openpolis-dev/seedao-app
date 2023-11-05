@@ -232,6 +232,15 @@
     "GovernanceNodeResult": "治理节点资质计算结果",
     "GovernanceNodeResultDesc": ""
   },
+  "GovernanceNodeResult": {
+    "SearchTip": "SNS/钱包地址",
+    "Export": "导出",
+    "MinerReward": "{{season}}挖矿奖励",
+    "Total": "总计",
+    "ActiveSCR": "活跃SCR",
+    "EffectiveSCR": "有效SCR",
+    "SeedCount": "SEED数量（个）"
+  },
   "Push": {
     "CreatePush": "创建推送",
     "History": "推送记录",

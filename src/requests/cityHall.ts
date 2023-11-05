@@ -24,3 +24,7 @@ export interface IUpdateBudgetParams {
 export const UpdateBudget = (data: IUpdateBudgetParams) => {
   return request.post(`${PATH_PREFIX}/update_budget`, data);
 };
+
+export const getGovernanceNodeResult = () => {
+  return request.get('data_srv/aggr_scr');
+};
