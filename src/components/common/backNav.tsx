@@ -5,22 +5,22 @@ import { Link } from 'react-router-dom';
 interface IProps {
   to: string;
   title: string;
+  mb?: string; // margin-bottom
 }
 
-export default function BackerNav({ to, title }: IProps) {
+export default function BackerNav({ to, title, mb }: IProps) {
   return (
-    <BackBox to={to}>
+    <BackBox to={to} mb={mb}>
       <BackIconSVG />
       <span>{title}</span>
     </BackBox>
   );
 }
 
-const BackBox = styled(Link)`
-  width: 100%;
+const BackBox = styled(Link)<{ mb?: string }>`
   display: inline-flex;
   align-items: center;
-  margin-bottom: 48px;
+  margin-bottom: ${(props) => props.mb || '48px'};
   cursor: pointer;
   svg {
     margin-right: 10px;

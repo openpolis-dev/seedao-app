@@ -296,7 +296,6 @@ export default function EditProject({ detail }: { detail: ReTurnProject | undefi
 
 const EditPage = styled.div`
   width: 100%;
-  padding-top: 40px;
   display: flex;
   justify-content: space-between;
 `;
