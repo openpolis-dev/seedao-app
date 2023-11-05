@@ -7,6 +7,7 @@ import DefaultAvatar from 'assets/Imgs/defaultAvatar.png';
 import useToast, { ToastType } from 'hooks/useToast';
 import { updateMembers } from 'requests/cityHall';
 import BasicModal from 'components/modals/basicModal';
+import { NameMapType } from 'hooks/useParseSNS';
 
 const CardText = styled.div`
   font-size: 14px;
@@ -47,17 +48,18 @@ const ItemBox = styled.div`
   .wallet {
     font-size: 14px;
     line-height: 20px;
-    margin-top: 5px;
+    margin-bottom: 5px;
   }
 `;
 
 interface Iprops {
+  nameMap: NameMapType;
   closeRemove: (shouldUpdate?: boolean) => void;
   selectAdminArr: IUser[];
   selectMemArr?: IUser[];
 }
 export default function Del(props: Iprops) {
-  const { closeRemove, selectAdminArr } = props;
+  const { closeRemove, selectAdminArr, nameMap } = props;
   const { t } = useTranslation();
   const { dispatch } = useAuthContext();
 
@@ -91,8 +93,8 @@ export default function Del(props: Iprops) {
               <img src={item.avatar || DefaultAvatar} alt="" />
             </div>
             <div>
+              <div className="wallet">{nameMap[item.wallet || ''] || item.wallet}</div>
               <div className="name">{item.name}</div>
-              <div className="wallet">{item.wallet}</div>
             </div>
           </ItemBox>
         ))}

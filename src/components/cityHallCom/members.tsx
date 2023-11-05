@@ -126,7 +126,7 @@ export default function Members() {
   return (
     <Box>
       {show && <Add closeAdd={closeAdd} canUpdateSponsor={canUpdateSponsor} />}
-      {showDel && <Del closeRemove={closeRemove} selectAdminArr={selectAdminArr} />}
+      {showDel && <Del closeRemove={closeRemove} selectAdminArr={selectAdminArr} nameMap={nameMap} />}
 
       <ItemBox>
         {/* <TitleBox>{t('Guild.Moderator')}</TitleBox> */}
