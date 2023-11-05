@@ -60,6 +60,7 @@ const CreatePushContent = () => {
       setTitle('');
       setContent('');
       setHref('');
+      showToast(t('Push.Success'), ToastType.Success);
     } catch (error: any) {
       console.error(error);
       showToast(error, ToastType.Danger);
