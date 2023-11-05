@@ -9,7 +9,7 @@ import BrandPanel from 'components/cityHallCom/brand';
 import TechPanel from 'components/cityHallCom/tech';
 import Members from 'components/cityHallCom/members';
 import Tabbar from 'components/common/tabbar';
-import { Route, Routes, useNavigate, Navigate } from 'react-router-dom';
+import { Route, Routes, useNavigate, Navigate, useLocation } from 'react-router-dom';
 import { useMemo } from 'react';
 
 const Box = styled.div`
@@ -33,15 +33,16 @@ const Content = styled.div`
 `;
 
 enum SubPage {
-  Members = 1,
-  Governance,
-  Brand,
-  Tech,
-  Push,
+  Members = 'members',
+  Governance = 'governance',
+  Brand = 'brand',
+  Tech = 'tech',
+  Push = 'notification',
 }
 
 export default function Index() {
   const navigate = useNavigate();
+  const { pathname } = useLocation();
   const { t } = useTranslation();
   const canUseCityhall = usePermission(PermissionAction.AuditApplication, PermissionObject.ProjectAndGuild);
 
@@ -64,10 +65,15 @@ export default function Index() {
     }
   };
 
+  const defaultTabKey = useMemo(() => {
+    return pathname.toLocaleLowerCase().replace('/city-hall/', '');
+  }, [pathname]);
+  console.log('defaultTabKey', defaultTabKey);
+
   return (
     <Box>
       <TopBox>
-        <Tabbar tabs={tabs} defaultActiveKey={SubPage.Members} onSelect={handleChangeSubPage} />
+        <Tabbar tabs={tabs} defaultActiveKey={defaultTabKey || SubPage.Members} onSelect={handleChangeSubPage} />
         <Content>
           <Routes>
             <Route path="/" element={<Navigate to="members" />} />
