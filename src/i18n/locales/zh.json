@@ -332,7 +332,8 @@
     "SelectAssetType": "资产类型错误",
     "AssetAmountError": "资产数量错误",
     "RequiredWallet": "SNS/地址错误",
-    "SNSError": "SNS错误"
+    "SNSError": "SNS错误",
+    "RepeatProposal": "重复的提案链接"
   },
   "event": {
     "events": "活动",

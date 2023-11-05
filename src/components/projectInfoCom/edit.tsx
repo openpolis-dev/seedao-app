@@ -2,7 +2,7 @@ import { InputGroup, Button, Form } from 'react-bootstrap';
 import styled from 'styled-components';
 import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { UpdateInfo } from 'requests/project';
+import { UpdateInfo, addRelatedProposal } from 'requests/project';
 import { InfoObj, ReTurnProject } from 'type/project.type';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import useToast, { ToastType } from 'hooks/useToast';
@@ -123,6 +123,10 @@ export default function EditProject({ detail, onUpdate }: { detail: ReTurnProjec
           for (const it of items) {
             if (it) {
               const _id = it.split('-').reverse()[0];
+              if (ids.includes(_id)) {
+                showToast(t('Msg.RepeatProposal'), ToastType.Danger);
+                return;
+              }
               ids.push(_id);
               break;
             }
@@ -131,6 +135,10 @@ export default function EditProject({ detail, onUpdate }: { detail: ReTurnProjec
           const items = l.split('/').reverse();
           for (const it of items) {
             if (it) {
+              if (ids.includes(it)) {
+                showToast(t('Msg.RepeatProposal'), ToastType.Danger);
+                return;
+              }
               ids.push(it);
               break;
             }
@@ -150,6 +158,7 @@ export default function EditProject({ detail, onUpdate }: { detail: ReTurnProjec
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
       await UpdateInfo(String(detail?.id), obj);
+      await addRelatedProposal(String(detail?.id), ids);
       showToast(t('Project.changeProName'), ToastType.Success);
       onUpdate();
     } catch (error) {
