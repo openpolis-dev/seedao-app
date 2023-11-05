@@ -1,13 +1,14 @@
 import styled from 'styled-components';
-import { Card, InputGroup, Button, Form } from 'react-bootstrap';
+import { InputGroup, Button, Form } from 'react-bootstrap';
 import React, { ChangeEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import { ethers } from 'ethers';
 import useToast, { ToastType } from 'hooks/useToast';
 import { updateMembers } from 'requests/cityHall';
-import { DashLg, PlusLg } from 'react-bootstrap-icons';
 import BasicModal from 'components/modals/basicModal';
+import sns from '@seedao/sns-js';
+import PlusMinusButton from 'components/common/buttons';
 
 const CardBody = styled.div``;
 const CardFooter = styled.div`
@@ -61,10 +62,10 @@ export default function Add(props: Iprops) {
   const { closeAdd } = props;
   const { t } = useTranslation();
   const { dispatch } = useAuthContext();
-  const { showToast, Toast } = useToast();
+  const { showToast } = useToast();
 
   const [adminList, setAdminList] = useState<string[]>(['']);
-  const [memberList, setMemberList] = useState<string[]>(['']);
+  const [memberList] = useState<string[]>(['']);
 
   const handleInput = (e: ChangeEvent, index: number) => {
     const { value } = e.target as HTMLInputElement;
@@ -87,15 +88,46 @@ export default function Add(props: Iprops) {
   };
 
   const submitObject = async () => {
-    const _adminList_invalid = adminList.filter((item) => item && !ethers.utils.isAddress(item));
-    const _invalid_address = [..._adminList_invalid];
-
-    if (_invalid_address.length) {
-      showToast(t('Msg.IncorrectAddress', { content: _invalid_address.join(', ') }), ToastType.Danger);
-      return;
+    const checkSNSlst: string[] = [];
+    const sns2walletMap = new Map<string, string>();
+    for (const item of adminList) {
+      if (!ethers.utils.isAddress(item)) {
+        if (!item.endsWith('.seedao')) {
+          showToast(t('Msg.IncorrectAddress', { content: item }), ToastType.Danger);
+          return;
+        } else {
+          checkSNSlst.push(item);
+        }
+      }
     }
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
 
-    const _adminList = adminList.filter((item) => item && ethers.utils.isAddress(item));
+    if (checkSNSlst.length) {
+      try {
+        const notOkList: string[] = [];
+        const res = await sns.resolves(checkSNSlst);
+        for (let i = 0; i < res.length; i++) {
+          const wallet = res[i];
+          sns2walletMap.set(checkSNSlst[i], wallet);
+          if (!wallet) {
+            notOkList.push(checkSNSlst[i]);
+          }
+        }
+        if (!!notOkList.length) {
+          showToast(t('Msg.IncorrectAddress', { content: notOkList.join(', ') }), ToastType.Danger);
+          return;
+        }
+      } catch (error) {
+        console.error('resolved failed', error);
+        dispatch({ type: AppActionType.SET_LOADING, payload: false });
+        return;
+      }
+    }
+    const _adminList: string[] = [];
+    adminList.forEach((item) => {
+      const wallet = sns2walletMap.get(item) || item;
+      _adminList.push(wallet);
+    });
 
     try {
       const params = {
@@ -131,16 +163,12 @@ export default function Add(props: Iprops) {
                   />
                 </LeftInputBox>
                 <OptionBox>
-                  {!(!index && index === adminList.length - 1) && (
-                    <span className="iconForm" onClick={() => removeAdmin(index)}>
-                      <DashLg />
-                    </span>
-                  )}
-                  {index === adminList.length - 1 && (
-                    <span className="iconForm" onClick={() => handleAddAdmin()}>
-                      <PlusLg />
-                    </span>
-                  )}
+                  <PlusMinusButton
+                    showMinus={index === adminList.length - 1}
+                    showPlus={!(!index && index === adminList.length - 1)}
+                    handleMinus={() => removeAdmin(index)}
+                    handlePlus={handleAddAdmin}
+                  />
                 </OptionBox>
               </li>
             ))}
@@ -151,7 +179,7 @@ export default function Add(props: Iprops) {
         <Button variant="outline-primary" className="btnBtm" onClick={() => closeAdd()}>
           {t('general.cancel')}
         </Button>
-        <Button onClick={() => submitObject()} disabled={!adminList.length && !memberList.length}>
+        <Button onClick={() => submitObject()} disabled={!adminList.length}>
           {t('general.confirm')}
         </Button>
       </CardFooter>
