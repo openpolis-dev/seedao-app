@@ -166,7 +166,7 @@ const SubCategoryCard = styled.div`
   flex-wrap: wrap;
   padding: 10px;
   background-color: var(--bs-box-background);
-  border: 1px solid var(--bs-border-color);
+  box-shadow: var(--box-shadow);
   border-radius: 16px;
   > a {
     width: 25%;

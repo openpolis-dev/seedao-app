@@ -76,7 +76,7 @@ export default function ProposalCard({ data }: { data: IBaseProposal }) {
   };
 
   const borderStyle = useMemo(() => {
-    return theme ? 'unset' : '1px solid var(--bs-border-color)';
+    return theme ? 'unset' : 'none';
   }, [theme]);
   return (
     <CardBox key={data.id} border={borderStyle}>
@@ -115,6 +115,7 @@ const CardBox = styled.div<{ border: string }>`
   padding: 24px;
   border-radius: 16px;
   margin-bottom: 24px;
+  box-shadow: var(--box-shadow);
 `;
 
 const CardHeaderStyled = styled.div`

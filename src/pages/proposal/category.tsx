@@ -8,6 +8,7 @@ import useProposalCategory from 'hooks/useProposalCategory';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import styled from 'styled-components';
 import LoadingBox from 'components/loadingBox';
+import { AppActionType, useAuthContext } from '../../providers/authProvider';
 
 export default function ProposalCategory() {
   const { id } = useParams();
@@ -20,12 +21,15 @@ export default function ProposalCategory() {
 
   const ProposalNav = useProposalCategory(Number(id));
 
+  const { dispatch } = useAuthContext();
+
   const getProposals = async () => {
     const _id = Number(id);
     if (!_id) {
       return;
     }
-    setLoading(true);
+    // setLoading(true);
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
       const res = await requests.proposal.getProposalsBySubCategory({
         page,
@@ -39,7 +43,8 @@ export default function ProposalCategory() {
     } catch (error) {
       console.error(error);
     } finally {
-      setLoading(false);
+      // setLoading(false);
+      dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }
   };
 

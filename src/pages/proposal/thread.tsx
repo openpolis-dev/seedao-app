@@ -13,11 +13,14 @@ import LoadingBox from 'components/loadingBox';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import { ContainerPadding } from 'assets/styles/global';
+import { AppActionType, useAuthContext } from '../../providers/authProvider';
 
 export default function Proposal() {
   const { id: qid } = useParams();
   const enableQuill = useLoadQuill();
   const { t } = useTranslation();
+
+  const { dispatch } = useAuthContext();
 
   const [data, setData] = useState<IBaseProposal>();
   const [loading, setLoading] = useState(false);
@@ -29,14 +32,16 @@ export default function Proposal() {
     if (!id) {
       return;
     }
-    setLoading(true);
+    // setLoading(true);
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
       const res = await requests.proposal.getProposalDetail(id);
       setData(res.data.thread);
     } catch (error) {
       console.error('get proposal detail error:', error);
     } finally {
-      setLoading(false);
+      // setLoading(false);
+      dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }
   };
 
