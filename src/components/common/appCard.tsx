@@ -26,10 +26,8 @@ const AppCard = ({
     state: { theme },
   } = useAuthContext();
   const handleClickEvent = () => {
-    if (id === 'online') {
-      navigate('/online-event');
-    } else if (id === 'pub') {
-      navigate('/pub');
+    if (id.startsWith('module-')) {
+      navigate(link);
     } else {
       window.open(link, '_blank');
     }

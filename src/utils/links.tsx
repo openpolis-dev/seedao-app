@@ -21,6 +21,11 @@ import RImg10 from '../assets/Imgs/resources/10.png';
 import RImg11 from '../assets/Imgs/resources/11.png';
 import RImg12 from '../assets/Imgs/resources/12.png';
 
+/**
+ * NOTE:
+ * if id starts with "module-", means its path is our app's router path, otherwise is outer link
+ */
+
 const links = {
   resource: [
     {
@@ -138,6 +143,13 @@ const links = {
       icon: RImg3,
       desc: 'city-hall.PubReviewDesc',
     },
+    {
+      name: 'city-hall.GovernanceNodeResult',
+      link: '/city-hall/governance/governance-node-result',
+      id: 'module-governance-node-result',
+      icon: RImg3, // TODO
+      desc: 'city-hall.GovernanceNodeResultDesc',
+    },
   ],
   brand: [
     // {
@@ -208,9 +220,9 @@ const links = {
       desc: 'apps.MetaforoDesc',
     },
     {
-      id: 'pub',
+      id: 'module-pub',
       name: 'apps.Pub',
-      link: '',
+      link: '/pub',
       icon: '',
       desc: 'apps.PubDesc',
     },
