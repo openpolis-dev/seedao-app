@@ -324,6 +324,7 @@ export default function EditGuild({ detail, onUpdate }: { detail: ReTurnProject 
 }
 
 const EditPage = styled.div`
+  width: 100%;
   padding-top: 40px;
   display: flex;
   justify-content: space-between;
