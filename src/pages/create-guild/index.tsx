@@ -51,7 +51,7 @@ export default function CreateGuild() {
   const { showToast } = useToast();
   const {
     dispatch,
-    state: { language },
+    state: { language, theme },
   } = useAuthContext();
   const [adminList, setAdminList] = useState(['']);
   const [memberList, setMemberList] = useState<string[]>([]);
@@ -249,7 +249,14 @@ export default function CreateGuild() {
         <BtnBox htmlFor="fileUpload" onChange={(e) => updateLogo(e)}>
           <ImgBox>
             <img src={url} alt="" />
-            <UpladBox className="upload">
+            <UpladBox
+              className="upload"
+              bg={
+                theme
+                  ? 'linear-gradient(180deg, rgba(13,12,15,0) 0%, rgba(38,27,70,0.6) 100%)'
+                  : 'linear-gradient(180deg, rgba(217,217,217,0) 0%, rgba(0,0,0,0.6) 100%)'
+              }
+            >
               <input id="fileUpload" type="file" hidden accept=".jpg, .jpeg, .png, .svg" />
               <CameraIconSVG />
               <UploadImgText>{t('Guild.upload')}</UploadImgText>
@@ -422,10 +429,6 @@ const InputBox = styled(InputGroup)`
   }
 `;
 
-const DescInputBox = styled(InputBox)`
-  height: 78px;
-`;
-
 const ProposalInputBox = styled(InputBox)`
   width: 480px;
 `;
@@ -514,7 +517,7 @@ const RightContent = styled.div`
   }
 `;
 
-const UpladBox = styled.div`
+const UpladBox = styled.div<{ bg?: string }>`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -526,10 +529,11 @@ const UpladBox = styled.div`
   left: 0;
   top: 0;
   cursor: pointer;
+  background: ${(props) => props.bg};
 `;
 
 const UploadImgText = styled.p`
-  font-size: 8px;
+  font-size: 12px;
   font-family: Poppins-Regular, Poppins;
   font-weight: 400;
   color: var(--bs-svg-color);

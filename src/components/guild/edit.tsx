@@ -44,7 +44,7 @@ export default function EditGuild({ detail, onUpdate }: { detail: ReTurnProject 
   const { showToast } = useToast();
   const {
     dispatch,
-    state: { language },
+    state: { language, theme },
   } = useAuthContext();
   const [proList, setProList] = useState(['']);
 
@@ -224,7 +224,14 @@ export default function EditGuild({ detail, onUpdate }: { detail: ReTurnProject 
           <BtnBox htmlFor="fileUpload" onChange={(e) => updateLogo(e)}>
             <ImgBox>
               <img src={url} alt="" />
-              <UpladBox className="upload">
+              <UpladBox
+                className="upload"
+                bg={
+                  theme
+                    ? 'linear-gradient(180deg, rgba(13,12,15,0) 0%, rgba(38,27,70,0.6) 100%)'
+                    : 'linear-gradient(180deg, rgba(217,217,217,0) 0%, rgba(0,0,0,0.6) 100%)'
+                }
+              >
                 <input id="fileUpload" type="file" hidden accept=".jpg, .jpeg, .png, .svg" />
                 <CameraIconSVG />
                 <UploadImgText>{t('Guild.upload')}</UploadImgText>
@@ -378,7 +385,7 @@ const ImgBox = styled.div`
   }
 `;
 
-const UpladBox = styled.div`
+const UpladBox = styled.div<{ bg?: string }>`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -390,11 +397,11 @@ const UpladBox = styled.div`
   left: 0;
   top: 0;
   cursor: pointer;
-  background-color: var(--bs-box--background);
+  background: ${(props) => props.bg};
 `;
 
 const UploadImgText = styled.p`
-  font-size: 8px;
+  font-size: 12px;
   font-family: Poppins-Regular, Poppins;
   font-weight: 400;
   color: var(--bs-svg-color);
