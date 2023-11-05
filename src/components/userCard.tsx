@@ -9,7 +9,6 @@ import styled from 'styled-components';
 import { Col, Form } from 'react-bootstrap';
 import { useAuthContext } from '../providers/authProvider';
 import CopyIconSVG from 'components/svgs/copy';
-import MultiClamp from 'react-multi-clamp';
 import { useTranslation } from 'react-i18next';
 import SocialIconBox from 'components/common/socialIcon';
 
@@ -60,19 +59,7 @@ export default function UserCard({ user, showEdit, onSelectUser, formatActive, s
             </div>
           )}
         </div>
-        <BioBox>
-          <MultiClamp
-            clamp={2}
-            splitByWords={false}
-            ellipsis={
-              <span>
-                <strong>...</strong>
-              </span>
-            }
-          >
-            {user.bio || t('My.DefaultBio')}
-          </MultiClamp>
-        </BioBox>
+        <BioBox>{user.bio || t('My.DefaultBio')}</BioBox>
         <SocialIconBox user={user} />
       </div>
     </UserCardBox>
@@ -130,4 +117,9 @@ const BioBox = styled.div`
   margin-top: 12px;
   margin-bottom: 10px;
   height: 38px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 `;
