@@ -9,6 +9,7 @@ import { AppActionType, useAuthContext } from 'providers/authProvider';
 import publicJs from 'utils/publicJs';
 import useQuerySNS from 'hooks/useQuerySNS';
 import { formatNumber } from 'utils/number';
+import ExcellentExport from 'excellentexport';
 
 const PAGE_SIZE = 15;
 
@@ -92,7 +93,38 @@ export default function GoveranceNodeResult() {
   };
 
   const handleExport = () => {
-    // TODO
+    ExcellentExport.convert({ filename: 'fileTriggeredAutomatically', format: 'xlsx', openAsDownload: true }, [
+      {
+        name: t('GovernanceNodeResult.SheetName'),
+        from: {
+          array: [
+            [
+              'SNS',
+              'S0',
+              'S1',
+              'S2',
+              'S3',
+              t('GovernanceNodeResult.MinerReward', { season: 'S3' }),
+              t('GovernanceNodeResult.Total'),
+              t('GovernanceNodeResult.ActiveSCR'),
+              t('GovernanceNodeResult.EffectiveSCR'),
+              t('GovernanceNodeResult.SeedCount'),
+            ],
+            ...allList.map((item) => [
+              dataMap.get(item.wallet) || item.wallet,
+              item.seasons_credit?.find((s) => s.season_idx === 0)?.total || 0,
+              item.seasons_credit?.find((s) => s.season_idx === 1)?.total || 0,
+              item.seasons_credit?.find((s) => s.season_idx === 2)?.total || 0,
+              item.seasons_credit?.find((s) => s.season_idx === 3)?.total || 0,
+              item.metaforo_credit || 0,
+              item.season_total_credit || 0,
+              item.activity_credit || 0,
+              item.effective_credit || 0,
+            ]),
+          ],
+        },
+      },
+    ]);
   };
 
   useEffect(() => {
@@ -122,6 +154,7 @@ export default function GoveranceNodeResult() {
             onChange={(e) => setSearchKey(e.target.value)}
           />
         </SearchBox>
+
         <Button variant="primary" onClick={handleExport}>
           {t('GovernanceNodeResult.Export')}
         </Button>
@@ -149,53 +182,25 @@ export default function GoveranceNodeResult() {
               <th rowSpan={1}>
                 <HeaderCell>{t('GovernanceNodeResult.MinerReward', { season: 'S3' })}</HeaderCell>
               </th>
-              <th rowSpan={1}>{t('GovernanceNodeResult.SeedCount')}</th>
+              <th rowSpan={1}>{t('GovernanceNodeResult.Total')}</th>
             </tr>
           </thead>
         </Table>
-        <Table>
+        <Table id="body-table">
           <ColGroup />
           <tbody>
             {displayList.map((item, index) => (
               <tr key={item.wallet}>
-                <td>
-                  <Cell150>{formatSNS(item.wallet)}</Cell150>
-                </td>
-                <td>
-                  <Cell100>
-                    {formatNumber(Number(item.seasons_credit?.find((s) => s.season_idx === 0)?.total || 0))}
-                  </Cell100>
-                </td>
-                <td>
-                  <Cell100>
-                    {formatNumber(Number(item.seasons_credit?.find((s) => s.season_idx === 1)?.total || 0))}
-                  </Cell100>
-                </td>
-                <td>
-                  <Cell100>
-                    {formatNumber(Number(item.seasons_credit?.find((s) => s.season_idx === 2)?.total || 0))}
-                  </Cell100>
-                </td>
-                <td>
-                  <Cell100>
-                    {formatNumber(Number(item.seasons_credit?.find((s) => s.season_idx === 3)?.total || 0))}
-                  </Cell100>
-                </td>
-                <td>
-                  <Cell100>{formatNumber(Number(item.metaforo_credit) || 0)}</Cell100>
-                </td>
-                <td>
-                  <Cell100>{formatNumber(Number(item.season_total_credit) || 0)}</Cell100>
-                </td>
-                <td>
-                  <Cell120>{formatNumber(Number(item.activity_credit) || 0)}</Cell120>
-                </td>
-                <td>
-                  <Cell120>{formatNumber(Number(item.effective_credit) || 0)}</Cell120>
-                </td>
-                <td>
-                  <div>{item.seed_count}</div>
-                </td>
+                <td>{formatSNS(item.wallet)}</td>
+                <td>{formatNumber(Number(item.seasons_credit?.find((s) => s.season_idx === 0)?.total || 0))}</td>
+                <td>{formatNumber(Number(item.seasons_credit?.find((s) => s.season_idx === 1)?.total || 0))}</td>
+                <td>{formatNumber(Number(item.seasons_credit?.find((s) => s.season_idx === 2)?.total || 0))}</td>
+                <td>{formatNumber(Number(item.seasons_credit?.find((s) => s.season_idx === 3)?.total || 0))}</td>
+                <td>{formatNumber(Number(item.metaforo_credit) || 0)}</td>
+                <td>{formatNumber(Number(item.season_total_credit) || 0)}</td>
+                <td>{formatNumber(Number(item.activity_credit) || 0)}</td>
+                <td>{formatNumber(Number(item.effective_credit) || 0)}</td>
+                <td>{item.seed_count}</td>
               </tr>
             ))}
           </tbody>
@@ -249,6 +254,9 @@ const TableBox = styled.div`
         border-right: none;
       }
     }
+    thead tr:last-child th {
+      border-radius: 0;
+    }
 
     th {
       border-style: inherit;
@@ -274,20 +282,6 @@ const TableBox = styled.div`
       left: 0; */
     }
   }
-`;
-
-const Cell = styled.div`
-  line-height: 74px;
-`;
-
-const Cell100 = styled(Cell)`
-  width: 100px;
-`;
-const Cell120 = styled.div`
-  width: 120px;
-`;
-const Cell150 = styled.div`
-  width: 150px;
 `;
 
 const HeaderCell = styled.div`

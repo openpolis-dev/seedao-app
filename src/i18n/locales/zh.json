@@ -239,7 +239,8 @@
     "Total": "总计",
     "ActiveSCR": "活跃SCR",
     "EffectiveSCR": "有效SCR",
-    "SeedCount": "SEED数量（个）"
+    "SeedCount": "SEED数量（个）",
+    "SheetName": "节点试算"
   },
   "Push": {
     "CreatePush": "创建推送",

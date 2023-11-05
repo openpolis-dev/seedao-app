@@ -239,7 +239,8 @@
     "Total": "Total",
     "ActiveSCR": "Active SCR",
     "EffectiveSCR": "Effective SCR",
-    "SeedCount": "SEED Count"
+    "SeedCount": "SEED Count",
+    "SheetName": "Result"
   },
   "Push": {
     "CreatePush": "Create Notification",
