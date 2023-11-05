@@ -128,7 +128,7 @@ export default function EditProject({ detail }: { detail: ReTurnProject | undefi
     try {
       await UpdateInfo(String(detail?.id), obj);
       await addRelatedProposal(String(detail?.id), ids);
-      showToast(t('Project.changeProName'), ToastType.Success);
+      showToast(t('Project.changeInfoSuccess'), ToastType.Success);
       navigate(`/project/info/${detail?.id}`);
     } catch (error) {
       showToast(JSON.stringify(error), ToastType.Danger);

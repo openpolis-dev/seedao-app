@@ -150,8 +150,8 @@ export default function EditGuild({ detail, onUpdate }: { detail: ReTurnProject 
     try {
       await UpdateInfo(String(detail?.id), obj);
       await addRelatedProposal(String(detail?.id), ids);
-      showToast(t('Guild.changeProName'), ToastType.Success);
       onUpdate();
+      showToast(t('Guild.changeInfoSuccess'), ToastType.Success);
     } catch (error) {
       showToast(JSON.stringify(error), ToastType.Danger);
     } finally {
