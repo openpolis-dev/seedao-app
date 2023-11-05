@@ -21,7 +21,7 @@ import RImg10 from '../assets/Imgs/resources/10.png';
 import RImg11 from '../assets/Imgs/resources/11.png';
 import RImg12 from '../assets/Imgs/resources/12.png';
 
-export default {
+const links = {
   resource: [
     {
       name: 'resources.calendar',
@@ -230,3 +230,5 @@ export default {
     },
   ],
 };
+
+export default links;
