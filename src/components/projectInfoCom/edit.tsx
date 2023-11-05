@@ -6,45 +6,21 @@ import { UpdateInfo, addRelatedProposal } from 'requests/project';
 import { InfoObj, ReTurnProject } from 'type/project.type';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import useToast, { ToastType } from 'hooks/useToast';
-import { MdEditor } from 'md-editor-rt';
 import PlusMinusButton from 'components/common/buttons';
 import CameraIconSVG from 'components/svgs/camera';
 import CloseTips from './closeTips';
 import CloseSuccess from './closeSuccess';
 import { createCloseProjectApplication } from 'requests/applications';
+import { useNavigate } from 'react-router-dom';
+import MarkdownEditor from 'components/common/markdownEditor';
 
-const config = {
-  toobars: [
-    'bold',
-    'underline',
-    'italic',
-    'strikeThrough',
-    'sub',
-    'sup',
-    'quote',
-    'unorderedList',
-    'orderedList',
-    'codeRow',
-    'code',
-    'link',
-    'image',
-    'table',
-    'revoke',
-    'next',
-    'pageFullscreen',
-    'fullscreen',
-    'preview',
-    'htmlPreview',
-  ],
-  toolbarsExclude: ['github'],
-};
-
-export default function EditProject({ detail, onUpdate }: { detail: ReTurnProject | undefined; onUpdate: () => void }) {
+export default function EditProject({ detail }: { detail: ReTurnProject | undefined }) {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const { showToast } = useToast();
   const {
     dispatch,
-    state: { language, theme },
+    state: { theme },
   } = useAuthContext();
   const [proList, setProList] = useState(['']);
 
@@ -53,15 +29,8 @@ export default function EditProject({ detail, onUpdate }: { detail: ReTurnProjec
   const [url, setUrl] = useState('');
   const [intro, setIntro] = useState('');
 
-  const [lan, setLan] = useState('');
-
   const [show, setShow] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
-
-  useEffect(() => {
-    const localLan = language === 'zh' ? 'zh-CN' : 'en-US';
-    setLan(localLan);
-  }, [language]);
 
   useEffect(() => {
     if (detail) {
@@ -160,7 +129,7 @@ export default function EditProject({ detail, onUpdate }: { detail: ReTurnProjec
       await UpdateInfo(String(detail?.id), obj);
       await addRelatedProposal(String(detail?.id), ids);
       showToast(t('Project.changeProName'), ToastType.Success);
-      onUpdate();
+      navigate(`/project/info/${detail?.id}}`);
     } catch (error) {
       showToast(JSON.stringify(error), ToastType.Danger);
     } finally {
@@ -202,7 +171,7 @@ export default function EditProject({ detail, onUpdate }: { detail: ReTurnProjec
 
   const closeSuccess = () => {
     setShowSuccess(false);
-    onUpdate();
+    navigate(`/project/info/${detail?.id}}`);
   };
 
   const handleClosePro = async () => {
@@ -305,17 +274,7 @@ export default function EditProject({ detail, onUpdate }: { detail: ReTurnProjec
           <li>
             <div className="title">{t('Project.Intro')}</div>
             <IntroBox>
-              <MdEditor
-                modelValue={intro}
-                onChange={(val) => {
-                  setIntro(val);
-                }}
-                theme={theme ? 'dark' : 'light'}
-                toolbars={config.toobars as any}
-                language={lan}
-                codeStyleReverse={false}
-                noUploadImg
-              />
+              <MarkdownEditor value={intro} onChange={(val) => setIntro(val)} />
             </IntroBox>
           </li>
         </UlBox>
@@ -346,12 +305,7 @@ const TopBox = styled.section`
   display: flex;
 `;
 
-const IntroBox = styled.div`
-  .cm-scroller,
-  .md-editor-preview-wrapper {
-    background: var(--bs-background);
-  }
-`;
+const IntroBox = styled.div``;
 
 const MainContent = styled.div`
   display: flex;

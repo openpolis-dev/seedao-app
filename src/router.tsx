@@ -17,6 +17,7 @@ import Chat from './pages/chat';
 import EventView from './pages/seeu-network/detail';
 import EventEdit from './pages/event/edit';
 import ProjectInfo from './pages/project/info';
+import ProjectEdit from './pages/project/edit';
 import GuildInfo from './pages/guild/info';
 import CreateProject from './pages/create-project';
 import CreateGuild from './pages/create-guild';
@@ -59,6 +60,7 @@ export default function RouterLink() {
           <Route path="/explore" element={<ExplorePage />} />
 
           <Route path="/project/info/:id" element={<ProjectInfo />} />
+          <Route path="/project/edit/:id" element={<ProjectEdit />} />
           <Route path="/create-project" element={<CreateProject />} />
 
           <Route path="/guild/info/:id" element={<GuildInfo />} />
