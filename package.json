@@ -22,6 +22,7 @@
     "dayjs": "^1.11.8",
     "eslint-config-next": "^13.4.5",
     "ethers": "^5.7.1",
+    "excellentexport": "^3.9.6",
     "firebase": "^10.4.0",
     "i18next": "^23.5.1",
     "md-editor-rt": "^4.6.1",
