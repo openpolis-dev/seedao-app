@@ -31,6 +31,7 @@ import Resources from './pages/resouces/resources';
 import ExplorePage from './pages/explore';
 import Pub from './pages/Pub/Pub';
 import PubDetail from './pages/Pub/detail';
+import GoveranceNodeResult from 'pages/cityhall/governance/governanceNodeResult';
 
 export default function RouterLink() {
   return (
@@ -67,6 +68,7 @@ export default function RouterLink() {
           <Route path="/proposal/category/:id" element={<ProposalCategory />} />
           <Route path="/proposal/thread/:id" element={<ProposalThread />} />
           <Route path="/city-hall/*" element={<CityHall />} />
+          <Route path="/city-hall/governance/governance-node-result" element={<GoveranceNodeResult />} />
           <Route path="/chat" element={<Chat />} />
           <Route path="/feedback" element={<Canny />} />
         </Routes>

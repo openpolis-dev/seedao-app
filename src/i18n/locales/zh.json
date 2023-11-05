@@ -228,7 +228,9 @@
     "SeedReviewDesc": "审核SEED获取的申请",
     "management": "管理",
     "create": "创建",
-    "closeProjectReview": "项目关闭审核"
+    "closeProjectReview": "项目关闭审核",
+    "GovernanceNodeResult": "治理节点资质计算结果",
+    "GovernanceNodeResultDesc": ""
   },
   "Push": {
     "CreatePush": "创建推送",

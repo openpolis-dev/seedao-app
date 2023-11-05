@@ -228,7 +228,9 @@
     "SeedReviewDesc": "Review the request of claiming SeeDAO SEED NFT.",
     "management": "Management",
     "create": "Create",
-    "closeProjectReview": "Close project review"
+    "closeProjectReview": "Close project review",
+    "GovernanceNodeResult": "Governance node result",
+    "GovernanceNodeResultDesc": ""
   },
   "Push": {
     "CreatePush": "Create Notification",
