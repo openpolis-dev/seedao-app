@@ -233,13 +233,13 @@
     "management": "Management",
     "create": "Create",
     "closeProjectReview": "Close project review",
-    "GovernanceNodeResult": "Governance node result",
+    "GovernanceNodeResult": "Governance node qualification result",
     "GovernanceNodeResultDesc": ""
   },
   "GovernanceNodeResult": {
-    "SearchTip": "SNS/Address",
+    "SearchTip": "SNS",
     "Export": "Export",
-    "MinerReward": "{{season}} Miner Reward",
+    "MinerReward": "{{season}} PoSK Mining Reward",
     "Total": "Total",
     "ActiveSCR": "Active SCR",
     "EffectiveSCR": "Effective SCR",
