@@ -37,7 +37,7 @@ export default function EditPage() {
   return (
     <OuterBox>
       <Box>
-        <BackerNav title={detail?.name || ''} to="/explore?tab=project" mb="40px" />
+        <BackerNav title={detail?.name || ''} to={`/project/info/${detail?.id}`} mb="40px" />
         <Content>
           <EditProject detail={detail} />
         </Content>

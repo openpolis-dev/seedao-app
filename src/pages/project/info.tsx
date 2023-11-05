@@ -49,7 +49,7 @@ export default function InfoPage() {
   return (
     <OuterBox>
       <Box>
-        <BackerNav title={detail?.name || ''} to="/explore?tab=project" />
+        <BackerNav title={detail?.name || ''} to="/explore?tab=project" mb="40px" />
         <Content>
           <FlexLine>
             <AllBox>
@@ -83,7 +83,7 @@ export default function InfoPage() {
               </LastLine>
             </AllBox>
             {canAuditApplication && (
-              <Link to={`/project/edit/${detail?.id}`}>
+              <Link to={`/project/edit/${detail?.id}`} state={detail}>
                 <Button>{t('Project.Edit')}</Button>
               </Link>
             )}
@@ -156,7 +156,6 @@ const InnerLft = styled.div`
 
 const TopBox = styled.div`
   display: flex;
-  margin-top: 46px;
 `;
 
 const TopImg = styled.div`
