@@ -127,7 +127,7 @@ export default function GoveranceNodeResult() {
         </Button>
       </OperateBox>
       <TableBox>
-        <Table className="head-table">
+        <Table id="head-table">
           <ColGroup />
           <thead>
             <tr>
@@ -232,9 +232,22 @@ const TableBox = styled.div`
   .table {
     table-layout: fixed;
     margin-bottom: 0;
-    &.head-table {
+    &#head-table {
       position: sticky;
       top: 0;
+    }
+    thead tr:first-child {
+      th {
+        border-top: none;
+      }
+      th:first-child {
+        border-top-left-radius: 16px;
+        border-left: none;
+      }
+      th:last-child {
+        border-top-right-radius: 16px;
+        border-right: none;
+      }
     }
 
     th {
@@ -247,6 +260,7 @@ const TableBox = styled.div`
       padding: 0;
       text-align: center;
       box-sizing: border-box;
+      line-height: 74px;
     }
     tr td:first-child {
       padding: 0 !important;

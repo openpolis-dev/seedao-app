@@ -131,7 +131,7 @@ const GlobalStyle = createGlobalStyle`
       height: 74px;
       padding: 10px;
       box-sizing: border-box;
-      color: var(--bs-body-color_a);
+      color: var(--bs-body-color_active);
       background-color: var(--rht-bg);
     }
     th {
