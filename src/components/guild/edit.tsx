@@ -6,45 +6,18 @@ import { UpdateInfo, addRelatedProposal } from 'requests/guild';
 import { InfoObj, ReTurnProject } from 'type/project.type';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import useToast, { ToastType } from 'hooks/useToast';
-import { MdEditor } from 'md-editor-rt';
 import PlusMinusButton from 'components/common/buttons';
 import CameraIconSVG from 'components/svgs/camera';
-import CloseTips from './closeTips';
-import CloseSuccess from './closeSuccess';
-import { createCloseProjectApplication } from 'requests/applications';
+import MarkdownEditor from 'components/common/markdownEditor';
+import { useNavigate } from 'react-router-dom';
 
-const config = {
-  toobars: [
-    'bold',
-    'underline',
-    'italic',
-    'strikeThrough',
-    'sub',
-    'sup',
-    'quote',
-    'unorderedList',
-    'orderedList',
-    'codeRow',
-    'code',
-    'link',
-    'image',
-    'table',
-    'revoke',
-    'next',
-    'pageFullscreen',
-    'fullscreen',
-    'preview',
-    'htmlPreview',
-  ],
-  toolbarsExclude: ['github'],
-};
-
-export default function EditGuild({ detail, onUpdate }: { detail: ReTurnProject | undefined; onUpdate: () => void }) {
+export default function EditGuild({ detail }: { detail?: ReTurnProject }) {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const { showToast } = useToast();
   const {
     dispatch,
-    state: { language, theme },
+    state: { theme },
   } = useAuthContext();
   const [proList, setProList] = useState(['']);
 
@@ -52,16 +25,6 @@ export default function EditGuild({ detail, onUpdate }: { detail: ReTurnProject 
   const [desc, setDesc] = useState('');
   const [url, setUrl] = useState('');
   const [intro, setIntro] = useState('');
-
-  const [lan, setLan] = useState('');
-
-  const [show, setShow] = useState(false);
-  const [showSuccess, setShowSuccess] = useState(false);
-
-  useEffect(() => {
-    const localLan = language === 'zh' ? 'zh-CN' : 'en-US';
-    setLan(localLan);
-  }, [language]);
 
   useEffect(() => {
     if (detail) {
@@ -150,8 +113,8 @@ export default function EditGuild({ detail, onUpdate }: { detail: ReTurnProject 
     try {
       await UpdateInfo(String(detail?.id), obj);
       await addRelatedProposal(String(detail?.id), ids);
-      onUpdate();
       showToast(t('Guild.changeInfoSuccess'), ToastType.Success);
+      navigate(`/guild/info/${detail?.id}`);
     } catch (error) {
       showToast(JSON.stringify(error), ToastType.Danger);
     } finally {
@@ -182,39 +145,6 @@ export default function EditGuild({ detail, onUpdate }: { detail: ReTurnProject 
     const { files } = e.target as any;
     const url = window.URL.createObjectURL(files[0]);
     getBase64(url);
-  };
-
-  const closeModal = () => {
-    setShow(false);
-  };
-  const handleShow = () => {
-    setShow(true);
-  };
-
-  const closeSuccess = () => {
-    setShowSuccess(false);
-    onUpdate();
-  };
-
-  const handleClosePro = async () => {
-    if (!detail) {
-      return;
-    }
-    setShow(false);
-    dispatch({ type: AppActionType.SET_LOADING, payload: true });
-    try {
-      await createCloseProjectApplication(detail.id);
-      dispatch({ type: AppActionType.SET_LOADING, payload: null });
-      setShowSuccess(true);
-
-      // reset project status
-      // updateProjectStatus(ProjectStatus.Pending);
-    } catch (e) {
-      console.error(e);
-      // showToast(JSON.stringify(e), ToastType.Danger);
-      dispatch({ type: AppActionType.SET_LOADING, payload: null });
-      closeModal();
-    }
   };
 
   return (
@@ -296,16 +226,7 @@ export default function EditGuild({ detail, onUpdate }: { detail: ReTurnProject 
           <li>
             <div className="title">{t('Project.Intro')}</div>
             <IntroBox>
-              <MdEditor
-                modelValue={intro}
-                onChange={(val) => {
-                  setIntro(val);
-                }}
-                toolbars={config.toobars as any}
-                language={lan}
-                codeStyleReverse={false}
-                noUploadImg
-              />
+              <MarkdownEditor value={intro} onChange={(val) => setIntro(val)} />
             </IntroBox>
           </li>
         </UlBox>
@@ -334,12 +255,7 @@ const TopBox = styled.section`
   display: flex;
 `;
 
-const IntroBox = styled.div`
-  .cm-scroller,
-  .md-editor-preview-wrapper {
-    background: var(--bs-background);
-  }
-`;
+const IntroBox = styled.div``;
 
 const MainContent = styled.div`
   display: flex;
