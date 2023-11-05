@@ -69,7 +69,7 @@ export default function InfoPage() {
   };
 
   const handleBack = () => {
-    isEdit ? setIsEdit(false) : navigate(-1);
+    isEdit ? setIsEdit(false) : navigate('/explore?tab=project');
   };
 
   const handleUpadte = () => {

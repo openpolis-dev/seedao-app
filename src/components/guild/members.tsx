@@ -110,9 +110,6 @@ export default function Members(props: Iprops) {
     setShow(false);
     refresh && updateProject();
   };
-  const handleAdd = () => {
-    setShow(true);
-  };
   const closeRemove = (refresh?: boolean) => {
     setShowDel(false);
     setEdit(false);
@@ -174,7 +171,7 @@ export default function Members(props: Iprops) {
 
   return (
     <Box>
-      {/*{show && <Add closeAdd={closeAdd} id={id as string} />}*/}
+      {show && <Add closeAdd={closeAdd} id={id as string} />}
       {/*{showDel && (*/}
       {/*  <Del*/}
       {/*    id={id as string}*/}
@@ -186,7 +183,7 @@ export default function Members(props: Iprops) {
       {/*)}*/}
       <TopBox>
         <BlockTitle>{t('Guild.Members')}</BlockTitle>
-        <AdeBox>
+        <AdeBox onClick={() => setShow(true)}>
           <img src={InviteImg} alt="" />
           {t('Project.invite')}
         </AdeBox>
@@ -294,9 +291,6 @@ const AdeBox = styled.div`
   border: 1px solid var(--bs-border-color);
   padding: 0 8px;
   cursor: pointer;
-`;
-const TitleBox = styled.div`
-  margin-bottom: 30px;
 `;
 
 const TopBox = styled.div`

@@ -69,7 +69,7 @@ export default function Index() {
   };
 
   const handleBack = () => {
-    isEdit ? setIsEdit(false) : navigate(-1);
+    isEdit ? setIsEdit(false) : navigate('/explore?tab=guild');
   };
 
   const handleUpadte = () => {

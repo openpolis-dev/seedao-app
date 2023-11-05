@@ -87,6 +87,8 @@
     "Others": "其他成员",
     "RemoveMember": "移除成员",
     "AddMember": "添加成员",
+    "AddMemberAddress": "SNS/地址",
+    "MemberRole": "角色",
     "Nickname": "昵称",
     "changeBudgetSuccess": "修改预算成功",
     "changeProName": "修改项目名称成功",
