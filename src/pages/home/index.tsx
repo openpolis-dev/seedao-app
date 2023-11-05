@@ -56,7 +56,7 @@ const ActiveBox = styled.div`
   }
   .boxApp {
     border: 1px solid var(--bs-border-color);
-    box-shadow: none;
+    box-shadow: var(--box-shadow);
   }
 `;
 
@@ -275,6 +275,11 @@ export default function Home() {
     return Links.apps.map((item) => ({ ...item, name: t(item.name) as string, desc: t(item.desc) as string }));
   }, [t]);
 
+  const Publicitys = useMemo(() => {
+    // @ts-ignore
+    return Links.publicity.map((item) => ({ ...item, name: t(item.name) as string, desc: t(item.desc) as string }));
+  }, [t]);
+
   useEffect(() => {
     const handleSEEDHolders = async () => {
       try {
@@ -397,13 +402,16 @@ export default function Home() {
         </Col>
         <Col md={4}>
           <CityBox>
-            <TitBox>
-              <span>{t('Home.Publicity')}</span>
-              <div className="toGo">
-                {t('Home.viewAll')}
-                <img src={ArrowImg} alt="" />
-              </div>
-            </TitBox>
+            <a href="https://seedao.notion.site/f57031667089473faa7ea3560d05960c" target="_blank" rel="noreferrer">
+              <TitBox>
+                <span>{t('Home.Publicity')}</span>
+                <div className="toGo">
+                  {t('Home.viewAll')}
+                  <img src={ArrowImg} alt="" />
+                </div>
+              </TitBox>
+            </a>
+
             <LinkBox>
               {/*<Col onClick={() => window.open(CITY_HALL, '_blank')}>*/}
               {/*  <div className="inn fst">*/}
@@ -440,17 +448,22 @@ export default function Home() {
               {/*    </div>*/}
               {/*  </div>*/}
               {/*</Col>*/}
-              <Col>
-                <BtmBox>
-                  <div>
-                    <div className="tit">Metaforo</div>
-                    <div className="desc">Here is the App introduction</div>
-                  </div>
-                  <div className="link">
-                    <img src={LinkImg} alt="" />
-                  </div>
-                </BtmBox>
-              </Col>
+
+              {Publicitys.map((item: any, index) => (
+                <Col key={`publicity_${index}`}>
+                  <a href={item.link} target="_blank" rel="noreferrer">
+                    <BtmBox>
+                      <div>
+                        <div className="tit">{item.name}</div>
+                        <div className="desc">{item.time}</div>
+                      </div>
+                      <div className="link">
+                        <img src={LinkImg} alt="" />
+                      </div>
+                    </BtmBox>
+                  </a>
+                </Col>
+              ))}
             </LinkBox>
           </CityBox>
         </Col>
