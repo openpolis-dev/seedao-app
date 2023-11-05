@@ -79,6 +79,15 @@ const TableBox = styled.div`
   overflow-x: auto;
   overflow-y: hidden;
   padding-bottom: 3rem;
+  td {
+    vertical-align: middle;
+  }
+  tr:hover {
+    td {
+      border-top: 1px solid #f00 !important;
+      border-bottom: 1px solid #fff !important;
+    }
+  }
 `;
 
 export default function AssetList() {

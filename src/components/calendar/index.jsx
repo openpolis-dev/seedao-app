@@ -141,7 +141,7 @@ const Box = styled.div`
             //margin-top: -13px;
             padding: 10px;
         }
-        a{
+        .calendarName + a{
             text-align: right;
             width: 100%;
             display: inline-block;

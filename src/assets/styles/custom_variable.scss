@@ -1,10 +1,11 @@
 :root{
   --bs-border-radius:8px;
   --bs-dropdown-padding-y:0;
-  --bs-primary-hover: #6014FF;
+
 }
 :root[data-bs-theme="light"] {
   --bs-primary: #5200FF;
+  --bs-primary-hover: #6014FF;
   --bs-background:#fff;
   --bs-box--background:#fff;
   --bs-body-bg:#fff;
@@ -36,6 +37,7 @@
 
 :root[data-bs-theme="dark"] {
   --bs-primary: #5200FF;
+  --bs-primary-hover: #6014FF;
   --bs-background:#0D0C0F;
   --bs-box--background:#1A1323;
   --bs-body-bg:#0D0C0F;
