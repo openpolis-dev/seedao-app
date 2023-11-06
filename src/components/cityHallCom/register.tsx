@@ -183,30 +183,6 @@ export default function Register() {
     getRecords();
   }, [selectApplicant, selectSource, page, pageSize]);
 
-  const getSelectIds = (): number[] => {
-    const ids = Object.keys(selectMap);
-    const select_ids: number[] = [];
-    for (const id of ids) {
-      const _id = Number(id);
-      if (selectMap[_id]) {
-        select_ids.push(_id);
-      }
-    }
-    return select_ids;
-  };
-
-  const handleExport = async () => {
-    const ids = Object.keys(selectMap);
-    const select_ids: number[] = [];
-    for (const id of ids) {
-      const _id = Number(id);
-      if (selectMap[_id]) {
-        select_ids.push(_id);
-      }
-    }
-    window.open(requests.application.getExportFileUrl(select_ids), '_blank');
-  };
-
   const formatSNS = (name: string) => {
     return name?.startsWith('0x') ? publicJs.AddressToShow(name) : name;
   };
@@ -283,10 +259,6 @@ export default function Register() {
                     }}
                   />
                 </BorderBox>
-
-                {/* <Button onClick={handleExport} disabled={!selectOne} variant="outlined">
-                    {t('application.ExportAll')}
-                  </Button> */}
               </TimeBox>
             </li>
           </TopLine>
@@ -299,11 +271,11 @@ export default function Register() {
                     <tr>
                       <th className="center">{t('application.RegisterSource')}</th>
                       <th className="center">{t('application.TotalAssets')}</th>
-                      <th className="center">{t('application.State')}</th>
+                      <th>{t('application.State')}</th>
                       <th>{t('application.RegisterNote')}</th>
+                      <th className="center">{t('application.Operator')}</th>
                       <th className="center">{t('application.Season')}</th>
                       <th className="center">{t('application.Time')}</th>
-                      <th className="center">{t('application.Operator')}</th>
                       <th>&nbsp;</th>
                     </tr>
                   </thead>
@@ -322,10 +294,9 @@ export default function Register() {
                           <ApplicationStatusTag status={item.state} />
                         </td>
                         <td>{item.comment}</td>
+                        <td className="center">{formatSNS(item.submitter_name)}</td>
                         <td className="center">{item.season_name}</td>
                         <td className="center">{item.created_date}</td>
-
-                        <td className="center">{formatSNS(item.submitter_name)}</td>
                         <td>
                           <TotalCountButton
                             onClick={() => {
