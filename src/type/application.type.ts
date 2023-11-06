@@ -72,7 +72,7 @@ export interface IApplicantBundle {
   records: IApplicationDisplay[];
   submit_date: number;
   season_name: string;
-  status: ApplicationStatus;
+  state: ApplicationStatus;
   submitter: string;
   entity: { id: number; name: string; type: string };
   assets: { name: string; amount: string }[];

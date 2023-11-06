@@ -20,6 +20,7 @@ import useBudgetSource from 'hooks/useBudgetSource';
 import BackerNav from 'components/common/backNav';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import { ContainerPadding } from 'assets/styles/global';
+import ApplicationStatusTag from 'components/common/applicationStatusTag';
 
 const Box = styled.div`
   position: relative;
@@ -317,7 +318,9 @@ export default function Register() {
                             ))}
                           </TotalAssets>
                         </td>
-                        <td></td>
+                        <td>
+                          <ApplicationStatusTag status={item.state} />
+                        </td>
                         <td>{item.comment}</td>
                         <td className="center">{item.season_name}</td>
                         <td className="center">{item.created_date}</td>
