@@ -1,9 +1,10 @@
 import styled from 'styled-components';
-import TwitterIcon from 'assets/Imgs/social/twitter.svg';
-import MirrorIcon from 'assets/Imgs/social/mirror.svg';
-import MirrorIconDark from 'assets/Imgs/social/mirror_dark.svg';
-import EmailIcon from 'assets/Imgs/social/email.svg';
-import GithubIcon from 'assets/Imgs/social/github.svg';
+import TwitterIcon from 'assets/Imgs/social/twitter.png';
+import MirrorIcon from 'assets/Imgs/social/mirror.png';
+import MirrorIconDark from 'assets/Imgs/social/mirror_dark.png';
+import EmailIcon from 'assets/Imgs/social/email.png';
+import GithubIcon from 'assets/Imgs/social/github.png';
+import GithubIconDark from 'assets/Imgs/social/github_dark.png';
 import { useMemo } from 'react';
 import { useAuthContext } from 'providers/authProvider';
 import { useTranslation } from 'react-i18next';
@@ -31,7 +32,7 @@ export function SocialIcon({ type, value }: IProps) {
       case SocaialType.Twitter:
         return TwitterIcon;
       case SocaialType.Github:
-        return theme ? GithubIcon : GithubIcon;
+        return theme ? GithubIconDark : GithubIcon;
       case SocaialType.Email:
         return EmailIcon;
       case SocaialType.Mirror:
@@ -70,7 +71,11 @@ export default function SocialIconBox({ user }: { user: IUser }) {
 
 const LinkBox = styled.div``;
 
-const IconHrefBox = styled.a``;
+const IconHrefBox = styled.a`
+  img {
+    width: 24px;
+  }
+`;
 
 const IconDisbaledBox = styled.div<{ theme: string }>`
   display: inline-block;
@@ -81,6 +86,7 @@ const IconDisbaledBox = styled.div<{ theme: string }>`
   }
 
   img {
+    width: 24px;
     opacity: 0.4;
   }
   .tooltip {
