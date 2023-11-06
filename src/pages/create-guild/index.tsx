@@ -1,8 +1,6 @@
 import { InputGroup, Button, Form } from 'react-bootstrap';
 import styled from 'styled-components';
-import React, { ChangeEvent, FormEvent, useState, useEffect } from 'react';
-// import { EvaIcon } from '@paljs/ui/Icon';
-// import { useRouter } from 'next/router';
+import React, { ChangeEvent, FormEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { createProjects } from 'requests/guild';
 import { BudgetType, IBaseProject } from 'type/project.type';
@@ -11,36 +9,10 @@ import useToast, { ToastType } from 'hooks/useToast';
 import { AssetName } from 'utils/constant';
 import { useNavigate } from 'react-router-dom';
 import { ContainerPadding } from 'assets/styles/global';
-import { MdEditor } from 'md-editor-rt';
 import PlusMinusButton from 'components/common/buttons';
 import CameraIconSVG from 'components/svgs/camera';
-import BackIconSVG from 'components/svgs/back';
-
-const config = {
-  toobars: [
-    'bold',
-    'underline',
-    'italic',
-    'strikeThrough',
-    'sub',
-    'sup',
-    'quote',
-    'unorderedList',
-    'orderedList',
-    'codeRow',
-    'code',
-    'link',
-    'image',
-    'table',
-    'revoke',
-    'next',
-    'pageFullscreen',
-    'fullscreen',
-    'preview',
-    'htmlPreview',
-  ],
-  toolbarsExclude: ['github'],
-};
+import BackerNav from 'components/common/backNav';
+import MarkdownEditor from 'components/common/markdownEditor';
 
 export default function CreateGuild() {
   // const router = useRouter();
@@ -51,7 +23,7 @@ export default function CreateGuild() {
   const { showToast } = useToast();
   const {
     dispatch,
-    state: { language, theme },
+    state: { theme },
   } = useAuthContext();
   const [adminList, setAdminList] = useState(['']);
   const [memberList, setMemberList] = useState<string[]>([]);
@@ -65,12 +37,6 @@ export default function CreateGuild() {
   const [url, setUrl] = useState('');
 
   const [intro, setIntro] = useState('');
-  const [lan, setLan] = useState('');
-
-  useEffect(() => {
-    const localLan = language === 'zh' ? 'zh-CN' : 'en-US';
-    setLan(localLan);
-  }, [language]);
 
   const handleInput = (e: ChangeEvent, index: number, type: string) => {
     const { value } = e.target as HTMLInputElement;
@@ -236,15 +202,12 @@ export default function CreateGuild() {
   };
 
   const handleBack = () => {
-    navigate('/city-hall');
+    navigate('/city-hall/governance');
   };
 
   return (
     <OuterBox>
-      <BackBox onClick={handleBack}>
-        <BackIconSVG />
-        <span>{t('Guild.create')}</span>
-      </BackBox>
+      <BackerNav title={t('Guild.create')} to="/city-hall/governance" />
       <CardBody>
         <BtnBox htmlFor="fileUpload" onChange={(e) => updateLogo(e)}>
           <ImgBox>
@@ -344,15 +307,11 @@ export default function CreateGuild() {
             <li>
               <div className="title">{t('Guild.Intro')}</div>
               <IntroBox>
-                <MdEditor
-                  modelValue={intro}
+                <MarkdownEditor
+                  value={intro}
                   onChange={(val) => {
                     setIntro(val);
                   }}
-                  toolbars={config.toobars as any}
-                  language={lan}
-                  codeStyleReverse={false}
-                  noUploadImg
                 />
               </IntroBox>
             </li>
