@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { Row, Col } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import Links from 'utils/links';
@@ -37,6 +37,14 @@ const AppBox = styled(Row)`
   }
 `;
 
+const AppCardBox = (props: { children: React.ReactNode }) => {
+  return (
+    <Col sm={12} md={6} lg={4} xl={3}>
+      {props.children}
+    </Col>
+  );
+};
+
 export default function GovernancePage() {
   const { t } = useTranslation();
   const {
@@ -53,13 +61,13 @@ export default function GovernancePage() {
     <div>
       <AppBox>
         {lst.map((app, i) => (
-          <Col sm={12} md={6} lg={4} xl={3} key={i}>
+          <AppCardBox key={i}>
             <AppCard {...app} />
-          </Col>
+          </AppCardBox>
         ))}
-        <Col sm={12} md={6} lg={4} xl={3}>
+        <AppCardBox>
           <EmptyAppCard theme={theme} />
-        </Col>
+        </AppCardBox>
       </AppBox>
     </div>
   );
