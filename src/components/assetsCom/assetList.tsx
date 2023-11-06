@@ -84,8 +84,10 @@ const TableBox = styled.div`
   }
   tr:hover {
     td {
-      border-top: 1px solid #f00 !important;
-      border-bottom: 1px solid #fff !important;
+      //border-bottom: 1px solid #fff !important;
+      //&+td{
+      //  border-bottom: 1px solid #fff !important;
+      //}
     }
   }
 `;
