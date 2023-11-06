@@ -366,6 +366,7 @@ const FilterSelect = styled(Select)`
 const TotalCountButton = styled.button`
   min-width: 111px;
   height: 40px;
+  line-height: 40px;
   background: var(--bs-background);
   border-radius: 8px;
   opacity: 1;
