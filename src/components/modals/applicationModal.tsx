@@ -119,6 +119,7 @@ const BlockRight = styled.div`
     border-radius: 8px;
     border: 1px solid var(--bs-border-color);
     padding: 10px 16px;
+    word-break: break-all;
   }
 `;
 
