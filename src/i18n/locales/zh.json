@@ -233,8 +233,8 @@
     "management": "管理",
     "create": "创建",
     "closeProjectReview": "项目关闭审核",
-    "GovernanceNodeResult": "治理节点资质计算结果",
-    "GovernanceNodeResultDesc": ""
+    "GovernanceNodeResult": "节点资质试算",
+    "GovernanceNodeResultDesc": "计算治理节点资质结果"
   },
   "GovernanceNodeResult": {
     "SearchTip": "SNS",
