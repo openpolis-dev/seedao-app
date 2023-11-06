@@ -174,6 +174,20 @@ const links = {
       icon: RImg2,
       desc: 'city-hall.GovernanceNodeResultDesc',
     },
+    {
+      name: 'Project.create',
+      link: '/create-project',
+      id: 'module-create-project',
+      icon: RImg4,
+      desc: '',
+    },
+    {
+      name: 'Guild.create',
+      link: '/create-guild',
+      id: 'module-create-guild',
+      icon: RImg6,
+      desc: '',
+    },
   ],
   brand: [
     // {
