@@ -59,7 +59,7 @@ const TableBox = styled.div`
   overflow-y: hidden;
   padding-bottom: 3rem;
   td {
-    line-height: 40px;
+    line-height: 54px;
     .form-check-input {
       position: relative;
       top: 8px;
@@ -219,6 +219,12 @@ export default function Register() {
       return;
     }
     setShowMore([...showMore.map((r) => ({ ...r, status }))]);
+    setList(
+      list.map((item) => ({
+        ...item,
+        records: item.records.map((r) => ({ ...r, status })),
+      })),
+    );
   };
 
   return (
@@ -290,11 +296,12 @@ export default function Register() {
                 <table className="table" cellPadding="0" cellSpacing="0">
                   <thead>
                     <tr>
-                      <th>{t('application.Time')}</th>
-                      <th className="center">{t('application.Season')}</th>
-                      <th className="center">{t('application.TotalAssets')}</th>
-                      <th>{t('application.RegisterNote')}</th>
                       <th className="center">{t('application.RegisterSource')}</th>
+                      <th className="center">{t('application.TotalAssets')}</th>
+                      <th className="center">{t('application.State')}</th>
+                      <th>{t('application.RegisterNote')}</th>
+                      <th className="center">{t('application.Season')}</th>
+                      <th className="center">{t('application.Time')}</th>
                       <th className="center">{t('application.Operator')}</th>
                       <th>&nbsp;</th>
                     </tr>
@@ -302,8 +309,7 @@ export default function Register() {
                   <tbody>
                     {list.map((item) => (
                       <tr key={item.id}>
-                        <td>{item.created_date}</td>
-                        <td className="center">{item.season_name}</td>
+                        <td className="center">{item.entity.name}</td>
                         <td className="center">
                           <TotalAssets>
                             {item.assets_display.map((asset, idx) => (
@@ -311,8 +317,11 @@ export default function Register() {
                             ))}
                           </TotalAssets>
                         </td>
+                        <td></td>
                         <td>{item.comment}</td>
-                        <td className="center">{item.entity.name}</td>
+                        <td className="center">{item.season_name}</td>
+                        <td className="center">{item.created_date}</td>
+
                         <td className="center">{formatSNS(item.submitter_name)}</td>
                         <td>
                           <TotalCountButton
@@ -375,4 +384,6 @@ const TotalAssets = styled.div`
   justify-content: center;
   gap: 8px;
   line-height: 20px;
+  box-sizing: border-box;
+  height: 100%;
 `;
