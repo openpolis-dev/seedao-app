@@ -14,11 +14,11 @@ export default function ExcelTable({ list }: IProps) {
       <table className="table" cellPadding="0" cellSpacing="0">
         <tr>
           <th>&nbsp;</th>
-          <th>SNS/钱包地址</th>
-          <th>资产类型</th>
-          <th>资产数量</th>
-          <th>{t('Project.Content')}</th>
-          <th>{t('Project.Note')}</th>
+          <th>{t('application.AddressName')}</th>
+          <th>{t('application.AssetType')}</th>
+          <th>{t('application.AssetAmount')}</th>
+          <th>{t('application.Content')}</th>
+          <th>{t('application.RegisterNote')}</th>
         </tr>
         {list.map((item, index) => (
           <tr key={index}>

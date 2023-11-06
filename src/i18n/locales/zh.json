@@ -286,7 +286,8 @@
     "RegisterList": "明细",
     "RegisterIntro": "填写提报备注信息",
     "RegisterAdd": "添加",
-    "RegisterSubmit": "提交"
+    "RegisterSubmit": "提交",
+    "TemplateFileName": "SeeDAO填报申请模版"
   },
   "My": {
     "MyProfile": "我的信息",

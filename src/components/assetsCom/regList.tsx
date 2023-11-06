@@ -2,10 +2,8 @@ import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
 import { IExcelObj } from 'type/project.type';
 import { useState, FormEvent, ChangeEvent, useEffect } from 'react';
-import { ethers } from 'ethers';
 import * as XLSX from 'xlsx';
-import { AppActionType, useAuthContext } from 'providers/authProvider';
-import requests from 'requests';
+import { useAuthContext } from 'providers/authProvider';
 import CustomTable from './customTable';
 import ExcelTable from './excelTable';
 import NoItem from 'components/noItem';
@@ -13,6 +11,7 @@ import { AddButton } from './customTable';
 import TableIconSVG from 'components/svgs/table';
 import AddIcon from 'assets/Imgs/add.svg';
 import DownloadIconSVG from 'components/svgs/download';
+import ExcellentExport from 'excellentexport';
 
 enum ChooseType {
   default = 0,
@@ -83,7 +82,24 @@ export default function RegList({ list, setList }: IProps) {
   };
 
   const downloadFile = async () => {
-    window.open(requests.application.getTemplateFileUrl(language), '_blank');
+    ExcellentExport.convert({ filename: t('Assets.TemplateFileName'), format: 'xlsx', openAsDownload: true }, [
+      {
+        name: 'Sheet',
+        from: {
+          array: [
+            [
+              t('application.AddressName'),
+              t('application.AssetType'),
+              t('application.AssetAmount'),
+              t('application.Content'),
+              t('application.RegisterNote'),
+            ],
+            ['***.seedao', 'SCR', '100', '', ''],
+            ['0x0000000000000000000000000000000000000000', 'USDT', '100', '', ''],
+          ],
+        },
+      },
+    ]);
   };
 
   const onClickAdd = () => {
@@ -134,10 +150,10 @@ export default function RegList({ list, setList }: IProps) {
     <>
       <FirstBox>
         <RhtBox>
-          {/* <DownloadButton className="rhtBtn" onClick={downloadFile}>
+          <DownloadButton className="rhtBtn" onClick={downloadFile}>
             <DownloadIconSVG />
             <span>{t('Project.DownloadForm')}</span>
-          </DownloadButton> */}
+          </DownloadButton>
           {chooseType === ChooseType.import && (
             <BtnBox className="top-import" htmlFor="fileUpload" onChange={(e) => updateFile(e)}>
               <input
