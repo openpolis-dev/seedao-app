@@ -4,7 +4,6 @@ import React, { useEffect, useMemo, useState } from 'react';
 import Page from 'components/pagination';
 import requests from 'requests';
 import { IApplicantBundleDisplay, ApplicationStatus, IApplicationDisplay } from 'type/application.type';
-import Loading from 'components/loading';
 import { formatTime } from 'utils/time';
 import utils from 'utils/publicJs';
 import { IQueryParams } from 'requests/applications';
@@ -19,6 +18,7 @@ import ArrowIconSVG from 'components/svgs/back';
 import useQuerySNS from 'hooks/useQuerySNS';
 import useSeasons from 'hooks/useSeasons';
 import useBudgetSource from 'hooks/useBudgetSource';
+import { AppActionType, useAuthContext } from 'providers/authProvider';
 
 const Box = styled.div`
   position: relative;
@@ -90,13 +90,13 @@ const TableBox = styled.div`
 
 export default function Register() {
   const { t } = useTranslation();
-  const { Toast, showToast } = useToast();
+  const { dispatch } = useAuthContext();
+  const { showToast } = useToast();
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [total, setTotal] = useState(100);
   const [list, setList] = useState<IApplicantBundleDisplay[]>([]);
   const [selectMap, setSelectMap] = useState<{ [id: number]: ApplicationStatus | boolean }>({});
-  const [loading, setLoading] = useState(false);
 
   // budget source
   const allSource = useBudgetSource();
@@ -110,6 +110,10 @@ export default function Register() {
   const [selectSeason, setSelectSeason] = useState<number>();
 
   const { getMultiSNS } = useQuerySNS();
+
+  const showLoading = (v: boolean) => {
+    dispatch({type: AppActionType.SET_LOADING, payload: v});
+  }
 
   const handlePage = (num: number) => {
     setPage(num + 1);
@@ -140,7 +144,7 @@ export default function Register() {
   }, []);
 
   const getRecords = async () => {
-    setLoading(true);
+    showLoading(true);
     const queryData: IQueryParams = {
       //   state: ApplicationStatus.Open,
     };
@@ -194,7 +198,7 @@ export default function Register() {
     } catch (error) {
       console.error('getProjectApplications failed', error);
     } finally {
-      setLoading(false);
+      showLoading(false);
     }
   };
 
@@ -215,7 +219,7 @@ export default function Register() {
   };
 
   const handleApprove = async () => {
-    setLoading(true);
+    showLoading(true);
     try {
       const select_ids = getSelectIds();
       await requests.application.approveBundles(select_ids);
@@ -226,12 +230,12 @@ export default function Register() {
       console.error('handle approve failed', error);
       showToast(t('Msg.ApproveFailed'), ToastType.Danger);
     } finally {
-      setLoading(false);
+      showLoading(false);
     }
   };
 
   const handleReject = async () => {
-    setLoading(true);
+    showLoading(true);
     try {
       const select_ids = getSelectIds();
       await requests.application.rejectBundles(select_ids);
@@ -242,7 +246,7 @@ export default function Register() {
       console.error('handle reject failed', error);
       showToast(t('Msg.ApproveFailed'), ToastType.Danger);
     } finally {
-      setLoading(false);
+      showLoading(false);
     }
   };
 
@@ -288,8 +292,6 @@ export default function Register() {
 
   return (
     <Box>
-      {loading && <Loading />}
-      {Toast}
       {showMore ? (
         <ExpandTable handleClose={() => setShowMore(undefined)} list={showMore} />
       ) : (
