@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { Button, Form } from 'react-bootstrap';
 import React, { useEffect, useMemo, useState } from 'react';
 import Page from 'components/pagination';
 import requests from 'requests';
@@ -18,10 +17,15 @@ import ArrowIconSVG from 'components/svgs/back';
 import useQuerySNS from 'hooks/useQuerySNS';
 import useSeasons from 'hooks/useSeasons';
 import useBudgetSource from 'hooks/useBudgetSource';
+import BackerNav from 'components/common/backNav';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
+import { ContainerPadding } from 'assets/styles/global';
 
 const Box = styled.div`
   position: relative;
+  box-sizing: border-box;
+  min-height: 100%;
+  ${ContainerPadding};
 `;
 const TopLine = styled.ul`
   display: flex;
@@ -31,6 +35,7 @@ const TopLine = styled.ul`
     .tit {
       white-space: nowrap;
       margin-bottom: 16px;
+      font-size: 14px;
     }
   }
 `;
@@ -44,32 +49,6 @@ const TimeBox = styled.div`
     border-color: var(--bs-primary);
     color: var(--bs-primary);
     &:disabled {
-    }
-  }
-`;
-
-const TopBox = styled.div`
-  display: flex;
-  gap: 18px;
-  margin-top: 32px;
-  margin-bottom: 20px;
-  button {
-    height: 40px;
-    min-width: 120px;
-    &.btn-outline-primary {
-      background-color: transparent;
-      color: #ff7193;
-      border-color: #ff7193;
-      &:hover,
-      &:active {
-        color: #ff7193 !important;
-        border-color: #ff7193 !important;
-        background-color: transparent !important;
-      }
-      &.disabled {
-        background-color: #b0b0b0;
-        color: #0d0c0f;
-      }
     }
   }
 `;
@@ -104,6 +83,7 @@ export default function Register() {
   const [applicants, setApplicants] = useState<ISelectItem[]>([]);
   const [selectApplicant, setSelectApplicant] = useState<string>();
   const [showMore, setShowMore] = useState<IApplicationDisplay[]>();
+  const [showBundleId, setShowBundleId] = useState<number>();
 
   // season
   const seasons = useSeasons();
@@ -112,18 +92,14 @@ export default function Register() {
   const { getMultiSNS } = useQuerySNS();
 
   const showLoading = (v: boolean) => {
-    dispatch({type: AppActionType.SET_LOADING, payload: v});
-  }
+    dispatch({ type: AppActionType.SET_LOADING, payload: v });
+  };
 
   const handlePage = (num: number) => {
     setPage(num + 1);
   };
   const handlePageSize = (num: number) => {
     setPageSize(num);
-  };
-
-  const onChangeCheckbox = (value: boolean, id: number) => {
-    setSelectMap({ ...selectMap, [id]: value });
   };
 
   const getApplicants = async () => {
@@ -218,38 +194,6 @@ export default function Register() {
     return select_ids;
   };
 
-  const handleApprove = async () => {
-    showLoading(true);
-    try {
-      const select_ids = getSelectIds();
-      await requests.application.approveBundles(select_ids);
-      getRecords();
-      showToast(t('Msg.ApproveSuccess'), ToastType.Success);
-      setSelectMap({});
-    } catch (error) {
-      console.error('handle approve failed', error);
-      showToast(t('Msg.ApproveFailed'), ToastType.Danger);
-    } finally {
-      showLoading(false);
-    }
-  };
-
-  const handleReject = async () => {
-    showLoading(true);
-    try {
-      const select_ids = getSelectIds();
-      await requests.application.rejectBundles(select_ids);
-      getRecords();
-      setSelectMap({});
-      showToast(t('Msg.ApproveSuccess'), ToastType.Success);
-    } catch (error) {
-      console.error('handle reject failed', error);
-      showToast(t('Msg.ApproveFailed'), ToastType.Danger);
-    } finally {
-      showLoading(false);
-    }
-  };
-
   const handleExport = async () => {
     const ids = Object.keys(selectMap);
     const select_ids: number[] = [];
@@ -262,98 +206,83 @@ export default function Register() {
     window.open(requests.application.getExportFileUrl(select_ids), '_blank');
   };
 
-  const onSelectAll = (v: boolean) => {
-    const newMap = { ...selectMap };
-    list.forEach((item) => {
-      newMap[item.id] = v;
-    });
-    setSelectMap(newMap);
-  };
-
-  const selectOne = useMemo(() => {
-    const select_ids = getSelectIds();
-    return select_ids.length > 0;
-  }, [selectMap]);
-
-  const ifSelectAll = useMemo(() => {
-    let _is_select_all = true;
-    for (const item of list) {
-      if (!selectMap[item.id]) {
-        _is_select_all = false;
-        break;
-      }
-    }
-    return _is_select_all;
-  }, [list, selectMap]);
-
   const formatSNS = (name: string) => {
     return name?.startsWith('0x') ? publicJs.AddressToShow(name) : name;
   };
 
+  const handleclose = () => {
+    setShowMore(undefined);
+    setShowBundleId(undefined);
+  };
+  const updateStatus = (status: ApplicationStatus) => {
+    if (!showMore) {
+      return;
+    }
+    setShowMore([...showMore.map((r) => ({ ...r, status }))]);
+  };
+
   return (
     <Box>
-      {showMore ? (
-        <ExpandTable handleClose={() => setShowMore(undefined)} list={showMore} />
+      {showMore && showBundleId ? (
+        <ExpandTable
+          bund_id={showBundleId}
+          list={showMore}
+          handleClose={handleclose}
+          updateStatus={updateStatus}
+          showLoading={showLoading}
+        />
       ) : (
         <>
-          <div>
-            <TopLine>
-              <li>
-                <div className="tit">{t('application.BudgetSource')}</div>
-                <FilterSelect
-                  options={allSource}
-                  placeholder=""
-                  onChange={(value: any) => {
-                    setSelectSource({ id: value?.value as number, type: value?.data });
-                    setSelectMap({});
-                    setPage(1);
-                  }}
-                />
-              </li>
-              <li>
-                <div className="tit">{t('application.Operator')}</div>
-                <FilterSelect
-                  options={applicants}
-                  placeholder=""
-                  onChange={(value: ISelectItem) => {
-                    setSelectApplicant(value?.value);
-                    setSelectMap({});
-                    setPage(1);
-                  }}
-                />
-              </li>
-              <li>
-                <div className="tit">{t('application.Season')}</div>
-                <TimeBox>
-                  <BorderBox>
-                    <Select
-                      width="90px"
-                      options={seasons}
-                      placeholder=""
-                      NotClear={true}
-                      onChange={(value: any) => {
-                        setSelectSeason(value?.value);
-                        setSelectMap({});
-                        setPage(1);
-                      }}
-                    />
-                  </BorderBox>
+          <BackerNav title={t('city-hall.PointsAndTokenAudit')} to="/city-hall/governance" />
 
-                  {/* <Button onClick={handleExport} disabled={!selectOne} variant="outlined">
+          <TopLine>
+            <li>
+              <div className="tit">{t('application.BudgetSource')}</div>
+              <FilterSelect
+                options={allSource}
+                placeholder=""
+                onChange={(value: any) => {
+                  setSelectSource({ id: value?.value as number, type: value?.data });
+                  setSelectMap({});
+                  setPage(1);
+                }}
+              />
+            </li>
+            <li>
+              <div className="tit">{t('application.Operator')}</div>
+              <FilterSelect
+                options={applicants}
+                placeholder=""
+                onChange={(value: ISelectItem) => {
+                  setSelectApplicant(value?.value);
+                  setSelectMap({});
+                  setPage(1);
+                }}
+              />
+            </li>
+            <li>
+              <div className="tit">{t('application.Season')}</div>
+              <TimeBox>
+                <BorderBox>
+                  <Select
+                    width="90px"
+                    options={seasons}
+                    placeholder=""
+                    NotClear={true}
+                    onChange={(value: any) => {
+                      setSelectSeason(value?.value);
+                      setSelectMap({});
+                      setPage(1);
+                    }}
+                  />
+                </BorderBox>
+
+                {/* <Button onClick={handleExport} disabled={!selectOne} variant="outlined">
                     {t('application.ExportAll')}
                   </Button> */}
-                </TimeBox>
-              </li>
-            </TopLine>
-            <TopBox>
-              <Button onClick={handleApprove} disabled={!selectOne}>
-                {t('city-hall.Pass')}
-              </Button>
-              <Button variant="outline-primary" onClick={handleReject} disabled={!selectOne}>
-                {t('city-hall.Reject')}
-              </Button>
-            </TopBox>
-          </div>
+              </TimeBox>
+            </li>
+          </TopLine>
 
           <TableBox>
             {list.length ? (
@@ -361,9 +290,6 @@ export default function Register() {
                 <table className="table" cellPadding="0" cellSpacing="0">
                   <thead>
                     <tr>
-                      <th className="chech-th">
-                        <Form.Check checked={ifSelectAll} onChange={(e) => onSelectAll(e.target.checked)} />
-                      </th>
                       <th>{t('application.Time')}</th>
                       <th className="center">{t('application.Season')}</th>
                       <th className="center">{t('application.TotalAssets')}</th>
@@ -376,24 +302,25 @@ export default function Register() {
                   <tbody>
                     {list.map((item) => (
                       <tr key={item.id}>
-                        <td>
-                          <Form.Check
-                            checked={!!selectMap[item.id]}
-                            onChange={(e: any) => onChangeCheckbox(e.target.checked, item.id)}
-                          />
-                        </td>
                         <td>{item.created_date}</td>
                         <td className="center">{item.season_name}</td>
                         <td className="center">
-                          {item.assets_display.map((asset, idx) => (
-                            <div key={idx}>{asset}</div>
-                          ))}
+                          <TotalAssets>
+                            {item.assets_display.map((asset, idx) => (
+                              <div key={idx}>{asset}</div>
+                            ))}
+                          </TotalAssets>
                         </td>
                         <td>{item.comment}</td>
                         <td className="center">{item.entity.name}</td>
                         <td className="center">{formatSNS(item.submitter_name)}</td>
                         <td>
-                          <TotalCountButton onClick={() => setShowMore(item.records)}>
+                          <TotalCountButton
+                            onClick={() => {
+                              setShowMore(item.records);
+                              setShowBundleId(item.id);
+                            }}
+                          >
                             {t('application.TotalCount', { count: item.records.length })}
                             <ArrowIconSVG className="arrow" />
                           </TotalCountButton>
@@ -440,4 +367,12 @@ const TotalCountButton = styled.button`
     position: relative;
     top: -1px;
   }
+`;
+
+const TotalAssets = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+  line-height: 20px;
 `;

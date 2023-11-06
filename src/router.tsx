@@ -36,6 +36,7 @@ import PubDetail from './pages/Pub/detail';
 
 import GoveranceNodeResult from 'pages/cityhall/governance/governanceNodeResult';
 import ResourcesDetail from './pages/resouces/resources-detail';
+import Audit from 'components/cityHallCom/register';
 
 export default function RouterLink() {
   return (
@@ -76,6 +77,7 @@ export default function RouterLink() {
           <Route path="/proposal/thread/:id" element={<ProposalThread />} />
           <Route path="/city-hall/*" element={<CityHall />} />
           <Route path="/city-hall/governance/governance-node-result" element={<GoveranceNodeResult />} />
+          <Route path="/city-hall/governance/audit" element={<Audit />} />
           <Route path="/chat" element={<Chat />} />
           <Route path="/feedback" element={<Canny />} />
         </Routes>
