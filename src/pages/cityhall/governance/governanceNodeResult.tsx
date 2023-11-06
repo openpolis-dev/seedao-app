@@ -93,7 +93,7 @@ export default function GoveranceNodeResult() {
   };
 
   const handleExport = () => {
-    ExcellentExport.convert({ filename: 'fileTriggeredAutomatically', format: 'xlsx', openAsDownload: true }, [
+    ExcellentExport.convert({ filename: t('GovernanceNodeResult.FileName'), format: 'xlsx', openAsDownload: true }, [
       {
         name: t('GovernanceNodeResult.SheetName'),
         from: {

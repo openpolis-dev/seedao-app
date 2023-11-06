@@ -244,7 +244,8 @@
     "ActiveSCR": "Active SCR",
     "EffectiveSCR": "Effective SCR",
     "SeedCount": "SEED Count",
-    "SheetName": "Result"
+    "SheetName": "Result",
+    "FileName": "SeeDAO Node Qualification"
   },
   "Push": {
     "CreatePush": "Create Notification",
