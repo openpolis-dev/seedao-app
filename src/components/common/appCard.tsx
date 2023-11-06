@@ -28,6 +28,9 @@ const AppCard = ({
   const handleClickEvent = () => {
     if (id.startsWith('module-')) {
       navigate(link);
+    } else if (id.startsWith('resource-')) {
+      const url = link.split('https://tally.so/r/')[1];
+      navigate(`/resources/detail/${url}`);
     } else {
       window.open(link, '_blank');
     }

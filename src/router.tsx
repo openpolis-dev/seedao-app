@@ -33,7 +33,9 @@ import Resources from './pages/resouces/resources';
 import ExplorePage from './pages/explore';
 import Pub from './pages/Pub/Pub';
 import PubDetail from './pages/Pub/detail';
+
 import GoveranceNodeResult from 'pages/cityhall/governance/governanceNodeResult';
+import ResourcesDetail from './pages/resouces/resources-detail';
 
 export default function RouterLink() {
   return (
@@ -50,6 +52,7 @@ export default function RouterLink() {
           <Route path="/event" element={<Event />} />
           <Route path="/apps" element={<Apps />} />
           <Route path="/resources" element={<Resources />} />
+          <Route path="/resources/detail/:id" element={<ResourcesDetail />} />
           <Route path="/event/view" element={<EventView />} />
           <Route path="/event/edit" element={<EventEdit />} />
           <Route path="/online-event" element={<CalendarPage />} />

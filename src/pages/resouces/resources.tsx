@@ -9,6 +9,7 @@ import Links from 'utils/links';
 import AppCard, { EmptyAppCard } from 'components/common/appCard';
 import Tabbar from 'components/common/tabbar';
 import { useAuthContext } from '../../providers/authProvider';
+import { useNavigate } from 'react-router-dom';
 
 const OuterBox = styled.div`
   min-height: 100%;
@@ -89,6 +90,9 @@ export default function Resources() {
             <AppCard {...item} />
           </Col>
         ))}
+        {/*<div onClick={()=>ToGo()}>*/}
+        {/*  test*/}
+        {/*</div>*/}
         <Col sm={12} md={6} lg={4} xl={3}>
           <EmptyAppCard theme={theme} />
         </Col>
