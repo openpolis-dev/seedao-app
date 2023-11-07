@@ -226,10 +226,6 @@ const SearchBox = styled.div`
 const TableBox = styled.div`
   height: calc(100vh - 262px);
   overflow-y: auto;
-  &::-webkit-scrollbar {
-    display: none;
-    width: 0;
-  }
   .table {
     table-layout: fixed;
     margin-bottom: 0;
