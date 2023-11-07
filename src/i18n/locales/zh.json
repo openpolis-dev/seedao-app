@@ -233,9 +233,9 @@
     "SeedReviewDesc": "审核SEED获取的申请",
     "management": "管理",
     "create": "创建",
-    "closeProjectReview": "项目关闭审核",
     "GovernanceNodeResult": "节点资质试算",
-    "GovernanceNodeResultDesc": "计算治理节点资质结果"
+    "GovernanceNodeResultDesc": "计算治理节点资质结果",
+    "CloseProjectAudit": "关闭项目审核"
   },
   "GovernanceNodeResult": {
     "SearchTip": "SNS",
@@ -420,8 +420,13 @@
     "AddressName": "SNS/地址",
     "AssetAmount": "资产数量",
     "AssetType": "资产类型",
-    "ExportAll": "导出全部"
-  },
+    "ExportAll": "导出全部",
+    "Project": "项目",
+    "CloseReason": "关闭原由",
+    "Applicant": "申请人",
+    "ApplyTime": "申请时间",
+    "Operation": "操作"
+    },
   "members": {
     "RemoveTitle": "移除成员",
     "AddTitle": "添加成员",

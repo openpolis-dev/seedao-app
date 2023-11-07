@@ -233,9 +233,9 @@
     "SeedReviewDesc": "Review the request of claiming SeeDAO SEED NFT.",
     "management": "Management",
     "create": "Create",
-    "closeProjectReview": "Review the request of closing project.",
     "GovernanceNodeResult": "SeeDAO Node Qualification",
-    "GovernanceNodeResultDesc": "SeeDAO Node qualification calculation result."
+    "GovernanceNodeResultDesc": "SeeDAO Node qualification calculation result.",
+    "CloseProjectAudit": "Audit Close Project"
   },
   "GovernanceNodeResult": {
     "SearchTip": "SNS",
@@ -420,7 +420,12 @@
     "AddressName": "SNS/Address",
     "AssetAmount": "Asset Amount",
     "AssetType": "Asset Type",
-    "ExportAll": "Export All"
+    "ExportAll": "Export All",
+    "Project": "Project",
+    "CloseReason": "Close Reason",
+    "Applicant": "Applicant",
+    "ApplyTime": "Apply Time",
+    "Operation": "Operation"
   },
   "members": {
     "RemoveTitle": "Remove Member",

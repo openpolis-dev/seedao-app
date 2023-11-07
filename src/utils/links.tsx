@@ -196,9 +196,9 @@ const links = {
       desc: '',
     },
     {
-      name: 'city-hall.PointsAndTokenAudit',
-      link: '/city-hall/governance/audit',
-      id: 'module-governance-audit',
+      name: 'city-hall.CloseProjectAudit',
+      link: '/city-hall/governance/audit-project',
+      id: 'module-governance-audit-project',
       icon: RImg8,
       desc: '',
     },
