@@ -427,7 +427,7 @@ export default function Menu({ isMedium }: { isMedium: boolean }) {
           onSelectMenu={onSelectMenu}
           selected={
             pathname.startsWith(item.link.href) ||
-            (item.link.href.startsWith('/explore') && (pathname.includes('project') || pathname.includes('guild')))
+            (item.link.href.startsWith('/explore') && (pathname.includes('/project') || pathname.includes('/guild')))
           }
         />
       ))}
