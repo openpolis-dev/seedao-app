@@ -1,12 +1,17 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useParams } from 'react-router-dom';
 import TallyForm from './tallyForm';
 import Links from '../../utils/links';
 import { useAuthContext } from '../../providers/authProvider';
+import BackerNav from '../../components/common/backNav';
 
 const Box = styled.div`
   margin: 24px 0;
+`;
+
+const LftBox = styled.div`
+  margin: 0 32px;
 `;
 
 export default function ResourcesDetail() {
@@ -27,5 +32,13 @@ export default function ResourcesDetail() {
     if (!id) return;
     getDetail();
   }, [id]);
-  return <Box>{!!account && <TallyForm id={id} item={item} userData={userData} account={account} />}</Box>;
+  return (
+    <Box>
+      <LftBox>
+        <BackerNav title={item?.name || ''} to="/resources" mb="40px" />
+      </LftBox>
+
+      {!!account && <TallyForm id={id} item={item} userData={userData} account={account} />}
+    </Box>
+  );
 }
