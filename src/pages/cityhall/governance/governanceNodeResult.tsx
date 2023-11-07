@@ -4,7 +4,7 @@ import BackerNav from 'components/common/backNav';
 import { useTranslation } from 'react-i18next';
 import { Table, Form, Button } from 'react-bootstrap';
 import { getGovernanceNodeResult } from 'requests/cityHall';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import publicJs from 'utils/publicJs';
 import useQuerySNS from 'hooks/useQuerySNS';
@@ -100,12 +100,12 @@ export default function GoveranceNodeResult() {
           array: [
             [
               'SNS',
-              'S0',
-              'S1',
-              'S2',
-              'S3',
-              t('GovernanceNodeResult.MinerReward', { season: 'S3' }),
-              t('GovernanceNodeResult.Total'),
+              'S0(SCR)',
+              'S1(SCR)',
+              'S2(SCR)',
+              'S3(SCR)',
+              t('GovernanceNodeResult.MinerReward', { season: 'S3' }) + '(SCR)',
+              t('GovernanceNodeResult.Total') + '(SCR)',
               t('GovernanceNodeResult.ActiveSCR'),
               t('GovernanceNodeResult.EffectiveSCR'),
               t('GovernanceNodeResult.SeedCount'),
@@ -120,6 +120,7 @@ export default function GoveranceNodeResult() {
               item.season_total_credit || 0,
               item.activity_credit || 0,
               item.effective_credit || 0,
+              item.seed_count || 0,
             ]),
           ],
         },
@@ -163,27 +164,20 @@ export default function GoveranceNodeResult() {
         <Table id="head-table">
           <ColGroup />
           <thead>
-            <tr>
-              <th rowSpan={2}>SNS</th>
-              <th scope="colgroup" colSpan={6}>
-                SCR
-              </th>
-              <th rowSpan={2}>{t('GovernanceNodeResult.ActiveSCR')}</th>
-              <th rowSpan={2}>{t('GovernanceNodeResult.EffectiveSCR')}</th>
-              <th rowSpan={2}>{t('GovernanceNodeResult.SeedCount')}</th>
-            </tr>
-            <tr>
-              <th rowSpan={1}>S0</th>
-              <th rowSpan={1}>S1</th>
-              <th rowSpan={1}>S2</th>
-              <th rowSpan={1}>
-                <CurrentSeason>S3</CurrentSeason>
-              </th>
-              <th rowSpan={1}>
-                <HeaderCell>{t('GovernanceNodeResult.MinerReward', { season: 'S3' })}</HeaderCell>
-              </th>
-              <th rowSpan={1}>{t('GovernanceNodeResult.Total')}</th>
-            </tr>
+            <th>SNS</th>
+            <th>S0(SCR)</th>
+            <th>S1(SCR)</th>
+            <th>S2(SCR)</th>
+            <th>
+              <CurrentSeason>S3</CurrentSeason>(SCR)
+            </th>
+            <th>
+              <HeaderCell>{t('GovernanceNodeResult.MinerReward', { season: 'S3' })}(SCR)</HeaderCell>
+            </th>
+            <th>{t('GovernanceNodeResult.Total')}(SCR)</th>
+            <th>{t('GovernanceNodeResult.ActiveSCR')}</th>
+            <th>{t('GovernanceNodeResult.EffectiveSCR')}</th>
+            <th>{t('GovernanceNodeResult.SeedCount')}</th>
           </thead>
         </Table>
         <Table id="body-table">
@@ -260,7 +254,6 @@ const TableBox = styled.div`
 
     th {
       border-style: inherit;
-      border-width: 1px;
       box-sizing: border-box;
       text-align: center;
     }
@@ -287,8 +280,12 @@ const TableBox = styled.div`
 const HeaderCell = styled.div`
   white-space: wrap;
   font-family: Poppins-SemiBold, Poppins;
+  background-color: transparent !important;
+  color: var(--bs-body-color_active) !important;
 `;
 
 const CurrentSeason = styled(HeaderCell)`
-  color: var(--bs-primary);
+  color: var(--bs-primary) !important;
+  display: inline;
+  padding: 0 !important;
 `;
