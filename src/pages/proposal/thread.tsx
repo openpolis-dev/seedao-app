@@ -9,7 +9,6 @@ import useLoadQuill from 'hooks/useLoadQuill';
 
 import useProposalCategory from 'hooks/useProposalCategory';
 import { formatDate } from 'utils/time';
-import LoadingBox from 'components/loadingBox';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import { ContainerPadding } from 'assets/styles/global';
@@ -23,7 +22,6 @@ export default function Proposal() {
   const { dispatch } = useAuthContext();
 
   const [data, setData] = useState<IBaseProposal>();
-  const [loading, setLoading] = useState(false);
 
   const ProposalNav = useProposalCategory(data?.category_index_id);
 
@@ -57,7 +55,6 @@ export default function Proposal() {
     <BoxOuter>
       {ProposalNav}
       <ProposalContainer>
-        {!data && loading && <LoadingBox />}
         {data && (
           <>
             <ProposalTitle>{data?.title}</ProposalTitle>

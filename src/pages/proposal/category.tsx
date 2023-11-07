@@ -7,7 +7,6 @@ import ProposalSubNav from 'components/proposal/proposalSubNav';
 import useProposalCategory from 'hooks/useProposalCategory';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import styled from 'styled-components';
-import LoadingBox from 'components/loadingBox';
 import { AppActionType, useAuthContext } from '../../providers/authProvider';
 
 export default function ProposalCategory() {
@@ -17,7 +16,6 @@ export default function ProposalCategory() {
   const [proposals, setProposals] = useState<IBaseProposal[]>([]);
   const [orderType, setOrderType] = useState<'new' | 'old'>('new');
   const [hasMore, setHasMore] = useState(false);
-  const [loading, setLoading] = useState(false);
 
   const ProposalNav = useProposalCategory(Number(id));
 
@@ -75,7 +73,6 @@ export default function ProposalCategory() {
             ))}
           </ProposalBox>
         </InfiniteScroll>
-        {loading && <LoadingBox />}
       </CategoryPage>
     </BoxOuter>
   );
