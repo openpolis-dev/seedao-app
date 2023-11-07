@@ -32,7 +32,7 @@
   --bs-table-bg: transparent;
   --bs-d-button-bg: #F9F9F9;
   --bs-d-button-border: rgba(217, 217, 217, 0.5);
-
+  --option-button-border-color: rgba(217, 217, 217, 0.5);
 }
 
 :root[data-bs-theme="dark"] {
@@ -64,4 +64,5 @@
   --bs-table-bg: transparent;
   --bs-d-button-bg: #1A1323;
   --bs-d-button-border: #29282F;
+  --option-button-border-color: #1A1323;
 }

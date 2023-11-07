@@ -48,6 +48,7 @@ const PlusButtonStyle = styled.span`
   background: var(--bs-box--background);
   border-radius: 8px;
   text-align: center;
+  border: 1px solid var(--option-button-border-color);
   svg {
     position: relative;
     top: 5px;
