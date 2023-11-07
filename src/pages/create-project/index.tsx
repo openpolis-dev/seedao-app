@@ -250,7 +250,7 @@ export default function CreateProject() {
   };
 
   const roleOptions = useMemo(() => {
-    return [{ label: t('Guild.Moderator'), value: UserRole.Admin }];
+    return [{ label: t('Project.Moderator'), value: UserRole.Admin }];
   }, [t]);
 
   return (
