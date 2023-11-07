@@ -124,6 +124,10 @@ export default function GoveranceNodeResult() {
             ]),
           ],
         },
+        formats: ['B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'].map((c) => ({
+          range: `${c}2:${c}1000`,
+          format: ExcellentExport.formats.NUMBER,
+        })),
       },
     ]);
   };
