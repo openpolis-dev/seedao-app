@@ -224,7 +224,7 @@ export default function Members(props: Iprops) {
               </ImgBox>
               <div>
                 <div className="snsBox">{nameMap[item?.wallet] || PublicJs.AddressToShow(item.wallet || '')}</div>
-                <div className="tagBox">{t('Project.Moderator')}</div>
+                <span className="tagBox">{t('Project.Moderator')}</span>
               </div>
             </InnerBox>
           ))}
@@ -260,12 +260,15 @@ const InnerBox = styled.div`
     word-break: break-all;
   }
   .tagBox {
+    margin-top: 8px;
+    display: inline-block;
+    height: 20px;
+    line-height: 20px;
     background: #2dc45e;
     border-radius: 6px;
     padding: 0 8px;
     color: #000;
     font-size: 12px;
-    margin-top: 8px;
   }
 `;
 
