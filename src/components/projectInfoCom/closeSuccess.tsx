@@ -35,6 +35,7 @@ const CardHeader = styled.div`
 `;
 
 const CardBody = styled.div`
+  width: 400px;
   color: var(--bs-body-color_active);
   font-size: 14px;
   line-height: 24px;

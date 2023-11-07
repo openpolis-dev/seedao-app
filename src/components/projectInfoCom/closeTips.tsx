@@ -7,6 +7,7 @@ const CardBody = styled.div`
   color: var(--bs-body-color_active);
   font-size: 14px;
   line-height: 24px;
+  width: 400px;
 `;
 const CardFooter = styled.div`
   display: flex;
@@ -27,10 +28,10 @@ export default function CloseTips(props: Iprops) {
   const { t } = useTranslation();
 
   return (
-    <BasicModal title={t('Project.CloseProject')}>
+    <BasicModal title={t('Project.CloseProject')} handleClose={closeModal}>
       <CardBody>{t('Project.confirmClose')}</CardBody>
       <CardFooter>
-        <Button variant="outline-primary" className="btnBtmAll" onClick={() => closeModal()}>
+        <Button variant="outline-primary" className="btnBtmAll" onClick={closeModal}>
           {t('general.cancel')}
         </Button>
         <Button onClick={() => handleClosePro()}>{t('general.confirm')}</Button>
