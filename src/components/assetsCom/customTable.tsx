@@ -5,8 +5,10 @@ import Select from 'components/common/select';
 import { Button, Form } from 'react-bootstrap';
 import { useState, FormEvent, useEffect } from 'react';
 import DeleteIcon from 'assets/Imgs/delete.svg';
-import AddIcon from 'assets/Imgs/add.svg';
+import AddIcon from 'assets/Imgs/dark/add.svg';
+import AddIconLight from 'assets/Imgs/light/add.svg';
 import { AssetName } from 'utils/constant';
+import { useAuthContext } from '../../providers/authProvider';
 
 interface IProps {
   updateList: (data: IExcelObj[]) => void;
@@ -14,6 +16,9 @@ interface IProps {
 
 const CustomTable = ({ updateList }: IProps) => {
   const { t } = useTranslation();
+  const {
+    state: { theme },
+  } = useAuthContext();
   const [list, setList] = useState<IExcelObj[]>([
     {
       address: '',
@@ -73,7 +78,7 @@ const CustomTable = ({ updateList }: IProps) => {
   }, [list]);
 
   return (
-    <>
+    <Box>
       <table className="table" cellPadding="0" cellSpacing="0">
         <thead>
           <tr>
@@ -130,15 +135,61 @@ const CustomTable = ({ updateList }: IProps) => {
       </table>
       <div>
         <AddButton onClick={addOne}>
-          <img src={AddIcon} alt="" />
+          <img src={theme ? AddIcon : AddIconLight} alt="" />
           {t('Assets.RegisterAdd')}
         </AddButton>
       </div>
-    </>
+    </Box>
   );
 };
 
 export default CustomTable;
+
+const Box = styled.div`
+  background: transparent;
+  .table > :not(caption) > * > * {
+    background: none;
+    padding: 0;
+  }
+  .table {
+    border-bottom: 1px solid var(--bs-border-color_opacity);
+    td,
+    th {
+      vertical-align: middle;
+      border: 0;
+    }
+    td {
+      padding: 0 20px;
+    }
+    tbody {
+      tr {
+        border: 0;
+      }
+    }
+    th {
+      padding-inline: 20px;
+      background: var(--table-header);
+      height: 70px;
+      &:first-child {
+        width: 400px;
+      }
+      &:last-child {
+        width: 80px;
+      }
+      &:nth-child(3) {
+        width: 150px;
+      }
+    }
+
+    input {
+      border: 1px solid var(--bs-border-color);
+      background: var(--bs-box--background);
+      padding: 10px 14px;
+      border-radius: 8px;
+      width: 100%;
+    }
+  }
+`;
 
 const DeleteImg = styled.img`
   cursor: pointer;
@@ -147,13 +198,13 @@ const DeleteImg = styled.img`
 `;
 
 export const AddButton = styled.button<{ long?: boolean }>`
-  height: 34px;
-  background: #b0b0b0;
+  height: 36px;
+  background: var(--home-right);
   border-radius: 8px;
-  color: #0d0c0f;
+  color: var(--bs-body-color_active);
+  border: 1px solid var(--bs-border-color);
   padding-inline: 10px;
-  border: none;
-  font-family: Poppins-SemiBold, Poppins;
+  font-size: 14px;
   img {
     margin-right: 8px;
   }

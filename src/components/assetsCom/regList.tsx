@@ -9,7 +9,8 @@ import ExcelTable from './excelTable';
 import NoItem from 'components/noItem';
 import { AddButton } from './customTable';
 import TableIconSVG from 'components/svgs/table';
-import AddIcon from 'assets/Imgs/add.svg';
+import AddIcon from 'assets/Imgs/dark/add.svg';
+import AddIconLight from 'assets/Imgs/light/add.svg';
 import DownloadIconSVG from 'components/svgs/download';
 import ExcellentExport from 'excellentexport';
 
@@ -28,7 +29,7 @@ export default function RegList({ list, setList }: IProps) {
   const { t } = useTranslation();
 
   const {
-    state: { language },
+    state: { theme },
   } = useAuthContext();
 
   const [chooseType, setChooseType] = useState(ChooseType.default);
@@ -121,26 +122,40 @@ export default function RegList({ list, setList }: IProps) {
       default:
         return (
           <TipsBox>
-            <EmptyBox />
-            <OptionBox>
-              <AddButton onClick={onClickAdd} long={true}>
-                <img src={AddIcon} alt="" />
-                {t('Assets.RegisterAdd')}
-              </AddButton>
-              <BtnBox htmlFor="fileUpload" onChange={(e) => updateFile(e)}>
-                <input
-                  id="fileUpload"
-                  accept=".xlsx, .xls, .csv"
-                  type="file"
-                  hidden
-                  onClick={(event) => {
-                    (event.target as any).value = null;
-                  }}
-                />
-                <TableIconSVG />
-                <span>{t('Project.ImportForm').toUpperCase()}</span>
-              </BtnBox>
-            </OptionBox>
+            <div className="inner">
+              <table className="table" cellPadding="0" cellSpacing="0">
+                <thead>
+                  <tr>
+                    <th>{t('application.AddressName')}</th>
+                    <th style={{ width: '120px' }}>{t('application.AssetType')}</th>
+                    <th style={{ width: '100px' }}>{t('application.AssetAmount')}</th>
+                    <th>{t('application.Content')}</th>
+                    <th>{t('application.RegisterNote')}</th>
+                    <th></th>
+                  </tr>
+                </thead>
+              </table>
+              <EmptyBox />
+              <OptionBox>
+                <AddButton onClick={onClickAdd} long={true}>
+                  <img src={theme ? AddIcon : AddIconLight} alt="" />
+                  {t('Assets.RegisterAdd')}
+                </AddButton>
+                <BtnBox htmlFor="fileUpload" onChange={(e) => updateFile(e)}>
+                  <input
+                    id="fileUpload"
+                    accept=".xlsx, .xls, .csv"
+                    type="file"
+                    hidden
+                    onClick={(event) => {
+                      (event.target as any).value = null;
+                    }}
+                  />
+                  <TableIconSVG />
+                  <span>{t('Project.ImportForm')}</span>
+                </BtnBox>
+              </OptionBox>
+            </div>
           </TipsBox>
         );
     }
@@ -166,7 +181,7 @@ export default function RegList({ list, setList }: IProps) {
                 }}
               />
               <TableIconSVG />
-              <span>{t('Project.ImportForm').toUpperCase()}</span>
+              <span>{t('Project.ImportForm')}</span>
             </BtnBox>
           )}
         </RhtBox>
@@ -176,16 +191,26 @@ export default function RegList({ list, setList }: IProps) {
   );
 }
 
-const Box = styled.div``;
+const Box = styled.div`
+  //background: var(--bs-box-background);
+  border-radius: 16px;
+`;
 
 const TipsBox = styled.div`
-  padding: 40px;
   margin-top: 10px;
   text-align: center;
   color: var(--bs-primary);
+  .inner {
+    background: var(--bs-box-background);
+    border-radius: 16px;
+    padding-bottom: 40px;
+  }
   .iconTop {
     font-size: 40px;
     margin-bottom: 10px;
+  }
+  table {
+    margin-bottom: 40px;
   }
 `;
 
@@ -226,13 +251,10 @@ const BtnBox = styled.label`
   gap: 8px;
   cursor: pointer;
   padding-inline: 12px;
-  span {
-    font-family: Poppins-SemiBold, Poppins;
-  }
   &.top-import {
-    background: var(--bs-background);
-    border: 1px solid var(--bs-svg-color);
-    color: var(--bs-svg-color);
+    background: transparent;
+    border: 1px solid var(--bs-primary);
+    color: var(--bs-primary);
   }
   .svg-stroke {
     stroke: var(--bs-primary) !important;
@@ -241,15 +263,14 @@ const BtnBox = styled.label`
 
 const DownloadButton = styled.button`
   height: 34px;
-  background: var(--bs-background);
+  background: var(--bs-d-button-bg);
   color: var(--bs-svg-color);
   border-radius: 8px;
-  border: 1px solid var(--bs-svg-color);
+  border: 1px solid var(--bs-border-color);
   text-align: center;
   padding-inline: 12px;
   span {
     padding-left: 10px;
-    font-family: Poppins-SemiBold, Poppins;
   }
 `;
 

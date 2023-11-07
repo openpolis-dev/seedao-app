@@ -176,7 +176,7 @@ export default function Register() {
         />
       </SectionBlock>
       <SectionBlock>
-        <div className="title">{t('Assets.RegisterList')}</div>
+        <div className="title lftTit">{t('Assets.RegisterList')}</div>
         <RegList list={list} setList={setList} />
       </SectionBlock>
 
@@ -215,10 +215,15 @@ const OuterBox = styled.div`
 
 const SectionBlock = styled.section`
   margin-top: 20px;
+  position: relative;
   .title {
     margin-bottom: 16px;
     line-height: 20px;
     color: var(--bs-body-color_active);
+  }
+  .lftTit {
+    position: absolute;
+    top: 10px;
   }
 `;
 
@@ -234,7 +239,7 @@ const BackBox = styled(Link)`
   align-items: center;
   color: var(--bs-svg-color);
   gap: 20px;
-  font-family: Poppins-SemiBold, Poppins;
+  font-family: Poppins-SemiBold;
   font-weight: 600;
   &:hover {
     color: var(--bs-svg-color);
