@@ -25,6 +25,10 @@ const GlobalStyle = createGlobalStyle`
     padding: 0;
     margin: 0;
   }
+  .form-control:focus{
+    box-shadow: none!important;
+    border: 1px solid var(--input-border)!important;
+  }
 
   a {
     text-decoration: none;
@@ -63,9 +67,9 @@ const GlobalStyle = createGlobalStyle`
   }
   .btn-outline-primary {
     height: 40px;
-    border-color: var(--bs-body-color);
+    border-color: var(--bs-border-color);
     font-weight: bold;
-    color: var(--bs-body-color);
+    color: var(--bs-body-color_active);
     &:hover, &:focus-visible, &:active {
       background-color: transparent !important;
       color: var(--bs-body-color_active) !important;

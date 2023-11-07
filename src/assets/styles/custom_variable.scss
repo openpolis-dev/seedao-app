@@ -34,7 +34,7 @@
   --bs-d-button-border: rgba(217, 217, 217, 0.5);
   --option-button-border-color: rgba(217, 217, 217, 0.5);
   --push-border:#fafafa;
-
+  --input-border:#5200FF;
 }
 
 :root[data-bs-theme="dark"] {
@@ -68,4 +68,5 @@
   --bs-d-button-border: #29282F;
   --option-button-border-color: #1A1323;
   --push-border:#0D0C0F;
+  --input-border:#fff;
 }

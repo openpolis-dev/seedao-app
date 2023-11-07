@@ -20,6 +20,9 @@ import { useNavigate } from 'react-router-dom';
 
 const OuterBox = styled.div`
   ${ContainerPadding};
+  input {
+    min-height: 40px;
+  }
 `;
 
 const HeadBox = styled.div`

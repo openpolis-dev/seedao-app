@@ -418,7 +418,6 @@ const ItemBox = styled.div`
 `;
 
 const TextButton = styled.div`
-  margin-top: 20px;
   font-size: 14px;
   font-family: Poppins-Medium;
   font-weight: 500;
