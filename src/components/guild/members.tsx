@@ -185,7 +185,7 @@ export default function Members(props: Iprops) {
         <BlockTitle>{t('Guild.Members')}</BlockTitle>
         <AdeBox onClick={() => setShow(true)}>
           <img src={InviteImg} alt="" />
-          {t('Project.invite')}
+          <span>{t('Project.invite')}</span>
         </AdeBox>
         {/*{(canUpdateMember || canUpdateSponsor) && (*/}
         {/*  <div>*/}
@@ -293,19 +293,22 @@ const AdeBox = styled.div`
   border-radius: 8px;
   border: 1px solid var(--bs-border-color);
   padding: 0 8px;
+  gap: 6px;
   cursor: pointer;
 `;
 
 const TopBox = styled.div`
   display: flex;
   justify-content: space-between;
-  margin-bottom: 30px;
+  margin-bottom: 70px;
   button {
     margin-left: 20px;
   }
 `;
 
 const BlockTitle = styled.div`
-  font-weight: 600;
   color: var(--bs-body-color_active);
+  font-size: 24px;
+  font-family: Poppins-Bold, Poppins;
+  font-weight: bold;
 `;
