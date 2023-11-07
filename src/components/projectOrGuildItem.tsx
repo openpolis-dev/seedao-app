@@ -2,11 +2,11 @@ import React from 'react';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
 const Box = styled.div`
-  width: 19.2%;
-  margin-right: 1%;
-  float: left;
-  &:nth-child(5n) {
-    margin-right: 0;
+  width: 20%;
+  height: 100%;
+  padding-right: 1%;
+  &:last-child {
+    margin-right: auto;
   }
 `;
 
@@ -27,6 +27,7 @@ const Item = styled.div`
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     margin-bottom: 8px;
+    min-height: 33px;
   }
 `;
 const CardBox = styled.div`
@@ -36,6 +37,7 @@ const CardBox = styled.div`
   background: var(--bs-box--background);
   box-shadow: var(--box-shadow) !important;
   padding: 14px;
+  height: 100%;
   &:hover {
     background: var(--home-right_hover);
   }
