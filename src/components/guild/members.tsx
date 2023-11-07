@@ -1,12 +1,10 @@
 import styled from 'styled-components';
 import React, { useEffect, useMemo, useState } from 'react';
 import Add from './add';
-import Del from './Del';
 import { useTranslation } from 'react-i18next';
 import { ReTurnProject } from 'type/project.type';
 import { getUsers } from 'requests/user';
 import { IUser, UserRole } from 'type/user.type';
-// import { useRouter } from 'next/router';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import { PermissionObject, PermissionAction } from 'utils/constant';
 import usePermission from 'hooks/usePermission';
@@ -14,6 +12,9 @@ import { useParams } from 'react-router-dom';
 import { useParseSNSList } from 'hooks/useParseSNS';
 import InviteImg from '../../assets/Imgs/person-plus.svg';
 import MemberCard from 'components/common/memberCard';
+import DeleteMemberModal from 'components/modals/deleteMemberModal';
+import { updateStaffs, IUpdateStaffsParams } from 'requests/guild';
+import useToast, { ToastType } from 'hooks/useToast';
 
 interface Iprops {
   detail: ReTurnProject | undefined;
@@ -31,6 +32,7 @@ export default function Members(props: Iprops) {
 
   const { t } = useTranslation();
   const { dispatch } = useAuthContext();
+  const { showToast } = useToast();
 
   const [show, setShow] = useState(false);
   const [memberArr, setMemberArr] = useState<string[]>([]);
@@ -40,6 +42,10 @@ export default function Members(props: Iprops) {
   const [adminList, setAdminList] = useState<any[]>([]);
 
   const [userMap, setUserMap] = useState<UserMap>({});
+  const [toDeleteUser, setToDeleteUser] = useState<{
+    user: IUser;
+    role: UserRole;
+  }>();
 
   const uniqueUsers = useMemo(() => {
     return Array.from(new Set([...memberArr, ...adminArr]));
@@ -111,24 +117,53 @@ export default function Members(props: Iprops) {
     return user;
   };
 
+  const handleShowRemoveModal = (user: IUser, role: UserRole) => {
+    setToDeleteUser({ user, role });
+  };
+
+  const handleCloseRemoveModal = () => {
+    setToDeleteUser(undefined);
+  };
+
+  const handleRemove = async () => {
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    try {
+      const params: IUpdateStaffsParams = { action: 'remove' };
+      if (toDeleteUser?.role === UserRole.Admin) {
+        params.sponsors = [toDeleteUser.user.wallet || ''];
+      } else if (toDeleteUser) {
+        params.members = [toDeleteUser.user.wallet || ''];
+      }
+      await updateStaffs(id as string, params);
+      handleCloseRemoveModal();
+      showToast(t('Guild.RemoveMemSuccess'), ToastType.Success);
+      updateProject();
+    } catch (e) {
+      console.error(e);
+      showToast(JSON.stringify(e), ToastType.Danger);
+    } finally {
+      dispatch({ type: AppActionType.SET_LOADING, payload: null });
+    }
+  };
+
   return (
     <Box>
       {show && <Add closeAdd={closeAdd} id={id as string} />}
-      {/*{showDel && (*/}
-      {/*  <Del*/}
-      {/*    id={id as string}*/}
-      {/*    nameMap={nameMap}*/}
-      {/*    closeRemove={closeRemove}*/}
-      {/*    selectAdminArr={selectAdminArr}*/}
-      {/*    selectMemArr={selectMemArr}*/}
-      {/*  />*/}
-      {/*)}*/}
+      {toDeleteUser && (
+        <DeleteMemberModal
+          title={t('Guild.RemoveMember')}
+          sns={nameMap[toDeleteUser.user.wallet || '']}
+          user={toDeleteUser.user}
+          onClose={handleCloseRemoveModal}
+          onConfirm={handleRemove}
+        />
+      )}
       <TopBox>
         <BlockTitle>{t('Guild.Members')}</BlockTitle>
         {(canUpdateMember || canUpdateSponsor) && (
           <AdeBox onClick={() => setShow(true)}>
             <img src={InviteImg} alt="" />
-            <span>{t('Project.invite')}</span>
+            <span>{t('Guild.invite')}</span>
           </AdeBox>
         )}
       </TopBox>
@@ -136,12 +171,26 @@ export default function Members(props: Iprops) {
       <ItemBox>
         <div>
           {adminList.map((item, index) => (
-            <MemberCard key={`admin_${index}`} user={item} role={UserRole.Admin} sns={nameMap[item?.wallet]} />
+            <MemberCard
+              key={`admin_${index}`}
+              user={item}
+              role={UserRole.Admin}
+              sns={nameMap[item.wallet]}
+              removeText={canUpdateSponsor ? t('Guild.RemoveMember') : ''}
+              showRemoveModal={handleShowRemoveModal}
+            />
           ))}
         </div>
         <div>
           {memberList.map((item, index) => (
-            <MemberCard key={`user_${index}`} user={item} role={UserRole.Member} sns={nameMap[item?.wallet]} />
+            <MemberCard
+              key={`user_${index}`}
+              user={item}
+              role={UserRole.Member}
+              sns={nameMap[item?.wallet]}
+              removeText={canUpdateSponsor ? t('Guild.RemoveMember') : ''}
+              showRemoveModal={handleShowRemoveModal}
+            />
           ))}
         </div>
       </ItemBox>

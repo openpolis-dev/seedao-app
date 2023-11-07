@@ -156,6 +156,7 @@
     "ProjectInformation": "公会信息",
     "ProjectProposal": "公会提案",
     "Add": "登记",
+    "invite": "邀请",
     "Asset": "资产",
     "HasBeenUsedAndRemains": "已使用{{used}}，剩余{{remain}}",
     "Others": "其他成员",

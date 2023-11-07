@@ -156,6 +156,7 @@
     "ProjectInformation": "Guild Information",
     "ProjectProposal": "Guild Proposal",
     "Add": "Add",
+    "invite": "Invite",
     "Asset": "Asset",
     "HasBeenUsedAndRemains": "{{used}} has been used and {{remain}} remains",
     "Others": "Others",

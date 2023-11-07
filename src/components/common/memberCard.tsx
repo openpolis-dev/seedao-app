@@ -12,13 +12,19 @@ interface IProps {
   user: IUser;
   sns: string;
   role: UserRole;
+  removeText?: string;
+  showRemoveModal?: (user: IUser, role: UserRole) => void;
 }
 
-export default function MemberCard({ user, sns, role }: IProps) {
+export default function MemberCard({ user, sns, role, removeText, showRemoveModal }: IProps) {
   const { t } = useTranslation();
   const snsDisplay = useMemo(() => {
     return sns || PublicJs.AddressToShow(user.wallet || '', 6);
   }, [sns, user]);
+
+  const handleClockRemove = () => {
+    showRemoveModal && showRemoveModal(user, role);
+  };
   return (
     <InnerBox>
       <ImgBox>
@@ -44,6 +50,7 @@ export default function MemberCard({ user, sns, role }: IProps) {
         <SocialBox>
           <SocialIconBox user={user} />
         </SocialBox>
+        {removeText && <RemoveButton onClick={handleClockRemove}>{removeText}</RemoveButton>}
       </HoverCard>
     </InnerBox>
   );
@@ -144,4 +151,20 @@ const SocialBox = styled.div`
     color: var(--bs-body-color);
     margin-bottom: 14px;
   }
+`;
+
+const RemoveButton = styled.button`
+  width: 100%;
+  height: 34px;
+  line-height: 34px;
+  background: var(--bs-background);
+  border-radius: 8px;
+  opacity: 1;
+  border: 1px solid var(--bs-border-color);
+  font-size: 14px;
+  font-family: Poppins-Medium, Poppins;
+  font-weight: 500;
+  color: var(--bs-body-color);
+  margin-top: 47px;
+  text-align: center;
 `;

@@ -195,6 +195,13 @@ const links = {
       icon: RImg7,
       desc: '',
     },
+    {
+      name: 'city-hall.PointsAndTokenAudit',
+      link: '/city-hall/governance/audit',
+      id: 'module-governance-audit',
+      icon: RImg8,
+      desc: '',
+    },
   ],
   brand: [
     // {
