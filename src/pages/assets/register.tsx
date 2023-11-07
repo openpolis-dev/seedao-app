@@ -169,7 +169,7 @@ export default function Register() {
         <div className="title">{t('Assets.RegisterSelect')}</div>
         <SourceSelect
           options={allSource}
-          placeholder="Search project/guild name"
+          placeholder={t('Assets.SearchSourcePlaceholder')}
           onChange={(value: any) => {
             setSelectSource({ id: value?.value as number, type: value?.data });
           }}

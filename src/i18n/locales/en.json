@@ -284,6 +284,7 @@
     "IncubatorVault": "Incubator Vault",
     "RegisterTitle": "Submission",
     "RegisterSelect": "Choose project/guild",
+    "SearchSourcePlaceholder": "Search project/guild name",
     "RegisterList": "Entries",
     "RegisterIntro": "Memo",
     "RegisterAdd": "Add",
