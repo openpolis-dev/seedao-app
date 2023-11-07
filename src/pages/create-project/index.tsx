@@ -15,6 +15,8 @@ import BackerNav from 'components/common/backNav';
 import MarkdownEditor from 'components/common/markdownEditor';
 import SeeSelect from 'components/common/select';
 import { UserRole } from 'type/user.type';
+import { ethers } from 'ethers';
+import sns from '@seedao/sns-js';
 
 export default function CreateProject() {
   const navigate = useNavigate();
@@ -110,6 +112,48 @@ export default function CreateProject() {
         break;
     }
   };
+  const handleModerators = async () => {
+    const checkSNSlst: string[] = [];
+    const sns2walletMap = new Map<string, string>();
+    for (const item of adminList) {
+      const _wallet = item.trim().toLocaleLowerCase();
+      if (!ethers.utils.isAddress(_wallet)) {
+        if (!_wallet.endsWith('.seedao')) {
+          showToast(t('Msg.IncorrectAddress', { content: _wallet }), ToastType.Danger);
+          return;
+        } else {
+          checkSNSlst.push(_wallet);
+        }
+      }
+    }
+    if (checkSNSlst.length) {
+      try {
+        const notOkList: string[] = [];
+        const res = await sns.resolves(checkSNSlst);
+        for (let i = 0; i < res.length; i++) {
+          const wallet = res[i];
+          sns2walletMap.set(checkSNSlst[i], wallet);
+          if (!wallet) {
+            notOkList.push(checkSNSlst[i]);
+          }
+        }
+        if (!!notOkList.length) {
+          showToast(t('Msg.IncorrectAddress', { content: notOkList.join(', ') }), ToastType.Danger);
+          return;
+        }
+      } catch (error) {
+        console.error('resolved failed', error);
+        return;
+      }
+    }
+    const _adminList: string[] = [];
+
+    adminList.forEach((item) => {
+      const wallet = sns2walletMap.get(item) || item;
+      _adminList.push(wallet);
+    });
+    return _adminList;
+  };
   const handleSubmit = async () => {
     const ids: string[] = [];
     for (const l of proList) {
@@ -137,10 +181,16 @@ export default function CreateProject() {
         }
       }
     }
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    const _adminList = await handleModerators();
+    if (!_adminList) {
+      dispatch({ type: AppActionType.SET_LOADING, payload: false });
+      return;
+    }
     const obj: IBaseProject = {
       logo: url,
       name: proName,
-      sponsors: adminList,
+      sponsors: _adminList,
       members: memberList,
       proposals: ids,
       desc,
@@ -327,14 +377,14 @@ export default function CreateProject() {
           <BtmBox>
             <Button
               onClick={() => handleSubmit()}
-              disabled={
-                proName?.length === 0 ||
-                url?.length === 0 ||
-                (credit && credit < 0) ||
-                (token && token < 0) ||
-                (adminList?.length === 1 && adminList[0]?.length === 0) ||
-                (proList?.length === 1 && proList[0]?.length === 0)
-              }
+              // disabled={
+              //   proName?.length === 0 ||
+              //   url?.length === 0 ||
+              //   (credit && credit < 0) ||
+              //   (token && token < 0) ||
+              //   (adminList?.length === 1 && adminList[0]?.length === 0) ||
+              //   (proList?.length === 1 && proList[0]?.length === 0)
+              // }
             >
               {t('general.confirm')}
             </Button>
