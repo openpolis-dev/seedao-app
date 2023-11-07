@@ -330,47 +330,47 @@ export default function Index() {
                 </div>
                 <div className="info-right">
                   <div className="title">{t('Assets.TotalBalance')}</div>
-                  <div className="balance num">${formatNumber(Number(totalBalance))}</div>
+                  <div className="balance num topLft">${formatNumber(Number(totalBalance))}</div>
                 </div>
               </InfoItem>
-              <div className="right">
-                <InfoItem>
-                  <div>
-                    <IconStyle src={WalletIcon} alt="" />
-                  </div>
-                  <div className="info-right">
-                    <div className="title">{t('Assets.Wallet')}</div>
-                    <div className="num">4</div>
-                  </div>
-                </InfoItem>
-                <InfoItem>
-                  <div>
-                    <IconStyle src={SignerIcon} alt="" />
-                  </div>
-                  <div className="info-right">
-                    <div className="title">{t('Assets.MultiSign')}</div>
-                    <div className="num">{totalSigner}</div>
-                  </div>
-                </InfoItem>
-                <InfoItem>
-                  <div>
-                    <IconStyle src={ChainIcon} alt="" />
-                  </div>
-                  <div className="info-right">
-                    <div className="title">{t('Assets.Chain')}</div>
-                    <div className="num">2</div>
-                  </div>
-                </InfoItem>
-                <OptionBox>
-                  <Link to="/assets/register">
-                    <Button style={{ height: '36px' }}>{t('application.Register')}</Button>
-                  </Link>
-                  <DetailButton onClick={() => setShowVaultDetail(!showVaultDetail)}>
-                    <span>{t('Assets.Detail')}</span>
-                    <ArrowIconSVG style={{ transform: showVaultDetail ? 'rotate(180deg)' : 'unset' }} />
-                  </DetailButton>
-                </OptionBox>
-              </div>
+              {/*<div className="right">*/}
+              <InfoItem>
+                <div>
+                  <IconStyle src={WalletIcon} alt="" />
+                </div>
+                <div className="info-right">
+                  <div className="title">{t('Assets.Wallet')}</div>
+                  <div className="num">4</div>
+                </div>
+              </InfoItem>
+              <InfoItem>
+                <div>
+                  <IconStyle src={SignerIcon} alt="" />
+                </div>
+                <div className="info-right">
+                  <div className="title">{t('Assets.MultiSign')}</div>
+                  <div className="num">{totalSigner}</div>
+                </div>
+              </InfoItem>
+              <InfoItem>
+                <div>
+                  <IconStyle src={ChainIcon} alt="" />
+                </div>
+                <div className="info-right">
+                  <div className="title">{t('Assets.Chain')}</div>
+                  <div className="num">2</div>
+                </div>
+              </InfoItem>
+              <OptionBox>
+                <Link to="/assets/register">
+                  <Button style={{ height: '36px' }}>{t('application.Register')}</Button>
+                </Link>
+                <DetailButton onClick={() => setShowVaultDetail(!showVaultDetail)}>
+                  <span>{t('Assets.Detail')}</span>
+                  <ArrowIconSVG style={{ transform: showVaultDetail ? 'rotate(180deg)' : 'unset' }} />
+                </DetailButton>
+              </OptionBox>
+              {/*</div>*/}
             </div>
             {showVaultDetail && (
               <VaultInfo>
@@ -521,7 +521,7 @@ const VaultOverview = styled.div<{ border: string }>`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 60px;
+    //gap: 60px;
   }
 
   @media (max-width: 950px) {
@@ -549,6 +549,9 @@ const InfoItem = styled.li`
   display: flex;
   align-items: center;
   gap: 22px;
+  .topLft {
+    color: #ffa842;
+  }
   .title {
     font-size: 14px;
     color: var(--bs-body-color);
