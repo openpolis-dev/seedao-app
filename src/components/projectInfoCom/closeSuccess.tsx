@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { Card, Button } from 'react-bootstrap';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import BasicModal from 'components/modals/basicModal';
 
 const Mask = styled.div`
   background: rgba(0, 0, 0, 0.3);
@@ -34,14 +35,16 @@ const CardHeader = styled.div`
 `;
 
 const CardBody = styled.div`
-  padding: 20px;
+  color: var(--bs-body-color_active);
+  font-size: 14px;
+  line-height: 24px;
 `;
 const CardFooter = styled.div`
-  padding: 0 20px 20px;
-`;
-
-const InnerBox = styled.div`
-  width: 400px;
+  text-align: center;
+  margin-top: 24px;
+  button {
+    width: 110px;
+  }
 `;
 
 interface Iprops {
@@ -53,16 +56,11 @@ export default function CloseSuccess(props: Iprops) {
   const { t } = useTranslation();
 
   return (
-    <Mask>
-      <Card>
-        <CardHeader> {t('Project.CloseProject')}</CardHeader>
-        <CardBody>
-          <InnerBox>{t('Project.closeTips')}</InnerBox>
-        </CardBody>
-        <CardFooter>
-          <Button onClick={() => closeModal()}>{t('general.ok')}</Button>
-        </CardFooter>
-      </Card>
-    </Mask>
+    <BasicModal title={t('Project.CloseProject')} handleClose={closeModal}>
+      <CardBody>{t('Project.closeTips')}</CardBody>
+      <CardFooter>
+        <Button onClick={() => closeModal()}>{t('general.ok')}</Button>
+      </CardFooter>
+    </BasicModal>
   );
 }
