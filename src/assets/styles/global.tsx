@@ -235,6 +235,20 @@ const GlobalStyle = createGlobalStyle`
     border:1px solid var(--bs-border-color)!important;
     margin-top: 16px;
   }
+  /* toast */
+  .Toastify__toast-theme--light {
+    background-color: var(--bs-background);
+    border: 1px solid var(--option-button-border-color);
+    border-radius: 16px;
+    box-shadow: unset;
+    padding: 18px;
+  }
+  .Toastify__toast-body {
+    color: var(--bs-body-color_active);
+  }
+  .Toastify__close-button svg path {
+    fill: var(--bs-svg-color);
+  }
 `;
 
 export default GlobalStyle;
