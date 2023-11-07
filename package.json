@@ -6,7 +6,7 @@
   "dependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@ericz1803/react-google-calendar": "^4.3.1",
-    "@joyid/evm": "^0.2.0-beta.4",
+    "@joyid/evm": "^0.2.4",
     "@seedao/sns-js": "^0.5.2",
     "@types/xlsx": "^0.0.36",
     "@unipasswallet/popup-types": "^1.1.11",

@@ -46,7 +46,7 @@ export default function Joyid(){
 
     const navigate = useNavigate();
     const { dispatch } = useAuthContext();
-
+    const JOY_ID_URL ="https://app.joy.id";
 
     const buildRedirectUrl = (action) => {
         const url = new URL(`${window.location.origin}/home`);
@@ -70,6 +70,7 @@ export default function Joyid(){
 
             const url = buildRedirectUrl("sign-message");
             signMessageWithRedirect(url, siweMessage, account, {
+                joyidAppURL: `${JOY_ID_URL}/?prefer=login`,
                 state: siweMessage,
             });
         }catch (e) {
@@ -83,6 +84,7 @@ export default function Joyid(){
         localStorage.setItem(SELECT_WALLET, 'JOYID');
         const url = buildRedirectUrl("connect");
         connectWithRedirect(url, {
+            joyidAppURL: `${JOY_ID_URL}/?prefer=login`,
             rpcURL: "https://eth.llamarpc.com",
             network: {
                 chainId: 1,
@@ -173,7 +175,7 @@ export default function Joyid(){
 
     return <WalletOption onClick={() => onConnectRedirect()}>
         <img src={JoyIdImg} alt=""/>
-        <span>JoyID</span>
+        <span>JoyID Passkey</span>
 
     </WalletOption>
 

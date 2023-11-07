@@ -215,7 +215,7 @@ export default function Profile() {
         <HeadBox>
           <AvatarBox>
             <ImgBox>
-              <img src={avatar ? `${avatar}?${new Date().valueOf()}` : defaultImg} alt="" />
+              <img src={avatar ? avatar : defaultImg} alt="" />
             </ImgBox>
           </AvatarBox>
           <InfoBox>
