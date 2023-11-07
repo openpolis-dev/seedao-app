@@ -204,7 +204,7 @@ export default function Profile() {
       const detail = (userData as any).data;
 
       setUserName(detail.nickname);
-      setAvatar(detail.avatar);
+      setAvatar(`${detail.avatar}?${new Date().valueOf()}`);
       setEmail(detail.email || '');
 
       let mapArr = new Map();

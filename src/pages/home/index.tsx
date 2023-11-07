@@ -214,8 +214,9 @@ const BtmBox = styled.div`
   overflow: hidden;
   cursor: pointer;
   background-color: var(--bs-box--background);
-  //border: 1px solid var(--bs-border-color);
+  border: 1px solid var(--bs-border-color_opacity);
   box-shadow: var(--box-shadow);
+
   padding: 14px;
   box-sizing: border-box;
   display: flex;
