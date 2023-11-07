@@ -35,6 +35,7 @@
   --option-button-border-color: rgba(217, 217, 217, 0.5);
   --push-border:#fafafa;
   --input-border:#5200FF;
+  --button-hover-bg: #2D2736;
 }
 
 :root[data-bs-theme="dark"] {
@@ -69,4 +70,5 @@
   --option-button-border-color: #1A1323;
   --push-border:#0D0C0F;
   --input-border:#fff;
+  --button-hover-bg: #C9C9C9;
 }

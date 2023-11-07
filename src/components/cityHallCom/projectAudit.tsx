@@ -14,6 +14,7 @@ import ApplicationStatusTag from 'components/common/applicationStatusTag';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import BackerNav from 'components/common/backNav';
 import { ContainerPadding } from 'assets/styles/global';
+import { PinkButton } from 'components/common/button';
 
 const Box = styled.div`
   ${ContainerPadding};
@@ -138,9 +139,9 @@ export default function ProjectAudit() {
                       <td>
                         <OperationBox>
                           <Button onClick={() => handleApprove(item.application_id)}>{t('city-hall.Pass')}</Button>
-                          <Button variant="outline-primary" onClick={() => handleReject(item.application_id)}>
+                          <PinkButton onClick={() => handleReject(item.application_id)}>
                             {t('city-hall.Reject')}
-                          </Button>
+                          </PinkButton>
                         </OperationBox>
                       </td>
                     </tr>
@@ -169,4 +170,8 @@ const OperationBox = styled.div`
   gap: 10px;
   justify-content: center;
   margin-top: 7px;
+  button {
+    width: 80px;
+    min-width: unset;
+  }
 `;
