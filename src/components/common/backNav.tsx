@@ -22,7 +22,7 @@ export default function BackerNav({ to, title, mb }: IProps) {
 const BackBox = styled.div<{ mb?: string }>`
   display: inline-flex;
   align-items: center;
-  margin-bottom: ${(props) => props.mb || '48px'};
+  margin-bottom: ${(props) => props.mb || '40px'};
 `;
 
 const BackIconBox = styled(Link)`
