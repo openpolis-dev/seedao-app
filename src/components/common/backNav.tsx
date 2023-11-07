@@ -10,19 +10,30 @@ interface IProps {
 
 export default function BackerNav({ to, title, mb }: IProps) {
   return (
-    <BackBox to={to} mb={mb}>
-      <BackIconSVG />
+    <BackBox mb={mb}>
+      <BackIconBox to={to}>
+        <BackIconSVG />
+      </BackIconBox>
       <span>{title}</span>
     </BackBox>
   );
 }
 
-const BackBox = styled(Link)<{ mb?: string }>`
+const BackBox = styled.div<{ mb?: string }>`
   display: inline-flex;
   align-items: center;
   margin-bottom: ${(props) => props.mb || '48px'};
-  cursor: pointer;
-  svg {
-    margin-right: 10px;
-  }
+`;
+
+const BackIconBox = styled(Link)`
+  display: inline-block;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background-color: var(--bs-box--background);
+  border: 1px solid var(--option-button-border-color);
+  margin-right: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
