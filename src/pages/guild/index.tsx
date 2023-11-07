@@ -28,11 +28,11 @@ const ItemBox = styled.div`
 `;
 
 const ListBox = styled.div`
-  &:after {
-    content: '';
-    display: block;
-    clear: both;
-  }
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: stretch;
+  margin-right: -1%;
 `;
 
 export interface listObj {
