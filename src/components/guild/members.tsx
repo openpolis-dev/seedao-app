@@ -1,23 +1,19 @@
 import styled from 'styled-components';
 import React, { useEffect, useMemo, useState } from 'react';
-import { Button, Row } from 'react-bootstrap';
 import Add from './add';
 import Del from './Del';
 import { useTranslation } from 'react-i18next';
 import { ReTurnProject } from 'type/project.type';
 import { getUsers } from 'requests/user';
-import { IUser } from 'type/user.type';
+import { IUser, UserRole } from 'type/user.type';
 // import { useRouter } from 'next/router';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
-import NoItem from 'components/noItem';
 import { PermissionObject, PermissionAction } from 'utils/constant';
 import usePermission from 'hooks/usePermission';
-import UserCard from 'components/userCard';
 import { useParams } from 'react-router-dom';
 import { useParseSNSList } from 'hooks/useParseSNS';
 import InviteImg from '../../assets/Imgs/person-plus.svg';
-import DefaultAvatar from '../../assets/Imgs/defaultAvatar.png';
-import PublicJs from '../../utils/publicJs';
+import MemberCard from 'components/common/memberCard';
 
 interface Iprops {
   detail: ReTurnProject | undefined;
@@ -28,8 +24,6 @@ type UserMap = { [w: string]: IUser };
 
 export default function Members(props: Iprops) {
   const { detail, updateProject } = props;
-
-  // const router = useRouter();
   const { id } = useParams();
 
   const canUpdateMember = usePermission(PermissionAction.UpdateMember, PermissionObject.GuildPrefix + id);
@@ -38,11 +32,7 @@ export default function Members(props: Iprops) {
   const { t } = useTranslation();
   const { dispatch } = useAuthContext();
 
-  const [edit, setEdit] = useState(false);
   const [show, setShow] = useState(false);
-  const [showDel, setShowDel] = useState(false);
-  const [selectAdminArr, setSelectAdminArr] = useState<IUser[]>([]);
-  const [selectMemArr, setSelectMemArr] = useState<IUser[]>([]);
   const [memberArr, setMemberArr] = useState<string[]>([]);
   const [adminArr, setAdminArr] = useState<string[]>([]);
 
@@ -99,54 +89,10 @@ export default function Members(props: Iprops) {
     setAdminList([...sList]);
   }, [memberArr, adminArr, userMap]);
 
-  const handleDel = () => {
-    setEdit(true);
-  };
-  const closeDel = () => {
-    setEdit(false);
-    setShowDel(true);
-  };
   const closeAdd = (refresh?: boolean) => {
     setShow(false);
     refresh && updateProject();
   };
-  const closeRemove = (refresh?: boolean) => {
-    setShowDel(false);
-    setEdit(false);
-    setSelectAdminArr([]);
-    setSelectMemArr([]);
-    refresh && updateProject();
-  };
-
-  const handleAdminSelect = (selItem: IUser) => {
-    const selectHas = selectAdminArr.findIndex((item) => item?.wallet === selItem.wallet);
-    const arr = [...selectAdminArr];
-    if (selectHas > -1) {
-      arr.splice(selectHas, 1);
-    } else {
-      arr.push(selItem);
-    }
-    setSelectAdminArr(arr);
-  };
-  const handleMemSelect = (selItem: IUser) => {
-    const selectHas = selectMemArr.findIndex((item) => item?.wallet === selItem.wallet);
-    const arr = [...selectMemArr];
-    if (selectHas > -1) {
-      arr.splice(selectHas, 1);
-    } else {
-      arr.push(selItem);
-    }
-    setSelectMemArr(arr);
-  };
-  const formatAdminActive = (num: string) => {
-    const arr = selectAdminArr.filter((item) => item.wallet === num);
-    return !!arr.length;
-  };
-  const formatMemActive = (num: string) => {
-    const arr = selectMemArr.filter((item) => item.wallet === num);
-    return !!arr.length;
-  };
-
   const getUser = (wallet: string): IUser => {
     const user = userMap[wallet];
     if (!user) {
@@ -165,10 +111,6 @@ export default function Members(props: Iprops) {
     return user;
   };
 
-  const removeButtonDisabled = useMemo(() => {
-    return !selectAdminArr.length && !selectMemArr.length;
-  }, [selectAdminArr, selectMemArr]);
-
   return (
     <Box>
       {show && <Add closeAdd={closeAdd} id={id as string} />}
@@ -183,100 +125,29 @@ export default function Members(props: Iprops) {
       {/*)}*/}
       <TopBox>
         <BlockTitle>{t('Guild.Members')}</BlockTitle>
-        <AdeBox onClick={() => setShow(true)}>
-          <img src={InviteImg} alt="" />
-          <span>{t('Project.invite')}</span>
-        </AdeBox>
-        {/*{(canUpdateMember || canUpdateSponsor) && (*/}
-        {/*  <div>*/}
-        {/*    <Button onClick={() => handleAdd()} disabled={edit}>*/}
-        {/*      {t('Guild.AddMember')}*/}
-        {/*    </Button>*/}
-        {/*    {!edit && (*/}
-        {/*      <Button variant="outline-primary" onClick={() => handleDel()}>*/}
-        {/*        {t('Guild.RemoveMember')}*/}
-        {/*      </Button>*/}
-        {/*    )}*/}
-        {/*    {edit && (*/}
-        {/*      <>*/}
-        {/*        <Button onClick={() => closeDel()} disabled={removeButtonDisabled}>*/}
-        {/*          {t('general.confirm')}*/}
-        {/*        </Button>*/}
-        {/*        <Button variant="outline-primary" onClick={() => closeRemove()}>*/}
-        {/*          {t('general.cancel')}*/}
-        {/*        </Button>*/}
-        {/*      </>*/}
-        {/*    )}*/}
-        {/*  </div>*/}
-        {/*)}*/}
+        {(canUpdateMember || canUpdateSponsor) && (
+          <AdeBox onClick={() => setShow(true)}>
+            <img src={InviteImg} alt="" />
+            <span>{t('Project.invite')}</span>
+          </AdeBox>
+        )}
       </TopBox>
 
       <ItemBox>
         <div>
           {adminList.map((item, index) => (
-            <InnerBox key={`admin_${index}`}>
-              <ImgBox>
-                <img className="avatar" src={item.avatar || DefaultAvatar} alt="" />
-              </ImgBox>
-              <div>
-                <div className="snsBox">{nameMap[item?.wallet] || PublicJs.AddressToShow(item.wallet || '')}</div>
-                <span className="tagBox">{t('Project.Moderator')}</span>
-              </div>
-            </InnerBox>
+            <MemberCard key={`admin_${index}`} user={item} role={UserRole.Admin} sns={nameMap[item?.wallet]} />
           ))}
         </div>
-
         <div>
           {memberList.map((item, index) => (
-            <InnerBox key={`user_${index}`}>
-              <ImgBox>
-                <img className="avatar" src={item.avatar || DefaultAvatar} alt="" />
-              </ImgBox>
-              <div>
-                <div className="snsBox">{nameMap[item?.wallet] || PublicJs.AddressToShow(item.wallet || '')}</div>
-              </div>
-            </InnerBox>
+            <MemberCard key={`user_${index}`} user={item} role={UserRole.Member} sns={nameMap[item?.wallet]} />
           ))}
         </div>
       </ItemBox>
     </Box>
   );
 }
-
-const InnerBox = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  margin-bottom: 26px;
-  .snsBox {
-    color: var(--bs-body-color_active);
-    font-size: 14px;
-    font-family: Poppins-SemiBold;
-    font-weight: 600;
-    line-height: 18px;
-    word-break: break-all;
-  }
-  .tagBox {
-    margin-top: 8px;
-    display: inline-block;
-    height: 20px;
-    line-height: 20px;
-    background: #2dc45e;
-    border-radius: 6px;
-    padding: 0 8px;
-    color: #000;
-    font-size: 12px;
-  }
-`;
-
-const ImgBox = styled.div`
-  margin-right: 12px;
-  img {
-    width: 44px;
-    height: 44px;
-    border-radius: 44px;
-  }
-`;
 
 const Box = styled.div``;
 
