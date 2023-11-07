@@ -1,6 +1,6 @@
 import { InputGroup, Button, Form } from 'react-bootstrap';
 import styled from 'styled-components';
-import React, { ChangeEvent, FormEvent, useState } from 'react';
+import React, { ChangeEvent, FormEvent, useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { createProjects } from 'requests/guild';
 import { BudgetType, IBaseProject } from 'type/project.type';
@@ -13,10 +13,10 @@ import PlusMinusButton from 'components/common/buttons';
 import CameraIconSVG from 'components/svgs/camera';
 import BackerNav from 'components/common/backNav';
 import MarkdownEditor from 'components/common/markdownEditor';
+import SeeSelect from 'components/common/select';
+import { UserRole } from 'type/user.type';
 
 export default function CreateGuild() {
-  // const router = useRouter();
-
   const navigate = useNavigate();
 
   const { t } = useTranslation();
@@ -205,6 +205,10 @@ export default function CreateGuild() {
     navigate('/city-hall/governance');
   };
 
+  const roleOptions = useMemo(() => {
+    return [{ label: t('Guild.Moderator'), value: UserRole.Admin }];
+  }, [t]);
+
   return (
     <OuterBox>
       <BackerNav title={t('Guild.create')} to="/city-hall/governance" />
@@ -270,16 +274,23 @@ export default function CreateGuild() {
               </div>
             </li>
             <li>
-              <div className="title">{t('Guild.Moderator')}</div>
+              <div className="title">{t('Guild.Members')}</div>
               <div>
                 {adminList.map((item, index) => (
                   <ItemBox key={`mem_${index}`}>
                     <MemberInputBox>
                       <Form.Control
                         type="text"
-                        placeholder={t('Guild.Moderator')}
+                        placeholder={t('Guild.AddMemberAddress')}
                         value={item}
                         onChange={(e) => handleInput(e, index, 'admin')}
+                      />
+                      <RoleSelect
+                        width="120px"
+                        options={roleOptions}
+                        defaultValue={roleOptions[0]}
+                        NotClear={true}
+                        isSearchable={false}
                       />
                     </MemberInputBox>
                     <PlusMinusButton
@@ -497,4 +508,11 @@ const UploadImgText = styled.p`
   font-weight: 400;
   color: var(--bs-svg-color);
   line-height: 12px;
+`;
+
+const RoleSelect = styled(SeeSelect)`
+  .react-select__control {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
 `;

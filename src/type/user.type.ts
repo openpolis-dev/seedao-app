@@ -43,3 +43,9 @@ export type Asset = {
   processing_amount: number;
   total_amount: number;
 };
+
+export enum UserRole {
+  None = 0,
+  Admin,
+  Member,
+}
