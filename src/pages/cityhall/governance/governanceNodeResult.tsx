@@ -37,7 +37,7 @@ const ColGroup = () => {
       <col style={{ width: '100px' }} />
       <col style={{ width: '100px' }} />
       <col style={{ width: '100px' }} />
-      <col style={{ width: '100px' }} />
+      <col style={{ width: '120px' }} />
       <col style={{ width: '120px' }} />
       <col style={{ width: '120px' }} />
       <col style={{ width: '120px' }} />
@@ -171,9 +171,7 @@ export default function GoveranceNodeResult() {
             <th>
               <CurrentSeason>S3</CurrentSeason>(SCR)
             </th>
-            <th>
-              <HeaderCell>{t('GovernanceNodeResult.MinerReward', { season: 'S3' })}(SCR)</HeaderCell>
-            </th>
+            <th>{t('GovernanceNodeResult.MinerReward', { season: 'S3' })}(SCR)</th>
             <th>{t('GovernanceNodeResult.Total')}(SCR)</th>
             <th>{t('GovernanceNodeResult.ActiveSCR')}</th>
             <th>{t('GovernanceNodeResult.EffectiveSCR')}</th>
