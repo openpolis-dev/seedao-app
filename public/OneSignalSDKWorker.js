@@ -1,5 +1,12 @@
 importScripts('https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.sw.js');
 
+console.log('service worker 注册成功');
+
+self.addEventListener('install', () => {
+  console.log('service worker installed');
+  self.skipWaiting();
+});
+
 const MESSAGE_TYPE = {
   PROJECT_ADD: 'proj_staff_add',
   PROJECT_REMOVE: 'proj_staff_remove',
@@ -8,10 +15,6 @@ const MESSAGE_TYPE = {
   ASSET_NEW: 'receive_assert',
   CUSTOM: 'custom',
 };
-
-self.addEventListener('activate', function () {
-  console.log('[Service Worker Activated]');
-});
 
 self.addEventListener('notificationclick', async function (event) {
   console.log('-- click event:', event);

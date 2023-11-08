@@ -1,10 +1,12 @@
-import { registerDevice, getPushDevice } from 'requests/push';
+import runOneSignal from 'utils/onesignal';
 
 const version = 'v1.0.4';
 
 export function register(config?: any) {
   if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {});
+    window.addEventListener('load', async () => {
+      runOneSignal();
+    });
   }
 }
 
