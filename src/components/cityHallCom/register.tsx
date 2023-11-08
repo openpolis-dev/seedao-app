@@ -21,6 +21,7 @@ import BackerNav from 'components/common/backNav';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import { ContainerPadding } from 'assets/styles/global';
 import ApplicationStatusTag from 'components/common/applicationStatusTag';
+import useApplicants from 'hooks/useApplicants';
 
 const Box = styled.div`
   position: relative;
@@ -82,7 +83,7 @@ export default function Register() {
   // budget source
   const allSource = useBudgetSource();
   const [selectSource, setSelectSource] = useState<{ id: number; type: 'project' | 'guild' }>();
-  const [applicants, setApplicants] = useState<ISelectItem[]>([]);
+  const applicants = useApplicants();
   const [selectApplicant, setSelectApplicant] = useState<string>();
   const [showMore, setShowMore] = useState<IApplicationDisplay[]>();
   const [showBundleId, setShowBundleId] = useState<number>();
@@ -103,23 +104,6 @@ export default function Register() {
   const handlePageSize = (num: number) => {
     setPageSize(num);
   };
-
-  const getApplicants = async () => {
-    try {
-      const res = await requests.application.getApplicants();
-      const options = res.data.map((item) => ({
-        label: item.Name || utils.AddressToShow(item.Applicant),
-        value: item.Applicant,
-      }));
-      setApplicants(options);
-    } catch (error) {
-      console.error('getApplicants error', error);
-    }
-  };
-
-  useEffect(() => {
-    getApplicants();
-  }, []);
 
   const getRecords = async () => {
     showLoading(true);
@@ -313,13 +297,15 @@ export default function Register() {
                     ))}
                   </tbody>
                 </table>
-                <Page
-                  itemsPerPage={pageSize}
-                  total={total}
-                  current={page - 1}
-                  handleToPage={handlePage}
-                  handlePageSize={handlePageSize}
-                />
+                {total > pageSize && (
+                  <Page
+                    itemsPerPage={pageSize}
+                    total={total}
+                    current={page - 1}
+                    handleToPage={handlePage}
+                    handlePageSize={handlePageSize}
+                  />
+                )}
               </>
             ) : (
               <NoItem />
@@ -332,7 +318,7 @@ export default function Register() {
 }
 
 const FilterSelect = styled(Select)`
-  width: 280px;
+  width: 200px;
   @media (max-width: 1240px) {
     width: unset;
   } ;
