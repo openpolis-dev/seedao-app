@@ -17,6 +17,7 @@ import SeeSelect from 'components/common/select';
 import { UserRole } from 'type/user.type';
 import { ethers } from 'ethers';
 import sns from '@seedao/sns-js';
+import { BlackButton } from 'components/common/button';
 
 export default function CreateGuild() {
   const navigate = useNavigate();
@@ -390,9 +391,9 @@ export default function CreateGuild() {
             >
               {t('general.confirm')}
             </Button>
-            <Button variant="outline-primary" className="btnBtm" onClick={handleBack}>
+            <BlackButton style={{ width: '80px' }} onClick={handleBack}>
               {t('general.cancel')}
-            </Button>
+            </BlackButton>
           </BtmBox>
         </RightContent>
       </CardBody>

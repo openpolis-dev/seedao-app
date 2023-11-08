@@ -19,7 +19,7 @@ export const PrimaryOutlinedButton = ({ children, ...props }: IProps) => {
 };
 
 const BasicButtonStyle = css`
-  min-width: 110px;
+  width: 110px;
   height: 40px;
   line-height: 40px;
   border-radius: 8px;

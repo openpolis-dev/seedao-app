@@ -17,6 +17,7 @@ import SeeSelect from 'components/common/select';
 import { UserRole } from 'type/user.type';
 import { ethers } from 'ethers';
 import sns from '@seedao/sns-js';
+import { BlackButton } from 'components/common/button';
 
 export default function CreateProject() {
   const navigate = useNavigate();
@@ -376,19 +377,20 @@ export default function CreateProject() {
           </UlBox>
           <BtmBox>
             <Button
+              style={{ width: '80px' }}
               onClick={() => handleSubmit()}
-              // disabled={
-              //   proName?.length === 0 ||
-              //   url?.length === 0 ||
-              //   (credit && credit < 0) ||
-              //   (token && token < 0) ||
-              //   (adminList?.length === 1 && adminList[0]?.length === 0) ||
-              //   (proList?.length === 1 && proList[0]?.length === 0)
-              // }
+              disabled={
+                !proName ||
+                !url ||
+                (adminList?.length === 1 && adminList[0]?.length === 0) ||
+                (proList?.length === 1 && proList[0]?.length === 0)
+              }
             >
               {t('general.confirm')}
             </Button>
-            <CancelButton onClick={handleBack}> {t('general.cancel')}</CancelButton>
+            <BlackButton style={{ width: '80px' }} onClick={handleBack}>
+              {t('general.cancel')}
+            </BlackButton>
           </BtmBox>
         </RightContent>
       </CardBody>
@@ -498,13 +500,6 @@ const BtnBox = styled.label`
     font-size: 20px;
     margin-right: 10px;
   }
-`;
-
-const CancelButton = styled.button`
-  background: #b0b0b0;
-  height: 34px;
-  border: none;
-  border-radius: 8px;
 `;
 
 const ImgBox = styled.div`
