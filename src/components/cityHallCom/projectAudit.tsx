@@ -122,6 +122,9 @@ export default function ProjectAudit() {
       showLoading(false);
     }
   };
+  const formatSNS = (name: string) => {
+    return name?.endsWith('.seedao') ? name : publicJs.AddressToShow(name, 6);
+  };
 
   return (
     <Box>
@@ -154,7 +157,7 @@ export default function ProjectAudit() {
                       <td style={{ width: '180px' }}>
                         <ApplicationStatusTag status={item.status} isProj={true} />
                       </td>
-                      <td>{item.submitter_name}</td>
+                      <td>{formatSNS(item.submitter_name)}</td>
                       <td style={{ width: '180px' }}>{item.created_date}</td>
                       <td>
                         <OperationBox>
