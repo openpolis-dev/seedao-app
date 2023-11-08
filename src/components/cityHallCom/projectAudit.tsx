@@ -170,7 +170,7 @@ export default function ProjectAudit() {
                           <PinkButton
                             onClick={() => handleReject(item.application_id)}
                             disabled={
-                              item.status === ApplicationStatus.Approved || item.status === ApplicationStatus.Rejected
+                              item.status === ApplicationStatus.Completed || item.status === ApplicationStatus.Rejected
                             }
                           >
                             {t('city-hall.Reject')}

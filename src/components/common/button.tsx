@@ -36,6 +36,9 @@ const PinkButtonStyle = styled.button`
   &:hover {
     background: #ff83a1;
   }
+  &:disabled:hover {
+    background: rgba(255, 113, 147, 0.4);
+  }
 `;
 
 const BlackButtonStyle = styled.button`
