@@ -32,6 +32,7 @@ const TopLine = styled.ul`
   display: flex;
   flex-wrap: wrap;
   gap: 18px;
+  margin-bottom: 24px;
   li {
     .tit {
       white-space: nowrap;
