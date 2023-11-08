@@ -14,7 +14,7 @@ export default function CloseProjectModal({ application, handleClose }: Iprops) 
   return (
     <CloseProjectnModalWrapper handleClose={handleClose} title={t('application.DetailModalHeader')}>
       <Content>
-        <Block underline>
+        <Block>
           <li>
             <BlockLeft>{t('application.Project')}</BlockLeft>
             <BlockRight>{application.budget_source}</BlockRight>
