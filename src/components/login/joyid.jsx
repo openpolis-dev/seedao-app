@@ -15,7 +15,7 @@ import { Authorizer } from "casbin.js";
 import { readPermissionUrl } from "../../requests/user";
 import { WalletType } from "../../wallet/wallet";
 import { SELECT_WALLET } from "../../utils/constant";
-import JoyIdImg from "../../assets/Imgs/home/JOYID.svg";
+import JoyIdImg from "../../assets/Imgs/home/JOYID.png";
 import styled from "styled-components";
 import OneSignal from 'react-onesignal';
 

@@ -81,7 +81,7 @@ export default function TallyForm({item,id,account,userData}){
     {/*<iframe data-tally-src="https://tally.so/embed/mBpyxe?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1&name=AAA&userid=123456&wallet=0x183F09C3cE99C02118c570e03808476b22d63191" loading="lazy" width="100%" height="200" frameBorder="0" marginHeight="0" marginWidth="0" title="Hacker House application"></iframe> */}
   <iframe
 
-        data-tally-src={`https://tally.so/embed/${id}?alignLeft=${detail?.alignLeft}&hideTitle=${detail?.hideTitle}&transparentBackground=1&dynamicHeight=1&${iframeStr}`}
+        data-tally-src={`https://tally.so/embed/${id}?alignLeft=${detail?.alignLeft}&hideTitle=${detail?.hideTitle}&transparentBackground=0&dynamicHeight=1&${iframeStr}`}
         loading="lazy"
         width="100%"
         height="200"

@@ -32,7 +32,7 @@ const UlBox = styled.div`
       margin-right: auto;
     }
   }
-  @media (max-width: 1700px) {
+  @media (max-width: 1750px) {
     .libox {
       width: 20%;
     }
