@@ -171,17 +171,17 @@ export default function EditProject({ detail }: { detail: ReTurnProject | undefi
 
   const closeSuccess = () => {
     setShowSuccess(false);
-    navigate(`/project/info/${detail?.id}}`);
+    navigate(`/project/info/${detail?.id}`);
   };
 
-  const handleClosePro = async () => {
+  const handleClosePro = async (content: string) => {
     if (!detail) {
       return;
     }
     setShow(false);
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
-      await createCloseProjectApplication(detail.id);
+      await createCloseProjectApplication(detail.id, content);
       dispatch({ type: AppActionType.SET_LOADING, payload: null });
       setShowSuccess(true);
 
