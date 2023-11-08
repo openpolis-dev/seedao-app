@@ -22,6 +22,7 @@ import { AppActionType, useAuthContext } from 'providers/authProvider';
 import { ContainerPadding } from 'assets/styles/global';
 import ApplicationStatusTag from 'components/common/applicationStatusTag';
 import useApplicants from 'hooks/useApplicants';
+import { formatApplicationStatus } from 'utils';
 
 const Box = styled.div`
   position: relative;
@@ -78,19 +79,36 @@ export default function Register() {
   const [pageSize, setPageSize] = useState(10);
   const [total, setTotal] = useState(100);
   const [list, setList] = useState<IApplicantBundleDisplay[]>([]);
-  const [selectMap, setSelectMap] = useState<{ [id: number]: ApplicationStatus | boolean }>({});
 
   // budget source
   const allSource = useBudgetSource();
   const [selectSource, setSelectSource] = useState<{ id: number; type: 'project' | 'guild' }>();
+  // applicant
   const applicants = useApplicants();
   const [selectApplicant, setSelectApplicant] = useState<string>();
-  const [showMore, setShowMore] = useState<IApplicationDisplay[]>();
-  const [showBundleId, setShowBundleId] = useState<number>();
-
+  // asset type
+  const assetTypes = useMemo(() => {
+    return [
+      { value: 'SCR', label: 'SCR' },
+      { value: 'USDT', label: 'USDT' },
+    ];
+  }, []);
+  const [selectAssetType, setSelectAssetType] = useState<string>();
+  // State
+  const allStates = useMemo(() => {
+    return [
+      { value: ApplicationStatus.Open, label: t(formatApplicationStatus(ApplicationStatus.Open)) },
+      { value: ApplicationStatus.Open, label: t(formatApplicationStatus(ApplicationStatus.Open)) },
+      { value: ApplicationStatus.Approved, label: t(formatApplicationStatus(ApplicationStatus.Approved)) },
+    ];
+  }, [t]);
+  const [selectState, setSelectState] = useState<ApplicationStatus>();
   // season
   const seasons = useSeasons();
   const [selectSeason, setSelectSeason] = useState<number>();
+
+  const [showMore, setShowMore] = useState<IApplicationDisplay[]>();
+  const [showBundleId, setShowBundleId] = useState<number>();
 
   const { getMultiSNS } = useQuerySNS();
 
@@ -117,6 +135,12 @@ export default function Register() {
     }
     if (selectSeason) {
       queryData.season_id = selectSeason;
+    }
+    if (selectState) {
+      queryData.state = selectState;
+    }
+    if (selectAssetType) {
+      // TODO: add query
     }
     try {
       const res = await requests.application.getApplicationBundle(
@@ -166,7 +190,7 @@ export default function Register() {
 
   useEffect(() => {
     getRecords();
-  }, [selectApplicant, selectSource, page, pageSize]);
+  }, [selectAssetType, selectState, selectApplicant, selectSource, selectSeason, page, pageSize]);
 
   const formatSNS = (name: string) => {
     return name?.endsWith('.seedao') ? name : publicJs.AddressToShow(name, 6);
@@ -205,13 +229,24 @@ export default function Register() {
 
           <TopLine>
             <li>
+              <div className="tit">{t('application.AssetType')}</div>
+              <Select
+                width="150px"
+                options={assetTypes}
+                placeholder=""
+                onChange={(value: any) => {
+                  setSelectAssetType(value?.value);
+                  setPage(1);
+                }}
+              />
+            </li>
+            <li>
               <div className="tit">{t('application.BudgetSource')}</div>
               <FilterSelect
                 options={allSource}
                 placeholder=""
                 onChange={(value: any) => {
                   setSelectSource({ id: value?.value as number, type: value?.data });
-                  setSelectMap({});
                   setPage(1);
                 }}
               />
@@ -223,7 +258,18 @@ export default function Register() {
                 placeholder=""
                 onChange={(value: ISelectItem) => {
                   setSelectApplicant(value?.value);
-                  setSelectMap({});
+                  setPage(1);
+                }}
+              />
+            </li>
+            <li>
+              <div className="tit">{t('application.State')}</div>
+              <Select
+                width="150px"
+                options={allStates}
+                placeholder=""
+                onChange={(value: any) => {
+                  setSelectState(value?.value);
                   setPage(1);
                 }}
               />
@@ -239,7 +285,6 @@ export default function Register() {
                     NotClear={true}
                     onChange={(value: any) => {
                       setSelectSeason(value?.value);
-                      setSelectMap({});
                       setPage(1);
                     }}
                   />
