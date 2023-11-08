@@ -1,10 +1,10 @@
 importScripts('https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.sw.js');
 
-console.log('service worker 注册成功');
+console.log('service worker registed');
 
-self.addEventListener('install', () => {
+self.addEventListener('install', (event) => {
   console.log('service worker installed');
-  self.skipWaiting();
+  event.waitUntil(self.skipWaiting());
 });
 
 const MESSAGE_TYPE = {
