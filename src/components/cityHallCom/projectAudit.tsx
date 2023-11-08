@@ -15,6 +15,7 @@ import { AppActionType, useAuthContext } from 'providers/authProvider';
 import BackerNav from 'components/common/backNav';
 import { ContainerPadding } from 'assets/styles/global';
 import { PinkButton } from 'components/common/button';
+import CloseProjectModal from 'components/modals/closeProjectModal';
 
 const Box = styled.div`
   ${ContainerPadding};
@@ -38,6 +39,7 @@ export default function ProjectAudit() {
   const [total, setTotal] = useState(0);
 
   const [list, setList] = useState<IApplicationDisplay[]>([]);
+  const [showApplication, setShowApplication] = useState<IApplicationDisplay>();
 
   const showLoading = (v: boolean) => {
     dispatch({ type: AppActionType.SET_LOADING, payload: v });
@@ -110,6 +112,9 @@ export default function ProjectAudit() {
 
   return (
     <Box>
+      {showApplication && (
+        <CloseProjectModal application={showApplication} handleClose={() => setShowApplication(undefined)} />
+      )}
       <BackerNav to="/city-hall/governance" title={t('city-hall.CloseProjectAudit')} />
       <section>
         <TableBox>
@@ -138,6 +143,9 @@ export default function ProjectAudit() {
                       <td>{item.created_date}</td>
                       <td>
                         <OperationBox>
+                          <Button variant="outline-primary" onClick={() => setShowApplication(item)}>
+                            Detail
+                          </Button>
                           <Button onClick={() => handleApprove(item.application_id)}>{t('city-hall.Pass')}</Button>
                           <PinkButton onClick={() => handleReject(item.application_id)}>
                             {t('city-hall.Reject')}
