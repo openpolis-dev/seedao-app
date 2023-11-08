@@ -16,6 +16,7 @@ import BackerNav from 'components/common/backNav';
 import { ContainerPadding } from 'assets/styles/global';
 import { PinkButton } from 'components/common/button';
 import CloseProjectModal from 'components/modals/closeProjectModal';
+import useQuerySNS from 'hooks/useQuerySNS';
 
 const Box = styled.div`
   ${ContainerPadding};
@@ -40,6 +41,8 @@ export default function ProjectAudit() {
 
   const [list, setList] = useState<IApplicationDisplay[]>([]);
   const [showApplication, setShowApplication] = useState<IApplicationDisplay>();
+
+  const { getMultiSNS } = useQuerySNS();
 
   const showLoading = (v: boolean) => {
     dispatch({ type: AppActionType.SET_LOADING, payload: v });
@@ -66,9 +69,19 @@ export default function ProjectAudit() {
         queryData,
       );
       setTotal(res.data.total);
+      const _wallets = new Set<string>();
+
+      res.data.rows.forEach((r) => {
+        _wallets.add(r.submitter_wallet?.toLocaleLowerCase());
+        _wallets.add(r.reviewer_wallet?.toLocaleLowerCase());
+      });
+      const sns_map = await getMultiSNS(Array.from(_wallets));
+
       const _list = res.data.rows.map((item) => ({
         ...item,
         created_date: formatTime(item.created_at),
+        submitter_name: sns_map.get(item.submitter_wallet?.toLocaleLowerCase()) as string,
+        reviewer_name: sns_map.get(item.reviewer_wallet?.toLocaleLowerCase()) as string,
       }));
       setList(_list);
     } catch (error) {
@@ -135,11 +148,13 @@ export default function ProjectAudit() {
                   {list.map((item, index) => (
                     <tr key={index}>
                       <td>{item.budget_source}</td>
-                      <td>{item.detailed_type}</td>
+                      <td>
+                        <ContentCell>{item.detailed_type}</ContentCell>
+                      </td>
                       <td>
                         <ApplicationStatusTag status={item.status} isProj={true} />
                       </td>
-                      <td>{item.submitter_name || publicJs.AddressToShow(item.submitter_wallet)}</td>
+                      <td>{item.submitter_name}</td>
                       <td>{item.created_date}</td>
                       <td>
                         <OperationBox>
@@ -182,4 +197,12 @@ const OperationBox = styled.div`
     width: 80px;
     min-width: unset;
   }
+`;
+
+const ContentCell = styled.div`
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
 `;
