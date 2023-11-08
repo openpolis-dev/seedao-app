@@ -3,7 +3,7 @@ import { Button } from 'react-bootstrap';
 import React, { useState, useEffect } from 'react';
 import Page from 'components/pagination';
 import requests from 'requests';
-import { IApplicationDisplay } from 'type/application.type';
+import { ApplicationStatus, IApplicationDisplay } from 'type/application.type';
 import { formatTime } from 'utils/time';
 import { IQueryApplicationsParams } from 'requests/applications';
 import publicJs from 'utils/publicJs';
@@ -138,9 +138,9 @@ export default function ProjectAudit() {
                   <tr>
                     <th>{t('application.Project')}</th>
                     <th>{t('application.CloseReason')}</th>
-                    <th>{t('Project.State')}</th>
+                    <th style={{ width: '180px' }}>{t('Project.State')}</th>
                     <th>{t('application.Applicant')}</th>
-                    <th>{t('application.ApplyTime')}</th>
+                    <th style={{ width: '180px' }}>{t('application.ApplyTime')}</th>
                     <th className="center">{t('application.Operation')}</th>
                   </tr>
                 </thead>
@@ -151,18 +151,26 @@ export default function ProjectAudit() {
                       <td>
                         <ContentCell>{item.detailed_type}</ContentCell>
                       </td>
-                      <td>
+                      <td style={{ width: '180px' }}>
                         <ApplicationStatusTag status={item.status} isProj={true} />
                       </td>
                       <td>{item.submitter_name}</td>
-                      <td>{item.created_date}</td>
+                      <td style={{ width: '180px' }}>{item.created_date}</td>
                       <td>
                         <OperationBox>
                           <Button variant="outline-primary" onClick={() => setShowApplication(item)}>
                             {t('city-hall.Detail')}
                           </Button>
-                          <Button onClick={() => handleApprove(item.application_id)}>{t('city-hall.Pass')}</Button>
-                          <PinkButton onClick={() => handleReject(item.application_id)}>
+                          <Button
+                            onClick={() => handleApprove(item.application_id)}
+                            disabled={item.status === ApplicationStatus.Approved}
+                          >
+                            {t('city-hall.Pass')}
+                          </Button>
+                          <PinkButton
+                            onClick={() => handleReject(item.application_id)}
+                            disabled={item.status === ApplicationStatus.Approved}
+                          >
                             {t('city-hall.Reject')}
                           </PinkButton>
                         </OperationBox>
@@ -200,6 +208,7 @@ const OperationBox = styled.div`
 `;
 
 const ContentCell = styled.div`
+  max-width: 400px;
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
