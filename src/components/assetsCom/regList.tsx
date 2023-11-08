@@ -12,7 +12,7 @@ import TableIconSVG from 'components/svgs/table';
 import AddIcon from 'assets/Imgs/dark/add.svg';
 import AddIconLight from 'assets/Imgs/light/add.svg';
 import DownloadIconSVG from 'components/svgs/download';
-import ExcellentExport from 'excellentexport';
+import { getTemplateFileUrl } from 'requests/applications';
 
 enum ChooseType {
   default = 0,
@@ -29,7 +29,7 @@ export default function RegList({ list, setList }: IProps) {
   const { t } = useTranslation();
 
   const {
-    state: { theme },
+    state: { theme, language },
   } = useAuthContext();
 
   const [chooseType, setChooseType] = useState(ChooseType.default);
@@ -83,24 +83,7 @@ export default function RegList({ list, setList }: IProps) {
   };
 
   const downloadFile = async () => {
-    ExcellentExport.convert({ filename: t('Assets.TemplateFileName'), format: 'xlsx', openAsDownload: true }, [
-      {
-        name: 'Sheet',
-        from: {
-          array: [
-            [
-              t('application.AddressName'),
-              t('application.AssetType'),
-              t('application.AssetAmount'),
-              t('application.Content'),
-              t('application.RegisterNote'),
-            ],
-            ['***.seedao', 'SCR', '100', '', ''],
-            ['0x0000000000000000000000000000000000000000', 'USDT', '100', '', ''],
-          ],
-        },
-      },
-    ]);
+    window.open(getTemplateFileUrl(language), '_blank');
   };
 
   const onClickAdd = () => {
