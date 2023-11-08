@@ -135,7 +135,7 @@ export default function ProjectAudit() {
                   {list.map((item, index) => (
                     <tr key={index}>
                       <td>{item.budget_source}</td>
-                      <td>{t('city-hall.CloseProject')}</td>
+                      <td>{item.detailed_type}</td>
                       <td>
                         <ApplicationStatusTag status={item.status} isProj={true} />
                       </td>
@@ -144,7 +144,7 @@ export default function ProjectAudit() {
                       <td>
                         <OperationBox>
                           <Button variant="outline-primary" onClick={() => setShowApplication(item)}>
-                            Detail
+                            {t('city-hall.Detail')}
                           </Button>
                           <Button onClick={() => handleApprove(item.application_id)}>{t('city-hall.Pass')}</Button>
                           <PinkButton onClick={() => handleReject(item.application_id)}>
