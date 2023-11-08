@@ -6,7 +6,7 @@ import { UpdateInfo, addRelatedProposal } from 'requests/guild';
 import { InfoObj, ReTurnProject } from 'type/project.type';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import useToast, { ToastType } from 'hooks/useToast';
-import PlusMinusButton from 'components/common/buttons';
+import PlusMinusButton from 'components/common/plusAndMinusButton';
 import CameraIconSVG from 'components/svgs/camera';
 import MarkdownEditor from 'components/common/markdownEditor';
 import { useNavigate } from 'react-router-dom';

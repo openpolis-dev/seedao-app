@@ -9,7 +9,7 @@ import useToast, { ToastType } from 'hooks/useToast';
 import Select from 'components/common/select';
 import sns from '@seedao/sns-js';
 import BasicModal from 'components/modals/basicModal';
-import PlusMinusButton from 'components/common/buttons';
+import PlusMinusButton from 'components/common/plusAndMinusButton';
 
 enum UserRole {
   None = 0,

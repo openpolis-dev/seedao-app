@@ -9,7 +9,7 @@ import useToast, { ToastType } from 'hooks/useToast';
 import { AssetName } from 'utils/constant';
 import { useNavigate } from 'react-router-dom';
 import { ContainerPadding } from 'assets/styles/global';
-import PlusMinusButton from 'components/common/buttons';
+import PlusMinusButton from 'components/common/plusAndMinusButton';
 import CameraIconSVG from 'components/svgs/camera';
 import BackerNav from 'components/common/backNav';
 import MarkdownEditor from 'components/common/markdownEditor';

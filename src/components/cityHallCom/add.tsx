@@ -8,7 +8,7 @@ import useToast, { ToastType } from 'hooks/useToast';
 import { updateMembers } from 'requests/cityHall';
 import BasicModal from 'components/modals/basicModal';
 import sns from '@seedao/sns-js';
-import PlusMinusButton from 'components/common/buttons';
+import PlusMinusButton from 'components/common/plusAndMinusButton';
 
 const CardBody = styled.div``;
 const CardFooter = styled.div`
