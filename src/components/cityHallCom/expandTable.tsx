@@ -52,7 +52,7 @@ export default function ExpandTable({ bund_id, list, handleClose, updateStatus, 
   };
 
   const formatSNS = (name: string) => {
-    return name?.startsWith('0x') ? publicJs.AddressToShow(name) : name;
+    return name?.endsWith('.seedao') ? name : publicJs.AddressToShow(name, 6);
   };
 
   return (

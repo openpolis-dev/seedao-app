@@ -184,7 +184,7 @@ export default function Register() {
   }, [selectApplicant, selectSource, page, pageSize]);
 
   const formatSNS = (name: string) => {
-    return name?.startsWith('0x') ? publicJs.AddressToShow(name) : name;
+    return name?.endsWith('.seedao') ? name : publicJs.AddressToShow(name, 6);
   };
 
   const handleclose = () => {

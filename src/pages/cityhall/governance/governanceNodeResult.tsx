@@ -89,7 +89,7 @@ export default function GoveranceNodeResult() {
 
   const formatSNS = (wallet: string) => {
     const sns = dataMap.get(wallet) || wallet;
-    return sns.startsWith('0x') && !sns.endsWith('.seedao') ? publicJs.AddressToShow(sns, 6) : sns;
+    return sns.endsWith('.seedao') ? sns : publicJs.AddressToShow(sns, 6);
   };
 
   const handleExport = () => {

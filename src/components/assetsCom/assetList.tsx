@@ -246,7 +246,7 @@ export default function AssetList() {
   }, [list, selectMap]);
 
   const formatSNS = (name: string) => {
-    return name?.startsWith('0x') ? publicJs.AddressToShow(name, 6) : name;
+    return name?.endsWith('.seedao') ? name : publicJs.AddressToShow(name, 6);
   };
 
   return (
