@@ -163,13 +163,15 @@ export default function ProjectAudit() {
                           </Button>
                           <Button
                             onClick={() => handleApprove(item.application_id)}
-                            disabled={item.status === ApplicationStatus.Approved}
+                            disabled={item.status === ApplicationStatus.Completed}
                           >
                             {t('city-hall.Pass')}
                           </Button>
                           <PinkButton
                             onClick={() => handleReject(item.application_id)}
-                            disabled={item.status === ApplicationStatus.Approved}
+                            disabled={
+                              item.status === ApplicationStatus.Approved || item.status === ApplicationStatus.Rejected
+                            }
                           >
                             {t('city-hall.Reject')}
                           </PinkButton>
