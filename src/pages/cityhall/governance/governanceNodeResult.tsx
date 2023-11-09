@@ -68,6 +68,9 @@ export default function GoveranceNodeResult() {
   const [hasSentFlag, setHasSentFlag] = useState(true);
   const [hasSnapshot, setSnapshot] = useState(true);
 
+  const [filterActiveNum, setFilterActiveNum] = useState('');
+  const [filterEffectiveNum, setFilterEffectiveNum] = useState('');
+
   const { getMultiSNS } = useQuerySNS();
 
   useEffect(() => {
@@ -202,6 +205,21 @@ export default function GoveranceNodeResult() {
             <div className="num">{formatNumber(Number(totalReward))}</div>
           </li>
         </StaticCards>
+        <FilterInputBox>
+          <FilterInputBoxTop>
+            <FilterInputItem>
+              <span>{t('GovernanceNodeResult.ActiveSCR')}</span>
+              <input type="number" value={filterActiveNum} onChange={(e) => setFilterActiveNum(e.target.value)} />
+            </FilterInputItem>
+            <FilterInputItem>
+              <span>{t('GovernanceNodeResult.EffectiveSCR')}</span>
+              <input type="number" value={filterEffectiveNum} onChange={(e) => setFilterEffectiveNum(e.target.value)} />
+            </FilterInputItem>
+          </FilterInputBoxTop>
+          <Button variant="primary" onClick={handleExport}>
+            {t('GovernanceNodeResult.StartFilter')}
+          </Button>
+        </FilterInputBox>
       </TopLine>
       <OperateBox>
         <SearchBox>
@@ -357,12 +375,17 @@ const CurrentSeason = styled(HeaderCell)`
 const TopLine = styled.div`
   display: flex;
   margin-bottom: 30px;
+  gap: 20px;
+  justify-content: space-between;
+  @media (max-width: 1520px) {
+    flex-direction: column;
+  }
 `;
 const StaticCards = styled.ul`
   display: flex;
   gap: 20px;
   li {
-    width: 230px;
+    min-width: 180px;
     border-radius: 16px;
     padding: 20px 25px;
     background-color: var(--bs-box--background);
@@ -371,6 +394,43 @@ const StaticCards = styled.ul`
       color: var(--bs-body-color_active);
       margin-top: 10px;
     }
+  }
+`;
+
+const FilterInputBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  @media (max-width: 1520px) {
+    flex-direction: row;
+  }
+`;
+
+const FilterInputBoxTop = styled.div`
+  display: flex;
+  border: 1px solid var(--bs-border-color);
+  border-radius: 16px;
+  height: 40px;
+`;
+
+const FilterInputItem = styled.div`
+  padding-inline: 16px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  &:first-child {
+    border-right: 1px solid var(--bs-border-color);
+  }
+  input {
+    width: 90px;
+    height: 40px;
+    line-height: 40px;
+    border: none;
+    background-color: transparent;
+    padding-left: 10px;
+  }
+  input:focus-visible {
+    outline: none;
   }
 `;
 

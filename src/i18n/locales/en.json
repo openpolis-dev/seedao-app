@@ -255,7 +255,8 @@
     "TotalSentSCR": "{{season}} Sent SCR ",
     "TotalMinerReward": "{{season}} Miner Reward (SCR)",
     "SeedSnapshot": "SEED Snapshot",
-    "SendReward": "Send Reward"
+    "SendReward": "Send Reward",
+    "StartFilter": "Start Filter"
   },
   "Push": {
     "CreatePush": "Create Notification",

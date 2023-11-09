@@ -25,6 +25,15 @@ const GlobalStyle = createGlobalStyle`
     padding: 0;
     margin: 0;
   }
+
+  input[type=number]::-webkit-inner-spin-button, 
+  input[type=number]::-webkit-outer-spin-button { 
+    -webkit-appearance: none;
+    margin: 0; 
+  }
+  input[type=number] {
+      -moz-appearance: textfield;
+  }
   .form-control:focus{
     box-shadow: none!important;
     border: 1px solid var(--input-border)!important;
