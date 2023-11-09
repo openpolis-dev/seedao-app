@@ -82,7 +82,8 @@ export default function InfoPage() {
                 </ContentBox>
               </LastLine>
             </AllBox>
-            {canAuditApplication && (
+
+            {canAuditApplication && detail?.status !== 'pending_close' && (
               <Link to={`/project/edit/${detail?.id}`} state={detail}>
                 <Button>{t('Project.Edit')}</Button>
               </Link>
