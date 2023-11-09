@@ -108,13 +108,13 @@ const links = {
       hideTitle: 0,
       hiddenFields: ['name', 'sns', 'wallet'],
     },
-    {
-      name: 'resources.Seed',
-      link: 'https://seed.seedao.xyz/',
-      id: 'Seed',
-      icon: SeedIcon,
-      desc: 'resources.SeedDesc',
-    },
+    // {
+    //   name: 'resources.Seed',
+    //   link: 'https://seed.seedao.xyz/',
+    //   id: 'Seed',
+    //   icon: SeedIcon,
+    //   desc: 'resources.SeedDesc',
+    // },
   ],
   applyAppLink: 'https://tally.so/r/3XozzP',
   governance: [
@@ -220,13 +220,13 @@ const links = {
     },
   ],
   tech: [
-    {
-      name: 'city-hall.SeedReview',
-      link: '',
-      id: 'seed',
-      icon: RImg5,
-      desc: 'city-hall.SeedReviewDesc',
-    },
+    // {
+    //   name: 'city-hall.SeedReview',
+    //   link: '',
+    //   id: 'seed',
+    //   icon: RImg5,
+    //   desc: 'city-hall.SeedReviewDesc',
+    // },
   ],
   apps: [
     {
