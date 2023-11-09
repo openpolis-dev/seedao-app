@@ -344,7 +344,7 @@ const SearchBox = styled.div`
 `;
 
 const TableBox = styled.div`
-  height: calc(100vh - 262px);
+  height: calc(100vh - 380px);
   overflow-y: auto;
   .table {
     table-layout: fixed;
@@ -392,6 +392,9 @@ const TableBox = styled.div`
       /* position: sticky;
       left: 0; */
     }
+  }
+  @media (max-width: 1520px) {
+    height: calc(100vh - 440px);
   }
 `;
 
