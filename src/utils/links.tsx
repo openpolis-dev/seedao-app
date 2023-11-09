@@ -36,7 +36,7 @@ const links = {
       desc: 'resources.CalendarReviewDesc',
       alignLeft: 0,
       hideTitle: 0,
-      hiddenFields: ['name', 'sns', 'wallet'],
+      hiddenFields: [],
     },
     {
       name: 'resources.community',

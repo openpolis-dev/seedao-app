@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { ContainerPadding } from '../../assets/styles/global';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { Row, Col } from 'react-bootstrap';
 
 import { useTranslation } from 'react-i18next';
@@ -10,9 +10,11 @@ import AppCard, { EmptyAppCard } from 'components/common/appCard';
 import Tabbar from 'components/common/tabbar';
 import { useAuthContext } from '../../providers/authProvider';
 import { useNavigate } from 'react-router-dom';
+import ResourcesDetail from './resources-detail';
 
 const OuterBox = styled.div`
   min-height: 100%;
+  position: relative;
   ${ContainerPadding};
 `;
 
@@ -65,6 +67,8 @@ const AppBox = styled(Row)`
 
 export default function Resources() {
   const { t } = useTranslation();
+  const [show, setShow] = useState(false);
+  const [type, setType] = useState('');
 
   const {
     state: { theme },
@@ -75,8 +79,17 @@ export default function Resources() {
     return Links.resource.map((item) => ({ ...item, name: t(item.name) as string, desc: t(item.desc) as string }));
   }, [t]);
 
+  const handleShow = (type: string) => {
+    setShow(true);
+    setType(type);
+  };
+
+  const closeModal = () => {
+    setShow(false);
+  };
   return (
     <OuterBox>
+      {show && <ResourcesDetail closeModal={closeModal} id={type} />}
       <TitBox>
         {/*<div className="titLft">*/}
         {/*  <Tabbar defaultActiveKey={0} tabs={[{ key: 0, title: t('resources.all') }]} />*/}
@@ -87,7 +100,7 @@ export default function Resources() {
       <AppBox>
         {resources.map((item, idx) => (
           <Col key={idx} sm={12} md={6} lg={4} xl={3}>
-            <AppCard {...item} />
+            <AppCard {...item} handleShow={handleShow} />
           </Col>
         ))}
         {/*<div onClick={()=>ToGo()}>*/}

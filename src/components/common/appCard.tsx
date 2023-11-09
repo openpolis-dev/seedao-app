@@ -14,23 +14,32 @@ const AppCard = ({
   link,
   id,
   desc,
+  hiddenFields,
+  handleShow,
 }: {
   icon?: any;
   name: string;
   link: string;
   id: string;
   desc?: string;
+  hiddenFields?: string[];
+  handleShow?: (arg0: string) => void;
 }) => {
   const navigate = useNavigate();
   const {
-    state: { theme },
+    state: { theme, userData },
   } = useAuthContext();
   const handleClickEvent = () => {
     if (id.startsWith('module-')) {
       navigate(link);
     } else if (id.startsWith('resource-')) {
-      const url = link.split('https://tally.so/r/')[1];
-      navigate(`/resources/detail/${url}`);
+      if ((hiddenFields && hiddenFields?.length && userData) || !(hiddenFields && hiddenFields?.length)) {
+        const url = link.split('https://tally.so/r/')[1];
+        // navigate(`/resources/detail/${url}`);
+        handleShow && handleShow(url);
+      } else {
+        return;
+      }
     } else {
       window.open(link, '_blank');
     }
@@ -100,7 +109,7 @@ const AppCardStyle = styled.div`
     }
     img {
       position: relative;
-      z-index: 99;
+      z-index: 8;
       width: 88px;
       height: 88px;
       object-fit: cover;

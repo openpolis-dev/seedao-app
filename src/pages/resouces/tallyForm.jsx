@@ -6,8 +6,9 @@ import { AppActionType, useAuthContext } from "../../providers/authProvider";
 
 
 const Box = styled.div`
-    margin-inline:${props => props.align === "1" ? "32px":0};
-    width:${props => props.align === "1" ? "900px":"auto"};
+    //margin-inline:${props => props.align === "1" ? "32px":0};
+    // width:${props => props.align === "1" ? "900px":"auto"};
+  width: 100%;
 `
 
 export default function TallyForm({item,id,account,userData}){
@@ -23,12 +24,12 @@ export default function TallyForm({item,id,account,userData}){
     window.Tally.loadEmbeds();
 
 
-    let iframe = document.getElementById("myIframe");
-    iframe.addEventListener("DOMContentLoaded",handleIframeLoad);
-
-    return ()=>{
-      iframe.removeEventListener("DOMContentLoaded",handleIframeLoad)
-    }
+    // let iframe = document.getElementById("myIframe");
+    // iframe.addEventListener("DOMContentLoaded",handleIframeLoad);
+    //
+    // return ()=>{
+    //   iframe.removeEventListener("DOMContentLoaded",handleIframeLoad)
+    // }
 
   }, []);
 
