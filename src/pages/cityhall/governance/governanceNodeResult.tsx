@@ -11,6 +11,7 @@ import useQuerySNS from 'hooks/useQuerySNS';
 import { formatNumber } from 'utils/number';
 import ExcellentExport from 'excellentexport';
 import { PrimaryOutlinedButton } from 'components/common/button';
+import FilterNodesNodal from 'components/modals/filterNodesModal';
 
 const PAGE_SIZE = 15;
 
@@ -58,6 +59,8 @@ export default function GoveranceNodeResult() {
   const [displayList, setDisplayList] = useState<IRowData[]>([]);
   const [dataMap, setDataMap] = useState<Map<string, string>>(new Map<string, string>());
   const [searchKey, setSearchKey] = useState('');
+  const [showModal, setShowModal] = useState(false);
+  const [filterResult, setFilterResult] = useState<string[]>([]);
 
   const [totalWallet, setTotalWallet] = useState(0);
   const [totalActive, setTotalActive] = useState(0);
@@ -175,8 +178,27 @@ export default function GoveranceNodeResult() {
 
   const onClickSnapshot = () => {};
 
+  const closeModal = () => {
+    setShowModal(false);
+    setFilterResult([]);
+  };
+
+  const handleFilter = () => {
+    setShowModal(true);
+    setFilterResult(
+      allList
+        .filter(
+          (item) =>
+            Number(item.activity_credit) >= Number(filterActiveNum) &&
+            Number(item.effective_credit) >= Number(filterEffectiveNum),
+        )
+        .map((item) => dataMap.get(item.wallet) || item.wallet),
+    );
+  };
+
   return (
     <OuterBox>
+      {showModal && <FilterNodesNodal snsList={filterResult} handleClose={closeModal} season={currentSeason} />}
       <BackerNav title={t('city-hall.GovernanceNodeResult')} to="/city-hall/governance" />
       <TopLine>
         <StaticCards>
@@ -216,7 +238,7 @@ export default function GoveranceNodeResult() {
               <input type="number" value={filterEffectiveNum} onChange={(e) => setFilterEffectiveNum(e.target.value)} />
             </FilterInputItem>
           </FilterInputBoxTop>
-          <Button variant="primary" onClick={handleExport}>
+          <Button variant="primary" onClick={handleFilter} disabled={!hasSnapshot}>
             {t('GovernanceNodeResult.StartFilter')}
           </Button>
         </FilterInputBox>

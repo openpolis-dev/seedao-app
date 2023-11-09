@@ -256,7 +256,9 @@
     "TotalMinerReward": "{{season}} Miner Reward (SCR)",
     "SeedSnapshot": "SEED Snapshot",
     "SendReward": "Send Reward",
-    "StartFilter": "Start Filter"
+    "StartFilter": "Start Filter",
+    "FilterNodesModalTitle": "{{season}} Nodes",
+    "FilterNodesFilename": "{{season}} Nodes"
   },
   "Push": {
     "CreatePush": "Create Notification",
