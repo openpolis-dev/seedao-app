@@ -53,14 +53,11 @@ export default function RegList({ list, setList }: IProps) {
             });
 
             const arrs = csvData.split('\n');
-            const objs: any = [];
-
             arrs.forEach((item, index) => {
-              console.log(index, item);
-              if (index !== 0) {
-                const vals = item.split(',');
+              const vals = item.split(',');
+              if (index > 0) {
                 const [address, assetType, amount, content, note] = vals;
-                objs.push({
+                data.push({
                   address,
                   assetType,
                   amount,
@@ -69,9 +66,8 @@ export default function RegList({ list, setList }: IProps) {
                 });
               }
             });
-
-            data = objs;
           }
+          break;
         }
         setList(data);
 
