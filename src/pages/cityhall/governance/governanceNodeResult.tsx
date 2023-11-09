@@ -452,7 +452,7 @@ const StaticCards = styled.ul`
     border-radius: 16px;
     padding: 20px 25px;
     background-color: var(--bs-box--background);
-    border: var(--bs-border-color);
+    border: 1px solid var(--bs-border-color);
     .num {
       color: var(--bs-body-color_active);
       margin-top: 10px;
