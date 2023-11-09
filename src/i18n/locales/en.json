@@ -301,7 +301,8 @@
     "RegisterIntro": "Memo",
     "RegisterAdd": "Add",
     "RegisterSubmit": "Submit",
-    "TemplateFileName": "SeeDAO Submission Template"
+    "TemplateFileName": "SeeDAO Submission Template",
+    "Total": "Total"
   },
   "My": {
     "MyProfile": "My Profile",

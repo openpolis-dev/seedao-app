@@ -3,12 +3,10 @@ import { useTranslation } from 'react-i18next';
 import { IExcelObj } from 'type/project.type';
 import Select from 'components/common/select';
 import { Button, Form } from 'react-bootstrap';
-import { useState, FormEvent, useEffect } from 'react';
+import { useState, FormEvent, useEffect, useMemo } from 'react';
 import DeleteIcon from 'assets/Imgs/delete.svg';
 import AddIcon from 'assets/Imgs/dark/add.svg';
-import AddIconLight from 'assets/Imgs/light/add.svg';
 import { AssetName } from 'utils/constant';
-import { useAuthContext } from '../../providers/authProvider';
 
 interface IProps {
   updateList: (data: IExcelObj[]) => void;
@@ -16,9 +14,6 @@ interface IProps {
 
 const CustomTable = ({ updateList }: IProps) => {
   const { t } = useTranslation();
-  const {
-    state: { theme },
-  } = useAuthContext();
   const [list, setList] = useState<IExcelObj[]>([
     {
       address: '',
@@ -77,6 +72,16 @@ const CustomTable = ({ updateList }: IProps) => {
     updateList(list);
   }, [list]);
 
+  const totalAssets = useMemo(() => {
+    let usdt_count = 0;
+    let scr_count = 0;
+    list.forEach((item) => {
+      if (item.assetType === AssetName.Credit) scr_count += Number(item.amount) || 0;
+      if (item.assetType === AssetName.Token) usdt_count += Number(item.amount) || 0;
+    });
+    return [usdt_count, scr_count];
+  }, [list]);
+
   return (
     <Box>
       <table className="table" cellPadding="0" cellSpacing="0">
@@ -133,12 +138,18 @@ const CustomTable = ({ updateList }: IProps) => {
           ))}
         </tbody>
       </table>
-      <div>
-        <AddButton onClick={addOne}>
-          <img src={theme ? AddIcon : AddIconLight} alt="" />
-          {t('Assets.RegisterAdd')}
-        </AddButton>
-      </div>
+      <TotalAsset>
+        <LeftAssets>
+          <span>{t('Assets.Total')}</span>
+          <span className="value">{totalAssets[0]}</span>
+          <span>{AssetName.Token}</span>
+          <span className="value">{totalAssets[1]}</span>
+          <span>{AssetName.Credit}</span>
+        </LeftAssets>
+        <Button variant="primary" onClick={addOne} style={{ height: '36px' }}>
+          <img src={AddIcon} alt="" /> {t('Assets.RegisterAdd')}
+        </Button>
+      </TotalAsset>
     </Box>
   );
 };
@@ -212,4 +223,23 @@ export const AddButton = styled.button<{ long?: boolean }>`
 
 const AssetSelect = styled(Select)`
   width: 100px;
+`;
+
+const TotalAsset = styled.div`
+  display: flex;
+  justify-content: space-between;
+  background-color: var(--table-header);
+  padding: 19px 32px;
+`;
+
+const LeftAssets = styled.div`
+  line-height: 36px;
+  color: var(--bs-body-color_active);
+  display: flex;
+  gap: 8px;
+  .value {
+    font-size: 20px;
+    font-family: Poppins-SemiBold, Poppins;
+    font-weight: 600;
+  }
 `;
