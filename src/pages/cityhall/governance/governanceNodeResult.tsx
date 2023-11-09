@@ -76,6 +76,16 @@ export default function GoveranceNodeResult() {
 
   const { getMultiSNS } = useQuerySNS();
 
+  const allSeasons = useMemo(() => {
+    if (currentSeason) {
+      const current = Number(currentSeason.replace('S', ''));
+      return Array.from({ length: current + 1 }, (_, i) => i);
+    } else {
+      return [];
+    }
+  }, [currentSeason]);
+  console.log('allSeasons', allSeasons);
+
   useEffect(() => {
     const getList = () => {
       dispatch({ type: AppActionType.SET_LOADING, payload: true });
@@ -127,11 +137,9 @@ export default function GoveranceNodeResult() {
           array: [
             [
               'SNS',
-              'S0(SCR)',
-              'S1(SCR)',
-              'S2(SCR)',
-              'S3(SCR)',
-              t('GovernanceNodeResult.MinerReward', { season: 'S3' }) + '(SCR)',
+              ...allSeasons.map((s) => `S${s}(SCR)`),
+              t('GovernanceNodeResult.VoteCount', { season: currentSeason }),
+              t('GovernanceNodeResult.MinerReward', { season: currentSeason }) + '(SCR)',
               t('GovernanceNodeResult.Total') + '(SCR)',
               t('GovernanceNodeResult.ActiveSCR'),
               t('GovernanceNodeResult.EffectiveSCR'),
@@ -143,6 +151,7 @@ export default function GoveranceNodeResult() {
               item.seasons_credit?.find((s) => s.season_idx === 1)?.total || 0,
               item.seasons_credit?.find((s) => s.season_idx === 2)?.total || 0,
               item.seasons_credit?.find((s) => s.season_idx === 3)?.total || 0,
+              item.metaforo_vote_count || 0,
               item.metaforo_credit || 0,
               item.season_total_credit || 0,
               item.activity_credit || 0,
@@ -151,7 +160,7 @@ export default function GoveranceNodeResult() {
             ]),
           ],
         },
-        formats: ['B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'].map((c) => ({
+        formats: ['B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K'].map((c) => ({
           range: `${c}2:${c}1000`,
           format: ExcellentExport.formats.NUMBER,
         })),
@@ -273,14 +282,17 @@ export default function GoveranceNodeResult() {
           <ColGroup />
           <thead>
             <th>SNS</th>
-            <th>S0(SCR)</th>
-            <th>S1(SCR)</th>
-            <th>S2(SCR)</th>
-            <th>
-              <CurrentSeason>S3</CurrentSeason>(SCR)
-            </th>
+            {allSeasons.map((s, i) => {
+              return i === allSeasons.length - 1 ? (
+                <th>
+                  <CurrentSeason>{currentSeason}</CurrentSeason>(SCR)
+                </th>
+              ) : (
+                <th key={s}>{`S${s}(SCR)`}</th>
+              );
+            })}
             <th>{t('GovernanceNodeResult.VoteCount', { season: currentSeason })}</th>
-            <th>{t('GovernanceNodeResult.MinerReward', { season: 'S3' })}(SCR)</th>
+            <th>{t('GovernanceNodeResult.MinerReward', { season: currentSeason })}(SCR)</th>
             <th>{t('GovernanceNodeResult.Total')}(SCR)</th>
             <th>{t('GovernanceNodeResult.ActiveSCR')}</th>
             <th>{t('GovernanceNodeResult.EffectiveSCR')}</th>
@@ -293,10 +305,12 @@ export default function GoveranceNodeResult() {
             {displayList.map((item, index) => (
               <tr key={item.wallet}>
                 <td>{formatSNS(item.wallet)}</td>
-                <td>{formatNumber(Number(item.seasons_credit?.find((s) => s.season_idx === 0)?.total || 0))}</td>
-                <td>{formatNumber(Number(item.seasons_credit?.find((s) => s.season_idx === 1)?.total || 0))}</td>
-                <td>{formatNumber(Number(item.seasons_credit?.find((s) => s.season_idx === 2)?.total || 0))}</td>
-                <td>{formatNumber(Number(item.seasons_credit?.find((s) => s.season_idx === 3)?.total || 0))}</td>
+                {[...allSeasons].map((season) => (
+                  <td key={season}>
+                    {formatNumber(Number(item.seasons_credit?.find((s) => s.season_idx === season)?.total || 0))}
+                  </td>
+                ))}
+
                 <td>{formatNumber(Number(item.metaforo_vote_count) || 0)}</td>
                 <td>{formatNumber(Number(item.metaforo_credit) || 0)}</td>
                 <td>{formatNumber(Number(item.season_total_credit) || 0)}</td>
