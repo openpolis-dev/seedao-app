@@ -41,6 +41,10 @@ import GovernImg from '../assets/Imgs/darkMenu/govern.svg';
 import GovernImgActive from '../assets/Imgs/darkMenu/govern_active.png';
 import GovernImgLight from '../assets/Imgs/lightMenu/govern.svg';
 
+import PubImg from '../assets/Imgs/darkMenu/pub.svg';
+import PubImgActive from '../assets/Imgs/darkMenu/pub_active.png';
+import PubImgLight from '../assets/Imgs/lightMenu/pub.svg';
+
 import React from 'react';
 import useCheckLogin from 'hooks/useCheckLogin';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
@@ -302,6 +306,20 @@ const items: MenuItemType[] = [
       },
     },
     link: { href: '/proposal' },
+  },
+  {
+    title: 'menus.Pub',
+    icon: {
+      dark: {
+        nor: PubImg,
+        active: PubImgActive,
+      },
+      light: {
+        nor: PubImgLight,
+        active: PubImgActive,
+      },
+    },
+    link: { href: '/pub' },
   },
   {
     title: 'menus.city-hall',

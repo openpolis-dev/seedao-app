@@ -271,13 +271,13 @@ const links = {
       icon: MetaforoIcon,
       desc: 'apps.MetaforoDesc',
     },
-    {
-      id: 'module-pub',
-      name: 'apps.Pub',
-      link: '/pub',
-      icon: '',
-      desc: 'apps.PubDesc',
-    },
+    // {
+    //   id: 'module-pub',
+    //   name: 'apps.Pub',
+    //   link: '/pub',
+    //   icon: '',
+    //   desc: 'apps.PubDesc',
+    // },
     // {
     //   id: 'online',
     //   name: 'Home.OnlineEvent',
