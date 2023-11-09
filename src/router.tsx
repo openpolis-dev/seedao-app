@@ -36,8 +36,8 @@ import PubDetail from './pages/Pub/detail';
 
 import GoveranceNodeResult from 'pages/cityhall/governance/governanceNodeResult';
 import ResourcesDetail from './pages/resouces/resources-detail';
-import Audit from 'components/cityHallCom/register';
-import AuditProject from 'components/cityHallCom/projectAudit';
+import Audit from 'pages/cityhall/governance/register';
+import AuditProject from 'pages/cityhall/governance/projectAudit';
 
 export default function RouterLink() {
   return (

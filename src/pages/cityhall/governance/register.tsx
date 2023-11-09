@@ -12,7 +12,7 @@ import { useTranslation } from 'react-i18next';
 import useToast, { ToastType } from 'hooks/useToast';
 import Select from 'components/common/select';
 import { formatNumber } from 'utils/number';
-import ExpandTable from './expandTable';
+import ExpandTable from '../../../components/cityHallCom/expandTable';
 import ArrowIconSVG from 'components/svgs/back';
 import useQuerySNS from 'hooks/useQuerySNS';
 import useSeasons from 'hooks/useSeasons';
