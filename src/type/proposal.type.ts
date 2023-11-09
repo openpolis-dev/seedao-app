@@ -25,6 +25,7 @@ export interface IBaseProposal {
   title: string;
   is_pin: string;
   is_delete: string;
+  slug: string;
   first_post: {
     id: number;
     content: string;

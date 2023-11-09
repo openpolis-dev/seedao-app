@@ -12,6 +12,7 @@ import usePermission from 'hooks/usePermission';
 import { PermissionObject, PermissionAction } from 'utils/constant';
 import { Button } from 'react-bootstrap';
 import BackerNav from 'components/common/backNav';
+import SipTag from 'components/common/sipTag';
 
 export default function Index() {
   const { t } = useTranslation();
@@ -58,11 +59,7 @@ export default function Index() {
                   <div className="desc">{detail?.desc}</div>
                   <ProposalBox>
                     {detail?.proposals.map((item, index) => (
-                      <li key={index}>
-                        <a href={`https://forum.seedao.xyz/thread/${item}`} target="_blank" rel="noopener noreferrer">
-                          {`SIP-${item}`}
-                        </a>
-                      </li>
+                      <SipTag key={index} threadId={Number(item)} />
                     ))}
                   </ProposalBox>
                 </TopInfo>
@@ -183,21 +180,11 @@ const TopInfo = styled.div`
   }
 `;
 
-const ProposalBox = styled.ul`
+const ProposalBox = styled.div`
   display: flex;
   align-items: center;
   margin-top: 14px;
   flex-wrap: wrap;
-  li {
-    border-radius: 5px;
-    border: 1px solid #0085ff;
-    font-size: 12px;
-    margin-right: 12px;
-    a {
-      padding: 2px 12px;
-      color: #0085ff;
-    }
-  }
 `;
 
 const ContentBox = styled.div`
