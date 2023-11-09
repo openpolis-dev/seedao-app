@@ -47,7 +47,7 @@ export default function Profile() {
   const {
     state: { userData },
   } = useAuthContext();
-  const sns = useParseSNS(userData?.wallet);
+  // const sns = useParseSNS(userData?.wallet);
   const { t } = useTranslation();
   const { Toast, showToast } = useToast();
   const [userName, setUserName] = useState<string | undefined>('');
@@ -59,6 +59,7 @@ export default function Profile() {
   const [sbt, setSbt] = useState<any[]>([]);
   const [seed, setSeed] = useState<any[]>([]);
   const [wallet, setWallet] = useState();
+  const [sns, setSns] = useState('');
   const [detail, setDetail] = useState<any>();
 
   const getDetail = () => {
@@ -68,7 +69,7 @@ export default function Profile() {
       setUserName(detail.nickname);
       setAvatar(detail.avatar);
       setWallet(detail.wallet);
-
+      setSns(detail.sns);
       setBio(detail.bio);
       setRoles(detail.roles!);
 
@@ -87,8 +88,9 @@ export default function Profile() {
 
   useEffect(() => {
     if (!userData) return;
+    console.error(userData);
     getDetail();
-  }, [userData]);
+  }, [userData, (userData as any)?.data?.sns]);
 
   const switchRoles = (role: string) => {
     let str: string = '';
