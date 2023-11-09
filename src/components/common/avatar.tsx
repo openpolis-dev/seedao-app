@@ -18,6 +18,7 @@ export default function Avatar({ user }: { user?: IUser }) {
 
   useEffect(() => {
     const { data } = userData as any;
+    if (!data) return;
     data.sns = sns;
 
     dispatch({ type: AppActionType.SET_USER_DATA, payload: userData });
