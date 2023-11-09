@@ -239,7 +239,7 @@ export default function GoveranceNodeResult() {
             <th>
               <CurrentSeason>S3</CurrentSeason>(SCR)
             </th>
-            <th>S3{t('GovernanceNodeResult.VoteCount')}</th>
+            <th>{t('GovernanceNodeResult.VoteCount', { season: currentSeason })}</th>
             <th>{t('GovernanceNodeResult.MinerReward', { season: 'S3' })}(SCR)</th>
             <th>{t('GovernanceNodeResult.Total')}(SCR)</th>
             <th>{t('GovernanceNodeResult.ActiveSCR')}</th>
