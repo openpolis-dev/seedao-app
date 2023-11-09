@@ -53,6 +53,7 @@ const GlobalStyle = createGlobalStyle`
     height: 40px;
     background: var(--bs-primary);
     border-color: var(--bs-primary);
+    border-radius: 8px;
     &:hover, &:focus-visible, &:active {
       color:#fff !important;
       background: var(--bs-primary-hover)!important;
@@ -66,6 +67,7 @@ const GlobalStyle = createGlobalStyle`
 
   }
   .btn-outline-primary {
+    border-radius: 8px;
     height: 40px;
     border-color: var(--bs-border-color);
     font-weight: bold;

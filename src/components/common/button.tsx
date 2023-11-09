@@ -30,6 +30,7 @@ const PinkButtonStyle = styled.button`
   ${BasicButtonStyle};
   background: #ff7193;
   color: #fff;
+  font-size: 14px;
   &:disabled {
     background: rgba(255, 113, 147, 0.4);
   }
@@ -47,6 +48,7 @@ const BlackButtonStyle = styled.button`
   line-height: 36px;
   background: var(--menu-color);
   color: var(--bs-body-bg);
+  font-size: 14px;
   &:disabled {
     background: rgba(255, 113, 147, 0.4);
   }
@@ -62,6 +64,7 @@ const PrimaryOutlinedButtonStyle = styled.button`
   background-color: transparent;
   border: 1px solid var(--bs-primary);
   color: var(--bs-primary);
+  font-size: 14px;
   &:disabled {
     opacity: 0.4;
   }

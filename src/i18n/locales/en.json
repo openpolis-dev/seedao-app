@@ -249,7 +249,7 @@
     "SeedCount": "SEED Count",
     "SheetName": "Result",
     "FileName": "SeeDAO Node Qualification",
-    "VoteCount": "Vote Count",
+    "VoteCount": "{{season}} Vote Count",
     "TotalSNS": "Total SNS",
     "TotalActiveSNS": "Total Active SNS",
     "TotalSentSCR": "{{season}} Sent SCR ",

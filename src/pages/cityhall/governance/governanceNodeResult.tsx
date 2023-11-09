@@ -10,6 +10,7 @@ import publicJs from 'utils/publicJs';
 import useQuerySNS from 'hooks/useQuerySNS';
 import { formatNumber } from 'utils/number';
 import ExcellentExport from 'excellentexport';
+import { PrimaryOutlinedButton } from 'components/common/button';
 
 const PAGE_SIZE = 15;
 
@@ -64,6 +65,9 @@ export default function GoveranceNodeResult() {
   const [totalReward, setTotalReward] = useState(0);
   const [currentSeason, setCurrentSeason] = useState('');
 
+  const [hasSentFlag, setHasSentFlag] = useState(true);
+  const [hasSnapshot, setSnapshot] = useState(true);
+
   const { getMultiSNS } = useQuerySNS();
 
   useEffect(() => {
@@ -82,6 +86,9 @@ export default function GoveranceNodeResult() {
           setTotalSCR(data.season_total_credit_without_mint);
           setTotalReward(data.season_total_mint_credit);
           setCurrentSeason(data.season_name);
+
+          setHasSentFlag(data.metaforo_confirmed);
+          setSnapshot(data.seed_snapshoted);
 
           const _wallets = new Set<string>();
           data.records.forEach((item: IRowData) => {
@@ -161,6 +168,10 @@ export default function GoveranceNodeResult() {
     }
   }, [searchKey, allList, dataMap]);
 
+  const onClickSendReward = () => {};
+
+  const onClickSnapshot = () => {};
+
   return (
     <OuterBox>
       <BackerNav title={t('city-hall.GovernanceNodeResult')} to="/city-hall/governance" />
@@ -201,10 +212,21 @@ export default function GoveranceNodeResult() {
             onChange={(e) => setSearchKey(e.target.value)}
           />
         </SearchBox>
-
-        <Button variant="primary" onClick={handleExport}>
-          {t('GovernanceNodeResult.Export')}
-        </Button>
+        <ButtonGroup>
+          <Button variant="outline-primary" onClick={onClickSnapshot} disabled={hasSnapshot}>
+            {t('GovernanceNodeResult.SeedSnapshot')}
+          </Button>
+          <PrimaryOutlinedButton
+            onClick={onClickSendReward}
+            disabled={hasSentFlag}
+            style={{ height: '40px', lineHeight: '40px' }}
+          >
+            {t('GovernanceNodeResult.SendReward')}
+          </PrimaryOutlinedButton>
+          <Button variant="primary" onClick={handleExport}>
+            {t('GovernanceNodeResult.Export')}
+          </Button>
+        </ButtonGroup>
       </OperateBox>
       <TableBox>
         <Table id="head-table">
@@ -338,17 +360,27 @@ const TopLine = styled.div`
 `;
 const StaticCards = styled.ul`
   display: flex;
-  gap: 30px;
+  gap: 20px;
   li {
-    height: 100px;
+    width: 230px;
     border-radius: 16px;
     padding: 20px 25px;
     background-color: var(--bs-box--background);
     border: var(--bs-border-color);
+    .num {
+      color: var(--bs-body-color_active);
+      margin-top: 10px;
+    }
   }
 `;
 
 const LiTitle = styled.div`
   color: var(--bs-body-color);
   line-height: 18px;
+  font-size: 14px;
+`;
+
+const ButtonGroup = styled.div`
+  display: flex;
+  gap: 16px;
 `;
