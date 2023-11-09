@@ -248,7 +248,8 @@
     "EffectiveSCR": "Effective SCR",
     "SeedCount": "SEED Count",
     "SheetName": "Result",
-    "FileName": "SeeDAO Node Qualification"
+    "FileName": "SeeDAO Node Qualification",
+    "VoteCount": "Vote Count"
   },
   "Push": {
     "CreatePush": "Create Notification",

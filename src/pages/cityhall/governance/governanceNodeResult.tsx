@@ -27,6 +27,7 @@ interface IRowData {
   metaforo_credit: string;
   seed_count: number;
   effective_credit: string;
+  metaforo_vote_count: string;
 }
 
 const ColGroup = () => {
@@ -37,6 +38,7 @@ const ColGroup = () => {
       <col style={{ width: '100px' }} />
       <col style={{ width: '100px' }} />
       <col style={{ width: '100px' }} />
+      <col style={{ width: '120px' }} />
       <col style={{ width: '120px' }} />
       <col style={{ width: '120px' }} />
       <col style={{ width: '120px' }} />
@@ -64,13 +66,13 @@ export default function GoveranceNodeResult() {
 
       getGovernanceNodeResult()
         .then((res) => {
-          console.log(res);
-          setToal(res.data.length);
-          setAllList(res.data);
-          setDisplayList(res.data);
+          const data = res.data;
+          setToal(data.records.length);
+          setAllList(data.records);
+          setDisplayList(data.records);
 
           const _wallets = new Set<string>();
-          res.data.forEach((item: IRowData) => {
+          data.records.forEach((item: IRowData) => {
             _wallets.add(item.wallet);
           });
           getMultiSNS(Array.from(_wallets)).then((_dataMap) => {
@@ -175,6 +177,7 @@ export default function GoveranceNodeResult() {
             <th>
               <CurrentSeason>S3</CurrentSeason>(SCR)
             </th>
+            <th>S3{t('GovernanceNodeResult.VoteCount')}</th>
             <th>{t('GovernanceNodeResult.MinerReward', { season: 'S3' })}(SCR)</th>
             <th>{t('GovernanceNodeResult.Total')}(SCR)</th>
             <th>{t('GovernanceNodeResult.ActiveSCR')}</th>
@@ -192,6 +195,7 @@ export default function GoveranceNodeResult() {
                 <td>{formatNumber(Number(item.seasons_credit?.find((s) => s.season_idx === 1)?.total || 0))}</td>
                 <td>{formatNumber(Number(item.seasons_credit?.find((s) => s.season_idx === 2)?.total || 0))}</td>
                 <td>{formatNumber(Number(item.seasons_credit?.find((s) => s.season_idx === 3)?.total || 0))}</td>
+                <td>{formatNumber(Number(item.metaforo_vote_count) || 0)}</td>
                 <td>{formatNumber(Number(item.metaforo_credit) || 0)}</td>
                 <td>{formatNumber(Number(item.season_total_credit) || 0)}</td>
                 <td>{formatNumber(Number(item.activity_credit) || 0)}</td>

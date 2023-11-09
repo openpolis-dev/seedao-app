@@ -248,7 +248,8 @@
     "EffectiveSCR": "有效SCR",
     "SeedCount": "SEED数量（个）",
     "SheetName": "节点试算",
-    "FileName": "节点资质试算"
+    "FileName": "节点资质试算",
+    "VoteCount": "投票次数"
   },
   "Push": {
     "CreatePush": "创建推送",
