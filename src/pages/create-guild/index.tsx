@@ -212,9 +212,15 @@ export default function CreateGuild() {
       ],
     };
     try {
-      await createProjects(obj);
+      let rt = await createProjects(obj);
       showToast(t('Guild.createSuccess'), ToastType.Success);
-      navigate('/explore?tab=guild');
+
+      const {
+        data: { id },
+      } = rt;
+      // navigate('/explore?tab=guild');
+
+      navigate(`/guild/info/${id}`);
     } catch (error) {
       showToast(t('Guild.createFailed'), ToastType.Danger);
     } finally {

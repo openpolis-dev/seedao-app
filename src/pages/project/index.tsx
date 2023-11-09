@@ -90,7 +90,8 @@ export default function Index() {
     const stt = current === 1 ? 'closed' : '';
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     const obj: IPageParams = {
-      status: stt,
+      // status: stt,
+      status: 'open,pending_close',
       page: pageCur,
       size: pageSize,
       sort_order: 'desc',

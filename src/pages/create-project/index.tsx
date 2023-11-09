@@ -211,9 +211,12 @@ export default function CreateProject() {
     };
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
-      await createProjects(obj);
+      let rt = await createProjects(obj);
+      const {
+        data: { id },
+      } = rt;
       showToast(t('Project.createSuccess'), ToastType.Success);
-      navigate('/explore');
+      navigate(`/project/info/${id}`);
     } catch (error) {
       showToast(t('Project.createFailed'), ToastType.Danger);
     } finally {
