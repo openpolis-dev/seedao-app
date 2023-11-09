@@ -28,3 +28,12 @@ export const UpdateBudget = (data: IUpdateBudgetParams) => {
 export const getGovernanceNodeResult = () => {
   return request.get('data_srv/aggr_scr');
 };
+
+// snapshot
+export const requestSnapshotSeed = () => {
+  return request.post('rewards/snapshot_seed');
+};
+// send reward
+export const requestApproveMintReward = () => {
+  return request.post('rewards/approve_mint_reward');
+};

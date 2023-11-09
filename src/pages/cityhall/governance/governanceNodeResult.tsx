@@ -3,7 +3,7 @@ import { ContainerPadding } from 'assets/styles/global';
 import BackerNav from 'components/common/backNav';
 import { useTranslation } from 'react-i18next';
 import { Table, Form, Button } from 'react-bootstrap';
-import { getGovernanceNodeResult } from 'requests/cityHall';
+import { getGovernanceNodeResult, requestSnapshotSeed, requestApproveMintReward } from 'requests/cityHall';
 import { useEffect, useMemo, useState } from 'react';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import publicJs from 'utils/publicJs';
@@ -12,6 +12,7 @@ import { formatNumber } from 'utils/number';
 import ExcellentExport from 'excellentexport';
 import { PrimaryOutlinedButton } from 'components/common/button';
 import FilterNodesNodal from 'components/modals/filterNodesModal';
+import useToast, { ToastType } from 'hooks/useToast';
 
 const PAGE_SIZE = 15;
 
@@ -53,6 +54,7 @@ const ColGroup = () => {
 export default function GoveranceNodeResult() {
   const { t } = useTranslation();
   const { dispatch } = useAuthContext();
+  const { showToast } = useToast();
   const [page, setPage] = useState(1);
   const [total, setToal] = useState(0);
   const [allList, setAllList] = useState<IRowData[]>([]);
@@ -183,9 +185,31 @@ export default function GoveranceNodeResult() {
     }
   }, [searchKey, allList, dataMap]);
 
-  const onClickSendReward = () => {};
+  const onClickSendReward = async () => {
+    try {
+      dispatch({ type: AppActionType.SET_LOADING, payload: true });
+      await requestApproveMintReward();
+      showToast(t('Msg.ApproveSuccess'), ToastType.Success);
+      setHasSentFlag(true);
+    } catch (error) {
+      showToast(t('Msg.ApproveFailed'), ToastType.Danger);
+    } finally {
+      dispatch({ type: AppActionType.SET_LOADING, payload: false });
+    }
+  };
 
-  const onClickSnapshot = () => {};
+  const onClickSnapshot = async () => {
+    try {
+      dispatch({ type: AppActionType.SET_LOADING, payload: true });
+      await requestSnapshotSeed();
+      showToast(t('Msg.ApproveSuccess'), ToastType.Success);
+      setSnapshot(true);
+    } catch (error) {
+      showToast(t('Msg.ApproveFailed'), ToastType.Danger);
+    } finally {
+      dispatch({ type: AppActionType.SET_LOADING, payload: false });
+    }
+  };
 
   const closeModal = () => {
     setShowModal(false);
