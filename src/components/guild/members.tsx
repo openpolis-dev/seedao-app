@@ -88,11 +88,13 @@ export default function Members(props: Iprops) {
   };
 
   useEffect(() => {
-    let Mlist = memberArr.map((item: string) => getUser(item));
-    setMemberList([...Mlist]);
-
     let sList = adminArr.map((item: string) => getUser(item));
     setAdminList([...sList]);
+
+    let Mlist = memberArr.map((item: string) => getUser(item));
+    const uniqueArray = Mlist.filter((item2) => !sList.some((item1) => item1.id === item2.id));
+
+    setMemberList([...uniqueArray]);
   }, [memberArr, adminArr, userMap]);
 
   const closeAdd = (refresh?: boolean) => {
