@@ -185,6 +185,7 @@ const ProposalBox = styled.div`
   align-items: center;
   margin-top: 14px;
   flex-wrap: wrap;
+  gap: 12px;
 `;
 
 const ContentBox = styled.div`
