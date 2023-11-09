@@ -58,6 +58,12 @@ export default function GoveranceNodeResult() {
   const [dataMap, setDataMap] = useState<Map<string, string>>(new Map<string, string>());
   const [searchKey, setSearchKey] = useState('');
 
+  const [totalWallet, setTotalWallet] = useState(0);
+  const [totalActive, setTotalActive] = useState(0);
+  const [totalSCR, setTotalSCR] = useState(0);
+  const [totalReward, setTotalReward] = useState(0);
+  const [currentSeason, setCurrentSeason] = useState('');
+
   const { getMultiSNS } = useQuerySNS();
 
   useEffect(() => {
@@ -70,6 +76,12 @@ export default function GoveranceNodeResult() {
           setToal(data.records.length);
           setAllList(data.records);
           setDisplayList(data.records);
+
+          setTotalWallet(data.total_wallet_count);
+          setTotalActive(data.activate_wallet_count);
+          setTotalSCR(data.season_total_credit_without_mint);
+          setTotalReward(data.season_total_mint_credit);
+          setCurrentSeason(data.season_name);
 
           const _wallets = new Set<string>();
           data.records.forEach((item: IRowData) => {
@@ -152,6 +164,34 @@ export default function GoveranceNodeResult() {
   return (
     <OuterBox>
       <BackerNav title={t('city-hall.GovernanceNodeResult')} to="/city-hall/governance" />
+      <TopLine>
+        <StaticCards>
+          <li>
+            <div>
+              <LiTitle>{t('GovernanceNodeResult.TotalSNS')}</LiTitle>
+            </div>
+            <div className="num">{formatNumber(Number(totalWallet))}</div>
+          </li>
+          <li>
+            <div>
+              <LiTitle>{t('GovernanceNodeResult.TotalActiveSNS')}</LiTitle>
+            </div>
+            <div className="num">{formatNumber(Number(totalActive))}</div>
+          </li>
+          <li>
+            <div>
+              <LiTitle>{t('GovernanceNodeResult.TotalSentSCR', { season: currentSeason })}</LiTitle>
+            </div>
+            <div className="num">{formatNumber(Number(totalSCR))}</div>
+          </li>
+          <li>
+            <div>
+              <LiTitle>{t('GovernanceNodeResult.TotalMinerReward', { season: currentSeason })}</LiTitle>
+            </div>
+            <div className="num">{formatNumber(Number(totalReward))}</div>
+          </li>
+        </StaticCards>
+      </TopLine>
       <OperateBox>
         <SearchBox>
           <Form.Control
@@ -290,4 +330,25 @@ const CurrentSeason = styled(HeaderCell)`
   color: var(--bs-primary) !important;
   display: inline;
   padding: 0 !important;
+`;
+
+const TopLine = styled.div`
+  display: flex;
+  margin-bottom: 30px;
+`;
+const StaticCards = styled.ul`
+  display: flex;
+  gap: 30px;
+  li {
+    height: 100px;
+    border-radius: 16px;
+    padding: 20px 25px;
+    background-color: var(--bs-box--background);
+    border: var(--bs-border-color);
+  }
+`;
+
+const LiTitle = styled.div`
+  color: var(--bs-body-color);
+  line-height: 18px;
 `;

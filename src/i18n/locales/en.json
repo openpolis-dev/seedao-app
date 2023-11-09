@@ -249,7 +249,13 @@
     "SeedCount": "SEED Count",
     "SheetName": "Result",
     "FileName": "SeeDAO Node Qualification",
-    "VoteCount": "Vote Count"
+    "VoteCount": "Vote Count",
+    "TotalSNS": "Total SNS",
+    "TotalActiveSNS": "Total Active SNS",
+    "TotalSentSCR": "{{season}} Sent SCR ",
+    "TotalMinerReward": "{{season}} Miner Reward (SCR)",
+    "SeedSnapshot": "SEED Snapshot",
+    "SendReward": "Send Reward"
   },
   "Push": {
     "CreatePush": "Create Notification",
