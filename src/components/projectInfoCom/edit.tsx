@@ -100,19 +100,21 @@ export default function EditProject({ detail }: { detail: ReTurnProject | undefi
               break;
             }
           }
-        } else if (l.indexOf('/proposal/thread/') > -1) {
-          const items = l.split('/').reverse();
-          for (const it of items) {
-            if (it) {
-              if (ids.includes(it)) {
-                showToast(t('Msg.RepeatProposal'), ToastType.Danger);
-                return;
-              }
-              ids.push(it);
-              break;
-            }
-          }
-        } else {
+        }
+        // else if (l.indexOf('/proposal/thread/') > -1) {
+        //   const items = l.split('/').reverse();
+        //   for (const it of items) {
+        //     if (it) {
+        //       if (ids.includes(it)) {
+        //         showToast(t('Msg.RepeatProposal'), ToastType.Danger);
+        //         return;
+        //       }
+        //       ids.push(it);
+        //       break;
+        //     }
+        //   }
+        // }
+        else {
           showToast(t('Msg.ProposalLinkMsg'), ToastType.Danger);
           return;
         }
