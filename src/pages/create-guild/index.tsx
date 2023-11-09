@@ -160,10 +160,12 @@ export default function CreateGuild() {
   };
   const handleSubmit = async () => {
     const ids: string[] = [];
+    const slugs: string[] = [];
     for (const l of proList) {
       if (l) {
         if (l.startsWith('https://forum.seedao.xyz/thread/sip-')) {
           const items = l.split('/').reverse();
+          slugs.push(items[0]);
           for (const it of items) {
             if (it) {
               const _id = it.split('-').reverse()[0];
@@ -202,7 +204,7 @@ export default function CreateGuild() {
       name: proName,
       sponsors: _adminList,
       members: memberList,
-      proposals: ids,
+      proposals: slugs,
       desc,
       intro,
       budgets: [

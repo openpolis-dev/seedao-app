@@ -59,7 +59,7 @@ export default function Index() {
                   <div className="desc">{detail?.desc}</div>
                   <ProposalBox>
                     {detail?.proposals.map((item, index) => (
-                      <SipTag key={index} threadId={Number(item)} />
+                      <SipTag key={index} slug={item} />
                     ))}
                   </ProposalBox>
                 </TopInfo>

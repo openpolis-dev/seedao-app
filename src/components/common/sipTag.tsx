@@ -1,22 +1,16 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { getProposalDetail } from 'requests/proposal';
 
-export default function SipTag({ threadId }: { threadId: number }) {
+export default function SipTag({ slug }: { slug: string }) {
   const [SIP, setSIP] = useState('');
-  const [slug, setSlug] = useState('');
   useEffect(() => {
     const getSIP = async () => {
-      getProposalDetail(threadId).then((res) => {
-        const slug = res.data.thread?.slug;
-        if (slug && slug.startsWith('sip-')) {
-          setSIP(slug.split('-')[1]);
-          setSlug(slug);
-        }
-      });
+      if (slug && slug.startsWith('sip-')) {
+        setSIP(slug.split('-')[1]);
+      }
     };
     getSIP();
-  }, [threadId]);
+  }, [slug]);
   if (!SIP) {
     return <></>;
   }

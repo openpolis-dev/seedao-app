@@ -85,10 +85,12 @@ export default function EditProject({ detail }: { detail: ReTurnProject | undefi
       return;
     }
     const ids: string[] = [];
+    const slugs: string[] = [];
     for (const l of proList) {
       if (l) {
-        if (l.startsWith('https://forum.seedao.xyz/thread/')) {
+        if (l.startsWith('https://forum.seedao.xyz/thread/sip-')) {
           const items = l.split('/').reverse();
+          slugs.push(items[0]);
           for (const it of items) {
             if (it) {
               const _id = it.split('-').reverse()[0];
@@ -129,7 +131,7 @@ export default function EditProject({ detail }: { detail: ReTurnProject | undefi
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
       await UpdateInfo(String(detail?.id), obj);
-      await addRelatedProposal(String(detail?.id), ids);
+      await addRelatedProposal(String(detail?.id), slugs);
       showToast(t('Project.changeInfoSuccess'), ToastType.Success);
       navigate(`/project/info/${detail?.id}`);
     } catch (error) {

@@ -32,6 +32,7 @@ export default function EditGuild({ detail }: { detail?: ReTurnProject }) {
       setDesc(detail.desc);
       setUrl(detail.logo);
       setProList(detail.proposals.map((item) => `https://forum.seedao.xyz/thread/${item}`));
+      setIntro(detail.intro);
     }
   }, [detail]);
 
@@ -78,26 +79,34 @@ export default function EditGuild({ detail }: { detail?: ReTurnProject }) {
       return;
     }
     const ids: string[] = [];
+    const slugs: string[] = [];
     for (const l of proList) {
       if (l) {
-        if (l.startsWith('https://forum.seedao.xyz/thread/')) {
+        if (l.startsWith('https://forum.seedao.xyz/thread/sip-')) {
           const items = l.split('/').reverse();
+          slugs.push(items[0]);
           for (const it of items) {
             if (it) {
               const _id = it.split('-').reverse()[0];
+              if (ids.includes(_id)) {
+                showToast(t('Msg.RepeatProposal'), ToastType.Danger);
+                return;
+              }
               ids.push(_id);
               break;
             }
           }
-        } else if (l.indexOf('/proposal/thread/') > -1) {
-          const items = l.split('/').reverse();
-          for (const it of items) {
-            if (it) {
-              ids.push(it);
-              break;
-            }
-          }
-        } else {
+        }
+        // else if (l.indexOf('/proposal/thread/') > -1) {
+        //   const items = l.split('/').reverse();
+        //   for (const it of items) {
+        //     if (it) {
+        //       ids.push(it);
+        //       break;
+        //     }
+        //   }
+        // }
+        else {
           showToast(t('Msg.ProposalLinkMsg'), ToastType.Danger);
           return;
         }
@@ -112,7 +121,7 @@ export default function EditGuild({ detail }: { detail?: ReTurnProject }) {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
       await UpdateInfo(String(detail?.id), obj);
-      await addRelatedProposal(String(detail?.id), ids);
+      await addRelatedProposal(String(detail?.id), slugs);
       showToast(t('Guild.changeInfoSuccess'), ToastType.Success);
       navigate(`/guild/info/${detail?.id}`);
     } catch (error) {
