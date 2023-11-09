@@ -356,7 +356,7 @@
     "SEEDAO_ONBOARDING": "SeeDAO Onboarding"
   },
   "Msg": {
-    "ProposalLinkMsg": "Require correct proposal link",
+    "ProposalLinkMsg": "Require correct SIP link",
     "ApproveSuccess": "Operate successfully",
     "ApproveFailed": "Operate failed",
     "IncorrectAddress": "Invalid address: {{content}}",

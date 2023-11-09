@@ -159,24 +159,30 @@ export default function CreateProject() {
     const ids: string[] = [];
     for (const l of proList) {
       if (l) {
-        if (l.startsWith('https://forum.seedao.xyz/thread/')) {
+        if (l.startsWith('https://forum.seedao.xyz/thread/sip-')) {
           const items = l.split('/').reverse();
           for (const it of items) {
             if (it) {
               const _id = it.split('-').reverse()[0];
+              if (ids.includes(_id)) {
+                showToast(t('Msg.RepeatProposal'), ToastType.Danger);
+                return;
+              }
               ids.push(_id);
               break;
             }
           }
-        } else if (l.indexOf('/proposal/thread/') > -1) {
-          const items = l.split('/').reverse();
-          for (const it of items) {
-            if (it) {
-              ids.push(it);
-              break;
-            }
-          }
-        } else {
+        }
+        // else if (l.indexOf('/proposal/thread/') > -1) {
+        //   const items = l.split('/').reverse();
+        //   for (const it of items) {
+        //     if (it) {
+        //       ids.push(it);
+        //       break;
+        //     }
+        //   }
+        // }
+        else {
           showToast(t('Msg.ProposalLinkMsg'), ToastType.Danger);
           return;
         }
@@ -320,7 +326,7 @@ export default function CreateProject() {
                     <ProposalInputBox>
                       <Form.Control
                         type="text"
-                        placeholder={`${t('Project.AssociatedProposal')}, eg. https://forum.seedao.xyz/thread...`}
+                        placeholder={`eg. https://forum.seedao.xyz/thread/sip-...`}
                         value={item}
                         onChange={(e) => handleInput(e, index, 'proposal')}
                       />
