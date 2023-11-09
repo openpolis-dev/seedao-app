@@ -5,6 +5,7 @@ import TallyForm from './tallyForm';
 import Links from '../../utils/links';
 import { useAuthContext } from '../../providers/authProvider';
 import BackerNav from '../../components/common/backNav';
+import useParseSNS from '../../hooks/useParseSNS';
 
 const Box = styled.div`
   margin: 24px 0;
@@ -17,6 +18,7 @@ const LftBox = styled.div`
 export default function ResourcesDetail() {
   const { id } = useParams();
   const [item, setItem] = useState<any>();
+
   const {
     state: { userData, account },
   } = useAuthContext();
