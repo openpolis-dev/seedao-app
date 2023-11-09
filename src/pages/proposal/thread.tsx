@@ -13,6 +13,7 @@ import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import { ContainerPadding } from 'assets/styles/global';
 import { AppActionType, useAuthContext } from '../../providers/authProvider';
+import ProposalVoteProgress from 'components/common/proposalVote';
 
 export default function Proposal() {
   const { id: qid } = useParams();
@@ -74,6 +75,7 @@ export default function Proposal() {
             <Content>
               {enableQuill && data?.first_post.content && <QuillViewer content={data?.first_post.content} />}
             </Content>
+            {data.polls[0] && <ProposalVoteProgress poll={data.polls[0]} />}
             {/* <div style={{ overflow: 'hidden' }}>{data?.first_post.content}</div> */}
           </>
         )}

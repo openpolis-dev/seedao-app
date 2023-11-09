@@ -56,7 +56,12 @@
     "CreateProposal": "创建提案",
     "TheOldest": "最早的",
     "LookMore": "查看更多",
-    "Topics": "话题"
+    "Topics": "话题",
+    "Export": "导出",
+    "PollNFT": "投票NFT地址",
+    "VoteClose": "投票结束",
+    "VoteEndAt": "投票剩余时间{{leftTime}}",
+    "TotalVotes": "Total Votes"
   },
   "Project": {
     "ProjectOrGuildItem": "ProjectOrGuildItem tips ProjectOrGuildItem tips",
