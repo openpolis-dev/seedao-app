@@ -81,14 +81,15 @@ export default function Add(props: Iprops) {
         const res = await sns.resolves(checkSNSlst);
         for (let i = 0; i < res.length; i++) {
           const wallet = res[i];
-          sns2walletMap.set(checkSNSlst[i], wallet);
-          if (!wallet) {
+          if (!wallet || ethers.constants.AddressZero === wallet) {
             notOkList.push(checkSNSlst[i]);
+          } else {
+            sns2walletMap.set(checkSNSlst[i], wallet);
           }
         }
         if (!!notOkList.length) {
           showToast(t('Msg.IncorrectAddress', { content: notOkList.join(', ') }), ToastType.Danger);
-          return;
+          throw Error(t('Msg.IncorrectAddress', { content: notOkList.join(', ') }));
         }
       } catch (error) {
         console.error('resolved failed', error);
@@ -161,6 +162,7 @@ export default function Add(props: Iprops) {
                   options={roleOptions}
                   placeholder=""
                   NotClear={true}
+                  // isSearchable={false}
                   onChange={(value: any) => {
                     handleSelect(value?.value, index);
                   }}

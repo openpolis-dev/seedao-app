@@ -24,21 +24,27 @@ const Box = styled.div`
   }
 `;
 
-const BoxInner = styled.div`
+const BoxOuter = styled.div`
+  background: #fff;
   width: 80vw;
   height: 80vh;
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+`;
+
+const BoxInner = styled.div`
+  height: 100%;
   box-sizing: border-box;
   padding: 40px;
   overflow-y: auto;
-  background: #fff;
-  border-radius: 16px;
+  box-sizing: border-box;
 
-  position: relative;
   .icon-close {
     position: absolute;
     right: 10px;
-    top: 5px;
-    font-size: 24px;
+    top: 0;
+    font-size: 34px;
     cursor: pointer;
   }
 `;
@@ -70,13 +76,15 @@ export default function ResourcesDetail(props: Iprops) {
   }, [id]);
   return (
     <Box>
-      <BoxInner>
-        <div className="icon-close" onClick={() => closeModal()}>
-          {/*<EvaIcon name="close-outline" />*/}
-          <X />
-        </div>
-        <TallyForm id={id} item={item} userData={userData} account={account} />
-      </BoxInner>
+      <BoxOuter>
+        <BoxInner>
+          <div className="icon-close" onClick={() => closeModal()}>
+            {/*<EvaIcon name="close-outline" />*/}
+            <X />
+          </div>
+          <TallyForm id={id} item={item} userData={userData} account={account} />
+        </BoxInner>
+      </BoxOuter>
 
       {/*<LftBox>*/}
       {/*  <BackerNav title={item?.name || ''} to="/resources" mb="40px" />*/}

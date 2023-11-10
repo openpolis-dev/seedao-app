@@ -4,7 +4,7 @@ import ReactMarkdown from 'react-markdown';
 import { useParams, Link } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
 import { getProjectById } from 'requests/project';
-import { ReTurnProject } from 'type/project.type';
+import { ProjectStatus, ReTurnProject } from 'type/project.type';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import { ContainerPadding } from 'assets/styles/global';
 import BackerNav from 'components/common/backNav';
@@ -47,6 +47,22 @@ export default function InfoPage() {
     getDetail();
   };
 
+  const showStatusComponent = () => {
+    if (detail?.status === ProjectStatus.Closed) {
+      return <StatusTag>{t('Project.Closed')}</StatusTag>;
+    }
+    if (detail?.status === ProjectStatus.Pending) {
+      return <StatusTag>{t('Project.Pending')}</StatusTag>;
+    }
+    if (canAuditApplication) {
+      return (
+        <Link to={`/project/edit/${detail?.id}`} state={detail}>
+          <Button>{t('Project.Edit')}</Button>
+        </Link>
+      );
+    }
+  };
+
   return (
     <OuterBox>
       <Box>
@@ -55,18 +71,22 @@ export default function InfoPage() {
           <FlexLine>
             <AllBox>
               <TopBox>
-                <TopImg>
-                  <img src={detail?.logo} alt="" />
-                </TopImg>
-                <TopInfo>
-                  <TitleBox>{detail?.name}</TitleBox>
-                  <div className="desc">{detail?.desc}</div>
-                  <ProposalBox>
-                    {detail?.proposals.map((item, index) => (
-                      <SipTag key={index} slug={item} />
-                    ))}
-                  </ProposalBox>
-                </TopInfo>
+                <TopBoxLeft>
+                  <TopImg>
+                    <img src={detail?.logo} alt="" />
+                  </TopImg>
+                  <TopInfo>
+                    <TitleBox>{detail?.name}</TitleBox>
+                    <div className="desc">{detail?.desc}</div>
+                    <ProposalBox>
+                      {detail?.proposals.map((item, index) => (
+                        <SipTag key={index} slug={item} />
+                      ))}
+                    </ProposalBox>
+                  </TopInfo>
+                </TopBoxLeft>
+
+                {showStatusComponent()}
               </TopBox>
               <LastLine>
                 <LftBox>
@@ -79,12 +99,6 @@ export default function InfoPage() {
                 </ContentBox>
               </LastLine>
             </AllBox>
-
-            {canAuditApplication && detail?.status !== 'pending_close' && (
-              <Link to={`/project/edit/${detail?.id}`} state={detail}>
-                <Button>{t('Project.Edit')}</Button>
-              </Link>
-            )}
           </FlexLine>
         </Content>
       </Box>
@@ -154,6 +168,11 @@ const InnerLft = styled.div`
 
 const TopBox = styled.div`
   display: flex;
+  justify-content: space-between;
+`;
+
+const TopBoxLeft = styled.div`
+  display: flex;
 `;
 
 const TopImg = styled.div`
@@ -204,4 +223,15 @@ const ContentBox = styled.div`
   img {
     max-width: 100%;
   }
+`;
+
+const StatusTag = styled.span`
+  display: inline-block;
+  border-radius: 8px;
+  padding-inline: 10px;
+  border: 1px solid var(--bs-primary);
+  line-height: 26px;
+  height: 26px;
+  font-size: 12px;
+  color: var(--bs-primary);
 `;

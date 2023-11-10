@@ -12,7 +12,7 @@
     "connectWallet": "连接钱包",
     "Resources": "资源申请",
     "Explore": "探索",
-    "Pub": "悬赏酒馆"
+    "Pub": "酒馆"
   },
   "general": {
     "back": "返回",
@@ -366,7 +366,7 @@
     "ProposalLinkMsg": "请填写正确SIP链接",
     "ApproveSuccess": "操作成功",
     "ApproveFailed": "操作失败",
-    "IncorrectAddress": "无效的钱包地址：{{content}}",
+    "IncorrectAddress": "无效的SNS/地址：{{content}}",
     "ImportFailed": "导入失败",
     "RequestFailed": "请求失败",
     "SelectSource": "请选择预算来源",

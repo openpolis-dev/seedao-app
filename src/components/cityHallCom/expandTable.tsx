@@ -17,9 +17,10 @@ interface IProps {
   handleClose: () => void;
   updateStatus: (status: ApplicationStatus) => void;
   showLoading: (show: boolean) => void;
+  status?: ApplicationStatus;
 }
 
-export default function ExpandTable({ bund_id, list, handleClose, updateStatus, showLoading }: IProps) {
+export default function ExpandTable({ bund_id, list, handleClose, updateStatus, showLoading, status }: IProps) {
   const { t } = useTranslation();
   const { showToast } = useToast();
 
@@ -94,8 +95,13 @@ export default function ExpandTable({ bund_id, list, handleClose, updateStatus, 
             </tbody>
           </table>
           <OperateBox>
-            <Button onClick={handleApprove}>{t('city-hall.Pass')}</Button>
-            <Button variant="outline-primary" onClick={handleReject}>
+            <Button
+              onClick={handleApprove}
+              disabled={status !== ApplicationStatus.Open && status !== ApplicationStatus.Rejected}
+            >
+              {t('city-hall.Pass')}
+            </Button>
+            <Button variant="outline-primary" onClick={handleReject} disabled={status !== ApplicationStatus.Open}>
               {t('city-hall.Reject')}
             </Button>
           </OperateBox>

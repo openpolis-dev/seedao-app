@@ -63,7 +63,11 @@ const TableBox = styled.div`
   overflow-y: hidden;
   padding-bottom: 3rem;
   td {
+    &:nth-child(4) {
+      width: 20%;
+    }
     line-height: 54px;
+    vertical-align: middle;
     .form-check-input {
       position: relative;
       top: 8px;
@@ -101,6 +105,7 @@ export default function Register() {
 
   const [showMore, setShowMore] = useState<IApplicationDisplay[]>();
   const [showBundleId, setShowBundleId] = useState<number>();
+  const [bundleStatus, setShowBundleStatus] = useState<ApplicationStatus>();
 
   const { getMultiSNS } = useQuerySNS();
 
@@ -188,18 +193,15 @@ export default function Register() {
   const handleclose = () => {
     setShowMore(undefined);
     setShowBundleId(undefined);
+    setShowBundleStatus(undefined);
   };
   const updateStatus = (status: ApplicationStatus) => {
     if (!showMore) {
       return;
     }
     setShowMore([...showMore.map((r) => ({ ...r, status }))]);
-    setList(
-      list.map((item) => ({
-        ...item,
-        records: item.records.map((r) => ({ ...r, status })),
-      })),
-    );
+    setShowBundleStatus(status);
+    getRecords();
   };
 
   return (
@@ -207,6 +209,7 @@ export default function Register() {
       {showMore && showBundleId ? (
         <ExpandTable
           bund_id={showBundleId}
+          status={bundleStatus}
           list={showMore}
           handleClose={handleclose}
           updateStatus={updateStatus}
@@ -300,7 +303,9 @@ export default function Register() {
                         <td>
                           <ApplicationStatusTag status={item.state} />
                         </td>
-                        <td>{item.comment}</td>
+                        <td>
+                          <CommentBox>{item.comment}</CommentBox>
+                        </td>
                         <td className="center">{formatSNS(item.submitter_name)}</td>
                         <td className="center">{item.season_name}</td>
                         <td className="center">{item.created_date}</td>
@@ -309,6 +314,7 @@ export default function Register() {
                             onClick={() => {
                               setShowMore(item.records);
                               setShowBundleId(item.id);
+                              setShowBundleStatus(item.state);
                             }}
                           >
                             {t('application.TotalCount', { count: item.records.length })}
@@ -339,6 +345,16 @@ export default function Register() {
   );
 }
 
+const CommentBox = styled.div`
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  overflow: hidden;
+
+  /*! autoprefixer: off */
+  -webkit-box-orient: vertical;
+`;
 const FilterSelect = styled(Select)`
   width: 200px;
   @media (max-width: 1240px) {

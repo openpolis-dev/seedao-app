@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { UpdateInfo, addRelatedProposal } from 'requests/project';
-import { InfoObj, ReTurnProject } from 'type/project.type';
+import { InfoObj, ProjectStatus, ReTurnProject } from 'type/project.type';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import useToast, { ToastType } from 'hooks/useToast';
 import PlusMinusButton from 'components/common/plusAndMinusButton';
@@ -283,15 +283,17 @@ export default function EditProject({ detail }: { detail: ReTurnProject | undefi
           </li>
         </UlBox>
       </MainContent>
-      <BtmBox>
-        <Button
-          onClick={() => handleSubmit()}
-          disabled={proName?.length === 0 || url?.length === 0 || (proList?.length === 1 && proList[0]?.length === 0)}
-        >
-          {t('general.confirm')}
-        </Button>
-        <TextButton onClick={() => handleShow()}>Close project</TextButton>
-      </BtmBox>
+      {detail?.status === ProjectStatus.Open && (
+        <BtmBox>
+          <Button
+            onClick={() => handleSubmit()}
+            disabled={proName?.length === 0 || url?.length === 0 || (proList?.length === 1 && proList[0]?.length === 0)}
+          >
+            {t('general.confirm')}
+          </Button>
+          <TextButton onClick={() => handleShow()}>{t('Project.CloseProject')}</TextButton>
+        </BtmBox>
+      )}
       {show && <CloseTips closeModal={closeModal} handleClosePro={handleClosePro} />}
       {showSuccess && <CloseSuccess closeModal={closeSuccess} />}
     </EditPage>
