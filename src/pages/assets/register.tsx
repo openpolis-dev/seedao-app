@@ -31,13 +31,13 @@ export default function Register() {
   const [list, setList] = useState<IExcelObj[]>([]);
 
   const allSource = useBudgetSource();
-  const [selectSource, setSelectSource] = useState<{ id: number; type: ApplicationEntity }>();
+  const [selectSource, setSelectSource] = useState<ISelectItem | null>(null);
 
   const [content, setContent] = useState('');
 
   const Clear = () => {
     setList([]);
-    setSelectSource(undefined);
+    setSelectSource(null);
     setContent('');
   };
   const checkInvalidData = () => {
@@ -135,16 +135,16 @@ export default function Register() {
 
     try {
       const data = {
-        entity: selectSource.type,
-        entity_id: selectSource.id,
+        entity: selectSource.data,
+        entity_id: selectSource.value,
         comment: content,
         records: list.map((item) => ({
           amount: Number(item.amount),
           asset_name: item.assetType,
           comment: item.note,
           detailed_type: item.content,
-          entity: selectSource.type,
-          entity_id: selectSource.id,
+          entity: selectSource.data,
+          entity_id: selectSource.value,
           target_user_wallet: item.address,
         })),
       };
@@ -171,8 +171,10 @@ export default function Register() {
           options={allSource}
           placeholder={t('Assets.SearchSourcePlaceholder')}
           onChange={(value: any) => {
-            setSelectSource({ id: value?.value as number, type: value?.data });
+            console.log(value, selectSource);
+            setSelectSource(value);
           }}
+          value={selectSource}
         />
       </SectionBlock>
       <SectionBlock>
