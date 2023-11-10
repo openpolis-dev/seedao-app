@@ -366,7 +366,7 @@
     "ProposalLinkMsg": "Require correct SIP link",
     "ApproveSuccess": "Operate successfully",
     "ApproveFailed": "Operate failed",
-    "IncorrectAddress": "Invalid address: {{content}}",
+    "IncorrectAddress": "Invalid SNS/address: {{content}}",
     "ImportFailed": "Import failed",
     "RequestFailed": "Request failed",
     "SelectSource": "Required budget source",

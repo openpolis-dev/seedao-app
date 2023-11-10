@@ -94,7 +94,7 @@ export default function Add(props: Iprops) {
       if (!ethers.utils.isAddress(item)) {
         if (!item.endsWith('.seedao')) {
           showToast(t('Msg.IncorrectAddress', { content: item }), ToastType.Danger);
-          return;
+          throw Error(t('Msg.IncorrectAddress', { content: item }));
         } else {
           checkSNSlst.push(item);
         }
