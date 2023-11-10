@@ -11,6 +11,7 @@ export interface IUser {
   wallet?: string;
   discord_profile: string;
   twitter_profile: string;
+  github_profile?: string;
   wechat: string;
   mirror: string;
   assets: any[];
