@@ -148,11 +148,13 @@ const GlobalStyle = createGlobalStyle`
       box-sizing: border-box;
       color: var(--bs-body-color_active);
       background-color: var(--rht-bg);
+
     }
     th {
       border-style: none;
     }
     th, td {
+      vertical-align: middle;
       &.center {
         text-align: center;
       }
