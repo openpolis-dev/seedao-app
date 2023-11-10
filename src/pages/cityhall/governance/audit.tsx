@@ -200,13 +200,8 @@ export default function Register() {
       return;
     }
     setShowMore([...showMore.map((r) => ({ ...r, status }))]);
-    setList(
-      list.map((item) => ({
-        ...item,
-        records: item.records.map((r) => ({ ...r, status })),
-      })),
-    );
     setShowBundleStatus(status);
+    getRecords();
   };
 
   return (
