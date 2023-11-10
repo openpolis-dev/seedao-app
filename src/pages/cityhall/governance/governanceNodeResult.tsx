@@ -264,11 +264,21 @@ export default function GoveranceNodeResult() {
           <FilterInputBoxTop>
             <FilterInputItem>
               <span>{t('GovernanceNodeResult.ActiveSCR')}</span>
-              <input type="number" value={filterActiveNum} onChange={(e) => setFilterActiveNum(e.target.value)} />
+              <input
+                type="number"
+                value={filterActiveNum}
+                onChange={(e) => setFilterActiveNum(e.target.value)}
+                placeholder={t('general.Placeholder')}
+              />
             </FilterInputItem>
             <FilterInputItem>
               <span>{t('GovernanceNodeResult.EffectiveSCR')}</span>
-              <input type="number" value={filterEffectiveNum} onChange={(e) => setFilterEffectiveNum(e.target.value)} />
+              <input
+                type="number"
+                value={filterEffectiveNum}
+                onChange={(e) => setFilterEffectiveNum(e.target.value)}
+                placeholder={t('general.Placeholder')}
+              />
             </FilterInputItem>
           </FilterInputBoxTop>
           <Button variant="primary" onClick={handleFilter} disabled={!hasSnapshot}>
