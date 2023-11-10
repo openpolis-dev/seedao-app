@@ -265,6 +265,7 @@ export default function Header() {
             value={getLanguages().find((item) => item.value === lan) || getLanguages()[0]}
             width="100px"
             NotClear={true}
+            isSearchable={false}
           />
 
           {isLogin && userData ? (
