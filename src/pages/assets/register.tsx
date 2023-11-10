@@ -75,6 +75,7 @@ export default function Register() {
   const checkWallet = async () => {
     const err_list: ErrorDataType[] = [];
     const sns_set: Set<string> = new Set();
+    const wallet_map = new Map<string, string>();
     list.forEach((item, i) => {
       const err: ErrorDataType = {
         line: i + 1,
@@ -101,35 +102,41 @@ export default function Register() {
       const sns_list = Array.from(sns_set);
       const result = await sns.resolves(sns_list);
       result.forEach((item, i) => {
-        if (!item) {
+        if (!item || item === ethers.constants.AddressZero) {
           err_sns_list.push(sns_list[i]);
+        } else {
+          wallet_map.set(sns_list[i], item);
         }
       });
     } catch (error) {
       console.error(error);
+      return `error`;
     }
     if (err_sns_list.length) {
       return `${t('Msg.SNSError')}: ${err_sns_list.join(', ')}`;
     }
     // check SNS
-    return undefined;
+    return wallet_map;
   };
 
   const handleCreate = async () => {
+    if (!selectSource) {
+      return;
+    }
     let msg: string | undefined;
     msg = checkInvalidData();
     if (msg) {
       showToast(msg, ToastType.Danger, { autoClose: false });
       return;
     }
-    msg = await checkWallet();
-    if (msg) {
-      showToast(msg, ToastType.Danger, { autoClose: false });
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    const result = await checkWallet();
+    if (typeof result === 'string') {
+      showToast(result, ToastType.Danger, { autoClose: false });
+      dispatch({ type: AppActionType.SET_LOADING, payload: false });
       return;
     }
-    if (!selectSource) {
-      return;
-    }
+
     // check and convert sns
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
 
@@ -145,7 +152,7 @@ export default function Register() {
           detailed_type: item.content,
           entity: selectSource.data,
           entity_id: selectSource.value,
-          target_user_wallet: item.address,
+          target_user_wallet: item.address.endsWith('.seedao') ? (result.get(item.address) as string) : item.address,
         })),
       };
       await requests.application.createApplicationBundles(data);
