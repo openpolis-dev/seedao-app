@@ -84,7 +84,7 @@ export default function TallyForm({item,id,account,userData}){
   <iframe
 
         // data-tally-src={`https://tally.so/embed/${id}?alignLeft=${detail?.alignLeft}&hideTitle=${detail?.hideTitle}&transparentBackground=0&dynamicHeight=1&${iframeStr}`}
-        data-tally-src={`https://tally.so/embed/${id}?alignLeft=${detail?.alignLeft}&hideTitle=${detail?.hideTitle}&transparentBackground=0&dynamicHeight=1&${iframeStr}`}
+        data-tally-src={`https://tally.so/embed/${id}?alignLeft=0&hideTitle=${detail?.hideTitle}&transparentBackground=0&dynamicHeight=1&${iframeStr}`}
         loading="lazy"
         width="100%"
         height="200"
