@@ -70,10 +70,10 @@ export interface IApplicantBundle {
   id: number;
   comment: string;
   records: IApplicationDisplay[];
-  submit_date: number;
+  apply_time: number;
   season_name: string;
   state: ApplicationStatus;
-  submitter: string;
+  applicant: string;
   entity: { id: number; name: string; type: string };
   assets: { name: string; amount: string }[];
 }

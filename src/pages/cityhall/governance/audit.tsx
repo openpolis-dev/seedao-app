@@ -86,19 +86,11 @@ export default function Register() {
   // applicant
   const applicants = useApplicants();
   const [selectApplicant, setSelectApplicant] = useState<string>();
-  // asset type
-  const assetTypes = useMemo(() => {
-    return [
-      { value: 'SCR', label: 'SCR' },
-      { value: 'USDT', label: 'USDT' },
-    ];
-  }, []);
-  const [selectAssetType, setSelectAssetType] = useState<string>();
   // State
   const allStates = useMemo(() => {
     return [
       { value: ApplicationStatus.Open, label: t(formatApplicationStatus(ApplicationStatus.Open)) },
-      { value: ApplicationStatus.Open, label: t(formatApplicationStatus(ApplicationStatus.Open)) },
+      { value: ApplicationStatus.Rejected, label: t(formatApplicationStatus(ApplicationStatus.Rejected)) },
       { value: ApplicationStatus.Approved, label: t(formatApplicationStatus(ApplicationStatus.Approved)) },
     ];
   }, [t]);
@@ -139,9 +131,6 @@ export default function Register() {
     if (selectState) {
       queryData.state = selectState;
     }
-    if (selectAssetType) {
-      // TODO: add query
-    }
     try {
       const res = await requests.application.getApplicationBundle(
         {
@@ -167,7 +156,7 @@ export default function Register() {
       setList(
         res.data.rows.map((item) => ({
           ...item,
-          created_date: formatTime(item.submit_date),
+          created_date: formatTime(item.apply_time),
           records: item.records.map((record) => ({
             ...record,
             created_date: formatTime(record.created_at),
@@ -177,7 +166,7 @@ export default function Register() {
             reviewer_name: sns_map.get(record.reviewer_wallet?.toLocaleLowerCase()) as string,
             receiver_name: sns_map.get(record.target_user_wallet?.toLocaleLowerCase()) as string,
           })),
-          submitter_name: sns_map.get(item.submitter?.toLocaleLowerCase()) as string,
+          submitter_name: sns_map.get(item.applicant?.toLocaleLowerCase()) as string,
           assets_display: item.assets.map((a) => `${formatNumber(Number(a.amount))} ${a.name}`),
         })),
       );
@@ -190,7 +179,7 @@ export default function Register() {
 
   useEffect(() => {
     getRecords();
-  }, [selectAssetType, selectState, selectApplicant, selectSource, selectSeason, page, pageSize]);
+  }, [selectState, selectApplicant, selectSource, selectSeason, page, pageSize]);
 
   const formatSNS = (name: string) => {
     return name?.endsWith('.seedao') ? name : publicJs.AddressToShow(name, 6);
@@ -228,18 +217,6 @@ export default function Register() {
           <BackerNav title={t('city-hall.PointsAndTokenAudit')} to="/city-hall/governance" />
 
           <TopLine>
-            <li>
-              <div className="tit">{t('application.AssetType')}</div>
-              <Select
-                width="150px"
-                options={assetTypes}
-                placeholder=""
-                onChange={(value: any) => {
-                  setSelectAssetType(value?.value);
-                  setPage(1);
-                }}
-              />
-            </li>
             <li>
               <div className="tit">{t('application.BudgetSource')}</div>
               <FilterSelect
