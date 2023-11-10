@@ -3,10 +3,8 @@ import { Button, Form } from 'react-bootstrap';
 
 import React, { useState, useEffect, useMemo } from 'react';
 import Page from 'components/pagination';
-import RangeDatePickerStyle from 'components/rangeDatePicker';
 import IssuedModal from 'components/cityHallCom/issuedModal';
 import { IApplicationDisplay, ApplicationStatus } from 'type/application.type';
-import Loading from 'components/loading';
 import requests from 'requests';
 import { formatDate, formatTime } from 'utils/time';
 import publicJs from 'utils/publicJs';
@@ -16,84 +14,18 @@ import { useTranslation } from 'react-i18next';
 import { formatApplicationStatus } from 'utils/index';
 import useToast, { ToastType } from 'hooks/useToast';
 import Select from 'components/common/select';
-
-const Box = styled.div``;
-const FirstLine = styled.div`
-  display: flex;
-  //flex-direction: column;
-  margin: 40px 0 20px;
-  align-items: center;
-  flex-wrap: wrap;
-
-  //justify-content: space-between;
-`;
-
-const TopLine = styled.ul`
-  display: flex;
-  align-items: center;
-  gap: 20px 40px;
-  li {
-    display: flex;
-    align-items: center;
-    .tit {
-      padding-right: 20px;
-      white-space: nowrap;
-    }
-  }
-  @media (max-width: 1024px) {
-    gap: 20px;
-  }
-`;
-
-const TimeBox = styled.div`
-  display: flex;
-  align-items: center;
-  margin-right: 20px;
-`;
-
-const BorderBox = styled.div`
-  border: 1px solid #eee;
-  padding: 2px 20px;
-  border-radius: 5px;
-  background: #f7f9fc;
-`;
-
-const TopBox = styled.div`
-  background: #f5f5f5;
-  display: flex;
-  justify-content: flex-start;
-  padding: 10px;
-  margin: 0 0 30px;
-  button {
-    margin-left: 20px;
-  }
-`;
-
-const TableBox = styled.div`
-  width: 100%;
-  overflow-x: auto;
-  overflow-y: hidden;
-  table {
-    th {
-      background: transparent;
-      color: #6e6893;
-      border: 1px solid #d9d5ec;
-      border-left: none;
-      border-right: none;
-      border-radius: 0;
-    }
-    td {
-      border-bottom-color: #d9d5ec;
-    }
-    tr:hover td {
-      background: #f2f0f9;
-    }
-  }
-`;
+import { ContainerPadding } from 'assets/styles/global';
+import { AppActionType, useAuthContext } from 'providers/authProvider';
+import useQuerySNS from 'hooks/useQuerySNS';
+import { formatNumber } from 'utils/number';
+import ApplicationStatusTag from 'components/common/applicationStatusTag';
+import ApplicationModal from 'components/modals/applicationModal';
+import BackerNav from 'components/common/backNav';
 
 export default function Issued() {
   const { t } = useTranslation();
-  const { Toast, showToast } = useToast();
+  const { showToast } = useToast();
+  const { dispatch } = useAuthContext();
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [total, setTotal] = useState(0);
@@ -102,9 +34,9 @@ export default function Issued() {
   const [endDate, setEndData] = useState<Date>();
   const [list, setList] = useState<IApplicationDisplay[]>([]);
   const [selectMap, setSelectMap] = useState<{ [id: number]: ApplicationStatus | boolean }>({});
-  const [loading, setLoading] = useState(false);
   const [selectStatus, setSelectStatus] = useState<ApplicationStatus>(ApplicationStatus.Approved);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [detailDisplay, setDetailDisplay] = useState<IApplicationDisplay>();
 
   const statusOption = useMemo(() => {
     return [
@@ -113,6 +45,7 @@ export default function Issued() {
       { label: t(formatApplicationStatus(ApplicationStatus.Completed)), value: ApplicationStatus.Completed },
     ];
   }, [t]);
+  const { getMultiSNS } = useQuerySNS();
 
   const handlePage = (num: number) => {
     setPage(num + 1);
@@ -140,7 +73,7 @@ export default function Issued() {
   };
 
   const getRecords = async () => {
-    setLoading(true);
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
       const queryData: IQueryApplicationsParams = {};
       if (selectStatus) queryData.state = selectStatus;
@@ -159,16 +92,29 @@ export default function Issued() {
         undefined,
       );
       setTotal(res.data.total);
-      setList(
-        res.data.rows.map((item) => ({
-          ...item,
-          created_date: formatTime(item.created_at),
-        })),
-      );
+      const _wallets = new Set<string>();
+      res.data.rows.forEach((item) => {
+        _wallets.add(item.target_user_wallet);
+        _wallets.add(item.submitter_wallet);
+        _wallets.add(item.reviewer_wallet);
+      });
+      const sns_map = await getMultiSNS(Array.from(_wallets));
+
+      const _list = res.data.rows.map((item, idx) => ({
+        ...item,
+        created_date: formatTime(item.created_at),
+        transactions: item.transaction_ids.split(','),
+        asset_display: formatNumber(Number(item.amount)) + ' ' + item.asset_name,
+        submitter_name: sns_map.get(item.submitter_wallet?.toLocaleLowerCase()) as string,
+        reviewer_name: sns_map.get(item.reviewer_wallet?.toLocaleLowerCase()) as string,
+        receiver_name: sns_map.get(item.target_user_wallet?.toLocaleLowerCase()) as string,
+      }));
+      setTotal(res.data.total);
+      setList(_list);
     } catch (error) {
       console.error('getProjectApplications failed', error);
     } finally {
-      setLoading(false);
+      dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }
   };
 
@@ -178,7 +124,8 @@ export default function Issued() {
   }, [selectStatus, page, pageSize, startDate, endDate]);
 
   const handleComplete = async (data: string[]) => {
-    setLoading(true);
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+
     try {
       await requests.application.compeleteApplications(data);
       closeShow();
@@ -189,7 +136,7 @@ export default function Issued() {
       console.error('compeleteApplications failed', error);
       showToast(t('Msg.ApproveFailed'), ToastType.Danger);
     } finally {
-      setLoading(false);
+      dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }
   };
 
@@ -205,7 +152,8 @@ export default function Issued() {
     if (!select_ids.length) {
       return;
     }
-    setLoading(true);
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+
     try {
       await requests.application.processApplications(select_ids);
       getRecords();
@@ -216,7 +164,7 @@ export default function Issued() {
       console.error('processApplications failed', error);
       showToast(t('Msg.ApproveFailed'), ToastType.Danger);
     } finally {
-      setLoading(false);
+      dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }
   };
 
@@ -308,10 +256,11 @@ export default function Issued() {
 
   return (
     <Box>
-      {loading && <Loading />}
+      <BackerNav to="/city-hall/governance" title={t('city-hall.IssueAssets')} />
+      {detailDisplay && (
+        <ApplicationModal application={detailDisplay} handleClose={() => setDetailDisplay(undefined)} />
+      )}
       {show && <IssuedModal closeShow={closeShow} handleConfirm={handleComplete} showToast={showToast} />}
-      {Toast}
-
       <FirstLine>
         <TopLine>
           <li>
@@ -327,71 +276,78 @@ export default function Issued() {
             ></Select>
           </li>
           <li>
-            <TimeBox>
-              <BorderBox>
-                <RangeDatePickerStyle
-                  placeholder={t('Project.RangeTime')}
-                  onChange={changeDate}
-                  startDate={startDate}
-                  endDate={endDate}
-                />
-              </BorderBox>
-            </TimeBox>
             <Button onClick={handleExport} disabled={!selectOne}>
               {t('Project.Export')}
             </Button>
           </li>
         </TopLine>
+        {showProcessButton()}
       </FirstLine>
-      {showProcessButton()}
+
       <TableBox>
         {list.length ? (
           <>
             <table className="table" cellPadding="0" cellSpacing="0">
               <thead>
                 <tr>
-                  <th>
-                    <Form.Check checked={ifSelectAll} onChange={(e) => onSelectAll(e.target.checked)} />
+                  {ApplicationStatus.Processing !== selectStatus && (
+                    <th>
+                      <Form.Check
+                        checked={ifSelectAll}
+                        onChange={(e) => {
+                          e.stopPropagation();
+                          onSelectAll(e.target.checked);
+                        }}
+                      />
+                    </th>
+                  )}
+                  <th style={{ width: '160px' }}>{t('application.Receiver')}</th>
+                  <th className="center" style={{ width: '200px' }}>
+                    {t('application.AddAssets')}
                   </th>
-                  <th>{t('Project.Time')}</th>
-                  <th>{t('Project.Address')}</th>
-                  <th>{t('Project.AddPoints')}</th>
-                  <th>{t('Project.AddToken')}</th>
-                  <th>{t('Project.Content')}</th>
-                  <th>{t('Project.BudgetSource')}</th>
-                  <th>{t('Project.Note')}</th>
-                  <th>{t('Project.State')}</th>
-                  <th>{t('Project.Operator')}</th>
-                  <th>{t('Project.Auditor')}</th>
+                  <th className="center" style={{ width: '200px' }}>
+                    {t('application.Season')}
+                  </th>
+                  <th>{t('application.Content')}</th>
+                  <th className="center" style={{ width: '200px' }}>
+                    {t('application.BudgetSource')}
+                  </th>
+                  <th className="center" style={{ width: '200px' }}>
+                    {t('application.Auditor')}
+                  </th>
+                  <th style={{ width: '200px' }}>{t('application.State')}</th>
                 </tr>
               </thead>
 
               <tbody>
                 {list.map((item) => (
-                  <tr key={item.application_id}>
-                    <td>
-                      <Form.Check
-                        checked={!!selectMap[item.application_id]}
-                        onChange={(e) => onChangeCheckbox(e.target.checked, item.application_id, item.status)}
-                      ></Form.Check>
+                  <tr key={item.application_id} onClick={() => setDetailDisplay(item)}>
+                    {ApplicationStatus.Processing !== selectStatus && (
+                      <td>
+                        <Form.Check
+                          checked={!!selectMap[item.application_id]}
+                          onChange={(e) => onChangeCheckbox(e.target.checked, item.application_id, item.status)}
+                        ></Form.Check>
+                      </td>
+                    )}
+
+                    <td>{item.receiver_name || ''}</td>
+                    <td className="center" style={{ width: '200px' }}>
+                      {item.asset_display}
                     </td>
-                    <td>{item.created_date}</td>
-                    <td>
-                      <div>
-                        <span>{publicJs.AddressToShow(item.target_user_wallet)}</span>
-                        {/* <CopyBox text={item.target_user_wallet}>
-                        <>复制</>
-                      </CopyBox> */}
-                      </div>
+                    <td className="center" style={{ width: '200px' }}>
+                      {item.season_name}
                     </td>
-                    <td>{item.credit_amount}</td>
-                    <td>{item.token_amount}</td>
-                    <td>{item.detailed_type}</td>
-                    <td>{item.budget_source}</td>
-                    <td>{item.comment}</td>
-                    <td>{t(formatApplicationStatus(item.status))}</td>
-                    <td>{item.submitter_name || publicJs.AddressToShow(item.submitter_wallet)}</td>
+                    <td>
+                      <BudgetContent>{item.detailed_type}</BudgetContent>
+                    </td>
+                    <td className="center" style={{ width: '200px' }}>
+                      {item.budget_source}
+                    </td>
                     <td>{item.reviewer_name || publicJs.AddressToShow(item.reviewer_wallet)}</td>
+                    <td style={{ width: '200px' }}>
+                      <ApplicationStatusTag status={item.status} />
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -412,13 +368,60 @@ export default function Issued() {
   );
 }
 
+const Box = styled.div`
+  position: relative;
+  box-sizing: border-box;
+  min-height: 100%;
+  ${ContainerPadding};
+`;
+const FirstLine = styled.div`
+  display: flex;
+  margin-bottom: 20px;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: space-between;
+`;
+
+const TopLine = styled.ul`
+  display: flex;
+  align-items: center;
+  gap: 20px 40px;
+  li {
+    display: flex;
+    align-items: center;
+    .tit {
+      padding-right: 20px;
+      white-space: nowrap;
+    }
+  }
+  @media (max-width: 1024px) {
+    gap: 20px;
+  }
+`;
+
+const TopBox = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  padding: 10px;
+  button {
+    margin-left: 20px;
+  }
+`;
+
+const TableBox = styled.div`
+  width: 100%;
+  td {
+    vertical-align: middle;
+  }
+`;
+
 const SendButtonBox = styled.div`
   position: relative;
   .tip {
     display: none;
     position: absolute;
     top: 50px;
-    left: 20px;
+    right: 0;
     width: 370px;
     background: #fff;
     border: 1px solid #e5e5e5;
@@ -429,4 +432,12 @@ const SendButtonBox = styled.div`
   &:hover .tip {
     display: block;
   }
+`;
+
+const BudgetContent = styled.div`
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
 `;

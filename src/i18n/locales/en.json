@@ -243,7 +243,8 @@
     "create": "Create",
     "GovernanceNodeResult": "SeeDAO Node Qualification",
     "GovernanceNodeResultDesc": "SeeDAO Node qualification calculation result.",
-    "CloseProjectAudit": "Audit Close Project"
+    "CloseProjectAudit": "Audit Close Project",
+    "IssueAssets": "Issue Assets"
   },
   "GovernanceNodeResult": {
     "SearchTip": "SNS",

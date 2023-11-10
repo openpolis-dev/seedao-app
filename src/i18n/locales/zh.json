@@ -243,7 +243,8 @@
     "create": "创建",
     "GovernanceNodeResult": "节点资质试算",
     "GovernanceNodeResultDesc": "计算治理节点资质结果",
-    "CloseProjectAudit": "关闭项目审核"
+    "CloseProjectAudit": "关闭项目审核",
+    "IssueAssets": "发放资产"
   },
   "GovernanceNodeResult": {
     "SearchTip": "SNS",

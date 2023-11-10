@@ -38,6 +38,7 @@ import GoveranceNodeResult from 'pages/cityhall/governance/governanceNodeResult'
 // import ResourcesDetail from './pages/resouces/resources-detail';
 import Audit from 'pages/cityhall/governance/audit';
 import AuditProject from 'pages/cityhall/governance/projectAudit';
+import Issue from 'pages/cityhall/governance/issue';
 
 export default function RouterLink() {
   return (
@@ -80,6 +81,7 @@ export default function RouterLink() {
           <Route path="/city-hall/governance/governance-node-result" element={<GoveranceNodeResult />} />
           <Route path="/city-hall/governance/audit" element={<Audit />} />
           <Route path="/city-hall/governance/audit-project" element={<AuditProject />} />
+          {/* <Route path="/city-hall/governance/issue" element={<Issue />} /> */}
           <Route path="/chat" element={<Chat />} />
           <Route path="/feedback" element={<Canny />} />
         </Routes>
