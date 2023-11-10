@@ -13,7 +13,7 @@ export default function ProposalVoteProgress({ poll }: { poll: Poll }) {
     } else if (poll.status === VoteType.Open) {
       return <OpenTag>{t('Proposal.VoteEndAt', { leftTime: poll.leftTime })}</OpenTag>;
     } else {
-      return <>TODO</>;
+      return <></>;
     }
   }, [poll, t]);
 
@@ -30,7 +30,7 @@ export default function ProposalVoteProgress({ poll }: { poll: Poll }) {
           <span>
             {t('Proposal.TotalVotes')}: {poll.totalVotes}
           </span>
-          <span>·</span>
+          <span className="dot">·</span>
           {voteStatusTag}
         </TotalVoters>
         {poll.options.map((option, index) => (
@@ -47,10 +47,13 @@ export default function ProposalVoteProgress({ poll }: { poll: Poll }) {
         ))}
       </VoteBody>
       <VoteFooter>
-        <span>
-          {t('Proposal.PollNFT')}: {poll.address}
-        </span>
-        {poll.token_id && <span>Token Id: {poll.token_id}</span>}
+        <VoteNFT>
+          <span>
+            {t('Proposal.PollNFT')}: {poll.address}
+          </span>
+          {poll.token_id && <span>Token Id: {poll.token_id}</span>}
+        </VoteNFT>
+        {poll.alias && <Alias>{poll.alias}</Alias>}
       </VoteFooter>
     </CardStyle>
   );
@@ -87,7 +90,12 @@ const VoteBody = styled.div`
 `;
 const VoteFooter = styled.div`
   padding-inline: 20px;
+  display: flex;
+  justify-content: space-between;
   line-height: 36px;
+`;
+
+const VoteNFT = styled.div`
   color: var(--bs-body-color);
   span {
     margin-right: 20px;
@@ -97,6 +105,9 @@ const VoteFooter = styled.div`
 const TotalVoters = styled.div`
   margin-top: 14px;
   margin-bottom: 9px;
+  .dot {
+    margin-inline: 4px;
+  }
 `;
 
 const CloseTag = styled.span`
@@ -115,7 +126,7 @@ const ProgressBar = styled.div<{ percent: number }>`
   height: 8px;
   border-radius: 16px;
   box-sizing: border-box;
-  background-color: var(--bs-background);
+  background-color: var(--bs-body-color);
   overflow: hidden;
   .inner {
     width: ${(props) => props.percent}%;
@@ -135,4 +146,8 @@ const VoteOptionBottom = styled.div`
 
 const OptionContent = styled.div`
   font-size: 16px;
+`;
+
+const Alias = styled.div`
+  color: var(--bs-primary);
 `;
