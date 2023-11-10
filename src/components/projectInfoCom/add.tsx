@@ -162,7 +162,7 @@ export default function Add(props: Iprops) {
                   options={roleOptions}
                   placeholder=""
                   NotClear={true}
-                  isSearchable={false}
+                  // isSearchable={false}
                   onChange={(value: any) => {
                     handleSelect(value?.value, index);
                   }}
