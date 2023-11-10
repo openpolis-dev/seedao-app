@@ -10,6 +10,7 @@ import Links from '../../utils/links';
 import { ChevronLeft } from 'react-bootstrap-icons';
 import { publicList } from '../../requests/publicData';
 import Page from '../../components/pagination';
+import BackerNav from '../../components/common/backNav';
 
 const PageStyle = styled.div`
   ${ContainerPadding};
@@ -263,10 +264,12 @@ export default function Pub() {
     <PageStyle>
       <Box>
         <FlexBox>
-          <BackBox onClick={() => navigate(-1)}>
-            <ChevronLeft className="iconTop" />
-            <span>{t('general.back')}</span>
-          </BackBox>
+          {/*<BackBox onClick={() => navigate(-1)}>*/}
+          {/*  <ChevronLeft className="iconTop" />*/}
+          {/*  <span>{t('general.back')}</span>*/}
+          {/*</BackBox>*/}
+          {/*<BackerNav title={t('general.back')}  mb="40px" />*/}
+          <div></div>
           <Button onClick={() => window.open('https://tally.so/r/mDKbqb', '_target')}>{t('general.apply')}</Button>
         </FlexBox>
         <UlBox>

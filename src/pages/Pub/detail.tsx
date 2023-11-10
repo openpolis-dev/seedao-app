@@ -9,6 +9,8 @@ import { useTranslation } from 'react-i18next';
 import { pubDetail } from '../../requests/publicData';
 import axios from 'axios';
 
+import BackerNav from 'components/common/backNav';
+
 const PageStyle = styled.div`
   ${ContainerPadding};
   min-height: 100%;
@@ -16,7 +18,7 @@ const PageStyle = styled.div`
 
 const Box = styled.div`
   width: 900px;
-  color: var(--bs-body-color_active);
+
   position: relative;
   min-height: 100%;
   display: flex;
@@ -26,10 +28,12 @@ const Box = styled.div`
 const Title = styled.div`
   font-size: 24px;
   font-family: 'Poppins-SemiBold';
+  color: var(--bs-body-color_active);
 `;
 const ContentBox = styled.div`
   margin-top: 40px;
   font-size: 12px;
+  color: var(--bs-body-color_active);
   .row {
     margin-bottom: 20px;
   }
@@ -265,10 +269,12 @@ export default function PubDetail() {
   return (
     <PageStyle>
       <Box>
-        <BackBox onClick={() => navigate(-1)}>
-          <ChevronLeft className="iconTop" />
-          <span>{title}</span>
-        </BackBox>
+        {/*<BackBox onClick={() => navigate(-1)}>*/}
+        {/*  <ChevronLeft className="iconTop" />*/}
+        {/*  <span>{title}</span>*/}
+        {/*</BackBox>*/}
+
+        <BackerNav title={title} to={`/pub`} mb="40px" />
         <ImgBox>
           <img src={imgUrl} alt="" />
         </ImgBox>
