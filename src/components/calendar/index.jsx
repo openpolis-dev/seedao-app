@@ -25,6 +25,7 @@ const Box = styled.div`
     }
 
     .calendar-header{
+        background: var(--push-border);
         .calendar-navigate{
             opacity: 1;
             width: 32px;
@@ -78,19 +79,40 @@ const Box = styled.div`
         display: none;
     }
     .calendar-body{
+        background: var(--push-border);
     }
     .innerDay{
         color:var(--bs-body-color_active) ;
     }
     .day-name{
         font-family: 'Poppins-SemiBold';
-        background: var(--home-right);
-        border: 0;
+        background: var(--bs-box--background);
+        border: 1px solid var(--bs-border-color);
         color: #B0B0B0;
         min-height: 40px;
         height: 40px;
         justify-content: center;
         align-items: center;
+        &:first-child{
+            border-top-left-radius: 8px;
+            border-bottom-left-radius: 8px;
+            border-right: 0;
+        }
+        &:nth-child(2), 
+        &:nth-child(3),
+        &:nth-child(4),
+        &:nth-child(5),
+        &:nth-child(6)
+        {
+            border-left: 0;
+            border-right: 0;
+        }
+        
+        &:nth-child(7){
+            border-top-right-radius: 8px;
+            border-bottom-right-radius: 8px;
+            border-left: 0;
+        }
     }
     .tooltip{
 
@@ -188,6 +210,7 @@ let styles = {
         alignItems:"flex-end",
         padding:"7px 0",
         border:"1px solid var(--bs-border-color)",
+        background:"var(--bs-background)",
         marginTop:"-1px",
         marginLeft:"-1px",
         minHeight:"120px",
