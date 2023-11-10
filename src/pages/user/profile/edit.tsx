@@ -17,6 +17,7 @@ import MirrorImg from '../../../assets/Imgs/profile/mirrorIcon.svg';
 import DescImg from '../../../assets/Imgs/profile/desc.svg';
 import GithubImg from '../../../assets/Imgs/profile/github.svg';
 import { useNavigate } from 'react-router-dom';
+import BackerNav from '../../../components/common/backNav';
 
 const OuterBox = styled.div`
   ${ContainerPadding};
@@ -258,7 +259,8 @@ export default function Profile() {
     <OuterBox>
       {Toast}
       <CardBox>
-        <TitleBox>{t('My.MyProfile')}</TitleBox>
+        <BackerNav title={t('My.MyProfile')} to={`/user/profile`} mb="40px" />
+        {/*<TitleBox>{t('My.MyProfile')}</TitleBox>*/}
         <HeadBox>
           <AvatarBox>
             <UploadBox htmlFor="fileUpload" onChange={(e) => updateLogo(e)}>
