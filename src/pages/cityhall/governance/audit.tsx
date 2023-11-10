@@ -101,6 +101,7 @@ export default function Register() {
 
   const [showMore, setShowMore] = useState<IApplicationDisplay[]>();
   const [showBundleId, setShowBundleId] = useState<number>();
+  const [bundleStatus, setShowBundleStatus] = useState<ApplicationStatus>();
 
   const { getMultiSNS } = useQuerySNS();
 
@@ -188,6 +189,7 @@ export default function Register() {
   const handleclose = () => {
     setShowMore(undefined);
     setShowBundleId(undefined);
+    setShowBundleStatus(undefined);
   };
   const updateStatus = (status: ApplicationStatus) => {
     if (!showMore) {
@@ -200,6 +202,7 @@ export default function Register() {
         records: item.records.map((r) => ({ ...r, status })),
       })),
     );
+    setShowBundleStatus(status);
   };
 
   return (
@@ -207,6 +210,7 @@ export default function Register() {
       {showMore && showBundleId ? (
         <ExpandTable
           bund_id={showBundleId}
+          status={bundleStatus}
           list={showMore}
           handleClose={handleclose}
           updateStatus={updateStatus}
@@ -309,6 +313,7 @@ export default function Register() {
                             onClick={() => {
                               setShowMore(item.records);
                               setShowBundleId(item.id);
+                              setShowBundleStatus(item.state);
                             }}
                           >
                             {t('application.TotalCount', { count: item.records.length })}
