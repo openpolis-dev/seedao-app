@@ -64,7 +64,7 @@ export default function SocialIconBox({ user }: { user: IUser }) {
       <SocialIcon type={SocaialType.Twitter} value={user.twitter_profile} />
       <SocialIcon type={SocaialType.Mirror} value={user.mirror} />
       <SocialIcon type={SocaialType.Email} value={user.email ? `mailto:${user.email}` : ''} />
-      <SocialIcon type={SocaialType.Github} value={user.github} />
+      <SocialIcon type={SocaialType.Github} value={user.github_profile} />
     </LinkBox>
   );
 }
