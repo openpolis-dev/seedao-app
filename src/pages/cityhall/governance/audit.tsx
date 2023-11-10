@@ -63,7 +63,11 @@ const TableBox = styled.div`
   overflow-y: hidden;
   padding-bottom: 3rem;
   td {
+    &:nth-child(4) {
+      width: 20%;
+    }
     line-height: 54px;
+    vertical-align: middle;
     .form-check-input {
       position: relative;
       top: 8px;
@@ -304,7 +308,9 @@ export default function Register() {
                         <td>
                           <ApplicationStatusTag status={item.state} />
                         </td>
-                        <td>{item.comment}</td>
+                        <td>
+                          <CommentBox>{item.comment}</CommentBox>
+                        </td>
                         <td className="center">{formatSNS(item.submitter_name)}</td>
                         <td className="center">{item.season_name}</td>
                         <td className="center">{item.created_date}</td>
@@ -344,6 +350,16 @@ export default function Register() {
   );
 }
 
+const CommentBox = styled.div`
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  overflow: hidden;
+
+  /*! autoprefixer: off */
+  -webkit-box-orient: vertical;
+`;
 const FilterSelect = styled(Select)`
   width: 200px;
   @media (max-width: 1240px) {
