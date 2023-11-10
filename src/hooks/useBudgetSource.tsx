@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import requests from 'requests';
 import { ApplicationEntity } from 'type/application.type';
+import { ProjectStatus } from 'type/project.type';
 
-export default function useBudgetSource() {
+export default function useBudgetSource(filter_closed = false) {
   const [allSource, setAllSource] = useState<ISelectItem[]>([]);
 
   useEffect(() => {
@@ -13,6 +14,7 @@ export default function useBudgetSource() {
           size: 1000,
           sort_order: 'desc',
           sort_field: 'created_at',
+          status: filter_closed ? ProjectStatus.Open : undefined,
         });
         return res.data.rows.map((item) => ({
           label: item.name,

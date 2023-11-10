@@ -30,7 +30,7 @@ export default function Register() {
 
   const [list, setList] = useState<IExcelObj[]>([]);
 
-  const allSource = useBudgetSource();
+  const allSource = useBudgetSource(true);
   const [selectSource, setSelectSource] = useState<ISelectItem | null>(null);
 
   const [content, setContent] = useState('');
