@@ -8,10 +8,10 @@ import NoItem from 'components/noItem';
 interface IProps {
   season: string;
   handleClose: () => void;
-  snsList: string[];
+  walletList: string[];
 }
 
-export default function FilterNodesNodal({ season, snsList, handleClose }: IProps) {
+export default function FilterNodesNodal({ season, walletList, handleClose }: IProps) {
   const { t } = useTranslation();
   const handleExport = () => {
     ExcellentExport.convert(
@@ -20,7 +20,7 @@ export default function FilterNodesNodal({ season, snsList, handleClose }: IProp
         {
           name: t('GovernanceNodeResult.FilterNodesFilename', { season }),
           from: {
-            array: [...snsList.map((item) => [item])],
+            array: [...walletList.map((item) => [item])],
           },
         },
       ],
@@ -31,17 +31,17 @@ export default function FilterNodesNodal({ season, snsList, handleClose }: IProp
       title={t('GovernanceNodeResult.FilterNodesModalTitle', { season })}
       handleClose={handleClose}
     >
-      {!!snsList.length && (
+      {!!walletList.length && (
         <Button className="btn-export" variant="primary" onClick={handleExport}>
           {t('GovernanceNodeResult.Export')}
         </Button>
       )}
 
       <SNSList>
-        {snsList.map((item, index) => (
+        {walletList.map((item, index) => (
           <li key={index}>{item}</li>
         ))}
-        {!snsList.length && (
+        {!walletList.length && (
           <li>
             <NoItem />
           </li>

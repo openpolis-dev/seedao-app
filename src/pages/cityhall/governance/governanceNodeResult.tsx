@@ -225,13 +225,13 @@ export default function GoveranceNodeResult() {
             Number(item.activity_credit) >= Number(filterActiveNum) &&
             Number(item.effective_credit) >= Number(filterEffectiveNum),
         )
-        .map((item) => dataMap.get(item.wallet) || item.wallet),
+        .map((item) => item.wallet),
     );
   };
 
   return (
     <OuterBox>
-      {showModal && <FilterNodesNodal snsList={filterResult} handleClose={closeModal} season={currentSeason} />}
+      {showModal && <FilterNodesNodal walletList={filterResult} handleClose={closeModal} season={currentSeason} />}
       <BackerNav title={t('city-hall.GovernanceNodeResult')} to="/city-hall/governance" />
       <TopLine>
         <StaticCards>
