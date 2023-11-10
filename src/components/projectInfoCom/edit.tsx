@@ -2,49 +2,25 @@ import { InputGroup, Button, Form } from 'react-bootstrap';
 import styled from 'styled-components';
 import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { UpdateInfo } from 'requests/project';
+import { UpdateInfo, addRelatedProposal } from 'requests/project';
 import { InfoObj, ReTurnProject } from 'type/project.type';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import useToast, { ToastType } from 'hooks/useToast';
-import { MdEditor } from 'md-editor-rt';
-import PlusMinusButton from 'components/common/buttons';
+import PlusMinusButton from 'components/common/plusAndMinusButton';
 import CameraIconSVG from 'components/svgs/camera';
 import CloseTips from './closeTips';
 import CloseSuccess from './closeSuccess';
 import { createCloseProjectApplication } from 'requests/applications';
+import { useNavigate } from 'react-router-dom';
+import MarkdownEditor from 'components/common/markdownEditor';
 
-const config = {
-  toobars: [
-    'bold',
-    'underline',
-    'italic',
-    'strikeThrough',
-    'sub',
-    'sup',
-    'quote',
-    'unorderedList',
-    'orderedList',
-    'codeRow',
-    'code',
-    'link',
-    'image',
-    'table',
-    'revoke',
-    'next',
-    'pageFullscreen',
-    'fullscreen',
-    'preview',
-    'htmlPreview',
-  ],
-  toolbarsExclude: ['github'],
-};
-
-export default function EditProject({ detail, onUpdate }: { detail: ReTurnProject | undefined; onUpdate: () => void }) {
+export default function EditProject({ detail }: { detail: ReTurnProject | undefined }) {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const { showToast } = useToast();
   const {
     dispatch,
-    state: { language, theme },
+    state: { theme },
   } = useAuthContext();
   const [proList, setProList] = useState(['']);
 
@@ -53,15 +29,8 @@ export default function EditProject({ detail, onUpdate }: { detail: ReTurnProjec
   const [url, setUrl] = useState('');
   const [intro, setIntro] = useState('');
 
-  const [lan, setLan] = useState('');
-
   const [show, setShow] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
-
-  useEffect(() => {
-    const localLan = language === 'zh' ? 'zh-CN' : 'en-US';
-    setLan(localLan);
-  }, [language]);
 
   useEffect(() => {
     if (detail) {
@@ -116,26 +85,38 @@ export default function EditProject({ detail, onUpdate }: { detail: ReTurnProjec
       return;
     }
     const ids: string[] = [];
+    const slugs: string[] = [];
     for (const l of proList) {
       if (l) {
-        if (l.startsWith('https://forum.seedao.xyz/thread/')) {
+        if (l.startsWith('https://forum.seedao.xyz/thread/sip-')) {
           const items = l.split('/').reverse();
+          slugs.push(items[0]);
           for (const it of items) {
             if (it) {
               const _id = it.split('-').reverse()[0];
+              if (ids.includes(_id)) {
+                showToast(t('Msg.RepeatProposal'), ToastType.Danger);
+                return;
+              }
               ids.push(_id);
               break;
             }
           }
-        } else if (l.indexOf('/proposal/thread/') > -1) {
-          const items = l.split('/').reverse();
-          for (const it of items) {
-            if (it) {
-              ids.push(it);
-              break;
-            }
-          }
-        } else {
+        }
+        // else if (l.indexOf('/proposal/thread/') > -1) {
+        //   const items = l.split('/').reverse();
+        //   for (const it of items) {
+        //     if (it) {
+        //       if (ids.includes(it)) {
+        //         showToast(t('Msg.RepeatProposal'), ToastType.Danger);
+        //         return;
+        //       }
+        //       ids.push(it);
+        //       break;
+        //     }
+        //   }
+        // }
+        else {
           showToast(t('Msg.ProposalLinkMsg'), ToastType.Danger);
           return;
         }
@@ -150,8 +131,9 @@ export default function EditProject({ detail, onUpdate }: { detail: ReTurnProjec
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
       await UpdateInfo(String(detail?.id), obj);
-      showToast(t('Project.changeProName'), ToastType.Success);
-      onUpdate();
+      await addRelatedProposal(String(detail?.id), slugs);
+      showToast(t('Project.changeInfoSuccess'), ToastType.Success);
+      navigate(`/project/info/${detail?.id}`);
     } catch (error) {
       showToast(JSON.stringify(error), ToastType.Danger);
     } finally {
@@ -193,17 +175,17 @@ export default function EditProject({ detail, onUpdate }: { detail: ReTurnProjec
 
   const closeSuccess = () => {
     setShowSuccess(false);
-    onUpdate();
+    navigate(`/project/info/${detail?.id}`);
   };
 
-  const handleClosePro = async () => {
+  const handleClosePro = async (content: string) => {
     if (!detail) {
       return;
     }
     setShow(false);
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
-      await createCloseProjectApplication(detail.id);
+      await createCloseProjectApplication(detail.id, content);
       dispatch({ type: AppActionType.SET_LOADING, payload: null });
       setShowSuccess(true);
 
@@ -224,7 +206,14 @@ export default function EditProject({ detail, onUpdate }: { detail: ReTurnProjec
           <BtnBox htmlFor="fileUpload" onChange={(e) => updateLogo(e)}>
             <ImgBox>
               <img src={url} alt="" />
-              <UpladBox className="upload">
+              <UpladBox
+                className="upload"
+                bg={
+                  theme
+                    ? 'linear-gradient(180deg, rgba(13,12,15,0) 0%, rgba(38,27,70,0.6) 100%)'
+                    : 'linear-gradient(180deg, rgba(217,217,217,0) 0%, rgba(0,0,0,0.6) 100%)'
+                }
+              >
                 <input id="fileUpload" type="file" hidden accept=".jpg, .jpeg, .png, .svg" />
                 <CameraIconSVG />
                 <UploadImgText>{t('Project.upload')}</UploadImgText>
@@ -289,17 +278,7 @@ export default function EditProject({ detail, onUpdate }: { detail: ReTurnProjec
           <li>
             <div className="title">{t('Project.Intro')}</div>
             <IntroBox>
-              <MdEditor
-                modelValue={intro}
-                onChange={(val) => {
-                  setIntro(val);
-                }}
-                theme={theme ? 'dark' : 'light'}
-                toolbars={config.toobars as any}
-                language={lan}
-                codeStyleReverse={false}
-                noUploadImg
-              />
+              <MarkdownEditor value={intro} onChange={(val) => setIntro(val)} />
             </IntroBox>
           </li>
         </UlBox>
@@ -320,7 +299,7 @@ export default function EditProject({ detail, onUpdate }: { detail: ReTurnProjec
 }
 
 const EditPage = styled.div`
-  padding-top: 40px;
+  width: 100%;
   display: flex;
   justify-content: space-between;
 `;
@@ -329,12 +308,7 @@ const TopBox = styled.section`
   display: flex;
 `;
 
-const IntroBox = styled.div`
-  .cm-scroller,
-  .md-editor-preview-wrapper {
-    background: var(--bs-background);
-  }
-`;
+const IntroBox = styled.div``;
 
 const MainContent = styled.div`
   display: flex;
@@ -381,7 +355,7 @@ const ImgBox = styled.div`
   }
 `;
 
-const UpladBox = styled.div`
+const UpladBox = styled.div<{ bg?: string }>`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -393,10 +367,11 @@ const UpladBox = styled.div`
   left: 0;
   top: 0;
   cursor: pointer;
+  background: ${(props) => props.bg};
 `;
 
 const UploadImgText = styled.p`
-  font-size: 8px;
+  font-size: 12px;
   font-family: Poppins-Regular, Poppins;
   font-weight: 400;
   color: var(--bs-svg-color);
@@ -447,7 +422,6 @@ const ItemBox = styled.div`
 `;
 
 const TextButton = styled.div`
-  margin-top: 20px;
   font-size: 14px;
   font-family: Poppins-Medium;
   font-weight: 500;

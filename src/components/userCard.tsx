@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { IUser } from 'type/user.type';
 // import Image from 'next/image';
 import CopyBox from 'components/copy';
@@ -6,16 +6,11 @@ import DefaultAvatar from 'assets/Imgs/defaultAvatar.png';
 import PublicJs from 'utils/publicJs';
 import styled from 'styled-components';
 // import { useWeb3React } from '@web3-react/core';
-import TwitterIcon from 'assets/Imgs/social/twitter.svg';
-import MirrorImg from 'assets/Imgs/social/mirror.svg';
-import EmailIcon from 'assets/Imgs/social/email.svg';
-import GithubIcon from 'assets/Imgs/social/github.svg';
 import { Col, Form } from 'react-bootstrap';
 import { useAuthContext } from '../providers/authProvider';
 import CopyIconSVG from 'components/svgs/copy';
-import MultiClamp from 'react-multi-clamp';
 import { useTranslation } from 'react-i18next';
-import SocialIcon, { SocaialType } from 'components/common/socialIcon';
+import SocialIconBox from 'components/common/socialIcon';
 
 interface IUserProps {
   user: IUser;
@@ -29,13 +24,17 @@ export default function UserCard({ user, showEdit, onSelectUser, formatActive, s
   // const { account } = useWeb3React();
 
   const {
-    state: { account },
+    state: { account, theme },
   } = useAuthContext();
 
   const { t } = useTranslation();
 
+  const borderStyle = useMemo(() => {
+    return theme ? '1px solid #29282F' : 'unset';
+  }, [theme]);
+
   return (
-    <UserCardBox sm={12} md={6} lg={4} xl={3}>
+    <UserCardBox sm={12} md={6} lg={4} xl={3} border={borderStyle}>
       <div className="boxAll">
         <div className="fst">
           <img className="avatar" src={user.avatar || DefaultAvatar} alt="" />
@@ -60,49 +59,26 @@ export default function UserCard({ user, showEdit, onSelectUser, formatActive, s
             </div>
           )}
         </div>
-        <BioBox>
-          <MultiClamp
-            clamp={2}
-            splitByWords={false}
-            ellipsis={
-              <span>
-                <strong>...</strong>
-              </span>
-            }
-          >
-            {user.bio || t('My.DefaultBio')}
-          </MultiClamp>
-        </BioBox>
-        <LinkBox>
-          <SocialIcon type={SocaialType.Twitter} value={user.twitter_profile} />
-          <SocialIcon type={SocaialType.Mirror} value={user.mirror} />
-          <SocialIcon type={SocaialType.Email} value={user.email ? `mailto:${user.email}` : ''} />
-          <SocialIcon type={SocaialType.Github} value={user.github} />
-        </LinkBox>
+        <BioBox>{user.bio || t('My.DefaultBio')}</BioBox>
+        <SocialIconBox user={user} />
       </div>
     </UserCardBox>
   );
 }
 
-const LinkBox = styled.div`
-  margin-top: 10px;
-  .copy-content {
-    display: inline-block;
-  }
-  .icon {
-    opacity: 0.4;
-  }
-`;
-const UserCardBox = styled(Col)`
+const UserCardBox = styled(Col)<{ border: string }>`
   margin-bottom: 24px;
   .boxAll {
-    background-color: var(--bs-background);
-    border: 1px solid var(--bs-border-color);
+    background: var(--bs-box--background);
+    border: ${(props) => props.border};
     padding: 14px;
     border-radius: 8px;
-    overflow: hidden;
     box-sizing: border-box;
+    box-shadow: var(--box-shadow);
     height: 100%;
+    &:hover {
+      background: var(--bs-menu-hover);
+    }
     .svg-stroke {
       stroke: var(--bs-body-color_active) !important;
     }
@@ -139,5 +115,11 @@ const BioBox = styled.div`
   color: var(--bs-body-color_active);
   line-height: 18px;
   margin-top: 12px;
+  margin-bottom: 10px;
   height: 38px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 `;

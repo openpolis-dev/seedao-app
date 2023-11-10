@@ -9,18 +9,20 @@ import useLoadQuill from 'hooks/useLoadQuill';
 
 import useProposalCategory from 'hooks/useProposalCategory';
 import { formatDate } from 'utils/time';
-import LoadingBox from 'components/loadingBox';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import { ContainerPadding } from 'assets/styles/global';
+import { AppActionType, useAuthContext } from '../../providers/authProvider';
+import ProposalVoteProgress from 'components/common/proposalVote';
 
 export default function Proposal() {
   const { id: qid } = useParams();
   const enableQuill = useLoadQuill();
   const { t } = useTranslation();
 
+  const { dispatch } = useAuthContext();
+
   const [data, setData] = useState<IBaseProposal>();
-  const [loading, setLoading] = useState(false);
 
   const ProposalNav = useProposalCategory(data?.category_index_id);
 
@@ -29,14 +31,16 @@ export default function Proposal() {
     if (!id) {
       return;
     }
-    setLoading(true);
+    // setLoading(true);
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
       const res = await requests.proposal.getProposalDetail(id);
       setData(res.data.thread);
     } catch (error) {
       console.error('get proposal detail error:', error);
     } finally {
-      setLoading(false);
+      // setLoading(false);
+      dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }
   };
 
@@ -52,7 +56,6 @@ export default function Proposal() {
     <BoxOuter>
       {ProposalNav}
       <ProposalContainer>
-        {!data && loading && <LoadingBox />}
         {data && (
           <>
             <ProposalTitle>{data?.title}</ProposalTitle>
@@ -72,6 +75,7 @@ export default function Proposal() {
             <Content>
               {enableQuill && data?.first_post.content && <QuillViewer content={data?.first_post.content} />}
             </Content>
+            {data.polls[0] && <ProposalVoteProgress poll={data.polls[0]} />}
             {/* <div style={{ overflow: 'hidden' }}>{data?.first_post.content}</div> */}
           </>
         )}

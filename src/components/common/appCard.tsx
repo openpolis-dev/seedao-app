@@ -14,28 +14,38 @@ const AppCard = ({
   link,
   id,
   desc,
+  hiddenFields,
+  handleShow,
 }: {
   icon?: any;
   name: string;
   link: string;
   id: string;
   desc?: string;
+  hiddenFields?: string[];
+  handleShow?: (arg0: string) => void;
 }) => {
   const navigate = useNavigate();
   const {
-    state: { theme },
+    state: { theme, userData },
   } = useAuthContext();
   const handleClickEvent = () => {
-    if (id === 'online') {
-      navigate('/online-event');
-    } else if (id === 'pub') {
-      navigate('/pub');
+    if (id.startsWith('module-')) {
+      navigate(link);
+    } else if (id.startsWith('resource-')) {
+      if ((hiddenFields && hiddenFields?.length && userData) || !(hiddenFields && hiddenFields?.length)) {
+        const url = link.split('https://tally.so/r/')[1];
+        // navigate(`/resources/detail/${url}`);
+        handleShow && handleShow(url);
+      } else {
+        return;
+      }
     } else {
       window.open(link, '_blank');
     }
   };
   return (
-    <AppCardStyle className="boxBg" onClick={handleClickEvent}>
+    <AppCardStyle className="boxApp" onClick={handleClickEvent}>
       <div className="iconBox">
         <img src={icon ? icon : theme ? DefaultImg : DefaultImgLight} alt="" />
         <div className="inner" />
@@ -65,16 +75,17 @@ export const EmptyAppCard = ({ theme }: any) => {
 };
 
 const AppCardStyle = styled.div`
-  padding: 24px;
+  padding: 14px;
   border-radius: 16px;
   overflow: hidden;
   cursor: pointer;
   display: flex;
   align-items: center;
   background-color: var(--bs-box--background);
-  border: 1px solid var(--bs-border-color);
-  margin-bottom: 20px;
-  min-height: 136px;
+  border: 1px solid var(--border-box);
+  box-shadow: var(--box-shadow);
+  width: 100%;
+  height: 100%;
 
   &:hover {
     background-color: var(--home-right_hover);
@@ -98,7 +109,7 @@ const AppCardStyle = styled.div`
     }
     img {
       position: relative;
-      z-index: 99;
+      z-index: 8;
       width: 88px;
       height: 88px;
       object-fit: cover;

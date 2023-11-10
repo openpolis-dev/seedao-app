@@ -5,17 +5,56 @@ import publicJs from 'utils/publicJs';
 import { useTranslation } from 'react-i18next';
 import BackIconSVG from 'components/svgs/back';
 import ApplicationStatusTag from 'components/common/applicationStatusTag';
+import { Button } from 'react-bootstrap';
+import requests from 'requests';
+import useToast, { ToastType } from 'hooks/useToast';
+import { ContainerPadding } from 'assets/styles/global';
+import { ApplicationStatus } from 'type/application.type';
 
 interface IProps {
+  bund_id: number;
   list: IApplicationDisplay[];
   handleClose: () => void;
+  updateStatus: (status: ApplicationStatus) => void;
+  showLoading: (show: boolean) => void;
 }
 
-export default function ExpandTable({ list, handleClose }: IProps) {
+export default function ExpandTable({ bund_id, list, handleClose, updateStatus, showLoading }: IProps) {
   const { t } = useTranslation();
-  const formatSNS = (name: string) => {
-    return name?.startsWith('0x') ? publicJs.AddressToShow(name) : name;
+  const { showToast } = useToast();
+
+  const handleApprove = async () => {
+    showLoading(true);
+    try {
+      await requests.application.approveBundles([bund_id]);
+      updateStatus(ApplicationStatus.Approved);
+      showToast(t('Msg.ApproveSuccess'), ToastType.Success);
+    } catch (error) {
+      console.error('handle approve failed', error);
+      showToast(t('Msg.ApproveFailed'), ToastType.Danger);
+    } finally {
+      showLoading(false);
+    }
   };
+
+  const handleReject = async () => {
+    showLoading(true);
+    try {
+      await requests.application.rejectBundles([bund_id]);
+      updateStatus(ApplicationStatus.Rejected);
+      showToast(t('Msg.ApproveSuccess'), ToastType.Success);
+    } catch (error) {
+      console.error('handle reject failed', error);
+      showToast(t('Msg.ApproveFailed'), ToastType.Danger);
+    } finally {
+      showLoading(false);
+    }
+  };
+
+  const formatSNS = (name: string) => {
+    return name?.endsWith('.seedao') ? name : publicJs.AddressToShow(name, 6);
+  };
+
   return (
     <TableBox>
       <BackBox onClick={handleClose}>
@@ -25,7 +64,7 @@ export default function ExpandTable({ list, handleClose }: IProps) {
         <span>{t('general.back')}</span>
       </BackBox>
       {list.length ? (
-        <>
+        <ContentBox>
           <table className="table" cellPadding="0" cellSpacing="0">
             <thead>
               <tr>
@@ -54,7 +93,13 @@ export default function ExpandTable({ list, handleClose }: IProps) {
               ))}
             </tbody>
           </table>
-        </>
+          <OperateBox>
+            <Button onClick={handleApprove}>{t('city-hall.Pass')}</Button>
+            <Button variant="outline-primary" onClick={handleReject}>
+              {t('city-hall.Reject')}
+            </Button>
+          </OperateBox>
+        </ContentBox>
       ) : (
         <NoItem />
       )}
@@ -64,25 +109,22 @@ export default function ExpandTable({ list, handleClose }: IProps) {
 
 const TableBox = styled.div`
   width: 100%;
-  overflow-x: auto;
-  overflow-y: hidden;
-  padding-bottom: 3rem;
   position: absolute;
   left: 0;
   top: 0;
-  min-height: 100%;
+  height: 100%;
+  ${ContainerPadding};
 `;
 
 const BackBox = styled.div`
-  margin-bottom: 20px;
+  margin-bottom: 40px;
   display: inline-flex;
   align-items: center;
-  gap: 20px;
+  gap: 12px;
   cursor: pointer;
-  color: var(--bs-primary);
   font-family: Poppins-SemiBold, Poppins;
   font-weight: 600;
-  color: var(--bs-body-color);
+  color: var(--bs-svg-color);
 `;
 
 const BackIcon = styled.span`
@@ -94,5 +136,36 @@ const BackIcon = styled.span`
   text-align: center;
   svg {
     margin-top: 8px;
+  }
+`;
+
+const ContentBox = styled.div`
+  height: calc(100% - 80px);
+  overflow-y: auto;
+`;
+
+const OperateBox = styled.div`
+  display: flex;
+  gap: 18px;
+  margin-top: 32px;
+  margin-bottom: 20px;
+  button {
+    height: 40px;
+    min-width: 120px;
+    &.btn-outline-primary {
+      background-color: transparent;
+      color: #ff7193;
+      border-color: #ff7193;
+      &:hover,
+      &:active {
+        color: #ff7193 !important;
+        border-color: #ff7193 !important;
+        background-color: transparent !important;
+      }
+      &.disabled {
+        background-color: #b0b0b0;
+        color: #0d0c0f;
+      }
+    }
   }
 `;

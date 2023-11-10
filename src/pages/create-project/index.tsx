@@ -1,6 +1,6 @@
 import { InputGroup, Button, Form } from 'react-bootstrap';
 import styled from 'styled-components';
-import React, { ChangeEvent, FormEvent, useState, useEffect } from 'react';
+import React, { ChangeEvent, FormEvent, useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { createProjects } from 'requests/project';
 import { BudgetType, IBaseProject } from 'type/project.type';
@@ -9,46 +9,23 @@ import useToast, { ToastType } from 'hooks/useToast';
 import { AssetName } from 'utils/constant';
 import { useNavigate } from 'react-router-dom';
 import { ContainerPadding } from 'assets/styles/global';
-import { MdEditor } from 'md-editor-rt';
-import BackIconSVG from 'components/svgs/back';
-import PlusMinusButton from 'components/common/buttons';
+import PlusMinusButton from 'components/common/plusAndMinusButton';
 import CameraIconSVG from 'components/svgs/camera';
-
-const config = {
-  toobars: [
-    'bold',
-    'underline',
-    'italic',
-    'strikeThrough',
-    'sub',
-    'sup',
-    'quote',
-    'unorderedList',
-    'orderedList',
-    'codeRow',
-    'code',
-    'link',
-    'image',
-    'table',
-    'revoke',
-    'next',
-    'pageFullscreen',
-    'fullscreen',
-    'preview',
-    'htmlPreview',
-  ],
-  toolbarsExclude: ['github'],
-};
+import BackerNav from 'components/common/backNav';
+import MarkdownEditor from 'components/common/markdownEditor';
+import SeeSelect from 'components/common/select';
+import { UserRole } from 'type/user.type';
+import { ethers } from 'ethers';
+import sns from '@seedao/sns-js';
+import { BlackButton } from 'components/common/button';
 
 export default function CreateProject() {
-  // const router = useRouter();
-
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { showToast } = useToast();
   const {
     dispatch,
-    state: { language },
+    state: { theme },
   } = useAuthContext();
   const [adminList, setAdminList] = useState(['']);
   const [memberList, setMemberList] = useState<string[]>([]);
@@ -61,12 +38,6 @@ export default function CreateProject() {
   const [desc, setDesc] = useState('');
   const [url, setUrl] = useState('');
   const [intro, setIntro] = useState('');
-  const [lan, setLan] = useState('');
-
-  useEffect(() => {
-    const localLan = language === 'zh' ? 'zh-CN' : 'en-US';
-    setLan(localLan);
-  }, [language]);
 
   const handleInput = (e: ChangeEvent, index: number, type: string) => {
     const { value } = e.target as HTMLInputElement;
@@ -142,39 +113,96 @@ export default function CreateProject() {
         break;
     }
   };
+  const handleModerators = async () => {
+    const checkSNSlst: string[] = [];
+    const sns2walletMap = new Map<string, string>();
+    for (const item of adminList) {
+      const _wallet = item.trim().toLocaleLowerCase();
+      if (!ethers.utils.isAddress(_wallet)) {
+        if (!_wallet.endsWith('.seedao')) {
+          showToast(t('Msg.IncorrectAddress', { content: _wallet }), ToastType.Danger);
+          return;
+        } else {
+          checkSNSlst.push(_wallet);
+        }
+      }
+    }
+    if (checkSNSlst.length) {
+      try {
+        const notOkList: string[] = [];
+        const res = await sns.resolves(checkSNSlst);
+        for (let i = 0; i < res.length; i++) {
+          const wallet = res[i];
+          if (!wallet || ethers.constants.AddressZero === wallet) {
+            notOkList.push(checkSNSlst[i]);
+          } else {
+            sns2walletMap.set(checkSNSlst[i], wallet);
+          }
+        }
+        if (!!notOkList.length) {
+          showToast(t('Msg.IncorrectAddress', { content: notOkList.join(', ') }), ToastType.Danger);
+          return;
+        }
+      } catch (error) {
+        console.error('resolved failed', error);
+        return;
+      }
+    }
+    const _adminList: string[] = [];
+
+    adminList.forEach((item) => {
+      const wallet = sns2walletMap.get(item) || item;
+      _adminList.push(wallet);
+    });
+    return _adminList;
+  };
   const handleSubmit = async () => {
     const ids: string[] = [];
+    const slugs: string[] = [];
     for (const l of proList) {
       if (l) {
-        if (l.startsWith('https://forum.seedao.xyz/thread/')) {
+        if (l.startsWith('https://forum.seedao.xyz/thread/sip-')) {
           const items = l.split('/').reverse();
+          slugs.push(items[0]);
           for (const it of items) {
             if (it) {
               const _id = it.split('-').reverse()[0];
+              if (ids.includes(_id)) {
+                showToast(t('Msg.RepeatProposal'), ToastType.Danger);
+                return;
+              }
               ids.push(_id);
               break;
             }
           }
-        } else if (l.indexOf('/proposal/thread/') > -1) {
-          const items = l.split('/').reverse();
-          for (const it of items) {
-            if (it) {
-              ids.push(it);
-              break;
-            }
-          }
-        } else {
+        }
+        // else if (l.indexOf('/proposal/thread/') > -1) {
+        //   const items = l.split('/').reverse();
+        //   for (const it of items) {
+        //     if (it) {
+        //       ids.push(it);
+        //       break;
+        //     }
+        //   }
+        // }
+        else {
           showToast(t('Msg.ProposalLinkMsg'), ToastType.Danger);
           return;
         }
       }
     }
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    const _adminList = await handleModerators();
+    if (!_adminList) {
+      dispatch({ type: AppActionType.SET_LOADING, payload: false });
+      return;
+    }
     const obj: IBaseProject = {
       logo: url,
       name: proName,
-      sponsors: adminList,
+      sponsors: _adminList,
       members: memberList,
-      proposals: ids,
+      proposals: slugs,
       desc,
       intro,
       budgets: [
@@ -192,9 +220,12 @@ export default function CreateProject() {
     };
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
-      await createProjects(obj);
+      let rt = await createProjects(obj);
+      const {
+        data: { id },
+      } = rt;
       showToast(t('Project.createSuccess'), ToastType.Success);
-      navigate('/explore');
+      navigate(`/project/info/${id}`);
     } catch (error) {
       showToast(t('Project.createFailed'), ToastType.Danger);
     } finally {
@@ -228,20 +259,28 @@ export default function CreateProject() {
   };
 
   const handleBack = () => {
-    navigate('/city-hall');
+    navigate('/city-hall/governance');
   };
+
+  const roleOptions = useMemo(() => {
+    return [{ label: t('Project.Moderator'), value: UserRole.Admin }];
+  }, [t]);
 
   return (
     <OuterBox>
-      <BackBox onClick={handleBack}>
-        <BackIconSVG />
-        <span> {t('Project.create')}</span>
-      </BackBox>
+      <BackerNav title={t('Project.create')} to="/city-hall/governance" />
       <CardBody>
         <BtnBox htmlFor="fileUpload" onChange={(e) => updateLogo(e)}>
           <ImgBox>
             <img src={url} alt="" />
-            <UpladBox className="upload">
+            <UpladBox
+              className="upload"
+              bg={
+                theme
+                  ? 'linear-gradient(180deg, rgba(13,12,15,0) 0%, rgba(38,27,70,0.6) 100%)'
+                  : 'linear-gradient(180deg, rgba(217,217,217,0) 0%, rgba(0,0,0,0.6) 100%)'
+              }
+            >
               <input id="fileUpload" type="file" hidden accept=".jpg, .jpeg, .png, .svg" />
               <CameraIconSVG />
               <UploadImgText>{t('Project.upload')}</UploadImgText>
@@ -290,7 +329,7 @@ export default function CreateProject() {
                     <ProposalInputBox>
                       <Form.Control
                         type="text"
-                        placeholder={`${t('Project.AssociatedProposal')}, eg. https://forum.seedao.xyz/thread...`}
+                        placeholder={`eg. https://forum.seedao.xyz/thread/sip-...`}
                         value={item}
                         onChange={(e) => handleInput(e, index, 'proposal')}
                       />
@@ -306,16 +345,23 @@ export default function CreateProject() {
               </div>
             </li>
             <li>
-              <div className="title">{t('Project.Dominator')}</div>
+              <div className="title">{t('Project.Members')}</div>
               <div>
                 {adminList.map((item, index) => (
                   <ItemBox key={`mem_${index}`}>
                     <MemberInputBox>
                       <Form.Control
                         type="text"
-                        placeholder={t('Project.Dominator')}
+                        placeholder={t('Project.AddMemberAddress')}
                         value={item}
                         onChange={(e) => handleInput(e, index, 'admin')}
+                      />
+                      <RoleSelect
+                        width="120px"
+                        options={roleOptions}
+                        defaultValue={roleOptions[0]}
+                        NotClear={true}
+                        isSearchable={false}
                       />
                     </MemberInputBox>
                     <PlusMinusButton
@@ -332,34 +378,31 @@ export default function CreateProject() {
             <li>
               <div className="title">{t('Project.Intro')}</div>
               <IntroBox>
-                <MdEditor
-                  modelValue={intro}
+                <MarkdownEditor
+                  value={intro}
                   onChange={(val) => {
                     setIntro(val);
                   }}
-                  toolbars={config.toobars as any}
-                  language={lan}
-                  codeStyleReverse={false}
-                  noUploadImg
                 />
               </IntroBox>
             </li>
           </UlBox>
           <BtmBox>
             <Button
+              style={{ width: '80px' }}
               onClick={() => handleSubmit()}
               disabled={
-                proName?.length === 0 ||
-                url?.length === 0 ||
-                (credit && credit < 0) ||
-                (token && token < 0) ||
+                !proName ||
+                !url ||
                 (adminList?.length === 1 && adminList[0]?.length === 0) ||
                 (proList?.length === 1 && proList[0]?.length === 0)
               }
             >
               {t('general.confirm')}
             </Button>
-            <CancelButton onClick={handleBack}> {t('general.cancel')}</CancelButton>
+            <BlackButton style={{ width: '80px' }} onClick={handleBack}>
+              {t('general.cancel')}
+            </BlackButton>
           </BtmBox>
         </RightContent>
       </CardBody>
@@ -471,13 +514,6 @@ const BtnBox = styled.label`
   }
 `;
 
-const CancelButton = styled.button`
-  background: #b0b0b0;
-  height: 34px;
-  border: none;
-  border-radius: 8px;
-`;
-
 const ImgBox = styled.div`
   width: 100%;
   height: 100%;
@@ -507,7 +543,7 @@ const RightContent = styled.div`
   }
 `;
 
-const UpladBox = styled.div`
+const UpladBox = styled.div<{ bg?: string }>`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -519,12 +555,20 @@ const UpladBox = styled.div`
   left: 0;
   top: 0;
   cursor: pointer;
+  background: ${(props) => props.bg};
 `;
 
 const UploadImgText = styled.p`
-  font-size: 8px;
+  font-size: 12px;
   font-family: Poppins-Regular, Poppins;
   font-weight: 400;
   color: var(--bs-svg-color);
   line-height: 12px;
+`;
+
+const RoleSelect = styled(SeeSelect)`
+  .react-select__control {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
 `;

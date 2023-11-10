@@ -111,7 +111,9 @@ export default function Index() {
                         </IconBox>
                         <div>
                           <div className="name">{subCategory.name}</div>
-                          <div className="topics">{subCategory.thread_count} topics</div>
+                          <div className="topics">
+                            {subCategory.thread_count} {t('Proposal.Topics')}
+                          </div>
                         </div>
                       </SubCategoryItem>
                     </a>
@@ -164,7 +166,7 @@ const SubCategoryCard = styled.div`
   flex-wrap: wrap;
   padding: 10px;
   background-color: var(--bs-box-background);
-  border: 1px solid var(--bs-border-color);
+  box-shadow: var(--box-shadow);
   border-radius: 16px;
   > a {
     width: 25%;

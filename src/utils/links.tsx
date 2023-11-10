@@ -8,71 +8,113 @@ import Wormhole3Icon from '../assets/Imgs/home/Wormhole3.png';
 import SeedIcon from '../assets/images/seed.png';
 import SeeUImg from '../assets/Imgs/home/seeuNetwork.jpg';
 
-export default {
+import RImg1 from '../assets/Imgs/resources/1.png';
+import RImg2 from '../assets/Imgs/resources/2.png';
+import RImg3 from '../assets/Imgs/resources/3.png';
+import RImg4 from '../assets/Imgs/resources/4.png';
+import RImg5 from '../assets/Imgs/resources/5.png';
+import RImg6 from '../assets/Imgs/resources/6.png';
+import RImg7 from '../assets/Imgs/resources/7.png';
+import RImg8 from '../assets/Imgs/resources/8.png';
+import RImg9 from '../assets/Imgs/resources/9.png';
+import RImg10 from '../assets/Imgs/resources/10.png';
+import RImg11 from '../assets/Imgs/resources/11.png';
+import RImg12 from '../assets/Imgs/resources/12.png';
+
+/**
+ * NOTE:
+ * if id starts with "module-", means its path is our app's router path, otherwise is outer link
+ */
+
+const links = {
   resource: [
     {
       name: 'resources.calendar',
       link: 'https://tally.so/r/mKxkWD',
-      id: 'calendar',
-      icon: '',
+      id: 'resource-calendar',
+      icon: RImg1,
       desc: 'resources.CalendarReviewDesc',
+      alignLeft: 0,
+      hideTitle: 0,
+      hiddenFields: [],
     },
     {
       name: 'resources.community',
       link: 'https://tally.so/r/mBp09R',
-      id: 'community',
-      icon: '',
+      id: 'resource-community',
+      icon: RImg2,
       desc: 'resources.communityDesc',
+      alignLeft: 1,
+      hideTitle: 0,
+      hiddenFields: ['name', 'sns', 'wallet'],
     },
     {
       name: 'resources.Pub',
       link: 'https://tally.so/r/mDKbqb',
-      id: 'community',
-      icon: '',
+      id: 'resource-community',
+      icon: RImg3,
       desc: 'resources.PubDesc',
+      alignLeft: 0,
+      hideTitle: 0,
+      hiddenFields: ['name', 'sns', 'wallet', 'seed'],
     },
     {
       name: 'resources.Media',
       link: 'https://tally.so/r/wzMRBE',
-      id: 'Media',
-      icon: '',
+      id: 'resource-Media',
+      icon: RImg4,
       desc: 'resources.MediaDesc',
+      alignLeft: 1,
+      hideTitle: 0,
+      hiddenFields: ['name', 'sns', 'wallet'],
     },
     {
       name: 'resources.App',
       link: 'https://tally.so/r/3XozzP',
-      id: 'Apps',
-      icon: '',
+      id: 'resource-Apps',
+      icon: RImg5,
       desc: 'resources.AppDesc',
+      alignLeft: 0,
+      hideTitle: 0,
+      hiddenFields: ['name', 'sns', 'wallet'],
     },
     {
       name: 'resources.Project',
       link: 'https://tally.so/r/w2AWlp',
-      id: 'Projects',
-      icon: '',
+      id: 'resource-Projects',
+      icon: RImg6,
       desc: 'resources.ProjectDesc',
+      alignLeft: 1,
+      hideTitle: 0,
+      hiddenFields: ['name', 'sns', 'wallet'],
     },
     {
       name: 'resources.Guild',
       link: 'https://tally.so/r/3NXjRW',
-      id: 'Guilds',
-      icon: '',
+      id: 'resource-Guilds',
+      icon: RImg7,
       desc: 'resources.GuildDesc',
+      alignLeft: 1,
+      hideTitle: 0,
+      hiddenFields: ['name', 'sns', 'wallet'],
     },
     {
       name: 'resources.Incubator',
       link: 'https://tally.so/r/wAr0Q0',
-      id: 'Apps',
-      icon: '',
+      id: 'resource-Apps',
+      icon: RImg8,
       desc: 'resources.IncubatorDesc',
+      alignLeft: 0,
+      hideTitle: 0,
+      hiddenFields: ['name', 'sns', 'wallet'],
     },
-    {
-      name: 'resources.Seed',
-      link: 'https://seed.seedao.xyz/',
-      id: 'Seed',
-      icon: SeedIcon,
-      desc: 'resources.SeedDesc',
-    },
+    // {
+    //   name: 'resources.Seed',
+    //   link: 'https://seed.seedao.xyz/',
+    //   id: 'Seed',
+    //   icon: SeedIcon,
+    //   desc: 'resources.SeedDesc',
+    // },
   ],
   applyAppLink: 'https://tally.so/r/3XozzP',
   governance: [
@@ -80,50 +122,85 @@ export default {
       name: 'city-hall.CommunityReview',
       link: 'https://tally.so/forms/mBp09R/submissions',
       id: 'community',
-      icon: '',
+      icon: RImg9,
       desc: 'city-hall.CommunityReviewDesc',
     },
     {
       name: 'city-hall.MediaReview',
       link: 'https://tally.so/forms/wzMRBE/submissions',
       id: 'community',
-      icon: '',
+      icon: RImg10,
       desc: 'city-hall.MediaReviewDesc',
     },
     {
       name: 'city-hall.CalendarReview',
       link: 'https://tally.so/r/mKxkWD/submissions',
       id: 'calendar',
-      icon: '',
+      icon: RImg11,
       desc: 'city-hall.CalendarReviewDesc',
     },
     {
       name: 'city-hall.AppReview',
       link: 'https://tally.so/forms/3XozzP/submissions',
       id: 'app',
-      icon: '',
+      icon: RImg12,
       desc: 'city-hall.AppReviewDesc',
     },
     {
       name: 'city-hall.ProjectReview',
       link: 'https://tally.so/forms/w2AWlp/submissions',
       id: 'project',
-      icon: '',
+      icon: RImg5,
       desc: 'city-hall.ProjectReviewDesc',
     },
     {
       name: 'city-hall.GuildReview',
       link: 'https://tally.so/forms/3NXjRW/submissions',
       id: 'guild',
-      icon: '',
+      icon: RImg1,
       desc: 'city-hall.GuildReviewDesc',
     },
     {
       name: 'city-hall.PubReview',
       link: 'https://www.notion.so/ab122e6e19f14ff5a212fb6e77d5b366?v=34760c2c81e648549f5a40a79dc3b198&pvs=4',
       id: 'community',
-      icon: '',
+      icon: RImg3,
       desc: 'city-hall.PubReviewDesc',
+    },
+    {
+      name: 'city-hall.GovernanceNodeResult',
+      link: '/city-hall/governance/governance-node-result',
+      id: 'module-governance-node-result',
+      icon: RImg2,
+      desc: 'city-hall.GovernanceNodeResultDesc',
+    },
+    {
+      name: 'Project.create',
+      link: '/create-project',
+      id: 'module-create-project',
+      icon: RImg4,
+      desc: '',
+    },
+    {
+      name: 'Guild.create',
+      link: '/create-guild',
+      id: 'module-create-guild',
+      icon: RImg6,
+      desc: '',
+    },
+    {
+      name: 'city-hall.PointsAndTokenAudit',
+      link: '/city-hall/governance/audit',
+      id: 'module-governance-audit',
+      icon: RImg7,
+      desc: '',
+    },
+    {
+      name: 'city-hall.CloseProjectAudit',
+      link: '/city-hall/governance/audit-project',
+      id: 'module-governance-audit-project',
+      icon: RImg8,
+      desc: '',
     },
   ],
   brand: [
@@ -138,18 +215,18 @@ export default {
       name: 'city-hall.MediaReview',
       link: 'https://tally.so/forms/wzMRBE/submissions',
       id: 'media',
-      icon: '',
+      icon: RImg4,
       desc: 'city-hall.MediaReviewDesc',
     },
   ],
   tech: [
-    {
-      name: 'city-hall.SeedReview',
-      link: '',
-      id: 'seed',
-      icon: '',
-      desc: 'city-hall.SeedReviewDesc',
-    },
+    // {
+    //   name: 'city-hall.SeedReview',
+    //   link: '',
+    //   id: 'seed',
+    //   icon: RImg5,
+    //   desc: 'city-hall.SeedReviewDesc',
+    // },
   ],
   apps: [
     {
@@ -194,13 +271,13 @@ export default {
       icon: MetaforoIcon,
       desc: 'apps.MetaforoDesc',
     },
-    {
-      id: 'pub',
-      name: 'apps.Pub',
-      link: '',
-      icon: '',
-      desc: 'apps.PubDesc',
-    },
+    // {
+    //   id: 'module-pub',
+    //   name: 'apps.Pub',
+    //   link: '/pub',
+    //   icon: '',
+    //   desc: 'apps.PubDesc',
+    // },
     // {
     //   id: 'online',
     //   name: 'Home.OnlineEvent',
@@ -216,4 +293,26 @@ export default {
       desc: 'apps.SeeUDesc',
     },
   ],
+  publicity: [
+    {
+      id: '',
+      name: 'SeeDAO APP 正式版 V 0.0.1 开始发布！（含测试奖励)',
+      time: '2023-10-23 18:54',
+      link: 'https://mp.weixin.qq.com/s/ahB4q1oF0C7KmfEb52vH8w',
+    },
+    {
+      id: '',
+      name: 'SeeDAO | Our Polis 发布会调整通知',
+      time: '2023-10-23 18:54',
+      link: 'https://mp.weixin.qq.com/s/s8ATHFdKhaMQ5SHkPjPAZQ',
+    },
+    {
+      id: '',
+      name: 'SeeDAO两周年生态发布会！十二月中相约清迈',
+      time: '2023-11-01 23:07',
+      link: 'https://mp.weixin.qq.com/s/YVpeaHSRCfUj5EKlHdmsyA',
+    },
+  ],
 };
+
+export default links;

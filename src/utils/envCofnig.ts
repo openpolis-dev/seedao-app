@@ -1,4 +1,4 @@
-const VERSION = '0.1.2';
+const VERSION = '0.1.3';
 
 const LOCAL = {
   REACT_APP_BASE_ENDPOINT: 'https://test-api.seedao.tech',

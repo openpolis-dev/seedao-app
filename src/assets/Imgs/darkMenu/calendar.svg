@@ -1,11 +1,1 @@
-<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g id="calendar ">
-<path id="Rectangle 417" d="M3 7.5C3 5.29086 4.79086 3.5 7 3.5H17C19.2091 3.5 21 5.29086 21 7.5V18C21 20.2091 19.2091 22 17 22H7C4.79086 22 3 20.2091 3 18V7.5Z" stroke="#B0B0B0" stroke-width="1.5"/>
-<path id="Vector 2523" d="M3 9H21" stroke="#B0B0B0" stroke-width="1.5" stroke-linecap="round"/>
-<path id="Vector 1090" d="M8 2L8 5" stroke="#B0B0B0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-<path id="Vector 1099" d="M16 2V5" stroke="#B0B0B0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-<circle id="Ellipse 418" cx="12" cy="15" r="1" fill="#B0B0B0"/>
-<circle id="Ellipse 419" cx="16" cy="15" r="1" fill="#B0B0B0"/>
-<circle id="Ellipse 421" cx="8" cy="15" r="1" fill="#B0B0B0"/>
-</g>
-</svg>
+<svg fill="none" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><g stroke="#b0b0b0" stroke-width="1.5"><path d="m3 7.5c0-2.20914 1.79086-4 4-4h10c2.2091 0 4 1.79086 4 4v10.5c0 2.2091-1.7909 4-4 4h-10c-2.20914 0-4-1.7909-4-4z"/><path d="m3 9h18" stroke-linecap="round"/><path d="m8 2v3" stroke-linecap="round" stroke-linejoin="round"/><path d="m16 2v3" stroke-linecap="round" stroke-linejoin="round"/></g><circle cx="12" cy="15" fill="#b0b0b0" r="1"/><circle cx="16" cy="15" fill="#b0b0b0" r="1"/><circle cx="8" cy="15" fill="#b0b0b0" r="1"/></svg>

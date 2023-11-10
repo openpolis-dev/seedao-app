@@ -60,6 +60,7 @@ const CreatePushContent = () => {
       setTitle('');
       setContent('');
       setHref('');
+      showToast(t('Push.Success'), ToastType.Success);
     } catch (error: any) {
       console.error(error);
       showToast(error, ToastType.Danger);
@@ -177,57 +178,59 @@ const PushHistoryContent = () => {
           }
         />
       )}
-      <BlockTitle>{t('Push.History')}</BlockTitle>
-      {list.length ? (
-        <PushContentBox id="push-scroll">
-          <InfiniteScroll
-            dataLength={list.length}
-            next={getList}
-            hasMore={hasMore}
-            scrollableTarget="push-scroll"
-            loader={<LoadingBottom>{t('general.Loading')}</LoadingBottom>}
-          >
-            {list.map((item, idx) => (
-              <PushItem key={idx} onClick={() => setShowRecord(item)}>
-                <PushItemTop>
-                  <PushItemTitle className="clip">{item.title}</PushItemTitle>
-                  <PushItemContent className="clip">{item.content}</PushItemContent>
-                  <JumpBox className="clip">
-                    {t('Push.Href')}
-                    {`: `}
-                    <a href={item.jump_url} target="_blank" rel="noopener noreferrer">
-                      {item.jump_url}
-                    </a>
-                  </JumpBox>
-                </PushItemTop>
+      <RhtBox>
+        <BlockTitle>{t('Push.History')}</BlockTitle>
+        {list.length ? (
+          <PushContentBox id="push-scroll">
+            <InfiniteScroll
+              dataLength={list.length}
+              next={getList}
+              hasMore={hasMore}
+              scrollableTarget="push-scroll"
+              loader={<LoadingBottom>{t('general.Loading')}</LoadingBottom>}
+            >
+              {list.map((item, idx) => (
+                <PushItem key={idx} onClick={() => setShowRecord(item)}>
+                  <PushItemTop>
+                    <PushItemTitle className="clip">{item.title}</PushItemTitle>
+                    <PushItemContent className="clip">{item.content}</PushItemContent>
+                    <JumpBox className="clip">
+                      {t('Push.Href')}
+                      {`: `}
+                      <a href={item.jump_url} target="_blank" rel="noopener noreferrer">
+                        {item.jump_url}
+                      </a>
+                    </JumpBox>
+                  </PushItemTop>
 
-                <PushItemBottom>
-                  <PushItemBottomLeft>
-                    <div className="name">
-                      {wallet2snsMap[item.creator_wallet.toLocaleLowerCase()] ||
-                        publicJs.AddressToShow(item.creator_wallet)}
-                    </div>
-                    <div className="date">{item.timeDisplay}</div>
-                  </PushItemBottomLeft>
-                  <StatusTag>{t('Push.Pushed')}</StatusTag>
-                  {/* {item.status === PUSH_STATUS.WAITING && (
+                  <PushItemBottom>
+                    <PushItemBottomLeft>
+                      <div className="name">
+                        {wallet2snsMap[item.creator_wallet.toLocaleLowerCase()] ||
+                          publicJs.AddressToShow(item.creator_wallet)}
+                      </div>
+                      <div className="date">{item.timeDisplay}</div>
+                    </PushItemBottomLeft>
+                    <StatusTag>{t('Push.Pushed')}</StatusTag>
+                    {/* {item.status === PUSH_STATUS.WAITING && (
                         <Button size="sm" variant="outline-primary" onClick={() => handleCancel()}>
                           {t('general.cancel')}
                         </Button>
                       )} */}
-                </PushItemBottom>
-              </PushItem>
-            ))}
-          </InfiniteScroll>
-        </PushContentBox>
-      ) : (
-        <NoItem />
-      )}
+                  </PushItemBottom>
+                </PushItem>
+              ))}
+            </InfiniteScroll>
+          </PushContentBox>
+        ) : (
+          <NoItem />
+        )}
+      </RhtBox>
     </div>
   );
 };
 
-export default function PushPanel({ id }: { id?: number }) {
+export default function PushPanel() {
   return (
     <Box>
       <CreatePushContent />
@@ -235,6 +238,13 @@ export default function PushPanel({ id }: { id?: number }) {
     </Box>
   );
 }
+
+const RhtBox = styled.div`
+  padding: 24px;
+  background: var(--bs-box--background);
+  border-radius: 24px;
+  box-shadow: var(--box-shadow);
+`;
 
 const PushContentBox = styled.div`
   height: calc(100vh - 280px);
@@ -247,10 +257,17 @@ const PushContentBox = styled.div`
 
 const Box = styled.div`
   display: flex;
-  gap: 40px;
-  justify-content: space-between;
+  gap: 60px;
   height: 100%;
-  @media (max-width: 768px) {
+  @media (max-width: 1240px) {
+    justify-content: space-between;
+    gap: 100px;
+  }
+  @media (max-width: 1000px) {
+    gap: 40px;
+  }
+
+  @media (max-width: 860px) {
     flex-direction: column;
   }
 `;
@@ -288,24 +305,24 @@ const SubmitBox = styled.div`
 
 const BlockTitle = styled.div`
   font-size: 24px;
-  font-family: Poppins-Bold, Poppins;
+  font-family: Poppins-Bold;
   font-weight: bold;
   line-height: 30px;
-  margin-bottom: 39px;
+  margin-bottom: 5px;
 `;
 
 const PushItem = styled.div`
   cursor: pointer;
   width: 480px;
-  min-height: 178px;
-  background: var(--bs-box--background);
-  border-radius: 16px;
-  border: 1px solid var(--bs-border-color);
-  margin-bottom: 25px;
+  border-bottom: 8px solid var(--push-border);
+  margin-bottom: 5px;
 `;
 
 const CreateBox = styled.div`
   width: 576px;
+  @media (max-width: 860px) {
+    width: 480px;
+  }
 `;
 
 const LoadingBottom = styled.div`

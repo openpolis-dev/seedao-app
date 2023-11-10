@@ -79,6 +79,17 @@ const TableBox = styled.div`
   overflow-x: auto;
   overflow-y: hidden;
   padding-bottom: 3rem;
+  td {
+    vertical-align: middle;
+  }
+  tr:hover {
+    td {
+      //border-bottom: 1px solid #fff !important;
+      //&+td{
+      //  border-bottom: 1px solid #fff !important;
+      //}
+    }
+  }
 `;
 
 export default function AssetList() {
@@ -235,8 +246,7 @@ export default function AssetList() {
   }, [list, selectMap]);
 
   const formatSNS = (name: string) => {
-    console.log('name', name);
-    return name?.startsWith('0x') ? publicJs.AddressToShow(name, 6) : name;
+    return name?.endsWith('.seedao') ? name : publicJs.AddressToShow(name, 6);
   };
 
   return (
@@ -339,14 +349,16 @@ export default function AssetList() {
                         onChange={(e) => onChangeCheckbox(e.target.checked, item.application_id, item.status)}
                       />
                     </td> */}
-                    <td style={{ width: '140px' }}>{formatSNS(item.receiver_name || '')}</td>
+                    <td>{item.receiver_name || ''}</td>
                     <td className="center" style={{ width: '200px' }}>
                       {item.asset_display}
                     </td>
                     <td className="center" style={{ width: '200px' }}>
                       {item.season_name}
                     </td>
-                    <td>{item.detailed_type}</td>
+                    <td>
+                      <BudgetContent>{item.detailed_type}</BudgetContent>
+                    </td>
                     <td className="center" style={{ width: '200px' }}>
                       {item.budget_source}
                     </td>
@@ -375,3 +387,11 @@ export default function AssetList() {
     </Box>
   );
 }
+
+const BudgetContent = styled.div`
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+`;

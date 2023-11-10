@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 type TabKeyType = string | number;
 
@@ -17,6 +17,10 @@ interface IProps {
 
 export default function Tabbar({ defaultActiveKey, tabs, onSelect }: IProps) {
   const [currentKey, setCurrentKey] = useState<TabKeyType>(defaultActiveKey || 0);
+
+  useEffect(() => {
+    setCurrentKey(defaultActiveKey);
+  }, [defaultActiveKey]);
 
   const handleSelect = (k: TabKeyType) => {
     setCurrentKey(k);

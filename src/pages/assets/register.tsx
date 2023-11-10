@@ -31,13 +31,13 @@ export default function Register() {
   const [list, setList] = useState<IExcelObj[]>([]);
 
   const allSource = useBudgetSource();
-  const [selectSource, setSelectSource] = useState<{ id: number; type: ApplicationEntity }>();
+  const [selectSource, setSelectSource] = useState<ISelectItem | null>(null);
 
   const [content, setContent] = useState('');
 
   const Clear = () => {
     setList([]);
-    setSelectSource(undefined);
+    setSelectSource(null);
     setContent('');
   };
   const checkInvalidData = () => {
@@ -135,16 +135,16 @@ export default function Register() {
 
     try {
       const data = {
-        entity: selectSource.type,
-        entity_id: selectSource.id,
+        entity: selectSource.data,
+        entity_id: selectSource.value,
         comment: content,
         records: list.map((item) => ({
           amount: Number(item.amount),
           asset_name: item.assetType,
-          comment: item.content,
-          detailed_type: item.note,
-          entity: selectSource.type,
-          entity_id: selectSource.id,
+          comment: item.note,
+          detailed_type: item.content,
+          entity: selectSource.data,
+          entity_id: selectSource.value,
           target_user_wallet: item.address,
         })),
       };
@@ -169,14 +169,16 @@ export default function Register() {
         <div className="title">{t('Assets.RegisterSelect')}</div>
         <SourceSelect
           options={allSource}
-          placeholder="Search project/guild name"
+          placeholder={t('Assets.SearchSourcePlaceholder')}
           onChange={(value: any) => {
-            setSelectSource({ id: value?.value as number, type: value?.data });
+            console.log(value, selectSource);
+            setSelectSource(value);
           }}
+          value={selectSource}
         />
       </SectionBlock>
       <SectionBlock>
-        <div className="title">{t('Assets.RegisterList')}</div>
+        <div className="title lftTit">{t('Assets.RegisterList')}</div>
         <RegList list={list} setList={setList} />
       </SectionBlock>
 
@@ -215,10 +217,15 @@ const OuterBox = styled.div`
 
 const SectionBlock = styled.section`
   margin-top: 20px;
+  position: relative;
   .title {
     margin-bottom: 16px;
     line-height: 20px;
     color: var(--bs-body-color_active);
+  }
+  .lftTit {
+    position: absolute;
+    top: 10px;
   }
 `;
 
@@ -234,7 +241,7 @@ const BackBox = styled(Link)`
   align-items: center;
   color: var(--bs-svg-color);
   gap: 20px;
-  font-family: Poppins-SemiBold, Poppins;
+  font-family: Poppins-SemiBold;
   font-weight: 600;
   &:hover {
     color: var(--bs-svg-color);

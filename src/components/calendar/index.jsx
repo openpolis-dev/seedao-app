@@ -141,7 +141,7 @@ const Box = styled.div`
             //margin-top: -13px;
             padding: 10px;
         }
-        a{
+        .calendarName + a{
             text-align: right;
             width: 100%;
             display: inline-block;
@@ -193,7 +193,7 @@ let styles = {
         minHeight:"120px",
         color: "var(--bs-body-color_active)",
         fontFamily: 'Poppins-SemiBold',
-        "&:nth-child(7n)":{
+        "&:nth-of-type(7n)":{
             borderRight:"1px solid var(--bs-border-color)"
         }
     },

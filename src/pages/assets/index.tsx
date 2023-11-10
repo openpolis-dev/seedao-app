@@ -18,16 +18,13 @@ import { Button } from 'react-bootstrap';
 import { ChevronDown, ChevronUp, Pencil } from 'react-bootstrap-icons';
 import { ContainerPadding } from 'assets/styles/global';
 import { Link } from 'react-router-dom';
-import BalanceIconLight from 'assets/Imgs/light/vault/balance.svg';
-import WalletIconLight from 'assets/Imgs/light/vault/wallet.svg';
-import ChainIconLight from 'assets/Imgs/light/vault/chain.svg';
-import SignerIconLight from 'assets/Imgs/light/vault/signer.svg';
-import BalanceIconDark from 'assets/Imgs/dark/vault/balance.svg';
-import WalletIconDark from 'assets/Imgs/dark/vault/wallet.svg';
-import ChainIconDark from 'assets/Imgs/dark/vault/chain.svg';
-import SignerIconDark from 'assets/Imgs/dark/vault/signer.svg';
+import BalanceIcon from 'assets/Imgs/vault/balance.png';
+import WalletIcon from 'assets/Imgs/vault/wallet.png';
+import ChainIcon from 'assets/Imgs/vault/chain.png';
+import SignerIcon from 'assets/Imgs/vault/signer.png';
 import CopyIconSVG from 'components/svgs/copy';
 import ShareIconSVG from 'components/svgs/share';
+import ArrowIconSVG from 'components/svgs/downArrow';
 
 const BoxOuter = styled.div`
   ${ContainerPadding};
@@ -48,6 +45,7 @@ const FirstLine = styled.ul<{ border: string }>`
   flex-wrap: wrap;
   margin-bottom: 40px;
   li {
+    position: relative;
     width: 23%;
     height: 153px;
     border-radius: 16px;
@@ -60,6 +58,7 @@ const FirstLine = styled.ul<{ border: string }>`
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    box-shadow: var(--box-shadow);
     &:hover {
       background-color: var(--home-right_hover);
     }
@@ -312,7 +311,7 @@ export default function Index() {
   }, []);
 
   const borderStyle = useMemo(() => {
-    return theme ? 'unset' : '1px solid var(--bs-border-color)';
+    return theme ? '1px solid #29282F' : 'unset';
   }, [theme]);
 
   return (
@@ -327,51 +326,51 @@ export default function Index() {
             <div className="vaultInner">
               <InfoItem className="left">
                 <div>
-                  <IconStyle src={theme ? BalanceIconDark : BalanceIconLight} alt="" />
+                  <IconStyle src={BalanceIcon} alt="" />
                 </div>
                 <div className="info-right">
                   <div className="title">{t('Assets.TotalBalance')}</div>
-                  <div className="balance num">${formatNumber(Number(totalBalance))}</div>
+                  <div className="balance num topLft">${formatNumber(Number(totalBalance))}</div>
                 </div>
               </InfoItem>
-              <div className="right">
-                <InfoItem>
-                  <div>
-                    <IconStyle src={theme ? WalletIconDark : WalletIconLight} alt="" />
-                  </div>
-                  <div className="info-right">
-                    <div className="title">{t('Assets.Wallet')}</div>
-                    <div className="num">4</div>
-                  </div>
-                </InfoItem>
-                <InfoItem>
-                  <div>
-                    <IconStyle src={theme ? SignerIconDark : SignerIconLight} alt="" />
-                  </div>
-                  <div className="info-right">
-                    <div className="title">{t('Assets.MultiSign')}</div>
-                    <div className="num">{totalSigner}</div>
-                  </div>
-                </InfoItem>
-                <InfoItem>
-                  <div>
-                    <IconStyle src={theme ? ChainIconDark : ChainIconLight} alt="" />
-                  </div>
-                  <div className="info-right">
-                    <div className="title">{t('Assets.Chain')}</div>
-                    <div className="num">2</div>
-                  </div>
-                </InfoItem>
-                <OptionBox>
-                  <Link to="/assets/register">
-                    <Button>{t('application.Register')}</Button>
-                  </Link>
-                  <Button variant="outline-primary" onClick={() => setShowVaultDetail(!showVaultDetail)}>
-                    <span>{t('Assets.Detail')}</span>
-                    {showVaultDetail ? <ChevronUp /> : <ChevronDown />}
-                  </Button>
-                </OptionBox>
-              </div>
+              {/*<div className="right">*/}
+              <InfoItem>
+                <div>
+                  <IconStyle src={WalletIcon} alt="" />
+                </div>
+                <div className="info-right">
+                  <div className="title">{t('Assets.Wallet')}</div>
+                  <div className="num">4</div>
+                </div>
+              </InfoItem>
+              <InfoItem>
+                <div>
+                  <IconStyle src={SignerIcon} alt="" />
+                </div>
+                <div className="info-right">
+                  <div className="title">{t('Assets.MultiSign')}</div>
+                  <div className="num">{totalSigner}</div>
+                </div>
+              </InfoItem>
+              <InfoItem>
+                <div>
+                  <IconStyle src={ChainIcon} alt="" />
+                </div>
+                <div className="info-right">
+                  <div className="title">{t('Assets.Chain')}</div>
+                  <div className="num">2</div>
+                </div>
+              </InfoItem>
+              <OptionBox>
+                <Link to="/assets/register">
+                  <Button style={{ height: '36px' }}>{t('application.Register')}</Button>
+                </Link>
+                <DetailButton onClick={() => setShowVaultDetail(!showVaultDetail)}>
+                  <span>{t('Assets.Detail')}</span>
+                  <ArrowIconSVG style={{ transform: showVaultDetail ? 'rotate(180deg)' : 'unset' }} />
+                </DetailButton>
+              </OptionBox>
+              {/*</div>*/}
             </div>
             {showVaultDetail && (
               <VaultInfo>
@@ -426,6 +425,7 @@ export default function Index() {
             <div style={{ textAlign: 'left' }}>
               <p className="tips">{/* ≈ {formatNumber(Number(SCRValue.toFixed(2)))} U 1SCR ≈ {SCR_PRICE} U */}</p>
             </div>
+            <BorderDecoration color="#FF86CB" />
           </li>
           <li className="center">
             <LiHead>
@@ -435,6 +435,7 @@ export default function Index() {
             <div className="tips">
               {t('Assets.FloorPrice')} : <span>{nftData.floorPrice} ETH</span>
             </div>
+            <BorderDecoration color="#FFB842" />
           </li>
           <li>
             <LiHead>
@@ -451,6 +452,7 @@ export default function Index() {
                 </span>
               )}
             </AssetBox>
+            <BorderDecoration color="#03DACD" />
           </li>
           <li className="center">
             <LiHead>
@@ -469,6 +471,7 @@ export default function Index() {
                 </span>
               )}
             </AssetBox>
+            <BorderDecoration color="#4378FF" />
           </li>
         </FirstLine>
 
@@ -505,6 +508,7 @@ const VaultOverview = styled.div<{ border: string }>`
   border: ${(props) => props.border};
   border-radius: 16px;
   overflow: hidden;
+  box-shadow: var(--box-shadow);
   .vaultInner {
     display: flex;
     justify-content: space-between;
@@ -517,7 +521,7 @@ const VaultOverview = styled.div<{ border: string }>`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 60px;
+    //gap: 60px;
   }
 
   @media (max-width: 950px) {
@@ -545,6 +549,9 @@ const InfoItem = styled.li`
   display: flex;
   align-items: center;
   gap: 22px;
+  .topLft {
+    color: #ffa842;
+  }
   .title {
     font-size: 14px;
     color: var(--bs-body-color);
@@ -691,8 +698,30 @@ const OptionBox = styled.div`
     &:hover {
       background-color: unset !important;
     }
-    svg {
-      margin-left: 6px;
-    }
   }
+`;
+
+const DetailButton = styled.button`
+  min-width: 111px;
+  font-size: 14px;
+  height: 36px;
+  background: var(--bs-d-button-bg);
+  border-radius: 8px;
+  opacity: 1;
+  border: 1px solid var(--bs-d-button-border);
+  color: var(--bs-body-color_active);
+  .svg-fill {
+    fill: var(--bs-body-color) !important;
+  }
+`;
+
+const BorderDecoration = styled.div<{ color: string }>`
+  width: 8px;
+  height: calc(100% - 48px);
+  box-sizing: border-box;
+  background-color: ${(props) => props.color};
+  position: absolute;
+  top: 24px;
+  left: 0%;
+  border-radius: 0 100px 100px 0;
 `;

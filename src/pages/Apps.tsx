@@ -72,4 +72,10 @@ export default function Apps() {
 
 const AppBox = styled(Row)`
   padding: 20px 0;
+
+  div[class^='col'] {
+    min-height: 116px;
+    display: flex;
+    margin-bottom: 24px;
+  }
 `;

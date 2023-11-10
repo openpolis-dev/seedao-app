@@ -7,7 +7,7 @@ import ProposalSubNav from 'components/proposal/proposalSubNav';
 import useProposalCategory from 'hooks/useProposalCategory';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import styled from 'styled-components';
-import LoadingBox from 'components/loadingBox';
+import { AppActionType, useAuthContext } from '../../providers/authProvider';
 
 export default function ProposalCategory() {
   const { id } = useParams();
@@ -16,16 +16,18 @@ export default function ProposalCategory() {
   const [proposals, setProposals] = useState<IBaseProposal[]>([]);
   const [orderType, setOrderType] = useState<'new' | 'old'>('new');
   const [hasMore, setHasMore] = useState(false);
-  const [loading, setLoading] = useState(false);
 
   const ProposalNav = useProposalCategory(Number(id));
+
+  const { dispatch } = useAuthContext();
 
   const getProposals = async () => {
     const _id = Number(id);
     if (!_id) {
       return;
     }
-    setLoading(true);
+    // setLoading(true);
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
       const res = await requests.proposal.getProposalsBySubCategory({
         page,
@@ -39,7 +41,8 @@ export default function ProposalCategory() {
     } catch (error) {
       console.error(error);
     } finally {
-      setLoading(false);
+      // setLoading(false);
+      dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }
   };
 
@@ -70,13 +73,14 @@ export default function ProposalCategory() {
             ))}
           </ProposalBox>
         </InfiniteScroll>
-        {loading && <LoadingBox />}
       </CategoryPage>
     </BoxOuter>
   );
 }
 
-const NavBox = styled.div``;
+const NavBox = styled.div`
+  min-height: 30px;
+`;
 const BoxOuter = styled.div`
   //padding: 40px;
   min-height: 100%;

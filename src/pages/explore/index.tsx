@@ -1,12 +1,14 @@
 import styled from 'styled-components';
 import { ContainerPadding } from 'assets/styles/global';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Project from 'pages/project';
 import Guild from 'pages/guild';
 import { useTranslation } from 'react-i18next';
 import Tabbar from 'components/common/tabbar';
+import { useSearchParams } from 'react-router-dom';
 
 export default function ExplorePage() {
+  const [search] = useSearchParams();
   const { t } = useTranslation();
   const [key, setKey] = useState(0);
 
@@ -20,6 +22,16 @@ export default function ExplorePage() {
         return <></>;
     }
   };
+
+  useEffect(() => {
+    const query_tab = search.get('tab');
+    if (query_tab === 'guild') {
+      setKey(1);
+    } else {
+      setKey(0);
+    }
+  }, [search]);
+
   return (
     <OuterBox>
       <TitBox>
@@ -29,7 +41,7 @@ export default function ExplorePage() {
               { key: 0, title: t('menus.Project') },
               { key: 1, title: t('menus.Guild') },
             ]}
-            defaultActiveKey={0}
+            defaultActiveKey={key}
             onSelect={(v: string | number) => setKey(v as number)}
           />
         </div>

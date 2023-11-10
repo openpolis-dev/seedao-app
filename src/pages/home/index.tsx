@@ -21,6 +21,7 @@ import { useAuthContext } from '../../providers/authProvider';
 import ArrowImg from '../../assets/Imgs/arrow.png';
 import LinkImg from '../../assets/Imgs/link.svg';
 import { useNavigate } from 'react-router-dom';
+import ProposalImg from '../../assets/Imgs/home/proposal.png';
 
 const CITY_HALL = 'https://seedao.notion.site/07c258913c5d4847b59271e2ae6f7c66';
 const CITY_HALL_MEMBERS = 'https://www.notion.so/3913d631d7bc49e1a0334140e3cd84f5';
@@ -29,7 +30,7 @@ const Box = styled.div`
   background: var(--bs-background);
   .lline {
     display: flex;
-    margin: 60px 20px;
+    margin: 40px 20px;
   }
 `;
 
@@ -37,16 +38,26 @@ const BannerBox = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 349px;
+  height: 295px;
   background: #19131f url(${BgImg}) no-repeat right center;
   background-size: auto 100%;
   border-radius: 16px;
   box-sizing: border-box;
-  margin: 24px 32px 60px;
+  margin: 24px 32px 40px;
 `;
 
 const ActiveBox = styled.div`
   margin: 0 40px 0 0;
+
+  div[class^='col'] {
+    min-height: 116px;
+    display: flex;
+    margin-bottom: 24px;
+  }
+  .boxApp {
+    border: 1px solid var(--bs-border-color);
+    box-shadow: var(--box-shadow);
+  }
 `;
 
 const TitBox = styled.div`
@@ -74,7 +85,6 @@ const LineBox = styled.div`
   display: flex;
   align-items: center;
   width: 100%;
-  margin-bottom: 16px;
   .rhtLine {
     width: 1px;
     height: 80px;
@@ -113,22 +123,22 @@ const CityBox = styled.div`
 const LinkBox = styled(Row)`
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
   .inn {
     border-radius: 10px;
     overflow: hidden;
     cursor: pointer;
-    background-color: var(--home-right);
-    border: 1px solid var(--bs-border-color);
-    padding: 30px 20px;
+    background-color: var(--bs-box--background);
+    //border: 1px solid var(--bs-border-color);
+    box-shadow: var(--box-shadow);
+    padding: 14px;
     box-sizing: border-box;
     display: flex;
     align-items: center;
+    justify-content: space-between;
     margin-bottom: 24px;
-    position: relative;
     .link {
-      position: absolute;
-      right: 20px;
-      top: 20px;
       display: none;
     }
     &:hover {
@@ -139,20 +149,16 @@ const LinkBox = styled(Row)`
     }
   }
   .lft {
-    border-radius: 100%;
-    width: 40px;
-    height: 40px;
     display: flex;
     align-items: center;
-    justify-content: center;
-    margin-right: 20px;
     font-size: 22px;
     font-weight: bold;
+    flex-grow: 1;
     color: var(--bs-primary);
   }
   .tit {
     font-size: 14px;
-    margin-bottom: 5px;
+    margin-left: 10px;
     font-family: 'Poppins-SemiBold';
     color: var(--bs-body-color_active);
   }
@@ -203,6 +209,47 @@ const FontBox = styled.div`
   }
 `;
 
+const BtmBox = styled.div`
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+  background-color: var(--bs-box--background);
+  border: 1px solid var(--bs-border-color_opacity);
+  box-shadow: var(--box-shadow);
+
+  padding: 14px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  .tit {
+    font-size: 14px;
+    font-family: Poppins-SemiBold;
+    font-weight: 600;
+    color: var(--bs-body-color_active);
+    line-height: 22px;
+  }
+  .desc {
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--bs-body-color);
+    line-height: 18px;
+    margin-top: 8px;
+    margin-left: 10px;
+  }
+
+  .link {
+    display: none;
+  }
+  &:hover {
+    background-color: var(--home-right_hover);
+    .link {
+      display: block;
+    }
+  }
+`;
+
 const getDatafromNftscan = (contract: string, base?: string) => {
   return axios.get(`${base || 'https://polygonapi.nftscan.com'}/api/v2/statistics/collection/${contract}`, {
     headers: {
@@ -227,6 +274,11 @@ export default function Home() {
   const events = useMemo(() => {
     // @ts-ignore
     return Links.apps.map((item) => ({ ...item, name: t(item.name) as string, desc: t(item.desc) as string }));
+  }, [t]);
+
+  const Publicitys = useMemo(() => {
+    // @ts-ignore
+    return Links.publicity.map((item) => ({ ...item, name: t(item.name) as string, desc: t(item.desc) as string }));
   }, [t]);
 
   useEffect(() => {
@@ -341,8 +393,8 @@ export default function Home() {
               </div>
             </TitBox>
             <Row>
-              {events.slice(0, 6).map((item, idx) => (
-                <Col key={idx} sm={12} md={6} lg={6} xl={6}>
+              {events.slice(0, 9).map((item, idx) => (
+                <Col key={idx} sm={12} md={4} lg={4} xl={4}>
                   <AppCard {...item} />
                 </Col>
               ))}
@@ -351,42 +403,68 @@ export default function Home() {
         </Col>
         <Col md={4}>
           <CityBox>
-            <TitBox>
-              <span>{t('Home.Publicity')}</span>
-              <div className="toGo">
-                {t('Home.viewAll')}
-                <img src={ArrowImg} alt="" />
-              </div>
-            </TitBox>
+            <a href="https://seedao.notion.site/f57031667089473faa7ea3560d05960c" target="_blank" rel="noreferrer">
+              <TitBox>
+                <span>{t('Home.Publicity')}</span>
+                <div className="toGo">
+                  {t('Home.viewAll')}
+                  <img src={ArrowImg} alt="" />
+                </div>
+              </TitBox>
+            </a>
+
             <LinkBox>
-              <Col onClick={() => window.open(CITY_HALL, '_blank')}>
-                <div className="inn fst">
-                  <div className="link">
-                    <img src={LinkImg} alt="" />
-                  </div>
-                  <div className="lft">
-                    <img src={CityHallImg} alt="" />
-                  </div>
-                  <div>
-                    <div className="tit">{t('Home.CityHall')}</div>
-                    <div className="tBtm">{CITY_HALL}</div>
-                  </div>
-                </div>
-              </Col>
-              <Col onClick={() => window.open(CITY_HALL_MEMBERS, '_blank')}>
-                <div className="inn snd">
-                  <div className="link">
-                    <img src={LinkImg} alt="" />
-                  </div>
-                  <div className="lft">
-                    <img src={MembersImg} alt="" />
-                  </div>
-                  <div>
-                    <div className="tit">{t('Home.CityHallMembers')}</div>
-                    <div className="tBtm">{CITY_HALL_MEMBERS}</div>
-                  </div>
-                </div>
-              </Col>
+              {/*<Col onClick={() => window.open(CITY_HALL, '_blank')}>*/}
+              {/*  <div className="inn fst">*/}
+              {/*     <div className="lft">*/}
+              {/*       <img src={CityHallImg} alt="" />*/}
+              {/*       <div className="tit">{t('Home.CityHall')}</div>*/}
+              {/*     </div>*/}
+
+              {/*    <div className="link">*/}
+              {/*      <img src={LinkImg} alt="" />*/}
+              {/*    </div>*/}
+              {/*  </div>*/}
+
+              {/*</Col>*/}
+              {/*<Col onClick={() => window.open(CITY_HALL_MEMBERS, '_blank')}>*/}
+              {/*  <div className="inn snd">*/}
+              {/*    <div className="lft">*/}
+              {/*      <img src={MembersImg} alt="" />*/}
+              {/*      <div className="tit">{t('Home.CityHallMembers')}</div>*/}
+              {/*    </div>*/}
+              {/*    <div className="link">*/}
+              {/*      <img src={LinkImg} alt="" />*/}
+              {/*    </div>*/}
+              {/*  </div>*/}
+              {/*</Col>*/}
+              {/*<Col onClick={() => window.open(CITY_HALL_MEMBERS, '_blank')}>*/}
+              {/*  <div className="inn snd">*/}
+              {/*    <div className="lft">*/}
+              {/*      <img src={ProposalImg} alt="" />*/}
+              {/*      <div className="tit">{t('Home.proposal')}</div>*/}
+              {/*    </div>*/}
+              {/*    <div className="link">*/}
+              {/*      <img src={LinkImg} alt="" />*/}
+              {/*    </div>*/}
+              {/*  </div>*/}
+              {/*</Col>*/}
+
+              {Publicitys.map((item: any, index) => (
+                <Col key={`publicity_${index}`}>
+                  <a href={item.link} target="_blank" rel="noreferrer">
+                    <BtmBox>
+                      <div>
+                        <div className="tit">{item.name}</div>
+                        <div className="desc">{item.time}</div>
+                      </div>
+                      <div className="link">
+                        <img src={LinkImg} alt="" />
+                      </div>
+                    </BtmBox>
+                  </a>
+                </Col>
+              ))}
             </LinkBox>
           </CityBox>
         </Col>

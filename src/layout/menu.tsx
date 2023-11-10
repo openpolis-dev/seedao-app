@@ -41,71 +41,15 @@ import GovernImg from '../assets/Imgs/darkMenu/govern.svg';
 import GovernImgActive from '../assets/Imgs/darkMenu/govern_active.png';
 import GovernImgLight from '../assets/Imgs/lightMenu/govern.svg';
 
+import PubImg from '../assets/Imgs/darkMenu/pub.svg';
+import PubImgActive from '../assets/Imgs/darkMenu/pub_active.png';
+import PubImgLight from '../assets/Imgs/lightMenu/pub.svg';
+
 import React from 'react';
 import useCheckLogin from 'hooks/useCheckLogin';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import { WalletType } from 'wallet/wallet';
 import AppVersion from '../components/version';
-
-const Box = styled.div`
-  background: var(--bs-background);
-  border-right: 1px solid var(--bs-border-color);
-  box-sizing: border-box;
-  padding: 20px;
-  width: 153px;
-  flex-shrink: 0;
-  position: relative;
-
-  &.expand.float {
-    position: absolute;
-    z-index: 100;
-    top: 60px;
-    left: 0;
-    height: calc(100% - 60px);
-  }
-  &.expand {
-    animation: 'expand' 0.1s ease;
-    animation-fill-mode: forwards;
-  }
-  &.unexpand {
-    animation: 'unexpand' 0.1s ease;
-    animation-fill-mode: forwards;
-    .liLine {
-      justify-content: center;
-    }
-    .topLi {
-      justify-content: center;
-    }
-  }
-  @keyframes expand {
-    0% {
-      width: 94px;
-    }
-    25% {
-      width: 110px;
-    }
-    50% {
-      width: 130px;
-    }
-    100% {
-      width: 153px;
-    }
-  }
-  @keyframes unexpand {
-    0% {
-      width: 153px;
-    }
-    50% {
-      width: 130px;
-    }
-    75% {
-      width: 110px;
-    }
-    100% {
-      width: 94px;
-    }
-  }
-`;
 
 const LftLi = styled.div<{ selected?: boolean }>`
   padding: 15px 0;
@@ -116,6 +60,26 @@ const LftLi = styled.div<{ selected?: boolean }>`
   cursor: pointer;
   font-size: 14px;
   font-weight: 500;
+  .hover {
+    position: relative;
+    .lftDecor {
+      display: block;
+      background: var(--bs-primary);
+      z-index: 9;
+      position: absolute;
+      border-bottom-right-radius: 40px;
+      border-top-right-radius: 40px;
+      width: 4px;
+      height: 24px;
+      left: -20px;
+      top: 0;
+    }
+  }
+  .none {
+    .lftDecor {
+      display: none;
+    }
+  }
   .name {
     padding-left: 10px;
     padding-top: 3px;
@@ -152,6 +116,69 @@ const LftLi = styled.div<{ selected?: boolean }>`
     top: 8px;
     left: -16px;
     transform: translateX(50%) rotate(-90deg);
+  }
+`;
+
+const Box = styled.div`
+  background: var(--bs-background);
+  border-right: 1px solid var(--bs-border-color);
+  box-sizing: border-box;
+  padding: 20px;
+  width: 153px;
+  flex-shrink: 0;
+  position: relative;
+
+  &.expand.float {
+    position: absolute;
+    z-index: 100;
+    top: 60px;
+    left: 0;
+    height: calc(100% - 60px);
+  }
+  &.expand {
+    animation: 'expand' 0.1s ease;
+    animation-fill-mode: forwards;
+  }
+  &.unexpand {
+    animation: 'unexpand' 0.1s ease;
+    animation-fill-mode: forwards;
+    .liLine {
+      justify-content: center;
+    }
+    .topLi {
+      justify-content: center;
+    }
+    .lftDecor {
+      left: -35px;
+    }
+  }
+  @keyframes expand {
+    0% {
+      width: 94px;
+    }
+    25% {
+      width: 110px;
+    }
+    50% {
+      width: 130px;
+    }
+    100% {
+      width: 153px;
+    }
+  }
+  @keyframes unexpand {
+    0% {
+      width: 153px;
+    }
+    50% {
+      width: 130px;
+    }
+    75% {
+      width: 110px;
+    }
+    100% {
+      width: 94px;
+    }
   }
 `;
 
@@ -281,6 +308,20 @@ const items: MenuItemType[] = [
     link: { href: '/proposal' },
   },
   {
+    title: 'menus.Pub',
+    icon: {
+      dark: {
+        nor: PubImg,
+        active: PubImgActive,
+      },
+      light: {
+        nor: PubImgLight,
+        active: PubImgActive,
+      },
+    },
+    link: { href: '/pub' },
+  },
+  {
     title: 'menus.city-hall',
     icon: {
       dark: {
@@ -341,10 +382,13 @@ const MenuItem = ({ data, onSelectMenu, selected, open, theme }: IMenuItem) => {
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
     >
-      {/*<span className="icon">{data.icon.name}</span>*/}
-      <img src={data.icon[theme ? 'dark' : 'light'][selected ? 'active' : 'nor']} alt="" />
-      {open && <span className="name">{data.title}</span>}
-      {!open && hover && <span className="tooltip-content">{data.title}</span>}
+      <div className={selected ? 'hover' : 'none'}>
+        <div className="lftDecor" />
+        {/*<span className="icon">{data.icon.name}</span>*/}
+        <img src={data.icon[theme ? 'dark' : 'light'][selected ? 'active' : 'nor']} alt="" />
+        {open && <span className="name">{data.title}</span>}
+        {!open && hover && <span className="tooltip-content">{data.title}</span>}
+      </div>
     </LftLi>
   );
 };
@@ -401,7 +445,7 @@ export default function Menu({ isMedium }: { isMedium: boolean }) {
           onSelectMenu={onSelectMenu}
           selected={
             pathname.startsWith(item.link.href) ||
-            (item.link.href.startsWith('/explore') && (pathname.includes('project') || pathname.includes('guild')))
+            (item.link.href.startsWith('/explore') && (pathname.includes('/project') || pathname.includes('/guild')))
           }
         />
       ))}

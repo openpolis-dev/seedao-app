@@ -28,11 +28,11 @@ const ItemBox = styled.div`
 `;
 
 const ListBox = styled.div`
-  &:after {
-    content: '';
-    display: block;
-    clear: both;
-  }
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: stretch;
+  margin-right: -1%;
 `;
 
 export interface listObj {
@@ -90,7 +90,8 @@ export default function Index() {
     const stt = current === 1 ? 'closed' : '';
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     const obj: IPageParams = {
-      status: stt,
+      // status: stt,
+      status: 'open,pending_close',
       page: pageCur,
       size: pageSize,
       sort_order: 'desc',
@@ -127,7 +128,7 @@ export default function Index() {
   };
 
   const openDetail = (id: number) => {
-    // navigate(`/project/info/${id}`);
+    navigate(`/project/info/${id}`);
   };
 
   return (
@@ -140,7 +141,7 @@ export default function Index() {
         <ItemBox>
           <ListBox>
             {proList.map((item) => (
-              <ProjectOrGuildItem key={item.id} data={item} onClickItem={openDetail} theme={theme} />
+              <ProjectOrGuildItem key={item.id} data={item} onClickItem={openDetail} />
             ))}
           </ListBox>
         </ItemBox>

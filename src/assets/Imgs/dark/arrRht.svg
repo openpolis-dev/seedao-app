@@ -1,10 +1,1 @@
-<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g id="Group 580">
-<rect id="Rectangle 1299" width="32" height="32" rx="8" transform="matrix(-1 0 0 1 32 0)" fill="#1A1323"/>
-<g id="vuesax/linear/arrow-left">
-<g id="arrow-left">
-<path id="Vector" d="M13.9998 21.2801L18.3464 16.9334C18.8598 16.4201 18.8598 15.5801 18.3464 15.0668L13.9998 10.7201" stroke="#B0B0B0" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-</g>
-</g>
-</g>
-</svg>
+<svg fill="none" height="32" viewBox="0 0 32 32" width="32" xmlns="http://www.w3.org/2000/svg"><rect fill="#1a1323" height="32" rx="8" transform="matrix(-1 0 0 1 32 0)" width="32"/><path d="m13.9998 21.2801 4.3466-4.3467c.5134-.5133.5134-1.3533 0-1.8666l-4.3466-4.3467" stroke="#b0b0b0" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="1.5"/></svg>

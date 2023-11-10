@@ -12,6 +12,28 @@ export interface ICategory extends IBaseCategory {
   children: IBaseCategory[];
 }
 
+export enum VoteType {
+  Open = 'open',
+  Closed = 'close',
+}
+type VoteOption = {
+  html: string;
+  percent: number;
+  voters: number;
+};
+
+export interface Poll {
+  title: string;
+  address: string;
+  alias?: string;
+  arweave?: string;
+  token_id: number;
+  status: VoteType;
+  leftTime: string;
+  options: VoteOption[];
+  totalVotes: number;
+}
+
 type ProposalTag = {
   id: number;
   name: string;
@@ -25,6 +47,7 @@ export interface IBaseProposal {
   title: string;
   is_pin: string;
   is_delete: string;
+  slug: string;
   first_post: {
     id: number;
     content: string;
@@ -45,4 +68,5 @@ export interface IBaseProposal {
     name: string;
     background: string;
   };
+  polls: Poll[];
 }

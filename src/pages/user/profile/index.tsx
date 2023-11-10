@@ -47,7 +47,7 @@ export default function Profile() {
   const {
     state: { userData },
   } = useAuthContext();
-  const sns = useParseSNS(userData?.wallet);
+  // const sns = useParseSNS(userData?.wallet);
   const { t } = useTranslation();
   const { Toast, showToast } = useToast();
   const [userName, setUserName] = useState<string | undefined>('');
@@ -59,16 +59,17 @@ export default function Profile() {
   const [sbt, setSbt] = useState<any[]>([]);
   const [seed, setSeed] = useState<any[]>([]);
   const [wallet, setWallet] = useState();
+  const [sns, setSns] = useState('');
   const [detail, setDetail] = useState<any>();
 
-  useEffect(() => {
+  const getDetail = () => {
     if (userData) {
       let detail = (userData as any).data;
       setDetail(detail);
       setUserName(detail.nickname);
       setAvatar(detail.avatar);
       setWallet(detail.wallet);
-
+      setSns(detail.sns);
       setBio(detail.bio);
       setRoles(detail.roles!);
 
@@ -78,7 +79,18 @@ export default function Profile() {
       setSbt(sbtFor);
       setSeed(detail.seed);
     }
-  }, [userData]);
+  };
+
+  useEffect(() => {
+    if (!userData) return;
+    getDetail();
+  }, []);
+
+  useEffect(() => {
+    if (!userData) return;
+    console.error(userData);
+    getDetail();
+  }, [userData, (userData as any)?.data?.sns]);
 
   const switchRoles = (role: string) => {
     let str: string = '';
@@ -204,7 +216,7 @@ export default function Profile() {
         <TitleBox>{t('My.MyProfile')}</TitleBox>
         <HeadBox>
           <AvatarBox>
-            <ImgBox onClick={() => removeUrl()}>
+            <ImgBox>
               <img src={avatar ? avatar : defaultImg} alt="" />
             </ImgBox>
           </AvatarBox>
@@ -250,9 +262,7 @@ export default function Profile() {
               <li key={`sbtInner_${index}`}>
                 <span className="iconLft">{returnSocial(item.network, item.identity)}</span>
               </li>
-            ) : (
-              <></>
-            ),
+            ) : null,
           )}
           {detail?.email && (
             <li>
