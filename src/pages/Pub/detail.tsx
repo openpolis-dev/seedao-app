@@ -275,9 +275,12 @@ export default function PubDetail() {
         {/*</BackBox>*/}
 
         <BackerNav title={title} to={`/pub`} mb="40px" />
-        <ImgBox>
-          <img src={imgUrl} alt="" />
-        </ImgBox>
+        {!!imgUrl && (
+          <ImgBox>
+            <img src={imgUrl} alt="" />
+          </ImgBox>
+        )}
+
         <FlexBox>
           <TopRht>
             <TagBox className={returnStatus(status)}> {status}</TagBox>
