@@ -310,7 +310,7 @@ const HeadeStyle = styled.header`
   top: 0;
   left: 0;
   right: 0;
-  z-index: 999;
+  z-index: 99;
   background: var(--bs-background);
   border-bottom: 1px solid var(--bs-border-color);
 
