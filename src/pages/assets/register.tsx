@@ -141,8 +141,8 @@ export default function Register() {
         records: list.map((item) => ({
           amount: Number(item.amount),
           asset_name: item.assetType,
-          comment: item.content,
-          detailed_type: item.note,
+          comment: item.note,
+          detailed_type: item.content,
           entity: selectSource.type,
           entity_id: selectSource.id,
           target_user_wallet: item.address,
