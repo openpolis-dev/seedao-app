@@ -23,11 +23,12 @@ type InputUser = {
 };
 
 interface Iprops {
+  oldMembers: string[];
   closeAdd: (refresh?: boolean) => void;
   id: string;
 }
 export default function Add(props: Iprops) {
-  const { closeAdd, id } = props;
+  const { oldMembers, closeAdd, id } = props;
   const { t } = useTranslation();
   const { dispatch } = useAuthContext();
   const { showToast } = useToast();
@@ -101,13 +102,21 @@ export default function Add(props: Iprops) {
     const _memberList: string[] = [];
 
     lst.forEach((item) => {
-      const wallet = sns2walletMap.get(item.walletOrSNS) || item.walletOrSNS;
+      const wallet = sns2walletMap.get(item.walletOrSNS) || item.walletOrSNS.toLocaleLowerCase();
       if (item.role === UserRole.Member) {
         _memberList.push(wallet);
       } else {
         _adminList.push(wallet);
       }
     });
+
+    for (const item of [..._adminList, ..._memberList]) {
+      if (oldMembers.includes(item)) {
+        showToast(t('Guild.MemberExist'), ToastType.Danger);
+        dispatch({ type: AppActionType.SET_LOADING, payload: null });
+        return;
+      }
+    }
 
     try {
       const params: IUpdateStaffsParams = {

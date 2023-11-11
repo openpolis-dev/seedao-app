@@ -55,17 +55,17 @@ const InnerBox = styled.div`
 `;
 
 interface Iprops {
+  oldMembers: string[];
   closeAdd: (shouldUpdate?: boolean) => void;
   canUpdateSponsor: boolean;
 }
 export default function Add(props: Iprops) {
-  const { closeAdd } = props;
+  const { closeAdd, oldMembers } = props;
   const { t } = useTranslation();
   const { dispatch } = useAuthContext();
   const { showToast } = useToast();
 
   const [adminList, setAdminList] = useState<string[]>(['']);
-  const [memberList] = useState<string[]>(['']);
 
   const handleInput = (e: ChangeEvent, index: number) => {
     const { value } = e.target as HTMLInputElement;
@@ -126,9 +126,16 @@ export default function Add(props: Iprops) {
     }
     const _adminList: string[] = [];
     adminList.forEach((item) => {
-      const wallet = sns2walletMap.get(item) || item;
+      const wallet = sns2walletMap.get(item) || item.toLocaleLowerCase();
       _adminList.push(wallet);
     });
+    for (const item of [..._adminList]) {
+      if (oldMembers.includes(item.toLocaleLowerCase())) {
+        showToast(t('city-hall.MemberExist'), ToastType.Danger);
+        dispatch({ type: AppActionType.SET_LOADING, payload: null });
+        return;
+      }
+    }
 
     try {
       const params = {
