@@ -348,7 +348,7 @@ export default function Profile() {
               <InputBox>
                 <Form.Control
                   type="text"
-                  placeholder="eg, https://twitter.com/..."
+                  placeholder="https://twitter.com/..."
                   value={twitter}
                   onChange={(e) => handleInput(e, 'twitter')}
                 />
@@ -373,7 +373,12 @@ export default function Profile() {
                 {t('My.Mirror')}
               </div>
               <InputBox>
-                <Form.Control type="text" placeholder="" value={mirror} onChange={(e) => handleInput(e, 'mirror')} />
+                <Form.Control
+                  type="text"
+                  placeholder="https://mirror.xyz/..."
+                  value={mirror}
+                  onChange={(e) => handleInput(e, 'mirror')}
+                />
               </InputBox>
             </li>
             <li>
