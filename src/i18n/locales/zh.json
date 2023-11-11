@@ -144,7 +144,7 @@
     "Credit": "积分",
     "Token": "Token",
     "Pending": "申请关闭中",
-    "MemberExist": "该成员已经存在"
+    "MemberExist": "请不要重复添加成员"
   },
   "Guild": {
     "create": "创建公会",
@@ -201,7 +201,7 @@
     "PointsOrToken": "积分或Token",
     "Credit": "积分",
     "Token": "Token",
-    "MemberExist": "该成员已经存在"
+    "MemberExist": "请不要重复添加成员"
   },
   "city-hall": {
     "Members": "成员",
@@ -247,7 +247,7 @@
     "GovernanceNodeResultDesc": "计算治理节点资质结果",
     "CloseProjectAudit": "关闭项目审核",
     "IssueAssets": "发放资产",
-    "MemberExist": "该成员已经存在"
+    "MemberExist": "请不要重复添加成员"
   },
   "GovernanceNodeResult": {
     "SearchTip": "SNS",

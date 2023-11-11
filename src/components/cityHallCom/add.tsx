@@ -129,7 +129,14 @@ export default function Add(props: Iprops) {
       const wallet = sns2walletMap.get(item) || item.toLocaleLowerCase();
       _adminList.push(wallet);
     });
-    for (const item of [..._adminList]) {
+    const unique_list = Array.from(new Set(_adminList));
+    if (_adminList.length !== unique_list.length) {
+      showToast(t('city-hall.MemberExist'), ToastType.Danger);
+      dispatch({ type: AppActionType.SET_LOADING, payload: null });
+      return;
+    }
+
+    for (const item of unique_list) {
       if (oldMembers.includes(item.toLocaleLowerCase())) {
         showToast(t('city-hall.MemberExist'), ToastType.Danger);
         dispatch({ type: AppActionType.SET_LOADING, payload: null });
@@ -172,10 +179,10 @@ export default function Add(props: Iprops) {
                 </LeftInputBox>
                 <OptionBox>
                   <PlusMinusButton
-                    showMinus={index === adminList.length - 1}
-                    showPlus={!(!index && index === adminList.length - 1)}
-                    handleMinus={() => removeAdmin(index)}
-                    handlePlus={handleAddAdmin}
+                    showMinus={!(!index && index === adminList.length - 1)}
+                    showPlus={index === adminList.length - 1}
+                    onClickMinus={() => removeAdmin(index)}
+                    onClickPlus={handleAddAdmin}
                   />
                 </OptionBox>
               </li>

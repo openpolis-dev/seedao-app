@@ -109,8 +109,15 @@ export default function Add(props: Iprops) {
         _adminList.push(wallet);
       }
     });
+    const total_list = [..._adminList, ..._memberList];
+    const unique_list = Array.from(new Set(total_list));
+    if (total_list.length !== unique_list.length) {
+      showToast(t('Project.MemberExist'), ToastType.Danger);
+      dispatch({ type: AppActionType.SET_LOADING, payload: null });
+      return;
+    }
 
-    for (const item of [..._adminList, ..._memberList]) {
+    for (const item of unique_list) {
       if (oldMembers.includes(item)) {
         showToast(t('Guild.MemberExist'), ToastType.Danger);
         dispatch({ type: AppActionType.SET_LOADING, payload: null });

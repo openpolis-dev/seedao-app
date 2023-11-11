@@ -143,7 +143,7 @@
     "Credit": "Points",
     "Token": "Token",
     "Pending": "Pending close",
-    "MemberExist": "Member already exists"
+    "MemberExist": "Please do not add members repeatedly"
   },
   "Guild": {
     "create": "Create Guild",
@@ -200,7 +200,7 @@
     "PointsOrToken": "Points or Token",
     "Credit": "Points",
     "Token": "Token",
-    "MemberExist": "Member already exists"
+    "MemberExist": "Please do not add members repeatedly"
   },
   "city-hall": {
     "Members": "Members",
@@ -247,7 +247,7 @@
     "GovernanceNodeResultDesc": "SeeDAO Node qualification calculation result.",
     "CloseProjectAudit": "Audit Close Project",
     "IssueAssets": "Issue Assets",
-    "MemberExist": "Member already exists"
+    "MemberExist": "Please do not add members repeatedly"
   },
   "GovernanceNodeResult": {
     "SearchTip": "SNS",
