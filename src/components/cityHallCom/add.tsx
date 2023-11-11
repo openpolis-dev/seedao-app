@@ -20,7 +20,6 @@ const CardFooter = styled.div`
 `;
 
 const ItemBox = styled.div`
-  margin-top: 20px;
   font-size: 14px;
   li {
     display: flex;
@@ -37,9 +36,6 @@ const ItemBox = styled.div`
   input {
     margin-right: 10px;
     min-width: 450px;
-  }
-  span {
-    margin-left: 10px;
   }
   .iconForm {
     color: var(--bs-primary);
@@ -202,9 +198,7 @@ export default function Add(props: Iprops) {
   );
 }
 
-const AddMemberModalWrapper = styled(BasicModal)`
-  width: 550px;
-`;
+const AddMemberModalWrapper = styled(BasicModal)``;
 
 const LeftInputBox = styled(InputGroup)`
   width: 400px;
