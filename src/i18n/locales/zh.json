@@ -265,7 +265,8 @@
     "SendReward": "发放奖励",
     "StartFilter": "开始试算",
     "FilterNodesModalTitle": "{{season}} 节点",
-    "FilterNodesFilename": "{{season}} 节点"
+    "FilterNodesFilename": "{{season}} 节点",
+    "FilterNodesCount": "共{{count}}个节点"
   },
   "Push": {
     "CreatePush": "创建推送",

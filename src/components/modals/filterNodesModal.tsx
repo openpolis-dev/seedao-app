@@ -6,12 +6,20 @@ import ExcellentExport from 'excellentexport';
 import NoItem from 'components/noItem';
 
 interface IProps {
+  filterActiveNum: string;
+  filterEffectiveNum: string;
   season: string;
   handleClose: () => void;
   walletList: string[];
 }
 
-export default function FilterNodesNodal({ season, walletList, handleClose }: IProps) {
+export default function FilterNodesNodal({
+  filterActiveNum,
+  filterEffectiveNum,
+  season,
+  walletList,
+  handleClose,
+}: IProps) {
   const { t } = useTranslation();
   const handleExport = () => {
     ExcellentExport.convert(
@@ -36,6 +44,15 @@ export default function FilterNodesNodal({ season, walletList, handleClose }: IP
           {t('GovernanceNodeResult.Export')}
         </Button>
       )}
+      <Statics>
+        <span>
+          {t('GovernanceNodeResult.ActiveSCR')}:{filterActiveNum}
+        </span>
+        <span>
+          {t('GovernanceNodeResult.EffectiveSCR')}:{filterEffectiveNum}
+        </span>
+        <span>{t('GovernanceNodeResult.FilterNodesCount', { count: walletList.length })}</span>
+      </Statics>
 
       <SNSList>
         {walletList.map((item, index) => (
@@ -60,6 +77,15 @@ const FilterNodesModalStyle = styled(BasicModal)`
     height: 34px;
   }
 `;
+
+const Statics = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 20px;
+  font-size: 14px;
+`;
+
 const SNSList = styled.ul`
   max-height: 60vh;
   overflow-y: auto;

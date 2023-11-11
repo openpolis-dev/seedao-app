@@ -231,7 +231,15 @@ export default function GoveranceNodeResult() {
 
   return (
     <OuterBox>
-      {showModal && <FilterNodesNodal walletList={filterResult} handleClose={closeModal} season={currentSeason} />}
+      {showModal && (
+        <FilterNodesNodal
+          filterActiveNum={formatNumber(Number(filterActiveNum))}
+          filterEffectiveNum={formatNumber(Number(filterEffectiveNum))}
+          walletList={filterResult}
+          handleClose={closeModal}
+          season={currentSeason}
+        />
+      )}
       <BackerNav title={t('city-hall.GovernanceNodeResult')} to="/city-hall/governance" />
       <TopLine>
         <StaticCards>
