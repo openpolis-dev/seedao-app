@@ -46,10 +46,10 @@ export default function FilterNodesNodal({
       )}
       <Statics>
         <span>
-          {t('GovernanceNodeResult.ActiveSCR')}:{filterActiveNum}
+          {t('GovernanceNodeResult.ActiveSCR')}: {filterActiveNum}
         </span>
         <span>
-          {t('GovernanceNodeResult.EffectiveSCR')}:{filterEffectiveNum}
+          {t('GovernanceNodeResult.EffectiveSCR')}: {filterEffectiveNum}
         </span>
         <span>{t('GovernanceNodeResult.FilterNodesCount', { count: walletList.length })}</span>
       </Statics>
@@ -69,7 +69,7 @@ export default function FilterNodesNodal({
 }
 
 const FilterNodesModalStyle = styled(BasicModal)`
-  min-width: 430px;
+  min-width: 470px;
   .btn-export {
     position: absolute;
     right: 0;
