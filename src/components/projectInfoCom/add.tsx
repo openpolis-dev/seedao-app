@@ -102,7 +102,7 @@ export default function Add(props: Iprops) {
     const _memberList: string[] = [];
 
     lst.forEach((item) => {
-      const wallet = sns2walletMap.get(item.walletOrSNS) || item.walletOrSNS.toLocaleLowerCase();
+      const wallet = sns2walletMap.get(item.walletOrSNS)?.toLocaleLowerCase() || item.walletOrSNS.toLocaleLowerCase();
       if (item.role === UserRole.Member) {
         _memberList.push(wallet);
       } else {
@@ -111,6 +111,7 @@ export default function Add(props: Iprops) {
     });
     const total_list = [..._adminList, ..._memberList];
     const unique_list = Array.from(new Set(total_list));
+
     if (total_list.length !== unique_list.length) {
       showToast(t('Project.MemberExist'), ToastType.Danger);
       dispatch({ type: AppActionType.SET_LOADING, payload: null });
