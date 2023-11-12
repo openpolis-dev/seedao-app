@@ -1,7 +1,7 @@
 import React from 'react';
 import { quillModules } from 'utils/quillUtil';
 import ReactQuill from 'react-quill';
-import ReactMarkdown from 'react-markdown';
+import { MdPreview } from 'md-editor-rt';
 
 interface QuillViewerProps {
   content: string;
@@ -18,6 +18,6 @@ export default function QuillViewer(props: QuillViewerProps) {
     // @ts-ignore
     return <ReactQuill className={'quill-viewer'} value={delta} readOnly={true} modules={modules} />;
   } catch (e) {
-    return <ReactMarkdown>{props.content}</ReactMarkdown>;
+    return <MdPreview modelValue={props.content} />;
   }
 }
