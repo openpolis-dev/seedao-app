@@ -110,20 +110,13 @@ const links = {
   ],
   applyAppLink: 'https://tally.so/r/3XozzP',
   governance: [
-    {
-      name: 'city-hall.CommunityReview',
-      link: 'https://tally.so/forms/mBp09R/submissions',
-      id: 'community',
-      icon: RImg9,
-      desc: 'city-hall.CommunityReviewDesc',
-    },
-    {
-      name: 'city-hall.MediaReview',
-      link: 'https://tally.so/forms/wzMRBE/submissions',
-      id: 'community',
-      icon: RImg10,
-      desc: 'city-hall.MediaReviewDesc',
-    },
+    // {
+    //   name: 'city-hall.MediaReview',
+    //   link: 'https://tally.so/forms/wzMRBE/submissions',
+    //   id: 'community',
+    //   icon: RImg10,
+    //   desc: 'city-hall.MediaReviewDesc',
+    // },
     {
       name: 'city-hall.CalendarReview',
       link: 'https://tally.so/r/mKxkWD/submissions',
@@ -131,13 +124,7 @@ const links = {
       icon: RImg11,
       desc: 'city-hall.CalendarReviewDesc',
     },
-    {
-      name: 'city-hall.AppReview',
-      link: 'https://tally.so/forms/3XozzP/submissions',
-      id: 'app',
-      icon: RImg12,
-      desc: 'city-hall.AppReviewDesc',
-    },
+
     {
       name: 'city-hall.ProjectReview',
       link: 'https://tally.so/forms/w2AWlp/submissions',
@@ -212,6 +199,20 @@ const links = {
     },
   ],
   tech: [
+    {
+      name: 'city-hall.CommunityReview',
+      link: 'https://tally.so/forms/mBp09R/submissions',
+      id: 'community',
+      icon: RImg9,
+      desc: 'city-hall.CommunityReviewDesc',
+    },
+    {
+      name: 'city-hall.AppReview',
+      link: 'https://tally.so/forms/3XozzP/submissions',
+      id: 'app',
+      icon: RImg12,
+      desc: 'city-hall.AppReviewDesc',
+    },
     // {
     //   name: 'city-hall.SeedReview',
     //   link: '',
