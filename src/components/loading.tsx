@@ -9,7 +9,7 @@ const Mask = styled.div`
   width: 100vw;
   height: 100vh;
   position: fixed;
-  z-index: 999999999999999999;
+  z-index: 999;
   left: 0;
   top: 0;
   display: flex;
@@ -29,6 +29,9 @@ const Box = styled.div`
   position: relative;
 
   img {
+    user-select: none;
+    width: 40px;
+    height: 40px;
     animation: rotate 1s infinite linear;
   }
   @keyframes rotate {

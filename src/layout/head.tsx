@@ -17,7 +17,6 @@ import Select from 'components/common/select';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { List as ListIcon } from 'react-bootstrap-icons';
-import Loading from 'components/loading';
 import usePushPermission from 'hooks/usePushPermission';
 import { requestSetDeviceLanguage, getPushDevice } from 'requests/push';
 import { useDisconnect } from 'wagmi';
@@ -29,6 +28,7 @@ import MoonImg from '../assets/Imgs/moon.png';
 
 import LogoImg from '../assets/Imgs/light/logo.svg';
 import LogoImgDark from '../assets/Imgs/dark/logo.svg';
+import getConfig from 'utils/envCofnig';
 
 export default function Header() {
   const { i18n } = useTranslation();
@@ -49,7 +49,7 @@ export default function Header() {
   const [lan, setLan] = useState('en');
 
   const {
-    state: { show_login_modal, language, theme, userData, loading, account },
+    state: { show_login_modal, language, theme, userData, account },
     dispatch,
   } = useAuthContext();
 
@@ -244,7 +244,6 @@ export default function Header() {
 
   return (
     <HeadeStyle>
-      {loading && <Loading />}
       <nav>
         <NavLeft>
           {/*<MenuExpandIcon*/}
@@ -257,9 +256,11 @@ export default function Header() {
         </NavLeft>
 
         <RightBox>
-          {/*<SwitchTheme>*/}
-          {/*  <img src={theme ? LightImg : MoonImg} alt="" onClick={() => SwitchThemeFun()} />*/}
-          {/*</SwitchTheme>*/}
+          {getConfig().REACT_APP_THEME_ENABLE && (
+            <SwitchTheme>
+              <img src={theme ? LightImg : MoonImg} alt="" onClick={() => SwitchThemeFun()} />
+            </SwitchTheme>
+          )}
           <Select
             options={getLanguages()}
             onChange={(event: any) => changeLang(event.value, true)}

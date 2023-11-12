@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import ReactMarkdown from 'react-markdown';
 import { useParams, Link } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
 import { getProjectById } from 'requests/project';
@@ -13,6 +12,7 @@ import { PermissionObject, PermissionAction } from 'utils/constant';
 import { useTranslation } from 'react-i18next';
 import Members from 'components/projectInfoCom/members';
 import SipTag from 'components/common/sipTag';
+import { MdPreview } from 'md-editor-rt';
 
 export default function InfoPage() {
   const { t } = useTranslation();
@@ -95,7 +95,7 @@ export default function InfoPage() {
                   </InnerLft>
                 </LftBox>
                 <ContentBox>
-                  <ReactMarkdown>{detail?.intro || ''}</ReactMarkdown>
+                  <MdPreview modelValue={detail?.intro || ''} />
                 </ContentBox>
               </LastLine>
             </AllBox>

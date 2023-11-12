@@ -53,7 +53,7 @@ export default function Apps() {
           {t('Home.Apps')}
         </div>
         <RhtBoxT>
-          <Button onClick={() => window.open(Links.applyAppLink, '_target')}>{t('general.apply')}</Button>
+          {/*<Button onClick={() => window.open(Links.applyAppLink, '_target')}>{t('general.apply')}</Button>*/}
         </RhtBoxT>
       </TitBox>
       <AppBox>

@@ -122,7 +122,7 @@ export default function Add(props: Iprops) {
     }
     const _adminList: string[] = [];
     adminList.forEach((item) => {
-      const wallet = sns2walletMap.get(item) || item.toLocaleLowerCase();
+      const wallet = sns2walletMap.get(item)?.toLocaleLowerCase() || item.toLocaleLowerCase();
       _adminList.push(wallet);
     });
     const unique_list = Array.from(new Set(_adminList));

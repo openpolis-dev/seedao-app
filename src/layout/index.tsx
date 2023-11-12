@@ -4,10 +4,14 @@ import Header from './head';
 import Menu from './menu';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import useMedia from 'hooks/useMedia';
+import Loading from 'components/loading';
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const isMedium = useMedia('(max-width: 1200px)');
-  const { dispatch } = useAuthContext();
+  const {
+    dispatch,
+    state: { loading },
+  } = useAuthContext();
   useEffect(() => {
     dispatch({ type: AppActionType.SET_EXPAND_MENU, payload: !isMedium });
   }, [isMedium, dispatch]);
@@ -18,6 +22,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <Menu isMedium={isMedium} />
         <Container id="scrollableDiv">{children}</Container>
       </LayoutBottom>
+      {loading && <Loading />}
     </Box>
   );
 }

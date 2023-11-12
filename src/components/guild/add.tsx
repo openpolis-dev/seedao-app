@@ -102,7 +102,7 @@ export default function Add(props: Iprops) {
     const _memberList: string[] = [];
 
     lst.forEach((item) => {
-      const wallet = sns2walletMap.get(item.walletOrSNS) || item.walletOrSNS.toLocaleLowerCase();
+      const wallet = sns2walletMap.get(item.walletOrSNS)?.toLocaleLowerCase() || item.walletOrSNS.toLocaleLowerCase();
       if (item.role === UserRole.Member) {
         _memberList.push(wallet);
       } else {
