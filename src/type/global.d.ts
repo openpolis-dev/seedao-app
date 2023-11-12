@@ -12,6 +12,9 @@ interface Window {
   seeDAOosApi: {
     getUsers: (wallets: string[]) => Promise<any>;
   };
+  AppConfig: {
+    host: string;
+  };
 }
 
 declare interface IPageParams {

@@ -1,5 +1,5 @@
 import { useAuthContext, AppActionType } from 'providers/authProvider';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 import { useTranslation } from 'react-i18next';
@@ -9,6 +9,7 @@ import CloseImgLight from '../../assets/Imgs/light/close-circle.svg';
 import WalletConnect from '../login/walletconnect';
 import Unipass, { upProvider } from '../login/unipass';
 import Joyid from '../login/joyid';
+import JoyidWeb from 'components/login/joyidWeb';
 
 import { useNetwork } from 'wagmi';
 import { useEthersSigner } from '../login/ethersNew';
@@ -16,6 +17,7 @@ import { SELECT_WALLET } from '../../utils/constant';
 import { ethers } from 'ethers';
 import { mainnet } from 'wagmi/chains';
 import getConfig from 'utils/envCofnig';
+import useCheckInstallPWA from 'hooks/useCheckInstallPWA';
 
 export default function LoginModal({ showModal }: any) {
   const { t } = useTranslation();
@@ -28,6 +30,7 @@ export default function LoginModal({ showModal }: any) {
   const { chain } = useNetwork();
 
   const signer = useEthersSigner({ chainId: chain });
+  const isInstalled = useCheckInstallPWA();
 
   useEffect(() => {
     let type = localStorage.getItem(SELECT_WALLET);
@@ -38,7 +41,7 @@ export default function LoginModal({ showModal }: any) {
     } else if (walletType === 'UNIPASS') {
       const providerUnipass = new ethers.providers.Web3Provider(upProvider, 'any');
       dispatch({ type: AppActionType.SET_PROVIDER, payload: providerUnipass });
-    } else if (walletType === 'JOYID') {
+    } else if (['JOYID', 'JOYID_WEB'].includes(walletType)) {
       const url = mainnet.rpcUrls.public.http[0];
       const id = mainnet.id;
       const providerJoyId = new ethers.providers.JsonRpcProvider(url, id);
@@ -60,7 +63,7 @@ export default function LoginModal({ showModal }: any) {
           <Title>{t('general.ConnectWallet')}</Title>
           <WalletConnect />
           <Unipass />
-          {getConfig().REACT_APP_JOYID_ENABLE && <Joyid />}
+          {getConfig().REACT_APP_JOYID_ENABLE && (isInstalled ? <Joyid /> : <JoyidWeb />)}
         </Modal>
       </Mask>
     </>
