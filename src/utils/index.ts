@@ -24,5 +24,5 @@ export const formatApplicationStatus = (status: ApplicationStatus, isProj?: bool
 };
 
 export const isNotOnline = () => {
-  return getConfig().REACT_APP_ENV === 'test';
+  return process.env.REACT_APP_ENV_VERSION !== 'prod';
 };
