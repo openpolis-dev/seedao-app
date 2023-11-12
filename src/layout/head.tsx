@@ -17,7 +17,6 @@ import Select from 'components/common/select';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { List as ListIcon } from 'react-bootstrap-icons';
-import Loading from 'components/loading';
 import usePushPermission from 'hooks/usePushPermission';
 import { requestSetDeviceLanguage, getPushDevice } from 'requests/push';
 import { useDisconnect } from 'wagmi';
@@ -50,7 +49,7 @@ export default function Header() {
   const [lan, setLan] = useState('en');
 
   const {
-    state: { show_login_modal, language, theme, userData, loading, account },
+    state: { show_login_modal, language, theme, userData, account },
     dispatch,
   } = useAuthContext();
 
@@ -244,7 +243,6 @@ export default function Header() {
 
   return (
     <HeadeStyle>
-      {loading && <Loading />}
       <nav>
         <NavLeft>
           {/*<MenuExpandIcon*/}
