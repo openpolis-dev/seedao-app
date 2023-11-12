@@ -153,7 +153,9 @@ export default function Members(props: Iprops) {
 
   return (
     <Box>
-      {show && <Add closeAdd={closeAdd} id={id as string} />}
+      {show && detail && (
+        <Add closeAdd={closeAdd} id={id as string} oldMembers={[...detail.sponsors, ...detail.members]} />
+      )}
       {toDeleteUser && (
         <DeleteMemberModal
           title={t('Project.RemoveMember')}

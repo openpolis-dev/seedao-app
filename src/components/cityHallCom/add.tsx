@@ -20,7 +20,6 @@ const CardFooter = styled.div`
 `;
 
 const ItemBox = styled.div`
-  margin-top: 20px;
   font-size: 14px;
   li {
     display: flex;
@@ -38,9 +37,6 @@ const ItemBox = styled.div`
     margin-right: 10px;
     min-width: 450px;
   }
-  span {
-    margin-left: 10px;
-  }
   .iconForm {
     color: var(--bs-primary);
     font-size: 20px;
@@ -55,17 +51,17 @@ const InnerBox = styled.div`
 `;
 
 interface Iprops {
+  oldMembers: string[];
   closeAdd: (shouldUpdate?: boolean) => void;
   canUpdateSponsor: boolean;
 }
 export default function Add(props: Iprops) {
-  const { closeAdd } = props;
+  const { closeAdd, oldMembers } = props;
   const { t } = useTranslation();
   const { dispatch } = useAuthContext();
   const { showToast } = useToast();
 
   const [adminList, setAdminList] = useState<string[]>(['']);
-  const [memberList] = useState<string[]>(['']);
 
   const handleInput = (e: ChangeEvent, index: number) => {
     const { value } = e.target as HTMLInputElement;
@@ -126,9 +122,23 @@ export default function Add(props: Iprops) {
     }
     const _adminList: string[] = [];
     adminList.forEach((item) => {
-      const wallet = sns2walletMap.get(item) || item;
+      const wallet = sns2walletMap.get(item)?.toLocaleLowerCase() || item.toLocaleLowerCase();
       _adminList.push(wallet);
     });
+    const unique_list = Array.from(new Set(_adminList));
+    if (_adminList.length !== unique_list.length) {
+      showToast(t('city-hall.MemberExist'), ToastType.Danger);
+      dispatch({ type: AppActionType.SET_LOADING, payload: null });
+      return;
+    }
+
+    for (const item of unique_list) {
+      if (oldMembers.includes(item.toLocaleLowerCase())) {
+        showToast(t('city-hall.MemberExist'), ToastType.Danger);
+        dispatch({ type: AppActionType.SET_LOADING, payload: null });
+        return;
+      }
+    }
 
     try {
       const params = {
@@ -165,10 +175,10 @@ export default function Add(props: Iprops) {
                 </LeftInputBox>
                 <OptionBox>
                   <PlusMinusButton
-                    showMinus={index === adminList.length - 1}
-                    showPlus={!(!index && index === adminList.length - 1)}
-                    handleMinus={() => removeAdmin(index)}
-                    handlePlus={handleAddAdmin}
+                    showMinus={!(!index && index === adminList.length - 1)}
+                    showPlus={index === adminList.length - 1}
+                    onClickMinus={() => removeAdmin(index)}
+                    onClickPlus={handleAddAdmin}
                   />
                 </OptionBox>
               </li>
@@ -188,9 +198,7 @@ export default function Add(props: Iprops) {
   );
 }
 
-const AddMemberModalWrapper = styled(BasicModal)`
-  width: 550px;
-`;
+const AddMemberModalWrapper = styled(BasicModal)``;
 
 const LeftInputBox = styled(InputGroup)`
   width: 400px;

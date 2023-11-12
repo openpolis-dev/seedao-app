@@ -125,7 +125,7 @@ export default function Members() {
 
   return (
     <Box>
-      {show && <Add closeAdd={closeAdd} canUpdateSponsor={canUpdateSponsor} />}
+      {show && detail && <Add closeAdd={closeAdd} canUpdateSponsor={canUpdateSponsor} oldMembers={detail.sponsors} />}
       {showDel && <Del closeRemove={closeRemove} selectAdminArr={selectAdminArr} nameMap={nameMap} />}
 
       <ItemBox>

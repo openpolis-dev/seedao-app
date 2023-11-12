@@ -23,11 +23,12 @@ type InputUser = {
 };
 
 interface Iprops {
+  oldMembers: string[];
   closeAdd: (refresh?: boolean) => void;
   id: string;
 }
 export default function Add(props: Iprops) {
-  const { closeAdd, id } = props;
+  const { oldMembers, closeAdd, id } = props;
   const { t } = useTranslation();
   const { dispatch } = useAuthContext();
   const { showToast } = useToast();
@@ -101,14 +102,28 @@ export default function Add(props: Iprops) {
     const _memberList: string[] = [];
 
     lst.forEach((item) => {
-      const wallet = sns2walletMap.get(item.walletOrSNS) || item.walletOrSNS;
+      const wallet = sns2walletMap.get(item.walletOrSNS)?.toLocaleLowerCase() || item.walletOrSNS.toLocaleLowerCase();
       if (item.role === UserRole.Member) {
         _memberList.push(wallet);
       } else {
         _adminList.push(wallet);
       }
     });
+    const total_list = [..._adminList, ..._memberList];
+    const unique_list = Array.from(new Set(total_list));
 
+    if (total_list.length !== unique_list.length) {
+      showToast(t('Project.MemberExist'), ToastType.Danger);
+      dispatch({ type: AppActionType.SET_LOADING, payload: null });
+      return;
+    }
+    for (const item of unique_list) {
+      if (oldMembers.includes(item)) {
+        showToast(t('Project.MemberExist'), ToastType.Danger);
+        dispatch({ type: AppActionType.SET_LOADING, payload: null });
+        return;
+      }
+    }
     try {
       const params: IUpdateStaffsParams = {
         action: 'add',
@@ -122,7 +137,6 @@ export default function Add(props: Iprops) {
 
       await updateStaffs(id as string, params);
       showToast(t('Project.addMemberSuccess'), ToastType.Success);
-      dispatch({ type: AppActionType.SET_LOADING, payload: null });
       closeAdd(true);
     } catch (e) {
       console.error(e);

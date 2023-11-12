@@ -256,6 +256,11 @@ const GlobalStyle = createGlobalStyle`
     box-shadow: unset;
     padding: 18px;
   }
+
+  .Toastify__toast{
+    border: 1px solid var(--bs-border-color);
+  }
+  
   .Toastify__toast-body {
     color: var(--bs-body-color_active);
   }

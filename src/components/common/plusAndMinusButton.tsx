@@ -51,7 +51,7 @@ const PlusButtonStyle = styled.span`
   border: 1px solid var(--option-button-border-color);
   svg {
     position: relative;
-    top: 5px;
+    top: 8px;
     color: var(--bs-body-color);
   }
   .icon-minus {

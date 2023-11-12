@@ -68,7 +68,7 @@ export default function GoveranceNodeResult() {
   const [totalActive, setTotalActive] = useState(0);
   const [totalSCR, setTotalSCR] = useState(0);
   const [totalReward, setTotalReward] = useState(0);
-  const [currentSeason, setCurrentSeason] = useState('');
+  const [currentSeasonNumber, setCurrentSeasonNumber] = useState(0);
 
   const [hasSentFlag, setHasSentFlag] = useState(true);
   const [hasSnapshot, setSnapshot] = useState(true);
@@ -78,14 +78,17 @@ export default function GoveranceNodeResult() {
 
   const { getMultiSNS } = useQuerySNS();
 
+  const currentSeason = useMemo(() => {
+    return `S${currentSeasonNumber}`;
+  }, [currentSeasonNumber]);
+
   const allSeasons = useMemo(() => {
-    if (currentSeason) {
-      const current = Number(currentSeason.replace('S', ''));
-      return Array.from({ length: current + 1 }, (_, i) => i);
+    if (currentSeasonNumber) {
+      return Array.from({ length: currentSeasonNumber + 1 }, (_, i) => i);
     } else {
       return [];
     }
-  }, [currentSeason]);
+  }, [currentSeasonNumber]);
   console.log('allSeasons', allSeasons);
 
   useEffect(() => {
@@ -103,7 +106,7 @@ export default function GoveranceNodeResult() {
           setTotalActive(data.activate_wallet_count);
           setTotalSCR(data.season_total_credit_without_mint);
           setTotalReward(data.season_total_mint_credit);
-          setCurrentSeason(data.season_name);
+          setCurrentSeasonNumber(Number(data.season_name.replace('S', '')));
 
           setHasSentFlag(data.metaforo_confirmed);
           setSnapshot(data.seed_snapshoted);
@@ -231,7 +234,15 @@ export default function GoveranceNodeResult() {
 
   return (
     <OuterBox>
-      {showModal && <FilterNodesNodal walletList={filterResult} handleClose={closeModal} season={currentSeason} />}
+      {showModal && (
+        <FilterNodesNodal
+          filterActiveNum={formatNumber(Number(filterActiveNum))}
+          filterEffectiveNum={formatNumber(Number(filterEffectiveNum))}
+          walletList={filterResult}
+          handleClose={closeModal}
+          season={`S${currentSeasonNumber + 1}`}
+        />
+      )}
       <BackerNav title={t('city-hall.GovernanceNodeResult')} to="/city-hall/governance" />
       <TopLine>
         <StaticCards>
