@@ -13,6 +13,7 @@ import { PermissionObject, PermissionAction } from 'utils/constant';
 import { useTranslation } from 'react-i18next';
 import Members from 'components/projectInfoCom/members';
 import SipTag from 'components/common/sipTag';
+import { MdPreview } from 'md-editor-rt';
 
 export default function InfoPage() {
   const { t } = useTranslation();
@@ -95,7 +96,7 @@ export default function InfoPage() {
                   </InnerLft>
                 </LftBox>
                 <ContentBox>
-                  <ReactMarkdown>{detail?.intro || ''}</ReactMarkdown>
+                  <MdPreview modelValue={detail?.intro || ''} />
                 </ContentBox>
               </LastLine>
             </AllBox>
