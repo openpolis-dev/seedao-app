@@ -29,6 +29,7 @@ import MoonImg from '../assets/Imgs/moon.png';
 
 import LogoImg from '../assets/Imgs/light/logo.svg';
 import LogoImgDark from '../assets/Imgs/dark/logo.svg';
+import getConfig from 'utils/envCofnig';
 
 export default function Header() {
   const { i18n } = useTranslation();
@@ -256,9 +257,11 @@ export default function Header() {
         </NavLeft>
 
         <RightBox>
-          <SwitchTheme>
-            <img src={theme ? LightImg : MoonImg} alt="" onClick={() => SwitchThemeFun()} />
-          </SwitchTheme>
+          {getConfig().REACT_APP_THEME_ENABLE && (
+            <SwitchTheme>
+              <img src={theme ? LightImg : MoonImg} alt="" onClick={() => SwitchThemeFun()} />
+            </SwitchTheme>
+          )}
           <Select
             options={getLanguages()}
             onChange={(event: any) => changeLang(event.value, true)}
