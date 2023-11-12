@@ -29,6 +29,9 @@ const Box = styled.div`
   position: relative;
 
   img {
+    user-select: none;
+    width: 40px;
+    height: 40px;
     animation: rotate 1s infinite linear;
   }
   @keyframes rotate {
