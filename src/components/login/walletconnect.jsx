@@ -40,7 +40,7 @@ const WalletOption = styled.li`
   }
 `;
 
-export default function  Metamask(){
+export default function  WalletConnect(){
     const navigate = useNavigate();
     const { dispatch } = useAuthContext();
 
