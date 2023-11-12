@@ -256,9 +256,9 @@ export default function Header() {
         </NavLeft>
 
         <RightBox>
-          {/*<SwitchTheme>*/}
-          {/*  <img src={theme ? LightImg : MoonImg} alt="" onClick={() => SwitchThemeFun()} />*/}
-          {/*</SwitchTheme>*/}
+          <SwitchTheme>
+            <img src={theme ? LightImg : MoonImg} alt="" onClick={() => SwitchThemeFun()} />
+          </SwitchTheme>
           <Select
             options={getLanguages()}
             onChange={(event: any) => changeLang(event.value, true)}
