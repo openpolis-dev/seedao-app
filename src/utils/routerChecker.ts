@@ -1,10 +1,7 @@
 import ReactGA from 'react-ga4';
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-
-export const isNotOnline = () => {
-  return process.env.NODE_ENV === 'development';
-};
+import { isNotOnline } from 'utils';
 
 export const GA_TRACKING_ID = isNotOnline() ? 'G-TLV0DRYC92' : 'G-QPVKNX8BXZ';
 
