@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import ReactMarkdown from 'react-markdown';
 import { useParams, Link } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
 import { getProjectById } from 'requests/project';

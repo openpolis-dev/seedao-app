@@ -7,12 +7,12 @@ import { useParams, Link } from 'react-router-dom';
 import { ContainerPadding } from 'assets/styles/global';
 import { useTranslation } from 'react-i18next';
 import Members from 'components/guild/members';
-import ReactMarkdown from 'react-markdown';
 import usePermission from 'hooks/usePermission';
 import { PermissionObject, PermissionAction } from 'utils/constant';
 import { Button } from 'react-bootstrap';
 import BackerNav from 'components/common/backNav';
 import SipTag from 'components/common/sipTag';
+import { MdPreview } from 'md-editor-rt';
 
 export default function Index() {
   const { t } = useTranslation();
@@ -71,7 +71,8 @@ export default function Index() {
                   </InnerLft>
                 </LftBox>
                 <ContentBox>
-                  <ReactMarkdown>{detail?.intro || ''}</ReactMarkdown>
+                  {/*<ReactMarkdown>{detail?.intro || ''}</ReactMarkdown>*/}
+                  <MdPreview modelValue={detail?.intro || ''} />
                 </ContentBox>
               </LastLine>
             </AllBox>
