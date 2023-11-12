@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import CloseImg from '../../assets/Imgs/dark/close-circle.svg';
 import CloseImgLight from '../../assets/Imgs/light/close-circle.svg';
 
-import Metamask from '../login/metamask';
+import WalletConnect from '../login/walletconnect';
 import Unipass, { upProvider } from '../login/unipass';
 import Joyid from '../login/joyid';
 
@@ -58,7 +58,7 @@ export default function LoginModal({ showModal }: any) {
             <img src={theme ? CloseImg : CloseImgLight} alt="" />
           </span>
           <Title>{t('general.ConnectWallet')}</Title>
-          <Metamask />
+          <WalletConnect />
           <Unipass />
           {getConfig().REACT_APP_JOYID_ENABLE && <Joyid />}
         </Modal>
