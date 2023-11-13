@@ -20,7 +20,7 @@ import GovernImgLight from '../../assets/Imgs/light/govern.png';
 import { useAuthContext } from '../../providers/authProvider';
 import ArrowImg from '../../assets/Imgs/arrow.png';
 import LinkImg from '../../assets/Imgs/link.svg';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import ProposalImg from '../../assets/Imgs/home/proposal.png';
 
 const CITY_HALL = 'https://seedao.notion.site/07c258913c5d4847b59271e2ae6f7c66';
@@ -450,21 +450,37 @@ export default function Home() {
               {/*  </div>*/}
               {/*</Col>*/}
 
-              {Publicitys.map((item: any, index) => (
-                <Col key={`publicity_${index}`}>
-                  <a href={item.link} target="_blank" rel="noreferrer">
-                    <BtmBox>
-                      <div>
-                        <div className="tit">{item.name}</div>
-                        <div className="desc">{item.time}</div>
-                      </div>
-                      <div className="link">
-                        <img src={LinkImg} alt="" />
-                      </div>
-                    </BtmBox>
-                  </a>
-                </Col>
-              ))}
+              {Publicitys.map((item: any, index) => {
+                return item.id.startsWith('module') ? (
+                  <Col>
+                    <Link to={item.link}>
+                      <BtmBox>
+                        <div>
+                          <div className="tit">{item.name}</div>
+                          <div className="desc">{item.time}</div>
+                        </div>
+                        <div className="link">
+                          <img src={LinkImg} alt="" />
+                        </div>
+                      </BtmBox>
+                    </Link>
+                  </Col>
+                ) : (
+                  <Col key={`publicity_${index}`}>
+                    <a href={item.link} target="_blank" rel="noreferrer">
+                      <BtmBox>
+                        <div>
+                          <div className="tit">{item.name}</div>
+                          <div className="desc">{item.time}</div>
+                        </div>
+                        <div className="link">
+                          <img src={LinkImg} alt="" />
+                        </div>
+                      </BtmBox>
+                    </a>
+                  </Col>
+                );
+              })}
             </LinkBox>
           </CityBox>
         </Col>
