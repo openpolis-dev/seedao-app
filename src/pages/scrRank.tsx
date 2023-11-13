@@ -7,11 +7,13 @@ import BackerNav from 'components/common/backNav';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 import { formatNumber } from 'utils/number';
-import publicJs from 'utils/publicJs';
 import ExcellentExport from 'excellentexport';
 import { getGovernanceNodeResult } from 'requests/cityHall';
 import useQuerySNS from 'hooks/useQuerySNS';
 import { useAuthContext, AppActionType } from 'providers/authProvider';
+import RankDownIcon from 'assets/Imgs/rank_down.svg';
+import RankUpIcon from 'assets/Imgs/rank_up.svg';
+import RankIcon from 'assets/Imgs/rank.svg';
 
 const ColGroup = () => {
   return (
@@ -39,6 +41,23 @@ interface IRowData {
   season_total_credit: string;
 }
 
+enum RankDirection {
+  default = 0,
+  down,
+  up,
+}
+
+const getRankIcon = (direction: RankDirection) => {
+  switch (direction) {
+    case RankDirection.down:
+      return RankDownIcon;
+    case RankDirection.up:
+      return RankUpIcon;
+    default:
+      return RankIcon;
+  }
+};
+
 export default function SCRRank() {
   const { t } = useTranslation();
   const { state } = useLocation();
@@ -51,6 +70,9 @@ export default function SCRRank() {
 
   const { getMultiSNS } = useQuerySNS();
 
+  const [rankCurrent, setRankCurrent] = useState(RankDirection.default);
+  const [rankTotal, setRankTotal] = useState(RankDirection.down);
+
   const currentSeason = useMemo(() => {
     return `S${currentSeasonNumber}`;
   }, [currentSeasonNumber]);
@@ -62,39 +84,70 @@ export default function SCRRank() {
       return [];
     }
   }, [currentSeasonNumber]);
-  console.log('allSeasons', allSeasons);
 
   const displayList = useMemo(() => {
-    return [...allList];
-  }, [allList]);
+    const newList = [...allList];
+    if (rankTotal !== RankDirection.default) {
+      newList.sort((a, b) => {
+        const a_total = Number(a.season_total_credit);
+        const b_total = Number(b.season_total_credit);
+
+        if (rankTotal === RankDirection.down) {
+          return b_total - a_total;
+        } else {
+          return a_total - b_total;
+        }
+      });
+    }
+    if (rankCurrent !== RankDirection.default) {
+      newList.sort((a, b) => {
+        const a_current = a.seasons_credit.find((item) => item.season_name === currentSeason)?.total || 0;
+        const b_current = b.seasons_credit.find((item) => item.season_name === currentSeason)?.total || 0;
+        if (rankCurrent === RankDirection.down) {
+          return Number(b_current) - Number(a_current);
+        } else {
+          return Number(a_current) - Number(b_current);
+        }
+      });
+    }
+
+    return newList;
+  }, [allList, rankCurrent, rankTotal]);
 
   const formatSNS = (wallet: string) => {
     return dataMap.get(wallet) || wallet;
   };
 
   const handleExport = () => {
-    ExcellentExport.convert({ filename: t('GovernanceNodeResult.FileName'), format: 'xlsx', openAsDownload: true }, [
+    ExcellentExport.convert(
       {
-        name: t('GovernanceNodeResult.SheetName'),
-        from: {
-          array: [
-            ['SNS', ...allSeasons.map((s) => `S${s}(SCR)`), t('GovernanceNodeResult.Total') + '(SCR)'],
-            ...allList.map((item) => [
-              dataMap.get(item.wallet) || item.wallet,
-              item.seasons_credit?.find((s) => s.season_idx === 0)?.total || 0,
-              item.seasons_credit?.find((s) => s.season_idx === 1)?.total || 0,
-              item.seasons_credit?.find((s) => s.season_idx === 2)?.total || 0,
-              item.seasons_credit?.find((s) => s.season_idx === 3)?.total || 0,
-              item.season_total_credit || 0,
-            ]),
-          ],
-        },
-        formats: ['B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K'].map((c) => ({
-          range: `${c}2:${c}1000`,
-          format: ExcellentExport.formats.NUMBER,
-        })),
+        filename: t('GovernanceNodeResult.SCRSeasonRankFilename', { season: currentSeason }),
+        format: 'xlsx',
+        openAsDownload: true,
       },
-    ]);
+      [
+        {
+          name: t('GovernanceNodeResult.SCRSeasonRankFilename', { season: currentSeason }),
+          from: {
+            array: [
+              ['SNS', ...allSeasons.map((s) => `S${s}(SCR)`), t('GovernanceNodeResult.Total') + '(SCR)'],
+              ...displayList.map((item) => [
+                dataMap.get(item.wallet) || item.wallet,
+                item.seasons_credit?.find((s) => s.season_idx === 0)?.total || 0,
+                item.seasons_credit?.find((s) => s.season_idx === 1)?.total || 0,
+                item.seasons_credit?.find((s) => s.season_idx === 2)?.total || 0,
+                item.seasons_credit?.find((s) => s.season_idx === 3)?.total || 0,
+                item.season_total_credit || 0,
+              ]),
+            ],
+          },
+          formats: ['B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K'].map((c) => ({
+            range: `${c}2:${c}1000`,
+            format: ExcellentExport.formats.NUMBER,
+          })),
+        },
+      ],
+    );
   };
 
   useEffect(() => {
@@ -126,6 +179,24 @@ export default function SCRRank() {
     getList();
   }, []);
 
+  const onClickCurrentRank = () => {
+    if (rankCurrent === RankDirection.down) {
+      setRankCurrent(RankDirection.up);
+    } else {
+      setRankCurrent(RankDirection.down);
+    }
+    setRankTotal(RankDirection.default);
+  };
+
+  const onClicktotalRank = () => {
+    if (rankTotal === RankDirection.down) {
+      setRankTotal(RankDirection.up);
+    } else {
+      setRankTotal(RankDirection.down);
+    }
+    setRankCurrent(RankDirection.default);
+  };
+
   return (
     <OuterBox>
       <BackerNav title={t('GovernanceNodeResult.SCRRank')} to={state || '/home'} />
@@ -143,13 +214,21 @@ export default function SCRRank() {
             {allSeasons.map((s, i) => {
               return i === allSeasons.length - 1 ? (
                 <th>
-                  <CurrentSeason>{currentSeason}</CurrentSeason>(SCR)
+                  <ColumnSort onClick={onClickCurrentRank}>
+                    <span>{currentSeason} (SCR)</span>
+                    <img src={getRankIcon(rankCurrent)} alt="" />
+                  </ColumnSort>
                 </th>
               ) : (
                 <th key={s}>{`S${s}(SCR)`}</th>
               );
             })}
-            <th>{t('GovernanceNodeResult.Total')}(SCR)</th>
+            <th>
+              <ColumnSort onClick={onClicktotalRank}>
+                <span>{t('GovernanceNodeResult.Total')}(SCR)</span>
+                <img src={getRankIcon(rankTotal)} alt="" />
+              </ColumnSort>
+            </th>
           </thead>
         </Table>
         <Table id="body-table">
@@ -238,15 +317,13 @@ const TableBox = styled.div`
   }
 `;
 
-const HeaderCell = styled.div`
-  white-space: wrap;
-  font-family: Poppins-SemiBold, Poppins;
-  background-color: transparent !important;
-  color: var(--bs-body-color_active) !important;
-`;
-
-const CurrentSeason = styled(HeaderCell)`
-  color: var(--bs-primary) !important;
+const ColumnSort = styled.div`
   display: inline;
   padding: 0 !important;
+  background-color: transparent !important;
+  color: var(--bs-body-color_active) !important;
+  cursor: pointer;
+  img {
+    width: 20px;
+  }
 `;

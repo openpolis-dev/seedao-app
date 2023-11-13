@@ -270,7 +270,8 @@
     "FilterNodesModalTitle": "{{season}} 节点",
     "FilterNodesFilename": "{{season}} 节点",
     "FilterNodesCount": "共{{count}}个节点",
-    "SCRRank": "积分总榜"
+    "SCRRank": "积分总榜",
+    "SCRSeasonRankFilename": "{{season}} 积分榜"
   },
   "Push": {
     "CreatePush": "创建推送",

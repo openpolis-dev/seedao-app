@@ -270,7 +270,8 @@
     "FilterNodesModalTitle": "{{season}} Nodes",
     "FilterNodesFilename": "{{season}} Nodes",
     "FilterNodesCount": "Total {{count}} Nodes",
-    "SCRRank": "SCR Rank"
+    "SCRRank": "SCR Rank",
+    "SCRSeasonRankFilename": "{{season}} SCR Rank"
   },
   "Push": {
     "CreatePush": "Create Notification",
