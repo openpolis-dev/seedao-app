@@ -305,6 +305,12 @@ const links = {
       time: '2023-11-01 23:07',
       link: 'https://mp.weixin.qq.com/s/YVpeaHSRCfUj5EKlHdmsyA',
     },
+    {
+      id: 'module-scr-rank',
+      name: 'SeeDAO | S3积分榜',
+      time: '2023-11-15 00:00',
+      link: '/scr-rank',
+    },
   ],
 };
 
