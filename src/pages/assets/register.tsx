@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { Form } from 'react-bootstrap';
 import RegList from 'components/assetsCom/regList';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { IExcelObj } from 'type/project.type';
 import requests from 'requests';
@@ -13,10 +13,10 @@ import Select from 'components/common/select';
 import BackIconSVG from 'components/svgs/back';
 import { Link } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
-import useBudgetSource from 'hooks/useBudgetSource';
 import { ethers } from 'ethers';
 import sns from '@seedao/sns-js';
 import { AssetName } from 'utils/constant';
+import { getAvailiableProjectsAndGuilds } from 'requests/applications';
 
 type ErrorDataType = {
   line: number;
@@ -30,10 +30,37 @@ export default function Register() {
 
   const [list, setList] = useState<IExcelObj[]>([]);
 
-  const allSource = useBudgetSource(true);
+  const [allSource, setAllSource] = useState<ISelectItem[]>([]);
   const [selectSource, setSelectSource] = useState<ISelectItem | null>(null);
 
   const [content, setContent] = useState('');
+
+  useEffect(() => {
+    const getAllSources = async () => {
+      try {
+        const res = await getAvailiableProjectsAndGuilds();
+        const { projects, guilds } = res.data;
+        setAllSource(
+          projects
+            .map((item) => ({
+              value: item.id,
+              label: item.name,
+              data: ApplicationEntity.Project,
+            }))
+            .concat(
+              guilds.map((item) => ({
+                value: item.id,
+                label: item.name,
+                data: ApplicationEntity.Guild,
+              })),
+            ),
+        );
+      } catch (error) {
+        console.error('getAvailiableProjectsAndGuilds failed:', error);
+      }
+    };
+    getAllSources();
+  }, []);
 
   const Clear = () => {
     setList([]);

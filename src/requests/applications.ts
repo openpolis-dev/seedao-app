@@ -8,6 +8,7 @@ import {
   ApplicationEntity,
   ISeason,
 } from 'type/application.type';
+import { ReTurnProject } from 'type/project.type';
 import { AssetName } from 'utils/constant';
 
 const PATH_PREFIX = '/applications/';
@@ -219,4 +220,13 @@ export const rejectBundleByID = (bundle_id: number) => {
 };
 export const rejectBundles = (bundle_ids: number[]) => {
   return request.post('/app_bundle_reject', bundle_ids);
+};
+
+interface ISourceResponse {
+  projects: ReTurnProject[];
+  guilds: ReTurnProject[];
+}
+
+export const getAvailiableProjectsAndGuilds = (): Promise<ResponseData<ISourceResponse>> => {
+  return request.get(`${BUNDLE_PATH_PREFIX}available_projects_guilds`);
 };
