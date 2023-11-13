@@ -291,7 +291,7 @@ const links = {
       id: 'module-scr-rank',
       name: 'SeeDAO 积分总榜',
       time: '2023-11-13 20:00',
-      link: '/scr-rank',
+      link: '/ranking',
     },
     {
       id: '',

@@ -258,7 +258,7 @@ export default function AssetList() {
 
       <TitBox>
         {t('Project.Record')}
-        <RankLink to="/scr-rank" state="/assets">
+        <RankLink to="/ranking" state="/assets">
           {t('GovernanceNodeResult.SCRRank')}
         </RankLink>
       </TitBox>
