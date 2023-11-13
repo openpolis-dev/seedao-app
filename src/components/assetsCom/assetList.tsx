@@ -21,6 +21,7 @@ import ApplicationStatusTag from 'components/common/applicationStatusTag';
 import useSeasons from 'hooks/useSeasons';
 import useQuerySNS from 'hooks/useQuerySNS';
 import useBudgetSource from 'hooks/useBudgetSource';
+import { Link } from 'react-router-dom';
 
 const Box = styled.div``;
 const TitBox = styled.div`
@@ -255,7 +256,10 @@ export default function AssetList() {
         <ApplicationModal application={detailDisplay} handleClose={() => setDetailDisplay(undefined)} />
       )}
 
-      <TitBox>{t('Project.Record')}</TitBox>
+      <TitBox>
+        {t('Project.Record')}
+        <RankLink to="/scr-rank">{t('GovernanceNodeResult.SCRRank')}</RankLink>
+      </TitBox>
       <FirstLine>
         <TopLine>
           <li>
@@ -394,4 +398,11 @@ const BudgetContent = styled.div`
   display: -webkit-box;
   -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
+`;
+
+const RankLink = styled(Link)`
+  display: inline-block;
+  padding-left: 20px;
+  margin-left: 20px;
+  border-left: 2px solid var(--bs-body-color);
 `;
