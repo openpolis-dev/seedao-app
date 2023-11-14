@@ -80,7 +80,7 @@ export interface IApplicantBundle {
 
 export interface IApplicantBundleDisplay extends IApplicantBundle {
   created_date: string;
-  submitter_name: string;
+  submitter_name?: string;
   assets_display: string[];
 }
 

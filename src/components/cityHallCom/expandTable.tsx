@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 import { IApplicationDisplay } from 'type/application.type';
 import NoItem from 'components/noItem';
-import publicJs from 'utils/publicJs';
 import { useTranslation } from 'react-i18next';
 import BackIconSVG from 'components/svgs/back';
 import ApplicationStatusTag from 'components/common/applicationStatusTag';
@@ -18,9 +17,20 @@ interface IProps {
   updateStatus: (status: ApplicationStatus) => void;
   showLoading: (show: boolean) => void;
   status?: ApplicationStatus;
+  snsMap: Map<string, string>;
+  formatSNS: (wallet: string) => string;
 }
 
-export default function ExpandTable({ bund_id, list, handleClose, updateStatus, showLoading, status }: IProps) {
+export default function ExpandTable({
+  bund_id,
+  list,
+  handleClose,
+  updateStatus,
+  showLoading,
+  status,
+  snsMap,
+  formatSNS,
+}: IProps) {
   const { t } = useTranslation();
   const { showToast } = useToast();
 
@@ -52,10 +62,6 @@ export default function ExpandTable({ bund_id, list, handleClose, updateStatus, 
     }
   };
 
-  const formatSNS = (name: string) => {
-    return name?.endsWith('.seedao') ? name : publicJs.AddressToShow(name, 6);
-  };
-
   return (
     <TableBox>
       <BackBox onClick={handleClose}>
@@ -81,12 +87,14 @@ export default function ExpandTable({ bund_id, list, handleClose, updateStatus, 
             <tbody>
               {list.map((item) => (
                 <tr key={item.application_id}>
-                  <td>{formatSNS(item.receiver_name || '')}</td>
+                  <td>{formatSNS(item.target_user_wallet)}</td>
                   <td className="center">{item.asset_display}</td>
                   <td className="center">{item.season_name}</td>
-                  <td>{item.detailed_type}</td>
+                  <td>
+                    <BudgetContent>{item.detailed_type}</BudgetContent>
+                  </td>
                   <td className="center">{item.budget_source}</td>
-                  <td className="center">{formatSNS(item.submitter_name)}</td>
+                  <td className="center">{formatSNS(item.submitter_wallet)}</td>
                   <td>
                     <ApplicationStatusTag status={item.status} />
                   </td>
@@ -174,4 +182,12 @@ const OperateBox = styled.div`
       }
     }
   }
+`;
+const BudgetContent = styled.div`
+  max-width: 300px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
 `;

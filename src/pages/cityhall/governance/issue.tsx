@@ -37,6 +37,7 @@ export default function Issued() {
   const [selectStatus, setSelectStatus] = useState<ApplicationStatus>(ApplicationStatus.Approved);
   const [isProcessing, setIsProcessing] = useState(false);
   const [detailDisplay, setDetailDisplay] = useState<IApplicationDisplay>();
+  const [snsMap, setSnsMap] = useState<Map<string, string>>(new Map());
 
   const statusOption = useMemo(() => {
     return [
@@ -72,6 +73,11 @@ export default function Issued() {
     setSelectMap({ ...selectMap, [id]: value && status });
   };
 
+  const handleSNS = async (wallets: string[]) => {
+    const sns_map = await getMultiSNS(wallets);
+    setSnsMap(sns_map);
+  };
+
   const getRecords = async () => {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
@@ -96,18 +102,15 @@ export default function Issued() {
       res.data.rows.forEach((item) => {
         _wallets.add(item.target_user_wallet);
         _wallets.add(item.submitter_wallet);
-        _wallets.add(item.reviewer_wallet);
+        item.reviewer_wallet && _wallets.add(item.reviewer_wallet);
       });
-      const sns_map = await getMultiSNS(Array.from(_wallets));
+      handleSNS(Array.from(_wallets));
 
       const _list = res.data.rows.map((item, idx) => ({
         ...item,
         created_date: formatTime(item.created_at),
         transactions: item.transaction_ids.split(','),
         asset_display: formatNumber(Number(item.amount)) + ' ' + item.asset_name,
-        submitter_name: sns_map.get(item.submitter_wallet?.toLocaleLowerCase()) as string,
-        reviewer_name: sns_map.get(item.reviewer_wallet?.toLocaleLowerCase()) as string,
-        receiver_name: sns_map.get(item.target_user_wallet?.toLocaleLowerCase()) as string,
       }));
       setTotal(res.data.total);
       setList(_list);
@@ -254,11 +257,16 @@ export default function Issued() {
     return <></>;
   };
 
+  const formatSNS = (wallet: string) => {
+    const name = snsMap.get(wallet) || wallet;
+    return name?.endsWith('.seedao') ? name : publicJs.AddressToShow(name, 6);
+  };
+
   return (
     <Box>
       <BackerNav to="/city-hall/governance" title={t('city-hall.IssueAssets')} />
       {detailDisplay && (
-        <ApplicationModal application={detailDisplay} handleClose={() => setDetailDisplay(undefined)} />
+        <ApplicationModal application={detailDisplay} handleClose={() => setDetailDisplay(undefined)} snsMap={snsMap} />
       )}
       {show && <IssuedModal closeShow={closeShow} handleConfirm={handleComplete} showToast={showToast} />}
       <FirstLine>
@@ -331,7 +339,7 @@ export default function Issued() {
                       </td>
                     )}
 
-                    <td>{item.receiver_name || ''}</td>
+                    <td>{formatSNS(item.target_user_wallet.toLocaleLowerCase())}</td>
                     <td className="center" style={{ width: '200px' }}>
                       {item.asset_display}
                     </td>
@@ -344,7 +352,7 @@ export default function Issued() {
                     <td className="center" style={{ width: '200px' }}>
                       {item.budget_source}
                     </td>
-                    <td>{item.reviewer_name || publicJs.AddressToShow(item.reviewer_wallet)}</td>
+                    <td>{formatSNS(item.reviewer_wallet.toLocaleLowerCase())}</td>
                     <td style={{ width: '200px' }}>
                       <ApplicationStatusTag status={item.status} />
                     </td>

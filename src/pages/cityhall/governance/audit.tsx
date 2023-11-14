@@ -107,6 +107,8 @@ export default function Register() {
   const [showBundleId, setShowBundleId] = useState<number>();
   const [bundleStatus, setShowBundleStatus] = useState<ApplicationStatus>();
 
+  const [snsMap, setSnsMap] = useState<Map<string, string>>(new Map());
+
   const { getMultiSNS } = useQuerySNS();
 
   const showLoading = (v: boolean) => {
@@ -118,6 +120,11 @@ export default function Register() {
   };
   const handlePageSize = (num: number) => {
     setPageSize(num);
+  };
+
+  const handleSNS = async (wallets: string[]) => {
+    const sns_map = await getMultiSNS(wallets);
+    setSnsMap(sns_map);
   };
 
   const getRecords = async () => {
@@ -153,11 +160,10 @@ export default function Register() {
         item.records.forEach((r) => {
           _wallets.add(r.submitter_wallet?.toLocaleLowerCase());
           _wallets.add(r.reviewer_wallet?.toLocaleLowerCase());
-          _wallets.add(r.target_user_wallet?.toLocaleLowerCase());
+          r.target_user_wallet && _wallets.add(r.target_user_wallet?.toLocaleLowerCase());
         });
       });
-      const sns_map = await getMultiSNS(Array.from(_wallets));
-
+      handleSNS(Array.from(_wallets));
       setList(
         res.data.rows.map((item) => ({
           ...item,
@@ -167,11 +173,11 @@ export default function Register() {
             created_date: formatTime(record.created_at),
             transactions: record.transaction_ids.split(','),
             asset_display: formatNumber(Number(record.amount)) + ' ' + record.asset_name,
-            submitter_name: sns_map.get(record.submitter_wallet?.toLocaleLowerCase()) as string,
-            reviewer_name: sns_map.get(record.reviewer_wallet?.toLocaleLowerCase()) as string,
-            receiver_name: sns_map.get(record.target_user_wallet?.toLocaleLowerCase()) as string,
+            // submitter_name: sns_map.get(record.submitter_wallet?.toLocaleLowerCase()) as string,
+            // reviewer_name: sns_map.get(record.reviewer_wallet?.toLocaleLowerCase()) as string,
+            // receiver_name: sns_map.get(record.target_user_wallet?.toLocaleLowerCase()) as string,
           })),
-          submitter_name: sns_map.get(item.applicant?.toLocaleLowerCase()) as string,
+          // submitter_name: sns_map.get(item.applicant?.toLocaleLowerCase()) as string,
           assets_display: item.assets.map((a) => `${formatNumber(Number(a.amount))} ${a.name}`),
         })),
       );
@@ -186,7 +192,8 @@ export default function Register() {
     getRecords();
   }, [selectState, selectApplicant, selectSource, selectSeason, page, pageSize]);
 
-  const formatSNS = (name: string) => {
+  const formatSNS = (wallet: string) => {
+    const name = snsMap.get(wallet) || wallet;
     return name?.endsWith('.seedao') ? name : publicJs.AddressToShow(name, 6);
   };
 
@@ -214,6 +221,8 @@ export default function Register() {
           handleClose={handleclose}
           updateStatus={updateStatus}
           showLoading={showLoading}
+          snsMap={snsMap}
+          formatSNS={formatSNS}
         />
       ) : (
         <>
@@ -306,7 +315,7 @@ export default function Register() {
                         <td>
                           <CommentBox>{item.comment}</CommentBox>
                         </td>
-                        <td className="center">{formatSNS(item.submitter_name)}</td>
+                        <td className="center">{formatSNS(item.applicant)}</td>
                         <td className="center">{item.season_name}</td>
                         <td className="center">{item.created_date}</td>
                         <td>

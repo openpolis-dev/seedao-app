@@ -111,6 +111,8 @@ export default function AssetList() {
   const seasons = useSeasons();
   const [selectSeason, setSelectSeason] = useState<number>();
 
+  const [snsMap, setSnsMap] = useState<Map<string, string>>(new Map());
+
   const statusOption = useMemo(() => {
     return [
       { label: t(formatApplicationStatus(ApplicationStatus.Open)), value: ApplicationStatus.Open },
@@ -151,6 +153,11 @@ export default function AssetList() {
     getApplicants();
   }, []);
 
+  const handleSNS = async (wallets: string[]) => {
+    const sns_map = await getMultiSNS(wallets);
+    setSnsMap(sns_map);
+  };
+
   const getRecords = async () => {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
@@ -164,7 +171,6 @@ export default function AssetList() {
         queryData.entity_id = selectSource.id;
         queryData.entity = selectSource.type;
       }
-
       const res = await requests.application.getApplications(
         {
           page,
@@ -179,18 +185,18 @@ export default function AssetList() {
       res.data.rows.forEach((item) => {
         _wallets.add(item.target_user_wallet);
         _wallets.add(item.submitter_wallet);
-        _wallets.add(item.reviewer_wallet);
+        item.reviewer_wallet && _wallets.add(item.reviewer_wallet);
       });
-      const sns_map = await getMultiSNS(Array.from(_wallets));
+      handleSNS(Array.from(_wallets));
 
       const _list = res.data.rows.map((item, idx) => ({
         ...item,
         created_date: formatTime(item.created_at),
         transactions: item.transaction_ids.split(','),
         asset_display: formatNumber(Number(item.amount)) + ' ' + item.asset_name,
-        submitter_name: sns_map.get(item.submitter_wallet?.toLocaleLowerCase()) as string,
-        reviewer_name: sns_map.get(item.reviewer_wallet?.toLocaleLowerCase()) as string,
-        receiver_name: sns_map.get(item.target_user_wallet?.toLocaleLowerCase()) as string,
+        submitter_name: item.submitter_wallet?.toLocaleLowerCase(),
+        reviewer_name: item.reviewer_wallet?.toLocaleLowerCase(),
+        receiver_name: item.target_user_wallet?.toLocaleLowerCase(),
       }));
       setList(_list);
     } catch (error) {
@@ -245,14 +251,15 @@ export default function AssetList() {
     return _is_select_all;
   }, [list, selectMap]);
 
-  const formatSNS = (name: string) => {
+  const formatSNS = (wallet: string) => {
+    const name = snsMap.get(wallet) || wallet;
     return name?.endsWith('.seedao') ? name : publicJs.AddressToShow(name, 6);
   };
 
   return (
     <Box>
       {detailDisplay && (
-        <ApplicationModal application={detailDisplay} handleClose={() => setDetailDisplay(undefined)} />
+        <ApplicationModal application={detailDisplay} handleClose={() => setDetailDisplay(undefined)} snsMap={snsMap} />
       )}
 
       <TitBox>{t('Project.Record')}</TitBox>
@@ -349,7 +356,8 @@ export default function AssetList() {
                         onChange={(e) => onChangeCheckbox(e.target.checked, item.application_id, item.status)}
                       />
                     </td> */}
-                    <td>{item.receiver_name || ''}</td>
+                    <td>{formatSNS(item.receiver_name || '')}</td>
+
                     <td className="center" style={{ width: '200px' }}>
                       {item.asset_display}
                     </td>

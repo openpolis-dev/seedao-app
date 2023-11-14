@@ -2,16 +2,15 @@ import styled from 'styled-components';
 import BasicModal from './basicModal';
 import { IApplicationDisplay } from 'type/application.type';
 import { useTranslation } from 'react-i18next';
-import { formatNumber } from 'utils/number';
-import { formatApplicationStatus } from 'utils/index';
 import ApplicationStatusTag from 'components/common/applicationStatusTag';
 
 interface Iprops {
   application: IApplicationDisplay;
   handleClose: () => void;
+  snsMap: Map<string, string>;
 }
 
-export default function ApplicationModal({ application, handleClose }: Iprops) {
+export default function ApplicationModal({ application, handleClose, snsMap }: Iprops) {
   const { t } = useTranslation();
   return (
     <ApplicationModalWrapper handleClose={handleClose} title={t('application.DetailModalHeader')}>
@@ -19,7 +18,7 @@ export default function ApplicationModal({ application, handleClose }: Iprops) {
         <Block underline>
           <li>
             <BlockLeft>{t('application.Receiver')}</BlockLeft>
-            <BlockRight>{application.receiver_name}</BlockRight>
+            <BlockRight>{snsMap.get(application.target_user_wallet.toLocaleLowerCase())}</BlockRight>
           </li>
           <li>
             <BlockLeft>{t('application.AddAssets')}</BlockLeft>
@@ -45,11 +44,11 @@ export default function ApplicationModal({ application, handleClose }: Iprops) {
           </li>
           <li>
             <BlockLeft>{t('Project.Operator')}</BlockLeft>
-            <BlockRight>{application.submitter_name}</BlockRight>
+            <BlockRight>{snsMap.get(application.submitter_wallet.toLocaleLowerCase())}</BlockRight>
           </li>
           <li>
             <BlockLeft>{t('application.Auditor')}</BlockLeft>
-            <BlockRight>{application.reviewer_name}</BlockRight>
+            <BlockRight>{snsMap.get(application.reviewer_wallet.toLocaleLowerCase())}</BlockRight>
           </li>
         </Block>
         <Block>
