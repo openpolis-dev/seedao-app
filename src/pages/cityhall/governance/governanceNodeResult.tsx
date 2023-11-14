@@ -33,19 +33,26 @@ interface IRowData {
   metaforo_vote_count: string;
 }
 
-const ColGroup = () => {
+const ColGroup = ({ seasons }: { seasons: number[] }) => {
   return (
     <colgroup>
+      {/* sns */}
       <col style={{ width: '150px' }} />
+      {/* seasons */}
+      {seasons.map((s) => (
+        <col style={{ width: '100px' }} key={s} />
+      ))}
+      {/* vote */}
       <col style={{ width: '100px' }} />
-      <col style={{ width: '100px' }} />
-      <col style={{ width: '100px' }} />
-      <col style={{ width: '100px' }} />
+      {/* season reward */}
       <col style={{ width: '120px' }} />
+      {/* total */}
       <col style={{ width: '120px' }} />
+      {/* active */}
       <col style={{ width: '120px' }} />
+      {/* effective */}
       <col style={{ width: '120px' }} />
-      <col style={{ width: '120px' }} />
+      {/* seed */}
       <col style={{ width: '150px' }} />
     </colgroup>
   );
@@ -165,7 +172,7 @@ export default function GoveranceNodeResult() {
             ]),
           ],
         },
-        formats: ['B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K'].map((c) => ({
+        formats: ['B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N'].map((c) => ({
           range: `${c}2:${c}1000`,
           format: ExcellentExport.formats.NUMBER,
         })),
@@ -324,7 +331,7 @@ export default function GoveranceNodeResult() {
       </OperateBox>
       <TableBox>
         <Table id="head-table">
-          <ColGroup />
+          <ColGroup seasons={allSeasons} />
           <thead>
             <th>SNS</th>
             {allSeasons.map((s, i) => {
@@ -345,7 +352,7 @@ export default function GoveranceNodeResult() {
           </thead>
         </Table>
         <Table id="body-table">
-          <ColGroup />
+          <ColGroup seasons={allSeasons} />
           <tbody>
             {displayList.map((item, index) => (
               <tr key={item.wallet}>
