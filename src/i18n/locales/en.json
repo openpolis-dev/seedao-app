@@ -247,7 +247,11 @@
     "GovernanceNodeResultDesc": "SeeDAO Node qualification calculation result.",
     "CloseProjectAudit": "Audit Close Project",
     "IssueAssets": "Issue Assets",
-    "MemberExist": "Please do not add members repeatedly"
+    "MemberExist": "Please do not add members repeatedly",
+    "MemberGroup": "Member Group",
+    "GovernanceGroup": "Governance Group",
+    "BrandGroup": "Branding Group",
+    "TechGroup": "Tech Group"
   },
   "GovernanceNodeResult": {
     "SearchTip": "SNS",

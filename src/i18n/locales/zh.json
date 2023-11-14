@@ -247,7 +247,11 @@
     "GovernanceNodeResultDesc": "计算治理节点资质结果",
     "CloseProjectAudit": "关闭项目审核",
     "IssueAssets": "发放资产",
-    "MemberExist": "请不要重复添加成员"
+    "MemberExist": "请不要重复添加成员",
+    "MemberGroup": "成员分组",
+    "GovernanceGroup": "治理小组",
+    "BrandGroup": "品牌小组",
+    "TechGroup": "技术小组"
   },
   "GovernanceNodeResult": {
     "SearchTip": "SNS",

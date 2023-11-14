@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { InputGroup, Button, Form } from 'react-bootstrap';
-import React, { ChangeEvent, useState } from 'react';
+import React, { ChangeEvent, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import { ethers } from 'ethers';
@@ -9,6 +9,7 @@ import { updateMembers } from 'requests/cityHall';
 import BasicModal from 'components/modals/basicModal';
 import sns from '@seedao/sns-js';
 import PlusMinusButton from 'components/common/plusAndMinusButton';
+import SeeSelect from 'components/common/select';
 
 const CardBody = styled.div``;
 const CardFooter = styled.div`
@@ -46,9 +47,16 @@ const ItemBox = styled.div`
 `;
 
 const InnerBox = styled.div`
-  max-height: 400px;
+  min-height: 200px;
+  max-height: 50vh;
   overflow-y: auto;
 `;
+
+enum MemberGroupType {
+  Governance = 1,
+  Brand,
+  Tech,
+}
 
 interface Iprops {
   oldMembers: string[];
@@ -62,6 +70,7 @@ export default function Add(props: Iprops) {
   const { showToast } = useToast();
 
   const [adminList, setAdminList] = useState<string[]>(['']);
+  const [group, setGroup] = useState<MemberGroupType>();
 
   const handleInput = (e: ChangeEvent, index: number) => {
     const { value } = e.target as HTMLInputElement;
@@ -157,12 +166,44 @@ export default function Add(props: Iprops) {
     }
   };
 
+  const handleSelectGroup = (v: MemberGroupType) => {
+    setGroup(v);
+  };
+
+  const groups = useMemo(() => {
+    return [
+      {
+        label: t('city-hall.GovernanceGroup'),
+        value: MemberGroupType.Governance,
+      },
+      {
+        label: t('city-hall.BrandGroup'),
+        value: MemberGroupType.Brand,
+      },
+      {
+        label: t('city-hall.TechGroup'),
+        value: MemberGroupType.Tech,
+      },
+    ];
+  }, [t]);
+
   return (
     <AddMemberModalWrapper title={t('members.AddTitle')} handleClose={closeAdd}>
       <CardBody>
         <InnerBox>
           <ItemBox>
-            <li>{t('members.AddressName')}</li>
+            <li>
+              <div>
+                <div className="item-title">{t('city-hall.MemberGroup')}</div>
+                <SeeSelect
+                  options={groups}
+                  placeholder=""
+                  NotClear={true}
+                  onChange={(value: any) => handleSelectGroup(value?.value)}
+                />
+              </div>
+            </li>
+            <li className="item-title">{t('members.AddressName')}</li>
             {adminList.map((item, index) => (
               <li key={`admin_${index}`}>
                 <LeftInputBox>
@@ -173,6 +214,7 @@ export default function Add(props: Iprops) {
                     onChange={(e) => handleInput(e, index)}
                   />
                 </LeftInputBox>
+
                 <OptionBox>
                   <PlusMinusButton
                     showMinus={!(!index && index === adminList.length - 1)}
@@ -198,7 +240,13 @@ export default function Add(props: Iprops) {
   );
 }
 
-const AddMemberModalWrapper = styled(BasicModal)``;
+const AddMemberModalWrapper = styled(BasicModal)`
+  width: 567px;
+  li.item-title,
+  .item-title {
+    margin-bottom: 10px;
+  }
+`;
 
 const LeftInputBox = styled(InputGroup)`
   width: 400px;
