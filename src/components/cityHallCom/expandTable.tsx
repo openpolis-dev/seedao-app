@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { useEffect, useState } from 'react';
 import { IApplicationDisplay } from 'type/application.type';
 import NoItem from 'components/noItem';
 import { useTranslation } from 'react-i18next';
@@ -9,6 +10,8 @@ import requests from 'requests';
 import useToast, { ToastType } from 'hooks/useToast';
 import { ContainerPadding } from 'assets/styles/global';
 import { ApplicationStatus } from 'type/application.type';
+import useQuerySNS from 'hooks/useQuerySNS';
+import publicJs from 'utils/publicJs';
 
 interface IProps {
   bund_id: number;
@@ -17,22 +20,39 @@ interface IProps {
   updateStatus: (status: ApplicationStatus) => void;
   showLoading: (show: boolean) => void;
   status?: ApplicationStatus;
-  snsMap: Map<string, string>;
-  formatSNS: (wallet: string) => string;
 }
 
-export default function ExpandTable({
-  bund_id,
-  list,
-  handleClose,
-  updateStatus,
-  showLoading,
-  status,
-  snsMap,
-  formatSNS,
-}: IProps) {
+export default function ExpandTable({ bund_id, list, handleClose, updateStatus, showLoading, status }: IProps) {
   const { t } = useTranslation();
   const { showToast } = useToast();
+
+  const [snsMap, setSnsMap] = useState<Map<string, string>>(new Map());
+
+  const { getMultiSNS } = useQuerySNS();
+
+  const formatSNS = (wallet: string) => {
+    const name = snsMap.get(wallet) || wallet;
+    return name?.endsWith('.seedao') ? name : publicJs.AddressToShow(name, 6);
+  };
+
+  const handleSNS = async (wallets: string[]) => {
+    try {
+      const sns_map = await getMultiSNS(wallets);
+      setSnsMap(sns_map);
+    } catch (error) {
+      console.error('get sns failed', error);
+    }
+  };
+
+  useEffect(() => {
+    const _wallets = new Set<string>();
+    list.forEach((r) => {
+      _wallets.add(r.submitter_wallet?.toLocaleLowerCase());
+      _wallets.add(r.reviewer_wallet?.toLocaleLowerCase());
+      r.target_user_wallet && _wallets.add(r.target_user_wallet?.toLocaleLowerCase());
+    });
+    handleSNS(Array.from(_wallets));
+  }, [list]);
 
   const handleApprove = async () => {
     showLoading(true);
@@ -87,14 +107,14 @@ export default function ExpandTable({
             <tbody>
               {list.map((item) => (
                 <tr key={item.application_id}>
-                  <td>{formatSNS(item.target_user_wallet)}</td>
+                  <td>{formatSNS(item.target_user_wallet?.toLocaleLowerCase())}</td>
                   <td className="center">{item.asset_display}</td>
                   <td className="center">{item.season_name}</td>
                   <td>
                     <BudgetContent>{item.detailed_type}</BudgetContent>
                   </td>
                   <td className="center">{item.budget_source}</td>
-                  <td className="center">{formatSNS(item.submitter_wallet)}</td>
+                  <td className="center">{formatSNS(item.submitter_wallet?.toLocaleLowerCase())}</td>
                   <td>
                     <ApplicationStatusTag status={item.status} />
                   </td>

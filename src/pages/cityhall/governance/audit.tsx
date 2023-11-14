@@ -173,11 +173,7 @@ export default function Register() {
             created_date: formatTime(record.created_at),
             transactions: record.transaction_ids.split(','),
             asset_display: formatNumber(Number(record.amount)) + ' ' + record.asset_name,
-            // submitter_name: sns_map.get(record.submitter_wallet?.toLocaleLowerCase()) as string,
-            // reviewer_name: sns_map.get(record.reviewer_wallet?.toLocaleLowerCase()) as string,
-            // receiver_name: sns_map.get(record.target_user_wallet?.toLocaleLowerCase()) as string,
           })),
-          // submitter_name: sns_map.get(item.applicant?.toLocaleLowerCase()) as string,
           assets_display: item.assets.map((a) => `${formatNumber(Number(a.amount))} ${a.name}`),
         })),
       );
@@ -221,8 +217,6 @@ export default function Register() {
           handleClose={handleclose}
           updateStatus={updateStatus}
           showLoading={showLoading}
-          snsMap={snsMap}
-          formatSNS={formatSNS}
         />
       ) : (
         <>
