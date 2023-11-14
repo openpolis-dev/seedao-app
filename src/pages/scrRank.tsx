@@ -15,15 +15,14 @@ import RankDownIcon from 'assets/Imgs/rank_down.svg';
 import RankUpIcon from 'assets/Imgs/rank_up.svg';
 import RankIcon from 'assets/Imgs/rank.svg';
 
-const ColGroup = () => {
+const ColGroup = ({ seasons }: { seasons: number[] }) => {
   return (
     <colgroup>
       <col style={{ width: '80px' }} />
       <col style={{ width: '340px' }} />
-      <col style={{ width: '150px' }} />
-      <col style={{ width: '150px' }} />
-      <col style={{ width: '150px' }} />
-      <col style={{ width: '150px' }} />
+      {seasons.map((s) => (
+        <col style={{ width: '150px' }} key={s} />
+      ))}
       <col style={{ width: '150px' }} />
     </colgroup>
   );
@@ -207,13 +206,13 @@ export default function SCRRank() {
       </OperateBox>
       <TableBox>
         <Table id="head-table">
-          <ColGroup />
+          <ColGroup seasons={allSeasons} />
           <thead>
             <th>No.</th>
             <th>SNS</th>
             {allSeasons.map((s, i) => {
               return i === allSeasons.length - 1 ? (
-                <th>
+                <th key={i}>
                   <ColumnSort onClick={onClickCurrentRank}>
                     <span>{currentSeason} (SCR)</span>
                     <img src={getRankIcon(rankCurrent)} alt="" />
@@ -232,7 +231,7 @@ export default function SCRRank() {
           </thead>
         </Table>
         <Table id="body-table">
-          <ColGroup />
+          <ColGroup seasons={allSeasons} />
           <tbody>
             {displayList.map((item, index) => (
               <tr key={item.wallet}>

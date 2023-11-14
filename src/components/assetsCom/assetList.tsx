@@ -21,7 +21,8 @@ import ApplicationStatusTag from 'components/common/applicationStatusTag';
 import useSeasons from 'hooks/useSeasons';
 import useQuerySNS from 'hooks/useQuerySNS';
 import useBudgetSource from 'hooks/useBudgetSource';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { PrimaryOutlinedButton } from 'components/common/button';
 
 const Box = styled.div``;
 const TitBox = styled.div`
@@ -30,6 +31,9 @@ const TitBox = styled.div`
   font-family: Poppins-Bold, Poppins;
   font-weight: bold;
   line-height: 30px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
 `;
 
 const FirstLine = styled.div`
@@ -94,6 +98,8 @@ const TableBox = styled.div`
 `;
 
 export default function AssetList() {
+  const navigate = useNavigate();
+
   const { dispatch } = useAuthContext();
   const { t } = useTranslation();
   const [page, setPage] = useState(1);
@@ -250,6 +256,9 @@ export default function AssetList() {
     return name?.endsWith('.seedao') ? name : publicJs.AddressToShow(name, 6);
   };
 
+  const openRank = () => {
+    navigate('/ranking', { state: '/assets' });
+  };
   return (
     <Box>
       {detailDisplay && (
@@ -257,10 +266,8 @@ export default function AssetList() {
       )}
 
       <TitBox>
-        {t('Project.Record')}
-        <RankLink to="/scr-rank" state="/assets">
-          {t('GovernanceNodeResult.SCRRank')}
-        </RankLink>
+        <span>{t('Project.Record')}</span>
+        <PrimaryOutlinedButton onClick={openRank}>{t('GovernanceNodeResult.SCRRank')}</PrimaryOutlinedButton>
       </TitBox>
       <FirstLine>
         <TopLine>
@@ -400,11 +407,4 @@ const BudgetContent = styled.div`
   display: -webkit-box;
   -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
-`;
-
-const RankLink = styled(Link)`
-  display: inline-block;
-  padding-left: 20px;
-  margin-left: 20px;
-  border-left: 2px solid var(--bs-body-color);
 `;

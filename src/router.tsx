@@ -84,7 +84,7 @@ export default function RouterLink() {
           <Route path="/city-hall/governance/audit-project" element={<AuditProject />} />
           {/* <Route path="/city-hall/governance/issue" element={<Issue />} /> */}
           {/* <Route path="/chat" element={<Chat />} /> */}
-          <Route path="/scr-rank" element={<SCRRank />} />
+          <Route path="/ranking" element={<SCRRank />} />
           <Route path="/feedback" element={<Canny />} />
         </Routes>
       </Layout>
