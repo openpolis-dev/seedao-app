@@ -66,3 +66,5 @@ export const GOV_NODE_CONTRACT = '0x9d34D407D8586478b3e4c39BE633ED3D7be1c80c';
 export const SBT_BOARDING = '0x0D9ea891B4C30e17437D00151399990ED7965F00';
 
 export const CITYHALL_ID = 14;
+
+export const ALCHEMY_RPC = 'https://eth-sepolia.g.alchemy.com/v2/HlAZ4I_XHDrPWs2x8L_7e6_3PQri91Il';
