@@ -79,12 +79,13 @@ export default function Profile() {
     });
   }, [seed, sbt]);
 
-  const getDetail = () => {
+  const getDetail = async () => {
     if (userData) {
       let detail = (userData as any).data;
       setDetail(detail);
       setUserName(detail.nickname);
-      setAvatar(detail.avatar);
+      let avarUrl = await PublicJs.getImage(detail?.avatar);
+      setAvatar(avarUrl!);
       setWallet(detail.wallet);
       setSns(detail.sns);
       setBio(detail.bio);
