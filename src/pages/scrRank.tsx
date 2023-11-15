@@ -15,6 +15,9 @@ import RankDownIcon from 'assets/Imgs/rank_down.svg';
 import RankUpIcon from 'assets/Imgs/rank_up.svg';
 import RankIcon from 'assets/Imgs/rank.svg';
 
+import { PermissionObject, PermissionAction } from 'utils/constant';
+import usePermission from 'hooks/usePermission';
+
 const ColGroup = ({ seasons }: { seasons: number[] }) => {
   return (
     <colgroup>
@@ -71,6 +74,8 @@ export default function SCRRank() {
 
   const [rankCurrent, setRankCurrent] = useState(RankDirection.default);
   const [rankTotal, setRankTotal] = useState(RankDirection.down);
+
+  const canUseCityhall = usePermission(PermissionAction.AuditApplication, PermissionObject.ProjectAndGuild);
 
   const currentSeason = useMemo(() => {
     return `S${currentSeasonNumber}`;
@@ -199,11 +204,14 @@ export default function SCRRank() {
   return (
     <OuterBox>
       <BackerNav title={t('GovernanceNodeResult.SCRRank')} to={state || '/home'} />
-      <OperateBox>
-        <Button variant="primary" onClick={handleExport}>
-          {t('GovernanceNodeResult.Export')}
-        </Button>
-      </OperateBox>
+      {canUseCityhall && (
+        <OperateBox>
+          <Button variant="primary" onClick={handleExport}>
+            {t('GovernanceNodeResult.Export')}
+          </Button>
+        </OperateBox>
+      )}
+
       <TableBox>
         <Table id="head-table">
           <ColGroup seasons={allSeasons} />
