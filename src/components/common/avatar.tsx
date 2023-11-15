@@ -4,12 +4,12 @@ import PublicJs from 'utils/publicJs';
 // import DefaultAvatar from 'assets/images/avatar.svg';
 import useParseSNS from 'hooks/useParseSNS';
 import DefaultAvatar from '../../assets/Imgs/defaultAvatarT.png';
-import { useEffect } from 'react';
-import requests from '../../requests';
+import { useEffect, useState } from 'react';
 import { AppActionType, useAuthContext } from '../../providers/authProvider';
 
 export default function Avatar({ user }: { user?: IUser }) {
   const sns = useParseSNS(user?.wallet);
+  const [avatar, setAvatar] = useState('');
 
   const {
     state: { userData },
@@ -24,10 +24,19 @@ export default function Avatar({ user }: { user?: IUser }) {
     dispatch({ type: AppActionType.SET_USER_DATA, payload: userData });
   }, [sns]);
 
+  useEffect(() => {
+    if (!user) return;
+    getAvatar();
+  }, [user]);
+
+  const getAvatar = async () => {
+    let avarUrl = await PublicJs.getImage(user?.avatar ?? '');
+    setAvatar(avarUrl!);
+  };
   return (
     <AvatarStyle>
       <span>{sns || user?.name || PublicJs.AddressToShow(user?.wallet || '')}</span>
-      <img src={user?.avatar || DefaultAvatar} alt="" />
+      <img src={avatar || DefaultAvatar} alt="" />
     </AvatarStyle>
   );
 }
