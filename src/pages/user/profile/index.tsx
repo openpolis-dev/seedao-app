@@ -17,6 +17,7 @@ import { formatNumber } from 'utils/number';
 import { Link } from 'react-router-dom';
 import CopyIconSVG from '../../../assets/Imgs/copy.svg';
 import defaultImg from '../../../assets/Imgs/defaultAvatar.png';
+import PublicJs from '../../../utils/publicJs';
 
 const OuterBox = styled.div`
   margin-bottom: 50px;
@@ -55,12 +56,28 @@ export default function Profile() {
   const [avatar, setAvatar] = useState('');
   const [bio, setBio] = useState('');
   const [roles, setRoles] = useState<any[]>([]);
-
+  const [list, setList] = useState<any[]>([]);
   const [sbt, setSbt] = useState<any[]>([]);
   const [seed, setSeed] = useState<any[]>([]);
   const [wallet, setWallet] = useState();
   const [sns, setSns] = useState('');
   const [detail, setDetail] = useState<any>();
+  const [sbtList, setSbtList] = useState<any[]>([]);
+
+  useEffect(() => {
+    if (!seed.length) return;
+    setList([]);
+    setSbtList([]);
+    seed?.map(async (seedItem: any) => {
+      let url = await PublicJs.getImage(seedItem.image_uri);
+      setList((list) => [...list, { ...seedItem, url }]);
+    });
+
+    sbt?.map(async (item: any) => {
+      let url = await PublicJs.getImage(item.image_uri);
+      setSbtList((list) => [...list, { ...item, url }]);
+    });
+  }, [seed, sbt]);
 
   const getDetail = () => {
     if (userData) {
@@ -293,27 +310,26 @@ export default function Profile() {
             </FstLine>
           </ProgressOuter>
           <NftBox>
-            {!!seed?.length && (
+            {!!list?.length && (
               <li>
                 <div className="title">SEED</div>
                 <div className="ul">
-                  {seed?.map((item, index) => (
+                  {list?.map((item, index) => (
                     <div key={index} className="li">
                       {' '}
-                      <img src={item.image_uri} alt="" />
+                      <img src={item.url} alt="" />
                     </div>
                   ))}
                 </div>
               </li>
             )}
-            {!!sbt?.length && (
+            {!!sbtList?.length && (
               <li>
                 <div className="title">SBT</div>
                 <div className="ul">
-                  {sbt?.map((item, index) => (
+                  {sbtList?.map((item, index) => (
                     <div key={index} className="li">
-                      {' '}
-                      <img src={item.image_uri} alt="" />
+                      <img src={item.url} alt="" />
                     </div>
                   ))}
                 </div>

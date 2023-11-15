@@ -40,7 +40,7 @@ export default function useQuerySNS() {
     const _snsMap = new Map(snsMap);
     if (_to_be_queried.length) {
       try {
-        const data = await sns.names(_to_be_queried, ALCHEMY_RPC);
+        const data = await sns.names(_to_be_queried, ALCHEMY_RPC as any);
         data.forEach((d, idx) => {
           _snsMap.set(_to_be_queried[idx], d || _to_be_queried[idx]);
         });
