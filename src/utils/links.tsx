@@ -288,6 +288,18 @@ const links = {
   ],
   publicity: [
     {
+      id: 'module-scr-rank',
+      name: 'SeeDAO 积分总榜',
+      time: '2023-11-13 20:00',
+      link: '/ranking',
+    },
+    {
+      id: '',
+      name: 'SeeDAO两周年生态发布会！十二月中相约清迈',
+      time: '2023-11-01 23:07',
+      link: 'https://mp.weixin.qq.com/s/YVpeaHSRCfUj5EKlHdmsyA',
+    },
+    {
       id: '',
       name: 'SeeDAO APP 正式版 V 0.0.1 开始发布！（含测试奖励)',
       time: '2023-10-23 18:54',
@@ -298,12 +310,6 @@ const links = {
       name: 'SeeDAO | Our Polis 发布会调整通知',
       time: '2023-10-23 18:54',
       link: 'https://mp.weixin.qq.com/s/s8ATHFdKhaMQ5SHkPjPAZQ',
-    },
-    {
-      id: '',
-      name: 'SeeDAO两周年生态发布会！十二月中相约清迈',
-      time: '2023-11-01 23:07',
-      link: 'https://mp.weixin.qq.com/s/YVpeaHSRCfUj5EKlHdmsyA',
     },
   ],
 };

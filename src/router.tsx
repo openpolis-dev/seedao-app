@@ -39,6 +39,7 @@ import GoveranceNodeResult from 'pages/cityhall/governance/governanceNodeResult'
 import Audit from 'pages/cityhall/governance/audit';
 import AuditProject from 'pages/cityhall/governance/projectAudit';
 import Issue from 'pages/cityhall/governance/issue';
+import SCRRank from 'pages/scrRank';
 
 export default function RouterLink() {
   return (
@@ -82,7 +83,8 @@ export default function RouterLink() {
           <Route path="/city-hall/governance/audit" element={<Audit />} />
           <Route path="/city-hall/governance/audit-project" element={<AuditProject />} />
           {/* <Route path="/city-hall/governance/issue" element={<Issue />} /> */}
-          <Route path="/chat" element={<Chat />} />
+          {/* <Route path="/chat" element={<Chat />} /> */}
+          <Route path="/ranking" element={<SCRRank />} />
           <Route path="/feedback" element={<Canny />} />
         </Routes>
       </Layout>

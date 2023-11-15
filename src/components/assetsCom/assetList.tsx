@@ -21,6 +21,8 @@ import ApplicationStatusTag from 'components/common/applicationStatusTag';
 import useSeasons from 'hooks/useSeasons';
 import useQuerySNS from 'hooks/useQuerySNS';
 import useBudgetSource from 'hooks/useBudgetSource';
+import { Link, useNavigate } from 'react-router-dom';
+import { PrimaryOutlinedButton } from 'components/common/button';
 
 const Box = styled.div``;
 const TitBox = styled.div`
@@ -29,6 +31,9 @@ const TitBox = styled.div`
   font-family: Poppins-Bold, Poppins;
   font-weight: bold;
   line-height: 30px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
 `;
 
 const FirstLine = styled.div`
@@ -93,6 +98,8 @@ const TableBox = styled.div`
 `;
 
 export default function AssetList() {
+  const navigate = useNavigate();
+
   const { dispatch } = useAuthContext();
   const { t } = useTranslation();
   const [page, setPage] = useState(1);
@@ -256,13 +263,19 @@ export default function AssetList() {
     return name?.endsWith('.seedao') ? name : publicJs.AddressToShow(name, 6);
   };
 
+  const openRank = () => {
+    navigate('/ranking', { state: '/assets' });
+  };
   return (
     <Box>
       {detailDisplay && (
         <ApplicationModal application={detailDisplay} handleClose={() => setDetailDisplay(undefined)} snsMap={snsMap} />
       )}
 
-      <TitBox>{t('Project.Record')}</TitBox>
+      <TitBox>
+        <span>{t('Project.Record')}</span>
+        <PrimaryOutlinedButton onClick={openRank}>{t('GovernanceNodeResult.SCRRank')}</PrimaryOutlinedButton>
+      </TitBox>
       <FirstLine>
         <TopLine>
           <li>
