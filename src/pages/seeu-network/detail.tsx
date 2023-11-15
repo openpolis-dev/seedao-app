@@ -31,24 +31,15 @@ export default function EventDetailPage() {
     };
     getDetail();
   }, [id]);
-  return (
-    <OuterBox>
-      <InnerBox>{data && <EventDetail item={data} />}</InnerBox>
-    </OuterBox>
-  );
+  return <OuterBox>{data && <EventDetail item={data} />}</OuterBox>;
 }
 
 const OuterBox = styled.div`
   min-height: 100%;
   ${ContainerPadding};
-`;
-
-const InnerBox = styled.div`
-  background: #fff;
-  padding: 20px;
-  min-height: 100%;
 
   .eventDetail {
+    color: var(--bs-body-color_active);
     img {
       max-width: 100%;
     }

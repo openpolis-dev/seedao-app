@@ -29,7 +29,7 @@ export const logout = () => {
   return request.post(`${PATH_PREFIX}/logout`);
 };
 
-export const getUser = (): Promise<ResponseData<IUser>> => {
+export const getUser = () => {
   return request.get(`${PATH_PREFIX}/me`);
 };
 

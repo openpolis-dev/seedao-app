@@ -2,31 +2,61 @@ import styled from 'styled-components';
 import Select from 'react-select';
 
 export default function SeeSelect(props: any) {
+  const { width, NotClear } = props;
   return (
     <SelectStyle
+      className="react-select-container"
+      classNamePrefix="react-select"
+      width={width}
       theme={(theme: any) => ({
         ...theme,
         colors: {
           ...theme.colors,
-          primary25: 'rgba(161, 110, 255, 0.1)',
-          primary: '#a16eff',
+          primary25: 'var(--bs-menu-hover)',
+          primary: 'var(--bs-menu-hover)',
+          neutral0: 'var(--bs-background)',
         },
       })}
       styles={{
-        control: (baseStyles) => ({
+        control: (baseStyles: any, state: any) => ({
           ...baseStyles,
           fontSize: '14px',
-          backgroundColor: 'rgb(247, 249, 252)',
-          borderColor: 'rgb(238, 238, 238)',
+          backgroundColor: 'var(--bs-background)',
+          borderColor: state.isFocused ? 'var(--bs-border-color-focus)' : 'var(--bs-border-color)',
         }),
       }}
-      isClearable
+      isClearable={!NotClear}
       {...props}
     />
   );
 }
 
-const SelectStyle = styled(Select)`
-  min-width: 150px;
-  background-color: rgb(247, 249, 252);
+const SelectStyle = styled<any>(Select)`
+  //min-width: 185px;
+  min-width: ${(props) => (props.width ? props.width : '185px')};
+  .react-select__input,
+  .react-select__single-value {
+    color: var(--bs-body-color_active) !important;
+  }
+  .react-select__menu-list {
+    padding: 0;
+  }
+  .react-select__menu {
+    padding: 0;
+  }
+  .react-select__menu,
+  .react-select__option--is-selected {
+    font-size: 14px;
+    color: var(--bs-body-color_active) !important;
+  }
+  .react-select__indicator-separator {
+    display: none;
+  }
+  .react-select__indicator svg path {
+    fill: var(--bs-body-color);
+  }
+  .react-select__control {
+    border-radius: 8px;
+    height: 40px !important;
+  }
 `;

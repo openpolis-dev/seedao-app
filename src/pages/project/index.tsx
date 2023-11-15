@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Row, Col, Tabs, Tab, Button } from 'react-bootstrap';
+import { Row } from 'react-bootstrap';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -8,23 +8,9 @@ import { AppActionType, useAuthContext } from 'providers/authProvider';
 import Page from 'components/pagination';
 import { ReTurnProject } from 'type/project.type';
 import NoItem from 'components/noItem';
-import usePermission from 'hooks/usePermission';
-import { PermissionObject, PermissionAction } from 'utils/constant';
 import useCheckLogin from 'hooks/useCheckLogin';
 import ProjectOrGuildItem from 'components/projectOrGuildItem';
-import { ContainerPadding } from 'assets/styles/global';
-
-const OuterBox = styled.div`
-  min-height: 100%;
-  ${ContainerPadding};
-`;
-
-const CardBox = styled.div`
-  background: #fff;
-  padding: 10px 40px;
-  box-sizing: border-box;
-  min-height: 100%;
-`;
+import SubTabbar from 'components/common/subTabbar';
 
 const Box = styled.div`
   position: relative;
@@ -37,29 +23,27 @@ const Box = styled.div`
   }
 `;
 
-const TopLine = styled.div`
-  position: absolute;
-  right: 0;
-  top: 14px;
-  z-index: 9;
-  cursor: pointer;
-`;
-
 const ItemBox = styled.div`
-  margin-top: 40px;
   overflow-x: hidden;
 `;
 
+const ListBox = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: stretch;
+  margin-right: -1%;
+`;
+
 export interface listObj {
-  name: string;
-  id: number;
+  title: string;
+  key: number;
 }
 
 export default function Index() {
   const { t } = useTranslation();
-  const canCreateProj = usePermission(PermissionAction.Create, PermissionObject.Project);
   const {
-    state: { language, account },
+    state: { language, account, theme },
     dispatch,
   } = useAuthContext();
   const isLogin = useCheckLogin(account);
@@ -84,18 +68,18 @@ export default function Index() {
   useEffect(() => {
     const _list = [
       {
-        name: t('Project.AllProjects'),
-        id: 0,
+        title: t('Project.AllProjects'),
+        key: 0,
       },
-      {
-        name: t('Project.Closed'),
-        id: 1,
-      },
+      // {
+      //   title: t('Project.Closed'),
+      //   key: 1,
+      // },
     ];
     if (isLogin) {
       _list.push({
-        name: t('Project.Joined'),
-        id: 2,
+        title: t('Project.Joined'),
+        key: 2,
       });
     }
     setList(_list);
@@ -106,7 +90,8 @@ export default function Index() {
     const stt = current === 1 ? 'closed' : '';
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     const obj: IPageParams = {
-      status: stt,
+      // status: stt,
+      status: 'open,pending_close',
       page: pageCur,
       size: pageSize,
       sort_order: 'desc',
@@ -137,10 +122,7 @@ export default function Index() {
     setTotal(total);
     setPageCur(page);
   };
-  const selectCurrent = (e: number) => {
-    setCurrent(Number(e));
-    setPageCur(1);
-  };
+
   const handlePage = (num: number) => {
     setPageCur(num + 1);
   };
@@ -150,36 +132,31 @@ export default function Index() {
   };
 
   return (
-    <OuterBox>
-      <CardBox>
-        <Box>
-          <TopLine>
-            {canCreateProj && <Button onClick={() => navigate('/create-project')}>{t('Project.create')}</Button>}
-          </TopLine>
+    <Box>
+      {list.length > 1 && (
+        <SubTabbarStyle defaultActiveKey={0} tabs={list} onSelect={(v: string | number) => setCurrent(v as number)} />
+      )}
+
+      <div>
+        <ItemBox>
+          <ListBox>
+            {proList.map((item) => (
+              <ProjectOrGuildItem key={item.id} data={item} onClickItem={openDetail} />
+            ))}
+          </ListBox>
+        </ItemBox>
+        {!proList.length && <NoItem />}
+        {total > pageSize && (
           <div>
-            <Tabs defaultActiveKey={0} onSelect={(e: any) => selectCurrent(e)}>
-              {list.map((item, index) => (
-                <Tab key={item.id} title={item.name} eventKey={index} />
-              ))}
-            </Tabs>
-            <div>
-              <ItemBox>
-                <Row>
-                  {proList.map((item) => (
-                    <ProjectOrGuildItem key={item.id} data={item} onClickItem={openDetail} />
-                  ))}
-                </Row>
-              </ItemBox>
-              {!proList.length && <NoItem />}
-              {total > pageSize && (
-                <div>
-                  <Page itemsPerPage={pageSize} total={total} current={pageCur - 1} handleToPage={handlePage} />
-                </div>
-              )}
-            </div>
+            <Page itemsPerPage={pageSize} total={total} current={pageCur - 1} handleToPage={handlePage} />
           </div>
-        </Box>
-      </CardBox>
-    </OuterBox>
+        )}
+      </div>
+    </Box>
   );
 }
+
+const SubTabbarStyle = styled(SubTabbar)`
+  margin-top: 12px;
+  margin-bottom: 24px;
+`;

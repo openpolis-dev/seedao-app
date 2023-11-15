@@ -3,9 +3,6 @@ import { Button, Form, Table } from 'react-bootstrap';
 
 import React, { useState, useEffect, useMemo } from 'react';
 import Page from 'components/pagination';
-import ViewHash from '../projectInfoCom/viewHash';
-import RangeDatePickerStyle from 'components/rangeDatePicker';
-// import { Checkbox } from '@paljs/ui/Checkbox';
 import requests from 'requests';
 import { IQueryParams } from 'requests/applications';
 import { IApplicationDisplay, ApplicationStatus } from 'type/application.type';
@@ -13,61 +10,73 @@ import utils from 'utils/publicJs';
 import NoItem from 'components/noItem';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import Loading from 'components/loading';
-import { formatDate, formatTime } from 'utils/time';
+import { formatTime } from 'utils/time';
 import publicJs from 'utils/publicJs';
 import { useTranslation } from 'react-i18next';
 import { formatApplicationStatus } from 'utils/index';
 import Select from 'components/common/select';
 import { formatNumber } from 'utils/number';
+import ApplicationModal from 'components/modals/applicationModal';
+import ApplicationStatusTag from 'components/common/applicationStatusTag';
+import useSeasons from 'hooks/useSeasons';
+import useQuerySNS from 'hooks/useQuerySNS';
+import useBudgetSource from 'hooks/useBudgetSource';
+import { Link, useNavigate } from 'react-router-dom';
+import { PrimaryOutlinedButton } from 'components/common/button';
 
 const Box = styled.div``;
 const TitBox = styled.div`
+  margin: 40px 0 26px;
+  font-size: 24px;
+  font-family: Poppins-Bold, Poppins;
   font-weight: bold;
-  margin: 40px 0 20px;
+  line-height: 30px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
 `;
+
 const FirstLine = styled.div`
   display: flex;
-  //flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+  align-items: end;
   margin-bottom: 20px;
-  align-items: center;
-  flex-wrap: wrap;
-  //justify-content: space-between;
+  .btn-export {
+    min-width: 111px;
+  }
+  @media (max-width: 1100px) {
+    justify-content: flex-start;
+    flex-direction: column;
+    gap: 20px;
+    align-items: start;
+  }
+  @media (max-width: 1000px) {
+    justify-content: space-between;
+    flex-direction: row;
+    align-items: end;
+  }
 `;
 
 const TopLine = styled.ul`
   display: flex;
-  align-items: center;
+  align-items: end;
   flex-wrap: wrap;
-
+  gap: 24px;
   li {
     display: flex;
-    align-items: center;
-    margin-right: 40px;
-    margin-bottom: 20px;
+    flex-direction: column;
+    > span {
+      margin-bottom: 10px;
+    }
     .tit {
       padding-right: 20px;
       white-space: nowrap;
     }
   }
-`;
-
-const TimeLine = styled.div`
-  display: flex;
-  align-items: center;
-  margin-bottom: 20px;
-`;
-
-const TimeBox = styled.div`
-  display: flex;
-  align-items: center;
-  margin-right: 20px;
-`;
-
-const BorderBox = styled.div`
-  border: 1px solid #eee;
-  padding: 2px 20px;
-  border-radius: 5px;
-  background: #f7f9fc;
+  @media (max-width: 1100px) {
+    width: 100%;
+  }
 `;
 
 const TableBox = styled.div`
@@ -75,27 +84,39 @@ const TableBox = styled.div`
   overflow-x: auto;
   overflow-y: hidden;
   padding-bottom: 3rem;
+  td {
+    vertical-align: middle;
+  }
+  tr:hover {
+    td {
+      //border-bottom: 1px solid #fff !important;
+      //&+td{
+      //  border-bottom: 1px solid #fff !important;
+      //}
+    }
+  }
 `;
 
 export default function AssetList() {
-  const {
-    state: { loading },
-    dispatch,
-  } = useAuthContext();
+  const navigate = useNavigate();
+
+  const { dispatch } = useAuthContext();
   const { t } = useTranslation();
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [total, setTotal] = useState(0);
-  const [show, setShow] = useState<string[]>();
-  const [startDate, setStartDate] = useState<Date>();
-  const [endDate, setEndData] = useState<Date>();
   const [list, setList] = useState<IApplicationDisplay[]>([]);
   const [selectStatus, setSelectStatus] = useState<ApplicationStatus>();
   const [selectMap, setSelectMap] = useState<{ [id: number]: ApplicationStatus | boolean }>({});
   const [applicants, setApplicants] = useState<ISelectItem[]>([]);
   const [selectApplicant, setSelectApplicant] = useState<string>();
-  const [allSource, setAllSource] = useState<ISelectItem[]>([]);
+  // budget source
+  const allSource = useBudgetSource();
   const [selectSource, setSelectSource] = useState<{ id: number; type: 'project' | 'guild' }>();
+  const [detailDisplay, setDetailDisplay] = useState<IApplicationDisplay>();
+  // season
+  const seasons = useSeasons();
+  const [selectSeason, setSelectSeason] = useState<number>();
 
   const statusOption = useMemo(() => {
     return [
@@ -107,72 +128,17 @@ export default function AssetList() {
     ];
   }, [t]);
 
+  const { getMultiSNS } = useQuerySNS();
+
   const handlePage = (num: number) => {
     setPage(num + 1);
   };
   const handlePageSize = (num: number) => {
     setPageSize(num);
   };
-  const handleShow = (data: string[]) => {
-    setShow(data);
-  };
-  const closeShow = () => {
-    setShow(undefined);
-  };
 
-  const changeDate = (rg: Date[]) => {
-    setStartDate(rg[0]);
-    setEndData(rg[1]);
-    if ((rg[0] && rg[1]) || (!rg[0] && !rg[1])) {
-      setSelectMap({});
-      setPage(1);
-    }
-  };
   const onChangeCheckbox = (value: boolean, id: number, status: ApplicationStatus) => {
     setSelectMap({ ...selectMap, [id]: value && status });
-  };
-
-  const getProjects = async () => {
-    try {
-      const res = await requests.project.getProjects({
-        page: 1,
-        size: 1000,
-        sort_order: 'desc',
-        sort_field: 'created_at',
-      });
-      return res.data.rows.map((item) => ({
-        label: item.name,
-        value: item.id,
-        data: 'project',
-      }));
-    } catch (error) {
-      console.error('getProjects in city-hall failed: ', error);
-      return [];
-    }
-  };
-  const getGuilds = async () => {
-    try {
-      const res = await requests.guild.getProjects({
-        page: 1,
-        size: 1000,
-        sort_order: 'desc',
-        sort_field: 'created_at',
-      });
-      return res.data.rows.map((item) => ({
-        label: item.name,
-        value: item.id,
-        data: 'guild',
-      }));
-    } catch (error) {
-      console.error('getGuilds in city-hall failed: ', error);
-      return [];
-    }
-  };
-
-  const getSources = async () => {
-    const projects = await getProjects();
-    const guilds = await getGuilds();
-    setAllSource([...projects, ...guilds]);
   };
 
   const getApplicants = async () => {
@@ -189,10 +155,6 @@ export default function AssetList() {
   };
 
   useEffect(() => {
-    getSources();
-  }, []);
-
-  useEffect(() => {
     getApplicants();
   }, []);
 
@@ -202,9 +164,8 @@ export default function AssetList() {
       const queryData: IQueryParams = {};
       if (selectStatus) queryData.state = selectStatus;
       if (selectApplicant) queryData.applicant = selectApplicant;
-      if (startDate && endDate) {
-        queryData.start_date = formatDate(startDate);
-        queryData.end_date = formatDate(endDate);
+      if (selectSeason) {
+        queryData.season_id = selectSeason;
       }
       if (selectSource && selectSource.type) {
         queryData.entity_id = selectSource.id;
@@ -221,10 +182,22 @@ export default function AssetList() {
         queryData,
       );
       setTotal(res.data.total);
-      const _list = res.data.rows.map((item) => ({
+      const _wallets = new Set<string>();
+      res.data.rows.forEach((item) => {
+        _wallets.add(item.target_user_wallet);
+        _wallets.add(item.submitter_wallet);
+        _wallets.add(item.reviewer_wallet);
+      });
+      const sns_map = await getMultiSNS(Array.from(_wallets));
+
+      const _list = res.data.rows.map((item, idx) => ({
         ...item,
         created_date: formatTime(item.created_at),
         transactions: item.transaction_ids.split(','),
+        asset_display: formatNumber(Number(item.amount)) + ' ' + item.asset_name,
+        submitter_name: sns_map.get(item.submitter_wallet?.toLocaleLowerCase()) as string,
+        reviewer_name: sns_map.get(item.reviewer_wallet?.toLocaleLowerCase()) as string,
+        receiver_name: sns_map.get(item.target_user_wallet?.toLocaleLowerCase()) as string,
       }));
       setList(_list);
     } catch (error) {
@@ -235,9 +208,8 @@ export default function AssetList() {
   };
 
   useEffect(() => {
-    const selectOrClearDate = (startDate && endDate) || (!startDate && !endDate);
-    selectOrClearDate && getRecords();
-  }, [selectStatus, selectApplicant, page, pageSize, startDate, endDate, selectSource]);
+    getRecords();
+  }, [selectSeason, selectStatus, selectApplicant, page, pageSize, selectSource]);
 
   const getSelectIds = (): number[] => {
     const ids = Object.keys(selectMap);
@@ -280,12 +252,23 @@ export default function AssetList() {
     return _is_select_all;
   }, [list, selectMap]);
 
+  const formatSNS = (name: string) => {
+    return name?.endsWith('.seedao') ? name : publicJs.AddressToShow(name, 6);
+  };
+
+  const openRank = () => {
+    navigate('/ranking', { state: '/assets' });
+  };
   return (
     <Box>
-      {show && <ViewHash closeShow={closeShow} txs={show} />}
-      {loading && <Loading />}
+      {detailDisplay && (
+        <ApplicationModal application={detailDisplay} handleClose={() => setDetailDisplay(undefined)} />
+      )}
 
-      <TitBox>{t('Project.Record')}</TitBox>
+      <TitBox>
+        <span>{t('Project.Record')}</span>
+        <PrimaryOutlinedButton onClick={openRank}>{t('GovernanceNodeResult.SCRRank')}</PrimaryOutlinedButton>
+      </TitBox>
       <FirstLine>
         <TopLine>
           <li>
@@ -301,7 +284,7 @@ export default function AssetList() {
             />
           </li>
           <li>
-            <span className="tit">{t('Project.BudgetSource')}</span>
+            <span className="tit">{t('application.BudgetSource')}</span>
             <Select
               options={allSource}
               placeholder=""
@@ -313,7 +296,7 @@ export default function AssetList() {
             />
           </li>
           <li>
-            <span className="tit">{t('Project.Operator')}</span>
+            <span className="tit">{t('application.Operator')}</span>
             <Select
               options={applicants}
               placeholder=""
@@ -324,22 +307,24 @@ export default function AssetList() {
               }}
             />
           </li>
-          <TimeLine>
-            <TimeBox>
-              <BorderBox>
-                <RangeDatePickerStyle
-                  placeholder={t('Project.RangeTime')}
-                  onChange={changeDate}
-                  startDate={startDate}
-                  endDate={endDate}
-                />
-              </BorderBox>
-            </TimeBox>
-            <Button onClick={handleExport} disabled={!selectOne}>
-              {t('Project.Export')}
-            </Button>
-          </TimeLine>
+          <li>
+            <span className="tit">{t('application.Season')}</span>
+            <Select
+              options={seasons}
+              placeholder=""
+              onChange={(value: any) => {
+                setSelectSeason(value?.value);
+                setSelectMap({});
+                setPage(1);
+              }}
+            />
+          </li>
         </TopLine>
+        {/* <div>
+          <Button onClick={handleExport} disabled={!selectOne} className="btn-export">
+            {t('Project.Export')}
+          </Button>
+        </div> */}
       </FirstLine>
 
       <TableBox>
@@ -348,55 +333,53 @@ export default function AssetList() {
             <Table responsive>
               <thead>
                 <tr>
-                  <th>
+                  {/* <th className="chech-th">
                     <Form.Check checked={ifSelectAll} onChange={(e) => onSelectAll(e.target.checked)} />
+                  </th> */}
+                  <th style={{ width: '160px' }}>{t('application.Receiver')}</th>
+                  <th className="center" style={{ width: '200px' }}>
+                    {t('application.AddAssets')}
                   </th>
-                  <th>{t('Project.Time')}</th>
-                  <th>{t('Project.Address')}</th>
-                  <th>{t('Project.AddPoints')}</th>
-                  <th>{t('Project.AddToken')}</th>
-                  <th>{t('Project.Content')}</th>
-                  <th>{t('Project.BudgetSource')}</th>
-                  <th>{t('Project.Note')}</th>
-                  <th>{t('Project.State')}</th>
-                  <th>{t('Project.Operator')}</th>
-                  <th>{t('Project.Auditor')}</th>
-                  <th>{t('Project.TransactionID')}</th>
+                  <th className="center" style={{ width: '200px' }}>
+                    {t('application.Season')}
+                  </th>
+                  <th>{t('application.Content')}</th>
+                  <th className="center" style={{ width: '200px' }}>
+                    {t('application.BudgetSource')}
+                  </th>
+                  <th className="center" style={{ width: '200px' }}>
+                    {t('application.Operator')}
+                  </th>
+                  <th style={{ width: '200px' }}>{t('application.State')}</th>
                 </tr>
               </thead>
               <tbody>
                 {list.map((item) => (
-                  <tr key={item.application_id}>
-                    <td>
+                  <tr key={item.application_id} onClick={() => setDetailDisplay(item)}>
+                    {/* <td>
                       <Form.Check
-                        // status="Primary"
                         checked={!!selectMap[item.application_id]}
                         onChange={(e) => onChangeCheckbox(e.target.checked, item.application_id, item.status)}
-                      ></Form.Check>
+                      />
+                    </td> */}
+                    <td>{item.receiver_name || ''}</td>
+                    <td className="center" style={{ width: '200px' }}>
+                      {item.asset_display}
                     </td>
-                    <td>{item.created_date}</td>
-                    <td>
-                      <div>
-                        <span>{publicJs.AddressToShow(item.target_user_wallet)}</span>
-                        {/* <CopyBox text={item.target_user_wallet}>
-                          <>复制</>
-                        </CopyBox> */}
-                      </div>
+                    <td className="center" style={{ width: '200px' }}>
+                      {item.season_name}
                     </td>
-                    <td>{formatNumber(item.credit_amount)}</td>
-                    <td>{formatNumber(item.token_amount)}</td>
-                    <td>{item.detailed_type}</td>
-                    <td>{item.budget_source}</td>
-                    <td>{item.comment}</td>
-                    <td>{t(formatApplicationStatus(item.status))}</td>
-                    <td>{item.submitter_name || publicJs.AddressToShow(item.submitter_wallet)}</td>
-                    <td>{item.reviewer_name || publicJs.AddressToShow(item.reviewer_wallet)}</td>
                     <td>
-                      {item.status === ApplicationStatus.Completed && (
-                        <Button size="sm" variant="outline-primary" onClick={() => handleShow(item.transactions || [])}>
-                          {t('Project.View')}
-                        </Button>
-                      )}
+                      <BudgetContent>{item.detailed_type}</BudgetContent>
+                    </td>
+                    <td className="center" style={{ width: '200px' }}>
+                      {item.budget_source}
+                    </td>
+                    <td className="center" style={{ width: '200px' }}>
+                      {formatSNS(item.submitter_name)}
+                    </td>
+                    <td style={{ width: '200px' }}>
+                      <ApplicationStatusTag status={item.status} />
                     </td>
                   </tr>
                 ))}
@@ -417,3 +400,11 @@ export default function AssetList() {
     </Box>
   );
 }
+
+const BudgetContent = styled.div`
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+`;

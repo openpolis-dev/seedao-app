@@ -1,0 +1,74 @@
+:root{
+  --bs-border-radius:8px;
+  --bs-dropdown-padding-y:0;
+
+}
+:root[data-bs-theme="light"] {
+  --bs-primary: #5200FF;
+  --bs-primary-hover: #6014FF;
+  --bs-background:#fff;
+  --bs-box--background:#fff;
+  --bs-body-bg:#fff;
+  --bs-body-color:#B0B0B0;
+  --bs-body-color_active:#1A1323;
+  --bs-box-background:#fff;
+  --bs-border-color: #E9EBED;
+  --bs-border-color-focus: #E9EBED;
+  --bs-border-color_opacity: rgba(233, 235, 237, 0.5);
+  --bs-menu-hover:#F8F5FF;
+  --home-center-color:#150F1C;
+  --bs-svg-color: #1A1323;
+  --home-right:#F9F9F9;
+  --home-right_hover:#F8F5FF;
+  --menu-color:#1A1323;
+  --font-color-title:#1A1323;
+  --mask-bg:rgba(255,255,255,0.7);
+  --rht-bg:#fafafa;
+  --line-home:#E9EBED;
+  --box-shadow:2px 4px 4px 0px rgba(211,206,221,0.1);
+  --border-box:none;
+  --table-header: #F5F5F5;
+  --table-border: rgba(217, 217, 217, 0.5);;
+  --bs-table-bg: transparent;
+  --bs-d-button-bg: #F9F9F9;
+  --bs-d-button-border: rgba(217, 217, 217, 0.5);
+  --option-button-border-color: rgba(217, 217, 217, 0.5);
+  --push-border:#fafafa;
+  --input-border:#5200FF;
+  --button-hover-bg: #2D2736;
+}
+
+:root[data-bs-theme="dark"] {
+  --bs-primary: #5200FF;
+  --bs-primary-hover: #6014FF;
+  --bs-background:#0D0C0F;
+  --bs-box--background:#1A1323;
+  --bs-body-bg:#0D0C0F;
+  --bs-body-color:#B0B0B0;
+  --bs-body-color_active:#fff;
+  --bs-box-background:#1A1323;
+  --bs-border-color: #29282F;
+  --bs-border-color-focus: #fff;
+  --bs-border-color_opacity: #29282F;
+  --bs-menu-hover:#261B46;
+  --home-center-color:rgba(203,180,222,0.7);
+  --bs-svg-color: #B0B0B0;
+  --home-right:#1A1323;
+  --font-color-title:#F9F9F9;
+  --home-right_hover:#261B46;
+  --menu-color:#B0B0B0;
+  --mask-bg:rgba(0,0,0,0.7);
+  --rht-bg:#0D0C0F;
+  --line-home:#0D0C0F;
+  --box-shadow: none;
+  --border-box:#29282F;
+  --table-header: #161518;
+  --table-border: #29282F;
+  --bs-table-bg: transparent;
+  --bs-d-button-bg: #1A1323;
+  --bs-d-button-border: #29282F;
+  --option-button-border-color: #1A1323;
+  --push-border:#0D0C0F;
+  --input-border:#fff;
+  --button-hover-bg: #C9C9C9;
+}

@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { Card } from 'react-bootstrap';
+import React, { useState, useEffect, useMemo } from 'react';
 import { IBaseProposal } from 'type/proposal.type';
 import styled from 'styled-components';
 // import { useRouter } from 'next/router';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { formatDate } from 'utils/time';
-import QuillViewer from './quillViewer';
+import { useAuthContext } from 'providers/authProvider';
 
 const CardBody = styled.div``;
 
@@ -13,6 +12,10 @@ export default function ProposalCard({ data }: { data: IBaseProposal }) {
   // const router = useRouter();
   const navigate = useNavigate();
   const [content, setContent] = useState('');
+  const {
+    state: { theme },
+  } = useAuthContext();
+
   const handleContent = async () => {
     let delta: any[] = [];
     try {
@@ -71,16 +74,29 @@ export default function ProposalCard({ data }: { data: IBaseProposal }) {
   const openProposal = () => {
     navigate(`/proposal/thread/${data.id}`);
   };
+
+  const borderStyle = useMemo(() => {
+    return theme ? 'unset' : 'none';
+  }, [theme]);
   return (
-    <CardBox key={data.id}>
+    <CardBox key={data.id} border={borderStyle}>
       <div onClick={openProposal}>
         <CardHeaderStyled>
           <div className="left">
             <UserAvatar src={data.user.photo_url} alt="" />
           </div>
           <div className="right">
-            <div className="name">{data.user.username}</div>
-            <div className="date">{formatDate(new Date(data.updated_at))}</div>
+            <div className="name">
+              <span>{data.user.username}</span>
+              {data.user.user_title?.name && (
+                <UserTag bg={data.user.user_title.background}>{data.user.user_title?.name}</UserTag>
+              )}
+            </div>
+            <div className="date">
+              <Link to={`/proposal/category/${data.category_index_id}`}>#{data.category_name}</Link>
+              <span className="dot-dot"> • </span>
+              <span>{formatDate(new Date(data.updated_at))}</span>
+            </div>
           </div>
         </CardHeaderStyled>
         <CardBody>
@@ -92,39 +108,44 @@ export default function ProposalCard({ data }: { data: IBaseProposal }) {
   );
 }
 
-const CardBox = styled.div`
-  //border: 1px solid #f1f1f1;
+const CardBox = styled.div<{ border: string }>`
+  border: ${(props) => props.border};
   cursor: pointer;
-  background: #fff;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-  border-radius: 0.25rem;
-  margin-bottom: 20px;
+  background: var(--bs-box-background);
+  padding: 24px;
+  border-radius: 16px;
+  margin-bottom: 24px;
+  box-shadow: var(--box-shadow);
 `;
 
 const CardHeaderStyled = styled.div`
   display: flex;
   gap: 10px;
-  padding: 1rem 1.25rem;
   .name {
-    font-weight: 500;
+    font-size: 14px;
+    font-family: Poppins-SemiBold, Poppins;
+    color: var(--bs-body-color_active);
   }
   .date {
-    font-size: 13px;
-    color: #999;
+    font-size: 12px;
+    color: var(--bs-body-color);
+    padding-inline: 2px;
+    margin-top: 5px;
   }
 `;
 
 const UserAvatar = styled.img`
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
 `;
 
 const Title = styled.div`
   font-weight: 600;
-  font-size: 18px;
-  margin-bottom: 10px;
+  margin-block: 16px;
+  font-size: 16px;
+  font-family: Poppins-SemiBold, Poppins;
+  color: var(--bs-body-color_active);
 `;
 
 const ProposalContent = styled.div`
@@ -133,7 +154,20 @@ const ProposalContent = styled.div`
   -webkit-line-clamp: 2;
   overflow: hidden;
   font-size: 14px;
+  color: var(--bs-body-color);
   .ql-editor p {
     line-height: 24px;
   }
+`;
+
+const UserTag = styled.span<{ bg: string }>`
+  padding-inline: 8px;
+  height: 20px;
+  line-height: 20px;
+  display: inline-block;
+  font-size: 12px;
+  color: #000;
+  background-color: ${(props) => props.bg};
+  border-radius: 6px;
+  margin-left: 8px;
 `;

@@ -1,76 +1,41 @@
 import styled from 'styled-components';
-import { Card, InputGroup, Button, Form } from 'react-bootstrap';
-// import { EvaIcon } from '@paljs/ui/Icon';
+import { InputGroup, Button, Form } from 'react-bootstrap';
 import React, { ChangeEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { updateStaffs, IUpdateStaffsParams } from 'requests/guild';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import { ethers } from 'ethers';
 import useToast, { ToastType } from 'hooks/useToast';
 import { updateMembers } from 'requests/cityHall';
-import { DashLg, PlusLg } from 'react-bootstrap-icons';
+import BasicModal from 'components/modals/basicModal';
+import sns from '@seedao/sns-js';
+import PlusMinusButton from 'components/common/plusAndMinusButton';
 
-const Mask = styled.div`
-  background: rgba(0, 0, 0, 0.3);
-  width: 100vw;
-  height: 100vh;
-  position: fixed;
-  z-index: 99;
-  left: 0;
-  top: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  .btnBtm {
-    margin-right: 20px;
-  }
-`;
-
-const CardHeader = styled.div`
-  min-width: 500px;
-  padding: 1rem 1.25rem;
-  border-bottom: 1px solid rgb(237, 241, 247);
-  border-top-left-radius: 0.25rem;
-  border-top-right-radius: 0.25rem;
-  color: rgb(34, 43, 69);
-  font-family: Inter-Regular, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif,
-    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
-  font-size: 0.9375rem;
-  font-weight: 600;
-  line-height: 1.5rem;
-`;
-
-const CardBody = styled.div`
-  padding: 20px;
-`;
+const CardBody = styled.div``;
 const CardFooter = styled.div`
-  padding: 0 20px 20px;
+  text-align: center;
+  margin-top: 40px;
+  button {
+    width: 110px;
+  }
 `;
 
 const ItemBox = styled.div`
-  margin-bottom: 40px;
-  &:last-child {
-    margin-bottom: 0;
+  font-size: 14px;
+  li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    &:last-child {
+      margin-bottom: 0;
+    }
+    .name {
+      font-family: Poppins-SemiBold, Poppins;
+      color: var(--bs-body-color_active);
+    }
   }
-  .title {
-    font-weight: bold;
-    margin-bottom: 10px;
-  }
-  ul {
-    margin-top: 20px;
-    li {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 20px;
-    }
-    input {
-      margin-right: 10px;
-      min-width: 450px;
-    }
-    span {
-      margin-left: 10px;
-    }
+  input {
+    margin-right: 10px;
+    min-width: 450px;
   }
   .iconForm {
     color: var(--bs-primary);
@@ -86,17 +51,17 @@ const InnerBox = styled.div`
 `;
 
 interface Iprops {
+  oldMembers: string[];
   closeAdd: (shouldUpdate?: boolean) => void;
   canUpdateSponsor: boolean;
 }
 export default function Add(props: Iprops) {
-  const { closeAdd, canUpdateSponsor } = props;
+  const { closeAdd, oldMembers } = props;
   const { t } = useTranslation();
   const { dispatch } = useAuthContext();
-  const { showToast, Toast } = useToast();
+  const { showToast } = useToast();
 
   const [adminList, setAdminList] = useState<string[]>(['']);
-  const [memberList, setMemberList] = useState<string[]>(['']);
 
   const handleInput = (e: ChangeEvent, index: number) => {
     const { value } = e.target as HTMLInputElement;
@@ -119,15 +84,61 @@ export default function Add(props: Iprops) {
   };
 
   const submitObject = async () => {
-    const _adminList_invalid = adminList.filter((item) => item && !ethers.utils.isAddress(item));
-    const _invalid_address = [..._adminList_invalid];
+    const checkSNSlst: string[] = [];
+    const sns2walletMap = new Map<string, string>();
+    for (const item of adminList) {
+      if (!ethers.utils.isAddress(item)) {
+        if (!item.endsWith('.seedao')) {
+          showToast(t('Msg.IncorrectAddress', { content: item }), ToastType.Danger);
+          throw Error(t('Msg.IncorrectAddress', { content: item }));
+        } else {
+          checkSNSlst.push(item);
+        }
+      }
+    }
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
 
-    if (_invalid_address.length) {
-      showToast(t('Msg.IncorrectAddress', { content: _invalid_address.join(', ') }), ToastType.Danger);
+    if (checkSNSlst.length) {
+      try {
+        const notOkList: string[] = [];
+        const res = await sns.resolves(checkSNSlst);
+        for (let i = 0; i < res.length; i++) {
+          const wallet = res[i];
+          if (!wallet || ethers.constants.AddressZero === wallet) {
+            notOkList.push(checkSNSlst[i]);
+          } else {
+            sns2walletMap.set(checkSNSlst[i], wallet);
+          }
+        }
+        if (!!notOkList.length) {
+          showToast(t('Msg.IncorrectAddress', { content: notOkList.join(', ') }), ToastType.Danger);
+          return;
+        }
+      } catch (error) {
+        console.error('resolved failed', error);
+        dispatch({ type: AppActionType.SET_LOADING, payload: false });
+        return;
+      }
+    }
+    const _adminList: string[] = [];
+    adminList.forEach((item) => {
+      const wallet = sns2walletMap.get(item)?.toLocaleLowerCase() || item.toLocaleLowerCase();
+      _adminList.push(wallet);
+    });
+    const unique_list = Array.from(new Set(_adminList));
+    if (_adminList.length !== unique_list.length) {
+      showToast(t('city-hall.MemberExist'), ToastType.Danger);
+      dispatch({ type: AppActionType.SET_LOADING, payload: null });
       return;
     }
 
-    const _adminList = adminList.filter((item) => item && ethers.utils.isAddress(item));
+    for (const item of unique_list) {
+      if (oldMembers.includes(item.toLocaleLowerCase())) {
+        showToast(t('city-hall.MemberExist'), ToastType.Danger);
+        dispatch({ type: AppActionType.SET_LOADING, payload: null });
+        return;
+      }
+    }
 
     try {
       const params = {
@@ -147,53 +158,56 @@ export default function Add(props: Iprops) {
   };
 
   return (
-    <Mask>
-      <Card>
-        {Toast}
-        <CardHeader>{t('Project.AddMember')}</CardHeader>
-        <CardBody>
-          <InnerBox>
-            {canUpdateSponsor && (
-              <ItemBox>
-                <div className="title">{t('Project.Dominator')}</div>
-                <ul>
-                  {adminList.map((item, index) => (
-                    <li key={`admin_${index}`}>
-                      <InputGroup>
-                        <Form.Control
-                          type="text"
-                          placeholder={t('Project.Dominator')}
-                          value={item}
-                          onChange={(e) => handleInput(e, index)}
-                        />
-                      </InputGroup>
-                      {index === adminList.length - 1 && (
-                        <span className="iconForm" onClick={() => handleAddAdmin()}>
-                          <PlusLg />
-                        </span>
-                      )}
-
-                      {!(!index && index === adminList.length - 1) && (
-                        <span className="iconForm" onClick={() => removeAdmin(index)}>
-                          <DashLg />
-                        </span>
-                      )}
-                    </li>
-                  ))}
-                </ul>
-              </ItemBox>
-            )}
-          </InnerBox>
-        </CardBody>
-        <CardFooter>
-          <Button variant="outline-primary" className="btnBtm" onClick={() => closeAdd()}>
-            {t('general.cancel')}
-          </Button>
-          <Button onClick={() => submitObject()} disabled={!adminList.length && !memberList.length}>
-            {t('general.confirm')}
-          </Button>
-        </CardFooter>
-      </Card>
-    </Mask>
+    <AddMemberModalWrapper title={t('members.AddTitle')} handleClose={closeAdd}>
+      <CardBody>
+        <InnerBox>
+          <ItemBox>
+            <li>{t('members.AddressName')}</li>
+            {adminList.map((item, index) => (
+              <li key={`admin_${index}`}>
+                <LeftInputBox>
+                  <Form.Control
+                    type="text"
+                    // placeholder={t('Project.Moderator')}
+                    value={item}
+                    onChange={(e) => handleInput(e, index)}
+                  />
+                </LeftInputBox>
+                <OptionBox>
+                  <PlusMinusButton
+                    showMinus={!(!index && index === adminList.length - 1)}
+                    showPlus={index === adminList.length - 1}
+                    onClickMinus={() => removeAdmin(index)}
+                    onClickPlus={handleAddAdmin}
+                  />
+                </OptionBox>
+              </li>
+            ))}
+          </ItemBox>
+        </InnerBox>
+      </CardBody>
+      <CardFooter>
+        <Button variant="outline-primary" className="btnBtm" onClick={() => closeAdd()}>
+          {t('general.cancel')}
+        </Button>
+        <Button onClick={() => submitObject()} disabled={!adminList.length}>
+          {t('general.confirm')}
+        </Button>
+      </CardFooter>
+    </AddMemberModalWrapper>
   );
 }
+
+const AddMemberModalWrapper = styled(BasicModal)``;
+
+const LeftInputBox = styled(InputGroup)`
+  width: 400px;
+  input.form-control {
+    height: 40px;
+    line-height: 40px;
+  }
+`;
+
+const OptionBox = styled.div`
+  display: flex;
+`;

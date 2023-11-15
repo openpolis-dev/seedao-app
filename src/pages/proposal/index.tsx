@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import requests from 'requests';
 import { IBaseProposal } from 'type/proposal.type';
-import { Tabs, Tab } from 'react-bootstrap';
 import { useAuthContext, AppActionType } from 'providers/authProvider';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import ProposalCard from 'components/proposal/proposalCard';
 import ProposalSubNav from 'components/proposal/proposalSubNav';
 import { useTranslation } from 'react-i18next';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import MsgIcon from 'assets/images/proposal/message.png';
+import MsgIcon from 'assets/Imgs/message.svg';
 import { ContainerPadding } from 'assets/styles/global';
+import { Link } from 'react-router-dom';
+import Tabbar from 'components/common/tabbar';
+import ArrowIconSVG from 'components/svgs/rightArrow';
 
 export default function Index() {
   const {
@@ -30,7 +32,7 @@ export default function Index() {
       const resp = await requests.proposal.getCategories();
       dispatch({
         type: AppActionType.SET_PROPOSAL_CATEGORIES,
-        payload: resp.data.group.categories.filter((category) => category.category_id === 19),
+        payload: resp.data.group.categories,
       });
     } catch (error) {
       console.error('getCategories failed', error);
@@ -59,7 +61,7 @@ export default function Index() {
     setOrderType(index === 0 ? 'latest' : 'old');
   };
 
-  const handleSelectTab = (index: string) => {
+  const handleSelectTab = (index: string | number) => {
     setActiveTab(Number(index));
   };
 
@@ -73,50 +75,74 @@ export default function Index() {
 
   return (
     <BoxOuter>
-      <ProposalContainer>
-        <Tabs defaultActiveKey={activeTab} onSelect={(e: any) => handleSelectTab(e)}>
-          <Tab title={t('Proposal.AllCategories')} eventKey={0}></Tab>
-          <Tab title={t('Proposal.TheNeweset')} eventKey={1}></Tab>
-        </Tabs>
-        {activeTab === 0 ? (
-          <div>
-            <SubCategoryCard>
-              {proposal_categories[0].children.map((subCategory) => (
-                <a href={`/proposal/category/${subCategory.category_id}`} key={subCategory.category_id}>
-                  <SubCategoryItem>
-                    <img src={MsgIcon} alt="" width="24px" height="24px" />
-                    <div>
-                      <div className="name">{subCategory.name}</div>
-                      <div>
-                        <span>{subCategory.thread_count} topics</span>
-                      </div>
-                    </div>
-                  </SubCategoryItem>
-                </a>
-              ))}
-            </SubCategoryCard>
-          </div>
-        ) : (
-          <>
-            <ProposalSubNav onSelect={handleChangeOrder} />
-            <div>
-              <InfiniteScroll
-                dataLength={proposals.length}
-                next={getAllProposals}
-                hasMore={hasMore}
-                scrollableTarget="scrollableDiv"
-                loader={<></>}
-              >
-                <ProposalBox>
-                  {proposals.map((proposal) => (
-                    <ProposalCard key={proposal.id} data={proposal} />
+      <Tabbar
+        tabs={[
+          {
+            key: 0,
+            title: t('Proposal.AllCategories'),
+          },
+          {
+            key: 1,
+            title: t('Proposal.TheNeweset'),
+          },
+        ]}
+        defaultActiveKey={activeTab}
+        onSelect={handleSelectTab}
+      />
+      {activeTab === 0 ? (
+        <ContentBox>
+          {proposal_categories.map((category, index) => (
+            <CategoryCard key={index}>
+              <CategoryName to={`/proposal/category/${category.category_id}`}>
+                <span className="dot"></span>
+                <span className="name">{category.name}</span>
+                <ArrowBox>
+                  <ArrowIconSVG />
+                </ArrowBox>
+              </CategoryName>
+
+              {!!category.children.length && (
+                <SubCategoryCard>
+                  {category.children.map((subCategory) => (
+                    <a href={`/proposal/category/${subCategory.category_id}`} key={subCategory.category_id}>
+                      <SubCategoryItem>
+                        <IconBox>
+                          <img src={MsgIcon} alt="" width="24px" height="24px" />
+                        </IconBox>
+                        <div>
+                          <div className="name">{subCategory.name}</div>
+                          <div className="topics">
+                            {subCategory.thread_count} {t('Proposal.Topics')}
+                          </div>
+                        </div>
+                      </SubCategoryItem>
+                    </a>
                   ))}
-                </ProposalBox>
-              </InfiniteScroll>
-            </div>
-          </>
-        )}
-      </ProposalContainer>
+                </SubCategoryCard>
+              )}
+            </CategoryCard>
+          ))}
+        </ContentBox>
+      ) : (
+        <ContentBox>
+          <ProposalSubNav onSelect={handleChangeOrder} />
+          <div>
+            <InfiniteScroll
+              dataLength={proposals.length}
+              next={getAllProposals}
+              hasMore={hasMore}
+              scrollableTarget="scrollableDiv"
+              loader={<></>}
+            >
+              <ProposalBox>
+                {proposals.map((proposal) => (
+                  <ProposalCard key={proposal.id} data={proposal} />
+                ))}
+              </ProposalBox>
+            </InfiniteScroll>
+          </div>
+        </ContentBox>
+      )}
     </BoxOuter>
   );
 }
@@ -126,39 +152,88 @@ const BoxOuter = styled.div`
   ${ContainerPadding};
 `;
 
-const ProposalContainer = styled.div`
-  background: #fff;
-  padding: 20px;
-  min-height: 100%;
+const ContentBox = styled.div`
+  margin-top: 24px;
+`;
+
+const CategoryCard = styled.div`
+  margin-bottom: 40px;
 `;
 
 const SubCategoryCard = styled.div`
+  width: 100%;
   display: flex;
-  flex-direction: column;
-  //gap: 8px;
-  justify-content: space-between;
   flex-wrap: wrap;
   padding: 10px;
+  background-color: var(--bs-box-background);
+  box-shadow: var(--box-shadow);
+  border-radius: 16px;
+  > a {
+    width: 25%;
+  }
 `;
 
 const SubCategoryItem = styled.div`
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
   padding: 16px;
   cursor: pointer;
-  border-bottom: 1px solid #eee;
-  &:hover {
-    box-shadow: 0 0 4px rgba(0, 0, 0, 0.15);
-  }
   .name {
-    color: var(--bs-primary);
+    color: var(--bs-body-color_active);
     font-weight: 600;
+    font-size: 16px;
+    font-family: Poppins-SemiBold, Poppins;
+    margin-bottom: 8px;
+  }
+  .topics {
+    font-size: 14px;
+    color: var(--bs-body-color);
   }
 `;
 
-const ProposalBox = styled.div`
-  & > div {
-    margin: 20px;
+const ProposalBox = styled.div``;
+
+const IconBox = styled.span`
+  display: inline-block;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background-color: var(--bs-primary);
+  text-align: center;
+  img {
+    margin-top: 11px;
+  }
+`;
+
+const ArrowBox = styled.div`
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  border: 1px solid var(--bs-svg-color);
+`;
+
+const CategoryName = styled(Link)`
+  height: 30px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 17px;
+  .dot {
+    width: 4px;
+    height: 18px;
+    background: #14ff00;
+    border-radius: 17px;
+  }
+  .name {
+    font-size: 18px;
+    font-family: Poppins-Bold, Poppins;
+    font-weight: bold;
+    color: var(--bs-body-color_active);
+  }
+  svg {
+    position: relative;
+    top: -6px;
+    left: 3px;
   }
 `;

@@ -3,7 +3,7 @@ import './font.css';
 
 const GlobalStyle = createGlobalStyle`
   * {
-    font-family: "Inter-Regular",-apple-system,BlinkMacSystemFont,
+    font-family: 'Poppins-Regular',-apple-system,BlinkMacSystemFont,
     "Segoe UI",Roboto,"Helvetica Neue",
     Arial,sans-serif,"Apple Color Emoji",
     "Segoe UI Emoji","Segoe UI Symbol" ;
@@ -17,13 +17,26 @@ const GlobalStyle = createGlobalStyle`
   }
   
   body{
-    background: #f0f3f8;
+    background: var(--bs-background);
   }
    
   ul, li, dl, dt, dd,p{
     list-style: none;
     padding: 0;
     margin: 0;
+  }
+
+  input[type=number]::-webkit-inner-spin-button, 
+  input[type=number]::-webkit-outer-spin-button { 
+    -webkit-appearance: none;
+    margin: 0; 
+  }
+  input[type=number] {
+      -moz-appearance: textfield;
+  }
+  .form-control:focus{
+    box-shadow: none!important;
+    border: 1px solid var(--input-border)!important;
   }
 
   a {
@@ -35,35 +48,43 @@ const GlobalStyle = createGlobalStyle`
   }
   .btn{
     white-space: nowrap;
-
   }
+  textarea{
+    resize: none;
+  }
+
   .form-select,.btn{
     font-size: 14px;
     
   }
-  .btn{
-    border-radius: 0.25rem;
-  }
   .btn-primary{
     color:#fff;
-    text-transform: uppercase;
+    height: 40px;
+    background: var(--bs-primary);
+    border-color: var(--bs-primary);
+    border-radius: 8px;
     &:hover, &:focus-visible, &:active {
       color:#fff !important;
+      background: var(--bs-primary-hover)!important;
+      border-color: var(--bs-primary) !important;
     }
     &:disabled{
-      background-color: rgb(230, 228, 235);
+      background: var(--bs-primary);
       border-color: transparent;
-      color: rgba(143, 155, 179, 0.48);
+      opacity: 0.4;
     }
 
   }
   .btn-outline-primary {
-    text-transform: uppercase;
-    background-color: rgba(161, 100, 255, 0.25);
+    border-radius: 8px;
+    height: 40px;
+    border-color: var(--bs-border-color);
     font-weight: bold;
+    color: var(--bs-body-color_active);
     &:hover, &:focus-visible, &:active {
-      background-color: rgba(161, 100, 255, 0.15) !important;
-      color: var(--bs-primary) !important;
+      background-color: transparent !important;
+      color: var(--bs-body-color_active) !important;
+      border-color: var(--bs-body-color_active) !important;
     }
   }
   .nav-tabs{
@@ -102,28 +123,71 @@ const GlobalStyle = createGlobalStyle`
 
   .table {
     th {
-      background: transparent;
-      color: #6e6893;
-      border: 1px solid #d9d5ec;
-      border-left: none;
-      border-right: none;
-      border-radius: 0;
+      background-color: var(--table-header);
       white-space: nowrap;
-      padding: 20px;
+      padding: 20px 10px;
+      color: var(--menu-color);
+      font-family: Poppins-SemiBold, Poppins;
+      font-size: 14px;
+      &.chech-th {
+        padding-inline: 10px;
+      }
+      &:first-child {
+        padding-left: 24px !important;
+        border-top-left-radius: 16px;
+      }
+      &:last-child {
+        padding-right: 20px !important;
+        border-top-right-radius: 16px;
+      }
     }
     td {
-      border-bottom-color: #d9d5ec;
-      color: rgb(34, 43, 69);
       font-size: 14px;
-      padding: 20px;
+      height: 74px;
+      padding: 10px;
+      box-sizing: border-box;
+      color: var(--bs-body-color_active);
+      background-color: var(--rht-bg);
+
+    }
+    th {
+      border-style: none;
+    }
+    th, td {
+      vertical-align: middle;
+      &.center {
+        text-align: center;
+      }
+    }
+    tr td {
+      &:first-child {
+        padding-left: 24px !important;
+      }
+      &:last-child {
+        padding-right: 20px !important;
+      }
     }
     tr:hover td {
-      background: #f2f0f9;
+      background: var(--bs-box--background);
+      &:first-child {
+        border-radius: 8px;
+      }
+      &:last-child {
+        border-radius: 8px;
+      }
+    }
+
+    tbody tr {
+      border-top: 1px solid var(--table-border);
+      &:first-child {
+        border-style: none;
+      }
+      &:hover, &:hover+tr {
+        border-style: none;
+      }
     }
   }
-  .form-control,.form-select{
-    background-color: rgb(247, 249, 252);
-  }
+
   .dateBox{
     position: relative;
     flex: 1 1 auto;
@@ -143,25 +207,72 @@ const GlobalStyle = createGlobalStyle`
     border-radius: var(--bs-border-radius);
     transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
   }
+  .form-control {
+    color: var(--bs-body-color_active);
+    font-size: 14px;
+  }
+  .form-control:hover {
+    border-color: var(--bs-border-color-focus);
+  }
   .form-control:focus {
-    border-color: rgb(161, 100, 255);
-    box-shadow: 0 0 0 0.25rem rgba(161, 100, 255, 0.25);
+    border-color: var(--bs-primary);
+    color: var(--bs-body-color_active);
+    box-shadow: 0 0 0 0.25rem rgba(82, 0, 255, .25);
+  }
+  .form-check-input {
+    width: 18px;
+    height: 18px;
+    border-color: var(--bs-svg-color);
   }
   .form-check-input:focus {
     border-color: var(--bs-primary);
-    box-shadow: 0 0 0 0.25rem rgba(161, 100, 255, 0.25);
+    box-shadow: unset;
   } 
   .form-check-input:checked {
     background-color: var(--bs-primary);
     border-color: var(--bs-primary);
-    box-shadow: 0 0 0 0.25rem rgba(161, 100, 255, 0.25);
+  }
+
+  /* svg color */
+  .svg-stroke {
+    stroke: var(--bs-svg-color) !important;
+  }
+  .svg-fill {
+    fill: var(--bs-svg-color) !important;
+  }
+  .dropdown-item{
+    border-bottom:0!important;
+ 
+  }
+  .dropdown-menu-show{
+    border:1px solid var(--bs-border-color)!important;
+    margin-top: 16px;
+  }
+  /* toast */
+  .Toastify__toast-theme--light {
+    background-color: var(--bs-background);
+    border: 1px solid var(--option-button-border-color);
+    border-radius: 16px;
+    box-shadow: unset;
+    padding: 18px;
+  }
+
+  .Toastify__toast{
+    border: 1px solid var(--bs-border-color);
+  }
+  
+  .Toastify__toast-body {
+    color: var(--bs-body-color_active);
+  }
+  .Toastify__close-button svg path {
+    fill: var(--bs-svg-color);
   }
 `;
 
 export default GlobalStyle;
 
 export const ContainerPadding = css`
-  padding: 40px;
+  padding: 24px 32px;
   @media (max-width: 1024px) {
     padding: 20px;
   }

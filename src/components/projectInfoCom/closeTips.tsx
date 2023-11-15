@@ -1,70 +1,58 @@
 import styled from 'styled-components';
-import { Button, Card } from 'react-bootstrap';
-import React from 'react';
+import { Button, Form } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
+import BasicModal from 'components/modals/basicModal';
+import { useMemo, useState } from 'react';
 
-const Mask = styled.div`
-  background: rgba(0, 0, 0, 0.3);
-  width: 100vw;
-  height: 100vh;
-  position: fixed;
-  z-index: 999999999999999999;
-  left: 0;
-  top: 0;
+const CardBody = styled.div`
+  color: var(--bs-body-color_active);
+  font-size: 14px;
+  line-height: 24px;
+  width: 400px;
+`;
+const CardFooter = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  .btnBtmAll {
-    margin-right: 20px;
+  margin-top: 24px;
+  .btn {
+    width: 110px;
   }
 `;
-const InnerBox = styled.div`
-  width: 400px;
-`;
 
-const CardHeader = styled.div`
-  min-width: 500px;
-  padding: 1rem 1.25rem;
-  border-bottom: 1px solid rgb(237, 241, 247);
-  border-top-left-radius: 0.25rem;
-  border-top-right-radius: 0.25rem;
-  color: rgb(34, 43, 69);
-  font-family: Inter-Regular, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif,
-    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
-  font-size: 0.9375rem;
-  font-weight: 600;
-  line-height: 1.5rem;
-`;
-
-const CardBody = styled.div`
-  padding: 20px;
-`;
-const CardFooter = styled.div`
-  padding: 0 20px 20px;
-`;
 interface Iprops {
   closeModal: () => void;
-  handleClosePro: () => void;
+  handleClosePro: (content: string) => void;
 }
 
 export default function CloseTips(props: Iprops) {
   const { closeModal, handleClosePro } = props;
   const { t } = useTranslation();
+  const [content, setContent] = useState('');
+
+  const confirmDisabled = useMemo(() => {
+    return !content || !content.trim();
+  }, [content]);
 
   return (
-    <Mask>
-      <Card>
-        <CardHeader> {t('Project.CloseProject')}</CardHeader>
-        <CardBody>
-          <InnerBox>{t('Project.confirmClose')}</InnerBox>
-        </CardBody>
-        <CardFooter>
-          <Button variant="outline-primary" className="btnBtmAll" onClick={() => closeModal()}>
-            {t('general.cancel')}
-          </Button>
-          <Button onClick={() => handleClosePro()}>{t('general.confirm')}</Button>
-        </CardFooter>
-      </Card>
-    </Mask>
+    <BasicModal title={t('Project.CloseProject')} handleClose={closeModal}>
+      <CardBody>
+        <Form.Control
+          as="textarea"
+          rows={5}
+          placeholder={t('Project.CloseProjectPlaceholder')}
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+        />
+      </CardBody>
+      <CardFooter>
+        <Button variant="outline-primary" className="btnBtmAll" onClick={closeModal}>
+          {t('general.cancel')}
+        </Button>
+        <Button onClick={() => handleClosePro(content)} disabled={confirmDisabled}>
+          {t('general.confirm')}
+        </Button>
+      </CardFooter>
+    </BasicModal>
   );
 }

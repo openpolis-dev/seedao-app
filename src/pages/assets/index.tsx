@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import AssetList from 'components/assetsCom/assetList';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import requests from 'requests';
 import { useTranslation } from 'react-i18next';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
@@ -14,24 +14,29 @@ import { ethers } from 'ethers';
 import ModifyBudgetModal from 'components/assetsCom/modifyBudget';
 import { BudgetType } from 'type/project.type';
 import { formatNumber } from 'utils/number';
-import BgImg from '../../assets/images/homebg.png';
-import { Clipboard, Share, ChevronDown, ChevronUp, Pencil } from 'react-bootstrap-icons';
+import { Button } from 'react-bootstrap';
+import { ChevronDown, ChevronUp, Pencil } from 'react-bootstrap-icons';
 import { ContainerPadding } from 'assets/styles/global';
+import { Link } from 'react-router-dom';
+import BalanceIcon from 'assets/Imgs/vault/balance.png';
+import WalletIcon from 'assets/Imgs/vault/wallet.png';
+import ChainIcon from 'assets/Imgs/vault/chain.png';
+import SignerIcon from 'assets/Imgs/vault/signer.png';
+import CopyIconSVG from 'components/svgs/copy';
+import ShareIconSVG from 'components/svgs/share';
+import ArrowIconSVG from 'components/svgs/downArrow';
 
 const BoxOuter = styled.div`
   ${ContainerPadding};
+  color: var(--bs-body-color_active);
+  font-family: Poppins-Regular, Poppins;
 `;
 
-const Box = styled.div`
-  padding: 40px 20px;
-`;
 const CardBox = styled.div`
-  background: #fff;
-  box-shadow: rgba(44, 51, 73, 0.1) 0px 0.5rem 1rem 0px;
   height: 100%;
 `;
 
-const FirstLine = styled.ul`
+const FirstLine = styled.ul<{ border: string }>`
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -40,51 +45,24 @@ const FirstLine = styled.ul`
   flex-wrap: wrap;
   margin-bottom: 40px;
   li {
-    width: 23%;
-    height: 192px;
-    //border: 1px solid #f1f1f1;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
     position: relative;
-
-    background: #fff;
-    color: #fff;
-    &:first-child {
-      background: linear-gradient(to right, #9d72fa, #6961fa);
-    }
-    &:nth-child(2) {
-      background: linear-gradient(to right, #f9a488, #fe7c7c);
-    }
-    &:nth-child(3) {
-      background: linear-gradient(to right, #f1a6b6, #8f69d2);
-    }
-    &:nth-child(4) {
-      background: linear-gradient(to right, #3bdabe, #44b5f4);
-    }
-    .inner {
-      box-sizing: border-box;
-      padding: 20px;
-      display: flex;
-      align-items: center;
-      flex-direction: column;
-      //position: relative;
-      //z-index: 9;
-      color: #000;
+    width: 23%;
+    height: 153px;
+    border-radius: 16px;
+    padding: 20px 25px;
+    overflow: hidden;
+    position: relative;
+    background-color: var(--bs-box--background);
+    border: ${(props) => props.border};
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: var(--box-shadow);
+    &:hover {
+      background-color: var(--home-right_hover);
     }
 
-    .decorBg {
-      position: absolute;
-      right: 0;
-      bottom: -25px;
-      font-size: 90px;
-      font-family: 'Jost-Bold';
-      opacity: 0.04;
-      color: #000;
-    }
-    div {
-      text-align: center;
-    }
     @media screen and (max-width: 1000px) {
       width: 48%;
     }
@@ -93,22 +71,13 @@ const FirstLine = styled.ul`
     }
   }
   .num {
-    font-size: 25px;
-    font-weight: 600;
-    margin-bottom: 10px;
-    margin-top: 10px;
-    color: #fff;
-  }
-  .tips {
-    font-size: 0.9rem;
-    color: #fff;
+    font-size: 28px;
+    font-family: Poppins-Medium, Poppins;
+    font-weight: 500;
   }
   @media (max-width: 1100px) {
     .num {
       font-size: 20px;
-    }
-    .tips {
-      font-size: 12px;
     }
   }
 `;
@@ -172,7 +141,10 @@ type VaultInfoMap = {
 
 export default function Index() {
   const { t } = useTranslation();
-  const { dispatch } = useAuthContext();
+  const {
+    dispatch,
+    state: { theme },
+  } = useAuthContext();
   const { Toast, showToast } = useToast();
   const canUseCityhall = usePermission(PermissionAction.AssetsBudget, PermissionObject.Treasury);
 
@@ -234,7 +206,7 @@ export default function Index() {
 
   const getFloorPrice = async () => {
     try {
-      const url = 'https://restapi.nftscan.com/api/v2/statistics/collection/0x23fda8a873e9e46dbe51c78754dddccfbc41cfe1';
+      const url = 'https://restapi.nftscan.com/api/v2/statistics/collection/0x30093266e34a816a53e302be3e59a93b52792fd4';
       const res = await axios.get(url, {
         headers: {
           'X-API-KEY': 'laP3Go52WW4oBXdt7zhJ7aoj',
@@ -338,6 +310,10 @@ export default function Index() {
     getVaultsInfo();
   }, []);
 
+  const borderStyle = useMemo(() => {
+    return theme ? '1px solid #29282F' : 'unset';
+  }, [theme]);
+
   return (
     <BoxOuter>
       {Toast}
@@ -345,58 +321,73 @@ export default function Index() {
         <ModifyBudgetModal handleClose={() => setshowModifyModal(undefined)} handleModify={handleModifyBudget} />
       )}
       <CardBox>
-        <Box>
-          <Vault>
-            <VaultOverview>
-              <div className="vaultInner">
-                <div className="LftBox">
-                  <TotalBalance>{t('Assets.TotalBalance')}</TotalBalance>
-                  <TotalBalanceNum>${formatNumber(Number(totalBalance))}</TotalBalanceNum>
+        <Vault>
+          <VaultOverview border={borderStyle}>
+            <div className="vaultInner">
+              <InfoItem className="left">
+                <div>
+                  <IconStyle src={BalanceIcon} alt="" />
                 </div>
-                <div className="right">
-                  <InfoItem>
-                    <span>{t('Assets.Wallet')}</span>
-                    <span>4</span>
-                  </InfoItem>
-                  <InfoItem>
-                    <span>{t('Assets.MultiSign')}</span>
-                    <span>{totalSigner}</span>
-                  </InfoItem>
-                  <InfoItem>
-                    <span>{t('Assets.Chain')}</span>
-                    <span>2</span>
-                  </InfoItem>
-                  <InfoItem className="detail">
-                    <div onClick={() => setShowVaultDetail(!showVaultDetail)}>
-                      <span>{t('Assets.Detail')}</span>
-                      {showVaultDetail ? <ChevronUp /> : <ChevronDown />}
-                    </div>
-                  </InfoItem>
+                <div className="info-right">
+                  <div className="title">{t('Assets.TotalBalance')}</div>
+                  <div className="balance num topLft">${formatNumber(Number(totalBalance))}</div>
                 </div>
-              </div>
-            </VaultOverview>
+              </InfoItem>
+              {/*<div className="right">*/}
+              <InfoItem>
+                <div>
+                  <IconStyle src={WalletIcon} alt="" />
+                </div>
+                <div className="info-right">
+                  <div className="title">{t('Assets.Wallet')}</div>
+                  <div className="num">4</div>
+                </div>
+              </InfoItem>
+              <InfoItem>
+                <div>
+                  <IconStyle src={SignerIcon} alt="" />
+                </div>
+                <div className="info-right">
+                  <div className="title">{t('Assets.MultiSign')}</div>
+                  <div className="num">{totalSigner}</div>
+                </div>
+              </InfoItem>
+              <InfoItem>
+                <div>
+                  <IconStyle src={ChainIcon} alt="" />
+                </div>
+                <div className="info-right">
+                  <div className="title">{t('Assets.Chain')}</div>
+                  <div className="num">2</div>
+                </div>
+              </InfoItem>
+              <OptionBox>
+                <Link to="/assets/register">
+                  <Button style={{ height: '36px' }}>{t('application.Register')}</Button>
+                </Link>
+                <DetailButton onClick={() => setShowVaultDetail(!showVaultDetail)}>
+                  <span>{t('Assets.Detail')}</span>
+                  <ArrowIconSVG style={{ transform: showVaultDetail ? 'rotate(180deg)' : 'unset' }} />
+                </DetailButton>
+              </OptionBox>
+              {/*</div>*/}
+            </div>
             {showVaultDetail && (
               <VaultInfo>
                 {VAULTS.map((v) => (
                   <VaultItem key={v.address}>
-                    <div className="left">
-                      <span className="name">{t(v.name as any)}</span>
+                    <div className="info-left">
+                      <span className="name">
+                        <DotIcon />
+                        <span>{t(v.name as any)}</span>
+                      </span>
                       <div className="info">
                         <div className="address">
                           <span>{publicJs.AddressToShow(v.address)}</span>
                           <div>
                             <CopyBox text={v.address}>
-                              <Clipboard className="iconBox" />
+                              <CopyIconSVG />
                             </CopyBox>
-                          </div>
-                          <div>
-                            <a
-                              href={`https://app.safe.global/balances?safe=${SAFE_CHAIN[v.chainId].short}:${v.address}`}
-                              target="_blank"
-                              rel="noreferrer"
-                            >
-                              <Share className="iconBox" />
-                            </a>
                           </div>
                         </div>
                         <div className="tag">
@@ -409,83 +400,82 @@ export default function Index() {
                         </div>
                       </div>
                     </div>
-                    <div className="balance">${formatNumber(Number(vaultsMap[v.id]?.balance || 0.0))}</div>
+                    <div className="balance">
+                      <span> ${formatNumber(Number(vaultsMap[v.id]?.balance || 0.0))}</span>
+                      <a
+                        href={`https://app.safe.global/balances?safe=${SAFE_CHAIN[v.chainId].short}:${v.address}`}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        <ShareIconSVG />
+                      </a>
+                    </div>
                   </VaultItem>
                 ))}
               </VaultInfo>
             )}
-          </Vault>
-          <FirstLine>
-            <li>
-              <div className="inner">
-                <LiHead>
-                  <LiTitle>{t('Assets.SupplySCR')}</LiTitle>
-                  <div className="tips"></div>
-                </LiHead>
-                <div className="num">{formatNumber(Number(totalSCR))}</div>
-                <div style={{ textAlign: 'left' }}>
-                  <p className="tips">≈{formatNumber(Number(SCRValue.toFixed(2)))}U</p>
-                  <p className="tips">1SCR ≈ {SCR_PRICE}U</p>
-                </div>
-              </div>
-              <div className="decorBg">SEEDAO</div>
-            </li>
-            <li className="center">
-              <div className="inner">
-                <LiHead>
-                  <LiTitle>{t('Assets.SupplySGN')}</LiTitle>
-                  <div className="tips"></div>
-                </LiHead>
-                <div className="num">{nftData.totalSupply}</div>
-                <div className="tips">
-                  {t('Assets.FloorPrice')}: <span>{nftData.floorPrice}ETH</span>
-                </div>
-              </div>
-              <div className="decorBg">SEEDAO</div>
-            </li>
-            <li>
-              <div className="inner">
-                <LiHead>
-                  <LiTitle>{t('Assets.SeasonUseUSD')}</LiTitle>
-                </LiHead>
-                <div className="num">{formatNumber(asset.token_used_amount)}</div>
-                <AssetBox className="tips">
-                  <span>{t('Assets.SeasonBudget')}:</span>
-                  <span>{formatNumber(asset.token_total_amount)}</span>
-                  {canUseCityhall && (
-                    <span className="btn-edit" onClick={() => setshowModifyModal(BudgetType.Token)}>
-                      <Pencil />
-                      {/*<EvaIcon name="edit-2-outline" options={{ width: '16px', height: '16px' }} />*/}
-                    </span>
-                  )}
-                </AssetBox>
-              </div>
-              <div className="decorBg">SEEDAO</div>
-            </li>
-            <li className="center">
-              <div className="inner">
-                <LiHead>
-                  <LiTitle>{t('Assets.SeasonUsedSCR')}</LiTitle>
-                  <div className="tips">({t('Assets.SCRTip')})</div>
-                </LiHead>
-                <div className="num">{formatNumber(asset.credit_used_amount)}</div>
-                <AssetBox className="tips">
-                  <span>{t('Assets.SeasonBudget')}:</span>
-                  <span>{formatNumber(asset.credit_total_amount)}</span>
-                  {canUseCityhall && (
-                    <span className="btn-edit" onClick={() => setshowModifyModal(BudgetType.Credit)}>
-                      <Pencil />
-                      {/*<EvaIcon name="edit-2-outline" options={{ width: '16px', height: '16px' }} />*/}
-                    </span>
-                  )}
-                </AssetBox>
-              </div>
-              <div className="decorBg">SEEDAO</div>
-            </li>
-          </FirstLine>
+          </VaultOverview>
+        </Vault>
+        <FirstLine border={borderStyle}>
+          <li>
+            <LiHead>
+              <LiTitle>{t('Assets.SupplySCR')}</LiTitle>
+            </LiHead>
+            <div className="num">{formatNumber(Number(totalSCR))}</div>
+            <div style={{ textAlign: 'left' }}>
+              <p className="tips">{/* ≈ {formatNumber(Number(SCRValue.toFixed(2)))} U 1SCR ≈ {SCR_PRICE} U */}</p>
+            </div>
+            <BorderDecoration color="#FF86CB" />
+          </li>
+          <li className="center">
+            <LiHead>
+              <LiTitle>{t('Assets.SupplySGN')}</LiTitle>
+            </LiHead>
+            <div className="num">{nftData.totalSupply}</div>
+            <div className="tips">
+              {t('Assets.FloorPrice')} : <span>{nftData.floorPrice} ETH</span>
+            </div>
+            <BorderDecoration color="#FFB842" />
+          </li>
+          <li>
+            <LiHead>
+              <LiTitle>{t('Assets.SeasonUseUSD')}</LiTitle>
+            </LiHead>
+            <div className="num">{formatNumber(asset.token_used_amount)}</div>
+            <AssetBox className="tips">
+              <span>{t('Assets.SeasonBudget')} : </span>
+              <span>{formatNumber(asset.token_total_amount)}</span>
+              {canUseCityhall && (
+                <span className="btn-edit" onClick={() => setshowModifyModal(BudgetType.Token)}>
+                  <Pencil />
+                  {/*<EvaIcon name="edit-2-outline" options={{ width: '16px', height: '16px' }} />*/}
+                </span>
+              )}
+            </AssetBox>
+            <BorderDecoration color="#03DACD" />
+          </li>
+          <li className="center">
+            <LiHead>
+              <LiTitle>
+                {t('Assets.SeasonUsedSCR')}({t('Assets.SCRTip')})
+              </LiTitle>
+            </LiHead>
+            <div className="num">{formatNumber(asset.credit_used_amount)}</div>
+            <AssetBox className="tips">
+              <span>{t('Assets.SeasonBudget')} : </span>
+              <span>{formatNumber(asset.credit_total_amount)}</span>
+              {canUseCityhall && (
+                <span className="btn-edit" onClick={() => setshowModifyModal(BudgetType.Credit)}>
+                  <Pencil />
+                  {/*<EvaIcon name="edit-2-outline" options={{ width: '16px', height: '16px' }} />*/}
+                </span>
+              )}
+            </AssetBox>
+            <BorderDecoration color="#4378FF" />
+          </li>
+        </FirstLine>
 
-          <AssetList />
-        </Box>
+        <AssetList />
       </CardBox>
     </BoxOuter>
   );
@@ -511,106 +501,122 @@ const Vault = styled.div`
   margin-bottom: 20px;
   border-radius: 4px;
   //background: #fff;
-  color: #000;
 `;
 
-const VaultOverview = styled.div`
-  background: url(${BgImg}) top no-repeat;
-  background-size: 100%;
-  background-attachment: fixed;
-  border-radius: 10px;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+const VaultOverview = styled.div<{ border: string }>`
+  background: var(--bs-box--background);
+  border: ${(props) => props.border};
+  border-radius: 16px;
   overflow: hidden;
+  box-shadow: var(--box-shadow);
   .vaultInner {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: rgba(161, 110, 255, 0.2);
-    padding: 30px 40px;
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
+    min-height: 152px;
+    padding-left: 29px;
+    padding-right: 62px;
   }
   .right {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 60px;
+    //gap: 60px;
   }
 
   @media (max-width: 950px) {
     .vaultInner {
       flex-direction: column;
+      padding-top: 20px;
+      padding: 20px 16px 0 16px;
+      align-items: flex-start;
     }
-    .LftBox {
+    .left {
       width: 100%;
-      display: flex;
-      align-items: center;
-      border-bottom: 1px solid #eee;
       padding-bottom: 20px;
+      margin-bottom: 20px;
+      border-bottom: 1px solid var(--bs-body-color);
+    }
+    .right {
+      width: 100%;
+      gap: unset;
       margin-bottom: 20px;
     }
   }
 `;
 
 const InfoItem = styled.li`
-  ${({ theme }) => css`
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  .topLft {
+    color: #ffa842;
+  }
+  .title {
+    font-size: 14px;
+    color: var(--bs-body-color);
+  }
+  .num {
+    font-size: 28px;
+    font-family: Poppins-Medium, Poppins;
+  }
+
+  .info-right {
     display: flex;
-    align-items: center;
     flex-direction: column;
+    gap: 16px;
+  }
+
+  &.detail {
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.4);
+    padding: 10px 20px;
+    border-radius: 10px;
+
+    div {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+  }
+  > span:first-child {
+  }
+
+  @media (max-width: 950px) {
     gap: 8px;
-    color: #fff;
-    &.detail {
-      cursor: pointer;
-      background: rgba(255, 255, 255, 0.4);
-      color: #000;
-      padding: 10px 20px;
-      border-radius: 10px;
-
-      div {
-        display: flex;
-        align-items: center;
-        gap: 5px;
-      }
+    &:first-child,
+    &:nth-child(2) {
+      padding-right: 40px;
     }
-    > span:first-child {
-      font-weight: ${theme.textSubtitleFontWeight};
-    }
-
-    @media (max-width: 950px) {
-      color: #000;
-      gap: 0;
-      &:first-child,
-      &:nth-child(2) {
-        padding-right: 40px;
-        border-right: 1px solid #eee;
-      }
-    }
-  `}
+  }
 `;
 
 const VaultInfo = styled.ul`
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-  margin: 0 20px;
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
-  padding: 30px 20px 20px;
+  padding-bottom: 20px;
 `;
 const VaultItem = styled.li`
   display: flex;
   justify-content: space-between;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  padding-block: 15px;
-  color: #000;
+  padding: 12px 40px;
+  &:hover {
+    background-color: var(--bs-menu-hover);
+  }
   &:last-child {
     border-bottom: 0;
   }
-  .left {
+  .info-left {
     display: flex;
     gap: 60px;
     align-items: center;
     .name {
       width: 160px;
       font-size: 14px;
+      font-family: Poppins-SemiBold, Poppins;
+      font-weight: 600;
     }
   }
   .tag {
@@ -623,56 +629,31 @@ const VaultItem = styled.li`
     font-size: 14px;
   }
   .address {
-    gap: 5px;
-    > div {
-      height: 20px;
-      cursor: pointer;
-      a {
-        color: unset;
-      }
-    }
+    gap: 8px;
   }
   .iconBox {
     cursor: pointer;
     margin: 0 0 10px 10px;
   }
   .balance {
-    font-weight: 600;
+    font-size: 18px;
+    font-family: Poppins-SemiBold, Poppins;
+    display: flex;
+    gap: 16px;
+    align-items: center;
   }
   @media (max-width: 950px) {
-    .left {
-      gap: 0;
-    }
+    padding: 12px 16px;
   }
 `;
 
-const TotalBalance = styled.div`
-  font-weight: 600;
-  font-size: 1.125rem;
-`;
-
-const TotalBalanceNum = styled.div`
-  font-weight: 600;
-  font-size: 1.375rem;
-  margin-top: 20px;
+const Tag = styled.div`
+  background: #ebe9ff;
+  color: var(--bs-primary);
   text-align: center;
-
-  @media (max-width: 950px) {
-    text-align: left;
-    margin-top: 0;
-    margin-left: 20px;
-  }
-`;
-
-const Tag = styled.span`
-  border: 1px solid var(--bs-primary);
-  background: var(--bs-primary);
-  //border: 1px solid #eecf00;
-  border-radius: 6px;
-  color: #fff;
-
-  padding: 4px 6px;
-  font-size: 12px;
+  border-radius: 8px;
+  width: 128px;
+  line-height: 30px;
   span {
     margin-left: 5px;
   }
@@ -681,12 +662,66 @@ const Tag = styled.span`
 const LiHead = styled.div`
   //height: 40px;
   width: 100%;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.4);
-  padding-bottom: 10px;
-  margin-bottom: 10px;
 `;
 
 const LiTitle = styled.div`
-  color: #fff;
-  font-size: 1.2rem;
+  color: var(--bs-body-color);
+  line-height: 18px;
+`;
+
+const IconStyle = styled.img`
+  width: 54px;
+  height: 54px;
+`;
+
+const DotIcon = styled.span`
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background: var(--bs-primary);
+  border-radius: 50%;
+  margin-right: 14px;
+`;
+
+const OptionBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  button {
+    min-width: 111px;
+    font-size: 14px;
+  }
+  button.btn-outline-primary {
+    border: 1px solid var(--bs-border-color);
+    background-color: var(--bs-box--background);
+    color: var(--bs-body-color_active) !important;
+    &:hover {
+      background-color: unset !important;
+    }
+  }
+`;
+
+const DetailButton = styled.button`
+  min-width: 111px;
+  font-size: 14px;
+  height: 36px;
+  background: var(--bs-d-button-bg);
+  border-radius: 8px;
+  opacity: 1;
+  border: 1px solid var(--bs-d-button-border);
+  color: var(--bs-body-color_active);
+  .svg-fill {
+    fill: var(--bs-body-color) !important;
+  }
+`;
+
+const BorderDecoration = styled.div<{ color: string }>`
+  width: 8px;
+  height: calc(100% - 48px);
+  box-sizing: border-box;
+  background-color: ${(props) => props.color};
+  position: absolute;
+  top: 24px;
+  left: 0%;
+  border-radius: 0 100px 100px 0;
 `;

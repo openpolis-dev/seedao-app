@@ -1,17 +1,26 @@
 export interface IUser {
   id: string;
-  name: string;
+  name?: string;
+  nickname?: string | undefined;
   bio: string;
   avatar: string;
   email?: string;
+  github?: string;
   created_at?: string;
   updated_at?: string;
   wallet?: string;
   discord_profile: string;
   twitter_profile: string;
+  github_profile?: string;
   wechat: string;
   mirror: string;
   assets: any[];
+  level?: any;
+  scr?: any;
+  social_accounts?: any;
+  sbt?: any;
+  seed?: any;
+  roles?: string[];
 }
 
 export interface IUserInfo {
@@ -35,3 +44,9 @@ export type Asset = {
   processing_amount: number;
   total_amount: number;
 };
+
+export enum UserRole {
+  None = 0,
+  Admin,
+  Member,
+}

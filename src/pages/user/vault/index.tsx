@@ -98,14 +98,14 @@ export default function Vault() {
   const getUserAssets = async () => {
     try {
       const res = await requests.user.getUser();
-      const assests = res.data.assets;
-      const _token = assests.find((item) => item.asset_type === BudgetType.Token) || {};
+      const assests = (res as any).assets;
+      const _token = assests.find((item: any) => item.asset_type === BudgetType.Token) || {};
       setToken({
         dealt_amount: _token.dealt_amount || 0,
         processing_amount: _token.processing_amount || 0,
         total_amount: (Number(_token.dealt_amount) || 0) + (Number(_token.processing_amount) || 0),
       });
-      const _credit = assests.find((item) => item.asset_type === BudgetType.Credit) || {};
+      const _credit = assests.find((item: any) => item.asset_type === BudgetType.Credit) || {};
       setCredit({
         dealt_amount: _credit.dealt_amount || 0,
         processing_amount: _credit.processing_amount || 0,

@@ -1,20 +1,20 @@
 import styled from 'styled-components';
-import React, { useEffect, useState, useMemo } from 'react';
-import { Button, Row } from 'react-bootstrap';
+import React, { useEffect, useMemo, useState } from 'react';
 import Add from './add';
-import Del from './Del';
 import { useTranslation } from 'react-i18next';
-import { ReTurnProject, ProjectStatus } from 'type/project.type';
+import { ReTurnProject } from 'type/project.type';
 import { getUsers } from 'requests/user';
-import { IUser } from 'type/user.type';
-// import { useRouter } from 'next/router';
+import { IUser, UserRole } from 'type/user.type';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
-import NoItem from 'components/noItem';
 import { PermissionObject, PermissionAction } from 'utils/constant';
 import usePermission from 'hooks/usePermission';
-import UserCard from 'components/userCard';
 import { useParams } from 'react-router-dom';
 import { useParseSNSList } from 'hooks/useParseSNS';
+import InviteImg from '../../assets/Imgs/person-plus.svg';
+import MemberCard from 'components/common/memberCard';
+import DeleteMemberModal from 'components/modals/deleteMemberModal';
+import { updateStaffs, IUpdateStaffsParams } from 'requests/project';
+import useToast, { ToastType } from 'hooks/useToast';
 
 interface Iprops {
   detail: ReTurnProject | undefined;
@@ -26,8 +26,6 @@ type UserMap = { [w: string]: IUser };
 export default function Members(props: Iprops) {
   const { detail, updateProject } = props;
 
-  // const router = useRouter();
-  // const { id } = router.query;
   const { id } = useParams();
 
   const canUpdateMember = usePermission(PermissionAction.UpdateMember, PermissionObject.ProjPrefix + id);
@@ -35,16 +33,19 @@ export default function Members(props: Iprops) {
 
   const { t } = useTranslation();
   const { dispatch } = useAuthContext();
+  const { showToast } = useToast();
 
-  const [edit, setEdit] = useState(false);
   const [show, setShow] = useState(false);
-  const [showDel, setShowDel] = useState(false);
-  const [selectAdminArr, setSelectAdminArr] = useState<IUser[]>([]);
-  const [selectMemArr, setSelectMemArr] = useState<IUser[]>([]);
-  const [memberArr, setMemberArr] = useState<string[]>([]);
-  const [adminArr, setAdminArr] = useState<string[]>([]);
+  const [memberArr, setMemberArr] = useState<any[]>([]);
+  const [adminArr, setAdminArr] = useState<any[]>([]);
+  const [memberList, setMemberList] = useState<any[]>([]);
+  const [adminList, setAdminList] = useState<any[]>([]);
 
   const [userMap, setUserMap] = useState<UserMap>({});
+  const [toDeleteUser, setToDeleteUser] = useState<{
+    user: IUser;
+    role: UserRole;
+  }>();
 
   const uniqueUsers = useMemo(() => {
     return Array.from(new Set([...memberArr, ...adminArr]));
@@ -65,6 +66,7 @@ export default function Members(props: Iprops) {
       res.data.forEach((r) => {
         userData[r.wallet || ''] = r;
       });
+
       setUserMap(userData);
     } catch (error) {
       console.error('getUsersInfo error:', error);
@@ -76,60 +78,30 @@ export default function Members(props: Iprops) {
   const getDetail = async () => {
     const members = detail?.members || [];
     const sponsors = detail?.sponsors || [];
-    setMemberArr(members.map((m) => m.toLowerCase()));
-    setAdminArr(sponsors.map((m) => m.toLowerCase()));
+    let mArr = members.map((m) => m.toLowerCase());
+    setMemberArr(mArr);
+
+    let sArr = sponsors.map((m) => m.toLowerCase());
+
+    setAdminArr(sArr);
+
     getUsersInfo(Array.from(new Set([...members, ...sponsors])));
   };
 
-  const handleDel = () => {
-    setEdit(true);
-  };
-  const closeDel = () => {
-    setEdit(false);
-    setShowDel(true);
-  };
+  useEffect(() => {
+    let sList = adminArr.map((item: string) => getUser(item));
+    setAdminList([...sList]);
+
+    let Mlist = memberArr.map((item: string) => getUser(item));
+
+    const uniqueArray = Mlist.filter((item2) => !sList.some((item1) => item1.id === item2.id));
+
+    setMemberList([...uniqueArray]);
+  }, [memberArr, adminArr, userMap]);
+
   const closeAdd = (refresh?: boolean) => {
     setShow(false);
     refresh && updateProject();
-  };
-  const handleAdd = () => {
-    setShow(true);
-  };
-  const closeRemove = (refresh?: boolean) => {
-    setShowDel(false);
-    setEdit(false);
-    setSelectAdminArr([]);
-    setSelectMemArr([]);
-    refresh && updateProject();
-  };
-
-  const handleAdminSelect = (selItem: IUser) => {
-    const selectHas = selectAdminArr.findIndex((item) => item?.wallet === selItem.wallet);
-    const arr = [...selectAdminArr];
-    if (selectHas > -1) {
-      arr.splice(selectHas, 1);
-    } else {
-      arr.push(selItem);
-    }
-    setSelectAdminArr(arr);
-  };
-  const handleMemSelect = (selItem: IUser) => {
-    const selectHas = selectMemArr.findIndex((item) => item?.wallet === selItem.wallet);
-    const arr = [...selectMemArr];
-    if (selectHas > -1) {
-      arr.splice(selectHas, 1);
-    } else {
-      arr.push(selItem);
-    }
-    setSelectMemArr(arr);
-  };
-  const formatAdminActive = (num: string) => {
-    const arr = selectAdminArr.filter((item) => item.wallet === num);
-    return !!arr.length;
-  };
-  const formatMemActive = (num: string) => {
-    const arr = selectMemArr.filter((item) => item.wallet === num);
-    return !!arr.length;
   };
 
   const getUser = (wallet: string): IUser => {
@@ -150,107 +122,119 @@ export default function Members(props: Iprops) {
     return user;
   };
 
-  const isProjectOpen = useMemo(() => {
-    return detail?.status === ProjectStatus.Open;
-  }, [detail?.status]);
+  const handleShowRemoveModal = (user: IUser, role: UserRole) => {
+    setToDeleteUser({ user, role });
+  };
 
-  const removeButtonDisabled = useMemo(() => {
-    return !selectAdminArr.length && !selectMemArr.length;
-  }, [selectAdminArr, selectMemArr]);
+  const handleCloseRemoveModal = () => {
+    setToDeleteUser(undefined);
+  };
+
+  const handleRemove = async () => {
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    try {
+      const params: IUpdateStaffsParams = { action: 'remove' };
+      if (toDeleteUser?.role === UserRole.Admin) {
+        params.sponsors = [toDeleteUser.user.wallet || ''];
+      } else if (toDeleteUser) {
+        params.members = [toDeleteUser.user.wallet || ''];
+      }
+      await updateStaffs(id as string, params);
+      handleCloseRemoveModal();
+      showToast(t('Project.RemoveMemSuccess'), ToastType.Success);
+      updateProject();
+    } catch (e) {
+      console.error(e);
+      showToast(JSON.stringify(e), ToastType.Danger);
+    } finally {
+      dispatch({ type: AppActionType.SET_LOADING, payload: null });
+    }
+  };
 
   return (
     <Box>
-      {show && (
-        <Add
-          closeAdd={closeAdd}
-          id={id as string}
-          canUpdateMember={canUpdateMember}
-          canUpdateSponsor={canUpdateSponsor}
+      {show && detail && (
+        <Add closeAdd={closeAdd} id={id as string} oldMembers={[...detail.sponsors, ...detail.members]} />
+      )}
+      {toDeleteUser && (
+        <DeleteMemberModal
+          title={t('Project.RemoveMember')}
+          sns={nameMap[toDeleteUser.user.wallet || '']}
+          user={toDeleteUser.user}
+          onClose={handleCloseRemoveModal}
+          onConfirm={handleRemove}
         />
       )}
-      {showDel && (
-        <Del id={id as string} closeRemove={closeRemove} selectAdminArr={selectAdminArr} selectMemArr={selectMemArr} />
-      )}
-      {isProjectOpen && (canUpdateMember || canUpdateSponsor) && (
-        <TopBox>
-          <Button onClick={() => handleAdd()} disabled={edit}>
-            {t('Project.AddMember')}
-          </Button>
-          {!edit && (
-            <Button variant="outline-primary" onClick={() => handleDel()}>
-              {t('Project.RemoveMember')}
-            </Button>
-          )}
-          {edit && (
-            <>
-              <Button onClick={() => closeDel()} disabled={removeButtonDisabled}>
-                {t('general.confirm')}
-              </Button>
-              <Button variant="outline-primary" onClick={() => closeRemove()}>
-                {t('general.cancel')}
-              </Button>
-            </>
-          )}
-        </TopBox>
-      )}
-
+      <TopBox>
+        <BlockTitle>{t('Project.Members')}</BlockTitle>
+        {(canUpdateMember || canUpdateSponsor) && (
+          <AdeBox onClick={() => setShow(true)}>
+            <img src={InviteImg} alt="" />
+            <span>{t('Project.invite')}</span>
+          </AdeBox>
+        )}
+      </TopBox>
       <ItemBox>
-        <TitleBox>{t('Project.Dominator')}</TitleBox>
-        <Row>
-          {adminArr.map((item, index) => (
-            <UserCard
-              key={index}
-              user={getUser(item)}
-              onSelectUser={handleAdminSelect}
-              formatActive={formatAdminActive}
-              showEdit={edit && canUpdateSponsor}
-              sns={nameMap[getUser(item)?.wallet || '']}
+        <div>
+          {adminList.map((item, index) => (
+            <MemberCard
+              key={`admin_${index}`}
+              user={item}
+              role={UserRole.Admin}
+              sns={nameMap[item.wallet]}
+              removeText={canUpdateSponsor ? t('Project.RemoveMember') : ''}
+              showRemoveModal={handleShowRemoveModal}
             />
           ))}
-        </Row>
-      </ItemBox>
-      {!adminArr.length && <NoItem />}
-
-      <ItemBox>
-        <TitleBox>{t('Project.Others')}</TitleBox>
-        <Row>
-          {memberArr.map((item, index) => (
-            <UserCard
-              key={index}
-              user={getUser(item)}
-              onSelectUser={handleMemSelect}
-              formatActive={formatMemActive}
-              showEdit={edit && canUpdateMember}
-              sns={nameMap[getUser(item)?.wallet || '']}
+        </div>
+        <div>
+          {memberList.map((item, index) => (
+            <MemberCard
+              key={`user_${index}`}
+              user={item}
+              role={UserRole.Member}
+              sns={nameMap[item?.wallet]}
+              removeText={canUpdateSponsor ? t('Project.RemoveMember') : ''}
+              showRemoveModal={handleShowRemoveModal}
             />
           ))}
-        </Row>
+        </div>
       </ItemBox>
-      {!memberArr.length && <NoItem />}
     </Box>
   );
 }
 
-const Box = styled.div`
-  padding: 20px;
-`;
+const Box = styled.div``;
 
 const ItemBox = styled.div`
   display: flex;
   flex-direction: column;
 `;
-const TitleBox = styled.div`
-  font-weight: bold;
-  margin-bottom: 30px;
+
+const AdeBox = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  border-radius: 8px;
+  border: 1px solid var(--bs-border-color);
+  padding: 0 8px;
+  gap: 6px;
+  cursor: pointer;
 `;
 
 const TopBox = styled.div`
-  background: #f5f5f5;
   display: flex;
-  justify-content: flex-end;
-  padding: 20px;
-  margin-bottom: 30px;
+  justify-content: space-between;
+  margin-bottom: 70px;
   button {
     margin-left: 20px;
   }
+`;
+
+const BlockTitle = styled.div`
+  color: var(--bs-body-color_active);
+  font-size: 24px;
+  font-family: Poppins-Bold, Poppins;
+  font-weight: bold;
 `;

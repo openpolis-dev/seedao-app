@@ -2,13 +2,14 @@ import React from 'react';
 import styled from 'styled-components';
 import { Spinner } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
+import LoadingImg from '../assets/Imgs/loading.png';
 
 const Mask = styled.div`
   background: rgba(0, 0, 0, 0.3);
   width: 100vw;
   height: 100vh;
   position: fixed;
-  z-index: 999999999999999999;
+  z-index: 999;
   left: 0;
   top: 0;
   display: flex;
@@ -24,8 +25,19 @@ const Box = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  span {
-    padding-left: 10px;
+
+  position: relative;
+
+  img {
+    animation: rotate 1s infinite linear;
+  }
+  @keyframes rotate {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
   }
 `;
 export default function Loading() {
@@ -33,10 +45,11 @@ export default function Loading() {
   return (
     <Mask>
       <Box>
-        <Spinner animation="border" variant="primary"></Spinner>
-        <div>
-          <span>{t('general.Loading')}...</span>
-        </div>
+        <img src={LoadingImg} alt="" />
+        {/*<Spinner animation="border" variant="primary"></Spinner>*/}
+        {/*<div>*/}
+        {/*  <span>{t('general.Loading')}...</span>*/}
+        {/*</div>*/}
       </Box>
     </Mask>
   );

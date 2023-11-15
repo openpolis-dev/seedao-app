@@ -11,34 +11,31 @@ import { readPermissionUrl } from "../../requests/user";
 import { WalletType } from "../../wallet/wallet";
 import { SELECT_WALLET } from "../../utils/constant";
 import { clearStorage } from "../../utils/auth";
-import { registerPush } from 'utils/serviceWorkerRegistration';
 
 import styled from "styled-components";
-import UnipassIcon from "../../assets/images/wallet/unipass.svg";
-
+import UnipassIcon from "../../assets/Imgs/home/Unipass.svg";
+import OneSignal from 'react-onesignal';
 
 const WalletOption = styled.li`
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  justify-content: space-between;
-  padding: 10px 28px;
-  border-radius: 8px;
-  margin-block: 10px;
-  cursor: pointer;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-  border: 1px solid #f1f1f1;
-  background: #fff;
-  color: #000;
-  font-weight: 600;
-  font-size: 16px;
-  &:hover {
-    background-color: #f5f5f5;
-  }
-  img {
-    width: 28px;
-    height: 28px;
-  }
+    display: flex;
+    align-items: center;
+    padding: 14px 28px;
+    border-radius: 16px;
+    margin-bottom: 16px;
+    cursor: pointer;
+    background:  var(--home-right);
+    color: var(--bs-body-color_active);
+    font-family: 'Poppins-SemiBold';
+    font-weight: 600;
+    font-size: 16px;
+    &:hover {
+        background-color: var(--home-right_hover);
+    }
+    img {
+        width:32px;
+        height: 32px;
+        margin-right: 20px;
+    }
 `;
 
 export const upProvider = new UniPassProvider({
@@ -162,7 +159,11 @@ export default function Unipass(){
                 type: "unipass",
                 account:"account:"+account
             });
-            await registerPush();
+            try {
+              await OneSignal.login(account.toLocaleLowerCase());
+            } catch (error) {
+              console.error('OneSignal login error', error);
+            }
         }catch (e){
             console.error(e)
             ReactGA.event("login_failed",{type: "unipass"});
@@ -178,10 +179,8 @@ export default function Unipass(){
 
 
     return <WalletOption onClick={() => getP()}>
+        <img src={UnipassIcon} alt=""/>
         <span>Unipass</span>
-        <span>
-                    <img src={UnipassIcon} alt="" width="28px" height="28px" />
-                  </span>
     </WalletOption>
 
 }

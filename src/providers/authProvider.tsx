@@ -17,6 +17,8 @@ interface IState {
   wallet_type?: WalletType;
   expandMenu: boolean;
   provider?: any;
+  theme: boolean;
+  snsMap: Map<string, string>;
 }
 
 export enum AppActionType {
@@ -32,6 +34,8 @@ export enum AppActionType {
   SET_WALLET_TYPE = 'set_wallet_type',
   SET_EXPAND_MENU = 'set_expand_menu',
   SET_PROVIDER = 'set_provider',
+  SET_THEME = 'set_theme',
+  SET_SNS_MAP = 'set_sns_map',
 }
 
 interface IAction {
@@ -42,24 +46,26 @@ interface IAction {
 const INIT_STATE: IState = {
   expandMenu: true,
   show_login_modal: false,
+  theme: document.documentElement.getAttribute('data-bs-theme') === 'dark',
   proposal_categories: [
-    {
-      category_id: 19,
-      id: 2785,
-      group_id: 4649,
-      name: '3 层提案专区',
-      thread_count: 0,
-      post_count: 0,
-      can_see: 1,
-      children: [
-        { category_id: 12, id: 2483, group_id: 4649, name: 'P3 提案', thread_count: 0, post_count: 0, can_see: 1 },
-        { category_id: 9, id: 2272, group_id: 4649, name: 'P2 提案', thread_count: 0, post_count: 0, can_see: 1 },
-        { category_id: 14, id: 2485, group_id: 4649, name: 'P1 提案', thread_count: 0, post_count: 0, can_see: 1 },
-      ],
-    },
+    // {
+    //   category_id: 19,
+    //   id: 2785,
+    //   group_id: 4649,
+    //   name: '3 层提案专区',
+    //   thread_count: 0,
+    //   post_count: 0,
+    //   can_see: 1,
+    //   children: [
+    //     { category_id: 12, id: 2483, group_id: 4649, name: 'P3 提案', thread_count: 0, post_count: 0, can_see: 1 },
+    //     { category_id: 9, id: 2272, group_id: 4649, name: 'P2 提案', thread_count: 0, post_count: 0, can_see: 1 },
+    //     { category_id: 14, id: 2485, group_id: 4649, name: 'P1 提案', thread_count: 0, post_count: 0, can_see: 1 },
+    //   ],
+    // },
   ],
   language: '',
   loading: null,
+  snsMap: new Map(),
 };
 
 const AuthContext = createContext<{
@@ -104,10 +110,15 @@ const reducer = (state: IState, action: IAction): IState => {
     case AppActionType.SET_PROVIDER:
       return { ...state, provider: action.payload };
 
+    case AppActionType.SET_THEME:
+      return { ...state, theme: action.payload };
+
     case AppActionType.SET_LAN:
       return { ...state, language: action.payload };
     case AppActionType.SET_WALLET_TYPE:
       return { ...state, wallet_type: action.payload };
+    case AppActionType.SET_SNS_MAP:
+      return { ...state, snsMap: action.payload };
     default:
       throw new Error(`Unknown type: ${action.type}`);
   }

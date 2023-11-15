@@ -1,10 +1,11 @@
 import styled from 'styled-components';
 
 import React from 'react';
-import { Calendar3Range } from 'react-bootstrap-icons';
+import EmptyDarkIcon from 'assets/Imgs/dark/empty.svg';
+import EmptyLightIcon from 'assets/Imgs/light/empty.svg';
+import { useAuthContext } from 'providers/authProvider';
 
 const Box = styled.div`
-  background: #f8f8f8;
   padding: 80px;
   display: flex;
   flex-direction: column;
@@ -12,19 +13,30 @@ const Box = styled.div`
   justify-content: center;
   color: #aaa;
   .sizeTop {
-    font-size: 40px;
     margin-bottom: 10px;
+  }
+  .text {
+    margin-top: 30px;
+    color: var(--bs-body-color_active);
+    font-size: 14px;
   }
 `;
 
-export default function NoItem() {
+interface IProps {
+  text?: string;
+  [key: string]: any;
+}
+
+export default function NoItem({ text, ...rest }: IProps) {
+  const {
+    state: { theme },
+  } = useAuthContext();
   return (
-    <Box>
+    <Box {...rest}>
       <div>
-        {/*<EvaIcon name="monitor-outline" className="sizeTop" />*/}
-        <Calendar3Range className="sizeTop" />
+        <img src={theme ? EmptyDarkIcon : EmptyLightIcon} alt="" className="sizeTop" />
       </div>
-      <div>No Data</div>
+      <div className="text">{text || 'No Data'}</div>
     </Box>
   );
 }

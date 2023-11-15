@@ -1,0 +1,74 @@
+import styled from 'styled-components';
+import React, { useMemo } from 'react';
+import { Row, Col } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
+import Links from 'utils/links';
+import AppCard, { EmptyAppCard } from 'components/common/appCard';
+import { useAuthContext } from 'providers/authProvider';
+
+const AppBox = styled(Row)`
+  div[class^='col'] {
+    min-height: 96px;
+    display: flex;
+    margin-bottom: 24px;
+  }
+  .boxApp {
+    align-items: flex-start;
+    padding: 16px;
+  }
+  .iconBox {
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .inner {
+      background: #fff;
+      width: 44px;
+      height: 44px;
+      border-radius: 8px;
+    }
+    img {
+      width: 24px;
+      height: 24px;
+      border-radius: 8px;
+    }
+  }
+`;
+
+const AppCardBox = (props: { children: React.ReactNode }) => {
+  return (
+    <Col sm={12} md={6} lg={4} xl={3}>
+      {props.children}
+    </Col>
+  );
+};
+
+export default function GovernancePage() {
+  const { t } = useTranslation();
+  const {
+    state: { theme },
+  } = useAuthContext();
+
+  const lst = useMemo(() => {
+    console.log(Links.governance);
+    // @ts-ignore
+    return Links.governance.map((item) => ({ ...item, name: t(item.name) as string, desc: t(item.desc) as string }));
+  }, [t]);
+
+  return (
+    <div>
+      <AppBox>
+        {lst.map((app, i) => (
+          <AppCardBox key={i}>
+            <AppCard {...app} />
+          </AppCardBox>
+        ))}
+        <AppCardBox>
+          <EmptyAppCard theme={theme} />
+        </AppCardBox>
+      </AppBox>
+    </div>
+  );
+}

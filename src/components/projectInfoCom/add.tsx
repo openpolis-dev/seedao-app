@@ -1,155 +1,129 @@
 import styled from 'styled-components';
 import { InputGroup, Button, Form } from 'react-bootstrap';
-import React, { ChangeEvent, useState } from 'react';
-// import { Button } from '@paljs/ui/Button';
+import React, { ChangeEvent, useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { updateStaffs, IUpdateStaffsParams } from 'requests/project';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import { ethers } from 'ethers';
 import useToast, { ToastType } from 'hooks/useToast';
-import { DashLg, PlusLg } from 'react-bootstrap-icons';
+import Select from 'components/common/select';
+import sns from '@seedao/sns-js';
+import BasicModal from 'components/modals/basicModal';
+import PlusMinusButton from 'components/common/plusAndMinusButton';
 
-const Mask = styled.div`
-  background: rgba(0, 0, 0, 0.3);
-  width: 100vw;
-  height: 100vh;
-  position: fixed;
-  z-index: 99;
-  left: 0;
-  top: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  .btnBtm {
-    margin-right: 20px;
-  }
-`;
-const CardBox = styled.div`
-  background: #fff;
-  border-radius: 0.25rem;
-  min-width: 500px;
-`;
+enum UserRole {
+  None = 0,
+  Admin,
+  Member,
+}
 
-const CardHeader = styled.div`
-  padding: 1rem 1.25rem;
-  border-bottom: 1px solid rgb(237, 241, 247);
-  border-top-left-radius: 0.25rem;
-  border-top-right-radius: 0.25rem;
-  color: rgb(34, 43, 69);
-  font-family: Inter-Regular, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif,
-    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
-  font-size: 0.9375rem;
-  font-weight: 600;
-  line-height: 1.5rem;
-`;
-
-const CardBody = styled.div`
-  padding: 20px;
-`;
-const CardFooter = styled.div`
-  padding: 0 20px 20px;
-`;
-
-const ItemBox = styled.div`
-  margin-bottom: 20px;
-  &:last-child {
-    margin-bottom: 0;
-  }
-  .title {
-    font-weight: bold;
-    margin-bottom: 10px;
-  }
-  ul {
-    li {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 20px;
-    }
-    input {
-      margin-right: 10px;
-      min-width: 450px;
-    }
-    span {
-      margin-left: 10px;
-    }
-  }
-  .iconForm {
-    color: var(--bs-primary);
-    font-size: 20px;
-    margin-right: 10px;
-    cursor: pointer;
-  }
-`;
-
-const InnerBox = styled.div`
-  max-height: 400px;
-  overflow-y: auto;
-`;
+type InputUser = {
+  walletOrSNS: string;
+  role: UserRole;
+};
 
 interface Iprops {
+  oldMembers: string[];
   closeAdd: (refresh?: boolean) => void;
   id: string;
-  canUpdateMember: boolean;
-  canUpdateSponsor: boolean;
 }
 export default function Add(props: Iprops) {
-  const { closeAdd, id, canUpdateMember, canUpdateSponsor } = props;
+  const { oldMembers, closeAdd, id } = props;
   const { t } = useTranslation();
   const { dispatch } = useAuthContext();
-  const { Toast, showToast } = useToast();
+  const { showToast } = useToast();
 
-  const [adminList, setAdminList] = useState<string[]>(['']);
-  const [memberList, setMemberList] = useState<string[]>(['']);
+  const [lst, setLst] = useState<InputUser[]>([{ walletOrSNS: '', role: UserRole.None }]);
 
-  const handleInput = (e: ChangeEvent, index: number, type: string) => {
+  const handleInput = (e: ChangeEvent, index: number) => {
     const { value } = e.target as HTMLInputElement;
-    let arr: string[] = [];
-    if (type === 'member') {
-      arr = [...memberList];
-      arr[index] = value;
-      setMemberList(arr);
-    } else {
-      arr = [...adminList];
-      arr[index] = value;
-      setAdminList(arr);
-    }
+    let arr: InputUser[] = [...lst];
+    arr[index].walletOrSNS = value;
+    setLst(arr);
   };
 
-  const handleAddMember = () => {
-    const arr = [...memberList];
-    arr.push('');
-    setMemberList(arr);
+  const handleSelect = (value: UserRole, index: number) => {
+    let arr: InputUser[] = [...lst];
+    arr[index].role = value;
+    setLst(arr);
   };
-  const handleAddAdmin = () => {
-    const arr = [...adminList];
-    arr.push('');
-    setAdminList(arr);
+
+  const handleAddItem = () => {
+    setLst([...lst, { walletOrSNS: '', role: UserRole.None }]);
   };
-  const removeMember = (index: number) => {
-    const arr = [...memberList];
+  const handleRemoveItem = (index: number) => {
+    const arr = [...lst];
     arr.splice(index, 1);
-    setMemberList(arr);
-  };
-  const removeAdmin = (index: number) => {
-    const arr = [...adminList];
-    arr.splice(index, 1);
-    setAdminList(arr);
+    setLst(arr);
   };
 
   const submitObject = async () => {
-    const _adminList_invalid = adminList.filter((item) => item && !ethers.utils.isAddress(item));
-    const _memberList_invalid = memberList.filter((item) => item && !ethers.utils.isAddress(item));
-    const _invalid_address = [..._adminList_invalid, ..._memberList_invalid];
+    const checkSNSlst: string[] = [];
+    const sns2walletMap = new Map<string, string>();
+    for (const item of lst) {
+      if (!item.role) {
+        showToast(t('Msg.SelectRole'), ToastType.Danger);
+        return;
+      }
+      if (!ethers.utils.isAddress(item.walletOrSNS)) {
+        if (!item.walletOrSNS.endsWith('.seedao')) {
+          showToast(t('Msg.IncorrectAddress', { content: item.walletOrSNS }), ToastType.Danger);
+          return;
+        } else {
+          checkSNSlst.push(item.walletOrSNS);
+        }
+      }
+    }
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
 
-    if (_invalid_address.length) {
-      showToast(t('Msg.IncorrectAddress', { content: _invalid_address.join(', ') }), ToastType.Danger);
+    if (checkSNSlst.length) {
+      try {
+        const notOkList: string[] = [];
+        const res = await sns.resolves(checkSNSlst);
+        for (let i = 0; i < res.length; i++) {
+          const wallet = res[i];
+          if (!wallet || ethers.constants.AddressZero === wallet) {
+            notOkList.push(checkSNSlst[i]);
+          } else {
+            sns2walletMap.set(checkSNSlst[i], wallet);
+          }
+        }
+        if (!!notOkList.length) {
+          showToast(t('Msg.IncorrectAddress', { content: notOkList.join(', ') }), ToastType.Danger);
+          throw Error(t('Msg.IncorrectAddress', { content: notOkList.join(', ') }));
+        }
+      } catch (error) {
+        console.error('resolved failed', error);
+        dispatch({ type: AppActionType.SET_LOADING, payload: false });
+        return;
+      }
+    }
+    const _adminList: string[] = [];
+    const _memberList: string[] = [];
+
+    lst.forEach((item) => {
+      const wallet = sns2walletMap.get(item.walletOrSNS)?.toLocaleLowerCase() || item.walletOrSNS.toLocaleLowerCase();
+      if (item.role === UserRole.Member) {
+        _memberList.push(wallet);
+      } else {
+        _adminList.push(wallet);
+      }
+    });
+    const total_list = [..._adminList, ..._memberList];
+    const unique_list = Array.from(new Set(total_list));
+
+    if (total_list.length !== unique_list.length) {
+      showToast(t('Project.MemberExist'), ToastType.Danger);
+      dispatch({ type: AppActionType.SET_LOADING, payload: null });
       return;
     }
-
-    const _adminList = adminList.filter((item) => item && ethers.utils.isAddress(item));
-    const _memberList = memberList.filter((item) => item && ethers.utils.isAddress(item));
-
+    for (const item of unique_list) {
+      if (oldMembers.includes(item)) {
+        showToast(t('Project.MemberExist'), ToastType.Danger);
+        dispatch({ type: AppActionType.SET_LOADING, payload: null });
+        return;
+      }
+    }
     try {
       const params: IUpdateStaffsParams = {
         action: 'add',
@@ -160,11 +134,9 @@ export default function Add(props: Iprops) {
       if (!!_memberList.length) {
         params['members'] = _memberList;
       }
-      dispatch({ type: AppActionType.SET_LOADING, payload: true });
+
       await updateStaffs(id as string, params);
       showToast(t('Project.addMemberSuccess'), ToastType.Success);
-
-      dispatch({ type: AppActionType.SET_LOADING, payload: null });
       closeAdd(true);
     } catch (e) {
       console.error(e);
@@ -175,84 +147,124 @@ export default function Add(props: Iprops) {
     }
   };
 
+  const roleOptions = useMemo(() => {
+    return [
+      { label: t('Project.Moderator'), value: UserRole.Admin },
+      { label: t('Project.Members'), value: UserRole.Member },
+    ];
+  }, [t]);
+
   return (
-    <Mask>
-      <CardBox>
-        {Toast}
-        <CardHeader>{t('Project.AddMember')}</CardHeader>
-        <CardBody>
-          <InnerBox>
-            {canUpdateSponsor && (
-              <ItemBox>
-                <div className="title">{t('Project.Dominator')}</div>
-                <ul>
-                  {adminList.map((item, index) => (
-                    <li key={`admin_${index}`}>
-                      <InputGroup>
-                        <Form.Control
-                          type="text"
-                          placeholder={t('Project.Dominator')}
-                          value={item}
-                          onChange={(e) => handleInput(e, index, 'admin')}
-                        />
-                      </InputGroup>
-                      {index === adminList.length - 1 && (
-                        <span className="iconForm" onClick={() => handleAddAdmin()}>
-                          <PlusLg />
-                        </span>
-                      )}
-
-                      {!(!index && index === adminList.length - 1) && (
-                        <span className="iconForm" onClick={() => removeAdmin(index)}>
-                          <DashLg />
-                        </span>
-                      )}
-                    </li>
-                  ))}
-                </ul>
-              </ItemBox>
-            )}
-            {canUpdateMember && (
-              <ItemBox>
-                <div className="title">{t('Project.Others')}</div>
-                <ul>
-                  {memberList.map((item, index) => (
-                    <li key={`member_${index}`}>
-                      <InputGroup>
-                        <Form.Control
-                          type="text"
-                          placeholder={t('Project.Members')}
-                          value={item}
-                          onChange={(e) => handleInput(e, index, 'member')}
-                        />
-                      </InputGroup>
-                      {index === memberList.length - 1 && (
-                        <span className="iconForm" onClick={() => handleAddMember()}>
-                          <PlusLg />
-                        </span>
-                      )}
-
-                      {!(!index && index === memberList.length - 1) && (
-                        <span className="iconForm" onClick={() => removeMember(index)}>
-                          <DashLg />
-                        </span>
-                      )}
-                    </li>
-                  ))}
-                </ul>
-              </ItemBox>
-            )}
-          </InnerBox>
-        </CardBody>
-        <CardFooter>
-          <Button variant="outline-primary" className="btnBtm" onClick={() => closeAdd()}>
-            {t('general.cancel')}
-          </Button>
-          <Button onClick={() => submitObject()} disabled={!adminList.length && !memberList.length}>
-            {t('general.confirm')}
-          </Button>
-        </CardFooter>
-      </CardBox>
-    </Mask>
+    <AddMemberModal title={t('Project.AddMember')} handleClose={closeAdd}>
+      <CardBody>
+        <InnerBox>
+          <ul>
+            <InputLableRow>
+              <InputBox>{t('Project.AddMemberAddress')}</InputBox>
+              <div style={{ width: '140px' }}>{t('Project.MemberRole')}</div>
+              <OptionBox></OptionBox>
+            </InputLableRow>
+            {lst.map((item, index) => (
+              <li key={index}>
+                <InputBox>
+                  <InputGroup>
+                    <Form.Control type="text" value={item.walletOrSNS} onChange={(e) => handleInput(e, index)} />
+                  </InputGroup>
+                </InputBox>
+                <Select
+                  width="140px"
+                  options={roleOptions}
+                  placeholder=""
+                  NotClear={true}
+                  // isSearchable={false}
+                  onChange={(value: any) => {
+                    handleSelect(value?.value, index);
+                  }}
+                />
+                <OptionBox>
+                  <PlusMinusButton
+                    showMinus={!(!index && index === lst.length - 1)}
+                    showPlus={index === lst.length - 1}
+                    onClickMinus={() => handleRemoveItem(index)}
+                    onClickPlus={handleAddItem}
+                  />
+                </OptionBox>
+              </li>
+            ))}
+          </ul>
+        </InnerBox>
+      </CardBody>
+      <CardFooter>
+        <Button variant="outline-primary" className="btnBtm" onClick={() => closeAdd()}>
+          {t('general.cancel')}
+        </Button>
+        <Button onClick={() => submitObject()} disabled={!lst.length}>
+          {t('general.confirm')}
+        </Button>
+      </CardFooter>
+    </AddMemberModal>
   );
 }
+
+const AddMemberModal = styled(BasicModal)`
+  min-height: 400px;
+  max-height: 80vh;
+  width: 680px;
+  display: flex;
+  flex-direction: column;
+`;
+
+const CardBody = styled.div`
+  flex: 1;
+  overflow-y: auto;
+  margin-bottom: 40px;
+  &::-webkit-scrollbar {
+    display: none;
+    width: 0;
+  }
+`;
+const CardFooter = styled.div`
+  text-align: center;
+  button {
+    width: 110px;
+  }
+`;
+
+const InnerBox = styled.div`
+  height: 100%;
+  ul {
+    margin-top: 20px;
+    height: 100%;
+    li {
+      display: flex;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    input {
+      margin-right: 10px;
+      min-width: 450px;
+    }
+  }
+  .iconForm {
+    color: var(--bs-primary);
+    font-size: 20px;
+    margin-right: 10px;
+    cursor: pointer;
+  }
+`;
+
+const OptionBox = styled.div`
+  width: 88px;
+  margin-left: 10px;
+`;
+
+const InputBox = styled.div`
+  flex: 1;
+`;
+
+const InputLableRow = styled.li`
+  font-size: 14px;
+  font-family: Poppins-SemiBold, Poppins;
+  color: var(--bs-body-color_active);
+  margin-bottom: 8px !important;
+`;
