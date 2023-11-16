@@ -4,7 +4,6 @@ import { Button, Row } from 'react-bootstrap';
 import Add from './add';
 import Del from './Del';
 import { useTranslation } from 'react-i18next';
-import { ReTurnProject } from 'type/project.type';
 import { getUsers } from 'requests/user';
 import { IUser } from 'type/user.type';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
@@ -12,8 +11,7 @@ import NoItem from 'components/noItem';
 import { PermissionObject, PermissionAction } from 'utils/constant';
 import usePermission from 'hooks/usePermission';
 import UserCard from 'components/userCard';
-import { useParseSNSList } from 'hooks/useParseSNS';
-import { getCityHallDetail } from 'requests/cityHall';
+import { getCityHallDetail, MemberGroupType } from 'requests/cityHall';
 import useQuerySNS from 'hooks/useQuerySNS';
 import publicJs from 'utils/publicJs';
 
@@ -26,21 +24,18 @@ export default function Members() {
     state: { snsMap },
   } = useAuthContext();
 
-  const [cityhallMembers, setCityhallMembers] = useState<{ [k: string]: string[] }>({});
-
-  const [detail, setDetail] = useState<ReTurnProject | undefined>();
+  const [id, setId] = useState<number>();
+  const [membersGroupMap, setMembersGroupMap] = useState<{ [w: string]: string[] }>({});
   const [edit, setEdit] = useState(false);
   const [show, setShow] = useState(false);
   const [showDel, setShowDel] = useState(false);
-  const [selectAdminArr, setSelectAdminArr] = useState<IUser[]>([]);
-  const [adminArr, setAdminArr] = useState<string[]>([]);
+  const [selectUsers, setSelectUsers] = useState<{ user: IUser; group: MemberGroupType }[]>([]);
 
   const [userMap, setUserMap] = useState<UserMap>({});
-  const nameMap = useParseSNSList(adminArr);
 
   const { getMultiSNS } = useQuerySNS();
 
-  const canUpdateSponsor = usePermission(PermissionAction.UpdateSponsor, PermissionObject.GuildPrefix + detail?.id);
+  const canUpdateSponsor = usePermission(PermissionAction.UpdateSponsor, PermissionObject.GuildPrefix + id);
 
   const handleMembers = (members: string[]) => {
     return members.map((w) => {
@@ -72,18 +67,19 @@ export default function Members() {
 
   const [govMembers, brandMembers, techMembers] = useMemo(() => {
     return [
-      handleMembers(cityhallMembers.G_GOVERNANCE || []),
-      handleMembers(cityhallMembers.G_BRANDING || []),
-      handleMembers(cityhallMembers.G_TECH || []),
+      handleMembers(membersGroupMap.G_GOVERNANCE || []),
+      handleMembers(membersGroupMap.G_BRANDING || []),
+      handleMembers(membersGroupMap.G_TECH || []),
     ];
-  }, [cityhallMembers, userMap, snsMap]);
+  }, [membersGroupMap, userMap, snsMap]);
 
   const getDetail = async () => {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
       const dt = await getCityHallDetail();
-      setDetail(dt.data);
-      setCityhallMembers(dt.data.grouped_sponsors);
+      setMembersGroupMap(dt.data.grouped_sponsors);
+      setId(dt.data.id);
+      setMembersGroupMap(dt.data.grouped_sponsors);
 
       const _wallets: string[] = [];
       Object.keys(dt.data.grouped_sponsors).forEach((key) => {
@@ -119,6 +115,14 @@ export default function Members() {
     }
   };
 
+  const allMembers = useMemo(() => {
+    const arr: string[] = [];
+    Object.keys(membersGroupMap).forEach((key) => {
+      arr.push(...membersGroupMap[key]);
+    });
+    return arr;
+  }, [membersGroupMap]);
+
   const handleDel = () => {
     setEdit(true);
   };
@@ -136,28 +140,28 @@ export default function Members() {
   const closeRemove = (shouldUpdate?: boolean) => {
     setShowDel(false);
     setEdit(false);
-    setSelectAdminArr([]);
+    setSelectUsers([]);
     shouldUpdate && getDetail();
   };
 
-  const handleAdminSelect = (selItem: IUser) => {
-    const selectHas = selectAdminArr.findIndex((item) => item?.wallet === selItem.wallet);
-    const arr = [...selectAdminArr];
+  const handleAdminSelect = (selItem: IUser, group: MemberGroupType) => {
+    const selectHas = selectUsers.findIndex((item) => item.user?.wallet === selItem.wallet);
+    const arr = [...selectUsers];
     if (selectHas > -1) {
       arr.splice(selectHas, 1);
     } else {
-      arr.push(selItem);
+      arr.push({ user: selItem, group });
     }
-    setSelectAdminArr(arr);
+    setSelectUsers(arr);
   };
   const formatAdminActive = (num: string) => {
-    return !!selectAdminArr.find((item) => item.wallet === num);
+    return !!selectUsers.find((item) => item.user.wallet === num);
   };
 
   return (
     <Box>
-      {show && detail && <Add closeAdd={closeAdd} canUpdateSponsor={canUpdateSponsor} oldMembers={detail.sponsors} />}
-      {showDel && <Del closeRemove={closeRemove} selectAdminArr={selectAdminArr} nameMap={nameMap} />}
+      {show && <Add closeAdd={closeAdd} canUpdateSponsor={canUpdateSponsor} oldMembers={allMembers} />}
+      {showDel && <Del closeRemove={closeRemove} selectUsers={selectUsers} />}
 
       <ItemBox>
         <Grouptitle>{t('city-hall.GovernanceGroup')}</Grouptitle>
@@ -166,7 +170,7 @@ export default function Members() {
             <UserCard
               key={index}
               user={item}
-              onSelectUser={handleAdminSelect}
+              onSelectUser={(u) => handleAdminSelect(u, MemberGroupType.Governance)}
               formatActive={formatAdminActive}
               showEdit={edit && canUpdateSponsor}
               sns={item?.sns}
@@ -181,7 +185,7 @@ export default function Members() {
             <UserCard
               key={index}
               user={item}
-              onSelectUser={handleAdminSelect}
+              onSelectUser={(u) => handleAdminSelect(u, MemberGroupType.Brand)}
               formatActive={formatAdminActive}
               showEdit={edit && canUpdateSponsor}
               sns={item?.sns}
@@ -196,7 +200,7 @@ export default function Members() {
             <UserCard
               key={index}
               user={item}
-              onSelectUser={handleAdminSelect}
+              onSelectUser={(u) => handleAdminSelect(u, MemberGroupType.Tech)}
               formatActive={formatAdminActive}
               showEdit={edit && canUpdateSponsor}
               sns={item?.sns}
@@ -219,7 +223,7 @@ export default function Members() {
           )}
           {edit && (
             <>
-              <Button onClick={() => closeDel()} disabled={!selectAdminArr.length}>
+              <Button onClick={() => closeDel()} disabled={!selectUsers.length}>
                 {t('general.confirm')}
               </Button>
               <Button variant="outline-primary" onClick={() => closeRemove()}>

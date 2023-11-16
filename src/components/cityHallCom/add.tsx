@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import { ethers } from 'ethers';
 import useToast, { ToastType } from 'hooks/useToast';
-import { updateMembers } from 'requests/cityHall';
+import { updateMembers, MemberGroupType } from 'requests/cityHall';
 import BasicModal from 'components/modals/basicModal';
 import sns from '@seedao/sns-js';
 import PlusMinusButton from 'components/common/plusAndMinusButton';
@@ -51,12 +51,6 @@ const InnerBox = styled.div`
   max-height: 50vh;
   overflow-y: auto;
 `;
-
-enum MemberGroupType {
-  Governance = 1,
-  Brand,
-  Tech,
-}
 
 interface Iprops {
   oldMembers: string[];
@@ -152,6 +146,7 @@ export default function Add(props: Iprops) {
     try {
       const params = {
         add: _adminList,
+        group_name: group,
       };
       dispatch({ type: AppActionType.SET_LOADING, payload: true });
       await updateMembers(params);
@@ -232,7 +227,7 @@ export default function Add(props: Iprops) {
         <Button variant="outline-primary" className="btnBtm" onClick={() => closeAdd()}>
           {t('general.cancel')}
         </Button>
-        <Button onClick={() => submitObject()} disabled={!adminList.length}>
+        <Button onClick={() => submitObject()} disabled={!adminList.length || !group}>
           {t('general.confirm')}
         </Button>
       </CardFooter>
