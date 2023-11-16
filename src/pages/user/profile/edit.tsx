@@ -174,6 +174,10 @@ export default function Profile() {
       showToast(t('My.IncorrectLink', { media: 'Twitter' }), ToastType.Danger);
       return;
     }
+    if (github && !github.startsWith('https://github.com/')) {
+      showToast(t('My.IncorrectLink', { media: 'Github' }), ToastType.Danger);
+      return;
+    }
 
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
@@ -389,7 +393,12 @@ export default function Profile() {
                 {t('My.Github')}
               </div>
               <InputBox>
-                <Form.Control type="text" placeholder="" value={github} onChange={(e) => handleInput(e, 'github')} />
+                <Form.Control
+                  type="text"
+                  placeholder="https://github.com/..."
+                  value={github}
+                  onChange={(e) => handleInput(e, 'github')}
+                />
               </InputBox>
             </li>
             <RhtLi>
