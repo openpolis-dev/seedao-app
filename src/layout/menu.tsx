@@ -182,12 +182,13 @@ const Box = styled.div`
   }
 `;
 
-const SwitchBox = styled.div`
+const SwitchBox = styled.div<{ open: string }>`
   display: flex;
   justify-content: flex-end;
   margin-bottom: 10px;
   img {
     cursor: pointer;
+    transform: ${(props) => (props.open === 'open' ? 'rotateY(180deg)' : 'rotateY(0deg)')};
   }
 `;
 
@@ -432,7 +433,11 @@ export default function Menu({ isMedium }: { isMedium: boolean }) {
   return (
     <Box className={boxClassName}>
       <div>
-        <SwitchBox className="topLi" onClick={() => dispatch({ type: AppActionType.SET_EXPAND_MENU, payload: !open })}>
+        <SwitchBox
+          open={open ? 'open' : ''}
+          className="topLi"
+          onClick={() => dispatch({ type: AppActionType.SET_EXPAND_MENU, payload: !open })}
+        >
           <img src={theme ? MenuSwitch : MenuSwitchLight} alt="" />
         </SwitchBox>
       </div>
