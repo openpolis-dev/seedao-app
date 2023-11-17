@@ -1,10 +1,11 @@
 import styled from 'styled-components';
 import { EventDetail } from 'seeucomp';
 import { ContainerPadding } from 'assets/styles/global';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import useToast, { ToastType } from 'hooks/useToast';
 import { getSeeuEventDetail } from 'requests/event';
+import BackerNav from '../../components/common/backNav';
 
 export default function EventDetailPage() {
   const { search } = window.location;
@@ -31,7 +32,12 @@ export default function EventDetailPage() {
     };
     getDetail();
   }, [id]);
-  return <OuterBox>{data && <EventDetail item={data} />}</OuterBox>;
+  return (
+    <OuterBox>
+      <BackerNav title={''} to="/explore?tab=project" mb="40px" />
+      {data && <EventDetail item={data} />}
+    </OuterBox>
+  );
 }
 
 const OuterBox = styled.div`
