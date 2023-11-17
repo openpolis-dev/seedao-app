@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { IApplicationDisplay } from 'type/application.type';
 import NoItem from 'components/noItem';
 import { useTranslation } from 'react-i18next';
@@ -12,6 +12,8 @@ import { ContainerPadding } from 'assets/styles/global';
 import { ApplicationStatus } from 'type/application.type';
 import useQuerySNS from 'hooks/useQuerySNS';
 import publicJs from 'utils/publicJs';
+import { AssetName } from 'utils/constant';
+import { formatNumber } from 'utils/number';
 
 interface IProps {
   bund_id: number;
@@ -82,6 +84,16 @@ export default function ExpandTable({ bund_id, list, handleClose, updateStatus, 
     }
   };
 
+  const totalAssets = useMemo(() => {
+    let usdt_count = 0;
+    let scr_count = 0;
+    list.forEach((item) => {
+      if (item.asset_name === AssetName.Credit) scr_count += Number(item.amount) || 0;
+      if (item.asset_name === AssetName.Token) usdt_count += Number(item.amount) || 0;
+    });
+    return [formatNumber(usdt_count), formatNumber(scr_count)];
+  }, [list]);
+
   return (
     <TableBox>
       <BackBox onClick={handleClose}>
@@ -122,6 +134,13 @@ export default function ExpandTable({ bund_id, list, handleClose, updateStatus, 
               ))}
             </tbody>
           </table>
+          <TotalAssets>
+            <span>{t('Assets.Total')}</span>
+            <span className="value">{totalAssets[0]}</span>
+            <span>{AssetName.Token}</span>
+            <span className="value">{totalAssets[1]}</span>
+            <span>{AssetName.Credit}</span>
+          </TotalAssets>
           <OperateBox>
             <Button
               onClick={handleApprove}
@@ -210,4 +229,16 @@ const BudgetContent = styled.div`
   display: -webkit-box;
   -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
+`;
+
+const TotalAssets = styled.div`
+  line-height: 36px;
+  color: var(--bs-body-color_active);
+  display: flex;
+  gap: 8px;
+  .value {
+    font-size: 20px;
+    font-family: Poppins-SemiBold, Poppins;
+    font-weight: 600;
+  }
 `;
