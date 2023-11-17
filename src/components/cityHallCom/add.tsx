@@ -115,7 +115,7 @@ export default function Add(props: Iprops) {
         }
         if (!!notOkList.length) {
           showToast(t('Msg.IncorrectAddress', { content: notOkList.join(', ') }), ToastType.Danger);
-          return;
+          throw Error(t('Msg.IncorrectAddress', { content: notOkList.join(', ') }));
         }
       } catch (error) {
         console.error('resolved failed', error);
