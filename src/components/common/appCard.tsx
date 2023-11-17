@@ -64,14 +64,14 @@ export default AppCard;
 export const EmptyAppCard = ({ theme }: any) => {
   const { t } = useTranslation();
   return (
-    <AppCardStyle>
+    <AppCardStyleEmp>
       <div className="flexBox">
         <div className="iconBox2">
           <img src={theme ? AddImg : AddImgLight} alt="" />
         </div>
         <div className="tips">{t('resources.wait2add')}</div>
       </div>
-    </AppCardStyle>
+    </AppCardStyleEmp>
   );
 };
 
@@ -160,5 +160,11 @@ const AppCardStyle = styled.div`
     .iconBox {
       font-size: 20px;
     }
+  }
+`;
+
+const AppCardStyleEmp = styled(AppCardStyle)`
+  &:hover {
+    background-color: var(--bs-box--background);
   }
 `;
