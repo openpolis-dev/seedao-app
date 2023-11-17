@@ -28,9 +28,10 @@ const CITY_HALL_MEMBERS = 'https://www.notion.so/3913d631d7bc49e1a0334140e3cd84f
 
 const Box = styled.div`
   background: var(--bs-background);
+  min-height: 100vh;
   .lline {
     display: flex;
-    margin: 40px 20px;
+    margin: 40px 20px 0;
   }
 `;
 
