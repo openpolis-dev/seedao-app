@@ -16,7 +16,10 @@ import { MdPreview } from 'md-editor-rt';
 
 export default function Index() {
   const { t } = useTranslation();
-  const { dispatch } = useAuthContext();
+  const {
+    state: { theme },
+    dispatch,
+  } = useAuthContext();
 
   const { id } = useParams();
 
@@ -72,7 +75,7 @@ export default function Index() {
                 </LftBox>
                 <ContentBox>
                   {/*<ReactMarkdown>{detail?.intro || ''}</ReactMarkdown>*/}
-                  <MdPreview modelValue={detail?.intro || ''} />
+                  <MdPreview theme={theme ? 'dark' : 'light'} modelValue={detail?.intro || ''} />
                 </ContentBox>
               </LastLine>
             </AllBox>
@@ -199,5 +202,9 @@ const ContentBox = styled.div`
 
   img {
     max-width: 100%;
+  }
+
+  .md-editor-dark {
+    background: var(--bs-box--background);
   }
 `;
