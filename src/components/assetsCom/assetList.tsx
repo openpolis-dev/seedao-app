@@ -352,7 +352,7 @@ export default function AssetList() {
                 {/* operator */}
                 <col style={{ width: '160px' }} />
                 {/* state */}
-                <col style={{ width: '130px' }} />
+                <col style={{ width: '170px' }} />
               </colgroup>
               <thead>
                 <tr>
