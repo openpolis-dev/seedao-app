@@ -5,7 +5,7 @@ import { IUser } from 'type/user.type';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import DefaultAvatar from 'assets/Imgs/defaultAvatar.png';
 import useToast, { ToastType } from 'hooks/useToast';
-import { MemberGroupType, updateMembers } from 'requests/cityHall';
+import { MemberGroupType, batchUpdateMembers } from 'requests/cityHall';
 import BasicModal from 'components/modals/basicModal';
 import { NameMapType } from 'hooks/useParseSNS';
 
@@ -75,35 +75,28 @@ export default function Del(props: Iprops) {
       .filter((item) => item.group === MemberGroupType.Tech)
       .map((item) => item.user.wallet || '');
 
-    const reqArr: Promise<any>[] = [];
+    const reqArr: any[] = [];
     if (governance_list.length) {
-      reqArr.push(
-        updateMembers({
-          remove: governance_list,
-          group_name: MemberGroupType.Governance,
-        }),
-      );
+      reqArr.push({
+        remove: governance_list,
+        group_name: MemberGroupType.Governance,
+      });
     }
     if (brand_list.length) {
-      reqArr.push(
-        updateMembers({
-          remove: brand_list,
-          group_name: MemberGroupType.Brand,
-        }),
-      );
+      reqArr.push({
+        remove: brand_list,
+        group_name: MemberGroupType.Brand,
+      });
     }
     if (tech_list.length) {
-      reqArr.push(
-        updateMembers({
-          remove: tech_list,
-          group_name: MemberGroupType.Tech,
-        }),
-      );
+      reqArr.push({
+        remove: tech_list,
+        group_name: MemberGroupType.Tech,
+      });
     }
-
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
-      await Promise.allSettled(reqArr);
+      await batchUpdateMembers(reqArr);
       showToast(t('Guild.RemoveMemSuccess'), ToastType.Success);
     } catch (e) {
       console.error(e);
