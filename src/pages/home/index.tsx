@@ -452,7 +452,7 @@ export default function Home() {
 
               {Publicitys.map((item: any, index) => {
                 return item.id.startsWith('module') ? (
-                  <Col>
+                  <Col key={index}>
                     <Link to={item.link}>
                       <BtmBox>
                         <div>
