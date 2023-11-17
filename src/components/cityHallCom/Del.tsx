@@ -87,7 +87,7 @@ export default function Del(props: Iprops) {
     if (brand_list.length) {
       reqArr.push(
         updateMembers({
-          remove: governance_list,
+          remove: brand_list,
           group_name: MemberGroupType.Brand,
         }),
       );
@@ -95,7 +95,7 @@ export default function Del(props: Iprops) {
     if (tech_list.length) {
       reqArr.push(
         updateMembers({
-          remove: governance_list,
+          remove: tech_list,
           group_name: MemberGroupType.Tech,
         }),
       );
