@@ -61,11 +61,11 @@ export default function SeeuNetwork() {
   }, [pageCur, pageSize]);
   return (
     <OuterBox>
-      <TitBox>
-        <div className="titLft">
-          <Tabbar defaultActiveKey={0} tabs={[{ key: 0, title: t('event.events') }]} />
-        </div>
-      </TitBox>
+      {/*<TitBox>*/}
+      {/*  <div className="titLft">*/}
+      {/*    <Tabbar defaultActiveKey={0} tabs={[{ key: 0, title: t('event.events') }]} />*/}
+      {/*  </div>*/}
+      {/*</TitBox>*/}
       <Row>
         {lst.map((item, idx) => (
           <Col key={idx} sm={12} md={6} lg={3} xl={3} style={{ marginBottom: '30px' }}>
