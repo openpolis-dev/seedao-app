@@ -34,7 +34,7 @@ export default function EventDetailPage() {
   }, [id]);
   return (
     <OuterBox>
-      <BackerNav title={''} to="/explore?tab=project" mb="40px" />
+      <BackerNav title={''} to="/event" mb="40px" />
       {data && <EventDetail item={data} />}
     </OuterBox>
   );
