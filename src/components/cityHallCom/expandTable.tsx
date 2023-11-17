@@ -22,9 +22,18 @@ interface IProps {
   updateStatus: (status: ApplicationStatus) => void;
   showLoading: (show: boolean) => void;
   status?: ApplicationStatus;
+  applyIntro: string;
 }
 
-export default function ExpandTable({ bund_id, list, handleClose, updateStatus, showLoading, status }: IProps) {
+export default function ExpandTable({
+  bund_id,
+  list,
+  handleClose,
+  updateStatus,
+  showLoading,
+  status,
+  applyIntro,
+}: IProps) {
   const { t } = useTranslation();
   const { showToast } = useToast();
 
@@ -141,6 +150,10 @@ export default function ExpandTable({ bund_id, list, handleClose, updateStatus, 
             <span className="value">{totalAssets[1]}</span>
             <span>{AssetName.Credit}</span>
           </TotalAssets>
+          <MoreInfo>
+            <MoreInfoTitle>{t('application.RegisterNote')}</MoreInfoTitle>
+            <MoreInfoDesc>{applyIntro}</MoreInfoDesc>
+          </MoreInfo>
           <OperateBox>
             <Button
               onClick={handleApprove}
@@ -241,4 +254,15 @@ const TotalAssets = styled.div`
     font-family: Poppins-SemiBold, Poppins;
     font-weight: 600;
   }
+`;
+
+const MoreInfo = styled.div`
+  color: var(--bs-body-color_active);
+  margin-top: 6px;
+`;
+
+const MoreInfoTitle = styled.div``;
+
+const MoreInfoDesc = styled.div`
+  font-size: 12px;
 `;

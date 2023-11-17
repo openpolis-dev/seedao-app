@@ -106,6 +106,7 @@ export default function Register() {
   const [showMore, setShowMore] = useState<IApplicationDisplay[]>();
   const [showBundleId, setShowBundleId] = useState<number>();
   const [bundleStatus, setShowBundleStatus] = useState<ApplicationStatus>();
+  const [applyIntro, setApplyIntro] = useState('');
 
   const [snsMap, setSnsMap] = useState<Map<string, string>>(new Map());
 
@@ -197,6 +198,7 @@ export default function Register() {
     setShowMore(undefined);
     setShowBundleId(undefined);
     setShowBundleStatus(undefined);
+    setApplyIntro('');
   };
   const updateStatus = (status: ApplicationStatus) => {
     if (!showMore) {
@@ -217,6 +219,7 @@ export default function Register() {
           handleClose={handleclose}
           updateStatus={updateStatus}
           showLoading={showLoading}
+          applyIntro={applyIntro}
         />
       ) : (
         <>
@@ -318,6 +321,7 @@ export default function Register() {
                               setShowMore(item.records);
                               setShowBundleId(item.id);
                               setShowBundleStatus(item.state);
+                              setApplyIntro(item.comment);
                             }}
                           >
                             {t('application.TotalCount', { count: item.records.length })}
