@@ -338,26 +338,34 @@ export default function AssetList() {
         {list.length ? (
           <>
             <Table responsive>
+              <colgroup>
+                {/* receiver */}
+                <col style={{ width: '160px' }} />
+                {/* add assets */}
+                <col style={{ width: '140px' }} />
+                {/* season */}
+                <col style={{ width: '100px' }} />
+                {/* Content */}
+                <col />
+                {/* source */}
+                <col style={{ width: '140px' }} />
+                {/* operator */}
+                <col style={{ width: '160px' }} />
+                {/* state */}
+                <col style={{ width: '130px' }} />
+              </colgroup>
               <thead>
                 <tr>
                   {/* <th className="chech-th">
                     <Form.Check checked={ifSelectAll} onChange={(e) => onSelectAll(e.target.checked)} />
                   </th> */}
-                  <th style={{ width: '160px' }}>{t('application.Receiver')}</th>
-                  <th className="center" style={{ width: '200px' }}>
-                    {t('application.AddAssets')}
-                  </th>
-                  <th className="center" style={{ width: '200px' }}>
-                    {t('application.Season')}
-                  </th>
+                  <th>{t('application.Receiver')}</th>
+                  <th className="center">{t('application.AddAssets')}</th>
+                  <th className="center">{t('application.Season')}</th>
                   <th>{t('application.Content')}</th>
-                  <th className="center" style={{ width: '200px' }}>
-                    {t('application.BudgetSource')}
-                  </th>
-                  <th className="center" style={{ width: '200px' }}>
-                    {t('application.Operator')}
-                  </th>
-                  <th style={{ width: '200px' }}>{t('application.State')}</th>
+                  <th className="center">{t('application.BudgetSource')}</th>
+                  <th className="center">{t('application.Operator')}</th>
+                  <th>{t('application.State')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -371,22 +379,14 @@ export default function AssetList() {
                     </td> */}
                     <td>{formatSNS(item.receiver_name || '')}</td>
 
-                    <td className="center" style={{ width: '200px' }}>
-                      {item.asset_display}
-                    </td>
-                    <td className="center" style={{ width: '200px' }}>
-                      {item.season_name}
-                    </td>
+                    <td className="center">{item.asset_display}</td>
+                    <td className="center">{item.season_name}</td>
                     <td>
                       <BudgetContent>{item.detailed_type}</BudgetContent>
                     </td>
-                    <td className="center" style={{ width: '200px' }}>
-                      {item.budget_source}
-                    </td>
-                    <td className="center" style={{ width: '200px' }}>
-                      {formatSNS(item.submitter_name)}
-                    </td>
-                    <td style={{ width: '200px' }}>
+                    <td className="center">{item.budget_source}</td>
+                    <td className="center">{formatSNS(item.submitter_name)}</td>
+                    <td>
                       <ApplicationStatusTag status={item.status} />
                     </td>
                   </tr>
