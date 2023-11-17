@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { WindowPlus } from 'react-bootstrap-icons';
 import DefaultImg from '../../assets/Imgs/dark/default.png';
 import DefaultImgLight from '../../assets/Imgs/light/default.png';
-import { useAuthContext } from '../../providers/authProvider';
+import { AppActionType, useAuthContext } from '../../providers/authProvider';
 import AddImg from '../../assets/Imgs/dark/add.svg';
 import AddImgLight from '../../assets/Imgs/light/add.svg';
 
@@ -28,6 +28,7 @@ const AppCard = ({
   const navigate = useNavigate();
   const {
     state: { theme, userData },
+    dispatch,
   } = useAuthContext();
   const handleClickEvent = () => {
     if (id.startsWith('module-')) {
@@ -38,7 +39,7 @@ const AppCard = ({
         // navigate(`/resources/detail/${url}`);
         handleShow && handleShow(url);
       } else {
-        return;
+        dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: true });
       }
     } else {
       window.open(link, '_blank');
