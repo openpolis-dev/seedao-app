@@ -28,7 +28,7 @@ export const updateMembers = (data: IUpdateMemberParams) => {
 };
 
 export const batchUpdateMembers = (data: IUpdateMemberParams[]) => {
-  return request.post(`${PATH_PREFIX}/batch_udpate_members`, data);
+  return request.post(`${PATH_PREFIX}/batch_update_members`, data);
 };
 
 export interface IUpdateBudgetParams {
