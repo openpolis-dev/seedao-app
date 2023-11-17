@@ -83,7 +83,9 @@ export default function Members() {
 
       const _wallets: string[] = [];
       Object.keys(dt.data.grouped_sponsors).forEach((key) => {
-        _wallets.push(...dt.data.grouped_sponsors[key]);
+        if (dt.data.grouped_sponsors[key]) {
+          _wallets.push(...dt.data.grouped_sponsors[key]);
+        }
       });
       const wallets = Array.from(new Set(_wallets));
       getUsersInfo(wallets);
@@ -118,7 +120,7 @@ export default function Members() {
   const allMembers = useMemo(() => {
     const arr: string[] = [];
     Object.keys(membersGroupMap).forEach((key) => {
-      arr.push(...membersGroupMap[key]);
+      arr.push(...(membersGroupMap[key] || []));
     });
     return arr;
   }, [membersGroupMap]);
