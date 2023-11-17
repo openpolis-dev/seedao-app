@@ -36,7 +36,8 @@ export default function LoginModal({ showModal }: any) {
 
   useEffect(() => {
     let type = localStorage.getItem(SELECT_WALLET);
-    let walletType = type ? (type as Wallet) : Wallet.METAMASK_INJECTED;
+    let walletType = type as Wallet;
+
     if (account && provider) return;
     if (walletType === Wallet.METAMASK_INJECTED && window.ethereum) {
       // metamask

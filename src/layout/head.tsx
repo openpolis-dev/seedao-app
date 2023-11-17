@@ -133,7 +133,7 @@ export default function Header() {
         }
       });
       ethereum?.on('accountsChanged', function () {
-        onClickLogout();
+        if (!show_login_modal) onClickLogout();
       });
     };
 
