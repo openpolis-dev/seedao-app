@@ -27,11 +27,14 @@ instance.interceptors.request.use(
     ) {
       return config;
     }
+    if (['/user/login', '/user/refresh_nonce'].includes(config.url)) {
+      return config;
+    }
+
     const tokenstr = localStorage.getItem(SEEDAO_USER);
     if (!tokenstr) {
       return config;
     }
-
     const tokenData = parseToken(tokenstr);
     if (!checkTokenValid(tokenData?.token, tokenData?.token_exp)) {
       clearStorage();
