@@ -254,7 +254,11 @@
     "CreateGuildDesc": "依照社区提案来创建相应的公会",
     "PointsAndTokenAudit": "积分及token审核",
     "PointsAndTokenAuditDesc": "审核积分及token的发放申请",
-    "MemberExist": "请不要重复添加成员"
+    "MemberExist": "请不要重复添加成员",
+    "MemberGroup": "成员分组",
+    "GovernanceGroup": "治理小组",
+    "BrandGroup": "品牌小组",
+    "TechGroup": "技术小组"
   },
   "GovernanceNodeResult": {
     "SearchTip": "SNS",

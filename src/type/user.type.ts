@@ -21,6 +21,7 @@ export interface IUser {
   sbt?: any;
   seed?: any;
   roles?: string[];
+  sns?: string;
 }
 
 export interface IUserInfo {

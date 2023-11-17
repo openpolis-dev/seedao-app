@@ -118,6 +118,8 @@ export default function AssetList() {
   const seasons = useSeasons();
   const [selectSeason, setSelectSeason] = useState<number>();
 
+  const [snsMap, setSnsMap] = useState<Map<string, string>>(new Map());
+
   const statusOption = useMemo(() => {
     return [
       { label: t(formatApplicationStatus(ApplicationStatus.Open)), value: ApplicationStatus.Open },
@@ -158,6 +160,11 @@ export default function AssetList() {
     getApplicants();
   }, []);
 
+  const handleSNS = async (wallets: string[]) => {
+    const sns_map = await getMultiSNS(wallets);
+    setSnsMap(sns_map);
+  };
+
   const getRecords = async () => {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
@@ -171,7 +178,6 @@ export default function AssetList() {
         queryData.entity_id = selectSource.id;
         queryData.entity = selectSource.type;
       }
-
       const res = await requests.application.getApplications(
         {
           page,
@@ -186,18 +192,18 @@ export default function AssetList() {
       res.data.rows.forEach((item) => {
         _wallets.add(item.target_user_wallet);
         _wallets.add(item.submitter_wallet);
-        _wallets.add(item.reviewer_wallet);
+        item.reviewer_wallet && _wallets.add(item.reviewer_wallet);
       });
-      const sns_map = await getMultiSNS(Array.from(_wallets));
+      handleSNS(Array.from(_wallets));
 
       const _list = res.data.rows.map((item, idx) => ({
         ...item,
         created_date: formatTime(item.created_at),
         transactions: item.transaction_ids.split(','),
         asset_display: formatNumber(Number(item.amount)) + ' ' + item.asset_name,
-        submitter_name: sns_map.get(item.submitter_wallet?.toLocaleLowerCase()) as string,
-        reviewer_name: sns_map.get(item.reviewer_wallet?.toLocaleLowerCase()) as string,
-        receiver_name: sns_map.get(item.target_user_wallet?.toLocaleLowerCase()) as string,
+        submitter_name: item.submitter_wallet?.toLocaleLowerCase(),
+        reviewer_name: item.reviewer_wallet?.toLocaleLowerCase(),
+        receiver_name: item.target_user_wallet?.toLocaleLowerCase(),
       }));
       setList(_list);
     } catch (error) {
@@ -252,7 +258,8 @@ export default function AssetList() {
     return _is_select_all;
   }, [list, selectMap]);
 
-  const formatSNS = (name: string) => {
+  const formatSNS = (wallet: string) => {
+    const name = snsMap.get(wallet) || wallet;
     return name?.endsWith('.seedao') ? name : publicJs.AddressToShow(name, 6);
   };
 
@@ -262,7 +269,7 @@ export default function AssetList() {
   return (
     <Box>
       {detailDisplay && (
-        <ApplicationModal application={detailDisplay} handleClose={() => setDetailDisplay(undefined)} />
+        <ApplicationModal application={detailDisplay} handleClose={() => setDetailDisplay(undefined)} snsMap={snsMap} />
       )}
 
       <TitBox>
@@ -331,26 +338,34 @@ export default function AssetList() {
         {list.length ? (
           <>
             <Table responsive>
+              <colgroup>
+                {/* receiver */}
+                <col style={{ width: '160px' }} />
+                {/* add assets */}
+                <col style={{ width: '140px' }} />
+                {/* season */}
+                <col style={{ width: '100px' }} />
+                {/* Content */}
+                <col />
+                {/* source */}
+                <col style={{ width: '140px' }} />
+                {/* operator */}
+                <col style={{ width: '160px' }} />
+                {/* state */}
+                <col style={{ width: '170px' }} />
+              </colgroup>
               <thead>
                 <tr>
                   {/* <th className="chech-th">
                     <Form.Check checked={ifSelectAll} onChange={(e) => onSelectAll(e.target.checked)} />
                   </th> */}
-                  <th style={{ width: '160px' }}>{t('application.Receiver')}</th>
-                  <th className="center" style={{ width: '200px' }}>
-                    {t('application.AddAssets')}
-                  </th>
-                  <th className="center" style={{ width: '200px' }}>
-                    {t('application.Season')}
-                  </th>
+                  <th>{t('application.Receiver')}</th>
+                  <th className="center">{t('application.AddAssets')}</th>
+                  <th className="center">{t('application.Season')}</th>
                   <th>{t('application.Content')}</th>
-                  <th className="center" style={{ width: '200px' }}>
-                    {t('application.BudgetSource')}
-                  </th>
-                  <th className="center" style={{ width: '200px' }}>
-                    {t('application.Operator')}
-                  </th>
-                  <th style={{ width: '200px' }}>{t('application.State')}</th>
+                  <th className="center">{t('application.BudgetSource')}</th>
+                  <th className="center">{t('application.Operator')}</th>
+                  <th>{t('application.State')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -362,23 +377,16 @@ export default function AssetList() {
                         onChange={(e) => onChangeCheckbox(e.target.checked, item.application_id, item.status)}
                       />
                     </td> */}
-                    <td>{item.receiver_name || ''}</td>
-                    <td className="center" style={{ width: '200px' }}>
-                      {item.asset_display}
-                    </td>
-                    <td className="center" style={{ width: '200px' }}>
-                      {item.season_name}
-                    </td>
+                    <td>{formatSNS(item.receiver_name || '')}</td>
+
+                    <td className="center">{item.asset_display}</td>
+                    <td className="center">{item.season_name}</td>
                     <td>
                       <BudgetContent>{item.detailed_type}</BudgetContent>
                     </td>
-                    <td className="center" style={{ width: '200px' }}>
-                      {item.budget_source}
-                    </td>
-                    <td className="center" style={{ width: '200px' }}>
-                      {formatSNS(item.submitter_name)}
-                    </td>
-                    <td style={{ width: '200px' }}>
+                    <td className="center">{item.budget_source}</td>
+                    <td className="center">{formatSNS(item.submitter_name)}</td>
+                    <td>
                       <ApplicationStatusTag status={item.status} />
                     </td>
                   </tr>

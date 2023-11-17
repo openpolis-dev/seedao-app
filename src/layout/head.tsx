@@ -109,6 +109,7 @@ export default function Header() {
           break;
         case Wallet.UNIPASS:
         case Wallet.JOYID:
+        case Wallet.JOYID_WEB:
           wallet_type = WalletType.AA;
           break;
       }
@@ -132,7 +133,7 @@ export default function Header() {
         }
       });
       ethereum?.on('accountsChanged', function () {
-        onClickLogout();
+        if (!show_login_modal) onClickLogout();
       });
     };
 

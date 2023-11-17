@@ -254,7 +254,11 @@
     "CreateGuildDesc": "Create guild according to the application.",
     "PointsAndTokenAudit": "Reward Audit",
     "PointsAndTokenAuditDesc": "Review the request of reward.",
-    "MemberExist": "Please do not add members repeatedly"
+    "MemberExist": "Please do not add members repeatedly",
+    "MemberGroup": "Member Group",
+    "GovernanceGroup": "Governance Group",
+    "BrandGroup": "Branding Group",
+    "TechGroup": "Tech Group"
   },
   "GovernanceNodeResult": {
     "SearchTip": "SNS",

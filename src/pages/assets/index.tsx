@@ -422,9 +422,7 @@ export default function Index() {
               <LiTitle>{t('Assets.SupplySCR')}</LiTitle>
             </LiHead>
             <div className="num">{formatNumber(Number(totalSCR))}</div>
-            <div style={{ textAlign: 'left' }}>
-              <p className="tips">{/* ≈ {formatNumber(Number(SCRValue.toFixed(2)))} U 1SCR ≈ {SCR_PRICE} U */}</p>
-            </div>
+            <AssetBox></AssetBox>
             <BorderDecoration color="#FF86CB" />
           </li>
           <li className="center">
@@ -443,14 +441,13 @@ export default function Index() {
             </LiHead>
             <div className="num">{formatNumber(asset.token_used_amount)}</div>
             <AssetBox className="tips">
-              <span>{t('Assets.SeasonBudget')} : </span>
+              {/* <span>{t('Assets.SeasonBudget')} : </span>
               <span>{formatNumber(asset.token_total_amount)}</span>
               {canUseCityhall && (
                 <span className="btn-edit" onClick={() => setshowModifyModal(BudgetType.Token)}>
                   <Pencil />
-                  {/*<EvaIcon name="edit-2-outline" options={{ width: '16px', height: '16px' }} />*/}
                 </span>
-              )}
+              )} */}
             </AssetBox>
             <BorderDecoration color="#03DACD" />
           </li>
@@ -462,14 +459,13 @@ export default function Index() {
             </LiHead>
             <div className="num">{formatNumber(asset.credit_used_amount)}</div>
             <AssetBox className="tips">
-              <span>{t('Assets.SeasonBudget')} : </span>
+              {/* <span>{t('Assets.SeasonBudget')} : </span>
               <span>{formatNumber(asset.credit_total_amount)}</span>
               {canUseCityhall && (
                 <span className="btn-edit" onClick={() => setshowModifyModal(BudgetType.Credit)}>
                   <Pencil />
-                  {/*<EvaIcon name="edit-2-outline" options={{ width: '16px', height: '16px' }} />*/}
                 </span>
-              )}
+              )} */}
             </AssetBox>
             <BorderDecoration color="#4378FF" />
           </li>
@@ -494,6 +490,7 @@ const AssetBox = styled.div`
     margin-bottom: 5px;
     z-index: 9;
   }
+  min-height: 24px;
 `;
 
 const Vault = styled.div`

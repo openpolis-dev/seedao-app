@@ -5,7 +5,9 @@ import React, { FormEvent, useEffect, useState } from 'react';
 // import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
-import ReactMarkdown from 'react-markdown';
+// import ReactMarkdown from 'react-markdown';
+
+import { MdPreview } from 'md-editor-rt';
 import { getEventById, uplodaEventImage } from 'requests/event';
 import { formatTime } from 'utils/time';
 // import { useWeb3React } from '@web3-react/core';
@@ -276,7 +278,7 @@ export default function ViewEvent() {
             </UlBox>
           </InnerBox>
           <ContentBox>
-            <ReactMarkdown>{content}</ReactMarkdown>
+            <MdPreview modelValue={content} />
           </ContentBox>
         </div>
       </CardBox>

@@ -1,14 +1,16 @@
 import { useAuthContext, AppActionType } from 'providers/authProvider';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 import { useTranslation } from 'react-i18next';
 import CloseImg from '../../assets/Imgs/dark/close-circle.svg';
 import CloseImgLight from '../../assets/Imgs/light/close-circle.svg';
 
+import WalletConnect from '../login/walletconnect';
 import Metamask from '../login/metamask';
 import Unipass, { upProvider } from '../login/unipass';
 import Joyid from '../login/joyid';
+import JoyidWeb from 'components/login/joyidWeb';
 
 import { useNetwork } from 'wagmi';
 import { useEthersSigner } from '../login/ethersNew';
@@ -16,6 +18,8 @@ import { SELECT_WALLET } from '../../utils/constant';
 import { ethers } from 'ethers';
 import { mainnet } from 'wagmi/chains';
 import getConfig from 'utils/envCofnig';
+import useCheckInstallPWA from 'hooks/useCheckInstallPWA';
+import { Wallet } from 'wallet/wallet';
 
 export default function LoginModal({ showModal }: any) {
   const { t } = useTranslation();
@@ -28,17 +32,26 @@ export default function LoginModal({ showModal }: any) {
   const { chain } = useNetwork();
 
   const signer = useEthersSigner({ chainId: chain });
+  const isInstalled = useCheckInstallPWA();
 
   useEffect(() => {
     let type = localStorage.getItem(SELECT_WALLET);
-    let walletType = type ? type : 'METAMASK';
+    let walletType = type as Wallet;
+
     if (account && provider) return;
-    if (walletType === 'METAMASK' && signer) {
+    if (walletType === Wallet.METAMASK_INJECTED && window.ethereum) {
+      // metamask
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      dispatch({ type: AppActionType.SET_PROVIDER, payload: provider.getSigner() });
+    } else if (walletType === Wallet.METAMASK && signer) {
+      // metamask in walletconnect
       dispatch({ type: AppActionType.SET_PROVIDER, payload: signer });
-    } else if (walletType === 'UNIPASS') {
+    } else if (walletType === Wallet.UNIPASS) {
+      // unipass
       const providerUnipass = new ethers.providers.Web3Provider(upProvider, 'any');
       dispatch({ type: AppActionType.SET_PROVIDER, payload: providerUnipass });
-    } else if (walletType === 'JOYID') {
+    } else if ([Wallet.JOYID, Wallet.JOYID_WEB].includes(walletType)) {
+      // joyid
       const url = mainnet.rpcUrls.public.http[0];
       const id = mainnet.id;
       const providerJoyId = new ethers.providers.JsonRpcProvider(url, id);
@@ -58,9 +71,9 @@ export default function LoginModal({ showModal }: any) {
             <img src={theme ? CloseImg : CloseImgLight} alt="" />
           </span>
           <Title>{t('general.ConnectWallet')}</Title>
-          <Metamask />
+          {isInstalled ? <WalletConnect /> : <Metamask />}
           <Unipass />
-          {getConfig().REACT_APP_JOYID_ENABLE && <Joyid />}
+          {getConfig().REACT_APP_JOYID_ENABLE && (isInstalled ? <Joyid /> : <JoyidWeb />)}
         </Modal>
       </Mask>
     </>

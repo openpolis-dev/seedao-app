@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import ReactMarkdown from 'react-markdown';
 import { useParams, Link } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
 import { getProjectById } from 'requests/project';
@@ -13,10 +12,15 @@ import { PermissionObject, PermissionAction } from 'utils/constant';
 import { useTranslation } from 'react-i18next';
 import Members from 'components/projectInfoCom/members';
 import SipTag from 'components/common/sipTag';
+import { MdPreview } from 'md-editor-rt';
 
 export default function InfoPage() {
   const { t } = useTranslation();
-  const { dispatch } = useAuthContext();
+
+  const {
+    state: { theme },
+    dispatch,
+  } = useAuthContext();
 
   const { id } = useParams();
 
@@ -95,7 +99,7 @@ export default function InfoPage() {
                   </InnerLft>
                 </LftBox>
                 <ContentBox>
-                  <ReactMarkdown>{detail?.intro || ''}</ReactMarkdown>
+                  <MdPreview theme={theme ? 'dark' : 'light'} modelValue={detail?.intro || ''} />
                 </ContentBox>
               </LastLine>
             </AllBox>
@@ -222,6 +226,9 @@ const ContentBox = styled.div`
 
   img {
     max-width: 100%;
+  }
+  .md-editor-dark {
+    background: var(--bs-box--background);
   }
 `;
 

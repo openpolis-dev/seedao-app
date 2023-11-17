@@ -69,7 +69,7 @@ const CreatePushContent = () => {
     }
   };
   const createBtnDisabled = useMemo(() => {
-    return !title || !href || !title.trim() || !href.trim();
+    return !title || !href || !title.trim() || !href.trim() || !href.trim().startsWith('https://');
   }, [title, href]);
   return (
     <CreateBox>
@@ -95,7 +95,12 @@ const CreatePushContent = () => {
           <FormLabel>
             {t('Push.Href')} <span className="required">*</span>
           </FormLabel>
-          <FormInput type="text" value={href} onChange={(e: any) => setHref(e.target.value)} />
+          <FormInput
+            type="text"
+            value={href}
+            onChange={(e: any) => setHref(e.target.value)}
+            placeholder="https://..."
+          />
         </FormGroup>
         {/* <FormGroup>
           <div className="timer-group">
