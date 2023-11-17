@@ -62,10 +62,10 @@
     "PollNFT": "投票NFT地址",
     "VoteClose": "投票结束",
     "VoteEndAt": "投票剩余时间{{leftTime}}",
-    "TotalVotes": "Total Votes"
+    "TotalVotes": "总投票数"
   },
   "Project": {
-    "ProjectOrGuildItem": "ProjectOrGuildItem tips ProjectOrGuildItem tips",
+    "ProjectOrGuildItem": "还没有填写相关介绍信息～",
     "create": "创建项目",
     "Edit": "编辑项目",
     "createSuccess": "创建成功",
@@ -207,7 +207,6 @@
     "Members": "成员",
     "Asset": "资产",
     "Proposal": "提案",
-    "PointsAndTokenAudit": "积分及token审核",
     "Pass": "通过",
     "Reject": "驳回",
     "ProjectAudit": "项目审核",
@@ -246,7 +245,15 @@
     "GovernanceNodeResult": "节点资质试算",
     "GovernanceNodeResultDesc": "计算治理节点资质结果",
     "CloseProjectAudit": "关闭项目审核",
+    "CloseProjectAuditDesc": "审核关闭项目的申请",
     "IssueAssets": "发放资产",
+    "IssueAssetsDesc": "审核发放资产的申请",
+    "CreateProject": "创建项目",
+    "CreateProjectDesc": "依照社区提案来创建相应的项目",
+    "CreateGuild": "创建公会",
+    "CreateGuildDesc": "依照社区提案来创建相应的公会",
+    "PointsAndTokenAudit": "积分及token审核",
+    "PointsAndTokenAuditDesc": "审核积分及token的发放申请",
     "MemberExist": "请不要重复添加成员"
   },
   "GovernanceNodeResult": {
