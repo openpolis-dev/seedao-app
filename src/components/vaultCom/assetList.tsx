@@ -409,7 +409,7 @@ export default function AssetList() {
                     <td>{item.budget_source}</td>
                     <td>{item.comment}</td>
                     <td>{t(formatApplicationStatus(item.status))}</td>
-                    <td>{item.submitter_name || publicJs.AddressToShow(item.submitter_wallet)}</td>
+                    <td>{item.submitter_name || publicJs.AddressToShow(item.applicant_wallet)}</td>
                     <td>{item.reviewer_name || publicJs.AddressToShow(item.reviewer_wallet)}</td>
                     <td>
                       {item.status === ApplicationStatus.Completed && (

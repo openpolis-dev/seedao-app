@@ -101,7 +101,7 @@ export default function Issued() {
       const _wallets = new Set<string>();
       res.data.rows.forEach((item) => {
         _wallets.add(item.target_user_wallet);
-        _wallets.add(item.submitter_wallet);
+        item.applicant_wallet && _wallets.add(item.applicant_wallet);
         item.reviewer_wallet && _wallets.add(item.reviewer_wallet);
       });
       handleSNS(Array.from(_wallets));

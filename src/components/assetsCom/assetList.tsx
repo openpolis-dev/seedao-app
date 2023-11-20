@@ -191,7 +191,7 @@ export default function AssetList() {
       const _wallets = new Set<string>();
       res.data.rows.forEach((item) => {
         _wallets.add(item.target_user_wallet);
-        _wallets.add(item.submitter_wallet);
+        item.applicant_wallet && _wallets.add(item.applicant_wallet);
         item.reviewer_wallet && _wallets.add(item.reviewer_wallet);
       });
       handleSNS(Array.from(_wallets));
@@ -201,7 +201,7 @@ export default function AssetList() {
         created_date: formatTime(item.created_at),
         transactions: item.transaction_ids.split(','),
         asset_display: formatNumber(Number(item.amount)) + ' ' + item.asset_name,
-        submitter_name: item.submitter_wallet?.toLocaleLowerCase(),
+        submitter_name: item.applicant_wallet?.toLocaleLowerCase(),
         reviewer_name: item.reviewer_wallet?.toLocaleLowerCase(),
         receiver_name: item.target_user_wallet?.toLocaleLowerCase(),
       }));
