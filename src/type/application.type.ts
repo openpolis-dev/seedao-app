@@ -43,6 +43,11 @@ export interface IApplication {
   season_name: string;
   amount: string;
   asset_name: string;
+  create_ts: number;
+  update_ts: number;
+  apply_ts: number;
+  review_ts: number;
+  process_ts: number;
   // TO BE REMOVED
   token_amount: number;
   credit_amount: number;
@@ -71,6 +76,7 @@ export interface IApplicantBundle {
   comment: string;
   records: IApplicationDisplay[];
   apply_time: number;
+  apply_ts: number;
   season_name: string;
   state: ApplicationStatus;
   applicant: string;
