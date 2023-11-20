@@ -33,7 +33,7 @@ const TitBox = styled.div`
 `;
 
 const AppBox = styled(Row)`
-  padding: 20px 0;
+  padding-bottom: 20px;
 
   div[class^='col'] {
     min-height: 96px;
@@ -90,13 +90,6 @@ export default function Resources() {
   return (
     <OuterBox>
       {show && <ResourcesDetail closeModal={closeModal} id={type} />}
-      <TitBox>
-        {/*<div className="titLft">*/}
-        {/*  <Tabbar defaultActiveKey={0} tabs={[{ key: 0, title: t('resources.all') }]} />*/}
-        {/*</div>*/}
-        {t('resources.all')}
-      </TitBox>
-
       <AppBox>
         {resources.map((item, idx) => (
           <Col key={idx} sm={12} md={6} lg={4} xl={3}>
