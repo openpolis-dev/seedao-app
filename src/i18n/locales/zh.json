@@ -326,7 +326,8 @@
     "RegisterAdd": "添加",
     "RegisterSubmit": "提交",
     "TemplateFileName": "SeeDAO填报申请模版",
-    "Total": "总计"
+    "Total": "总计",
+    "Export": "导出"
   },
   "My": {
     "MyProfile": "我的信息",

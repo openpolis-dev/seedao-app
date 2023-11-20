@@ -326,7 +326,8 @@
     "RegisterAdd": "Add",
     "RegisterSubmit": "Submit",
     "TemplateFileName": "SeeDAO Submission Template",
-    "Total": "Total"
+    "Total": "Total",
+    "Export": "Export"
   },
   "My": {
     "MyProfile": "My Profile",

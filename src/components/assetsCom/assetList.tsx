@@ -327,11 +327,11 @@ export default function AssetList() {
             />
           </li>
         </TopLine>
-        {/* <div>
+        <div>
           <Button onClick={handleExport} disabled={!selectOne} className="btn-export">
-            {t('Project.Export')}
+            {t('Assets.Export')}
           </Button>
-        </div> */}
+        </div>
       </FirstLine>
 
       <TableBox>
