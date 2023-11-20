@@ -149,7 +149,7 @@ export default function Register() {
         {
           page,
           size: pageSize,
-          sort_field: 'created_at',
+          sort_field: 'apply_ts',
           sort_order: 'desc',
         },
         queryData,
@@ -171,7 +171,7 @@ export default function Register() {
           created_date: formatTime(item.apply_ts * 1000),
           records: item.records.map((record) => ({
             ...record,
-            created_date: formatTime(record.created_at),
+            created_date: formatTime(record.create_ts * 1000),
             transactions: record.transaction_ids.split(','),
             asset_display: formatNumber(Number(record.amount)) + ' ' + record.asset_name,
           })),

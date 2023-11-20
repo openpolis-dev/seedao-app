@@ -182,7 +182,7 @@ export default function AssetList() {
         {
           page,
           size: pageSize,
-          sort_field: 'created_at',
+          sort_field: 'create_ts',
           sort_order: 'desc',
         },
         queryData,
@@ -198,7 +198,7 @@ export default function AssetList() {
 
       const _list = res.data.rows.map((item, idx) => ({
         ...item,
-        created_date: formatTime(item.created_at),
+        created_date: formatTime(item.create_ts * 1000),
         transactions: item.transaction_ids.split(','),
         asset_display: formatNumber(Number(item.amount)) + ' ' + item.asset_name,
         submitter_name: item.applicant_wallet?.toLocaleLowerCase(),

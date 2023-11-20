@@ -33,7 +33,6 @@ export interface IApplication {
   budget_source: string;
   status: ApplicationStatus;
   transaction_ids: string;
-  created_at: number;
   detailed_type: string;
   comment: string;
   season_name: string;

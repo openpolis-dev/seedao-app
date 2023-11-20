@@ -237,7 +237,7 @@ export default function AssetList() {
         {
           page,
           size: pageSize,
-          sort_field: 'created_at',
+          sort_field: 'create_ts',
           sort_order: 'desc',
         },
         queryData,
@@ -245,7 +245,7 @@ export default function AssetList() {
       setTotal(res.data.total);
       const _list = res.data.rows.map((item) => ({
         ...item,
-        created_date: formatTime(item.created_at),
+        created_date: formatTime(item.create_ts * 1000),
         transactions: item.transaction_ids.split(','),
       }));
       setList(_list);
