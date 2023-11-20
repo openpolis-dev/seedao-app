@@ -51,7 +51,7 @@ export function SocialIcon({ type, value }: IProps) {
     return (
       <IconDisbaledBox theme={theme ? 'dark' : 'light'}>
         <img src={icon} alt="" />
-        <span className="tooltip">{t('members.NotRegister')}</span>
+        <span className="tooltip">{t('members.NotFilled')}</span>
         <span className="arrow"></span>
       </IconDisbaledBox>
     );

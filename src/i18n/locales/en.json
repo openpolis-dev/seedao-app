@@ -469,7 +469,8 @@
     "AddTitle": "Add Member",
     "RemoveConfirm": "Confirm remove the following members?",
     "AddressName": "SNS/Wallet",
-    "NotRegister": "Not Register"
+    "NotRegister": "Not Register",
+    "NotFilled" : "Not available"
   },
   "apps": {
     "DeschoolDesc": "DeSchool is building education infrastructure in Web3.",
