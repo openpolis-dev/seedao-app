@@ -16,13 +16,10 @@ const MESSAGE_TYPE = {
   CUSTOM: 'custom',
 };
 
-// for test
+// log for test
 self.addEventListener('push', function (event) {
-  event.waitUntil(
-    self.registration.showNotification('Secret Notification'),
-  );
+  console.log("[notification] push event received");
 });
-
 
 self.addEventListener('notificationclick', async function (event) {
   console.log('-- click event:', event);
