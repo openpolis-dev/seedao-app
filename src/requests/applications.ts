@@ -149,6 +149,16 @@ export const getExportFileUrl = (ids: number[]) => {
   return `${getBaseURL()}/download_applications?ids=${ids.join(',')}`;
 };
 
+export const getExportFileUrlFromVault = (queryData: IQueryParams) => {
+  const url = new URL(`${getBaseURL()}/download_applications?type=${ApplicationType.NewReward}`);
+  for (const k in queryData) {
+    // @ts-ignore
+    url.searchParams.set(k, String(queryData[k]));
+  }
+  console.log('url.href', url.href);
+  return url.href;
+};
+
 interface IApplicantRequest {
   entity: 'project' | 'guild';
   entity_id: number;

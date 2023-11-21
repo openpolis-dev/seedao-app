@@ -165,19 +165,23 @@ export default function AssetList() {
     setSnsMap(sns_map);
   };
 
+  const getQuerydata = () => {
+    const queryData: IQueryParams = {};
+    if (selectStatus) queryData.state = selectStatus;
+    if (selectApplicant) queryData.applicant = selectApplicant;
+    if (selectSeason) {
+      queryData.season_id = selectSeason;
+    }
+    if (selectSource && selectSource.type) {
+      queryData.entity_id = selectSource.id;
+      queryData.entity = selectSource.type;
+    }
+    return queryData;
+  };
+
   const getRecords = async () => {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
-      const queryData: IQueryParams = {};
-      if (selectStatus) queryData.state = selectStatus;
-      if (selectApplicant) queryData.applicant = selectApplicant;
-      if (selectSeason) {
-        queryData.season_id = selectSeason;
-      }
-      if (selectSource && selectSource.type) {
-        queryData.entity_id = selectSource.id;
-        queryData.entity = selectSource.type;
-      }
       const res = await requests.application.getApplications(
         {
           page,
@@ -185,7 +189,7 @@ export default function AssetList() {
           sort_field: 'create_ts',
           sort_order: 'desc',
         },
-        queryData,
+        getQuerydata(),
       );
       setTotal(res.data.total);
       const _wallets = new Set<string>();
@@ -230,8 +234,7 @@ export default function AssetList() {
   };
 
   const handleExport = async () => {
-    const select_ids = getSelectIds();
-    window.open(requests.application.getExportFileUrl(select_ids), '_blank');
+    window.open(requests.application.getExportFileUrlFromVault(getQuerydata()), '_blank');
   };
 
   const onSelectAll = (v: boolean) => {
@@ -328,7 +331,7 @@ export default function AssetList() {
           </li>
         </TopLine>
         <div>
-          <Button onClick={handleExport} disabled={!selectOne} className="btn-export">
+          <Button onClick={handleExport} className="btn-export">
             {t('Assets.Export')}
           </Button>
         </div>
