@@ -123,22 +123,30 @@ export default function Header() {
     initAuth();
   };
 
+  const handleChainChanged = (chainId: any) => {
+    if (parseInt(chainId, 16) !== mainnet.id) {
+      onClickLogout();
+    }
+  };
+
+  const handleAccountChanged = (data: any) => {
+    if (!show_login_modal) onClickLogout();
+  };
+
   useEffect(() => {
     if (!window.ethereum) return;
     const initProvider = async () => {
       const { ethereum } = window as any;
-      ethereum?.on('chainChanged', (chainId: any) => {
-        if (parseInt(chainId, 16) !== mainnet.id) {
-          onClickLogout();
-        }
-      });
-      ethereum?.on('accountsChanged', function () {
-        if (!show_login_modal) onClickLogout();
-      });
+      ethereum?.on('chainChanged', handleChainChanged);
+      ethereum?.on('accountsChanged', handleAccountChanged);
     };
-
     initProvider();
-  }, []);
+    return () => {
+      const { ethereum } = window as any;
+      ethereum?.removeListener('chainChanged', handleChainChanged);
+      ethereum?.removeListener('accountsChanged', handleAccountChanged);
+    };
+  });
 
   useEffect(() => {
     isLogin && getUser();
