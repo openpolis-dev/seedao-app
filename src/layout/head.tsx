@@ -216,7 +216,11 @@ export default function Header() {
     dispatch({ type: AppActionType.SET_AUTHORIZER, payload: null });
     dispatch({ type: AppActionType.SET_WALLET_TYPE, payload: null });
     dispatch({ type: AppActionType.SET_ACCOUNT, payload: null });
-    await OneSignal.logout();
+    try {
+      await OneSignal.logout();
+    } catch (error) {
+      console.error('onesignal logout failed', error);
+    }
     toGo();
     window.location.reload();
   };
