@@ -133,12 +133,12 @@ const PushHistoryContent = () => {
   };
   const getList = async () => {
     try {
-      const { data } = await getPushList({ page, size: pageSize, sort_field: 'created_at', sort_order: 'desc' });
+      const { data } = await getPushList({ page, size: pageSize, sort_field: 'create_ts', sort_order: 'desc' });
       const _list = [
         ...list,
         ...data.rows.map((item) => ({
           ...item,
-          timeDisplay: formatTime(new Date(item.created_at).getTime()),
+          timeDisplay: formatTime(item.create_ts * 1000),
         })),
       ];
       setList(_list);

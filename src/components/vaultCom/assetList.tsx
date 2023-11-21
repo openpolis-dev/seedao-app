@@ -158,7 +158,7 @@ export default function AssetList() {
         page: 1,
         size: 1000,
         sort_order: 'desc',
-        sort_field: 'created_at',
+        sort_field: 'create_ts',
       });
       return res.data.rows.map((item) => ({
         label: item.name,
@@ -176,7 +176,7 @@ export default function AssetList() {
         page: 1,
         size: 1000,
         sort_order: 'desc',
-        sort_field: 'created_at',
+        sort_field: 'create_ts',
       });
       return res.data.rows.map((item) => ({
         label: item.name,

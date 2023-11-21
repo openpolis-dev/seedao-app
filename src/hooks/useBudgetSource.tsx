@@ -13,7 +13,7 @@ export default function useBudgetSource(filter_closed = false) {
           page: 1,
           size: 1000,
           sort_order: 'desc',
-          sort_field: 'created_at',
+          sort_field: 'create_ts',
           status: filter_closed ? ProjectStatus.Open : undefined,
         });
         return res.data.rows.map((item) => ({
@@ -32,7 +32,7 @@ export default function useBudgetSource(filter_closed = false) {
           page: 1,
           size: 1000,
           sort_order: 'desc',
-          sort_field: 'created_at',
+          sort_field: 'create_ts',
         });
         return res.data.rows.map((item) => ({
           label: item.name,
