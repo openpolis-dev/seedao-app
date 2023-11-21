@@ -19,7 +19,7 @@ const MESSAGE_TYPE = {
 // for test
 self.addEventListener('push', function (event) {
   event.waitUntil(
-    self.registration.showNotification('lalala title'),
+    self.registration.showNotification('Secret Notification'),
   );
 });
 
