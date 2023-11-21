@@ -163,8 +163,9 @@ export default function CreateGuild() {
     const slugs: string[] = [];
     for (const l of proList) {
       if (l) {
-        if (l.startsWith('https://forum.seedao.xyz/thread/sip-')) {
-          const items = l.split('/').reverse();
+        const _l = l.trim().toLocaleLowerCase();
+        if (_l.startsWith('https://forum.seedao.xyz/thread/sip-')) {
+          const items = _l.split('/').reverse();
           slugs.push(items[0]);
           for (const it of items) {
             if (it) {
