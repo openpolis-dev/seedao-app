@@ -288,6 +288,12 @@ const links = {
   ],
   publicity: [
     {
+      id: '',
+      name: 'S5 节点共识大会积分公示',
+      time: '2023-11-22 22:27',
+      link: 'https://seedao.notion.site/S5-6022ae9607f64019a10fd383db682706?pvs=4',
+    },
+    {
       id: 'module-scr-rank',
       name: 'SeeDAO 积分总榜',
       time: '2023-11-13 20:00',
