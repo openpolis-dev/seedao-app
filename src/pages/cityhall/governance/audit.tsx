@@ -149,7 +149,7 @@ export default function Register() {
         {
           page,
           size: pageSize,
-          sort_field: 'apply_ts',
+          sort_field: 'create_ts',
           sort_order: 'desc',
         },
         queryData,
