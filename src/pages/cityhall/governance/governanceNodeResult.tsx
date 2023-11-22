@@ -232,7 +232,8 @@ export default function GoveranceNodeResult() {
         .filter(
           (item) =>
             Number(item.activity_credit) >= Number(filterActiveNum) &&
-            Number(item.effective_credit) >= Number(filterEffectiveNum),
+            Number(item.effective_credit) >= Number(filterEffectiveNum) &&
+            item.seed_count > 0,
         )
         .map((item) => item.wallet),
     );
