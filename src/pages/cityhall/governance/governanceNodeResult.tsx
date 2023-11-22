@@ -159,10 +159,9 @@ export default function GoveranceNodeResult() {
             ],
             ...allList.map((item) => [
               dataMap.get(item.wallet) || item.wallet,
-              item.seasons_credit?.find((s) => s.season_idx === 0)?.total || 0,
-              item.seasons_credit?.find((s) => s.season_idx === 1)?.total || 0,
-              item.seasons_credit?.find((s) => s.season_idx === 2)?.total || 0,
-              item.seasons_credit?.find((s) => s.season_idx === 3)?.total || 0,
+              ...allSeasons.map((i) => {
+                return item.seasons_credit?.find((s) => s.season_idx === i)?.total || 0;
+              }),
               item.metaforo_vote_count || 0,
               item.metaforo_credit || 0,
               item.season_total_credit || 0,
