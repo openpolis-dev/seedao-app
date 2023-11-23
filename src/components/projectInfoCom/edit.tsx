@@ -249,7 +249,7 @@ export default function EditProject({ detail }: { detail: ReTurnProject | undefi
                   <InputBox>
                     <Form.Control
                       type="text"
-                      placeholder={`${t('Project.AssociatedProposal')}, eg. https://forum.seedao.xyz/thread...`}
+                      placeholder={`https://forum.seedao.xyz/thread...`}
                       value={item}
                       onChange={(e) => handleInput(e, index, 'proposal')}
                     />

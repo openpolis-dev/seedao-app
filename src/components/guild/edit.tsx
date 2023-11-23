@@ -206,7 +206,7 @@ export default function EditGuild({ detail }: { detail?: ReTurnProject }) {
                   <InputBox>
                     <Form.Control
                       type="text"
-                      placeholder={`${t('Guild.AssociatedProposal')}, eg. https://forum.seedao.xyz/thread...`}
+                      placeholder={`https://forum.seedao.xyz/thread...`}
                       value={item}
                       onChange={(e) => handleInput(e, index, 'proposal')}
                     />

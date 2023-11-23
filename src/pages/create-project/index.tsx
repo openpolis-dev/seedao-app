@@ -330,7 +330,7 @@ export default function CreateProject() {
                     <ProposalInputBox>
                       <Form.Control
                         type="text"
-                        placeholder={`eg. https://forum.seedao.xyz/thread/sip-...`}
+                        placeholder={`https://forum.seedao.xyz/thread/sip-...`}
                         value={item}
                         onChange={(e) => handleInput(e, index, 'proposal')}
                       />
