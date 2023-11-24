@@ -47,15 +47,6 @@ export default function Apps() {
 
   return (
     <OuterBox>
-      <TitBox>
-        <div className="titLft">
-          {/*<Tabbar defaultActiveKey={0} tabs={[{ key: 0, title: t('resources.all') }]} />*/}
-          {t('Home.Apps')}
-        </div>
-        <RhtBoxT>
-          {/*<Button onClick={() => window.open(Links.applyAppLink, '_target')}>{t('general.apply')}</Button>*/}
-        </RhtBoxT>
-      </TitBox>
       <AppBox>
         {events.map((item, idx) => (
           <Col key={idx} sm={12} md={6} lg={4} xl={3}>
@@ -71,7 +62,7 @@ export default function Apps() {
 }
 
 const AppBox = styled(Row)`
-  padding: 20px 0;
+  padding-bottom: 20px;
 
   div[class^='col'] {
     min-height: 116px;

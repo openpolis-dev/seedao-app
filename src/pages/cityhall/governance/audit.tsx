@@ -149,7 +149,7 @@ export default function Register() {
         {
           page,
           size: pageSize,
-          sort_field: 'created_at',
+          sort_field: 'create_ts',
           sort_order: 'desc',
         },
         queryData,
@@ -159,7 +159,7 @@ export default function Register() {
       const _wallets = new Set<string>();
       res.data.rows.forEach((item) => {
         item.records.forEach((r) => {
-          _wallets.add(r.submitter_wallet?.toLocaleLowerCase());
+          r.applicant_wallet && _wallets.add(r.applicant_wallet?.toLocaleLowerCase());
           _wallets.add(r.reviewer_wallet?.toLocaleLowerCase());
           r.target_user_wallet && _wallets.add(r.target_user_wallet?.toLocaleLowerCase());
         });
@@ -168,10 +168,10 @@ export default function Register() {
       setList(
         res.data.rows.map((item) => ({
           ...item,
-          created_date: formatTime(item.apply_time),
+          created_date: formatTime(item.apply_ts * 1000),
           records: item.records.map((record) => ({
             ...record,
-            created_date: formatTime(record.created_at),
+            created_date: formatTime(record.create_ts * 1000),
             transactions: record.transaction_ids.split(','),
             asset_display: formatNumber(Number(record.amount)) + ' ' + record.asset_name,
           })),

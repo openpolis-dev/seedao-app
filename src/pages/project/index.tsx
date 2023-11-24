@@ -95,7 +95,7 @@ export default function Index() {
       page: pageCur,
       size: pageSize,
       sort_order: 'desc',
-      sort_field: 'created_at',
+      sort_field: 'create_ts',
     };
     const rt = await getProjects(obj, false);
     dispatch({ type: AppActionType.SET_LOADING, payload: null });
@@ -112,7 +112,7 @@ export default function Index() {
       page: pageCur,
       size: pageSize,
       sort_order: 'desc',
-      sort_field: 'created_at',
+      sort_field: 'create_ts',
     };
     const rt = await getMyProjects(obj);
     dispatch({ type: AppActionType.SET_LOADING, payload: null });

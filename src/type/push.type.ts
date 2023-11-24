@@ -11,7 +11,7 @@ export interface IPush {
   jump_url: string;
   creator_wallet: string;
   push_date: string;
-  created_at: string;
+  create_ts: number;
   // status: PUSH_STATUS;
   isTimer?: boolean;
 }

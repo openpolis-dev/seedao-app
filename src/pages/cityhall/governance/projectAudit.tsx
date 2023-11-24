@@ -63,7 +63,7 @@ export default function ProjectAudit() {
         {
           page,
           size: pageSize,
-          sort_field: 'created_at',
+          sort_field: 'create_ts',
           sort_order: 'desc',
         },
         queryData,
@@ -72,15 +72,15 @@ export default function ProjectAudit() {
       const _wallets = new Set<string>();
 
       res.data.rows.forEach((r) => {
-        _wallets.add(r.submitter_wallet?.toLocaleLowerCase());
+        r.applicant_wallet && _wallets.add(r.applicant_wallet?.toLocaleLowerCase());
         _wallets.add(r.reviewer_wallet?.toLocaleLowerCase());
       });
       const sns_map = await getMultiSNS(Array.from(_wallets));
 
       const _list = res.data.rows.map((item) => ({
         ...item,
-        created_date: formatTime(item.created_at),
-        submitter_name: sns_map.get(item.submitter_wallet?.toLocaleLowerCase()) as string,
+        created_date: formatTime(item.create_ts * 1000),
+        submitter_name: item.applicant_wallet && (sns_map.get(item.applicant_wallet?.toLocaleLowerCase()) as string),
         reviewer_name: sns_map.get(item.reviewer_wallet?.toLocaleLowerCase()) as string,
       }));
       setList(_list);

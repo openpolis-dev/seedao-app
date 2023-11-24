@@ -10,7 +10,6 @@ import useToast, { ToastType } from 'hooks/useToast';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { MdEditor } from 'md-editor-rt';
-import 'md-editor-rt/lib/style.css';
 import { createEvent, editEventById, getEventById, uplodaEventImage } from 'requests/event';
 // import { useWeb3React } from '@web3-react/core';
 import { useNavigate } from 'react-router-dom';

@@ -91,7 +91,7 @@ export default function Issued() {
         {
           page,
           size: pageSize,
-          sort_field: 'created_at',
+          sort_field: 'create_ts',
           sort_order: 'desc',
         },
         queryData,
@@ -101,14 +101,14 @@ export default function Issued() {
       const _wallets = new Set<string>();
       res.data.rows.forEach((item) => {
         _wallets.add(item.target_user_wallet);
-        _wallets.add(item.submitter_wallet);
+        item.applicant_wallet && _wallets.add(item.applicant_wallet);
         item.reviewer_wallet && _wallets.add(item.reviewer_wallet);
       });
       handleSNS(Array.from(_wallets));
 
       const _list = res.data.rows.map((item, idx) => ({
         ...item,
-        created_date: formatTime(item.created_at),
+        created_date: formatTime(item.create_ts * 1000),
         transactions: item.transaction_ids.split(','),
         asset_display: formatNumber(Number(item.amount)) + ' ' + item.asset_name,
       }));
@@ -176,7 +176,7 @@ export default function Issued() {
       {
         page: 1,
         size: 1,
-        sort_field: 'created_at',
+        sort_field: 'create_ts',
         sort_order: 'desc',
       },
       {

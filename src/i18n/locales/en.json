@@ -276,7 +276,7 @@
     "TotalSentSCR": "{{season}} Sent SCR ",
     "TotalMinerReward": "{{season}} Miner Reward (SCR)",
     "SeedSnapshot": "SEED Snapshot",
-    "SendReward": "Send Reward",
+    "SendReward": "Apply Reward",
     "StartFilter": "Start Filter",
     "FilterNodesModalTitle": "{{season}} Nodes",
     "FilterNodesFilename": "{{season}} Nodes",
@@ -326,7 +326,8 @@
     "RegisterAdd": "Add",
     "RegisterSubmit": "Submit",
     "TemplateFileName": "SeeDAO Submission Template",
-    "Total": "Total"
+    "Total": "Total",
+    "Export": "Export"
   },
   "My": {
     "MyProfile": "My Profile",
@@ -469,7 +470,8 @@
     "AddTitle": "Add Member",
     "RemoveConfirm": "Confirm remove the following members?",
     "AddressName": "SNS/Wallet",
-    "NotRegister": "Not Register"
+    "NotRegister": "Not Register",
+    "NotFilled" : "Not available"
   },
   "apps": {
     "DeschoolDesc": "DeSchool is building education infrastructure in Web3.",

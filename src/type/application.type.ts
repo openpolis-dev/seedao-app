@@ -32,17 +32,30 @@ export interface IApplication {
   entity_name: ApplicationEntity;
   budget_source: string;
   status: ApplicationStatus;
-  submitter_wallet: string;
-  target_user_wallet: string;
-  reviewer_wallet: string;
   transaction_ids: string;
-  created_at: number;
   detailed_type: string;
   comment: string;
-  // NEW FIELDS
   season_name: string;
   amount: string;
   asset_name: string;
+  create_ts: number;
+  update_ts: number;
+  // target_user
+  target_user_wallet: string;
+  target_user_avatar: string;
+  // applicant
+  apply_ts: number;
+  applicant_wallet: string;
+  applicant_avatar: string;
+  // reviewer/auditor
+  review_ts: number;
+  reviewer_wallet: string;
+  reviewer_avatar: string;
+  process_ts: number;
+  // issuer
+  complete_ts: number;
+  completer_wallet: string;
+  completer_avatar: string;
   // TO BE REMOVED
   token_amount: number;
   credit_amount: number;
@@ -70,7 +83,7 @@ export interface IApplicantBundle {
   id: number;
   comment: string;
   records: IApplicationDisplay[];
-  apply_time: number;
+  apply_ts: number;
   season_name: string;
   state: ApplicationStatus;
   applicant: string;

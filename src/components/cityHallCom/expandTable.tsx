@@ -58,7 +58,7 @@ export default function ExpandTable({
   useEffect(() => {
     const _wallets = new Set<string>();
     list.forEach((r) => {
-      _wallets.add(r.submitter_wallet?.toLocaleLowerCase());
+      r.applicant_wallet && _wallets.add(r.applicant_wallet?.toLocaleLowerCase());
       _wallets.add(r.reviewer_wallet?.toLocaleLowerCase());
       r.target_user_wallet && _wallets.add(r.target_user_wallet?.toLocaleLowerCase());
     });
@@ -135,7 +135,9 @@ export default function ExpandTable({
                     <BudgetContent>{item.detailed_type}</BudgetContent>
                   </td>
                   <td className="center">{item.budget_source}</td>
-                  <td className="center">{formatSNS(item.submitter_wallet?.toLocaleLowerCase())}</td>
+                  <td className="center">
+                    {item.applicant_wallet && formatSNS(item.applicant_wallet?.toLocaleLowerCase())}
+                  </td>
                   <td>
                     <ApplicationStatusTag status={item.status} />
                   </td>

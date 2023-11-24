@@ -276,7 +276,7 @@
     "TotalSentSCR": "{{season}} SCR 发放总数",
     "TotalMinerReward": "{{season}} 治理挖矿奖励总数 (SCR)",
     "SeedSnapshot": "SEED 快照",
-    "SendReward": "发放奖励",
+    "SendReward": "申请奖励",
     "StartFilter": "开始试算",
     "FilterNodesModalTitle": "{{season}} 节点",
     "FilterNodesFilename": "{{season}} 节点",
@@ -326,7 +326,8 @@
     "RegisterAdd": "添加",
     "RegisterSubmit": "提交",
     "TemplateFileName": "SeeDAO填报申请模版",
-    "Total": "总计"
+    "Total": "总计",
+    "Export": "导出"
   },
   "My": {
     "MyProfile": "我的信息",
@@ -469,7 +470,8 @@
     "AddTitle": "添加成员",
     "RemoveConfirm": "确定要移除以下成员？",
     "AddressName": "SNS/地址",
-    "NotRegister": "未登记"
+    "NotRegister": "未登记",
+    "NotFilled" : "未提供"
   },
   "apps": {
     "DeschoolDesc": "DeSchool is building education infrastructure in Web3.",

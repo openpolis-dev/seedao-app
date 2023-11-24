@@ -82,8 +82,9 @@ export default function EditGuild({ detail }: { detail?: ReTurnProject }) {
     const slugs: string[] = [];
     for (const l of proList) {
       if (l) {
-        if (l.startsWith('https://forum.seedao.xyz/thread/sip-')) {
-          const items = l.split('/').reverse();
+        const _l = l.trim().toLocaleLowerCase();
+        if (_l.startsWith('https://forum.seedao.xyz/thread/sip-')) {
+          const items = _l.split('/').reverse();
           slugs.push(items[0]);
           for (const it of items) {
             if (it) {
@@ -205,7 +206,7 @@ export default function EditGuild({ detail }: { detail?: ReTurnProject }) {
                   <InputBox>
                     <Form.Control
                       type="text"
-                      placeholder={`${t('Guild.AssociatedProposal')}, eg. https://forum.seedao.xyz/thread...`}
+                      placeholder={`https://forum.seedao.xyz/thread...`}
                       value={item}
                       onChange={(e) => handleInput(e, index, 'proposal')}
                     />

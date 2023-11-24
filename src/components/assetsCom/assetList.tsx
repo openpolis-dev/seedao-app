@@ -23,6 +23,7 @@ import useQuerySNS from 'hooks/useQuerySNS';
 import useBudgetSource from 'hooks/useBudgetSource';
 import { Link, useNavigate } from 'react-router-dom';
 import { PrimaryOutlinedButton } from 'components/common/button';
+import getConfig from 'utils/envCofnig';
 
 const Box = styled.div``;
 const TitBox = styled.div`
@@ -165,43 +166,47 @@ export default function AssetList() {
     setSnsMap(sns_map);
   };
 
+  const getQuerydata = () => {
+    const queryData: IQueryParams = {};
+    if (selectStatus) queryData.state = selectStatus;
+    if (selectApplicant) queryData.applicant = selectApplicant;
+    if (selectSeason) {
+      queryData.season_id = selectSeason;
+    }
+    if (selectSource && selectSource.type) {
+      queryData.entity_id = selectSource.id;
+      queryData.entity = selectSource.type;
+    }
+    return queryData;
+  };
+
   const getRecords = async () => {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
-      const queryData: IQueryParams = {};
-      if (selectStatus) queryData.state = selectStatus;
-      if (selectApplicant) queryData.applicant = selectApplicant;
-      if (selectSeason) {
-        queryData.season_id = selectSeason;
-      }
-      if (selectSource && selectSource.type) {
-        queryData.entity_id = selectSource.id;
-        queryData.entity = selectSource.type;
-      }
       const res = await requests.application.getApplications(
         {
           page,
           size: pageSize,
-          sort_field: 'created_at',
+          sort_field: 'create_ts',
           sort_order: 'desc',
         },
-        queryData,
+        getQuerydata(),
       );
       setTotal(res.data.total);
       const _wallets = new Set<string>();
       res.data.rows.forEach((item) => {
         _wallets.add(item.target_user_wallet);
-        _wallets.add(item.submitter_wallet);
+        item.applicant_wallet && _wallets.add(item.applicant_wallet);
         item.reviewer_wallet && _wallets.add(item.reviewer_wallet);
       });
       handleSNS(Array.from(_wallets));
 
       const _list = res.data.rows.map((item, idx) => ({
         ...item,
-        created_date: formatTime(item.created_at),
+        created_date: formatTime(item.create_ts * 1000),
         transactions: item.transaction_ids.split(','),
         asset_display: formatNumber(Number(item.amount)) + ' ' + item.asset_name,
-        submitter_name: item.submitter_wallet?.toLocaleLowerCase(),
+        submitter_name: item.applicant_wallet?.toLocaleLowerCase(),
         reviewer_name: item.reviewer_wallet?.toLocaleLowerCase(),
         receiver_name: item.target_user_wallet?.toLocaleLowerCase(),
       }));
@@ -230,8 +235,7 @@ export default function AssetList() {
   };
 
   const handleExport = async () => {
-    const select_ids = getSelectIds();
-    window.open(requests.application.getExportFileUrl(select_ids), '_blank');
+    window.open(requests.application.getExportFileUrlFromVault(getQuerydata()), '_blank');
   };
 
   const onSelectAll = (v: boolean) => {
@@ -327,11 +331,13 @@ export default function AssetList() {
             />
           </li>
         </TopLine>
-        {/* <div>
-          <Button onClick={handleExport} disabled={!selectOne} className="btn-export">
-            {t('Project.Export')}
-          </Button>
-        </div> */}
+        {getConfig().REACT_APP_ENV !== 'prod' && getConfig().REACT_APP_ENV !== 'preview' && (
+          <div>
+            <Button onClick={handleExport} className="btn-export">
+              {t('Assets.Export')}
+            </Button>
+          </div>
+        )}
       </FirstLine>
 
       <TableBox>

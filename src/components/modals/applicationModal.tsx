@@ -44,7 +44,9 @@ export default function ApplicationModal({ application, handleClose, snsMap }: I
           </li>
           <li>
             <BlockLeft>{t('Project.Operator')}</BlockLeft>
-            <BlockRight>{snsMap.get(application.submitter_wallet.toLocaleLowerCase())}</BlockRight>
+            <BlockRight>
+              {application.applicant_wallet && snsMap.get(application.applicant_wallet.toLocaleLowerCase())}
+            </BlockRight>
           </li>
           <li>
             <BlockLeft>{t('application.Auditor')}</BlockLeft>
