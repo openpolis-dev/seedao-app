@@ -3,8 +3,8 @@ const VERSION = '0.2.1';
 const LOCAL = {
   REACT_APP_BASE_ENDPOINT: 'https://test-api.seedao.tech',
   REACT_APP_PUSH_ENDPOINT: 'https://test-push-api.seedao.tech',
-  REACT_APP_MOBILE_URL: '',
-  REACT_APP_MOBILE_OPEN: false,
+  REACT_APP_MOBILE_URL: 'preview-m.seedao.tech',
+  REACT_APP_MOBILE_OPEN: true,
   REACT_APP_ENV: 'test',
   REACT_APP_JOYID_ENABLE: true,
   REACT_APP_ONESIGNAL_ID: '9c6122e1-3de4-4c03-8e68-9f357e9ca1ae',
@@ -15,6 +15,7 @@ const DEVELOPMENT = {
   ...LOCAL,
   REACT_APP_ENV: 'test',
   REACT_APP_ONESIGNAL_ID: 'd3bf95e4-40e3-455d-95ab-e01ef35d6732',
+  REACT_APP_MOBILE_URL: 'https://dev-m.seedao.tech',
 };
 
 const PREVIEW = {
@@ -22,6 +23,7 @@ const PREVIEW = {
   REACT_APP_BASE_ENDPOINT: 'https://preview-api.seedao.tech',
   REACT_APP_THEME_ENABLE: false,
   REACT_APP_ONESIGNAL_ID: '673e6ac3-ab64-4935-8df7-25dd37baa7d1',
+  REACT_APP_MOBILE_URL: 'https://preview-m.seedao.tech',
 };
 
 const PRODUCTION = {
@@ -32,6 +34,7 @@ const PRODUCTION = {
   REACT_APP_APP_VERSION: `B ${VERSION}`,
   REACT_APP_THEME_ENABLE: false,
   REACT_APP_ONESIGNAL_ID: '8ecd086b-3e15-4537-9f8b-c55c72a8dcf7',
+  REACT_APP_MOBILE_URL: 'https://m.seedao.xyz',
 };
 
 export default function getConfig() {
