@@ -26,10 +26,14 @@ const OuterBox = styled.div`
 `;
 
 const HeadBox = styled.div`
-  position: relative;
   display: flex;
-  align-items: center;
-  margin-bottom: 40px;
+  align-items: flex-start;
+  justify-content: space-between;
+  background: var(--bs-box--background);
+  margin-bottom: 24px;
+  padding: 20px 24px;
+  border-radius: 16px;
+  box-shadow: var(--box-shadow);
 `;
 const AvatarBox = styled.div`
   display: flex;
@@ -128,6 +132,9 @@ export default function Profile() {
       case 'NODE_S4':
         str = t('roles.NODE_S4');
         break;
+      case 'NODE_S5':
+        str = t('roles.NODE_S5');
+        break;
       case 'CITYHALL_S1':
         str = t('roles.CITYHALL_S1');
         break;
@@ -179,6 +186,19 @@ export default function Profile() {
     }
     return str;
   };
+
+  const LftBox = styled.div`
+    flex-grow: 1;
+    display: flex;
+    align-items: flex-start;
+  `;
+
+  const RhtBox = styled.div`
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+  `;
   const removeUrl = () => {
     setAvatar('');
   };
@@ -233,83 +253,91 @@ export default function Profile() {
       <>
         <TitleBox>{t('My.MyProfile')}</TitleBox>
         <HeadBox>
-          <AvatarBox>
-            <ImgBox>
-              <img src={avatar ? avatar : defaultImg} alt="" />
-            </ImgBox>
-          </AvatarBox>
-          <InfoBox>
-            <div className="userName">{userName}</div>
-            {!!sns && (
-              <div className="wallet btm8">
-                <span>{sns || '-'}</span>
-                <CopyBox text={sns || ''} dir="left">
-                  <img src={CopyIconSVG} alt="" />
-                </CopyBox>
+          <LftBox>
+            <AvatarBox>
+              <ImgBox>
+                <img src={avatar ? avatar : defaultImg} alt="" />
+              </ImgBox>
+            </AvatarBox>
+            <InfoBox>
+              <div>
+                <div className="userName">{userName}</div>
+                {!!sns && (
+                  <div className="wallet btm8">
+                    <span>{sns || '-'}</span>
+                    <CopyBox text={sns || ''} dir="left">
+                      <img src={CopyIconSVG} alt="" />
+                    </CopyBox>
+                  </div>
+                )}
+
+                <div className="wallet">
+                  <span>{wallet}</span>
+                  {wallet && (
+                    <CopyBox text={wallet!} dir="right">
+                      <img src={CopyIconSVG} alt="" />
+                    </CopyBox>
+                  )}
+                </div>
               </div>
-            )}
-
-            <div className="wallet">
-              <span>{AddressToShow(wallet!)}</span>
-              {wallet && (
-                <CopyBox text={wallet!} dir="right">
-                  <img src={CopyIconSVG} alt="" />
-                </CopyBox>
+              {!!bio && (
+                <BioBox>
+                  {/*<div className="title">{t('My.Bio')}</div>*/}
+                  <div>{bio || '-'}</div>
+                </BioBox>
               )}
-            </div>
-          </InfoBox>
-          <EditButton to="/user/profile/edit">
-            <Button variant="primary">{t('general.edit')}</Button>
-          </EditButton>
+              <TagBox>
+                {roles?.map((item, index) => (
+                  <li key={`tag_${index}`}>{switchRoles(item)}</li>
+                ))}
+              </TagBox>
+            </InfoBox>
+          </LftBox>
+          <RhtBox>
+            <EditButton to="/user/profile/edit">
+              <Button variant="primary">{t('general.edit')}</Button>
+            </EditButton>
+            <LinkBox>
+              {detail?.social_accounts?.map((item: any, index: number) =>
+                returnSocial(item.network, item.identity) ? (
+                  <li key={`sbtInner_${index}`}>
+                    <span className="iconLft">{returnSocial(item.network, item.identity)}</span>
+                  </li>
+                ) : null,
+              )}
+              {detail?.email && (
+                <li>
+                  <span className="iconLft">{returnSocial('email', detail?.email)}</span>
+                </li>
+              )}
+            </LinkBox>
+          </RhtBox>
         </HeadBox>
-        {!!bio && (
-          <BioBox>
-            <div className="title">{t('My.Bio')}</div>
-            <div>{bio || '-'}</div>
-          </BioBox>
-        )}
 
-        <TagBox>
-          {roles?.map((item, index) => (
-            <li key={`tag_${index}`}>{switchRoles(item)}</li>
-          ))}
-        </TagBox>
-        <LinkBox>
-          {detail?.social_accounts?.map((item: any, index: number) =>
-            returnSocial(item.network, item.identity) ? (
-              <li key={`sbtInner_${index}`}>
-                <span className="iconLft">{returnSocial(item.network, item.identity)}</span>
-              </li>
-            ) : null,
-          )}
-          {detail?.email && (
-            <li>
-              <span className="iconLft">{returnSocial('email', detail?.email)}</span>
-            </li>
-          )}
-        </LinkBox>
+        <ProgressOuter>
+          <div>{t('My.current')}</div>
+          <div>LV {detail?.level?.current_lv}</div>
+          <div>{t('My.current')}</div>
+          <div>
+            <Crt>
+              <div>{t('My.current')}</div>
+              <div className="num">{detail?.level?.upgrade_percent}%</div>
+            </Crt>
+            {/*<ProgressBox width={detail?.level?.upgrade_percent ? detail?.level?.upgrade_percent : 0}>*/}
+            {/*  <div className="inner" />*/}
+            {/*</ProgressBox>*/}
+            <TipsBox>
+              <div>{t('My.nextLevel')}</div>
+              <div className="scr">{formatNumber(detail?.level?.scr_to_next_lv)} SCR</div>
+            </TipsBox>
+          </div>
+          <FstLine>
+            <LevelBox>{t('My.level')}</LevelBox>
+            <SCRBox>{formatNumber(detail?.scr?.amount)} SCR</SCRBox>
+          </FstLine>
+        </ProgressOuter>
+
         <>
-          <ProgressOuter>
-            <div>
-              <Crt>
-                <div>{t('My.current')}</div>
-                <div className="num">{detail?.level?.upgrade_percent}%</div>
-              </Crt>
-              <ProgressBox width={detail?.level?.upgrade_percent ? detail?.level?.upgrade_percent : 0}>
-                <div className="inner" />
-              </ProgressBox>
-              <TipsBox>
-                <div>{t('My.nextLevel')}</div>
-                <div className="scr">{formatNumber(detail?.level?.scr_to_next_lv)} SCR</div>
-              </TipsBox>
-            </div>
-            <FstLine>
-              <LevelBox>
-                {t('My.level')} {detail?.level?.current_lv}
-              </LevelBox>
-              <SCRBox>{formatNumber(detail?.scr?.amount)} SCR</SCRBox>
-            </FstLine>
-          </ProgressOuter>
           <NftBox>
             {!!list?.length && (
               <li>
@@ -363,8 +391,10 @@ const ImgBox = styled.div`
     margin-right: 10px;
   }
   img {
-    max-width: 100%;
-    max-height: 100%;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
   }
   .del {
     display: none;
@@ -404,6 +434,7 @@ const InfoBox = styled.div`
     margin-bottom: 16px;
   }
   .wallet {
+    color: var(--bs-body-color_active);
     display: flex;
     font-size: 14px;
     span {
@@ -411,7 +442,6 @@ const InfoBox = styled.div`
     }
   }
   .btm8 {
-    margin-bottom: 8px;
   }
 `;
 
@@ -444,7 +474,7 @@ const NftBox = styled.ul`
 `;
 
 const BioBox = styled.section`
-  margin: 20px 0 40px;
+  margin: 7px 0;
   color: var(--bs-body-color_active);
 
   width: 582px;
@@ -486,8 +516,11 @@ const ProgressBox = styled.div<{ width: number | string }>`
 
 const ProgressOuter = styled.div`
   display: flex;
-  align-items: flex-start;
-  margin: 44px 0;
+  align-items: center;
+  border-radius: 16px;
+  padding: 24px;
+  background: var(--bs-box--background);
+  box-shadow: var(--box-shadow);
 `;
 
 const FstLine = styled.div`
@@ -530,7 +563,6 @@ const TagBox = styled.ul`
   flex-wrap: wrap;
   display: flex;
   font-weight: 400;
-  width: 600px;
   li {
     border-radius: 5px;
     padding-inline: 10px;
@@ -580,9 +612,6 @@ const TagBox = styled.ul`
 `;
 
 const EditButton = styled(Link)`
-  position: absolute;
-  right: 20px;
-  top: 0;
   .btn {
     padding: 10px 30px;
   }
