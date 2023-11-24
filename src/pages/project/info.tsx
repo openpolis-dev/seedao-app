@@ -134,6 +134,7 @@ const Content = styled.div`
   box-sizing: border-box;
   flex-grow: 1;
   display: flex;
+  margin-top: -30px;
 `;
 
 const AllBox = styled.div`
@@ -152,20 +153,19 @@ const LastLine = styled.div`
   display: flex;
   align-items: stretch;
   justify-content: space-between;
-  margin-top: 60px;
+  margin-top: 15px;
   padding-bottom: 60px;
   flex-shrink: 0;
-  min-height: calc(100% - 200px);
+  min-height: calc(100% - 110px);
 `;
 
 const LftBox = styled.div`
   width: 246px;
+  background: var(--bs-box--background);
+  border-radius: 16px;
 `;
 
 const InnerLft = styled.div`
-  background: var(--bs-box--background);
-  border-radius: 16px;
-  width: 246px;
   box-sizing: border-box;
   padding: 24px;
 `;
@@ -173,6 +173,11 @@ const InnerLft = styled.div`
 const TopBox = styled.div`
   display: flex;
   justify-content: space-between;
+
+  background: var(--bs-box--background);
+  box-shadow: var(--box-shadow);
+  border-radius: 16px;
+  padding: 22px 24px;
 `;
 
 const TopBoxLeft = styled.div`
