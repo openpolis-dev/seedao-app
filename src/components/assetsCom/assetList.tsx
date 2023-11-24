@@ -23,6 +23,7 @@ import useQuerySNS from 'hooks/useQuerySNS';
 import useBudgetSource from 'hooks/useBudgetSource';
 import { Link, useNavigate } from 'react-router-dom';
 import { PrimaryOutlinedButton } from 'components/common/button';
+import getConfig from 'utils/envCofnig';
 
 const Box = styled.div``;
 const TitBox = styled.div`
@@ -330,11 +331,13 @@ export default function AssetList() {
             />
           </li>
         </TopLine>
-        <div>
-          <Button onClick={handleExport} className="btn-export">
-            {t('Assets.Export')}
-          </Button>
-        </div>
+        {getConfig().REACT_APP_ENV !== 'prod' && getConfig().REACT_APP_ENV !== 'preview' && (
+          <div>
+            <Button onClick={handleExport} className="btn-export">
+              {t('Assets.Export')}
+            </Button>
+          </div>
+        )}
       </FirstLine>
 
       <TableBox>
