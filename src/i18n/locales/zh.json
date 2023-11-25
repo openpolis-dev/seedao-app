@@ -352,8 +352,9 @@
     "IncorrectGoogle": "请填写正确的Gmail信息",
     "IncorrectMirror": "请填写正确的Mirror链接",
     "EmptySBT": "您还未拥有SBT",
-    "current": "当前等级",
+    "current": "当前",
     "level": "等级",
+    "levelTips": "距离升级到LV{{level}}还需",
     "nextLevel": "下一等级" ,
     "DefaultName": "TA没有留下昵称",
     "DefaultBio": "TA很神秘哦，并没有介绍自己"
