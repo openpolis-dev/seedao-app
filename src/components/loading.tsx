@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Spinner } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import LoadingImg from '../assets/Imgs/loading.png';
 
