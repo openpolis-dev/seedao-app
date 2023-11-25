@@ -5,6 +5,11 @@ import styled from 'styled-components';
 import { debounce } from 'utils';
 import LoadingImg from 'assets/Imgs/loading.png';
 import ClearIcon from 'assets/Imgs/sns/clear.svg';
+import useCheckLogin from 'hooks/useCheckLogin';
+import { AppActionType, useAuthContext } from 'providers/authProvider';
+import { ethers } from 'ethers';
+import useToast, { ToastType } from 'hooks/useToast';
+import { useSNSContext, ACTIONS } from './snsProvider';
 
 enum AvailableStatus {
   DEFAULT = 'default',
@@ -18,6 +23,17 @@ export default function RegisterSNSStep1() {
   const [searchVal, setSearchVal] = useState<string>();
   const [isPending, setPending] = useState(false);
   const [isAvailable, setAvailable] = useState(AvailableStatus.DEFAULT);
+
+  const {
+    dispatch,
+    state: { provider, account },
+  } = useAuthContext();
+
+  const { dispatch: dispatchSNS } = useSNSContext();
+
+  const isLogin = useCheckLogin(account);
+
+  const { showToast } = useToast();
 
   const handleSearchAvailable = (v: string) => {
     setSearchVal(v);
@@ -37,6 +53,30 @@ export default function RegisterSNSStep1() {
     setSearchVal('');
     setAvailable(AvailableStatus.DEFAULT);
   };
+  const handleMint = async () => {
+    // check login status
+    if (!isLogin) {
+      dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: true });
+      return;
+    }
+    // check network
+    const network = await provider.getNetwork();
+    if (network?.chainId !== 11155111) {
+      // switch network;
+      try {
+        await provider.send('wallet_switchEthereumChain', [{ chainId: ethers.utils.hexValue(11155111) }]);
+      } catch (error) {
+        console.error('switch network error', error);
+        return;
+      }
+    }
+    // if (isAvailable !== AvailableStatus.OK) {
+    //   showToast('unvaliable', ToastType.Danger);
+    //   return;
+    // }
+    // TODO mint
+    dispatchSNS({ type: ACTIONS.ADD_STEP, payload: null });
+  };
   return (
     <Container>
       <ContainerWrapper>
@@ -44,7 +84,7 @@ export default function RegisterSNSStep1() {
         <StepDesc>{t('SNS.Step1Desc')}</StepDesc>
         <SearchBox>
           <InputBox>
-            <InputStyled autoFocus value={searchVal} onChange={(e) => handleInput(e.target.value)} />
+            <InputStyled autoFocus value={val} onChange={(e) => handleInput(e.target.value)} />
             <span className="endfill">.seedao</span>
           </InputBox>
           <SearchRight>
@@ -55,7 +95,10 @@ export default function RegisterSNSStep1() {
           </SearchRight>
         </SearchBox>
         <OperateBox>
-          <MintButton variant="primary">{t('SNS.FreeMint')}</MintButton>
+          <MintButton variant="primary" onClick={handleMint}>
+            {/* <MintButton variant="primary" onClick={handleMint} disabled={isPending || isAvailable !== AvailableStatus.OK}> */}
+            {t('SNS.FreeMint')}
+          </MintButton>
         </OperateBox>
       </ContainerWrapper>
     </Container>
