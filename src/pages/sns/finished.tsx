@@ -1,12 +1,17 @@
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
+import NiceIcon from 'assets/Imgs/sns/nice.svg';
+import { useAuthContext } from 'providers/authProvider';
 
 export default function FinishedComponent() {
   const { t } = useTranslation();
+  const {
+    state: { theme },
+  } = useAuthContext();
   return (
     <Container>
-      <ContainerTop>
-        <CircleBox></CircleBox>
+      <ContainerTop bg={theme ? 'dark' : 'light'}>
+        <img src={NiceIcon} alt="" />
       </ContainerTop>
       <ContainerBottom>
         <div className="title">aaa.seedao</div>
@@ -25,23 +30,19 @@ const Container = styled.div`
   overflow: hidden;
 `;
 
-const ContainerTop = styled.div`
+const ContainerTop = styled.div<{ bg: string }>`
   height: 180px;
-  background: linear-gradient(207deg, #f7e1ed 10%, #f8fff8 58%, #e9deff 100%);
+  background: ${(props) =>
+    props.bg === 'dark'
+      ? 'linear-gradient(207deg, #ff4974 10%, #9668f2 58%, #4500d6 100%)'
+      : 'linear-gradient(207deg, #f7e1ed 10%, #f8fff8 58%, #e9deff 100%)'};
   text-align: center;
+  img {
+    position: relative;
+    top: 57px;
+    display: inline-block;
+  }
 `;
-
-const CircleBox = styled.div`
-  width: 173px;
-  height: 173px;
-  background: linear-gradient(157deg, #ffffff 0%, #fbecff 100%);
-  box-shadow: 10px 10px 10px 0px rgba(246, 245, 255, 0.36);
-  border-radius: 50%;
-  position: relative;
-  top: 57px;
-  display: inline-block;
-`;
-
 const ContainerBottom = styled.div`
   text-align: center;
   padding-top: 82px;
