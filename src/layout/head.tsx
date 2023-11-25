@@ -137,13 +137,13 @@ export default function Header() {
     if (!window.ethereum) return;
     const initProvider = async () => {
       const { ethereum } = window as any;
-      ethereum?.on('chainChanged', handleChainChanged);
+      // ethereum?.on('chainChanged', handleChainChanged);
       ethereum?.on('accountsChanged', handleAccountChanged);
     };
     initProvider();
     return () => {
       const { ethereum } = window as any;
-      ethereum?.removeListener('chainChanged', handleChainChanged);
+      // ethereum?.removeListener('chainChanged', handleChainChanged);
       ethereum?.removeListener('accountsChanged', handleAccountChanged);
     };
   });

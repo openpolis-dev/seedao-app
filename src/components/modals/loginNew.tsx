@@ -13,7 +13,7 @@ import Joyid from '../login/joyid';
 import JoyidWeb from 'components/login/joyidWeb';
 
 import { useNetwork } from 'wagmi';
-import { useEthersSigner } from '../login/ethersNew';
+import { useEthersProvider, useEthersSigner } from '../login/ethersNew';
 import { SELECT_WALLET } from '../../utils/constant';
 import { ethers } from 'ethers';
 import { mainnet } from 'wagmi/chains';
@@ -31,10 +31,10 @@ export default function LoginModal({ showModal }: any) {
 
   const { chain } = useNetwork();
 
-  const signer = useEthersSigner({ chainId: chain });
+  const walletconnect_provider = useEthersProvider({ chainId: chain });
   const isInstalled = useCheckInstallPWA();
 
-  useEffect(() => {
+  const handleProvider = () => {
     let type = localStorage.getItem(SELECT_WALLET);
     let walletType = type as Wallet;
 
@@ -42,10 +42,10 @@ export default function LoginModal({ showModal }: any) {
     if (walletType === Wallet.METAMASK_INJECTED && window.ethereum) {
       // metamask
       const provider = new ethers.providers.Web3Provider(window.ethereum);
-      dispatch({ type: AppActionType.SET_PROVIDER, payload: provider.getSigner() });
-    } else if (walletType === Wallet.METAMASK && signer) {
+      dispatch({ type: AppActionType.SET_PROVIDER, payload: provider });
+    } else if (walletType === Wallet.METAMASK && walletconnect_provider) {
       // metamask in walletconnect
-      dispatch({ type: AppActionType.SET_PROVIDER, payload: signer });
+      dispatch({ type: AppActionType.SET_PROVIDER, payload: walletconnect_provider });
     } else if (walletType === Wallet.UNIPASS) {
       // unipass
       const providerUnipass = new ethers.providers.Web3Provider(upProvider, 'any');
@@ -57,7 +57,24 @@ export default function LoginModal({ showModal }: any) {
       const providerJoyId = new ethers.providers.JsonRpcProvider(url, id);
       dispatch({ type: AppActionType.SET_PROVIDER, payload: providerJoyId });
     }
-  }, [account, provider, chain, signer]);
+  };
+
+  useEffect(() => {
+    handleProvider();
+  }, [account, provider, chain, walletconnect_provider]);
+
+  useEffect(() => {
+    if (!window.ethereum) return;
+    const initProvider = async () => {
+      const { ethereum } = window as any;
+      ethereum?.on('chainChanged', handleProvider);
+    };
+    initProvider();
+    return () => {
+      const { ethereum } = window as any;
+      ethereum?.removeListener('chainChanged', handleProvider);
+    };
+  });
 
   const closeModal = () => {
     dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: false });
