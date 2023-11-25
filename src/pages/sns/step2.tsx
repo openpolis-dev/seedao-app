@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
+import CircleProgress from 'components/circleProgress';
 
 export default function RegisterSNSStep2() {
   const { t } = useTranslation();
@@ -7,6 +8,12 @@ export default function RegisterSNSStep2() {
     <Container>
       <ContainerWrapper>
         <CurrentSNS>1211.seedao</CurrentSNS>
+        <CircleBox>
+          <CircleProgress progress={80} color="var(--bs-primary)" />
+          <div className="number">
+            46<span className="sec">S</span>
+          </div>
+        </CircleBox>
         <StepTitle>{t('SNS.TimerTitle')}</StepTitle>
         <StepDesc>{t('SNS.TimerDesc')}</StepDesc>
       </ContainerWrapper>
@@ -54,6 +61,29 @@ const StepDesc = styled.div`
   color: #534e59;
   font-size: 14px;
   line-height: 24px;
-
   font-weight: 400;
+  margin-top: 11px;
+`;
+
+const CircleBox = styled.div`
+  position: relative;
+  .number {
+    font-size: 36px;
+    font-family: 'Poppins-Bold';
+    font-weight: bold;
+    color: var(--bs-primary);
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    line-height: 118px;
+  }
+  .sec {
+    font-family: 'Poppins-Regular';
+    font-weight: 400;
+    font-size: 20px;
+    position: relative;
+    bottom: 6px;
+    left: 2px;
+  }
 `;
