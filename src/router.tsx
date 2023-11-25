@@ -40,6 +40,8 @@ import Audit from 'pages/cityhall/governance/audit';
 import AuditProject from 'pages/cityhall/governance/projectAudit';
 import Issue from 'pages/cityhall/governance/issue';
 import SCRRank from 'pages/scrRank';
+import SNSEntrancePage from 'pages/sns/entrance';
+import RegisterSNS from 'pages/sns/register';
 
 export default function RouterLink() {
   return (
@@ -86,6 +88,9 @@ export default function RouterLink() {
           {/* <Route path="/chat" element={<Chat />} /> */}
           <Route path="/ranking" element={<SCRRank />} />
           <Route path="/feedback" element={<Canny />} />
+          {/* SNS */}
+          <Route path="/sns" element={<SNSEntrancePage />} />
+          <Route path="/sns/register" element={<RegisterSNS />} />
         </Routes>
       </Layout>
       <RouterChecker />
