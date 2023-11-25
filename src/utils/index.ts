@@ -26,3 +26,15 @@ export const formatApplicationStatus = (status: ApplicationStatus, isProj?: bool
 export const isNotOnline = () => {
   return process.env.REACT_APP_ENV_VERSION !== 'prod';
 };
+
+export const debounce = (fn: any, wait: number) => {
+  let timer: any;
+  return (...args: any) => {
+    const context = this;
+    if (timer) clearTimeout(timer);
+    timer = setTimeout(() => {
+      timer = null;
+      fn.apply(context, args);
+    }, wait);
+  };
+};

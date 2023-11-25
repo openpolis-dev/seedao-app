@@ -1,9 +1,42 @@
 import { Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
+import { useState, useCallback } from 'react';
 import styled from 'styled-components';
+import { debounce } from 'utils';
+import LoadingImg from 'assets/Imgs/loading.png';
+import ClearIcon from 'assets/Imgs/sns/clear.svg';
+
+enum AvailableStatus {
+  DEFAULT = 'default',
+  OK = 'ok',
+  NOT_OK = 'not_ok',
+}
 
 export default function RegisterSNSStep1() {
   const { t } = useTranslation();
+  const [val, setVal] = useState<string>();
+  const [searchVal, setSearchVal] = useState<string>();
+  const [isPending, setPending] = useState(false);
+  const [isAvailable, setAvailable] = useState(AvailableStatus.DEFAULT);
+
+  const handleSearchAvailable = (v: string) => {
+    setSearchVal(v);
+    setPending(false);
+    setAvailable(AvailableStatus.OK);
+  };
+  const onChangeVal = useCallback(debounce(handleSearchAvailable, 1000), []);
+
+  const handleInput = (v: string) => {
+    setVal(v);
+    setPending(true);
+    onChangeVal(v);
+  };
+
+  const handleClearInput = () => {
+    setVal('');
+    setSearchVal('');
+    setAvailable(AvailableStatus.DEFAULT);
+  };
   return (
     <Container>
       <ContainerWrapper>
@@ -11,11 +44,14 @@ export default function RegisterSNSStep1() {
         <StepDesc>{t('SNS.Step1Desc')}</StepDesc>
         <SearchBox>
           <InputBox>
-            <InputStyled />
+            <InputStyled autoFocus value={searchVal} onChange={(e) => handleInput(e.target.value)} />
             <span className="endfill">.seedao</span>
           </InputBox>
           <SearchRight>
-            <OkTag>{t('SNS.Available')}</OkTag>
+            {!isPending && isAvailable === AvailableStatus.OK && <OkTag>{t('SNS.Available')}</OkTag>}
+            {!isPending && isAvailable === AvailableStatus.NOT_OK && <NotOkTag>{t('SNS.Uavailable')}</NotOkTag>}
+            {isPending && <Loading src={LoadingImg} alt="" />}
+            {searchVal && <img className="btn-clear" src={ClearIcon} alt="" onClick={handleClearInput} />}
           </SearchRight>
         </SearchBox>
         <OperateBox>
@@ -121,6 +157,9 @@ const SearchRight = styled.div`
   display: flex;
   gap: 7px;
   align-items: center;
+  .btn-clear {
+    cursor: pointer;
+  }
 `;
 
 const OperateBox = styled.div`
@@ -129,4 +168,19 @@ const OperateBox = styled.div`
 
 const MintButton = styled(Button)`
   width: 394px;
+`;
+
+const Loading = styled.img`
+  user-select: none;
+  width: 18px;
+  height: 18px;
+  animation: rotate 1s infinite linear;
+  @keyframes rotate {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
 `;
