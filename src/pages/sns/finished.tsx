@@ -2,19 +2,23 @@ import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import NiceIcon from 'assets/Imgs/sns/nice.svg';
 import { useAuthContext } from 'providers/authProvider';
+import { useSNSContext } from './snsProvider';
 
 export default function FinishedComponent() {
   const { t } = useTranslation();
   const {
     state: { theme },
   } = useAuthContext();
+  const {
+    state: { sns },
+  } = useSNSContext();
   return (
     <Container>
       <ContainerTop bg={theme ? 'dark' : 'light'}>
         <img src={NiceIcon} alt="" />
       </ContainerTop>
       <ContainerBottom>
-        <div className="title">aaa.seedao</div>
+        <div className="title">{sns}.seedao</div>
         <div className="success">{t('SNS.FinishSucess')}</div>
       </ContainerBottom>
     </Container>

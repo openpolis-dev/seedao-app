@@ -20,6 +20,7 @@ export enum ACTIONS {
   SET_LOCAL_DATA = 'set_local_data',
   SHOW_LOADING = 'show_loading',
   CLOSE_LOADING = 'close_loading',
+  SET_SNS = 'set_sns',
 }
 
 interface IState {
@@ -27,13 +28,14 @@ interface IState {
   contract?: any;
   localData?: LocalSNS;
   loading?: boolean;
+  sns: string;
 }
 interface IAction {
   type: ACTIONS;
   payload?: any;
 }
 
-const INIT_STATE: IState = { step: 1 };
+const INIT_STATE: IState = { step: 1, sns: '' };
 
 const SNSContext = createContext<{
   state: IState;
@@ -45,6 +47,8 @@ const SNSContext = createContext<{
 
 const reducer = (state: IState, action: IAction): IState => {
   switch (action.type) {
+    case ACTIONS.SET_SNS:
+      return { ...state, sns: action.payload };
     case ACTIONS.ADD_STEP:
       return { ...state, step: state.step + 1 };
     case ACTIONS.SET_CONTRACT:

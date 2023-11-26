@@ -6,6 +6,7 @@ import { useEffect, useState, useRef } from 'react';
 import { ACTIONS, useSNSContext } from './snsProvider';
 import { useAuthContext } from 'providers/authProvider';
 import { builtin } from '@seedao/sns-js';
+import useToast, { ToastType } from 'hooks/useToast';
 
 export default function RegisterSNSStep2() {
   const { t } = useTranslation();
@@ -13,14 +14,14 @@ export default function RegisterSNSStep2() {
     state: { account },
   } = useAuthContext();
   const {
-    state: { localData, contract },
+    state: { localData, contract, sns },
     dispatch: dispatchSNS,
   } = useSNSContext();
+  const { showToast } = useToast();
 
   const startTimeRef = useRef<number>(0);
   const [leftTime, setLeftTime] = useState<number>(0);
   const [secret, setSecret] = useState('');
-  const [name, setName] = useState('');
 
   useEffect(() => {
     const parseLocalData = () => {
@@ -29,7 +30,6 @@ export default function RegisterSNSStep2() {
       }
       const d = localData[account];
       setSecret(d.secret);
-      setName(d.sns);
       startTimeRef.current = d.timestamp || 0;
     };
     parseLocalData();
@@ -63,14 +63,18 @@ export default function RegisterSNSStep2() {
     }
     dispatchSNS({ type: ACTIONS.SHOW_LOADING });
     try {
-      const res = await contract.register(name, account, builtin.PUBLIC_RESOLVER_ADDR, secret);
+      const res = await contract.register(sns, account, builtin.PUBLIC_RESOLVER_ADDR, secret);
       const d = { ...localData };
       d[account].step = 'register';
       d[account].stepStatus = 'pending';
       d[account].registerHash = res.hash;
       localStorage.setItem('sns', JSON.stringify(d));
+      // go to step3
+      dispatchSNS({ type: ACTIONS.ADD_STEP });
     } catch (error) {
       console.error('register failed', error);
+      // TODO message
+      showToast('failed', ToastType.Danger);
     } finally {
       dispatchSNS({ type: ACTIONS.CLOSE_LOADING });
     }
@@ -79,7 +83,7 @@ export default function RegisterSNSStep2() {
   return (
     <Container>
       <ContainerWrapper>
-        <CurrentSNS>{name}.seedao</CurrentSNS>
+        <CurrentSNS>{sns}.seedao</CurrentSNS>
         <CircleBox>
           <CircleProgress progress={progress} color="var(--bs-primary)" />
           <div className="number">
