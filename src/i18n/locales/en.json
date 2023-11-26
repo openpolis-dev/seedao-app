@@ -360,12 +360,12 @@
     "DefaultBio": "No Bio"
   },
   "roles": {
-    "SGN_HOLDER": "SGN Holder",
-    "NODE_S1": "SeeDAO Node S1",
-    "NODE_S2": "SeeDAO Node S2",
-    "NODE_S3": "SeeDAO Node S3",
-    "NODE_S4": "SeeDAO Node S4",
-    "NODE_S5": "SeeDAO Node S5",
+    "SGN_HOLDER": "SEED Holder",
+    "NODE_S1": "Node S1",
+    "NODE_S2": "Node S2",
+    "NODE_S3": "Node S3",
+    "NODE_S4": "Node S4",
+    "NODE_S5": "Node S5",
     "CITYHALL_S1": "Cityhall S1",
     "CITYHALL_S2": "Cityhall S2",
     "CITYHALL_S3": "Cityhall S3",
@@ -380,7 +380,7 @@
     "CONTRIBUTOR_L7": "L7 Contributor",
     "CONTRIBUTOR_L8": "L8 Contributor",
     "CONTRIBUTOR_L9": "L9 Contributor",
-    "SEEDAO_MEMBER": "SeeDAO Member",
+    "SEEDAO_MEMBER": "Member",
     "SEEDAO_ONBOARDING": "SeeDAO Onboarding"
   },
   "Msg": {
