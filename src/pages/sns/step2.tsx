@@ -1,21 +1,57 @@
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import CircleProgress from 'components/circleProgress';
+import { Button } from 'react-bootstrap';
+import { useEffect, useState, useRef } from 'react';
+import { useSNSContext } from './snsProvider';
 
 export default function RegisterSNSStep2() {
   const { t } = useTranslation();
+  const {
+    state: { localData },
+  } = useSNSContext();
+
+  const startTimeRef = useRef<number>(0);
+  const [leftTime, setLeftTime] = useState<number>(0);
+
+  useEffect(() => {
+    // TODO parse
+    startTimeRef.current = Math.floor(Date.now() / 1000 - 20);
+  }, [localData]);
+
+  useEffect(() => {
+    let timer: any;
+    const timerFunc = () => {
+      const currentTime = Math.floor(Date.now() / 1000);
+      const delta = currentTime - startTimeRef.current;
+      if (delta > 60) {
+        setLeftTime(0);
+        clearInterval(timer);
+        return;
+      }
+      setLeftTime(60 - delta);
+    };
+    timerFunc();
+    timer = setInterval(timerFunc, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const progress = (leftTime / 60) * 100;
+
   return (
     <Container>
       <ContainerWrapper>
         <CurrentSNS>1211.seedao</CurrentSNS>
         <CircleBox>
-          <CircleProgress progress={80} color="var(--bs-primary)" />
+          <CircleProgress progress={progress} color="var(--bs-primary)" />
           <div className="number">
-            46<span className="sec">S</span>
+            {leftTime}
+            <span className="sec">S</span>
           </div>
         </CircleBox>
         <StepTitle>{t('SNS.TimerTitle')}</StepTitle>
         <StepDesc>{t('SNS.TimerDesc')}</StepDesc>
+        <FinishButton>{t('SNS.Finish')}</FinishButton>
       </ContainerWrapper>
     </Container>
   );
@@ -86,4 +122,9 @@ const CircleBox = styled.div`
     bottom: 6px;
     left: 2px;
   }
+`;
+
+const FinishButton = styled(Button)`
+  width: 394px;
+  margin-top: 26px;
 `;
