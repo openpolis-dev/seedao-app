@@ -12,6 +12,7 @@ import { useSNSContext, ACTIONS } from './snsProvider';
 import { normalize } from '@seedao/sns-namehash';
 import { isAvailable } from '@seedao/sns-safe';
 import { builtin } from '@seedao/sns-js';
+import { getRandomCode } from 'utils';
 
 enum AvailableStatus {
   DEFAULT = 'default',
@@ -25,6 +26,7 @@ export default function RegisterSNSStep1() {
   const [searchVal, setSearchVal] = useState<string>();
   const [isPending, setPending] = useState(false);
   const [availableStatus, setAvailable] = useState(AvailableStatus.DEFAULT);
+  const [randomSecret, setRandomSecret] = useState<string>('');
 
   const {
     dispatch,
@@ -43,6 +45,7 @@ export default function RegisterSNSStep1() {
     try {
       // offchain check
       const res = await isAvailable(v, builtin.SAFE_HOST);
+      console.log('offline check', v, res);
       if (!res) {
         setAvailable(AvailableStatus.NOT_OK);
         setPending(false);
@@ -50,6 +53,8 @@ export default function RegisterSNSStep1() {
       }
       // onchain check
       const res1 = await contract.available(v);
+      console.log('online check', v, res1);
+
       if (!res1) {
         setAvailable(AvailableStatus.NOT_OK);
         setPending(false);
@@ -92,7 +97,7 @@ export default function RegisterSNSStep1() {
   };
   const handleMint = async () => {
     // check login status
-    if (!isLogin) {
+    if (!account || !isLogin) {
       dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: true });
       return;
     }
@@ -111,10 +116,79 @@ export default function RegisterSNSStep1() {
     //   showToast('unvaliable', ToastType.Danger);
     //   return;
     // }
-    // TODO mint
-    dispatchSNS({ type: ACTIONS.ADD_STEP, payload: null });
-    const txId = '0x643e511de56b566830ec2dd103814a73b80829de4866b29d764912f6f0e59e9e';
+    // mint
+    // try {
+    //   const _s = getRandomCode();
+    //   setRandomSecret(_s);
+    //   const tx = await contract.makeCommitment(
+    //     searchVal,
+    //     account,
+    //     builtin.PUBLIC_RESOLVER_ADDR,
+    //     ethers.utils.formatBytes32String(_s),
+    //   );
+    //   const txHash = tx.hash;
+    //   // record to localstorage
+    //   const localsns = localStorage.getItem('sns') || '';
+    //   let data = undefined;
+    //   try {
+    //     data = JSON.parse(localsns);
+    //   } catch (error) {
+    //     data = {};
+    //   }
+    //   data[account] = {
+    //     sns: searchVal,
+    //     step: 'commit',
+    //     commitHash: txHash,
+    //     stepStatus: 'pending',
+    //     commitTimeStart: new Date().getTime(),
+    //   };
+    //   localStorage.setItem('sns', JSON.stringify(data));
+    //   try {
+    //     await tx.wait();
+    //     data[account] = {
+    //       ...data[account],
+    //       stepStatus: 'success',
+    //       commitTimeEnd: new Date().getTime(),
+    //     };
+    //     dispatchSNS({ type: ACTIONS.ADD_STEP, payload: null });
+    //   } catch (error) {
+    //     data[account] = {
+    //       ...data[account],
+    //       stepStatus: 'failed',
+    //       commitTimeEnd: new Date().getTime(),
+    //     };
+    //     throw new Error('tx failed');
+    //   } finally {
+    //     localStorage.setItem('sns', JSON.stringify(data));
+    //   }
+    // } catch (error) {
+    //   console.error('mint failed', error);
+    // }
+    const txId = '0xa97e6bdf6329e69e16529bc16bdb2a4afbe77a1a2bd3d31cd7b43f63619baefb';
+
+    localStorage.setItem(
+      'sns',
+      JSON.stringify({
+        [account]: {
+          sns: searchVal,
+          step: 'commit',
+          commitHash: txId,
+          stepStatus: 'success',
+          commitTimeStart: new Date().getTime(),
+          commitTimeEnd: new Date().getTime(),
+          timestamp: Math.floor(Date.now() / 1000),
+        },
+      }),
+    );
     // record to localstorage
+    // const block = await provider.getBlock('0xf5b7874afd9670a20bd5259b11c3998b631e15a84202e0e653432e7cb286760b');
+    // console.log('block', block);
+
+    // provider.getTransactionReceipt(txId).then((r: any) => {
+    //   console.log('r:', r);
+
+    // });
+    dispatchSNS({ type: ACTIONS.ADD_STEP, payload: null });
   };
   return (
     <Container>
