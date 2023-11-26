@@ -3,25 +3,44 @@ import styled from 'styled-components';
 import CircleProgress from 'components/circleProgress';
 import { Button } from 'react-bootstrap';
 import { useEffect, useState, useRef } from 'react';
-import { useSNSContext } from './snsProvider';
+import { ACTIONS, useSNSContext } from './snsProvider';
+import { useAuthContext } from 'providers/authProvider';
+import { builtin } from '@seedao/sns-js';
 
 export default function RegisterSNSStep2() {
   const { t } = useTranslation();
   const {
-    state: { localData },
+    state: { account },
+  } = useAuthContext();
+  const {
+    state: { localData, contract },
+    dispatch: dispatchSNS,
   } = useSNSContext();
 
   const startTimeRef = useRef<number>(0);
   const [leftTime, setLeftTime] = useState<number>(0);
+  const [secret, setSecret] = useState('');
+  const [name, setName] = useState('');
 
   useEffect(() => {
-    // TODO parse
-    startTimeRef.current = Math.floor(Date.now() / 1000 - 20);
+    const parseLocalData = () => {
+      if (!account || !localData) {
+        return;
+      }
+      const d = localData[account];
+      setSecret(d.secret);
+      setName(d.sns);
+      startTimeRef.current = d.timestamp || 0;
+    };
+    parseLocalData();
   }, [localData]);
 
   useEffect(() => {
     let timer: any;
     const timerFunc = () => {
+      if (!startTimeRef.current) {
+        return;
+      }
       const currentTime = Math.floor(Date.now() / 1000);
       const delta = currentTime - startTimeRef.current;
       if (delta > 60) {
@@ -38,10 +57,29 @@ export default function RegisterSNSStep2() {
 
   const progress = (leftTime / 60) * 100;
 
+  const handleRegister = async () => {
+    if (!account) {
+      return;
+    }
+    dispatchSNS({ type: ACTIONS.SHOW_LOADING });
+    try {
+      const res = await contract.register(name, account, builtin.PUBLIC_RESOLVER_ADDR, secret);
+      const d = { ...localData };
+      d[account].step = 'register';
+      d[account].stepStatus = 'pending';
+      d[account].registerHash = res.hash;
+      localStorage.setItem('sns', JSON.stringify(d));
+    } catch (error) {
+      console.error('register failed', error);
+    } finally {
+      dispatchSNS({ type: ACTIONS.CLOSE_LOADING });
+    }
+  };
+
   return (
     <Container>
       <ContainerWrapper>
-        <CurrentSNS>1211.seedao</CurrentSNS>
+        <CurrentSNS>{name}.seedao</CurrentSNS>
         <CircleBox>
           <CircleProgress progress={progress} color="var(--bs-primary)" />
           <div className="number">
@@ -51,7 +89,9 @@ export default function RegisterSNSStep2() {
         </CircleBox>
         <StepTitle>{t('SNS.TimerTitle')}</StepTitle>
         <StepDesc>{t('SNS.TimerDesc')}</StepDesc>
-        <FinishButton>{t('SNS.Finish')}</FinishButton>
+        <FinishButton onClick={handleRegister} disabled={!!leftTime}>
+          {t('SNS.Finish')}
+        </FinishButton>
       </ContainerWrapper>
     </Container>
   );

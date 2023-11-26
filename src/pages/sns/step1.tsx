@@ -172,6 +172,7 @@ export default function RegisterSNSStep1() {
         [account]: {
           sns: searchVal,
           step: 'commit',
+          secret: randomSecret,
           commitHash: txId,
           stepStatus: 'success',
           commitTimeStart: new Date().getTime(),
