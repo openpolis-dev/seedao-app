@@ -8,8 +8,10 @@ import ClearIcon from 'assets/Imgs/sns/clear.svg';
 import useCheckLogin from 'hooks/useCheckLogin';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import { ethers } from 'ethers';
-import useToast, { ToastType } from 'hooks/useToast';
 import { useSNSContext, ACTIONS } from './snsProvider';
+import { normalize } from '@seedao/sns-namehash';
+import { isAvailable } from '@seedao/sns-safe';
+import { builtin } from '@seedao/sns-js';
 
 enum AvailableStatus {
   DEFAULT = 'default',
@@ -22,30 +24,65 @@ export default function RegisterSNSStep1() {
   const [val, setVal] = useState<string>();
   const [searchVal, setSearchVal] = useState<string>();
   const [isPending, setPending] = useState(false);
-  const [isAvailable, setAvailable] = useState(AvailableStatus.DEFAULT);
+  const [availableStatus, setAvailable] = useState(AvailableStatus.DEFAULT);
 
   const {
     dispatch,
     state: { provider, account },
   } = useAuthContext();
 
-  const { dispatch: dispatchSNS } = useSNSContext();
+  const {
+    dispatch: dispatchSNS,
+    state: { contract },
+  } = useSNSContext();
 
   const isLogin = useCheckLogin(account);
 
-  const { showToast } = useToast();
-
-  const handleSearchAvailable = (v: string) => {
+  const handleSearchAvailable = async (v: string) => {
     setSearchVal(v);
-    setPending(false);
-    setAvailable(AvailableStatus.OK);
+    try {
+      // offchain check
+      const res = await isAvailable(v, builtin.SAFE_HOST);
+      if (!res) {
+        setAvailable(AvailableStatus.NOT_OK);
+        setPending(false);
+        return;
+      }
+      // onchain check
+      const res1 = await contract.available(v);
+      if (!res1) {
+        setAvailable(AvailableStatus.NOT_OK);
+        setPending(false);
+        return;
+      }
+      setAvailable(AvailableStatus.OK);
+    } catch (error) {
+      console.error('check available error', error);
+      setAvailable(AvailableStatus.DEFAULT);
+    } finally {
+      setPending(false);
+    }
   };
-  const onChangeVal = useCallback(debounce(handleSearchAvailable, 1000), []);
+  const onChangeVal = useCallback(debounce(handleSearchAvailable, 1000), [contract]);
 
   const handleInput = (v: string) => {
-    setVal(v);
-    setPending(true);
-    onChangeVal(v);
+    if (v?.length > 15) {
+      return;
+    }
+    if (!contract) {
+      // TODO check login status?
+      return;
+    }
+    const v_lower = v.toLocaleLowerCase();
+    setVal(v_lower);
+    const [ok, v_normalized] = normalize(v_lower);
+    if (!ok) {
+      setAvailable(AvailableStatus.NOT_OK);
+      return;
+    } else {
+      setPending(true);
+      onChangeVal(v_normalized);
+    }
   };
 
   const handleClearInput = () => {
@@ -70,12 +107,14 @@ export default function RegisterSNSStep1() {
         return;
       }
     }
-    // if (isAvailable !== AvailableStatus.OK) {
+    // if (availableStatus !== AvailableStatus.OK) {
     //   showToast('unvaliable', ToastType.Danger);
     //   return;
     // }
     // TODO mint
     dispatchSNS({ type: ACTIONS.ADD_STEP, payload: null });
+    const txId = '0x643e511de56b566830ec2dd103814a73b80829de4866b29d764912f6f0e59e9e';
+    // record to localstorage
   };
   return (
     <Container>
@@ -88,15 +127,15 @@ export default function RegisterSNSStep1() {
             <span className="endfill">.seedao</span>
           </InputBox>
           <SearchRight>
-            {!isPending && isAvailable === AvailableStatus.OK && <OkTag>{t('SNS.Available')}</OkTag>}
-            {!isPending && isAvailable === AvailableStatus.NOT_OK && <NotOkTag>{t('SNS.Uavailable')}</NotOkTag>}
+            {!isPending && availableStatus === AvailableStatus.OK && <OkTag>{t('SNS.Available')}</OkTag>}
+            {!isPending && availableStatus === AvailableStatus.NOT_OK && <NotOkTag>{t('SNS.Uavailable')}</NotOkTag>}
             {isPending && <Loading src={LoadingImg} alt="" />}
             {searchVal && <img className="btn-clear" src={ClearIcon} alt="" onClick={handleClearInput} />}
           </SearchRight>
         </SearchBox>
         <OperateBox>
           <MintButton variant="primary" onClick={handleMint}>
-            {/* <MintButton variant="primary" onClick={handleMint} disabled={isPending || isAvailable !== AvailableStatus.OK}> */}
+            {/* <MintButton variant="primary" onClick={handleMint} disabled={isPending || availableStatus !== AvailableStatus.OK}> */}
             {t('SNS.FreeMint')}
           </MintButton>
         </OperateBox>
