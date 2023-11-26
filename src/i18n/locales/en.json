@@ -12,7 +12,7 @@
     "connectWallet": "Connect Wallet",
     "Resources": "Apply Now",
     "Explore": "Explore",
-    "Pub": "SeeDAO Pub"
+    "Pub": "SeeDAO Hub"
   },
   "general": {
     "back": "Back",
@@ -483,7 +483,7 @@
     "DAOLinkDesc": "DAOLink is a web3 cowork platform perfect for DAOs, remote teams, and digital nomads.",
     "Wormhole3Desc": "A Wormhole From Web2 to Web3.",
     "MetaforoDesc": "Decisions get made by members, for members. Metaforo is the only community platform that supports quorum and quadratic token voting.",
-    "Pub": "SeeDAO Pub",
+    "Pub": "SeeDAO Hub",
     "PubDesc": "The events hub for SeeDAO community.",
     "SeeU": "SeeU Network",
     "SeeUDesc": "SeeU Network is a decentralized social network that allows users to create and manage their own communities."
