@@ -4,6 +4,11 @@ export type LocalSNS = {
   [account: string]: {
     sns: string;
     step: 'commit' | 'register';
+    stepStatus: 'pending' | 'success' | 'failed';
+    secret: string;
+    commitHash: string;
+    registerHash: string;
+    timestamp: number;
     tx?: any;
   };
 };
@@ -13,16 +18,19 @@ export enum ACTIONS {
   ADD_STEP = 'add_step',
   SET_CONTRACT = 'set_contract',
   SET_LOCAL_DATA = 'set_local_data',
+  SHOW_LOADING = 'show_loading',
+  CLOSE_LOADING = 'close_loading',
 }
 
 interface IState {
   step: number;
   contract?: any;
   localData?: LocalSNS;
+  loading?: boolean;
 }
 interface IAction {
   type: ACTIONS;
-  payload: any;
+  payload?: any;
 }
 
 const INIT_STATE: IState = { step: 1 };
@@ -43,6 +51,10 @@ const reducer = (state: IState, action: IAction): IState => {
       return { ...state, contract: action.payload };
     case ACTIONS.SET_LOCAL_DATA:
       return { ...state, localData: action.payload };
+    case ACTIONS.SHOW_LOADING:
+      return { ...state, loading: true };
+    case ACTIONS.CLOSE_LOADING:
+      return { ...state, loading: false };
     default:
       throw new Error(`Unknown type: ${action.type}`);
   }

@@ -7,6 +7,7 @@ import SNSProvider, { ACTIONS, useSNSContext } from './snsProvider';
 import { useAuthContext } from 'providers/authProvider';
 import { useEffect } from 'react';
 import { ethers } from 'ethers';
+import StepLoading from './stepLoading';
 import ABI from 'assets/abi/snsRegister.json';
 const SNS_REGISTER_CONTRACT_ADDRESS = '0xded0a911F095349A071CA71Bb8237C4a40947159';
 
@@ -16,7 +17,7 @@ const RegisterSNSWrapper = () => {
   } = useAuthContext();
 
   const {
-    state: { step, localData },
+    state: { step, localData, loading },
     dispatch: dispatchSNS,
   } = useSNSContext();
 
@@ -73,6 +74,7 @@ const RegisterSNSWrapper = () => {
       {step === 1 && <RegisterSNSStep1 />}
       {step === 2 && <RegisterSNSStep2 />}
       {step === 3 && <FinishedComponent />}
+      {loading && <StepLoading />}
     </Container>
   );
 };
