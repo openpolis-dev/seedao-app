@@ -89,8 +89,8 @@ export default function LoginModal({ showModal }: any) {
           </span>
           <Title>{t('general.ConnectWallet')}</Title>
           {isInstalled ? <WalletConnect /> : <Metamask />}
-          <Unipass />
           {getConfig().REACT_APP_JOYID_ENABLE && (isInstalled ? <Joyid /> : <JoyidWeb />)}
+          <Unipass />
         </Modal>
       </Mask>
     </>
