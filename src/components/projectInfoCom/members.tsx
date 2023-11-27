@@ -228,7 +228,6 @@ const AddBox = styled.div`
   flex-shrink: 0;
   width: 20px !important;
   height: 20px !important;
-  background: #f00;
 `;
 
 const TopBox = styled.div`
