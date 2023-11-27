@@ -10,8 +10,7 @@ import { ethers } from 'ethers';
 import StepLoading from './stepLoading';
 import BackerNav from 'components/common/backNav';
 import ABI from 'assets/abi/snsRegister.json';
-import { useTranslation } from 'react-i18next';
-const SNS_REGISTER_CONTRACT_ADDRESS = '0xded0a911F095349A071CA71Bb8237C4a40947159';
+import { builtin } from '@seedao/sns-js';
 
 const RegisterSNSWrapper = () => {
   const {
@@ -28,7 +27,7 @@ const RegisterSNSWrapper = () => {
   useEffect(() => {
     console.log('222provider', provider);
     if (provider) {
-      const _contract = new ethers.Contract(SNS_REGISTER_CONTRACT_ADDRESS, ABI, provider.getSigner());
+      const _contract = new ethers.Contract(builtin.SEEDAO_REGISTRAR_CONTROLLER_ADDR, ABI, provider.getSigner());
       dispatchSNS({ type: ACTIONS.SET_CONTRACT, payload: _contract });
     }
   }, [provider]);
