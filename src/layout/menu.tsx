@@ -320,7 +320,7 @@ const items: MenuItemType[] = [
         active: PubImgActive,
       },
     },
-    link: { href: '/pub' },
+    link: { href: '/hub' },
   },
   {
     title: 'menus.city-hall',

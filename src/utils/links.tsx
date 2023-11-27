@@ -267,7 +267,7 @@ const links = {
     // {
     //   id: 'module-pub',
     //   name: 'apps.Pub',
-    //   link: '/pub',
+    //   link: '/hub',
     //   icon: '',
     //   desc: 'apps.PubDesc',
     // },
