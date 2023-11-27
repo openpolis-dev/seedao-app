@@ -42,6 +42,7 @@ import Issue from 'pages/cityhall/governance/issue';
 import SCRRank from 'pages/scrRank';
 import SNSEntrancePage from 'pages/sns/entrance';
 import RegisterSNS from 'pages/sns/register';
+import UserSNS from 'pages/sns/userSNS';
 
 export default function RouterLink() {
   return (
@@ -91,6 +92,7 @@ export default function RouterLink() {
           {/* SNS */}
           <Route path="/sns" element={<SNSEntrancePage />} />
           <Route path="/sns/register" element={<RegisterSNS />} />
+          <Route path="/sns/user" element={<UserSNS />} />
         </Routes>
       </Layout>
       <RouterChecker />

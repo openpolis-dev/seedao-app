@@ -14,6 +14,8 @@ import { isAvailable } from '@seedao/sns-safe';
 import { builtin } from '@seedao/sns-js';
 import { getRandomCode } from 'utils';
 import useToast, { ToastType } from 'hooks/useToast';
+import UserSVGIcon from 'components/svgs/user';
+import { Link } from 'react-router-dom';
 
 enum AvailableStatus {
   DEFAULT = 'default',
@@ -227,6 +229,10 @@ export default function RegisterSNSStep1() {
           </MintButton>
         </OperateBox>
       </ContainerWrapper>
+      <UserEntrance to="/sns/user">
+        <UserSVGIcon />
+        <span>{t('SNS.MySNS')}</span>
+      </UserEntrance>
     </Container>
   );
 }
@@ -239,7 +245,7 @@ const Container = styled.div`
   border-radius: 16px;
   border: 1px solid var(--table-border);
   text-align: center;
-  text-align: center;
+  position: relative;
 `;
 
 const ContainerWrapper = styled.div`
@@ -364,4 +370,26 @@ const Tip = styled.div`
   margin: 0 auto;
   margin-top: 8px;
   text-align: left;
+`;
+
+const UserEntrance = styled(Link)`
+  position: absolute;
+  background: var(--home-right);
+  border-radius: 8px;
+  opacity: 1;
+  border: 1px solid var(--table-border);
+  font-size: 14px;
+  height: 36px;
+  padding-inline: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  top: 24px;
+  right: 24px;
+  user-select: none;
+  color: var(--bs-body-color_active) !important;
+  &:hover {
+    color: var(--bs-body-color_active);
+  }
 `;

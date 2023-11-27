@@ -152,7 +152,6 @@ const Container = styled.div`
   border-radius: 16px;
   border: 1px solid var(--table-border);
   text-align: center;
-  text-align: center;
 `;
 
 const ContainerWrapper = styled.div`
