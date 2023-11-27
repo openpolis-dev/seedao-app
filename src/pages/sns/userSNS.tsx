@@ -14,14 +14,11 @@ import { ethers } from 'ethers';
 export default function UserSNS() {
   const { t } = useTranslation();
   const {
-    state: { account },
+    state: { account, sns: userSNS },
   } = useAuthContext();
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState<string>();
   const [snsList, setSnsList] = useState<string[]>([]);
-  const [name, setName] = useState<string>();
-
-  useEffect(() => {}, []);
 
   useEffect(() => {
     const getSNSList = () => {
@@ -41,24 +38,10 @@ export default function UserSNS() {
           setLoading(false);
         });
     };
-    const getCurrentName = () => {
-      if (!account) {
-        return;
-      }
-      sns.name(account).then((r) => {
-        if (r) {
-          setName(r);
-        }
-      });
-    };
     getSNSList();
-    getCurrentName();
   }, [account]);
-  const list = snsList.filter((item) => item !== name);
+  const list = snsList.filter((item) => item !== userSNS);
   const handleCloseModal = (newSNS?: string) => {
-    if (newSNS) {
-      setName(newSNS);
-    }
     setShowModal(undefined);
   };
   return (
@@ -66,7 +49,7 @@ export default function UserSNS() {
       <BackerNav title={t('SNS.MySNS')} to="/sns/register" mb="0" />
       <Container>
         <ContainerWrapper>
-          <CurrentUsed>{name || account}</CurrentUsed>
+          <CurrentUsed>{userSNS || account}</CurrentUsed>
           {loading ? (
             <Loading />
           ) : !!snsList.length ? (

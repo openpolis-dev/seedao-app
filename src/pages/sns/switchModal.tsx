@@ -27,7 +27,7 @@ export default function SwitchModal({ select, handleClose }: IProps) {
       const tx = await contract.setDefaultAddr(select.replace('.seedao', ''), builtin.PUBLIC_RESOLVER_ADDR);
       await tx.wait();
       handleClose(select);
-      // TODO: notify sns changed in header
+      dispatch({ type: AppActionType.SET_SNS, payload: select });
     } catch (error) {
       console.error(error);
     } finally {
