@@ -42,7 +42,7 @@ export default function StepLoading() {
         <div className="title">{t('SNS.StepLoadingTitle')}</div>
         <div className="step-container">
           {STEPS.map((item) => (
-            <StepBox className={step >= item.value ? 'active' : ''}>
+            <StepBox className={step >= item.value ? 'active' : ''} key={item.value}>
               {step > item.value ? <img src={DoneIcon} alt="" /> : <div className="step">{item.step}</div>}
               <div className="loader">{step === item.value && <Loading />}</div>
 

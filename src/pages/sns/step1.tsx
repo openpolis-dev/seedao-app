@@ -13,6 +13,7 @@ import { normalize } from '@seedao/sns-namehash';
 import { isAvailable } from '@seedao/sns-safe';
 import { builtin } from '@seedao/sns-js';
 import { getRandomCode } from 'utils';
+import useToast, { ToastType } from 'hooks/useToast';
 
 enum AvailableStatus {
   DEFAULT = 'default',
@@ -37,6 +38,8 @@ export default function RegisterSNSStep1() {
     dispatch: dispatchSNS,
     state: { contract, localData },
   } = useSNSContext();
+
+  const { showToast } = useToast();
 
   const isLogin = useCheckLogin(account);
 
@@ -139,9 +142,10 @@ export default function RegisterSNSStep1() {
         registerHash: '',
       };
       dispatchSNS({ type: ACTIONS.SET_STORAGE, payload: JSON.stringify(data) });
-    } catch (error) {
+    } catch (error: any) {
       console.error('mint failed', error);
       dispatchSNS({ type: ACTIONS.CLOSE_LOADING });
+      showToast(error?.reason || error?.data?.message || 'error', ToastType.Danger);
     }
   };
 
