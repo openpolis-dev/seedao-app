@@ -93,7 +93,7 @@ export default function RegisterSNSStep2() {
     }
     const hash = localData[account]?.registerHash;
     console.log(localData[account], hash);
-    if (!hash) {
+    if (!hash || localData[account]?.stepStatus === 'failed') {
       return;
     }
     let timer: any;
@@ -102,22 +102,21 @@ export default function RegisterSNSStep2() {
         return;
       }
       console.log(localData, account);
-
-      if (!hash) {
-        return;
-      }
       provider.getTransactionReceipt(hash).then((r: any) => {
         console.log('r:', r);
+        const _d = { ...localData };
         if (r && r.status === 1) {
           // means tx success
-          const _d = { ...localData };
           _d[account].stepStatus = 'success';
           dispatchSNS({ type: ACTIONS.SET_STORAGE, payload: JSON.stringify(_d) });
           dispatchSNS({ type: ACTIONS.CLOSE_LOADING });
           clearInterval(timer);
         } else if (r && r.status === 2) {
           // means tx failed
-          // TODO
+          _d[account].stepStatus = 'failed';
+          dispatchSNS({ type: ACTIONS.SET_STORAGE, payload: JSON.stringify(_d) });
+          dispatchSNS({ type: ACTIONS.CLOSE_LOADING });
+          clearInterval(timer);
         }
       });
     };
