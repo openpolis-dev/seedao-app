@@ -146,13 +146,23 @@ const links = {
       icon: RImg3,
       desc: 'city-hall.PubReviewDesc',
     },
+
     {
-      name: 'city-hall.GovernanceNodeResult',
-      link: '/city-hall/governance/governance-node-result',
-      id: 'module-governance-node-result',
-      icon: RImg2,
-      desc: 'city-hall.GovernanceNodeResultDesc',
+      name: 'city-hall.PointsAndTokenAudit',
+      link: '/city-hall/governance/audit',
+      id: 'module-governance-audit',
+      icon: RImg7,
+      desc: 'city-hall.PointsAndTokenAuditDesc',
     },
+    {
+      name: 'city-hall.CloseProjectAudit',
+      link: '/city-hall/governance/audit-project',
+      id: 'module-governance-audit-project',
+      icon: RImg8,
+      desc: 'city-hall.CloseProjectAuditDesc',
+    },
+  ],
+  governanceBtm: [
     {
       name: 'city-hall.CreateProject',
       link: '/create-project',
@@ -168,18 +178,11 @@ const links = {
       desc: 'city-hall.CreateGuildDesc',
     },
     {
-      name: 'city-hall.PointsAndTokenAudit',
-      link: '/city-hall/governance/audit',
-      id: 'module-governance-audit',
-      icon: RImg7,
-      desc: 'city-hall.PointsAndTokenAuditDesc',
-    },
-    {
-      name: 'city-hall.CloseProjectAudit',
-      link: '/city-hall/governance/audit-project',
-      id: 'module-governance-audit-project',
-      icon: RImg8,
-      desc: 'city-hall.CloseProjectAuditDesc',
+      name: 'city-hall.GovernanceNodeResult',
+      link: '/city-hall/governance/governance-node-result',
+      id: 'module-governance-node-result',
+      icon: RImg2,
+      desc: 'city-hall.GovernanceNodeResultDesc',
     },
   ],
   brand: [
