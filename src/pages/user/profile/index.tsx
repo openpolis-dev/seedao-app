@@ -5,7 +5,6 @@ import { useAuthContext } from 'providers/authProvider';
 import { useTranslation } from 'react-i18next';
 import useToast from 'hooks/useToast';
 import { ContainerPadding } from 'assets/styles/global';
-import useParseSNS from 'hooks/useParseSNS';
 import CopyBox from 'components/copy';
 import GithubImg from '../../../assets/Imgs/profile/Github2.svg';
 import TwitterIcon from '../../../assets/Imgs/profile/Twitter.svg';
@@ -56,9 +55,8 @@ const AvatarBox = styled.div`
 
 export default function Profile() {
   const {
-    state: { userData },
+    state: { userData, sns },
   } = useAuthContext();
-  // const sns = useParseSNS(userData?.wallet);
   const { t } = useTranslation();
   const { Toast, showToast } = useToast();
   const [userName, setUserName] = useState<string | undefined>('');
@@ -70,7 +68,6 @@ export default function Profile() {
   const [sbt, setSbt] = useState<any[]>([]);
   const [seed, setSeed] = useState<any[]>([]);
   const [wallet, setWallet] = useState();
-  const [sns, setSns] = useState('');
   const [detail, setDetail] = useState<any>();
   const [sbtList, setSbtList] = useState<any[]>([]);
   const [sbtArr, setSbtArr] = useState<any[]>([]);
@@ -116,7 +113,6 @@ export default function Profile() {
       let avarUrl = await PublicJs.getImage(detail?.avatar);
       setAvatar(avarUrl!);
       setWallet(detail.wallet);
-      setSns(detail.sns);
       setBio(detail.bio);
       setRoles(detail.roles!);
 

@@ -9,6 +9,7 @@ interface IState {
   account?: string;
   show_login_modal?: boolean;
   userData?: IUser;
+  sns?: string;
   tokenData?: ITokenType;
   proposal_categories: ICategory[];
   language: string;
@@ -36,6 +37,7 @@ export enum AppActionType {
   SET_PROVIDER = 'set_provider',
   SET_THEME = 'set_theme',
   SET_SNS_MAP = 'set_sns_map',
+  SET_SNS = 'set_sns',
 }
 
 interface IAction {
@@ -119,6 +121,8 @@ const reducer = (state: IState, action: IAction): IState => {
       return { ...state, wallet_type: action.payload };
     case AppActionType.SET_SNS_MAP:
       return { ...state, snsMap: action.payload };
+    case AppActionType.SET_SNS:
+      return { ...state, sns: action.payload };
     default:
       throw new Error(`Unknown type: ${action.type}`);
   }
