@@ -8,7 +8,9 @@ import { useAuthContext } from 'providers/authProvider';
 import { useEffect } from 'react';
 import { ethers } from 'ethers';
 import StepLoading from './stepLoading';
+import BackerNav from 'components/common/backNav';
 import ABI from 'assets/abi/snsRegister.json';
+import { useTranslation } from 'react-i18next';
 const SNS_REGISTER_CONTRACT_ADDRESS = '0xded0a911F095349A071CA71Bb8237C4a40947159';
 
 const RegisterSNSWrapper = () => {
@@ -87,9 +89,12 @@ const RegisterSNSWrapper = () => {
 
   return (
     <Container>
-      {step === 1 && <RegisterSNSStep1 />}
-      {step === 2 && <RegisterSNSStep2 />}
-      {step === 3 && <FinishedComponent />}
+      <BackerNav to="/home" title="SNS" mb="0" />
+      <StepContainer>
+        {step === 1 && <RegisterSNSStep1 />}
+        {step === 2 && <RegisterSNSStep2 />}
+        {step === 3 && <FinishedComponent />}
+      </StepContainer>
       {loading && <StepLoading />}
     </Container>
   );
@@ -105,9 +110,13 @@ export default function RegisterSNS() {
 
 const Container = styled.div`
   ${ContainerPadding};
+  min-height: 100%;
+`;
+
+const StepContainer = styled.div`
+  height: calc(100% - 30px);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 100%;
 `;
