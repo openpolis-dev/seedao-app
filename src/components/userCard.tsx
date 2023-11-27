@@ -100,6 +100,8 @@ const UserCardBox = styled(Col)<{ border: string }>`
   img.avatar {
     width: 60px;
     height: 60px;
+    object-fit: cover;
+    object-position: center;
     border-radius: 50%;
     margin-right: 20px;
   }

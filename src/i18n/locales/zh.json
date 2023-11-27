@@ -91,7 +91,7 @@
     "Detail": "详情",
     "HasBeenUsedAndRemains": "已使用{{used}}，剩余{{remain}}",
     "closeTips": "已申请关闭项目，审核通过后项目将被关闭",
-    "CloseProjectPlaceholder": "请输入关闭项目的理由",
+    "CloseProjectPlaceholder": "填写关闭项目的理由",
     "Others": "其他成员",
     "RemoveMember": "移除成员",
     "AddMember": "添加成员",
@@ -512,5 +512,11 @@
     "InputTip": "*请输入4-15位数字（0～9）、小写字母（a～z）或特殊字符（ ! $ ( ) * + - _ ）",
     "Switch": "切换",
     "MySNS": "我的 SNS"
+  },
+  "Governance": {
+    "GovernanceRule": "治理规则",
+    "MetaRule": "SeeDAO 元规则",
+    "GovernanceBook": "治理手册",
+    "NodesConferenceRule": "节点共识大会规则"
   }
 }

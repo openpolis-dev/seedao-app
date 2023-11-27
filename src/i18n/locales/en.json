@@ -512,5 +512,11 @@
     "InputTip": "*Please input 4-15 numbers(0-9)、lower letter(a-z) or special( ! $ ( ) * + - _ )",
     "Switch": "Switch",
     "MySNS": "My SNS"
+  },
+  "Governance": {
+    "GovernanceRule": "Governance Rules",
+    "MetaRule": "SeeDAO Meta Rules",
+    "GovernanceBook": "Governance Book",
+    "NodesConferenceRule": "Nodes Conference Rules"
   }
 }
