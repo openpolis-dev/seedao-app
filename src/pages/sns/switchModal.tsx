@@ -18,7 +18,7 @@ export default function SwitchModal({ select, handleClose }: IProps) {
 
   const handleSwitch = () => {};
   return (
-    <SwitchModalStyle>
+    <SwitchModalStyle handleClose={handleClose}>
       <SelectSNS>{select}</SelectSNS>
       <Content>{account}</Content>
       <Footer>
