@@ -168,10 +168,16 @@ export default function Members(props: Iprops) {
       <TopBox>
         <BlockTitle>{t('Project.Members')}</BlockTitle>
         {(canUpdateMember || canUpdateSponsor) && (
-          <AdeBox onClick={() => setShow(true)}>
-            <img src={InviteImg} alt="" />
-            <span>{t('Project.invite')}</span>
-          </AdeBox>
+          <TopRht>
+            <AddBox onClick={() => setShow(true)}>
+              <img src={InviteImg} alt="" />
+              {/*<span>{t('Project.invite')}</span>*/}
+            </AddBox>
+            <AddBox onClick={() => setShow(true)}>
+              <img src={InviteImg} alt="" />
+              {/*<span>{t('Project.invite')}</span>*/}
+            </AddBox>
+          </TopRht>
         )}
       </TopBox>
       <ItemBox>
@@ -211,16 +217,18 @@ const ItemBox = styled.div`
   flex-direction: column;
 `;
 
-const AdeBox = styled.div`
+const AddBox = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 12px;
-  border-radius: 8px;
+  border-radius: 4px;
   border: 1px solid var(--bs-border-color);
-  padding: 0 8px;
-  gap: 6px;
   cursor: pointer;
+  margin-left: 9px;
+  flex-shrink: 0;
+  width: 20px !important;
+  height: 20px !important;
+  background: #f00;
 `;
 
 const TopBox = styled.div`
@@ -238,3 +246,4 @@ const BlockTitle = styled.div`
   font-family: Poppins-Bold, Poppins;
   font-weight: bold;
 `;
+const TopRht = styled.div``;
