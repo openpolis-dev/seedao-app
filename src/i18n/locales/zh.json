@@ -495,11 +495,11 @@
   },
   "SNS": {
     "Started": "Started",
-    "Step1Title": "Your SeeDAO Username",
-    "Step1Desc": "Your identity across SeeDAO,one name for all your SeeDAO address, and your SeeDAO website.",
-    "Available": "Available",
-    "Uavailable": "Uavailable",
-    "FreeMint": "Free mint",
+    "Step1Title": "您的 SeeDAO 用户名",
+    "Step1Desc": "Your identity across SeeDAO, one name for all your SeeDAO address, and your SeeDAO website.",
+    "Available": "可注册",
+    "Uavailable": "不可注册",
+    "FreeMint": "免费 mint",
     "SpentMint": "{{money}} mint",
     "TimerTitle": "Almost here",
     "TimerDesc": "This timer helps prevent others from registering the name before you do.your name is not registered until you’ve completed the second transaction.",
@@ -508,6 +508,7 @@
     "StepLoadingTitle": "注册 SNS 需要三个步骤",
     "Step1Intro": "完成一笔交易并开始计时",
     "StepMiddleIntro": "等待计时器完成 60 秒计时",
-    "Step2Intro": "完成第二笔交易来获得该 SNS"
+    "Step2Intro": "完成第二笔交易来获得该 SNS",
+    "InputTip": "*请输入4-15位数字（0～9）、小写字母（a～z）或特殊字符（ ! $ ( ) * + - _ ）"
   }
 }

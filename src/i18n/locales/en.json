@@ -508,6 +508,7 @@
     "StepLoadingTitle": "Three steps to get your SNS",
     "Step1Intro": "Complete a transaction and start counting",
     "StepMiddleIntro": "Wait 60 seconds for the timer to complete",
-    "Step2Intro": "Complete a second transaction to secure your SNS"
+    "Step2Intro": "Complete a second transaction to secure your SNS",
+    "InputTip": "*Please input 4-15 numbers(0-9)、lower letter(a-z) or special( ! $ ( ) * + - _ )"
   }
 }

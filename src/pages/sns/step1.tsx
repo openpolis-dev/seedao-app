@@ -81,9 +81,15 @@ export default function RegisterSNSStep1() {
       // TODO check login status?
       return;
     }
+    if (!v) {
+      setVal('');
+      setSearchVal('');
+      setAvailable(AvailableStatus.DEFAULT);
+      return;
+    }
     const v_lower = v.toLocaleLowerCase();
-    setVal(v_lower);
     const [ok, v_normalized] = normalize(v_lower);
+    setVal(v_normalized);
     if (!ok) {
       setAvailable(AvailableStatus.NOT_OK);
       return;
@@ -209,6 +215,7 @@ export default function RegisterSNSStep1() {
             {searchVal && <img className="btn-clear" src={ClearIcon} alt="" onClick={handleClearInput} />}
           </SearchRight>
         </SearchBox>
+        <Tip>{t('SNS.InputTip')}</Tip>
         <OperateBox>
           {/* <MintButton variant="primary" onClick={handleMint}> */}
           <MintButton
@@ -325,7 +332,7 @@ const SearchRight = styled.div`
 `;
 
 const OperateBox = styled.div`
-  margin-top: 68px;
+  margin-top: 43px;
 `;
 
 const MintButton = styled(Button)`
@@ -345,4 +352,16 @@ const Loading = styled.img`
       transform: rotate(360deg);
     }
   }
+`;
+
+const Tip = styled.div`
+  width: 394px;
+  font-size: 10px;
+  font-family: Poppins, Poppins;
+  font-weight: 400;
+  color: #1a1323;
+  line-height: 17px;
+  margin: 0 auto;
+  margin-top: 8px;
+  text-align: left;
 `;
