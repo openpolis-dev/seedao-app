@@ -1,34 +1,117 @@
 import styled from 'styled-components';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import BackerNav from 'components/common/backNav';
 import { ContainerPadding } from 'assets/styles/global';
 import { PrimaryOutlinedButton } from 'components/common/button';
 import SwitchModal from './switchModal';
+import sns, { builtin } from '@seedao/sns-js';
+import { useAuthContext } from 'providers/authProvider';
+import LoadingImg from 'assets/Imgs/loading.png';
+import NoItem from 'components/noItem';
 
 export default function UserSNS() {
   const { t } = useTranslation();
+  const {
+    state: { account },
+  } = useAuthContext();
+  const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState<string>();
+  const [snsList, setSnsList] = useState<string[]>([]);
+  const [name, setName] = useState<string>();
+
+  useEffect(() => {}, []);
+
+  useEffect(() => {
+    const getSNSList = () => {
+      if (!account) {
+        return;
+      }
+      setLoading(true);
+      fetch(`${builtin.INDEXER_HOST}/sns/list_by_wallet/${account.toLocaleLowerCase()}`)
+        .then((res) => res.json())
+        .then((res) => {
+          setSnsList(res.map((item: any) => item.sns));
+        })
+        .catch((err) => {
+          console.error("Can't get sns list", err);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    };
+    const getCurrentName = () => {
+      if (!account) {
+        return;
+      }
+      sns.name(account).then((r) => {
+        if (r) {
+          setName(r);
+        }
+      });
+    };
+    getSNSList();
+    getCurrentName();
+  }, [account]);
   return (
     <Page>
       <BackerNav title={t('SNS.MySNS')} to="/sns/register" mb="0" />
       <Container>
         <ContainerWrapper>
-          <CurrentUsed>1111.hhh</CurrentUsed>
-          <NameList>
-            <li>
-              <span>as.seedao</span>
-              <PrimaryOutlinedButton onClick={() => setShowModal('sss.seedao')}>
-                {t('SNS.Switch')}
-              </PrimaryOutlinedButton>
-            </li>
-          </NameList>
+          <CurrentUsed>{name || account}</CurrentUsed>
+          {loading ? (
+            <Loading />
+          ) : !!snsList.length ? (
+            <NameList>
+              {snsList.map((item) => (
+                <li key={item}>
+                  <span>{item}</span>
+                  <PrimaryOutlinedButton onClick={() => setShowModal(item)}>{t('SNS.Switch')}</PrimaryOutlinedButton>
+                </li>
+              ))}
+            </NameList>
+          ) : (
+            <NoItem />
+          )}
         </ContainerWrapper>
       </Container>
       {showModal && <SwitchModal select={showModal} handleClose={() => setShowModal(undefined)} />}
     </Page>
   );
 }
+
+const Loading = () => {
+  return (
+    <LoadingStyle>
+      <img src={LoadingImg} alt="" />
+    </LoadingStyle>
+  );
+};
+
+const LoadingStyle = styled.div`
+  width: 100%;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  position: relative;
+
+  img {
+    user-select: none;
+    width: 40px;
+    height: 40px;
+    animation: rotate 1s infinite linear;
+  }
+  @keyframes rotate {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+`;
 
 const Page = styled.div`
   ${ContainerPadding};

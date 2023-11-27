@@ -303,6 +303,7 @@ const InputStyled = styled.input`
   border: none;
   padding: 0;
   max-width: calc(100% - 56px);
+  background-color: transparent;
   &:focus-visible {
     outline: none;
   }
