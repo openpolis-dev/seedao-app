@@ -3,26 +3,46 @@ import BasicModal from 'components/modals/basicModal';
 import { Button } from 'react-bootstrap';
 import { PrimaryOutlinedButton } from 'components/common/button';
 import { useTranslation } from 'react-i18next';
-import { useAuthContext } from 'providers/authProvider';
+import { AppActionType, useAuthContext } from 'providers/authProvider';
+import { ethers } from 'ethers';
+import { builtin } from '@seedao/sns-js';
+import ABI from 'assets/abi/snsRegister.json';
 
 interface IProps {
   select: string;
-  handleClose: () => void;
+  handleClose: (newSNS?: string) => void;
 }
 
 export default function SwitchModal({ select, handleClose }: IProps) {
   const { t } = useTranslation();
   const {
-    state: { account },
+    state: { account, provider },
+    dispatch,
   } = useAuthContext();
 
-  const handleSwitch = () => {};
+  const handleSwitch = async () => {
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    try {
+      const contract = new ethers.Contract(builtin.SEEDAO_REGISTRAR_CONTROLLER_ADDR, ABI, provider.getSigner());
+      const tx = await contract.setDefaultAddr(select.replace('.seedao', ''), builtin.PUBLIC_RESOLVER_ADDR);
+      await tx.wait();
+      handleClose(select);
+      // TODO: notify sns changed in header
+    } catch (error) {
+      console.error(error);
+    } finally {
+      dispatch({ type: AppActionType.SET_LOADING, payload: false });
+    }
+  };
   return (
     <SwitchModalStyle handleClose={handleClose}>
       <SelectSNS>{select}</SelectSNS>
       <Content>{account}</Content>
       <Footer>
-        <PrimaryOutlinedButton onClick={handleClose} style={{ width: '110px', height: '40px', lineHeight: '40px' }}>
+        <PrimaryOutlinedButton
+          onClick={() => handleClose()}
+          style={{ width: '110px', height: '40px', lineHeight: '40px' }}
+        >
           {t('general.cancel')}
         </PrimaryOutlinedButton>
         <Button variant="primary" onClick={handleSwitch} style={{ width: '110px' }}>

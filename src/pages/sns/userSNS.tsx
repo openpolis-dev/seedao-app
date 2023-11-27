@@ -9,6 +9,7 @@ import sns, { builtin } from '@seedao/sns-js';
 import { useAuthContext } from 'providers/authProvider';
 import LoadingImg from 'assets/Imgs/loading.png';
 import NoItem from 'components/noItem';
+import { ethers } from 'ethers';
 
 export default function UserSNS() {
   const { t } = useTranslation();
@@ -28,7 +29,7 @@ export default function UserSNS() {
         return;
       }
       setLoading(true);
-      fetch(`${builtin.INDEXER_HOST}/sns/list_by_wallet/${account.toLocaleLowerCase()}`)
+      fetch(`${builtin.INDEXER_HOST}/sns/list_by_wallet/${ethers.utils.getAddress(account)}`)
         .then((res) => res.json())
         .then((res) => {
           setSnsList(res.map((item: any) => item.sns));
@@ -53,6 +54,13 @@ export default function UserSNS() {
     getSNSList();
     getCurrentName();
   }, [account]);
+  const list = snsList.filter((item) => item !== name);
+  const handleCloseModal = (newSNS?: string) => {
+    if (newSNS) {
+      setName(newSNS);
+    }
+    setShowModal(undefined);
+  };
   return (
     <Page>
       <BackerNav title={t('SNS.MySNS')} to="/sns/register" mb="0" />
@@ -63,7 +71,7 @@ export default function UserSNS() {
             <Loading />
           ) : !!snsList.length ? (
             <NameList>
-              {snsList.map((item) => (
+              {list.map((item) => (
                 <li key={item}>
                   <span>{item}</span>
                   <PrimaryOutlinedButton onClick={() => setShowModal(item)}>{t('SNS.Switch')}</PrimaryOutlinedButton>
@@ -75,7 +83,7 @@ export default function UserSNS() {
           )}
         </ContainerWrapper>
       </Container>
-      {showModal && <SwitchModal select={showModal} handleClose={() => setShowModal(undefined)} />}
+      {showModal && <SwitchModal select={showModal} handleClose={handleCloseModal} />}
     </Page>
   );
 }
