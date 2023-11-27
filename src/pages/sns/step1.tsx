@@ -76,6 +76,11 @@ export default function RegisterSNSStep1() {
   const onChangeVal = useCallback(debounce(handleSearchAvailable, 1000), [contract]);
 
   const handleInput = (v: string) => {
+    // check login status
+    if (!account || !isLogin) {
+      dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: true });
+      return;
+    }
     if (v?.length > 15) {
       return;
     }
@@ -107,21 +112,8 @@ export default function RegisterSNSStep1() {
     setAvailable(AvailableStatus.DEFAULT);
   };
   const handleMint = async () => {
-    // check login status
-    if (!account || !isLogin) {
-      dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: true });
+    if (!account) {
       return;
-    }
-    // check network
-    const network = await provider.getNetwork();
-    if (network?.chainId !== 11155111) {
-      // switch network;
-      try {
-        await provider.send('wallet_switchEthereumChain', [{ chainId: ethers.utils.hexValue(11155111) }]);
-      } catch (error) {
-        console.error('switch network error', error);
-        return;
-      }
     }
     // mint
     try {

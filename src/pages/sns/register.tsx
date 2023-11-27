@@ -11,11 +11,14 @@ import StepLoading from './stepLoading';
 import BackerNav from 'components/common/backNav';
 import ABI from 'assets/abi/snsRegister.json';
 import { builtin } from '@seedao/sns-js';
+import getConfig from 'utils/envCofnig';
 
 const RegisterSNSWrapper = () => {
   const {
     state: { account, provider },
   } = useAuthContext();
+
+  const networkConfig = getConfig().NETWORK;
 
   const {
     state: { step, localData, loading },
@@ -26,11 +29,30 @@ const RegisterSNSWrapper = () => {
 
   useEffect(() => {
     console.log('222provider', provider);
-    if (provider) {
-      const _contract = new ethers.Contract(builtin.SEEDAO_REGISTRAR_CONTROLLER_ADDR, ABI, provider.getSigner());
+    const initContract = async () => {
+      // check network
+      if (!provider?.getNetwork) {
+        return;
+      }
+      const network = await provider.getNetwork();
+      if (network?.chainId !== networkConfig.chainId) {
+        // switch network;
+        try {
+          await provider.send('wallet_switchEthereumChain', [
+            { chainId: ethers.utils.hexValue(networkConfig.chainId) },
+          ]);
+          return;
+        } catch (error) {
+          console.error('switch network error', error);
+          return;
+        }
+      }
+      console.log('signer', provider.getSigner(account));
+      const _contract = new ethers.Contract(builtin.SEEDAO_REGISTRAR_CONTROLLER_ADDR, ABI, provider.getSigner(account));
       dispatchSNS({ type: ACTIONS.SET_CONTRACT, payload: _contract });
-    }
-  }, [provider]);
+    };
+    provider && initContract();
+  }, [provider, provider?.getNetwork]);
 
   useEffect(() => {
     console.log('account', account);
