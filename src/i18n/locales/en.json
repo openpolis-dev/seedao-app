@@ -327,7 +327,9 @@
     "RegisterSubmit": "Submit",
     "TemplateFileName": "SeeDAO Submission Template",
     "Total": "Total",
-    "Export": "Export"
+    "Export": "Export",
+    "record": "资产发放记录",
+    "apply": "申请资产发放"
   },
   "My": {
     "MyProfile": "My Profile",
@@ -466,7 +468,8 @@
     "CloseReason": "Close Reason",
     "Applicant": "Applicant",
     "ApplyTime": "Apply Time",
-    "Operation": "Operation"
+    "Operation": "Operation",
+    "Detail": "Detail"
   },
   "members": {
     "RemoveTitle": "Remove Member",

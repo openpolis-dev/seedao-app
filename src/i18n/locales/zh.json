@@ -327,7 +327,9 @@
     "RegisterSubmit": "提交",
     "TemplateFileName": "SeeDAO填报申请模版",
     "Total": "总计",
-    "Export": "导出"
+    "Export": "导出",
+    "record": "资产发放记录",
+    "apply": "申请资产发放"
   },
   "My": {
     "MyProfile": "我的信息",
@@ -466,7 +468,8 @@
     "CloseReason": "关闭原由",
     "Applicant": "申请人",
     "ApplyTime": "申请时间",
-    "Operation": "操作"
+    "Operation": "操作",
+    "Detail": "详情"
     },
   "members": {
     "RemoveTitle": "移除成员",
