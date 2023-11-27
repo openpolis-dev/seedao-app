@@ -10,6 +10,7 @@ const LOCAL = {
   REACT_APP_ONESIGNAL_ID: '9c6122e1-3de4-4c03-8e68-9f357e9ca1ae',
   REACT_APP_APP_VERSION: `A ${VERSION}`,
   REACT_APP_THEME_ENABLE: true,
+  JOY_ID_URL: 'https://testnet.joyid.dev',
   NETWORK: {
     name: 'Sepolia',
     chainId: 11155111,
@@ -40,6 +41,7 @@ const PRODUCTION = {
   REACT_APP_THEME_ENABLE: false,
   REACT_APP_ONESIGNAL_ID: '8ecd086b-3e15-4537-9f8b-c55c72a8dcf7',
   REACT_APP_MOBILE_URL: 'https://m.seedao.xyz',
+  // JOY_ID_URL: 'https://app.joy.id',
   NETWORK: {
     // [TODO] when publish sns contract, change to mainnet
     name: 'Sepolia',

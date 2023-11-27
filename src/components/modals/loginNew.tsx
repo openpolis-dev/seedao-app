@@ -16,13 +16,13 @@ import { useNetwork } from 'wagmi';
 import { useEthersProvider, useEthersSigner } from '../login/ethersNew';
 import { SELECT_WALLET } from '../../utils/constant';
 import { ethers } from 'ethers';
-import { mainnet } from 'wagmi/chains';
 import getConfig from 'utils/envCofnig';
 import useCheckInstallPWA from 'hooks/useCheckInstallPWA';
 import { Wallet } from 'wallet/wallet';
 
 export default function LoginModal({ showModal }: any) {
   const { t } = useTranslation();
+  const network = getConfig().NETWORK;
 
   const {
     state: { account, provider, theme },
@@ -52,9 +52,10 @@ export default function LoginModal({ showModal }: any) {
       dispatch({ type: AppActionType.SET_PROVIDER, payload: providerUnipass });
     } else if ([Wallet.JOYID, Wallet.JOYID_WEB].includes(walletType)) {
       // joyid
-      const url = mainnet.rpcUrls.public.http[0];
-      const id = mainnet.id;
-      const providerJoyId = new ethers.providers.JsonRpcProvider(url, id);
+      const providerJoyId = new ethers.providers.JsonRpcProvider(network.rpc, {
+        chainId: network.chainId,
+        name: network.name,
+      });
       dispatch({ type: AppActionType.SET_PROVIDER, payload: providerJoyId });
     }
   };

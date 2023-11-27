@@ -15,6 +15,7 @@ import styled from 'styled-components';
 import OneSignal from 'react-onesignal';
 import { connect, disconnect, signMessage, initConfig } from '@joyid/evm';
 import { clearStorage } from 'utils/auth';
+import getConfig from 'utils/envCofnig';
 
 export default function JoyidWeb() {
   const navigate = useNavigate();
@@ -25,16 +26,18 @@ export default function JoyidWeb() {
   const [account, setAccount] = useState<string>('');
   const { dispatch } = useAuthContext();
 
+  const network = getConfig().NETWORK;
+
   useEffect(() => {
     initConfig({
       name: 'SeeDAO',
       logo: `${window.location.origin}/favicon.ico`,
       // optional
-      joyidAppURL: 'https://app.joy.id',
-      rpcURL: 'https://mainnet.infura.io/v3/',
+      joyidAppURL: getConfig().JOY_ID_URL,
+      rpcURL: network.rpc,
       network: {
-        name: 'Ethereum Mainnet',
-        chainId: 1,
+        name: network.name,
+        chainId: network.chainId,
       },
     });
   }, []);
@@ -42,6 +45,7 @@ export default function JoyidWeb() {
   const onClickConnect = async () => {
     try {
       const address = await connect();
+      localStorage.setItem(SELECT_WALLET, Wallet.JOYID_WEB);
       setAccount(address);
       startSign(address);
     } catch (error) {
@@ -63,7 +67,7 @@ export default function JoyidWeb() {
   const startSign = async (account: string) => {
     try {
       const nonce = await getMyNonce(account);
-      const siweMessage = createSiweMessage(account, 1, nonce, 'Welcome to SeeDAO!');
+      const siweMessage = createSiweMessage(account, network.chainId, nonce, 'Welcome to SeeDAO!');
       setMsg(siweMessage);
       const res = await signMessage(siweMessage, account);
       setSignInfo(res);
