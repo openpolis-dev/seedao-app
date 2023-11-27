@@ -277,8 +277,18 @@ export default function AssetList() {
       )}
 
       <TitBox>
-        <span>{t('Project.Record')}</span>
-        <PrimaryOutlinedButton onClick={openRank}>{t('GovernanceNodeResult.SCRRank')}</PrimaryOutlinedButton>
+        <dl>
+          <dt></dt>
+          <dd>{t('Project.Record')}</dd>
+        </dl>
+        <dl>
+          <dt></dt>
+          <dd>申请资产发放</dd>
+        </dl>
+        <dl onClick={() => openRank()}>
+          <dt></dt>
+          <dd>{t('GovernanceNodeResult.SCRRank')}</dd>
+        </dl>
       </TitBox>
       <FirstLine>
         <TopLine>

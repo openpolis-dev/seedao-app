@@ -302,7 +302,7 @@
     "Canceled": "Canceled"
   },
   "Assets": {
-    "TotalBalance": "Vault Balance",
+    "TotalBalance": "Total Assets",
     "Wallet": "Wallet",
     "MultiSign": "Multi-Signer",
     "Chain": "Chain",

@@ -302,7 +302,7 @@
     "Canceled": "已取消"
   },
   "Assets": {
-    "TotalBalance": "金库余额",
+    "TotalBalance": "总资产",
     "Wallet": "钱包",
     "MultiSign": "多签账户",
     "Chain": "链",
