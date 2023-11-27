@@ -474,7 +474,7 @@
     "RemoveConfirm": "Confirm remove the following members?",
     "AddressName": "SNS/Wallet",
     "NotRegister": "Not Register",
-    "NotFilled" : "Not available"
+    "NotFilled": "Not available"
   },
   "apps": {
     "DeschoolDesc": "DeSchool is building education infrastructure in Web3.",
@@ -499,6 +499,10 @@
     "TimerTitle": "Almost here",
     "TimerDesc": "This timer helps prevent others from registering the name before you do.your name is not registered until you’ve completed the second transaction.",
     "Finish": "Finish",
-    "FinishSucess": "Registered successfully!"
+    "FinishSucess": "Registered successfully!",
+    "StepLoadingTitle": "Three steps to get your SNS",
+    "Step1Intro": "Complete a transaction and start counting",
+    "StepMiddleIntro": "Wait 60 seconds for the timer to complete",
+    "Step2Intro": "Complete a second transaction to secure your SNS"
   }
 }
