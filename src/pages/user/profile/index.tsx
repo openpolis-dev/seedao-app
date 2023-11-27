@@ -131,12 +131,7 @@ export default function Profile() {
   useEffect(() => {
     if (!userData) return;
     getDetail();
-  }, []);
-
-  useEffect(() => {
-    if (!userData) return;
-    getDetail();
-  }, [userData, (userData as any)?.data?.sns]);
+  }, [userData]);
 
   const switchRoles = (role: string) => {
     let str: string = '';
