@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import NiceIcon from 'assets/Imgs/sns/nice.svg';
-import { useAuthContext } from 'providers/authProvider';
+import { AppActionType, useAuthContext } from 'providers/authProvider';
 import { useSNSContext } from './snsProvider';
 import { useEffect } from 'react';
 
@@ -9,6 +9,7 @@ export default function FinishedComponent() {
   const { t } = useTranslation();
   const {
     state: { theme },
+    dispatch,
   } = useAuthContext();
   const {
     state: { sns },
@@ -16,6 +17,7 @@ export default function FinishedComponent() {
 
   useEffect(() => {
     localStorage.removeItem('sns');
+    dispatch({ type: AppActionType.SET_SNS, payload: `${sns}.seedao` });
   }, []);
   return (
     <Container>
