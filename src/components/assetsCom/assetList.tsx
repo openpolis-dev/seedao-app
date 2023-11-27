@@ -17,24 +17,61 @@ import { formatApplicationStatus } from 'utils/index';
 import Select from 'components/common/select';
 import { formatNumber } from 'utils/number';
 import ApplicationModal from 'components/modals/applicationModal';
-import ApplicationStatusTag from 'components/common/applicationStatusTag';
+import ApplicationStatusTagNew from 'components/common/applicationStatusTagNew';
 import useSeasons from 'hooks/useSeasons';
 import useQuerySNS from 'hooks/useQuerySNS';
 import useBudgetSource from 'hooks/useBudgetSource';
-import { Link, useNavigate } from 'react-router-dom';
-import { PrimaryOutlinedButton } from 'components/common/button';
+import { useNavigate } from 'react-router-dom';
 import getConfig from 'utils/envCofnig';
+
+import RecordImg from 'assets/Imgs/light/record.svg';
+import ApplyImg from 'assets/Imgs/light/apply.svg';
+import RankImg from 'assets/Imgs/light/rank.svg';
+import SearchImg from 'assets/Imgs/light/search.svg';
+
+import RecordWhite from 'assets/Imgs/dark/record.svg';
+import ApplyWhite from 'assets/Imgs/dark/apply.svg';
+import RankWhite from 'assets/Imgs/dark/rank.svg';
+import SearchWhite from 'assets/Imgs/light/search.svg';
 
 const Box = styled.div``;
 const TitBox = styled.div`
-  margin: 40px 0 26px;
+  margin: 60px 0 40px;
   font-size: 24px;
-  font-family: Poppins-Bold, Poppins;
-  font-weight: bold;
+  font-family: Poppins-Bold;
   line-height: 30px;
   display: flex;
   align-items: center;
-  gap: 20px;
+  dl {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 40px;
+    cursor: pointer;
+    &.active,
+    &:hover {
+      font-weight: bold;
+      dd:after {
+        content: '';
+        width: 50px;
+        height: 4px;
+        background: var(--bs-primary);
+        position: absolute;
+        bottom: -10px;
+        left: calc((100% - 50px) / 2);
+      }
+    }
+  }
+  dd {
+    position: relative;
+  }
+  dt {
+    margin-right: 8px;
+    img {
+      width: 24px;
+      height: 24px;
+    }
+  }
 `;
 
 const FirstLine = styled.div`
@@ -85,15 +122,56 @@ const TableBox = styled.div`
   overflow-x: auto;
   overflow-y: hidden;
   padding-bottom: 3rem;
+  th {
+    text-align: center;
+    &:first-child,
+    &:nth-child(4) {
+      text-align: left;
+    }
+  }
   td {
     vertical-align: middle;
+    border-top: 1px solid var(--bs-border-color);
+    border-bottom: 0;
+  }
+  tbody tr {
+    border: 0;
   }
   tr:hover {
     td {
-      //border-bottom: 1px solid #fff !important;
-      //&+td{
-      //  border-bottom: 1px solid #fff !important;
-      //}
+      border-top: 0;
+    }
+    & + tr {
+      td {
+        border-top: 0;
+      }
+    }
+
+    //td {
+    //  border-bottom: 1px solid #fff !important;
+    //}
+  }
+`;
+
+const SearchBox = styled.div`
+  height: 40px;
+  background: #fff;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 8px;
+  border: 1px solid var(--bs-border-color);
+  input {
+    border: 0;
+    background: transparent;
+    margin-left: 9px;
+    height: 24px;
+    &::placeholder {
+      color: var(--bs-body-color);
+    }
+    &:focus {
+      outline: none;
     }
   }
 `;
@@ -101,7 +179,10 @@ const TableBox = styled.div`
 export default function AssetList() {
   const navigate = useNavigate();
 
-  const { dispatch } = useAuthContext();
+  const {
+    state: { theme },
+    dispatch,
+  } = useAuthContext();
   const { t } = useTranslation();
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -267,6 +348,9 @@ export default function AssetList() {
     return name?.endsWith('.seedao') ? name : publicJs.AddressToShow(name, 6);
   };
 
+  const openApply = () => {
+    navigate('/assets/register', { state: '/assets' });
+  };
   const openRank = () => {
     navigate('/ranking', { state: '/assets' });
   };
@@ -277,26 +361,38 @@ export default function AssetList() {
       )}
 
       <TitBox>
-        <dl>
-          <dt></dt>
-          <dd>{t('Project.Record')}</dd>
+        <dl className="active">
+          <dt>
+            <img src={theme ? RecordWhite : RecordImg} alt="" />
+          </dt>
+          <dd>{t('Assets.record')}</dd>
         </dl>
-        <dl>
-          <dt></dt>
-          <dd>申请资产发放</dd>
+        <dl onClick={() => openApply()}>
+          <dt>
+            <img src={theme ? ApplyWhite : ApplyImg} alt="" />
+          </dt>
+          <dd>{t('Assets.apply')}</dd>
         </dl>
         <dl onClick={() => openRank()}>
-          <dt></dt>
+          <dt>
+            <img src={theme ? RankWhite : RankImg} alt="" />
+          </dt>
           <dd>{t('GovernanceNodeResult.SCRRank')}</dd>
         </dl>
       </TitBox>
       <FirstLine>
         <TopLine>
           <li>
-            <span className="tit">{t('Project.State')}</span>
+            <SearchBox>
+              <img src={theme ? SearchWhite : SearchImg} alt="" />
+              <input type="text" placeholder="sns" />
+            </SearchBox>
+          </li>
+          <li>
+            {/*<span className="tit">{t('Project.State')}</span>*/}
             <Select
               options={statusOption}
-              placeholder=""
+              placeholder={t('Project.State')}
               onChange={(value: any) => {
                 setSelectStatus(value?.value as ApplicationStatus);
                 setSelectMap({});
@@ -305,10 +401,10 @@ export default function AssetList() {
             />
           </li>
           <li>
-            <span className="tit">{t('application.BudgetSource')}</span>
+            {/*<span className="tit">{t('application.BudgetSource')}</span>*/}
             <Select
               options={allSource}
-              placeholder=""
+              placeholder={t('application.BudgetSource')}
               onChange={(value: any) => {
                 setSelectSource({ id: value?.value as number, type: value?.data });
                 setSelectMap({});
@@ -317,10 +413,10 @@ export default function AssetList() {
             />
           </li>
           <li>
-            <span className="tit">{t('application.Operator')}</span>
+            {/*<span className="tit">{t('application.Operator')}</span>*/}
             <Select
               options={applicants}
-              placeholder=""
+              placeholder={t('application.Operator')}
               onChange={(value: any) => {
                 setSelectApplicant(value?.value);
                 setSelectMap({});
@@ -329,10 +425,10 @@ export default function AssetList() {
             />
           </li>
           <li>
-            <span className="tit">{t('application.Season')}</span>
+            {/*<span className="tit">{t('application.Season')}</span>*/}
             <Select
               options={seasons}
-              placeholder=""
+              placeholder={t('application.Season')}
               onChange={(value: any) => {
                 setSelectSeason(value?.value);
                 setSelectMap({});
@@ -382,6 +478,7 @@ export default function AssetList() {
                   <th className="center">{t('application.BudgetSource')}</th>
                   <th className="center">{t('application.Operator')}</th>
                   <th>{t('application.State')}</th>
+                  <th></th>
                 </tr>
               </thead>
               <tbody>
@@ -402,8 +499,11 @@ export default function AssetList() {
                     </td>
                     <td className="center">{item.budget_source}</td>
                     <td className="center">{formatSNS(item.submitter_name)}</td>
-                    <td>
-                      <ApplicationStatusTag status={item.status} />
+                    <td className="center">
+                      <ApplicationStatusTagNew status={item.status} />
+                    </td>
+                    <td className="center">
+                      <MoreButton>{t('application.Detail')}</MoreButton>
                     </td>
                   </tr>
                 ))}
@@ -431,4 +531,14 @@ const BudgetContent = styled.div`
   display: -webkit-box;
   -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
+`;
+
+const MoreButton = styled.div`
+  padding: 7px 26px;
+  display: inline-block;
+  background: var(--bs-box--background);
+  border-radius: 8px;
+  cursor: pointer;
+  border: 1px solid var(--bs-border-color);
+  font-size: 14px;
 `;

@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import BasicModal from './basicModal';
 import { IApplicationDisplay } from 'type/application.type';
 import { useTranslation } from 'react-i18next';
-import ApplicationStatusTag from 'components/common/applicationStatusTag';
+import ApplicationStatusTagNew from 'components/common/applicationStatusTagNew';
 
 interface Iprops {
   application: IApplicationDisplay;
@@ -39,7 +39,7 @@ export default function ApplicationModal({ application, handleClose, snsMap }: I
           <li>
             <BlockLeft>{t('application.State')}</BlockLeft>
             <BlockRight>
-              <ApplicationStatusTag status={application.status} />
+              <ApplicationStatusTagNew status={application.status} />
             </BlockRight>
           </li>
           <li>
