@@ -486,7 +486,9 @@
     "Pub": "SeeDAO Hub",
     "PubDesc": "The events hub for SeeDAO community.",
     "SeeU": "SeeU Network",
-    "SeeUDesc": "SeeU Network is a decentralized social network that allows users to create and manage their own communities."
+    "SeeUDesc": "SeeU Network is a decentralized social network that allows users to create and manage their own communities.",
+    "SNS": "SNS",
+    "SNSDesc": "SeeDAO Name Service (SNS) is a decentralized name service based on blockchain."
   },
   "SNS": {
     "Started": "Started",

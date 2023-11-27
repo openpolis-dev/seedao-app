@@ -285,6 +285,12 @@ const links = {
       icon: SeeUImg,
       desc: 'apps.SeeUDesc',
     },
+    {
+      id: 'module-sns',
+      name: 'apps.SNS',
+      link: '/sns/register',
+      desc: 'apps.SNSDesc',
+    },
   ],
   publicity: [
     {
