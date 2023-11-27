@@ -1,6 +1,6 @@
 import { Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import styled from 'styled-components';
 import { debounce } from 'utils';
 import LoadingImg from 'assets/Imgs/loading.png';
@@ -23,7 +23,7 @@ enum AvailableStatus {
 export default function RegisterSNSStep1() {
   const { t } = useTranslation();
   const [val, setVal] = useState<string>();
-  const [searchVal, setSearchVal] = useState<string>();
+  const [searchVal, setSearchVal] = useState<string>('');
   const [isPending, setPending] = useState(false);
   const [availableStatus, setAvailable] = useState(AvailableStatus.DEFAULT);
   const [randomSecret, setRandomSecret] = useState<string>('');
@@ -35,7 +35,7 @@ export default function RegisterSNSStep1() {
 
   const {
     dispatch: dispatchSNS,
-    state: { contract },
+    state: { contract, localData },
   } = useSNSContext();
 
   const isLogin = useCheckLogin(account);
@@ -112,85 +112,79 @@ export default function RegisterSNSStep1() {
         return;
       }
     }
-    // if (availableStatus !== AvailableStatus.OK) {
-    //   showToast('unvaliable', ToastType.Danger);
-    //   return;
-    // }
     // mint
-    // try {
-    //   const _s = getRandomCode();
-    //   setRandomSecret(_s);
-    //   const tx = await contract.makeCommitment(
-    //     searchVal,
-    //     account,
-    //     builtin.PUBLIC_RESOLVER_ADDR,
-    //     ethers.utils.formatBytes32String(_s),
-    //   );
-    //   const txHash = tx.hash;
-    //   // record to localstorage
-    //   const localsns = localStorage.getItem('sns') || '';
-    //   let data = undefined;
-    //   try {
-    //     data = JSON.parse(localsns);
-    //   } catch (error) {
-    //     data = {};
-    //   }
-    //   data[account] = {
-    //     sns: searchVal,
-    //     step: 'commit',
-    //     commitHash: txHash,
-    //     stepStatus: 'pending',
-    //     commitTimeStart: new Date().getTime(),
-    //   };
-    //   localStorage.setItem('sns', JSON.stringify(data));
-    //   try {
-    //     await tx.wait();
-    //     data[account] = {
-    //       ...data[account],
-    //       stepStatus: 'success',
-    //       commitTimeEnd: new Date().getTime(),
-    //     };
-    //     dispatchSNS({ type: ACTIONS.ADD_STEP, payload: null });
-    //   } catch (error) {
-    //     data[account] = {
-    //       ...data[account],
-    //       stepStatus: 'failed',
-    //       commitTimeEnd: new Date().getTime(),
-    //     };
-    //     throw new Error('tx failed');
-    //   } finally {
-    //     localStorage.setItem('sns', JSON.stringify(data));
-    //   }
-    // } catch (error) {
-    //   console.error('mint failed', error);
-    // }
-    const txId = '0xa97e6bdf6329e69e16529bc16bdb2a4afbe77a1a2bd3d31cd7b43f63619baefb';
-
-    localStorage.setItem(
-      'sns',
-      JSON.stringify({
-        [account]: {
-          sns: searchVal,
-          step: 'commit',
-          secret: randomSecret,
-          commitHash: txId,
-          stepStatus: 'success',
-          commitTimeStart: new Date().getTime(),
-          commitTimeEnd: new Date().getTime(),
-          timestamp: Math.floor(Date.now() / 1000),
-        },
-      }),
-    );
-    // record to localstorage
-    // const block = await provider.getBlock('0xf5b7874afd9670a20bd5259b11c3998b631e15a84202e0e653432e7cb286760b');
-    // console.log('block', block);
-
-    // provider.getTransactionReceipt(txId).then((r: any) => {
-    //   console.log('r:', r);
-
-    // });
-    dispatchSNS({ type: ACTIONS.ADD_STEP, payload: null });
+    try {
+      const _s = getRandomCode();
+      setRandomSecret(_s);
+      // get commitment
+      const commitment = await contract.makeCommitment(
+        searchVal,
+        account,
+        builtin.PUBLIC_RESOLVER_ADDR,
+        ethers.utils.formatBytes32String(_s),
+      );
+      // commit
+      dispatchSNS({ type: ACTIONS.SHOW_LOADING });
+      const tx = await contract.commit(commitment);
+      const txHash = tx.hash;
+      // record to localstorage
+      const data = { ...localData };
+      data[account] = {
+        sns: searchVal,
+        step: 'commit',
+        commitHash: txHash,
+        stepStatus: 'pending',
+        timestamp: 0,
+        secret: _s,
+        registerHash: '',
+      };
+      dispatchSNS({ type: ACTIONS.SET_STORAGE, payload: JSON.stringify(data) });
+    } catch (error) {
+      console.error('mint failed', error);
+      dispatchSNS({ type: ACTIONS.CLOSE_LOADING });
+    }
   };
+
+  useEffect(() => {
+    if (!account || !localData || !provider) {
+      return;
+    }
+    const hash = localData[account]?.commitHash;
+    console.log(localData[account], hash);
+    if (!hash) {
+      return;
+    }
+    let timer: any;
+    const timerFunc = () => {
+      if (!account || !localData) {
+        return;
+      }
+      console.log(localData, account);
+
+      if (!hash) {
+        return;
+      }
+      provider.getTransactionReceipt(hash).then((r: any) => {
+        console.log('r:', r);
+        if (r && r.status === 1) {
+          // means tx success
+          const _d = { ...localData };
+          _d[account].stepStatus = 'success';
+          provider.getBlock(r.blockNumber).then((block: any) => {
+            _d[account].timestamp = block.timestamp;
+            dispatchSNS({ type: ACTIONS.SET_STORAGE, payload: JSON.stringify(_d) });
+            dispatchSNS({ type: ACTIONS.CLOSE_LOADING });
+            clearInterval(timer);
+          });
+        } else if (r && r.status === 2) {
+          // means tx failed
+          // TODO
+        }
+      });
+    };
+    timer = setInterval(timerFunc, 1000);
+    return () => timer && clearInterval(timer);
+  }, [localData, account, provider]);
   return (
     <Container>
       <ContainerWrapper>
@@ -209,8 +203,12 @@ export default function RegisterSNSStep1() {
           </SearchRight>
         </SearchBox>
         <OperateBox>
-          <MintButton variant="primary" onClick={handleMint}>
-            {/* <MintButton variant="primary" onClick={handleMint} disabled={isPending || availableStatus !== AvailableStatus.OK}> */}
+          {/* <MintButton variant="primary" onClick={handleMint}> */}
+          <MintButton
+            variant="primary"
+            onClick={handleMint}
+            disabled={isPending || availableStatus !== AvailableStatus.OK}
+          >
             {t('SNS.FreeMint')}
           </MintButton>
         </OperateBox>

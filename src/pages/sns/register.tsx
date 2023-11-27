@@ -3,7 +3,7 @@ import RegisterSNSStep1 from './step1';
 import RegisterSNSStep2 from './step2';
 import FinishedComponent from './finished';
 import { ContainerPadding } from 'assets/styles/global';
-import SNSProvider, { ACTIONS, useSNSContext } from './snsProvider';
+import SNSProvider, { ACTIONS, LocalSNS, useSNSContext } from './snsProvider';
 import { useAuthContext } from 'providers/authProvider';
 import { useEffect } from 'react';
 import { ethers } from 'ethers';
@@ -32,42 +32,58 @@ const RegisterSNSWrapper = () => {
   }, [provider]);
 
   useEffect(() => {
-    const parseLocalData = () => {
-      // if (!account) {
-      //   return;
-      // }
-      // const localsns = localStorage.getItem('sns') || '';
-      // let data = undefined;
-      // try {
-      //   data = JSON.parse(localsns);
-      // } catch (error) { }
-      // let data: LocalSNS = {
-      //   [account]: {
-      //     sns: 'lala',
-      //     step: 'commit',
-      //   },
-      // };
-      // if (data && data[account]) {
-      //   const _d = data[account];
-      //   if (_d.step === 'commit') {
-      //     // TODO
-      //   }
-      // }
-    };
-    parseLocalData();
+    console.log('account', account);
+    console.log('localData', localData);
+    if (account && !localData) {
+      const localsns = localStorage.getItem('sns') || '';
+      let data: LocalSNS;
+      try {
+        data = JSON.parse(localsns);
+      } catch (error) {
+        dispatchSNS({ type: ACTIONS.SET_STEP, payload: 1 });
+        return;
+      }
+      dispatchSNS({ type: ACTIONS.SET_LOCAL_DATA, payload: data });
+    }
   }, [account, localData]);
 
   useEffect(() => {
-    const handleStorageChange = (event: StorageEvent) => {
-      if (event.key === 'sns' && event.newValue && JSON.stringify(localData) !== event.newValue) {
-        dispatchSNS({ type: ACTIONS.SET_LOCAL_DATA, payload: JSON.parse(event.newValue) });
+    const parseLocalData = () => {
+      if (!account || !localData) {
+        return;
       }
+      const v = localData[account];
+      if (!v) {
+        return;
+      }
+      dispatchSNS({ type: ACTIONS.SET_SNS, payload: v.sns });
+      // check step
+
+      console.log('v:', v);
+      if (v.step === 'commit') {
+        console.log('timestamp', v.timestamp);
+        if (v.timestamp > 0) {
+          dispatchSNS({ type: ACTIONS.SET_STEP, payload: 2 });
+          return;
+        } else {
+          dispatchSNS({ type: ACTIONS.SHOW_LOADING });
+        }
+      } else if (v.step === 'register') {
+        if (v.stepStatus === 'success') {
+          dispatchSNS({ type: ACTIONS.SET_STEP, payload: 3 });
+          return;
+        } else {
+          dispatchSNS({ type: ACTIONS.SET_STEP, payload: 2 });
+          if (v.stepStatus === 'pending') {
+            dispatchSNS({ type: ACTIONS.SHOW_LOADING });
+          }
+          return;
+        }
+      }
+      dispatchSNS({ type: ACTIONS.SET_STEP, payload: 1 });
     };
-    window.addEventListener('storage', handleStorageChange);
-    return () => {
-      window.removeEventListener('storage', handleStorageChange);
-    };
-  }, [localData]);
+    parseLocalData();
+  }, [account, localData]);
 
   return (
     <Container>

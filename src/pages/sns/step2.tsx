@@ -7,11 +7,12 @@ import { ACTIONS, useSNSContext } from './snsProvider';
 import { useAuthContext } from 'providers/authProvider';
 import { builtin } from '@seedao/sns-js';
 import useToast, { ToastType } from 'hooks/useToast';
+import { ethers } from 'ethers';
 
 export default function RegisterSNSStep2() {
   const { t } = useTranslation();
   const {
-    state: { account },
+    state: { account, provider },
   } = useAuthContext();
   const {
     state: { localData, contract, sns },
@@ -63,22 +64,66 @@ export default function RegisterSNSStep2() {
     }
     dispatchSNS({ type: ACTIONS.SHOW_LOADING });
     try {
-      const res = await contract.register(sns, account, builtin.PUBLIC_RESOLVER_ADDR, secret);
+      console.log(sns, account, builtin.PUBLIC_RESOLVER_ADDR, secret);
+      const res = await contract.register(
+        sns,
+        account,
+        builtin.PUBLIC_RESOLVER_ADDR,
+        ethers.utils.formatBytes32String(secret),
+      );
       const d = { ...localData };
       d[account].step = 'register';
       d[account].stepStatus = 'pending';
       d[account].registerHash = res.hash;
-      localStorage.setItem('sns', JSON.stringify(d));
+      dispatchSNS({ type: ACTIONS.SET_STORAGE, payload: JSON.stringify(d) });
       // go to step3
-      dispatchSNS({ type: ACTIONS.ADD_STEP });
+      // dispatchSNS({ type: ACTIONS.ADD_STEP });
     } catch (error) {
       console.error('register failed', error);
       // TODO message
       showToast('failed', ToastType.Danger);
-    } finally {
       dispatchSNS({ type: ACTIONS.CLOSE_LOADING });
+    } finally {
     }
   };
+
+  useEffect(() => {
+    if (!account || !localData || !provider) {
+      return;
+    }
+    const hash = localData[account]?.registerHash;
+    console.log(localData[account], hash);
+    if (!hash) {
+      return;
+    }
+    let timer: any;
+    const timerFunc = () => {
+      if (!account || !localData) {
+        return;
+      }
+      console.log(localData, account);
+
+      if (!hash) {
+        return;
+      }
+      provider.getTransactionReceipt(hash).then((r: any) => {
+        console.log('r:', r);
+        if (r && r.status === 1) {
+          // means tx success
+          const _d = { ...localData };
+          _d[account].stepStatus = 'success';
+          dispatchSNS({ type: ACTIONS.SET_STORAGE, payload: JSON.stringify(_d) });
+          dispatchSNS({ type: ACTIONS.CLOSE_LOADING });
+          clearInterval(timer);
+        } else if (r && r.status === 2) {
+          // means tx failed
+          // TODO
+        }
+      });
+    };
+    timer = setInterval(timerFunc, 1000);
+    return () => timer && clearInterval(timer);
+  }, [localData, account, provider]);
 
   return (
     <Container>

@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import NiceIcon from 'assets/Imgs/sns/nice.svg';
 import { useAuthContext } from 'providers/authProvider';
 import { useSNSContext } from './snsProvider';
+import { useEffect } from 'react';
 
 export default function FinishedComponent() {
   const { t } = useTranslation();
@@ -12,6 +13,10 @@ export default function FinishedComponent() {
   const {
     state: { sns },
   } = useSNSContext();
+
+  useEffect(() => {
+    localStorage.removeItem('sns');
+  }, []);
   return (
     <Container>
       <ContainerTop bg={theme ? 'dark' : 'light'}>

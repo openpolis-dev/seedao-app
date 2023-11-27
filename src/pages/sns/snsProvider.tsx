@@ -21,6 +21,7 @@ export enum ACTIONS {
   SHOW_LOADING = 'show_loading',
   CLOSE_LOADING = 'close_loading',
   SET_SNS = 'set_sns',
+  SET_STORAGE = 'set_storage',
 }
 
 interface IState {
@@ -35,7 +36,7 @@ interface IAction {
   payload?: any;
 }
 
-const INIT_STATE: IState = { step: 1, sns: '' };
+const INIT_STATE: IState = { step: 0, sns: '' };
 
 const SNSContext = createContext<{
   state: IState;
@@ -51,6 +52,8 @@ const reducer = (state: IState, action: IAction): IState => {
       return { ...state, sns: action.payload };
     case ACTIONS.ADD_STEP:
       return { ...state, step: state.step + 1 };
+    case ACTIONS.SET_STEP:
+      return { ...state, step: action.payload };
     case ACTIONS.SET_CONTRACT:
       return { ...state, contract: action.payload };
     case ACTIONS.SET_LOCAL_DATA:
@@ -59,6 +62,9 @@ const reducer = (state: IState, action: IAction): IState => {
       return { ...state, loading: true };
     case ACTIONS.CLOSE_LOADING:
       return { ...state, loading: false };
+    case ACTIONS.SET_STORAGE:
+      localStorage.setItem('sns', action.payload);
+      return { ...state, localData: action.payload ? JSON.parse(action.payload) : undefined };
     default:
       throw new Error(`Unknown type: ${action.type}`);
   }
