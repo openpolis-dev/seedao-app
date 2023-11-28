@@ -16,12 +16,21 @@ import { getRandomCode } from 'utils';
 import useToast, { ToastType } from 'hooks/useToast';
 import UserSVGIcon from 'components/svgs/user';
 import { Link } from 'react-router-dom';
+import { sendTransaction } from '@joyid/evm';
+import { SELECT_WALLET } from 'utils/constant';
+import { Wallet } from '../../wallet/wallet';
+import ABI from 'assets/abi/snsRegister.json';
 
 enum AvailableStatus {
   DEFAULT = 'default',
   OK = 'ok',
   NOT_OK = 'not_ok',
 }
+
+const buildCommitData = (commitment: string) => {
+  const iface = new ethers.utils.Interface(ABI);
+  return iface.encodeFunctionData('commit', [commitment]);
+};
 
 export default function RegisterSNSStep1() {
   const { t } = useTranslation();
@@ -128,8 +137,21 @@ export default function RegisterSNSStep1() {
       );
       // commit
       dispatchSNS({ type: ACTIONS.SHOW_LOADING });
-      const tx = await contract.commit(commitment);
-      const txHash = tx.hash;
+      const wallet = localStorage.getItem(SELECT_WALLET);
+      let txHash: string;
+      if (wallet && wallet === Wallet.JOYID_WEB) {
+        txHash = await sendTransaction({
+          to: builtin.SEEDAO_REGISTRAR_CONTROLLER_ADDR,
+          from: account,
+          value: '0',
+          data: buildCommitData(commitment),
+        });
+        console.log('joyid txHash:', txHash);
+      } else {
+        const tx = await contract.commit(commitment);
+        console.log('tx:', tx);
+        txHash = tx.hash;
+      }
       // record to localstorage
       const data = { ...localData };
       data[account] = {

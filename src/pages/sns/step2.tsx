@@ -8,6 +8,15 @@ import { useAuthContext } from 'providers/authProvider';
 import { builtin } from '@seedao/sns-js';
 import useToast, { ToastType } from 'hooks/useToast';
 import { ethers } from 'ethers';
+import { sendTransaction } from '@joyid/evm';
+import { SELECT_WALLET } from 'utils/constant';
+import { Wallet } from '../../wallet/wallet';
+import ABI from 'assets/abi/snsRegister.json';
+
+const buildRegisterData = (sns: string, account: string, resolveAddress: string, secret: string) => {
+  const iface = new ethers.utils.Interface(ABI);
+  return iface.encodeFunctionData('register', [sns, account, resolveAddress, secret]);
+};
 
 export default function RegisterSNSStep2() {
   const { t } = useTranslation();
@@ -65,16 +74,31 @@ export default function RegisterSNSStep2() {
     dispatchSNS({ type: ACTIONS.SHOW_LOADING });
     try {
       console.log(sns, account, builtin.PUBLIC_RESOLVER_ADDR, secret);
-      const res = await contract.register(
-        sns,
-        account,
-        builtin.PUBLIC_RESOLVER_ADDR,
-        ethers.utils.formatBytes32String(secret),
-      );
       const d = { ...localData };
+
+      const wallet = localStorage.getItem(SELECT_WALLET);
+      let txHash: string;
+      if (wallet && wallet === Wallet.JOYID_WEB) {
+        txHash = await sendTransaction({
+          to: builtin.SEEDAO_REGISTRAR_CONTROLLER_ADDR,
+          from: account,
+          value: '0',
+          data: buildRegisterData(sns, account, builtin.PUBLIC_RESOLVER_ADDR, ethers.utils.formatBytes32String(secret)),
+        });
+        console.log('joyid txHash:', txHash);
+        d[account].registerHash = txHash;
+      } else {
+        const tx = await contract.register(
+          sns,
+          account,
+          builtin.PUBLIC_RESOLVER_ADDR,
+          ethers.utils.formatBytes32String(secret),
+        );
+        console.log('tx:', tx);
+        d[account].registerHash = tx.hash;
+      }
       d[account].step = 'register';
       d[account].stepStatus = 'pending';
-      d[account].registerHash = res.hash;
       dispatchSNS({ type: ACTIONS.SET_STORAGE, payload: JSON.stringify(d) });
       // go to step3
       // dispatchSNS({ type: ACTIONS.ADD_STEP });
