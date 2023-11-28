@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import NiceIcon from 'assets/Imgs/sns/nice.svg';
+import NiceDarkIcon from 'assets/Imgs/sns/nice_dark.svg';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import { useSNSContext } from './snsProvider';
 import { useEffect } from 'react';
@@ -22,7 +23,7 @@ export default function FinishedComponent() {
   return (
     <Container>
       <ContainerTop bg={theme ? 'dark' : 'light'}>
-        <img src={NiceIcon} alt="" />
+        <img src={theme ? NiceDarkIcon : NiceIcon} alt="" />
       </ContainerTop>
       <ContainerBottom>
         <div className="title">{sns}.seedao</div>
@@ -37,7 +38,6 @@ const Container = styled.div`
   width: 669px;
   box-shadow: 2px 4px 4px 0px var(--box-shadow);
   border-radius: 16px;
-  border: 1px solid var(--table-border);
   overflow: hidden;
 `;
 
@@ -70,6 +70,6 @@ const ContainerBottom = styled.div`
     font-family: 'Poppins-Medium';
     font-size: 14px;
     font-weight: 500;
-    color: #534e59;
+    color: var(--sns-font-color);
   }
 `;

@@ -12,7 +12,7 @@ import { ethers } from 'ethers';
 export default function RegisterSNSStep2() {
   const { t } = useTranslation();
   const {
-    state: { account, provider },
+    state: { account, provider, theme },
   } = useAuthContext();
   const {
     state: { localData, contract, sns },
@@ -127,7 +127,7 @@ export default function RegisterSNSStep2() {
     <Container>
       <ContainerWrapper>
         <CurrentSNS>{sns}.seedao</CurrentSNS>
-        <CircleBox>
+        <CircleBox color={theme ? '#fff' : 'var(--bs-primary)'}>
           <CircleProgress progress={progress} color="var(--bs-primary)" />
           <div className="number">
             {leftTime}
@@ -150,7 +150,6 @@ const Container = styled.div`
   width: 669px;
   box-shadow: 2px 4px 4px 0px var(--box-shadow);
   border-radius: 16px;
-  border: 1px solid var(--table-border);
   text-align: center;
 `;
 
@@ -172,28 +171,28 @@ const CurrentSNS = styled.div`
 
 const StepTitle = styled.div`
   margin-top: 16px;
-  color: #534e59;
   line-height: 24px;
   font-size: 18px;
   font-weight: 400;
   font-family: 'Poppins-Medium';
+  color: var(--sns-font-color);
 `;
 const StepDesc = styled.div`
   font-size: 18px;
-  color: #534e59;
   font-size: 14px;
   line-height: 24px;
   font-weight: 400;
   margin-top: 11px;
+  color: var(--sns-font-color);
 `;
 
-const CircleBox = styled.div`
+const CircleBox = styled.div<{ color: string }>`
   position: relative;
   .number {
     font-size: 36px;
     font-family: 'Poppins-Bold';
     font-weight: bold;
-    color: var(--bs-primary);
+    color: ${(props) => props.color};
     position: absolute;
     width: 100%;
     height: 100%;

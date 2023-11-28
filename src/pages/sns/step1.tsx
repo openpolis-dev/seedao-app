@@ -235,7 +235,6 @@ const Container = styled.div`
   width: 669px;
   box-shadow: 2px 4px 4px 0px var(--box-shadow);
   border-radius: 16px;
-  border: 1px solid var(--table-border);
   text-align: center;
   position: relative;
 `;
