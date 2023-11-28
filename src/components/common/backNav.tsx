@@ -14,7 +14,7 @@ export default function BackerNav({ to, title, mb }: IProps) {
       <BackIconBox to={to}>
         <BackIconSVG />
       </BackIconBox>
-      <span>{title}</span>
+      <span className="backTitle">{title}</span>
     </BackBox>
   );
 }

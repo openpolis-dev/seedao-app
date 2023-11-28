@@ -399,6 +399,12 @@ const OuterBox = styled.div`
   box-sizing: border-box;
   min-height: 100%;
   ${ContainerPadding};
+  .backTitle {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--bs-body-color_active);
+    line-height: 20px;
+  }
 `;
 
 const OperateBox = styled.div`
