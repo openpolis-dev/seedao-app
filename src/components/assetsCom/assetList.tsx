@@ -155,7 +155,7 @@ const TableBox = styled.div`
 
 const SearchBox = styled.div`
   height: 40px;
-  background: #fff;
+  background: var(--bs-box-background);
   border-radius: 8px;
   display: flex;
   align-items: center;
