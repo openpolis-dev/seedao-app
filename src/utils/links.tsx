@@ -178,6 +178,13 @@ const links = {
       desc: 'city-hall.CreateGuildDesc',
     },
     {
+      name: 'Governance.apply',
+      link: '/assets/register',
+      id: 'module-create-guild',
+      icon: RImg6,
+      desc: 'city-hall.CreateGuildDesc',
+    },
+    {
       name: 'city-hall.GovernanceNodeResult',
       link: '/city-hall/governance/governance-node-result',
       id: 'module-governance-node-result',

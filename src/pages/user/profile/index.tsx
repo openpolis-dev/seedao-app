@@ -332,7 +332,7 @@ export default function Profile() {
         <LevelBox>LV{detail?.level?.current_lv}</LevelBox>
         <LevelInfo>
           <span>
-            {t('My.current')}SCR {formatNumber(detail?.scr?.amount)}
+            {t('My.current')} {formatNumber(detail?.scr?.amount)} SCR
           </span>
           <span>{t('My.levelTips', { level: Number(detail?.level?.current_lv) + 1 })}</span>
           <span>{formatNumber(detail?.level?.scr_to_next_lv)} SCR</span>

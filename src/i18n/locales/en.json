@@ -517,6 +517,7 @@
     "GovernanceRule": "Governance Rules",
     "MetaRule": "SeeDAO Meta Rules",
     "GovernanceBook": "Governance Book",
-    "NodesConferenceRule": "Nodes Conference Rules"
+    "NodesConferenceRule": "Nodes Conference Rules",
+    "apply": "资产发放"
   }
 }

@@ -517,6 +517,7 @@
     "GovernanceRule": "治理规则",
     "MetaRule": "SeeDAO 元规则",
     "GovernanceBook": "治理手册",
-    "NodesConferenceRule": "节点共识大会规则"
+    "NodesConferenceRule": "节点共识大会规则",
+    "apply": "资产发放"
   }
 }
