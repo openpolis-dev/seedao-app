@@ -60,6 +60,7 @@ const LiBox = styled(Col)`
   border: 1px solid var(--border-box);
   display: flex;
   align-items: center;
+  flex-direction: column;
   justify-content: center;
   margin-right: 20px;
   .name {
@@ -67,6 +68,14 @@ const LiBox = styled(Col)`
     font-weight: 600;
     color: var(--bs-body-color_active);
     line-height: 22px;
+    text-align: center;
+  }
+  img {
+    width: 28px;
+    height: 28px;
+    object-fit: cover;
+    object-position: center;
+    margin-bottom: 18px;
   }
 `;
 
@@ -102,7 +111,9 @@ export default function GovernancePage() {
         <Row>
           {BList.map((item, index) => (
             <LiBox md={2} key={`gBtm_${index}`}>
-              <div></div>
+              <div>
+                <img src={item.icon} alt="" />
+              </div>
               <div className="name">{item.name}</div>
             </LiBox>
           ))}

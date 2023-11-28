@@ -21,6 +21,11 @@ import RImg10 from '../assets/Imgs/resources/10.png';
 import RImg11 from '../assets/Imgs/resources/11.png';
 import RImg12 from '../assets/Imgs/resources/12.png';
 
+import CreateImg from '../assets/Imgs/governance/create.png';
+import GuildImg from '../assets/Imgs/governance/guild.png';
+import DistributeImg from '../assets/Imgs/governance/distribute.png';
+import NodeImg from '../assets/Imgs/governance/node.png';
+
 /**
  * NOTE:
  * if id starts with "module-", means its path is our app's router path, otherwise is outer link
@@ -167,28 +172,28 @@ const links = {
       name: 'city-hall.CreateProject',
       link: '/create-project',
       id: 'module-create-project',
-      icon: RImg4,
+      icon: CreateImg,
       desc: 'city-hall.CreateProjectDesc',
     },
     {
       name: 'city-hall.CreateGuild',
       link: '/create-guild',
       id: 'module-create-guild',
-      icon: RImg6,
+      icon: GuildImg,
       desc: 'city-hall.CreateGuildDesc',
     },
     {
       name: 'Governance.apply',
       link: '/assets/register',
       id: 'module-create-guild',
-      icon: RImg6,
+      icon: DistributeImg,
       desc: 'city-hall.CreateGuildDesc',
     },
     {
       name: 'city-hall.GovernanceNodeResult',
       link: '/city-hall/governance/governance-node-result',
       id: 'module-governance-node-result',
-      icon: RImg2,
+      icon: NodeImg,
       desc: 'city-hall.GovernanceNodeResultDesc',
     },
   ],
