@@ -13,7 +13,7 @@ import { SELECT_WALLET } from "../../utils/constant";
 import { clearStorage } from "../../utils/auth";
 
 import styled from "styled-components";
-import UnipassIcon from "../../assets/Imgs/home/Unipass.svg";
+import UnipassIcon from "../../assets/Imgs/home/UniPass.svg";
 import OneSignal from 'react-onesignal';
 
 const WalletOption = styled.li`
@@ -53,7 +53,7 @@ export const upProvider = new UniPassProvider({
 });
 
 
-export default function Unipass(){
+export default function UniPass(){
     const navigate = useNavigate();
     const [msg,setMsg] = useState(null);
     const [signInfo,setSignInfo] = useState();
@@ -180,7 +180,7 @@ export default function Unipass(){
 
     return <WalletOption onClick={() => getP()}>
         <img src={UnipassIcon} alt=""/>
-        <span>Unipass</span>
+        <span>UniPass</span>
     </WalletOption>
 
 }

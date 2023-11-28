@@ -8,7 +8,7 @@ import CloseImgLight from '../../assets/Imgs/light/close-circle.svg';
 
 import WalletConnect from '../login/walletconnect';
 import Metamask from '../login/metamask';
-import Unipass, { upProvider } from '../login/unipass';
+import UniPass, { upProvider } from '../login/unipass';
 import Joyid from '../login/joyid';
 import JoyidWeb from 'components/login/joyidWeb';
 
@@ -91,7 +91,7 @@ export default function LoginModal({ showModal }: any) {
           <Title>{t('general.ConnectWallet')}</Title>
           {isInstalled ? <WalletConnect /> : <Metamask />}
           {getConfig().REACT_APP_JOYID_ENABLE && (isInstalled ? <Joyid /> : <JoyidWeb />)}
-          <Unipass />
+          <UniPass />
         </Modal>
       </Mask>
     </>
