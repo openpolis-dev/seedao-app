@@ -76,15 +76,28 @@ export default function Profile() {
     if (!seed?.length) return;
     setList([]);
     setSbtList([]);
-    seed?.map(async (seedItem: any) => {
-      let url = await PublicJs.getImage(seedItem.image_uri);
-      setList((list) => [...list, { ...seedItem, url }]);
-    });
 
-    sbt?.map(async (item: any) => {
-      let url = await PublicJs.getImage(item.image_uri);
-      setSbtList((list) => [...list, { ...item, url }]);
-    });
+    const getSeed = async () => {
+      let arr = [];
+      for (let i = 0; i < seed.length; i++) {
+        let seedItem = seed[i];
+        let url = await PublicJs.getImage(seedItem.image_uri);
+        arr.push({ ...seedItem, url });
+      }
+      setList([...arr]);
+    };
+    getSeed();
+
+    const getSbt = async () => {
+      let arr = [];
+      for (let i = 0; i < sbt.length; i++) {
+        let item = sbt[i];
+        let url = await PublicJs.getImage(item.image_uri);
+        arr.push({ ...item, url });
+      }
+      setSbtList([...arr]);
+    };
+    getSbt();
   }, [seed, sbt]);
   useEffect(() => {
     if (!sbtList?.length) return;
