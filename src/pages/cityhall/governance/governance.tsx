@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import Links from 'utils/links';
 import AppCard, { EmptyAppCard } from 'components/common/appCard';
 import { useAuthContext } from 'providers/authProvider';
+import { useNavigate } from 'react-router-dom';
 
 const AppBox = styled(Row)`
   div[class^='col'] {
@@ -63,6 +64,7 @@ const LiBox = styled(Col)`
   flex-direction: column;
   justify-content: center;
   margin-right: 20px;
+  cursor: pointer;
   .name {
     font-size: 16px;
     font-weight: 600;
@@ -85,6 +87,8 @@ export default function GovernancePage() {
     state: { theme },
   } = useAuthContext();
 
+  const navigate = useNavigate();
+
   const lst = useMemo(() => {
     // @ts-ignore
     return Links.governance.map((item) => ({ ...item, name: t(item.name) as string, desc: t(item.desc) as string }));
@@ -94,6 +98,10 @@ export default function GovernancePage() {
     // @ts-ignore
     return Links.governanceBtm.map((item) => ({ ...item, name: t(item.name) as string, desc: t(item.desc) as string }));
   }, [t]);
+
+  const ToGo = (url: string) => {
+    navigate(url);
+  };
 
   return (
     <div>
@@ -110,7 +118,7 @@ export default function GovernancePage() {
       <BtmBox>
         <Row>
           {BList.map((item, index) => (
-            <LiBox md={2} key={`gBtm_${index}`}>
+            <LiBox md={2} key={`gBtm_${index}`} onClick={() => ToGo(item.link)}>
               <div>
                 <img src={item.icon} alt="" />
               </div>

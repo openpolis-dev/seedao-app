@@ -11,7 +11,7 @@ import { AppActionType, useAuthContext } from 'providers/authProvider';
 import { ContainerPadding } from 'assets/styles/global';
 import Select from 'components/common/select';
 import BackIconSVG from 'components/svgs/back';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
 import { ethers } from 'ethers';
 import sns from '@seedao/sns-js';
@@ -27,6 +27,7 @@ export default function Register() {
   const { t } = useTranslation();
   const { dispatch } = useAuthContext();
   const { showToast } = useToast();
+  const navigate = useNavigate();
 
   const [list, setList] = useState<IExcelObj[]>([]);
 
@@ -193,9 +194,13 @@ export default function Register() {
     }
   };
 
+  const togo = () => {
+    navigate(-1);
+  };
+
   return (
     <OuterBox>
-      <BackBox to="/assets">
+      <BackBox onClick={() => togo()}>
         <BackIconSVG />
         <span>{t('Assets.RegisterTitle')}</span>
       </BackBox>
@@ -269,7 +274,7 @@ const ButtonSection = styled(SectionBlock)`
   }
 `;
 
-const BackBox = styled(Link)`
+const BackBox = styled.div`
   padding: 10px 0 20px;
   display: inline-flex;
   align-items: center;
@@ -277,6 +282,7 @@ const BackBox = styled(Link)`
   gap: 20px;
   font-family: Poppins-SemiBold;
   font-weight: 600;
+  cursor: pointer;
   &:hover {
     color: var(--bs-svg-color);
   }
