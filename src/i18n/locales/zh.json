@@ -494,6 +494,8 @@
     "SNSDesc": "SeeDAO Name Service (SNS) is a decentralized name service based on blockchain."
   },
   "SNS": {
+    "EntranceTitle": "INVOLVED IN SEEDAO IN YOUR NAME",
+    "EntranceDesc": "SeeDAO Name Service (SNS) is your unique symbol at seedao",
     "Started": "Started",
     "Step1Title": "您的 SeeDAO 用户名",
     "Step1Desc": "Your identity across SeeDAO, one name for all your SeeDAO address, and your SeeDAO website.",
