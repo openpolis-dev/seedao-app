@@ -259,7 +259,7 @@ const StepDesc = styled.div`
   line-height: 24px;
   margin-top: 10px;
   margin-bottom: 43px;
-  color: #534e59;
+  color: var(--sns-font-color);
 `;
 
 const SearchBox = styled.div`
@@ -357,7 +357,7 @@ const Tip = styled.div`
   font-size: 10px;
   font-family: Poppins, Poppins;
   font-weight: 400;
-  color: #1a1323;
+  color: var(--bs-body-color_active);
   line-height: 17px;
   margin: 0 auto;
   margin-top: 8px;
