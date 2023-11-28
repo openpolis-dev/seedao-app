@@ -61,10 +61,13 @@ export interface IApplication {
   credit_amount: number;
   submitter_name: string;
   reviewer_name: string;
+  entity_id: string;
+  entity_type: string;
 }
 
 export interface IApplicationDisplay extends IApplication {
   created_date: string;
+  review_date?: string;
   transactions?: string[];
   // NEW FIELDS
   asset_display?: string;

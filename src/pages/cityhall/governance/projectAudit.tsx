@@ -10,7 +10,7 @@ import publicJs from 'utils/publicJs';
 import NoItem from 'components/noItem';
 import { useTranslation } from 'react-i18next';
 import useToast, { ToastType } from 'hooks/useToast';
-import ApplicationStatusTag from 'components/common/applicationStatusTag';
+import ApplicationStatusTagNew from 'components/common/applicationStatusTagNew';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import BackerNav from 'components/common/backNav';
 import { ContainerPadding } from 'assets/styles/global';
@@ -80,6 +80,7 @@ export default function ProjectAudit() {
       const _list = res.data.rows.map((item) => ({
         ...item,
         created_date: formatTime(item.create_ts * 1000),
+        review_date: formatTime(item.review_ts * 1000),
         submitter_name: item.applicant_wallet && (sns_map.get(item.applicant_wallet?.toLocaleLowerCase()) as string),
         reviewer_name: sns_map.get(item.reviewer_wallet?.toLocaleLowerCase()) as string,
       }));
@@ -129,7 +130,12 @@ export default function ProjectAudit() {
   return (
     <Box>
       {showApplication && (
-        <CloseProjectModal application={showApplication} handleClose={() => setShowApplication(undefined)} />
+        <CloseProjectModal
+          application={showApplication}
+          handleClose={() => setShowApplication(undefined)}
+          handleApprove={handleApprove}
+          handleReject={handleReject}
+        />
       )}
       <BackerNav to="/city-hall/governance" title={t('city-hall.CloseProjectAudit')} />
       <section>
@@ -155,7 +161,7 @@ export default function ProjectAudit() {
                         <ContentCell>{item.detailed_type}</ContentCell>
                       </td>
                       <td style={{ width: '180px' }}>
-                        <ApplicationStatusTag status={item.status} isProj={true} />
+                        <ApplicationStatusTagNew status={item.status} isProj={true} />
                       </td>
                       <td>{formatSNS(item.submitter_name)}</td>
                       <td style={{ width: '180px' }}>{item.created_date}</td>
@@ -164,18 +170,18 @@ export default function ProjectAudit() {
                           <Button variant="outline-primary" onClick={() => setShowApplication(item)}>
                             {t('city-hall.Detail')}
                           </Button>
-                          <Button
-                            onClick={() => handleApprove(item.application_id)}
-                            disabled={item.status !== ApplicationStatus.Open}
-                          >
-                            {t('city-hall.Pass')}
-                          </Button>
-                          <PinkButton
-                            onClick={() => handleReject(item.application_id)}
-                            disabled={item.status !== ApplicationStatus.Open}
-                          >
-                            {t('city-hall.Reject')}
-                          </PinkButton>
+                          {/*<Button*/}
+                          {/*  onClick={() => handleApprove(item.application_id)}*/}
+                          {/*  disabled={item.status !== ApplicationStatus.Open}*/}
+                          {/*>*/}
+                          {/*  {t('city-hall.Pass')}*/}
+                          {/*</Button>*/}
+                          {/*<PinkButton*/}
+                          {/*  onClick={() => handleReject(item.application_id)}*/}
+                          {/*  disabled={item.status !== ApplicationStatus.Open}*/}
+                          {/*>*/}
+                          {/*  {t('city-hall.Reject')}*/}
+                          {/*</PinkButton>*/}
                         </OperationBox>
                       </td>
                     </tr>

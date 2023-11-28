@@ -453,6 +453,8 @@
     "Operator": "Operator",
     "Receiver": "Receiver",
     "Auditor": "Auditor",
+    "AuditTime": "Audit time",
+    "detail": "查看项目详情",
     "TotalCount": "total {{count}}",
     "AddAssets": "Add Assets",
     "Season": "Season",

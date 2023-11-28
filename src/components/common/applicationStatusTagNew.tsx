@@ -14,7 +14,7 @@ export default function ApplicationStatusTagNew({ status, isProj }: IProps) {
   const [statusText, color] = useMemo(() => {
     if (isProj) {
       if (status === ApplicationStatus.Approved || status === ApplicationStatus.Completed) {
-        return [t('Project.Approved'), '#1F9E14'];
+        return [t('Project.Approved'), '#2DC45E'];
       }
     }
     switch (status) {

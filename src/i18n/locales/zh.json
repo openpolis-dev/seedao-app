@@ -262,7 +262,7 @@
   },
   "GovernanceNodeResult": {
     "SearchTip": "SNS",
-    "Export": "导出",
+    "Export": "导出全部",
     "MinerReward": "{{season}}奖励",
     "Total": "总计",
     "ActiveSCR": "活跃SCR",
@@ -453,6 +453,8 @@
     "Operator": "申请人",
     "Receiver": "接收人",
     "Auditor": "审核人",
+    "AuditTime": "审核时间",
+    "detail": "查看项目详情",
     "TotalCount": "共{{count}}条",
     "AddAssets": "增加资产",
     "Season": "季度",

@@ -1,23 +1,44 @@
 import styled from 'styled-components';
 import BasicModal from './basicModal';
-import { IApplicationDisplay } from 'type/application.type';
 import { useTranslation } from 'react-i18next';
-import ApplicationStatusTag from 'components/common/applicationStatusTag';
+import ApplicationStatusTagNew from 'components/common/applicationStatusTagNew';
+import { Button } from 'react-bootstrap';
+import { PinkButton } from 'components/common/button';
+import requests from '../../requests';
+import { ToastType } from '../../hooks/useToast';
+import { ApplicationStatus, IApplicationDisplay } from 'type/application.type';
+import { useNavigate } from 'react-router-dom';
 
 interface Iprops {
   application: IApplicationDisplay;
   handleClose: () => void;
+  handleApprove: (arg: number) => void;
+  handleReject: (arg: number) => void;
 }
 
-export default function CloseProjectModal({ application, handleClose }: Iprops) {
+export default function CloseProjectModal({ application, handleClose, handleApprove, handleReject }: Iprops) {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+
+  const toGo = (id: string, type: string) => {
+    if (type === 'project') {
+      navigate(`/project/info/${id}`);
+    }
+  };
+
   return (
-    <CloseProjectnModalWrapper handleClose={handleClose} title={t('application.DetailModalHeader')}>
+    // <CloseProjectnModalWrapper handleClose={handleClose} title={t('application.DetailModalHeader')}>
+    <CloseProjectnModalWrapper handleClose={handleClose}>
       <Content>
         <Block>
           <li>
             <BlockLeft>{t('application.Project')}</BlockLeft>
-            <BlockRight>{application.budget_source}</BlockRight>
+            <BlockRight>
+              {application.budget_source}{' '}
+              <TagBox onClick={() => toGo(application.entity_id, application.entity_type)}>
+                {t('application.detail')}
+              </TagBox>
+            </BlockRight>
           </li>
           <li>
             <BlockLeft className="text-field-label">{t('application.CloseReason')}</BlockLeft>
@@ -26,7 +47,7 @@ export default function CloseProjectModal({ application, handleClose }: Iprops) 
           <li>
             <BlockLeft>{t('Project.State')}</BlockLeft>
             <BlockRight>
-              <ApplicationStatusTag status={application.status} isProj={true} />
+              <ApplicationStatusTagNew status={application.status} isProj={true} />
             </BlockRight>
           </li>
           <li>
@@ -34,13 +55,32 @@ export default function CloseProjectModal({ application, handleClose }: Iprops) 
             <BlockRight>{application.submitter_name}</BlockRight>
           </li>
           <li>
+            <BlockLeft>{t('application.ApplyTime')}</BlockLeft>
+            <BlockRight>{application.created_date}</BlockRight>
+          </li>
+          <li>
             <BlockLeft>{t('application.Auditor')}</BlockLeft>
             <BlockRight>{application.reviewer_name}</BlockRight>
           </li>
           <li>
-            <BlockLeft>{t('application.ApplyTime')}</BlockLeft>
-            <BlockRight>{application.created_date}</BlockRight>
+            <BlockLeft>{t('application.AuditTime')}</BlockLeft>
+            <BlockRight>{application.review_date}</BlockRight>
           </li>
+
+          <LiBox>
+            <Button
+              onClick={() => handleApprove(application.application_id)}
+              disabled={application.status !== ApplicationStatus.Open}
+            >
+              {t('city-hall.Pass')}
+            </Button>
+            <PinkButton
+              onClick={() => handleReject(application.application_id)}
+              disabled={application.status !== ApplicationStatus.Open}
+            >
+              {t('city-hall.Reject')}
+            </PinkButton>
+          </LiBox>
         </Block>
       </Content>
     </CloseProjectnModalWrapper>
@@ -90,4 +130,26 @@ const BlockRight = styled.div`
     padding-block: 10px;
     word-break: break-all;
   }
+`;
+
+const LiBox = styled.li`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 40px;
+  .btn {
+    min-width: 110px;
+  }
+`;
+
+const TagBox = styled.div`
+  border-radius: 8px;
+  border: 1px solid #0085ff;
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 400;
+  color: #2f8fff;
+  line-height: 20px;
+  padding: 0 10px;
+  margin-left: 10px;
 `;
