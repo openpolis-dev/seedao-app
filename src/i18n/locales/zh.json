@@ -263,6 +263,7 @@
   "GovernanceNodeResult": {
     "SearchTip": "SNS",
     "Export": "导出全部",
+    "ExportBtn": "导出",
     "MinerReward": "{{season}}奖励",
     "Total": "总计",
     "ActiveSCR": "活跃SCR",

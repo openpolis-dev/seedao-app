@@ -39,11 +39,6 @@ export default function FilterNodesNodal({
       title={t('GovernanceNodeResult.FilterNodesModalTitle', { season })}
       handleClose={handleClose}
     >
-      {!!walletList.length && (
-        <Button className="btn-export" variant="primary" onClick={handleExport}>
-          {t('GovernanceNodeResult.Export')}
-        </Button>
-      )}
       <Statics>
         <span>
           {t('GovernanceNodeResult.ActiveSCR')}: {filterActiveNum}
@@ -64,6 +59,13 @@ export default function FilterNodesNodal({
           </li>
         )}
       </SNSList>
+      <ButtonLine>
+        {!!walletList.length && (
+          <Button className="btn-export" variant="primary" onClick={handleExport}>
+            {t('GovernanceNodeResult.ExportBtn')}
+          </Button>
+        )}
+      </ButtonLine>
     </FilterNodesModalStyle>
   );
 }
@@ -71,25 +73,39 @@ export default function FilterNodesNodal({
 const FilterNodesModalStyle = styled(BasicModal)`
   min-width: 470px;
   .btn-export {
-    position: absolute;
-    right: 0;
-    top: 14px;
     height: 34px;
+    margin-top: 15px;
   }
+`;
+
+const ButtonLine = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 const Statics = styled.div`
   display: flex;
   justify-content: center;
-  gap: 16px;
-  margin-bottom: 20px;
   font-size: 14px;
+  background: var(--table-header);
+  border-radius: 8px;
+  padding: 12px 0;
+  span {
+    display: inline-block;
+    width: 33.333%;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--bs-body-color_active);
+    line-height: 20px;
+  }
 `;
 
 const SNSList = styled.ul`
   max-height: 60vh;
   overflow-y: auto;
-  line-height: 36px;
+  line-height: 48px;
   font-size: 14px;
   color: var(--bs-body-color_active);
   padding-inline: 10px;
