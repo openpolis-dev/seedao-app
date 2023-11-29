@@ -73,7 +73,7 @@ const Mask = styled.div`
 const LoadingContainer = styled.div`
   text-align: center;
   .title {
-    font-size: 'Poppins-Medium';
+    font-family: 'Poppins-Medium';
     line-height: 28px;
     font-size: 24px;
     margin-bottom: 44px;
