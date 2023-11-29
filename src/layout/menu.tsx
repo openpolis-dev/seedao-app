@@ -127,6 +127,9 @@ const Box = styled.div`
   width: 153px;
   flex-shrink: 0;
   position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 
   &.expand.float {
     position: absolute;
@@ -440,20 +443,20 @@ export default function Menu({ isMedium }: { isMedium: boolean }) {
         >
           <img src={theme ? MenuSwitch : MenuSwitchLight} alt="" />
         </SwitchBox>
+        {menuItemsFormat.map((item) => (
+          <MenuItem
+            open={open}
+            key={item.title}
+            data={item}
+            theme={theme}
+            onSelectMenu={onSelectMenu}
+            selected={
+              pathname.startsWith(item.link.href) ||
+              (item.link.href.startsWith('/explore') && (pathname.includes('/project') || pathname.includes('/guild')))
+            }
+          />
+        ))}
       </div>
-      {menuItemsFormat.map((item) => (
-        <MenuItem
-          open={open}
-          key={item.title}
-          data={item}
-          theme={theme}
-          onSelectMenu={onSelectMenu}
-          selected={
-            pathname.startsWith(item.link.href) ||
-            (item.link.href.startsWith('/explore') && (pathname.includes('/project') || pathname.includes('/guild')))
-          }
-        />
-      ))}
       {!isMedium && <AppVersion open={open} />}
     </Box>
   );
