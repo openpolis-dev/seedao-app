@@ -21,7 +21,7 @@ export default function ApplicationStatusTagNew({ status, isProj }: IProps) {
       case ApplicationStatus.Open:
         return [t('Project.ToBeReviewed'), '#f9b617'];
       case ApplicationStatus.Approved:
-        return [t('Project.ToBeIssued'), '#f9b617'];
+        return [t('Project.ToBeIssued'), '#5200FF'];
       case ApplicationStatus.Rejected:
         return [t('Project.Rejected'), '#FF7193'];
       case ApplicationStatus.Processing:
@@ -41,8 +41,10 @@ export default function ApplicationStatusTagNew({ status, isProj }: IProps) {
 
 const Tag = styled.span<{ color: string }>`
   background: ${({ color }) => color || '#ccc'};
-  padding: 4px 19px;
+  padding-inline: 19px;
   border-radius: 8px;
+  height: 24px;
+  line-height: 24px;
   .text {
     color: #fff;
     font-size: 12px;

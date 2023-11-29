@@ -465,6 +465,8 @@ export default function AssetList() {
                 <col style={{ width: '160px' }} />
                 {/* state */}
                 <col style={{ width: '170px' }} />
+                {/* more */}
+                <col style={{ width: '130px' }} />
               </colgroup>
               <thead>
                 <tr>
