@@ -25,6 +25,7 @@ export interface IQueryApplicationsParams {
   user_wallet?: string;
   state?: ApplicationStatus;
   season_id?: number;
+  asset_name?: string;
 }
 
 export interface IQueryParams extends IQueryApplicationsParams {

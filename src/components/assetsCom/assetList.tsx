@@ -23,6 +23,7 @@ import useQuerySNS from 'hooks/useQuerySNS';
 import useBudgetSource from 'hooks/useBudgetSource';
 import { useNavigate } from 'react-router-dom';
 import getConfig from 'utils/envCofnig';
+import useAssets from 'hooks/useAssets';
 
 import RecordImg from 'assets/Imgs/light/record.svg';
 import ApplyImg from 'assets/Imgs/light/apply.svg';
@@ -33,6 +34,29 @@ import RecordWhite from 'assets/Imgs/dark/record.svg';
 import ApplyWhite from 'assets/Imgs/dark/apply.svg';
 import RankWhite from 'assets/Imgs/dark/rank.svg';
 import SearchWhite from 'assets/Imgs/light/search.svg';
+
+const Colgroups = () => {
+  return (
+    <colgroup>
+      {/* receiver */}
+      <col style={{ width: '160px' }} />
+      {/* add assets */}
+      <col style={{ width: '180px' }} />
+      {/* season */}
+      <col style={{ width: '120px' }} />
+      {/* Content */}
+      <col />
+      {/* source */}
+      <col style={{ width: '140px' }} />
+      {/* operator */}
+      <col style={{ width: '160px' }} />
+      {/* state */}
+      <col style={{ width: '170px' }} />
+      {/* more */}
+      <col style={{ width: '130px' }} />
+    </colgroup>
+  );
+};
 
 const Box = styled.div``;
 const TitBox = styled.div`
@@ -74,47 +98,9 @@ const TitBox = styled.div`
   }
 `;
 
-const FirstLine = styled.div`
-  display: flex;
-  justify-content: space-between;
+const FilterLine = styled.div`
   width: 100%;
-  align-items: end;
   margin-bottom: 20px;
-  .btn-export {
-    min-width: 111px;
-  }
-  @media (max-width: 1100px) {
-    justify-content: flex-start;
-    flex-direction: column;
-    gap: 20px;
-    align-items: start;
-  }
-  @media (max-width: 1000px) {
-    justify-content: space-between;
-    flex-direction: row;
-    align-items: end;
-  }
-`;
-
-const TopLine = styled.ul`
-  display: flex;
-  align-items: end;
-  flex-wrap: wrap;
-  gap: 24px;
-  li {
-    display: flex;
-    flex-direction: column;
-    > span {
-      margin-bottom: 10px;
-    }
-    .tit {
-      padding-right: 20px;
-      white-space: nowrap;
-    }
-  }
-  @media (max-width: 1100px) {
-    width: 100%;
-  }
 `;
 
 const TableBox = styled.div`
@@ -154,6 +140,7 @@ const TableBox = styled.div`
 `;
 
 const SearchBox = styled.div`
+  width: 100%;
   height: 40px;
   background: var(--bs-box-background);
   border-radius: 8px;
@@ -163,6 +150,7 @@ const SearchBox = styled.div`
   padding: 0 8px;
   border: 1px solid var(--bs-border-color);
   input {
+    width: calc(100% - 15px);
     border: 0;
     background: transparent;
     margin-left: 9px;
@@ -199,6 +187,9 @@ export default function AssetList() {
   // season
   const seasons = useSeasons();
   const [selectSeason, setSelectSeason] = useState<number>();
+  // assets
+  const assets = useAssets();
+  const [selectAsset, setSelectAsset] = useState();
 
   const [snsMap, setSnsMap] = useState<Map<string, string>>(new Map());
 
@@ -258,6 +249,9 @@ export default function AssetList() {
       queryData.entity_id = selectSource.id;
       queryData.entity = selectSource.type;
     }
+    if (selectAsset) {
+      queryData.asset_name = selectAsset;
+    }
     return queryData;
   };
 
@@ -301,7 +295,7 @@ export default function AssetList() {
 
   useEffect(() => {
     getRecords();
-  }, [selectSeason, selectStatus, selectApplicant, page, pageSize, selectSource]);
+  }, [selectSeason, selectStatus, selectApplicant, page, pageSize, selectSource, selectAsset]);
 
   const getSelectIds = (): number[] => {
     const ids = Object.keys(selectMap);
@@ -380,94 +374,108 @@ export default function AssetList() {
           <dd>{t('GovernanceNodeResult.SCRRank')}</dd>
         </dl>
       </TitBox>
-      <FirstLine>
-        <TopLine>
-          <li>
-            <SearchBox>
-              <img src={theme ? SearchWhite : SearchImg} alt="" />
-              <input type="text" placeholder="sns" />
-            </SearchBox>
-          </li>
-          <li>
-            {/*<span className="tit">{t('Project.State')}</span>*/}
-            <Select
-              options={statusOption}
-              placeholder={t('Project.State')}
-              onChange={(value: any) => {
-                setSelectStatus(value?.value as ApplicationStatus);
-                setSelectMap({});
-                setPage(1);
-              }}
-            />
-          </li>
-          <li>
-            {/*<span className="tit">{t('application.BudgetSource')}</span>*/}
-            <Select
-              options={allSource}
-              placeholder={t('application.BudgetSource')}
-              onChange={(value: any) => {
-                setSelectSource({ id: value?.value as number, type: value?.data });
-                setSelectMap({});
-                setPage(1);
-              }}
-            />
-          </li>
-          <li>
-            {/*<span className="tit">{t('application.Operator')}</span>*/}
-            <Select
-              options={applicants}
-              placeholder={t('application.Operator')}
-              onChange={(value: any) => {
-                setSelectApplicant(value?.value);
-                setSelectMap({});
-                setPage(1);
-              }}
-            />
-          </li>
-          <li>
-            {/*<span className="tit">{t('application.Season')}</span>*/}
-            <Select
-              options={seasons}
-              placeholder={t('application.Season')}
-              onChange={(value: any) => {
-                setSelectSeason(value?.value);
-                setSelectMap({});
-                setPage(1);
-              }}
-            />
-          </li>
-        </TopLine>
-        {getConfig().REACT_APP_ENV !== 'prod' && getConfig().REACT_APP_ENV !== 'preview' && (
-          <div>
-            <Button onClick={handleExport} className="btn-export">
-              {t('Assets.Export')}
-            </Button>
-          </div>
-        )}
-      </FirstLine>
+      <FilterLine>
+        <Table responsive>
+          <Colgroups />
+          <tbody>
+            <tr>
+              <td>
+                <SearchBox>
+                  <img src={theme ? SearchWhite : SearchImg} alt="" />
+                  <input type="text" placeholder="sns" />
+                </SearchBox>
+              </td>
+
+              <td>
+                <Select
+                  menuPortalTarget={document.body}
+                  width="100%"
+                  options={assets}
+                  closeClear={true}
+                  isSearchable={false}
+                  placeholder={t('application.SelectAsset')}
+                  onChange={(value: any) => {
+                    setSelectAsset(value?.value);
+                    setSelectMap({});
+                    setPage(1);
+                  }}
+                />
+              </td>
+              <td>
+                <Select
+                  menuPortalTarget={document.body}
+                  width="100%"
+                  options={seasons}
+                  placeholder={t('application.Season')}
+                  onChange={(value: any) => {
+                    setSelectSeason(value?.value);
+                    setSelectMap({});
+                    setPage(1);
+                  }}
+                />
+              </td>
+              <td>
+                <SearchBox style={{ maxWidth: '200px' }}>
+                  <img src={theme ? SearchWhite : SearchImg} alt="" />
+                  <input type="text" placeholder="sns" />
+                </SearchBox>
+              </td>
+              <td>
+                <Select
+                  menuPortalTarget={document.body}
+                  width="100%"
+                  options={allSource}
+                  placeholder={t('application.BudgetSource')}
+                  onChange={(value: any) => {
+                    setSelectSource({ id: value?.value as number, type: value?.data });
+                    setSelectMap({});
+                    setPage(1);
+                  }}
+                />
+              </td>
+              <td>
+                <Select
+                  menuPortalTarget={document.body}
+                  width="100%"
+                  options={applicants}
+                  placeholder={t('application.Operator')}
+                  onChange={(value: any) => {
+                    setSelectApplicant(value?.value);
+                    setSelectMap({});
+                    setPage(1);
+                  }}
+                />
+              </td>
+              <td>
+                <Select
+                  menuPortalTarget={document.body}
+                  width="100%"
+                  options={statusOption}
+                  placeholder={t('Project.State')}
+                  onChange={(value: any) => {
+                    setSelectStatus(value?.value as ApplicationStatus);
+                    setSelectMap({});
+                    setPage(1);
+                  }}
+                />
+              </td>
+              <td>
+                {getConfig().REACT_APP_ENV !== 'prod' && getConfig().REACT_APP_ENV !== 'preview' && (
+                  <ExportButton onClick={handleExport} className="btn-export">
+                    {t('Assets.Export')}
+                  </ExportButton>
+                )}
+              </td>
+            </tr>
+          </tbody>
+        </Table>
+      </FilterLine>
 
       <TableBox>
         {list.length ? (
           <>
             <Table responsive>
-              <colgroup>
-                {/* receiver */}
-                <col style={{ width: '160px' }} />
-                {/* add assets */}
-                <col style={{ width: '140px' }} />
-                {/* season */}
-                <col style={{ width: '100px' }} />
-                {/* Content */}
-                <col />
-                {/* source */}
-                <col style={{ width: '140px' }} />
-                {/* operator */}
-                <col style={{ width: '160px' }} />
-                {/* state */}
-                <col style={{ width: '170px' }} />
-                {/* more */}
-                <col style={{ width: '130px' }} />
-              </colgroup>
+              <Colgroups />
               <thead>
                 <tr>
                   {/* <th className="chech-th">
@@ -536,11 +544,22 @@ const BudgetContent = styled.div`
 `;
 
 const MoreButton = styled.div`
-  padding: 7px 26px;
+  padding-inline: 26px;
+  height: 34px;
+  line-height: 34px;
+  box-sizing: border-box;
   display: inline-block;
   background: var(--bs-box--background);
   border-radius: 8px;
   cursor: pointer;
   border: 1px solid var(--bs-border-color);
   font-size: 14px;
+`;
+
+const ExportButton = styled(MoreButton)`
+  width: 100%;
+  height: 40px;
+  line-height: 40px;
+  font-family: 'Poppins-SemiBold';
+  text-align: center;
 `;

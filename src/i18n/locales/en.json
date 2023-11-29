@@ -472,7 +472,9 @@
     "Applicant": "Applicant",
     "ApplyTime": "Apply Time",
     "Operation": "Operation",
-    "Detail": "Detail"
+    "Detail": "Detail",
+    "SelectAsset": "All Asset Types",
+    "AllAssets": "All Assets Types"
   },
   "members": {
     "RemoveTitle": "Remove Member",

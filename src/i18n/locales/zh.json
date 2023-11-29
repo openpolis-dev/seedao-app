@@ -472,7 +472,9 @@
     "Applicant": "申请人",
     "ApplyTime": "申请时间",
     "Operation": "操作",
-    "Detail": "详情"
+    "Detail": "详情",
+    "SelectAsset": "所有资产类型",
+    "AllAssets": "所有资产类型"
     },
   "members": {
     "RemoveTitle": "移除成员",
