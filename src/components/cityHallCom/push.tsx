@@ -73,7 +73,7 @@ const CreatePushContent = () => {
   }, [title, href]);
   return (
     <CreateBox>
-      <BlockTitle>{t('Push.CreatePush')}</BlockTitle>
+      {/* <BlockTitle>{t('Push.CreatePush')}</BlockTitle> */}
       <Form>
         <FormGroup>
           <FormLabel>
@@ -281,7 +281,7 @@ const FormGroup = styled(Form.Group)`
   .checkbox {
     width: unset;
   }
-  margin-bottom: 40px;
+  margin-bottom: 30px;
   .timer-group {
     display: flex;
     align-items: center;
@@ -290,7 +290,7 @@ const FormGroup = styled(Form.Group)`
 `;
 
 const FormLabel = styled(Form.Label)`
-  margin-bottom: 24px;
+  margin-bottom: 14px;
   font-family: unset;
   .required {
     color: darkred;
@@ -302,14 +302,14 @@ const FormInput = styled(Form.Control)`
 `;
 
 const SubmitBox = styled.div`
-  margin-top: 52px;
+  margin-top: 30px;
   button {
     min-width: 120px;
   }
 `;
 
 const BlockTitle = styled.div`
-  font-size: 24px;
+  font-size: 20px;
   font-family: Poppins-Bold;
   font-weight: bold;
   line-height: 30px;
