@@ -130,8 +130,8 @@ const Modal = styled.div`
   justify-content: space-between;
   .icon-close {
     position: absolute;
-    right: -50px;
-    top: 10px;
+    right: 10px;
+    top: 5px;
     cursor: pointer;
     font-size: 24px;
   }
