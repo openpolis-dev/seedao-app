@@ -48,10 +48,16 @@ const BoxInner = styled.div`
 
   .icon-close {
     position: absolute;
-    right: -50px;
+    right: 10px;
     top: 10px;
     cursor: pointer;
-    font-size: 24px;
+    width: 24px;
+    height: 24px;
+    background: var(--bs-box-background);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 24px;
   }
 `;
 
