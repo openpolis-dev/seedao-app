@@ -10,6 +10,7 @@ const LOCAL = {
   REACT_APP_ONESIGNAL_ID: '9c6122e1-3de4-4c03-8e68-9f357e9ca1ae',
   REACT_APP_APP_VERSION: `A ${VERSION}`,
   REACT_APP_THEME_ENABLE: true,
+  INDEXER_ENDPOINT: 'https://test-spp-indexer.seedao.tech',
 };
 const DEVELOPMENT = {
   ...LOCAL,
@@ -32,6 +33,7 @@ const PRODUCTION = {
   REACT_APP_APP_VERSION: `B ${VERSION}`,
   REACT_APP_THEME_ENABLE: false,
   REACT_APP_ONESIGNAL_ID: '8ecd086b-3e15-4537-9f8b-c55c72a8dcf7',
+  INDEXER_ENDPOINT: 'https://spp-indexer.seedao.tech',
 };
 
 export default function getConfig() {
