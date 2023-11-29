@@ -23,6 +23,7 @@ import SbtImg from '../../../assets/Imgs/profile/sbt.svg';
 
 import SeedList from '../../../components/profile/seed';
 import Sbt from '../../../components/profile/Sbt';
+import ProfileComponent from '../../../profile-components/profile';
 
 const OuterBox = styled.div`
   margin-bottom: 50px;
@@ -218,18 +219,6 @@ export default function Profile() {
     return str;
   };
 
-  const LftBox = styled.div`
-    flex-grow: 1;
-    display: flex;
-    align-items: flex-start;
-  `;
-
-  const RhtBox = styled.div`
-    flex-shrink: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-  `;
   const removeUrl = () => {
     setAvatar('');
   };
@@ -275,6 +264,7 @@ export default function Profile() {
     <OuterBox>
       {Toast}
       <TitleBox>{t('My.MyProfile')}</TitleBox>
+      {/*<ProfileComponent/>*/}
       <HeadBox>
         <LftBox>
           <AvatarBox>
@@ -621,4 +611,16 @@ const RhtBoxB = styled.div`
   font-weight: 400;
   color: var(--bs-body-color_active);
   line-height: 14px;
+`;
+const LftBox = styled.div`
+  flex-grow: 1;
+  display: flex;
+  align-items: flex-start;
+`;
+
+const RhtBox = styled.div`
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
 `;
