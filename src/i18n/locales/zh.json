@@ -91,7 +91,7 @@
     "Detail": "详情",
     "HasBeenUsedAndRemains": "已使用{{used}}，剩余{{remain}}",
     "closeTips": "已申请关闭项目，审核通过后项目将被关闭",
-    "CloseProjectPlaceholder": "填写关闭项目的理由",
+    "CloseProjectPlaceholder": "填写关闭原由",
     "Others": "其他成员",
     "RemoveMember": "移除成员",
     "AddMember": "添加成员",

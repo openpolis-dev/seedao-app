@@ -234,7 +234,7 @@ export default function EditGuild({ detail }: { detail?: ReTurnProject }) {
             </InputBox>
           </li>
           <li>
-            <div className="title">{t('Project.Intro')}</div>
+            <div className="title">{t('Guild.Intro')}</div>
             <IntroBox>
               <MarkdownEditor value={intro} onChange={(val) => setIntro(val)} />
             </IntroBox>
@@ -339,6 +339,7 @@ const BtmBox = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
+  min-width: 104px;
 `;
 
 const UlBox = styled.ul`

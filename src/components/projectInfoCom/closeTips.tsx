@@ -10,7 +10,7 @@ const CardBody = styled.div`
   line-height: 24px;
   width: 400px;
   .box {
-    padding: 10px;
+    padding: 12px 21px;
     &::placeholder {
       color: #bbbbbb;
     }

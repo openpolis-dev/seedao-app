@@ -22,7 +22,7 @@ interface IProps {
 export default function MemberCard({ user, sns, role, removeText, showRemoveModal, showEdit, onSelectUser }: IProps) {
   const { t } = useTranslation();
   const snsDisplay = useMemo(() => {
-    return sns || PublicJs.AddressToShow(user.wallet || '', 6);
+    return sns || PublicJs.AddressToShow(user.wallet || '', 4);
   }, [sns, user]);
 
   const handleClockRemove = () => {
