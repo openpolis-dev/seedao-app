@@ -6,11 +6,12 @@ interface IProps {
   to: string;
   title: string;
   mb?: string; // margin-bottom
+  onClick?: () => void;
 }
 
-export default function BackerNav({ to, title, mb }: IProps) {
+export default function BackerNav({ to, title, mb, onClick }: IProps) {
   return (
-    <BackBox mb={mb}>
+    <BackBox mb={mb} onClick={() => onClick && onClick()}>
       <BackIconBox to={to}>
         <img src={BackIcon} alt="" />
       </BackIconBox>
