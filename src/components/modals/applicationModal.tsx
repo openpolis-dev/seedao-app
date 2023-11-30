@@ -25,6 +25,22 @@ export default function ApplicationModal({ application, handleClose, snsMap }: I
             <BlockRight>{application.asset_display}</BlockRight>
           </li>
           <li>
+            <BlockLeft>{t('application.OutputVault')}</BlockLeft>
+            <BlockRight>{t('application.CityhallVault')}</BlockRight>
+          </li>
+          <li>
+            <BlockLeft>{t('application.State')}</BlockLeft>
+            <BlockRight>
+              <ApplicationStatusTagNew status={application.status} />
+            </BlockRight>
+          </li>
+        </Block>
+        <Block underline>
+          <li>
+            <BlockLeft>{t('application.Season')}</BlockLeft>
+            <BlockRight>{application.season_name}</BlockRight>
+          </li>
+          <li>
             <BlockLeft>{t('application.BudgetSource')}</BlockLeft>
             <BlockRight>{application.budget_source}</BlockRight>
           </li>
@@ -37,23 +53,29 @@ export default function ApplicationModal({ application, handleClose, snsMap }: I
             <BlockRight className="text-field">{application.comment}</BlockRight>
           </li>
           <li>
-            <BlockLeft>{t('application.State')}</BlockLeft>
-            <BlockRight>
-              <ApplicationStatusTagNew status={application.status} />
-            </BlockRight>
-          </li>
-          <li>
-            <BlockLeft>{t('Project.Operator')}</BlockLeft>
+            <BlockLeft>{t('application.Operator')}</BlockLeft>
             <BlockRight>
               {application.applicant_wallet && snsMap.get(application.applicant_wallet.toLocaleLowerCase())}
             </BlockRight>
           </li>
           <li>
-            <BlockLeft>{t('application.Auditor')}</BlockLeft>
-            <BlockRight>{snsMap.get(application.reviewer_wallet.toLocaleLowerCase())}</BlockRight>
+            <BlockLeft>{t('application.ApplyTime')}</BlockLeft>
+            <BlockRight>{application.created_date}</BlockRight>
+          </li>
+          <li>
+            <BlockLeft>{t('application.RegisterNote')}</BlockLeft>
+            <BlockRight>{application.app_bundle_comment}</BlockRight>
           </li>
         </Block>
         <Block>
+          <li>
+            <BlockLeft>{t('application.Auditor')}</BlockLeft>
+            <BlockRight>{snsMap.get(application.reviewer_wallet.toLocaleLowerCase())}</BlockRight>
+          </li>
+          <li>
+            <BlockLeft>{t('application.AuditTime')}</BlockLeft>
+            <BlockRight>{application.review_date}</BlockRight>
+          </li>
           <li>
             <BlockLeft>{t('application.TransactionID')}</BlockLeft>
             <BlockRight>
@@ -69,8 +91,8 @@ export default function ApplicationModal({ application, handleClose, snsMap }: I
             </BlockRight>
           </li>
           <li>
-            <BlockLeft>{t('Project.Time')}</BlockLeft>
-            <BlockRight>{application.created_date}</BlockRight>
+            <BlockLeft>{t('application.ProcessTime')}</BlockLeft>
+            <BlockRight>{application.process_date}</BlockRight>
           </li>
         </Block>
       </Content>
@@ -80,6 +102,7 @@ export default function ApplicationModal({ application, handleClose, snsMap }: I
 
 const ApplicationModalWrapper = styled(BasicModal)`
   width: 635px;
+  padding: 24px;
   .modal-header {
     margin-bottom: 0;
   }
@@ -103,6 +126,9 @@ const Block = styled.ul<{ underline?: boolean }>`
     display: flex;
     gap: 20px;
     min-height: 18px;
+  }
+  &:last-child {
+    padding-bottom: 0;
   }
 `;
 

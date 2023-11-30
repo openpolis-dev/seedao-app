@@ -448,7 +448,7 @@
   },
   "application": {
     "Register": "登记",
-    "DetailModalHeader": "详情",
+    "DetailModalHeader": "资产发放记录",
     "Time": "时间",
     "TotalAssets": "总资产",
     "RegisterNote": "申请说明",
@@ -479,7 +479,10 @@
     "AllAssets": "所有资产类型",
     "SearchTargetUserHint": "SNS",
     "SearchApplicantHint": "SNS",
-    "SearchDetailHint": "事项"
+    "SearchDetailHint": "事项",
+    "OutputVault": "支出金库",
+    "CityhallVault": "市政厅金库",
+    "ProcessTime": "交易时间"
   },
   "members": {
     "RemoveTitle": "移除成员",

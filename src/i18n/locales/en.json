@@ -479,7 +479,10 @@
     "AllAssets": "All Assets Types",
     "SearchTargetUserHint": "SNS",
     "SearchApplicantHint": "SNS",
-    "SearchDetailHint": "Content"
+    "SearchDetailHint": "Content",
+    "OutputVault": "Spending Vault",
+    "CityhallVault": "Cityhall Vault",
+    "ProcessTime": "Transaction Time"
   },
   "members": {
     "RemoveTitle": "Remove Member",
