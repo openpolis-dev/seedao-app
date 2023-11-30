@@ -64,7 +64,7 @@ export default function Members() {
           ...user,
           sns: snsMap.get(w.toLowerCase())?.endsWith('.seedao')
             ? snsMap.get(w.toLowerCase())
-            : publicJs.AddressToShow(w, 6),
+            : publicJs.AddressToShow(w, 4),
         };
       } else {
         return {

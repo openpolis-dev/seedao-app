@@ -129,7 +129,13 @@ const links = {
       icon: RImg11,
       desc: 'city-hall.CalendarReviewDesc',
     },
-
+    {
+      name: 'city-hall.PubReview',
+      link: 'https://www.notion.so/ab122e6e19f14ff5a212fb6e77d5b366?v=34760c2c81e648549f5a40a79dc3b198&pvs=4',
+      id: 'community',
+      icon: RImg3,
+      desc: 'city-hall.PubReviewDesc',
+    },
     {
       name: 'city-hall.ProjectReview',
       link: 'https://tally.so/forms/w2AWlp/submissions',
@@ -144,14 +150,6 @@ const links = {
       icon: RImg1,
       desc: 'city-hall.GuildReviewDesc',
     },
-    {
-      name: 'city-hall.PubReview',
-      link: 'https://www.notion.so/ab122e6e19f14ff5a212fb6e77d5b366?v=34760c2c81e648549f5a40a79dc3b198&pvs=4',
-      id: 'community',
-      icon: RImg3,
-      desc: 'city-hall.PubReviewDesc',
-    },
-
     {
       name: 'city-hall.PointsAndTokenAudit',
       link: '/city-hall/governance/audit',
@@ -184,10 +182,10 @@ const links = {
     },
     {
       name: 'Governance.apply',
-      link: '/assets/register',
-      id: 'module-create-guild',
+      link: '/city-hall/governance/issue',
+      id: 'module-issue',
       icon: DistributeImg,
-      desc: 'city-hall.CreateGuildDesc',
+      desc: '',
     },
     {
       name: 'city-hall.GovernanceNodeResult',
