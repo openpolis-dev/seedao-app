@@ -137,8 +137,8 @@ export const compeleteApplications = (data: string[]) => {
   });
 };
 // process
-export const processApplications = (data: number[]) => {
-  return request.post(`/apps_process`, data);
+export const processApplications = () => {
+  return request.post(`/apps_process`);
 };
 
 // download

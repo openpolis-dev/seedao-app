@@ -500,7 +500,7 @@ export default function AssetList() {
                   <th>{t('application.Content')}</th>
                   <th className="center">{t('application.BudgetSource')}</th>
                   <th className="center">{t('application.Operator')}</th>
-                  <th>{t('application.State')}</th>
+                  <th className="center">{t('application.State')}</th>
                   <th></th>
                 </tr>
               </thead>

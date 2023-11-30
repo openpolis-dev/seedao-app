@@ -248,11 +248,11 @@ export default function SCRRank() {
                 {[...allSeasons].map((season) => (
                   <td key={season}>
                     {formatNumber(
-                      getShortDisplay(item.seasons_credit?.find((s) => s.season_idx === season)?.total || 0, 2),
+                      Number(getShortDisplay(item.seasons_credit?.find((s) => s.season_idx === season)?.total || 0, 2)),
                     )}
                   </td>
                 ))}
-                <td>{formatNumber(getShortDisplay(item.season_total_credit || 0, 2))}</td>
+                <td>{formatNumber(Number(getShortDisplay(item.season_total_credit || 0, 2)))}</td>
               </tr>
             ))}
           </tbody>
