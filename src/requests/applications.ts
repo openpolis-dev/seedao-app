@@ -26,6 +26,7 @@ export interface IQueryApplicationsParams {
   state?: ApplicationStatus;
   season_id?: number;
   asset_name?: string;
+  detailed_type?: string;
 }
 
 export interface IQueryParams extends IQueryApplicationsParams {

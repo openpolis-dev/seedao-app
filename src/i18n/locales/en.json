@@ -400,8 +400,8 @@
     "SNSError": "SNS error",
     "RepeatProposal": "Repeated proposal",
     "SelectRole": "Required role",
-    "SnsNotFound": "SNS Not Found",
-    "InvalidAddress": "Invalid Address"
+    "SnsNotFound": "SNS Not Found: {{sns}}",
+    "InvalidAddress": "Invalid Address: {{address}}"
   },
   "event": {
     "events": "Events",

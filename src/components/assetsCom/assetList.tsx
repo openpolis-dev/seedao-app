@@ -202,6 +202,11 @@ export default function AssetList() {
   // search target user
   const [targetKeyword, setTargetKeyword] = useState('');
   const [searchTargetVal, setSearchTargetVal] = useState('');
+  // search applicant
+  const [applicantKeyword, setApplicantKeyword] = useState('');
+  const [searchApplicantVal, setSearchApplicantVal] = useState('');
+  // search content
+  const [searchContentVal, setSearchContentVal] = useState('');
 
   const [snsMap, setSnsMap] = useState<Map<string, string>>(new Map());
 
@@ -226,35 +231,41 @@ export default function AssetList() {
     setPageSize(num);
   };
 
-  const handleSearchTarget = async () => {
-    if (targetKeyword.endsWith('.seedao')) {
+  const handleSearch = async (keyword: string, setSearchVal: (v: string) => void) => {
+    if (keyword.endsWith('.seedao')) {
       // sns
       dispatch({ type: AppActionType.SET_LOADING, payload: true });
-      const w = await sns.resolve(targetKeyword);
+      const w = await sns.resolve(keyword);
       if (w && w !== ethers.constants.AddressZero) {
-        setSearchTargetVal(w?.toLocaleLowerCase());
+        setSearchVal(w?.toLocaleLowerCase());
       } else {
-        showToast(t('Msg.SnsNotFound'), ToastType.Danger);
+        showToast(t('Msg.SnsNotFound', { sns: keyword }), ToastType.Danger);
       }
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
-    } else if (ethers.utils.isAddress(targetKeyword)) {
+    } else if (ethers.utils.isAddress(keyword)) {
       // address
-      setSearchTargetVal(targetKeyword?.toLocaleLowerCase());
+      setSearchVal(keyword?.toLocaleLowerCase());
     } else {
-      showToast(t('Msg.InvalidAddress'), ToastType.Danger);
+      showToast(t('Msg.InvalidAddress', { address: keyword }), ToastType.Danger);
     }
   };
   const onKeyUp = (e: any, type: string) => {
-    console.log(e.keyCode);
     if (e.keyCode === 13) {
       // document.activeElement.blur();
-      handleSearchTarget();
+      switch (type) {
+        case 'target':
+          handleSearch(targetKeyword, setSearchTargetVal);
+          break;
+        case 'applicant':
+          handleSearch(applicantKeyword, setSearchApplicantVal);
+          break;
+        case 'content':
+          getRecords();
+          break;
+        default:
+          return;
+      }
     }
-  };
-  const onChangeTargetKey = (e: any) => {
-    const v = e.target.value;
-    setTargetKeyword(v);
-    !v && searchTargetVal && setSearchTargetVal('');
   };
 
   const handleSNS = async (wallets: string[]) => {
@@ -278,6 +289,12 @@ export default function AssetList() {
     }
     if (searchTargetVal) {
       queryData.user_wallet = searchTargetVal;
+    }
+    if (searchApplicantVal) {
+      queryData.applicant = searchApplicantVal;
+    }
+    if (searchContentVal) {
+      queryData.detailed_type = searchContentVal;
     }
     return queryData;
   };
@@ -322,7 +339,7 @@ export default function AssetList() {
 
   useEffect(() => {
     getRecords();
-  }, [selectSeason, selectStatus, page, pageSize, selectSource, selectAsset, searchTargetVal]);
+  }, [selectSeason, selectStatus, page, pageSize, selectSource, selectAsset, searchTargetVal, searchApplicantVal]);
 
   const handleExport = async () => {
     window.open(requests.application.getExportFileUrlFromVault(getQuerydata()), '_blank');
@@ -377,7 +394,7 @@ export default function AssetList() {
                     type="text"
                     placeholder={t('application.SearchTargetUserHint')}
                     onKeyUp={(e) => onKeyUp(e, 'target')}
-                    onChange={onChangeTargetKey}
+                    onChange={(e) => setTargetKeyword(e.target.value)}
                   />
                 </SearchBox>
               </td>
@@ -411,7 +428,12 @@ export default function AssetList() {
               <td>
                 <SearchBox style={{ maxWidth: '200px' }}>
                   <img src={theme ? SearchWhite : SearchImg} alt="" />
-                  <input type="text" placeholder={t('application.SearchApplicantHint')} />
+                  <input
+                    type="text"
+                    placeholder={t('application.SearchDetailHint')}
+                    onKeyUp={(e) => onKeyUp(e, 'content')}
+                    onChange={(e) => setSearchContentVal(e.target.value)}
+                  />
                 </SearchBox>
               </td>
               <td>
@@ -429,7 +451,12 @@ export default function AssetList() {
               <td>
                 <SearchBox>
                   <img src={theme ? SearchWhite : SearchImg} alt="" />
-                  <input type="text" placeholder={t('application.SearchDetailHint')} />
+                  <input
+                    type="text"
+                    placeholder={t('application.SearchApplicantHint')}
+                    onKeyUp={(e) => onKeyUp(e, 'applicant')}
+                    onChange={(e) => setApplicantKeyword(e.target.value)}
+                  />
                 </SearchBox>
               </td>
               <td>

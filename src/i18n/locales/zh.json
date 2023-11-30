@@ -400,8 +400,8 @@
     "SNSError": "SNS错误",
     "RepeatProposal": "重复的提案链接",
     "SelectRole": "请选择角色",
-    "SnsNotFound": "无效的SNS",
-    "InvalidAddress": "无效的地址"
+    "SnsNotFound": "无效的SNS：{{sns}}",
+    "InvalidAddress": "无效的地址：{{address}}"
   },
   "event": {
     "events": "活动",
