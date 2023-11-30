@@ -15,6 +15,7 @@ import publicJs from 'utils/publicJs';
 import { AssetName } from 'utils/constant';
 import { formatNumber } from 'utils/number';
 import ApplicationModal from 'components/modals/applicationModal';
+import VaultSVGIcon from 'components/svgs/vault';
 
 interface IProps {
   bund_id: number;
@@ -154,11 +155,14 @@ export default function ExpandTable({
             </tbody>
           </table>
           <TotalAssets>
+            <VaultSVGIcon />
             <span>{t('Assets.Total')}</span>
-            <span className="value">{totalAssets[0]}</span>
-            <span>{AssetName.Token}</span>
-            <span className="value">{totalAssets[1]}</span>
-            <span>{AssetName.Credit}</span>
+            <span className="value">
+              {totalAssets[0]} {AssetName.Token}
+            </span>
+            <span className="value">
+              {totalAssets[1]} {AssetName.Credit}
+            </span>
           </TotalAssets>
           <MoreInfo>
             <MoreInfoTitle>{t('application.RegisterNote')}</MoreInfoTitle>
@@ -254,14 +258,19 @@ const BudgetContent = styled.div`
 `;
 
 const TotalAssets = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
   line-height: 36px;
   color: var(--bs-body-color_active);
   display: flex;
   gap: 8px;
+  width: 100%;
+  height: 54px;
+  background: var(--table-header);
   .value {
-    font-size: 20px;
-    font-family: Poppins-SemiBold, Poppins;
-    font-weight: 600;
+    color: #ff1c52;
+    font-size: 14px;
   }
 `;
 
