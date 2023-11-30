@@ -6,7 +6,7 @@ const AddressToShow = (address: string, num?: number) => {
     return address;
   }
 
-  const frontStr = address.substring(0, n);
+  const frontStr = address.substring(0, n + 2);
 
   const afterStr = address.substring(address.length - n, address.length);
 

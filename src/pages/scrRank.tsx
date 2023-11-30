@@ -17,12 +17,14 @@ import RankIcon from 'assets/Imgs/rank.svg';
 
 import { PermissionObject, PermissionAction } from 'utils/constant';
 import usePermission from 'hooks/usePermission';
+import { PlainButton } from 'components/common/button';
+import publicJs from 'utils/publicJs';
 
 const ColGroup = ({ seasons }: { seasons: number[] }) => {
   return (
     <colgroup>
       <col style={{ width: '80px' }} />
-      <col style={{ width: '340px' }} />
+      <col style={{ width: '220px' }} />
       {seasons.map((s) => (
         <col style={{ width: '150px' }} key={s} />
       ))}
@@ -119,7 +121,8 @@ export default function SCRRank() {
   }, [allList, rankCurrent, rankTotal]);
 
   const formatSNS = (wallet: string) => {
-    return dataMap.get(wallet) || wallet;
+    const _sns = dataMap.get(wallet) || wallet;
+    return _sns?.endsWith('.seedao') ? _sns : publicJs.AddressToShow(_sns, 4);
   };
 
   const handleExport = () => {
@@ -205,9 +208,7 @@ export default function SCRRank() {
       <BackerNav title={t('GovernanceNodeResult.SCRRank')} to={state || '/home'} />
       {canUseCityhall && (
         <OperateBox>
-          <Button variant="primary" onClick={handleExport}>
-            {t('GovernanceNodeResult.Export')}
-          </Button>
+          <PlainButton onClick={handleExport}>{t('GovernanceNodeResult.Export')}</PlainButton>
         </OperateBox>
       )}
 
@@ -329,6 +330,11 @@ const ColumnSort = styled.div`
   background-color: transparent !important;
   color: var(--bs-body-color_active) !important;
   cursor: pointer;
+
+  span {
+    font-size: 14px;
+    font-family: Poppins-SemiBold, Poppins;
+  }
   img {
     width: 20px;
   }

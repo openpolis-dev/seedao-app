@@ -18,6 +18,10 @@ export const PrimaryOutlinedButton = ({ children, ...props }: IProps) => {
   return <PrimaryOutlinedButtonStyle {...props}>{children}</PrimaryOutlinedButtonStyle>;
 };
 
+export const PlainButton = ({ children, ...props }: IProps) => {
+  return <PlainButtonStyle {...props}>{children}</PlainButtonStyle>;
+};
+
 const BasicButtonStyle = css`
   width: 110px;
   height: 40px;
@@ -72,4 +76,13 @@ const PrimaryOutlinedButtonStyle = styled.button`
     border-color: #6014ff;
     color: #6014ff;
   }
+`;
+
+const PlainButtonStyle = styled.button`
+  ${BasicButtonStyle};
+  height: 36px;
+  line-height: 36px;
+  background-color: var(--bs-box--background);
+  border: 1px solid var(--bs-border-color);
+  font-family: Poppins-SemiBold;
 `;
