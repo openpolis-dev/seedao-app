@@ -3,8 +3,8 @@ import { useEffect, useState, useMemo } from 'react';
 import { IApplicationDisplay } from 'type/application.type';
 import NoItem from 'components/noItem';
 import { useTranslation } from 'react-i18next';
-import BackIconSVG from 'components/svgs/back';
-import ApplicationStatusTag from 'components/common/applicationStatusTag';
+import BackIcon from 'assets/Imgs/back.svg';
+import ApplicationStatusTag from 'components/common/applicationStatusTagNew';
 import { Button } from 'react-bootstrap';
 import requests from 'requests';
 import useToast, { ToastType } from 'hooks/useToast';
@@ -106,9 +106,9 @@ export default function ExpandTable({
   return (
     <TableBox>
       <BackBox onClick={handleClose}>
-        <BackIcon>
-          <BackIconSVG />
-        </BackIcon>
+        <BackIconBox>
+          <img src={BackIcon} alt="" />
+        </BackIconBox>
         <span>{t('general.back')}</span>
       </BackBox>
       {list.length ? (
@@ -190,20 +190,19 @@ const BackBox = styled.div`
   align-items: center;
   gap: 12px;
   cursor: pointer;
-  font-family: Poppins-SemiBold, Poppins;
-  font-weight: 600;
-  color: var(--bs-svg-color);
+  font-size: 14px;
+  color: var(--bs-body-color_active);
 `;
 
-const BackIcon = styled.span`
+const BackIconBox = styled.span`
   display: inline-block;
   width: 32px;
   height: 32px;
-  background-color: var(--bs-box-background);
+  border: 1px solid rgba(217, 217, 217, 0.5);
   border-radius: 8px;
   text-align: center;
-  svg {
-    margin-top: 8px;
+  img {
+    margin-top: 5px;
   }
 `;
 

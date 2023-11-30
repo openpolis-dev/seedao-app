@@ -542,6 +542,7 @@ const StaticCards = styled(Row)`
 `;
 
 const FilterInputBox = styled.div`
+  height: 100%;
   display: flex;
   border-radius: 16px;
   padding: 13px 15px 4px;
