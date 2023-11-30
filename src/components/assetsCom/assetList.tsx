@@ -6,10 +6,8 @@ import Page from 'components/pagination';
 import requests from 'requests';
 import { IQueryParams } from 'requests/applications';
 import { IApplicationDisplay, ApplicationStatus } from 'type/application.type';
-import utils from 'utils/publicJs';
 import NoItem from 'components/noItem';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
-import Loading from 'components/loading';
 import { formatTime } from 'utils/time';
 import publicJs from 'utils/publicJs';
 import { useTranslation } from 'react-i18next';
@@ -506,7 +504,7 @@ export default function AssetList() {
               </thead>
               <tbody>
                 {list.map((item) => (
-                  <tr key={item.application_id} onClick={() => setDetailDisplay(item)}>
+                  <tr key={item.application_id}>
                     {/* <td>
                       <Form.Check
                         checked={!!selectMap[item.application_id]}
@@ -526,7 +524,7 @@ export default function AssetList() {
                       <ApplicationStatusTagNew status={item.status} />
                     </td>
                     <td className="center">
-                      <MoreButton>{t('application.Detail')}</MoreButton>
+                      <MoreButton onClick={() => setDetailDisplay(item)}>{t('application.Detail')}</MoreButton>
                     </td>
                   </tr>
                 ))}

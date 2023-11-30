@@ -14,6 +14,7 @@ import useQuerySNS from 'hooks/useQuerySNS';
 import publicJs from 'utils/publicJs';
 import { AssetName } from 'utils/constant';
 import { formatNumber } from 'utils/number';
+import ApplicationModal from 'components/modals/applicationModal';
 
 interface IProps {
   bund_id: number;
@@ -38,6 +39,7 @@ export default function ExpandTable({
   const { showToast } = useToast();
 
   const [snsMap, setSnsMap] = useState<Map<string, string>>(new Map());
+  const [detailDisplay, setDetailDisplay] = useState<IApplicationDisplay>();
 
   const { getMultiSNS } = useQuerySNS();
 
@@ -105,6 +107,9 @@ export default function ExpandTable({
 
   return (
     <TableBox>
+      {detailDisplay && (
+        <ApplicationModal application={detailDisplay} handleClose={() => setDetailDisplay(undefined)} snsMap={snsMap} />
+      )}
       <BackBox onClick={handleClose}>
         <BackIconBox>
           <img src={BackIcon} alt="" />
@@ -140,6 +145,9 @@ export default function ExpandTable({
                   </td>
                   <td>
                     <ApplicationStatusTag status={item.status} />
+                  </td>
+                  <td>
+                    <MoreButton onClick={() => setDetailDisplay(item)}>{t('application.Detail')}</MoreButton>
                   </td>
                 </tr>
               ))}
@@ -266,4 +274,17 @@ const MoreInfoTitle = styled.div``;
 
 const MoreInfoDesc = styled.div`
   font-size: 12px;
+`;
+
+const MoreButton = styled.div`
+  padding-inline: 26px;
+  height: 34px;
+  line-height: 34px;
+  box-sizing: border-box;
+  display: inline-block;
+  background: var(--bs-box--background);
+  border-radius: 8px;
+  cursor: pointer;
+  border: 1px solid var(--bs-border-color);
+  font-size: 14px;
 `;
