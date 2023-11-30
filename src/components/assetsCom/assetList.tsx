@@ -61,7 +61,7 @@ const Colgroups = () => {
 const Box = styled.div``;
 const TitBox = styled.div`
   margin: 60px 0 40px;
-  font-size: 24px;
+  font-size: 20px;
   font-family: Poppins-Bold;
   line-height: 30px;
   display: flex;
@@ -101,6 +101,14 @@ const TitBox = styled.div`
 const FilterLine = styled.div`
   width: 100%;
   margin-bottom: 20px;
+  table {
+    td {
+      border: none !important;
+    }
+    tr:hover td {
+      background: transparent;
+    }
+  }
 `;
 
 const TableBox = styled.div`
