@@ -128,9 +128,10 @@ export default function Issued() {
       setSelectStatus(ApplicationStatus.Completed);
       setIsProcessing(false);
       showToast(t('city-hall.SendSuccess'), ToastType.Success);
-    } catch (error) {
+    } catch (error: any) {
       console.error('compeleteApplications failed', error);
-      showToast(t('Msg.ApproveFailed'), ToastType.Danger);
+      let msg = error?.data?.msg || t('Msg.ApproveFailed');
+      showToast(msg, ToastType.Danger);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }
@@ -143,9 +144,10 @@ export default function Issued() {
       setSelectStatus(ApplicationStatus.Processing);
       setIsProcessing(true);
       showToast(t('Msg.ApproveSuccess'), ToastType.Success);
-    } catch (error) {
+    } catch (error: any) {
       console.error('processApplications failed', error);
-      showToast(t('Msg.ApproveFailed'), ToastType.Danger);
+      let msg = error?.data?.msg || t('Msg.ApproveFailed');
+      showToast(msg, ToastType.Danger);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }
