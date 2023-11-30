@@ -80,8 +80,8 @@ const PrimaryOutlinedButtonStyle = styled.button`
 
 const PlainButtonStyle = styled.button`
   ${BasicButtonStyle};
-  height: 36px;
-  line-height: 36px;
+  height: 40px;
+  line-height: 40px;
   background-color: var(--bs-box--background);
   border: 1px solid var(--bs-border-color);
   font-family: Poppins-SemiBold;

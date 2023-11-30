@@ -1,12 +1,12 @@
 import styled from 'styled-components';
 import { useState, useMemo, useEffect } from 'react';
-import { Table, Button } from 'react-bootstrap';
+import { Table } from 'react-bootstrap';
 
 import { ContainerPadding } from 'assets/styles/global';
 import BackerNav from 'components/common/backNav';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
-import { formatNumber } from 'utils/number';
+import { formatNumber, getShortDisplay } from 'utils/number';
 import ExcellentExport from 'excellentexport';
 import { getGovernanceNodeResult } from 'requests/cityHall';
 import useQuerySNS from 'hooks/useQuerySNS';
@@ -205,7 +205,7 @@ export default function SCRRank() {
 
   return (
     <OuterBox>
-      <BackerNav title={t('GovernanceNodeResult.SCRRank')} to={state || '/home'} />
+      <BackerNav title={t('GovernanceNodeResult.SCRRank')} to={state || '/home'} mb="16px" />
       {canUseCityhall && (
         <OperateBox>
           <PlainButton onClick={handleExport}>{t('GovernanceNodeResult.Export')}</PlainButton>
@@ -247,11 +247,12 @@ export default function SCRRank() {
                 <td>{formatSNS(item.wallet)}</td>
                 {[...allSeasons].map((season) => (
                   <td key={season}>
-                    {formatNumber(Number(item.seasons_credit?.find((s) => s.season_idx === season)?.total || 0))}
+                    {formatNumber(
+                      getShortDisplay(item.seasons_credit?.find((s) => s.season_idx === season)?.total || 0, 2),
+                    )}
                   </td>
                 ))}
-
-                <td>{formatNumber(Number(item.season_total_credit) || 0)}</td>
+                <td>{formatNumber(getShortDisplay(item.season_total_credit || 0, 2))}</td>
               </tr>
             ))}
           </tbody>
@@ -269,7 +270,7 @@ const OuterBox = styled.div`
 const OperateBox = styled.div`
   display: flex;
   justify-content: flex-end;
-  margin-bottom: 30px;
+  margin-bottom: 16px;
 `;
 
 const TableBox = styled.div`

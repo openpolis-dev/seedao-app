@@ -37,6 +37,7 @@ import SearchWhite from 'assets/Imgs/light/search.svg';
 import useToast, { ToastType } from 'hooks/useToast';
 import sns from '@seedao/sns-js';
 import { ethers } from 'ethers';
+import { PlainButton } from 'components/common/button';
 
 const Colgroups = () => {
   return (
@@ -475,9 +476,7 @@ export default function AssetList() {
               </td>
               <td>
                 {getConfig().REACT_APP_ENV !== 'prod' && getConfig().REACT_APP_ENV !== 'preview' && (
-                  <ExportButton onClick={handleExport} className="btn-export">
-                    {t('Assets.Export')}
-                  </ExportButton>
+                  <PlainButton onClick={handleExport}>{t('Assets.Export')}</PlainButton>
                 )}
               </td>
             </tr>
