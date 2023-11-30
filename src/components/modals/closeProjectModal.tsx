@@ -4,27 +4,18 @@ import { useTranslation } from 'react-i18next';
 import ApplicationStatusTagNew from 'components/common/applicationStatusTagNew';
 import { Button } from 'react-bootstrap';
 import { PinkButton } from 'components/common/button';
-import requests from '../../requests';
-import { ToastType } from '../../hooks/useToast';
 import { ApplicationStatus, IApplicationDisplay } from 'type/application.type';
-import { useNavigate } from 'react-router-dom';
 
 interface Iprops {
   application: IApplicationDisplay;
   handleClose: () => void;
   handleApprove: (arg: number) => void;
   handleReject: (arg: number) => void;
+  snsMap: Map<string, string>;
 }
 
-export default function CloseProjectModal({ application, handleClose, handleApprove, handleReject }: Iprops) {
+export default function CloseProjectModal({ application, handleClose, handleApprove, handleReject, snsMap }: Iprops) {
   const { t } = useTranslation();
-  const navigate = useNavigate();
-
-  const toGo = (id: string, type: string) => {
-    if (type === 'project') {
-      navigate(`/project/info/${id}`);
-    }
-  };
 
   return (
     // <CloseProjectnModalWrapper handleClose={handleClose} title={t('application.DetailModalHeader')}>
@@ -35,12 +26,12 @@ export default function CloseProjectModal({ application, handleClose, handleAppr
             <BlockLeft>{t('application.Project')}</BlockLeft>
             <BlockRight>
               {application.budget_source}{' '}
-              <TagBox onClick={() => toGo(application.entity_id, application.entity_type)}>
+              <TagBox href={`${window.location.origin}/project/info/${application.entity_id}`} target="_blank">
                 {t('application.detail')}
               </TagBox>
             </BlockRight>
           </li>
-          <li>
+          <li style={{ height: 'unset' }}>
             <BlockLeft className="text-field-label">{t('application.CloseReason')}</BlockLeft>
             <BlockRight className="text-field">{application.detailed_type}</BlockRight>
           </li>
@@ -52,7 +43,9 @@ export default function CloseProjectModal({ application, handleClose, handleAppr
           </li>
           <li>
             <BlockLeft>{t('application.Applicant')}</BlockLeft>
-            <BlockRight>{application.submitter_name}</BlockRight>
+            <BlockRight>
+              {application.applicant_wallet && snsMap.get(application.applicant_wallet.toLocaleLowerCase())}
+            </BlockRight>
           </li>
           <li>
             <BlockLeft>{t('application.ApplyTime')}</BlockLeft>
@@ -60,7 +53,7 @@ export default function CloseProjectModal({ application, handleClose, handleAppr
           </li>
           <li>
             <BlockLeft>{t('application.Auditor')}</BlockLeft>
-            <BlockRight>{application.reviewer_name}</BlockRight>
+            <BlockRight>{snsMap.get(application.reviewer_wallet.toLocaleLowerCase())}</BlockRight>
           </li>
           <li>
             <BlockLeft>{t('application.AuditTime')}</BlockLeft>
@@ -111,23 +104,19 @@ const Block = styled.ul<{ underline?: boolean }>`
   li {
     display: flex;
     gap: 20px;
-    min-height: 18px;
+    height: 24px;
   }
 `;
 
 const BlockLeft = styled.div`
   color: var(--bs-body-color);
   min-width: 102px;
-  &.text-field-label {
-    line-height: 40px;
-  }
 `;
 const BlockRight = styled.div`
   flex: 1;
   color: var(--bs-body-color_active);
   &.text-field {
-    border-radius: 8px;
-    padding-block: 10px;
+    line-height: 22px;
     word-break: break-all;
   }
 `;
@@ -142,13 +131,17 @@ const LiBox = styled.li`
   }
 `;
 
-const TagBox = styled.div`
+const TagBox = styled.a`
+  display: inline-block;
   border-radius: 8px;
   border: 1px solid #0085ff;
   display: inline-block;
   font-size: 12px;
   font-weight: 400;
   color: #2f8fff;
+  &:hover {
+    color: #2f8fff;
+  }
   line-height: 20px;
   padding: 0 10px;
   margin-left: 10px;

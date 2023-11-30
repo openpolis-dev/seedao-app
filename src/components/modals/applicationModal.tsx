@@ -3,6 +3,7 @@ import BasicModal from './basicModal';
 import { IApplicationDisplay } from 'type/application.type';
 import { useTranslation } from 'react-i18next';
 import ApplicationStatusTagNew from 'components/common/applicationStatusTagNew';
+import publicJs from 'utils/publicJs';
 
 interface Iprops {
   application: IApplicationDisplay;
@@ -82,7 +83,7 @@ export default function ApplicationModal({ application, handleClose, snsMap }: I
               {application.transactions?.map((item, index) => {
                 return item ? (
                   <TransactionTx key={index} href={`https://etherscan.io/tx/${item}`} target="_blank">
-                    {item.slice(0, 8) + '...' + item.slice(-8)}
+                    {publicJs.AddressToShow(item, 8)}
                   </TransactionTx>
                 ) : (
                   <></>

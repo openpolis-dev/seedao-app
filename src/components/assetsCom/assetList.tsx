@@ -350,7 +350,7 @@ export default function AssetList() {
 
   const formatSNS = (wallet: string) => {
     const name = snsMap.get(wallet) || wallet;
-    return name?.endsWith('.seedao') ? name : publicJs.AddressToShow(name, 6);
+    return name?.endsWith('.seedao') ? name : publicJs.AddressToShow(name, 4);
   };
 
   const openApply = () => {
