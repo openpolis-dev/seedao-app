@@ -34,6 +34,9 @@ import RecordWhite from 'assets/Imgs/dark/record.svg';
 import ApplyWhite from 'assets/Imgs/dark/apply.svg';
 import RankWhite from 'assets/Imgs/dark/rank.svg';
 import SearchWhite from 'assets/Imgs/light/search.svg';
+import useToast, { ToastType } from 'hooks/useToast';
+import sns from '@seedao/sns-js';
+import { ethers } from 'ethers';
 
 const Colgroups = () => {
   return (
@@ -185,9 +188,6 @@ export default function AssetList() {
   const [total, setTotal] = useState(0);
   const [list, setList] = useState<IApplicationDisplay[]>([]);
   const [selectStatus, setSelectStatus] = useState<ApplicationStatus>();
-  const [selectMap, setSelectMap] = useState<{ [id: number]: ApplicationStatus | boolean }>({});
-  const [applicants, setApplicants] = useState<ISelectItem[]>([]);
-  const [selectApplicant, setSelectApplicant] = useState<string>();
   // budget source
   const allSource = useBudgetSource();
   const [selectSource, setSelectSource] = useState<{ id: number; type: 'project' | 'guild' }>();
@@ -198,6 +198,10 @@ export default function AssetList() {
   // assets
   const assets = useAssets();
   const [selectAsset, setSelectAsset] = useState();
+
+  // search target user
+  const [targetKeyword, setTargetKeyword] = useState('');
+  const [searchTargetVal, setSearchTargetVal] = useState('');
 
   const [snsMap, setSnsMap] = useState<Map<string, string>>(new Map());
 
@@ -211,6 +215,8 @@ export default function AssetList() {
     ];
   }, [t]);
 
+  const { showToast } = useToast();
+
   const { getMultiSNS } = useQuerySNS();
 
   const handlePage = (num: number) => {
@@ -220,26 +226,36 @@ export default function AssetList() {
     setPageSize(num);
   };
 
-  const onChangeCheckbox = (value: boolean, id: number, status: ApplicationStatus) => {
-    setSelectMap({ ...selectMap, [id]: value && status });
-  };
-
-  const getApplicants = async () => {
-    try {
-      const res = await requests.application.getApplicants();
-      const options = res.data.map((item) => ({
-        label: item.Name || utils.AddressToShow(item.Applicant),
-        value: item.Applicant,
-      }));
-      setApplicants(options);
-    } catch (error) {
-      console.error('getApplicants error', error);
+  const handleSearchTarget = async () => {
+    if (targetKeyword.endsWith('.seedao')) {
+      // sns
+      dispatch({ type: AppActionType.SET_LOADING, payload: true });
+      const w = await sns.resolve(targetKeyword);
+      if (w && w !== ethers.constants.AddressZero) {
+        setSearchTargetVal(w?.toLocaleLowerCase());
+      } else {
+        showToast(t('Msg.SnsNotFound'), ToastType.Danger);
+      }
+      dispatch({ type: AppActionType.SET_LOADING, payload: false });
+    } else if (ethers.utils.isAddress(targetKeyword)) {
+      // address
+      setSearchTargetVal(targetKeyword?.toLocaleLowerCase());
+    } else {
+      showToast(t('Msg.InvalidAddress'), ToastType.Danger);
     }
   };
-
-  useEffect(() => {
-    getApplicants();
-  }, []);
+  const onKeyUp = (e: any, type: string) => {
+    console.log(e.keyCode);
+    if (e.keyCode === 13) {
+      // document.activeElement.blur();
+      handleSearchTarget();
+    }
+  };
+  const onChangeTargetKey = (e: any) => {
+    const v = e.target.value;
+    setTargetKeyword(v);
+    !v && searchTargetVal && setSearchTargetVal('');
+  };
 
   const handleSNS = async (wallets: string[]) => {
     const sns_map = await getMultiSNS(wallets);
@@ -249,7 +265,7 @@ export default function AssetList() {
   const getQuerydata = () => {
     const queryData: IQueryParams = {};
     if (selectStatus) queryData.state = selectStatus;
-    if (selectApplicant) queryData.applicant = selectApplicant;
+    // if (selectApplicant) queryData.applicant = selectApplicant;
     if (selectSeason) {
       queryData.season_id = selectSeason;
     }
@@ -259,6 +275,9 @@ export default function AssetList() {
     }
     if (selectAsset) {
       queryData.asset_name = selectAsset;
+    }
+    if (searchTargetVal) {
+      queryData.user_wallet = searchTargetVal;
     }
     return queryData;
   };
@@ -303,47 +322,11 @@ export default function AssetList() {
 
   useEffect(() => {
     getRecords();
-  }, [selectSeason, selectStatus, selectApplicant, page, pageSize, selectSource, selectAsset]);
-
-  const getSelectIds = (): number[] => {
-    const ids = Object.keys(selectMap);
-    const select_ids: number[] = [];
-    for (const id of ids) {
-      const _id = Number(id);
-      if (selectMap[_id]) {
-        select_ids.push(_id);
-      }
-    }
-    return select_ids;
-  };
+  }, [selectSeason, selectStatus, page, pageSize, selectSource, selectAsset, searchTargetVal]);
 
   const handleExport = async () => {
     window.open(requests.application.getExportFileUrlFromVault(getQuerydata()), '_blank');
   };
-
-  const onSelectAll = (v: boolean) => {
-    const newMap = { ...selectMap };
-    list.forEach((item) => {
-      newMap[item.application_id] = v && item.status;
-    });
-    setSelectMap(newMap);
-  };
-
-  const selectOne = useMemo(() => {
-    const select_ids = getSelectIds();
-    return select_ids.length > 0;
-  }, [selectMap]);
-
-  const ifSelectAll = useMemo(() => {
-    let _is_select_all = true;
-    for (const item of list) {
-      if (!selectMap[item.application_id]) {
-        _is_select_all = false;
-        break;
-      }
-    }
-    return _is_select_all;
-  }, [list, selectMap]);
 
   const formatSNS = (wallet: string) => {
     const name = snsMap.get(wallet) || wallet;
@@ -390,7 +373,12 @@ export default function AssetList() {
               <td>
                 <SearchBox>
                   <img src={theme ? SearchWhite : SearchImg} alt="" />
-                  <input type="text" placeholder="sns" />
+                  <input
+                    type="text"
+                    placeholder={t('application.SearchTargetUserHint')}
+                    onKeyUp={(e) => onKeyUp(e, 'target')}
+                    onChange={onChangeTargetKey}
+                  />
                 </SearchBox>
               </td>
 
@@ -404,7 +392,6 @@ export default function AssetList() {
                   placeholder={t('application.SelectAsset')}
                   onChange={(value: any) => {
                     setSelectAsset(value?.value);
-                    setSelectMap({});
                     setPage(1);
                   }}
                 />
@@ -417,7 +404,6 @@ export default function AssetList() {
                   placeholder={t('application.Season')}
                   onChange={(value: any) => {
                     setSelectSeason(value?.value);
-                    setSelectMap({});
                     setPage(1);
                   }}
                 />
@@ -425,7 +411,7 @@ export default function AssetList() {
               <td>
                 <SearchBox style={{ maxWidth: '200px' }}>
                   <img src={theme ? SearchWhite : SearchImg} alt="" />
-                  <input type="text" placeholder="sns" />
+                  <input type="text" placeholder={t('application.SearchApplicantHint')} />
                 </SearchBox>
               </td>
               <td>
@@ -436,23 +422,15 @@ export default function AssetList() {
                   placeholder={t('application.BudgetSource')}
                   onChange={(value: any) => {
                     setSelectSource({ id: value?.value as number, type: value?.data });
-                    setSelectMap({});
                     setPage(1);
                   }}
                 />
               </td>
               <td>
-                <Select
-                  menuPortalTarget={document.body}
-                  width="100%"
-                  options={applicants}
-                  placeholder={t('application.Operator')}
-                  onChange={(value: any) => {
-                    setSelectApplicant(value?.value);
-                    setSelectMap({});
-                    setPage(1);
-                  }}
-                />
+                <SearchBox>
+                  <img src={theme ? SearchWhite : SearchImg} alt="" />
+                  <input type="text" placeholder={t('application.SearchDetailHint')} />
+                </SearchBox>
               </td>
               <td>
                 <Select
@@ -462,7 +440,6 @@ export default function AssetList() {
                   placeholder={t('Project.State')}
                   onChange={(value: any) => {
                     setSelectStatus(value?.value as ApplicationStatus);
-                    setSelectMap({});
                     setPage(1);
                   }}
                 />

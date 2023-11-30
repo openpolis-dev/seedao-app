@@ -399,7 +399,9 @@
     "RequiredWallet": "SNS/地址错误",
     "SNSError": "SNS错误",
     "RepeatProposal": "重复的提案链接",
-    "SelectRole": "请选择角色"
+    "SelectRole": "请选择角色",
+    "SnsNotFound": "无效的SNS",
+    "InvalidAddress": "无效的地址"
   },
   "event": {
     "events": "活动",
@@ -474,8 +476,11 @@
     "Operation": "操作",
     "Detail": "详情",
     "SelectAsset": "所有资产类型",
-    "AllAssets": "所有资产类型"
-    },
+    "AllAssets": "所有资产类型",
+    "SearchTargetUserHint": "SNS",
+    "SearchApplicantHint": "SNS",
+    "SearchDetailHint": "事项"
+  },
   "members": {
     "RemoveTitle": "移除成员",
     "AddTitle": "添加成员",

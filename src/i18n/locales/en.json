@@ -399,7 +399,9 @@
     "RequiredWallet": "Required SNS/address",
     "SNSError": "SNS error",
     "RepeatProposal": "Repeated proposal",
-    "SelectRole": "Required role"
+    "SelectRole": "Required role",
+    "SnsNotFound": "SNS Not Found",
+    "InvalidAddress": "Invalid Address"
   },
   "event": {
     "events": "Events",
@@ -474,7 +476,10 @@
     "Operation": "Operation",
     "Detail": "Detail",
     "SelectAsset": "All Asset Types",
-    "AllAssets": "All Assets Types"
+    "AllAssets": "All Assets Types",
+    "SearchTargetUserHint": "SNS",
+    "SearchApplicantHint": "SNS",
+    "SearchDetailHint": "Content"
   },
   "members": {
     "RemoveTitle": "Remove Member",
