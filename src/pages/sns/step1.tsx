@@ -327,7 +327,7 @@ const StatusTag = styled.span`
   border-radius: 3px;
   line-height: 20px;
   padding-inline: 8px;
-  font-size: 9px;
+  font-size: 12px;
   font-weight: 400;
   text-align: center;
 `;

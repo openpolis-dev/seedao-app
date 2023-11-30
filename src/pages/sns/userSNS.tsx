@@ -129,7 +129,6 @@ const ContainerWrapper = styled.div`
 
 const CurrentUsed = styled.div`
   font-size: 14px;
-  font-family: Poppins, Poppins;
   font-weight: 400;
   color: var(--bs-primary);
   line-height: 68px;
