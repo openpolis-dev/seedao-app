@@ -7,6 +7,7 @@ import { useState, FormEvent, useEffect, useMemo } from 'react';
 import DeleteIcon from 'assets/Imgs/delete.svg';
 import AddIcon from 'assets/Imgs/dark/add.svg';
 import { AssetName } from 'utils/constant';
+import VaultSVGIcon from 'components/svgs/vault';
 
 interface IProps {
   updateList: (data: IExcelObj[]) => void;
@@ -103,6 +104,7 @@ const CustomTable = ({ updateList }: IProps) => {
                   style={{ width: '368px' }}
                   value={item.address}
                   onChange={(e) => handleInput(e, index, 'address')}
+                  placeholder={t('application.RegisterAddressHint')}
                 />
               </td>
               <td style={{ width: '120px' }}>
@@ -140,11 +142,14 @@ const CustomTable = ({ updateList }: IProps) => {
       </table>
       <TotalAsset>
         <LeftAssets>
+          <VaultSVGIcon />
           <span>{t('Assets.Total')}</span>
-          <span className="value">{totalAssets[0]}</span>
-          <span>{AssetName.Token}</span>
-          <span className="value">{totalAssets[1]}</span>
-          <span>{AssetName.Credit}</span>
+          <span className="value">
+            {totalAssets[0]} {AssetName.Token}
+          </span>
+          <span className="value">
+            {totalAssets[1]} {AssetName.Credit}
+          </span>
         </LeftAssets>
         <Button variant="primary" onClick={addOne} style={{ height: '36px' }}>
           <img src={AddIcon} alt="" /> {t('Assets.RegisterAdd')}
@@ -226,20 +231,17 @@ const AssetSelect = styled(Select)`
 `;
 
 const TotalAsset = styled.div`
-  display: flex;
-  justify-content: space-between;
-  background-color: var(--table-header);
   padding: 19px 32px;
 `;
 
 const LeftAssets = styled.div`
   line-height: 36px;
   color: var(--bs-body-color_active);
+  gap: 10px;
   display: flex;
-  gap: 8px;
-  .value {
-    font-size: 20px;
-    font-family: Poppins-SemiBold, Poppins;
-    font-weight: 600;
+  align-items: center;
+  font-size: 14px;
+  svg {
+    margin-right: -2px;
   }
 `;

@@ -17,6 +17,7 @@ import { ethers } from 'ethers';
 import sns from '@seedao/sns-js';
 import { AssetName } from 'utils/constant';
 import { getAvailiableProjectsAndGuilds } from 'requests/applications';
+import BackerNav from 'components/common/backNav';
 
 type ErrorDataType = {
   line: number;
@@ -194,16 +195,9 @@ export default function Register() {
     }
   };
 
-  const togo = () => {
-    navigate(-1);
-  };
-
   return (
     <OuterBox>
-      <BackBox onClick={() => togo()}>
-        <BackIconSVG />
-        <span>{t('Assets.RegisterTitle')}</span>
-      </BackBox>
+      <BackerNav to="/assets" title={t('Assets.Apply')} />
       <SectionBlock>
         <div className="title">{t('Assets.RegisterSelect')}</div>
         <SourceSelect
@@ -255,7 +249,7 @@ const OuterBox = styled.div`
 `;
 
 const SectionBlock = styled.section`
-  margin-top: 20px;
+  margin-top: 40px;
   position: relative;
   .title {
     margin-bottom: 16px;
@@ -271,20 +265,6 @@ const SectionBlock = styled.section`
 const ButtonSection = styled(SectionBlock)`
   button {
     width: 120px;
-  }
-`;
-
-const BackBox = styled.div`
-  padding: 10px 0 20px;
-  display: inline-flex;
-  align-items: center;
-  color: var(--bs-svg-color);
-  gap: 20px;
-  font-family: Poppins-SemiBold;
-  font-weight: 600;
-  cursor: pointer;
-  &:hover {
-    color: var(--bs-svg-color);
   }
 `;
 

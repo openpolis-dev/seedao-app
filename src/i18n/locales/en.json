@@ -330,7 +330,7 @@
     "Total": "Total",
     "Export": "Export",
     "record": "资产发放记录",
-    "apply": "申请资产发放"
+    "Apply": "申请资产发放"
   },
   "My": {
     "MyProfile": "My Profile",
@@ -452,6 +452,7 @@
     "Time": "Time",
     "TotalAssets": "Total Assets",
     "RegisterNote": "Note",
+    "RegisterAddressHint": "SNS/Address",
     "RegisterSource": "Project / Guild",
     "Operator": "Operator",
     "Receiver": "Receiver",

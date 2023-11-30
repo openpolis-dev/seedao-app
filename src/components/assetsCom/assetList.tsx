@@ -375,7 +375,7 @@ export default function AssetList() {
           <dt>
             <img src={theme ? ApplyWhite : ApplyImg} alt="" />
           </dt>
-          <dd>{t('Assets.apply')}</dd>
+          <dd>{t('Assets.Apply')}</dd>
         </dl>
         <dl onClick={() => openRank()}>
           <dt>
