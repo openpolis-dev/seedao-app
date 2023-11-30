@@ -2,12 +2,13 @@ import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
 import { IExcelObj } from 'type/project.type';
 import Select from 'components/common/select';
-import { Button, Form } from 'react-bootstrap';
+import { Form } from 'react-bootstrap';
 import { useState, FormEvent, useEffect, useMemo } from 'react';
 import DeleteIcon from 'assets/Imgs/delete.svg';
 import AddIcon from 'assets/Imgs/dark/add.svg';
 import { AssetName } from 'utils/constant';
 import VaultSVGIcon from 'components/svgs/vault';
+import { PrimaryOutlinedButton } from 'components/common/button';
 
 interface IProps {
   updateList: (data: IExcelObj[]) => void;
@@ -140,6 +141,11 @@ const CustomTable = ({ updateList }: IProps) => {
           ))}
         </tbody>
       </table>
+      <AddBox>
+        <AddButton onClick={addOne}>
+          <img src={AddIcon} alt="" /> {t('Assets.RegisterAdd')}
+        </AddButton>
+      </AddBox>
       <TotalAsset>
         <LeftAssets>
           <VaultSVGIcon />
@@ -151,9 +157,6 @@ const CustomTable = ({ updateList }: IProps) => {
             {totalAssets[1]} {AssetName.Credit}
           </span>
         </LeftAssets>
-        <Button variant="primary" onClick={addOne} style={{ height: '36px' }}>
-          <img src={AddIcon} alt="" /> {t('Assets.RegisterAdd')}
-        </Button>
       </TotalAsset>
     </Box>
   );
@@ -213,14 +216,12 @@ const DeleteImg = styled.img`
   top: 4px;
 `;
 
-export const AddButton = styled.button<{ long?: boolean }>`
+const AddBox = styled.div`
+  text-align: center;
+`;
+
+export const AddButton = styled(PrimaryOutlinedButton)<{ long?: boolean }>`
   height: 36px;
-  background: var(--home-right);
-  border-radius: 8px;
-  color: var(--bs-body-color_active);
-  border: 1px solid var(--bs-border-color);
-  padding-inline: 10px;
-  font-size: 14px;
   img {
     margin-right: 8px;
   }
@@ -231,7 +232,7 @@ const AssetSelect = styled(Select)`
 `;
 
 const TotalAsset = styled.div`
-  padding: 19px 32px;
+  padding-inline: 32px;
 `;
 
 const LeftAssets = styled.div`

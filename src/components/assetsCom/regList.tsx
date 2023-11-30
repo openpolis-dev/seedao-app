@@ -10,7 +10,6 @@ import NoItem from 'components/noItem';
 import { AddButton } from './customTable';
 import TableIconSVG from 'components/svgs/table';
 import AddIcon from 'assets/Imgs/dark/add.svg';
-import AddIconLight from 'assets/Imgs/light/add.svg';
 import DownloadIconSVG from 'components/svgs/download';
 import { getTemplateFileUrl } from 'requests/applications';
 
@@ -117,7 +116,7 @@ export default function RegList({ list, setList }: IProps) {
               <EmptyBox />
               <OptionBox>
                 <AddButton onClick={onClickAdd} long={true}>
-                  <img src={theme ? AddIcon : AddIconLight} alt="" />
+                  <img src={AddIcon} alt="" />
                   {t('Assets.RegisterAdd')}
                 </AddButton>
                 <BtnBox htmlFor="fileUpload" onChange={(e) => updateFile(e)}>
@@ -216,7 +215,7 @@ const OptionBox = styled.div`
 `;
 
 const BtnBox = styled.label`
-  height: 34px;
+  height: 36px;
   box-sizing: border-box;
   color: var(--bs-primary);
   text-align: center;

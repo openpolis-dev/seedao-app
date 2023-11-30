@@ -10,8 +10,7 @@ import useToast, { ToastType } from 'hooks/useToast';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import { ContainerPadding } from 'assets/styles/global';
 import Select from 'components/common/select';
-import BackIconSVG from 'components/svgs/back';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
 import { ethers } from 'ethers';
 import sns from '@seedao/sns-js';
@@ -197,7 +196,7 @@ export default function Register() {
 
   return (
     <OuterBox>
-      <BackerNav to="/assets" title={t('Assets.Apply')} />
+      <BackerNav to="/assets" title={t('Assets.Apply')} mb="0" />
       <SectionBlock>
         <div className="title">{t('Assets.RegisterSelect')}</div>
         <SourceSelect
