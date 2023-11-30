@@ -20,7 +20,7 @@ import useBudgetSource from 'hooks/useBudgetSource';
 import BackerNav from 'components/common/backNav';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import { ContainerPadding } from 'assets/styles/global';
-import ApplicationStatusTag from 'components/common/applicationStatusTag';
+import ApplicationStatusTag from 'components/common/applicationStatusTagNew';
 import useApplicants from 'hooks/useApplicants';
 import { formatApplicationStatus } from 'utils';
 
@@ -101,7 +101,7 @@ export default function Register() {
   const [selectState, setSelectState] = useState<ApplicationStatus>();
   // season
   const seasons = useSeasons();
-  const [selectSeason, setSelectSeason] = useState<number>();
+  const selectSeason = seasons.length ? seasons[seasons.length - 1].value : undefined;
 
   const [showMore, setShowMore] = useState<IApplicationDisplay[]>();
   const [showBundleId, setShowBundleId] = useState<number>();
@@ -186,7 +186,7 @@ export default function Register() {
   };
 
   useEffect(() => {
-    getRecords();
+    selectSeason && getRecords();
   }, [selectState, selectApplicant, selectSource, selectSeason, page, pageSize]);
 
   const formatSNS = (wallet: string) => {
@@ -260,23 +260,6 @@ export default function Register() {
                 }}
               />
             </li>
-            <li>
-              <div className="tit">{t('application.Season')}</div>
-              <TimeBox>
-                <BorderBox>
-                  <Select
-                    width="90px"
-                    options={seasons}
-                    placeholder=""
-                    NotClear={true}
-                    onChange={(value: any) => {
-                      setSelectSeason(value?.value);
-                      setPage(1);
-                    }}
-                  />
-                </BorderBox>
-              </TimeBox>
-            </li>
           </TopLine>
 
           <TableBox>
@@ -285,20 +268,21 @@ export default function Register() {
                 <table className="table" cellPadding="0" cellSpacing="0">
                   <thead>
                     <tr>
-                      <th className="center">{t('application.RegisterSource')}</th>
+                      <th className="center">{t('application.BudgetSource')}</th>
                       <th className="center">{t('application.TotalAssets')}</th>
                       <th>{t('application.State')}</th>
-                      <th>{t('application.RegisterNote')}</th>
+                      <th>{t('application.ApplyIntro')}</th>
                       <th className="center">{t('application.Operator')}</th>
-                      <th className="center">{t('application.Season')}</th>
-                      <th className="center">{t('application.Time')}</th>
+                      <th className="center">{t('application.ApplyTime')}</th>
                       <th>&nbsp;</th>
                     </tr>
                   </thead>
                   <tbody>
                     {list.map((item) => (
                       <tr key={item.id}>
-                        <td className="center">{item.entity.name}</td>
+                        <td className="center">
+                          <CommentBox>{item.entity.name}</CommentBox>
+                        </td>
                         <td className="center">
                           <TotalAssets>
                             {item.assets_display.map((asset, idx) => (
@@ -313,7 +297,6 @@ export default function Register() {
                           <CommentBox>{item.comment}</CommentBox>
                         </td>
                         <td className="center">{formatSNS(item.applicant)}</td>
-                        <td className="center">{item.season_name}</td>
                         <td className="center">{item.created_date}</td>
                         <td>
                           <TotalCountButton

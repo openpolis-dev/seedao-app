@@ -454,6 +454,7 @@
     "RegisterNote": "Note",
     "RegisterAddressHint": "SNS/Address",
     "RegisterSource": "Project / Guild",
+    "ApplyIntro": "Apply intro",
     "Operator": "Operator",
     "Receiver": "Receiver",
     "Auditor": "Auditor",
