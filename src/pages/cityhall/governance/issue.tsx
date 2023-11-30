@@ -178,7 +178,7 @@ export default function Issued() {
   }, [selectStatus]);
 
   const handleExport = async () => {
-    // window.open(requests.application.getExportFileUrl(), '_blank');
+    window.open(requests.application.getExportFileUrlFromVault({ state: selectStatus }), '_blank');
   };
 
   const showProcessButton = () => {
