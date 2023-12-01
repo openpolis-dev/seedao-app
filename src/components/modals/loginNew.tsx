@@ -34,11 +34,11 @@ export default function LoginModal({ showModal }: any) {
   const walletconnect_provider = useEthersProvider({ chainId: chain });
   const isInstalled = useCheckInstallPWA();
 
-  const handleProvider = () => {
+  const handleProvider = (checkProvider = true) => {
     let type = localStorage.getItem(SELECT_WALLET);
     let walletType = type as Wallet;
 
-    if (provider) return;
+    if (checkProvider && provider) return;
     if (walletType === Wallet.METAMASK_INJECTED && window.ethereum) {
       // metamask
       const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -66,14 +66,17 @@ export default function LoginModal({ showModal }: any) {
 
   useEffect(() => {
     if (!window.ethereum) return;
+    const handleProviderEvents = () => {
+      handleProvider(false);
+    };
     const initProvider = async () => {
       const { ethereum } = window as any;
-      ethereum?.on('chainChanged', handleProvider);
+      ethereum?.on('chainChanged', handleProviderEvents);
     };
     initProvider();
     return () => {
       const { ethereum } = window as any;
-      ethereum?.removeListener('chainChanged', handleProvider);
+      ethereum?.removeListener('chainChanged', handleProviderEvents);
     };
   });
 
