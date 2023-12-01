@@ -16,6 +16,7 @@ import { AssetName } from 'utils/constant';
 import { formatNumber } from 'utils/number';
 import ApplicationModal from 'components/modals/applicationModal';
 import VaultSVGIcon from 'components/svgs/vault';
+import { PinkButton } from 'components/common/button';
 
 interface IProps {
   bund_id: number;
@@ -175,9 +176,9 @@ export default function ExpandTable({
             >
               {t('city-hall.Pass')}
             </Button>
-            <Button variant="outline-primary" onClick={handleReject} disabled={status !== ApplicationStatus.Open}>
+            <PinkButton onClick={handleReject} disabled={status !== ApplicationStatus.Open}>
               {t('city-hall.Reject')}
-            </Button>
+            </PinkButton>
           </OperateBox>
         </ContentBox>
       ) : (
@@ -225,12 +226,14 @@ const ContentBox = styled.div`
 
 const OperateBox = styled.div`
   display: flex;
-  gap: 18px;
-  margin-top: 32px;
+  gap: 10px;
+  margin-top: 24px;
   margin-bottom: 20px;
   button {
-    height: 40px;
-    min-width: 120px;
+    height: 34px;
+    line-height: 34px;
+    width: 80px;
+    padding-block: 0;
     &.btn-outline-primary {
       background-color: transparent;
       color: #ff7193;
@@ -268,6 +271,7 @@ const TotalAssets = styled.div`
   width: 100%;
   height: 54px;
   background: var(--table-header);
+  font-size: 14px;
   .value {
     color: #ff1c52;
     font-size: 14px;
@@ -276,13 +280,16 @@ const TotalAssets = styled.div`
 
 const MoreInfo = styled.div`
   color: var(--bs-body-color_active);
-  margin-top: 6px;
+  margin-top: 24px;
+  font-size: 14px;
 `;
 
-const MoreInfoTitle = styled.div``;
+const MoreInfoTitle = styled.div`
+  font-family: Poppins-Medium;
+`;
 
 const MoreInfoDesc = styled.div`
-  font-size: 12px;
+  margin-top: 8px;
 `;
 
 const MoreButton = styled.div`
