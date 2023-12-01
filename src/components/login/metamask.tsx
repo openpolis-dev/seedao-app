@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { ethers } from 'ethers';
 import { createSiweMessage } from '../../utils/sign';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import ReactGA from 'react-ga4';
 import requests from '../../requests';
 import { AppActionType, useAuthContext } from '../../providers/authProvider';
@@ -19,6 +19,7 @@ import getConfig from 'utils/envCofnig';
 const network = getConfig().NETWORK;
 
 export default function Metamask() {
+  const { pathname } = useLocation();
   const navigate = useNavigate();
   const { dispatch } = useAuthContext();
 
@@ -90,7 +91,9 @@ export default function Metamask() {
 
   useEffect(() => {
     if (!result) return;
-    navigate('/home');
+    if (!pathname.includes('/sns')) {
+      navigate('/home');
+    }
   }, [result]);
 
   const LoginTo = async () => {
