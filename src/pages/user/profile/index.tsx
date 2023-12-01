@@ -5,7 +5,6 @@ import { useAuthContext } from 'providers/authProvider';
 import { useTranslation } from 'react-i18next';
 import useToast from 'hooks/useToast';
 import { ContainerPadding } from 'assets/styles/global';
-import useParseSNS from 'hooks/useParseSNS';
 import CopyBox from 'components/copy';
 import GithubImg from '../../../assets/Imgs/profile/Github2.svg';
 import TwitterIcon from '../../../assets/Imgs/profile/Twitter.svg';
@@ -18,6 +17,12 @@ import { Link } from 'react-router-dom';
 import CopyIconSVG from '../../../assets/Imgs/copy.svg';
 import defaultImg from '../../../assets/Imgs/defaultAvatar.png';
 import PublicJs from '../../../utils/publicJs';
+import LevelImg from '../../../assets/Imgs/profile/level.svg';
+import SeedImg from '../../../assets/Imgs/profile/seed.svg';
+import SbtImg from '../../../assets/Imgs/profile/sbt.svg';
+
+import SeedList from '../../../components/profile/seed';
+import Sbt from '../../../components/profile/Sbt';
 
 const OuterBox = styled.div`
   margin-bottom: 50px;
@@ -26,10 +31,14 @@ const OuterBox = styled.div`
 `;
 
 const HeadBox = styled.div`
-  position: relative;
   display: flex;
-  align-items: center;
-  margin-bottom: 40px;
+  align-items: flex-start;
+  justify-content: space-between;
+  background: var(--bs-box--background);
+  margin-bottom: 24px;
+  padding: 20px 24px 5px;
+  border-radius: 16px;
+  box-shadow: var(--box-shadow);
 `;
 const AvatarBox = styled.div`
   display: flex;
@@ -46,9 +55,8 @@ const AvatarBox = styled.div`
 
 export default function Profile() {
   const {
-    state: { userData },
+    state: { userData, sns },
   } = useAuthContext();
-  // const sns = useParseSNS(userData?.wallet);
   const { t } = useTranslation();
   const { Toast, showToast } = useToast();
   const [userName, setUserName] = useState<string | undefined>('');
@@ -60,24 +68,55 @@ export default function Profile() {
   const [sbt, setSbt] = useState<any[]>([]);
   const [seed, setSeed] = useState<any[]>([]);
   const [wallet, setWallet] = useState();
-  const [sns, setSns] = useState('');
   const [detail, setDetail] = useState<any>();
   const [sbtList, setSbtList] = useState<any[]>([]);
+  const [sbtArr, setSbtArr] = useState<any[]>([]);
 
   useEffect(() => {
-    if (!seed.length) return;
+    if (!seed?.length) return;
     setList([]);
     setSbtList([]);
-    seed?.map(async (seedItem: any) => {
-      let url = await PublicJs.getImage(seedItem.image_uri);
-      setList((list) => [...list, { ...seedItem, url }]);
-    });
 
-    sbt?.map(async (item: any) => {
-      let url = await PublicJs.getImage(item.image_uri);
-      setSbtList((list) => [...list, { ...item, url }]);
-    });
+    const getSeed = async () => {
+      let arr = [];
+      for (let i = 0; i < seed.length; i++) {
+        let seedItem = seed[i];
+        let url = await PublicJs.getImage(seedItem.image_uri);
+        arr.push({ ...seedItem, url });
+      }
+      setList([...arr]);
+    };
+    getSeed();
+
+    const getSbt = async () => {
+      let arr = [];
+      for (let i = 0; i < sbt.length; i++) {
+        let item = sbt[i];
+        let url = await PublicJs.getImage(item.image_uri);
+        arr.push({ ...item, url });
+      }
+      setSbtList([...arr]);
+    };
+    getSbt();
   }, [seed, sbt]);
+  useEffect(() => {
+    if (!sbtList?.length) return;
+
+    const sbtFor = sbtList.filter((item: any) => item.name && item.image_uri);
+
+    const groupedData = sbtFor.reduce((result: any, item: any) => {
+      const key = item?.metadata?.properties?.category ? item?.metadata?.properties?.category : 'others';
+      const group = result?.find((group: any) => group.category === key);
+
+      if (group) {
+        group.tokens.push(item);
+      } else {
+        result.push({ category: key, tokens: [item] });
+      }
+      return result;
+    }, []);
+    setSbtArr(groupedData);
+  }, [sbtList]);
 
   const getDetail = async () => {
     if (userData) {
@@ -87,7 +126,6 @@ export default function Profile() {
       let avarUrl = await PublicJs.getImage(detail?.avatar);
       setAvatar(avarUrl!);
       setWallet(detail.wallet);
-      setSns(detail.sns);
       setBio(detail.bio);
       setRoles(detail.roles!);
 
@@ -102,13 +140,7 @@ export default function Profile() {
   useEffect(() => {
     if (!userData) return;
     getDetail();
-  }, []);
-
-  useEffect(() => {
-    if (!userData) return;
-    console.error(userData);
-    getDetail();
-  }, [userData, (userData as any)?.data?.sns]);
+  }, [userData]);
 
   const switchRoles = (role: string) => {
     let str: string = '';
@@ -185,6 +217,7 @@ export default function Profile() {
     }
     return str;
   };
+
   const removeUrl = () => {
     setAvatar('');
   };
@@ -226,125 +259,130 @@ export default function Profile() {
     }
   };
 
-  const AddressToShow = (address: string) => {
-    if (!address) return '';
-    const frontStr = address.substring(0, 16);
-    const afterStr = address.substring(address.length - 4, address.length);
-    return `${frontStr}...${afterStr}`;
-  };
-
   return (
     <OuterBox>
       {Toast}
-      <>
-        <TitleBox>{t('My.MyProfile')}</TitleBox>
-        <HeadBox>
+      {/*<TitleBox>{t('My.MyProfile')}</TitleBox>*/}
+      <HeadBox>
+        <LftBox>
           <AvatarBox>
             <ImgBox>
               <img src={avatar ? avatar : defaultImg} alt="" />
             </ImgBox>
           </AvatarBox>
           <InfoBox>
-            <div className="userName">{userName}</div>
-            {!!sns && (
-              <div className="wallet btm8">
-                <span>{sns || '-'}</span>
-                <CopyBox text={sns || ''} dir="left">
-                  <img src={CopyIconSVG} alt="" />
-                </CopyBox>
-              </div>
-            )}
-
-            <div className="wallet">
-              <span>{AddressToShow(wallet!)}</span>
-              {wallet && (
-                <CopyBox text={wallet!} dir="right">
-                  <img src={CopyIconSVG} alt="" />
-                </CopyBox>
+            <div>
+              <div className="userName">{userName}</div>
+              {!!sns && (
+                <div className="wallet btm8">
+                  <span>{sns || '-'}</span>
+                  <CopyBox text={sns || ''} dir="left">
+                    <img src={CopyIconSVG} alt="" />
+                  </CopyBox>
+                </div>
               )}
+
+              <div className="wallet">
+                <span>{wallet}</span>
+                {wallet && (
+                  <CopyBox text={wallet!} dir="right">
+                    <img src={CopyIconSVG} alt="" />
+                  </CopyBox>
+                )}
+              </div>
             </div>
+            {!!bio && (
+              <BioBox>
+                {/*<div className="title">{t('My.Bio')}</div>*/}
+                <div>{bio || '-'}</div>
+              </BioBox>
+            )}
+            <TagBox>
+              {roles?.map((item, index) => (
+                <li key={`tag_${index}`}>{switchRoles(item)}</li>
+              ))}
+            </TagBox>
           </InfoBox>
+        </LftBox>
+        <RhtBox>
           <EditButton to="/user/profile/edit">
             <Button variant="primary">{t('general.edit')}</Button>
           </EditButton>
-        </HeadBox>
-        {!!bio && (
-          <BioBox>
-            <div className="title">{t('My.Bio')}</div>
-            <div>{bio || '-'}</div>
-          </BioBox>
-        )}
+          <LinkBox>
+            {detail?.social_accounts?.map((item: any, index: number) =>
+              returnSocial(item.network, item.identity) ? (
+                <li key={`sbtInner_${index}`}>
+                  <span className="iconLft">{returnSocial(item.network, item.identity)}</span>
+                </li>
+              ) : null,
+            )}
+            {detail?.email && (
+              <li>
+                <span className="iconLft">{returnSocial('email', detail?.email)}</span>
+              </li>
+            )}
+          </LinkBox>
+        </RhtBox>
+      </HeadBox>
 
-        <TagBox>
-          {roles?.map((item, index) => (
-            <li key={`tag_${index}`}>{switchRoles(item)}</li>
-          ))}
-        </TagBox>
-        <LinkBox>
-          {detail?.social_accounts?.map((item: any, index: number) =>
-            returnSocial(item.network, item.identity) ? (
-              <li key={`sbtInner_${index}`}>
-                <span className="iconLft">{returnSocial(item.network, item.identity)}</span>
-              </li>
-            ) : null,
-          )}
-          {detail?.email && (
-            <li>
-              <span className="iconLft">{returnSocial('email', detail?.email)}</span>
-            </li>
-          )}
-        </LinkBox>
-        <>
-          <ProgressOuter>
-            <div>
-              <Crt>
-                <div>{t('My.current')}</div>
-                <div className="num">{detail?.level?.upgrade_percent}%</div>
-              </Crt>
-              <ProgressBox width={detail?.level?.upgrade_percent ? detail?.level?.upgrade_percent : 0}>
-                <div className="inner" />
-              </ProgressBox>
-              <TipsBox>
-                <div>{t('My.nextLevel')}</div>
-                <div className="scr">{formatNumber(detail?.level?.scr_to_next_lv)} SCR</div>
-              </TipsBox>
-            </div>
-            <FstLine>
-              <LevelBox>
-                {t('My.level')} {detail?.level?.current_lv}
-              </LevelBox>
-              <SCRBox>{formatNumber(detail?.scr?.amount)} SCR</SCRBox>
-            </FstLine>
-          </ProgressOuter>
-          <NftBox>
-            {!!list?.length && (
-              <li>
-                <div className="title">SEED</div>
-                <div className="ul">
-                  {list?.map((item, index) => (
-                    <div key={index} className="li">
-                      {' '}
-                      <img src={item.url} alt="" />
-                    </div>
-                  ))}
-                </div>
-              </li>
-            )}
-            {!!sbtList?.length && (
-              <li>
-                <div className="title">SBT</div>
-                <div className="ul">
-                  {sbtList?.map((item, index) => (
-                    <div key={index} className="li">
-                      <img src={item.url} alt="" />
-                    </div>
-                  ))}
-                </div>
-              </li>
-            )}
-          </NftBox>
-        </>
-      </>
+      <ProgressOuter>
+        <TitleLft>
+          <img src={LevelImg} alt="" />
+          <span>{t('My.level')}</span>
+        </TitleLft>
+        <LevelBox>LV{detail?.level?.current_lv}</LevelBox>
+        <LevelInfo>
+          <span>
+            {t('My.current')} {formatNumber(detail?.scr?.amount)} SCR
+          </span>
+          <span>{t('My.levelTips', { level: Number(detail?.level?.current_lv) + 1 })}</span>
+          <span>{formatNumber(detail?.level?.scr_to_next_lv)} SCR</span>
+        </LevelInfo>
+      </ProgressOuter>
+      <BgBox>
+        <TitleLft>
+          <img src={SeedImg} alt="" />
+          <span>SEED</span>
+        </TitleLft>
+        <RhtBoxB>
+          <SeedList list={list} />
+        </RhtBoxB>
+      </BgBox>
+      <BgBox>
+        <TitleLft>
+          <img src={SbtImg} alt="" />
+          <span>SBT</span>
+        </TitleLft>
+        <RhtBoxB>
+          <Sbt list={sbtArr} />
+        </RhtBoxB>
+      </BgBox>
+
+      {/*<>*/}
+      {/*    {!!list?.length && (*/}
+      {/*      <>*/}
+      {/*        <div className="ul">*/}
+      {/*          {list?.map((item, index) => (*/}
+      {/*            <div key={index} className="li">*/}
+      {/*              <img src={item.url} alt="" />*/}
+      {/*            </div>*/}
+      {/*          ))}*/}
+      {/*        </div>*/}
+      {/*      </>*/}
+      {/*    )}*/}
+      {/*    {!!sbtList?.length && (*/}
+      {/*      <li>*/}
+      {/*        <div className="title">SBT</div>*/}
+      {/*        <div className="ul">*/}
+      {/*          {sbtList?.map((item, index) => (*/}
+      {/*            <div key={index} className="li">*/}
+      {/*              <img src={item.url} alt="" />*/}
+      {/*            </div>*/}
+      {/*          ))}*/}
+      {/*        </div>*/}
+      {/*      </li>*/}
+      {/*    )}*/}
+      {/*  </>*/}
     </OuterBox>
   );
 }
@@ -369,8 +407,10 @@ const ImgBox = styled.div`
     margin-right: 10px;
   }
   img {
-    max-width: 100%;
-    max-height: 100%;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
   }
   .del {
     display: none;
@@ -407,54 +447,25 @@ const InfoBox = styled.div`
     font-family: Poppins-SemiBold;
     font-weight: 600;
     line-height: 23px;
-    margin-bottom: 16px;
+    margin-bottom: 6px;
   }
   .wallet {
+    color: var(--bs-body-color_active);
     display: flex;
-    font-size: 14px;
+    font-size: 12px;
     span {
       margin-right: 10px;
     }
   }
   .btm8 {
-    margin-bottom: 8px;
   }
 `;
-
-const NftBox = styled.ul`
-  li {
-    margin-bottom: 40px;
-  }
-  .ul {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    flex-wrap: wrap;
-  }
-  .li {
-    width: 120px;
-    height: 120px;
-    margin: 0 24px 24px 0;
-  }
-  .title {
-    margin-bottom: 20px;
-    color: var(--bs-body-color_active);
-    font-size: 16px;
-  }
-  img {
-    width: 100%;
-
-    margin-bottom: 20px;
-    border-radius: 16px;
-  }
-`;
-
 const BioBox = styled.section`
-  margin: 20px 0 40px;
+  margin: 7px 0;
   color: var(--bs-body-color_active);
 
   width: 582px;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 400;
   line-height: 20px;
   .title {
@@ -469,66 +480,21 @@ const LinkBox = styled.ul`
   display: flex;
   margin-top: 40px;
   li {
-    margin-right: 16px;
+    margin-left: 16px;
   }
   .copy-content {
     display: inline-block;
   }
 `;
 
-const ProgressBox = styled.div<{ width: number | string }>`
-  width: 320px;
-  height: 12px;
-  background: rgba(255, 113, 147, 0.21);
-  border-radius: 10px;
-  overflow: hidden;
-  .inner {
-    height: 10px;
-    background: #ff7193;
-    width: ${(props) => props.width + '%'};
-    border-radius: 8px;
-  }
-`;
-
 const ProgressOuter = styled.div`
   display: flex;
-  align-items: flex-start;
-  margin: 44px 0;
-`;
-
-const FstLine = styled.div`
-  display: flex;
   align-items: center;
-  justify-content: space-between;
-  margin: 40px 0 0 12px;
-  color: var(--bs-body-color_active);
-`;
-
-const LevelBox = styled.div`
-  padding: 2px 10px;
-  border-radius: 7px;
-  text-transform: uppercase;
-  font-size: 12px;
-`;
-
-const SCRBox = styled.div`
-  font-size: 15px;
-  text-align: right;
-  font-weight: 700;
-`;
-const TipsBox = styled.div`
-  color: #b5b6c4;
-  margin-top: 10px;
-  font-size: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  color: var(--bs-body-color_active);
-  .scr {
-    margin-left: 8px;
-    font-size: 16px;
-    margin-bottom: -3px;
-  }
+  border-radius: 16px;
+  padding: 24px;
+  background: var(--bs-box--background);
+  box-shadow: var(--box-shadow);
+  margin-bottom: 24px;
 `;
 
 const TagBox = styled.ul`
@@ -536,7 +502,6 @@ const TagBox = styled.ul`
   flex-wrap: wrap;
   display: flex;
   font-weight: 400;
-  width: 600px;
   li {
     border-radius: 5px;
     padding-inline: 10px;
@@ -586,23 +551,74 @@ const TagBox = styled.ul`
 `;
 
 const EditButton = styled(Link)`
-  position: absolute;
-  right: 20px;
-  top: 0;
   .btn {
     padding: 10px 30px;
   }
 `;
 
-const Crt = styled.div`
+const TitleLft = styled.div`
   display: flex;
   align-items: center;
-  font-size: 12px;
-  color: var(--bs-body-color_active);
-  margin-bottom: 21px;
-  .num {
-    color: #ff7193;
-    font-size: 16px;
-    margin-left: 8px;
+  width: 100px;
+  flex-shrink: 0;
+  img {
+    width: 18px;
+    height: 18px;
+    margin-right: 12px;
   }
+  span {
+    font-family: 'Poppins-SemiBold';
+    font-size: 14px;
+    font-weight: 600;
+    color: #1a1323;
+    line-height: 18px;
+  }
+`;
+const LevelBox = styled.div`
+  font-size: 24px;
+  font-weight: normal;
+  line-height: 28px;
+  font-family: 'Poppins-Bold';
+  background: linear-gradient(90deg, #efbc80 0%, #ffda93 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-style: italic;
+  padding-right: 20px;
+`;
+const LevelInfo = styled.div`
+  font-size: 12px;
+  font-weight: 400;
+  color: #1a1323;
+  line-height: 16px;
+  span {
+    padding-right: 5px;
+  }
+`;
+const BgBox = styled.div`
+  background: var(--bs-box--background);
+  margin-bottom: 24px;
+  padding: 20px 24px;
+  border-radius: 16px;
+  box-shadow: var(--box-shadow);
+  display: flex;
+  align-items: center;
+`;
+const RhtBoxB = styled.div`
+  flex-grow: 1;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--bs-body-color_active);
+  line-height: 14px;
+`;
+const LftBox = styled.div`
+  flex-grow: 1;
+  display: flex;
+  align-items: flex-start;
+`;
+
+const RhtBox = styled.div`
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
 `;

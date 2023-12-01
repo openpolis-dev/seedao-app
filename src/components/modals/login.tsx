@@ -45,7 +45,7 @@ const LOGIN_WALLETS: LoginWallet[] = [
     type: WalletType.EOA,
   },
   {
-    name: 'Unipass',
+    name: 'UniPass',
     value: Wallet.UNIPASS,
     connector: uniPassWallet,
     iconURL: UnipassIcon,

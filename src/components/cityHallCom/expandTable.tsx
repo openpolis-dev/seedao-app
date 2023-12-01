@@ -3,8 +3,8 @@ import { useEffect, useState, useMemo } from 'react';
 import { IApplicationDisplay } from 'type/application.type';
 import NoItem from 'components/noItem';
 import { useTranslation } from 'react-i18next';
-import BackIconSVG from 'components/svgs/back';
-import ApplicationStatusTag from 'components/common/applicationStatusTag';
+import BackIcon from 'assets/Imgs/back.svg';
+import ApplicationStatusTag from 'components/common/applicationStatusTagNew';
 import { Button } from 'react-bootstrap';
 import requests from 'requests';
 import useToast, { ToastType } from 'hooks/useToast';
@@ -14,6 +14,9 @@ import useQuerySNS from 'hooks/useQuerySNS';
 import publicJs from 'utils/publicJs';
 import { AssetName } from 'utils/constant';
 import { formatNumber } from 'utils/number';
+import ApplicationModal from 'components/modals/applicationModal';
+import VaultSVGIcon from 'components/svgs/vault';
+import { PinkButton } from 'components/common/button';
 
 interface IProps {
   bund_id: number;
@@ -23,6 +26,7 @@ interface IProps {
   showLoading: (show: boolean) => void;
   status?: ApplicationStatus;
   applyIntro: string;
+  isProcessing: boolean;
 }
 
 export default function ExpandTable({
@@ -33,11 +37,13 @@ export default function ExpandTable({
   showLoading,
   status,
   applyIntro,
+  isProcessing,
 }: IProps) {
   const { t } = useTranslation();
   const { showToast } = useToast();
 
   const [snsMap, setSnsMap] = useState<Map<string, string>>(new Map());
+  const [detailDisplay, setDetailDisplay] = useState<IApplicationDisplay>();
 
   const { getMultiSNS } = useQuerySNS();
 
@@ -105,10 +111,13 @@ export default function ExpandTable({
 
   return (
     <TableBox>
+      {detailDisplay && (
+        <ApplicationModal application={detailDisplay} handleClose={() => setDetailDisplay(undefined)} snsMap={snsMap} />
+      )}
       <BackBox onClick={handleClose}>
-        <BackIcon>
-          <BackIconSVG />
-        </BackIcon>
+        <BackIconBox>
+          <img src={BackIcon} alt="" />
+        </BackIconBox>
         <span>{t('general.back')}</span>
       </BackBox>
       {list.length ? (
@@ -117,55 +126,60 @@ export default function ExpandTable({
             <thead>
               <tr>
                 <th>{t('application.Receiver')}</th>
-                <th className="center">{t('application.AddAssets')}</th>
+                <th className="right">{t('application.AddAssets')}</th>
                 <th className="center">{t('application.Season')}</th>
                 <th>{t('application.Content')}</th>
-                <th className="center">{t('application.BudgetSource')}</th>
-                <th className="center">{t('application.Operator')}</th>
-                <th>{t('application.State')}</th>
+                <th>{t('application.BudgetSource')}</th>
+                <th>{t('application.Operator')}</th>
+                <th className="center">{t('application.State')}</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
               {list.map((item) => (
                 <tr key={item.application_id}>
                   <td>{formatSNS(item.target_user_wallet?.toLocaleLowerCase())}</td>
-                  <td className="center">{item.asset_display}</td>
+                  <td className="right">{item.asset_display}</td>
                   <td className="center">{item.season_name}</td>
                   <td>
                     <BudgetContent>{item.detailed_type}</BudgetContent>
                   </td>
-                  <td className="center">{item.budget_source}</td>
+                  <td>{item.budget_source}</td>
+                  <td>{item.applicant_wallet && formatSNS(item.applicant_wallet?.toLocaleLowerCase())}</td>
                   <td className="center">
-                    {item.applicant_wallet && formatSNS(item.applicant_wallet?.toLocaleLowerCase())}
-                  </td>
-                  <td>
                     <ApplicationStatusTag status={item.status} />
+                  </td>
+                  <td className="center">
+                    <MoreButton onClick={() => setDetailDisplay(item)}>{t('application.Detail')}</MoreButton>
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
           <TotalAssets>
+            <VaultSVGIcon />
             <span>{t('Assets.Total')}</span>
-            <span className="value">{totalAssets[0]}</span>
-            <span>{AssetName.Token}</span>
-            <span className="value">{totalAssets[1]}</span>
-            <span>{AssetName.Credit}</span>
+            <span className="value">
+              {totalAssets[0]} {AssetName.Token}
+            </span>
+            <span className="value">
+              {totalAssets[1]} {AssetName.Credit}
+            </span>
           </TotalAssets>
           <MoreInfo>
-            <MoreInfoTitle>{t('application.RegisterNote')}</MoreInfoTitle>
+            <MoreInfoTitle>{t('application.ApplyIntro')}</MoreInfoTitle>
             <MoreInfoDesc>{applyIntro}</MoreInfoDesc>
           </MoreInfo>
           <OperateBox>
             <Button
               onClick={handleApprove}
-              disabled={status !== ApplicationStatus.Open && status !== ApplicationStatus.Rejected}
+              disabled={isProcessing || (status !== ApplicationStatus.Open && status !== ApplicationStatus.Rejected)}
             >
               {t('city-hall.Pass')}
             </Button>
-            <Button variant="outline-primary" onClick={handleReject} disabled={status !== ApplicationStatus.Open}>
+            <PinkButton onClick={handleReject} disabled={isProcessing || status !== ApplicationStatus.Open}>
               {t('city-hall.Reject')}
-            </Button>
+            </PinkButton>
           </OperateBox>
         </ContentBox>
       ) : (
@@ -190,20 +204,19 @@ const BackBox = styled.div`
   align-items: center;
   gap: 12px;
   cursor: pointer;
-  font-family: Poppins-SemiBold, Poppins;
-  font-weight: 600;
-  color: var(--bs-svg-color);
+  font-size: 14px;
+  color: var(--bs-body-color_active);
 `;
 
-const BackIcon = styled.span`
+const BackIconBox = styled.span`
   display: inline-block;
   width: 32px;
   height: 32px;
-  background-color: var(--bs-box-background);
+  border: 1px solid rgba(217, 217, 217, 0.5);
   border-radius: 8px;
   text-align: center;
-  svg {
-    margin-top: 8px;
+  img {
+    margin-top: 5px;
   }
 `;
 
@@ -214,12 +227,14 @@ const ContentBox = styled.div`
 
 const OperateBox = styled.div`
   display: flex;
-  gap: 18px;
-  margin-top: 32px;
+  gap: 10px;
+  margin-top: 24px;
   margin-bottom: 20px;
   button {
-    height: 40px;
-    min-width: 120px;
+    height: 34px;
+    line-height: 34px;
+    width: 80px;
+    padding-block: 0;
     &.btn-outline-primary {
       background-color: transparent;
       color: #ff7193;
@@ -247,24 +262,46 @@ const BudgetContent = styled.div`
 `;
 
 const TotalAssets = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
   line-height: 36px;
   color: var(--bs-body-color_active);
   display: flex;
   gap: 8px;
+  width: 100%;
+  height: 54px;
+  background: var(--table-header);
+  font-size: 14px;
   .value {
-    font-size: 20px;
-    font-family: Poppins-SemiBold, Poppins;
-    font-weight: 600;
+    color: #ff1c52;
+    font-size: 14px;
   }
 `;
 
 const MoreInfo = styled.div`
   color: var(--bs-body-color_active);
-  margin-top: 6px;
+  margin-top: 24px;
+  font-size: 14px;
 `;
 
-const MoreInfoTitle = styled.div``;
+const MoreInfoTitle = styled.div`
+  font-family: Poppins-Medium;
+`;
 
 const MoreInfoDesc = styled.div`
-  font-size: 12px;
+  margin-top: 8px;
+`;
+
+const MoreButton = styled.div`
+  padding-inline: 26px;
+  height: 34px;
+  line-height: 34px;
+  box-sizing: border-box;
+  display: inline-block;
+  background: var(--bs-box--background);
+  border-radius: 8px;
+  cursor: pointer;
+  border: 1px solid var(--bs-border-color);
+  font-size: 14px;
 `;

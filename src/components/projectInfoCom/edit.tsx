@@ -385,6 +385,7 @@ const BtmBox = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
+  min-width: 104px;
 `;
 
 const UlBox = styled.ul`

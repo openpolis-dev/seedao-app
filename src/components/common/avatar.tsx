@@ -12,16 +12,12 @@ export default function Avatar({ user }: { user?: IUser }) {
   const [avatar, setAvatar] = useState('');
 
   const {
-    state: { userData },
+    state: { sns: userSNS },
     dispatch,
   } = useAuthContext();
 
   useEffect(() => {
-    const { data } = userData as any;
-    if (!data) return;
-    data.sns = sns;
-
-    dispatch({ type: AppActionType.SET_USER_DATA, payload: userData });
+    dispatch({ type: AppActionType.SET_SNS, payload: sns });
   }, [sns]);
 
   useEffect(() => {
@@ -35,7 +31,7 @@ export default function Avatar({ user }: { user?: IUser }) {
   };
   return (
     <AvatarStyle>
-      <span>{sns || user?.name || PublicJs.AddressToShow(user?.wallet || '')}</span>
+      <span>{userSNS || user?.name || PublicJs.AddressToShow(user?.wallet || '')}</span>
       <img src={avatar || DefaultAvatar} alt="" />
     </AvatarStyle>
   );
@@ -49,5 +45,7 @@ const AvatarStyle = styled.div`
     width: 28px;
     height: 28px;
     border-radius: 50%;
+    object-fit: cover;
+    object-position: center;
   }
 `;

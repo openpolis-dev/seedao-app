@@ -19,12 +19,14 @@ import { ChevronDown, ChevronUp, Pencil } from 'react-bootstrap-icons';
 import { ContainerPadding } from 'assets/styles/global';
 import { Link } from 'react-router-dom';
 import BalanceIcon from 'assets/Imgs/vault/balance.png';
-import WalletIcon from 'assets/Imgs/vault/wallet.png';
-import ChainIcon from 'assets/Imgs/vault/chain.png';
-import SignerIcon from 'assets/Imgs/vault/signer.png';
-import CopyIconSVG from 'components/svgs/copy';
-import ShareIconSVG from 'components/svgs/share';
-import ArrowIconSVG from 'components/svgs/downArrow';
+import EthImg from 'assets/Imgs/vault/ethereum.svg';
+import PolygonImg from 'assets/Imgs/vault/polygon.svg';
+// import WalletIcon from 'assets/Imgs/vault/wallet.png';
+// import ChainIcon from 'assets/Imgs/vault/chain.png';
+// import SignerIcon from 'assets/Imgs/vault/signer.png';
+// import CopyIconSVG from 'components/svgs/copy';
+// import ShareIconSVG from 'components/svgs/share';
+// import ArrowIconSVG from 'components/svgs/downArrow';
 
 const BoxOuter = styled.div`
   ${ContainerPadding};
@@ -74,6 +76,7 @@ const FirstLine = styled.ul<{ border: string }>`
     font-size: 28px;
     font-family: Poppins-Medium, Poppins;
     font-weight: 500;
+    margin-bottom: 25px;
   }
   @media (max-width: 1100px) {
     .num {
@@ -104,24 +107,28 @@ const VAULTS = [
     address: '0x7FdA3253c94F09fE6950710E5273165283f8b283',
     chainId: CHAINS.ETH,
     id: 1,
+    icon: EthImg,
   },
   {
     name: 'Assets.CommunityVault',
     address: '0x4876eaD85CE358133fb80276EB3631D192196e24',
     chainId: CHAINS.Polygon,
     id: 2,
+    icon: PolygonImg,
   },
   {
     name: 'Assets.CityHallVault',
     address: '0x70F97Ad9dd7E1bFf40c3374A497a7583B0fAdd25',
     chainId: CHAINS.ETH,
     id: 3,
+    icon: EthImg,
   },
   {
     name: 'Assets.IncubatorVault',
     address: '0x444C1Cf57b65C011abA9BaBEd05C6b13C11b03b5',
     chainId: CHAINS.ETH,
     id: 4,
+    icon: EthImg,
   },
 ];
 
@@ -334,65 +341,32 @@ export default function Index() {
                 </div>
               </InfoItem>
               {/*<div className="right">*/}
-              <InfoItem>
-                <div>
-                  <IconStyle src={WalletIcon} alt="" />
-                </div>
-                <div className="info-right">
-                  <div className="title">{t('Assets.Wallet')}</div>
-                  <div className="num">4</div>
-                </div>
-              </InfoItem>
-              <InfoItem>
-                <div>
-                  <IconStyle src={SignerIcon} alt="" />
-                </div>
-                <div className="info-right">
-                  <div className="title">{t('Assets.MultiSign')}</div>
-                  <div className="num">{totalSigner}</div>
-                </div>
-              </InfoItem>
-              <InfoItem>
-                <div>
-                  <IconStyle src={ChainIcon} alt="" />
-                </div>
-                <div className="info-right">
-                  <div className="title">{t('Assets.Chain')}</div>
-                  <div className="num">2</div>
-                </div>
-              </InfoItem>
-              <OptionBox>
-                <Link to="/assets/register">
-                  <Button style={{ height: '36px' }}>{t('application.Register')}</Button>
-                </Link>
-                <DetailButton onClick={() => setShowVaultDetail(!showVaultDetail)}>
-                  <span>{t('Assets.Detail')}</span>
-                  <ArrowIconSVG style={{ transform: showVaultDetail ? 'rotate(180deg)' : 'unset' }} />
-                </DetailButton>
-              </OptionBox>
-              {/*</div>*/}
-            </div>
-            {showVaultDetail && (
+
               <VaultInfo>
                 {VAULTS.map((v) => (
                   <VaultItem key={v.address}>
                     <div className="info-left">
                       <span className="name">
-                        <DotIcon />
                         <span>{t(v.name as any)}</span>
                       </span>
+                      <div className="balance">
+                        <span> ${formatNumber(Number(vaultsMap[v.id]?.balance || 0.0))}</span>
+                        <a
+                          href={`https://app.safe.global/balances?safe=${SAFE_CHAIN[v.chainId].short}:${v.address}`}
+                          target="_blank"
+                          rel="noreferrer"
+                        ></a>
+                      </div>
                       <div className="info">
                         <div className="address">
-                          <span>{publicJs.AddressToShow(v.address)}</span>
-                          <div>
-                            <CopyBox text={v.address}>
-                              <CopyIconSVG />
-                            </CopyBox>
-                          </div>
+                          <CopyBox text={v.address}>
+                            <span>{publicJs.AddressToShow(v.address)}</span>
+                          </CopyBox>
                         </div>
                         <div className="tag">
                           <Tag>
-                            {SAFE_CHAIN[v.chainId].name}
+                            <img src={v.icon} alt="" />
+
                             <span>
                               {vaultsMap[v.id]?.threshold || 0}/{vaultsMap[v.id]?.total || 0}
                             </span>
@@ -400,20 +374,47 @@ export default function Index() {
                         </div>
                       </div>
                     </div>
-                    <div className="balance">
-                      <span> ${formatNumber(Number(vaultsMap[v.id]?.balance || 0.0))}</span>
-                      <a
-                        href={`https://app.safe.global/balances?safe=${SAFE_CHAIN[v.chainId].short}:${v.address}`}
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        <ShareIconSVG />
-                      </a>
-                    </div>
                   </VaultItem>
                 ))}
               </VaultInfo>
-            )}
+              {/*<InfoItem>*/}
+              {/*  <div>*/}
+              {/*    <IconStyle src={WalletIcon} alt="" />*/}
+              {/*  </div>*/}
+              {/*  <div className="info-right">*/}
+              {/*    <div className="title">{t('Assets.Wallet')}</div>*/}
+              {/*    <div className="num">4</div>*/}
+              {/*  </div>*/}
+              {/*</InfoItem>*/}
+              {/*<InfoItem>*/}
+              {/*  <div>*/}
+              {/*    <IconStyle src={SignerIcon} alt="" />*/}
+              {/*  </div>*/}
+              {/*  <div className="info-right">*/}
+              {/*    <div className="title">{t('Assets.MultiSign')}</div>*/}
+              {/*    <div className="num">{totalSigner}</div>*/}
+              {/*  </div>*/}
+              {/*</InfoItem>*/}
+              {/*<InfoItem>*/}
+              {/*  <div>*/}
+              {/*    <IconStyle src={ChainIcon} alt="" />*/}
+              {/*  </div>*/}
+              {/*  <div className="info-right">*/}
+              {/*    <div className="title">{t('Assets.Chain')}</div>*/}
+              {/*    <div className="num">2</div>*/}
+              {/*  </div>*/}
+              {/*</InfoItem>*/}
+              {/*<OptionBox>*/}
+              {/*  <Link to="/assets/register">*/}
+              {/*    <Button style={{ height: '36px' }}>{t('application.Register')}</Button>*/}
+              {/*  </Link>*/}
+              {/*  <DetailButton onClick={() => setShowVaultDetail(!showVaultDetail)}>*/}
+              {/*    <span>{t('Assets.Detail')}</span>*/}
+              {/*    <ArrowIconSVG style={{ transform: showVaultDetail ? 'rotate(180deg)' : 'unset' }} />*/}
+              {/*  </DetailButton>*/}
+              {/*</OptionBox>*/}
+              {/*</div>*/}
+            </div>
           </VaultOverview>
         </Vault>
         <FirstLine border={borderStyle}>
@@ -422,7 +423,7 @@ export default function Index() {
               <LiTitle>{t('Assets.SupplySCR')}</LiTitle>
             </LiHead>
             <div className="num">{formatNumber(Number(totalSCR))}</div>
-            <AssetBox></AssetBox>
+            {/*<AssetBox></AssetBox>*/}
             <BorderDecoration color="#FF86CB" />
           </li>
           <li className="center">
@@ -430,9 +431,9 @@ export default function Index() {
               <LiTitle>{t('Assets.SupplySGN')}</LiTitle>
             </LiHead>
             <div className="num">{nftData.totalSupply}</div>
-            <div className="tips">
-              {t('Assets.FloorPrice')} : <span>{nftData.floorPrice} ETH</span>
-            </div>
+            {/*<div className="tips">*/}
+            {/*  {t('Assets.FloorPrice')} : <span>{nftData.floorPrice} ETH</span>*/}
+            {/*</div>*/}
             <BorderDecoration color="#FFB842" />
           </li>
           <li>
@@ -440,15 +441,15 @@ export default function Index() {
               <LiTitle>{t('Assets.SeasonUseUSD')}</LiTitle>
             </LiHead>
             <div className="num">{formatNumber(asset.token_used_amount)}</div>
-            <AssetBox className="tips">
-              {/* <span>{t('Assets.SeasonBudget')} : </span>
-              <span>{formatNumber(asset.token_total_amount)}</span>
-              {canUseCityhall && (
-                <span className="btn-edit" onClick={() => setshowModifyModal(BudgetType.Token)}>
-                  <Pencil />
-                </span>
-              )} */}
-            </AssetBox>
+            {/*<AssetBox className="tips">*/}
+            {/*  /!* <span>{t('Assets.SeasonBudget')} : </span>*/}
+            {/*  <span>{formatNumber(asset.token_total_amount)}</span>*/}
+            {/*  {canUseCityhall && (*/}
+            {/*    <span className="btn-edit" onClick={() => setshowModifyModal(BudgetType.Token)}>*/}
+            {/*      <Pencil />*/}
+            {/*    </span>*/}
+            {/*  )} *!/*/}
+            {/*</AssetBox>*/}
             <BorderDecoration color="#03DACD" />
           </li>
           <li className="center">
@@ -458,15 +459,15 @@ export default function Index() {
               </LiTitle>
             </LiHead>
             <div className="num">{formatNumber(asset.credit_used_amount)}</div>
-            <AssetBox className="tips">
-              {/* <span>{t('Assets.SeasonBudget')} : </span>
-              <span>{formatNumber(asset.credit_total_amount)}</span>
-              {canUseCityhall && (
-                <span className="btn-edit" onClick={() => setshowModifyModal(BudgetType.Credit)}>
-                  <Pencil />
-                </span>
-              )} */}
-            </AssetBox>
+            {/*<AssetBox className="tips">*/}
+            {/*  /!* <span>{t('Assets.SeasonBudget')} : </span>*/}
+            {/*  <span>{formatNumber(asset.credit_total_amount)}</span>*/}
+            {/*  {canUseCityhall && (*/}
+            {/*    <span className="btn-edit" onClick={() => setshowModifyModal(BudgetType.Credit)}>*/}
+            {/*      <Pencil />*/}
+            {/*    </span>*/}
+            {/*  )} *!/*/}
+            {/*</AssetBox>*/}
             <BorderDecoration color="#4378FF" />
           </li>
         </FirstLine>
@@ -501,7 +502,7 @@ const Vault = styled.div`
 `;
 
 const VaultOverview = styled.div<{ border: string }>`
-  background: var(--bs-box--background);
+  background: #8145ff;
   border: ${(props) => props.border};
   border-radius: 16px;
   overflow: hidden;
@@ -524,7 +525,6 @@ const VaultOverview = styled.div<{ border: string }>`
   @media (max-width: 950px) {
     .vaultInner {
       flex-direction: column;
-      padding-top: 20px;
       padding: 20px 16px 0 16px;
       align-items: flex-start;
     }
@@ -546,22 +546,26 @@ const InfoItem = styled.li`
   display: flex;
   align-items: center;
   gap: 22px;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  margin-right: 40px;
+  min-width: 300px;
+  flex-shrink: 0;
   .topLft {
     color: #ffa842;
   }
   .title {
-    font-size: 14px;
-    color: var(--bs-body-color);
+    font-size: 12px;
+    color: #fff;
   }
   .num {
-    font-size: 28px;
+    font-size: 22px;
     font-family: Poppins-Medium, Poppins;
   }
 
   .info-right {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 5px;
   }
 
   &.detail {
@@ -589,68 +593,54 @@ const InfoItem = styled.li`
 `;
 
 const VaultInfo = styled.ul`
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-  border-bottom-left-radius: 10px;
-  border-bottom-right-radius: 10px;
-  padding-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 1;
 `;
 const VaultItem = styled.li`
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  padding: 12px 40px;
-  &:hover {
-    background-color: var(--bs-menu-hover);
-  }
-  &:last-child {
-    border-bottom: 0;
-  }
+  align-items: center;
+  width: 25%;
+  color: #fff;
   .info-left {
-    display: flex;
-    gap: 60px;
-    align-items: center;
     .name {
       width: 160px;
-      font-size: 14px;
+      font-size: 12px;
       font-family: Poppins-SemiBold, Poppins;
       font-weight: 600;
     }
-  }
-  .tag {
-    margin-left: 20px;
   }
   .info,
   .address {
     display: flex;
     align-items: center;
-    font-size: 14px;
-  }
-  .address {
-    gap: 8px;
+    font-size: 12px;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.6);
+    line-height: 14px;
   }
   .iconBox {
     cursor: pointer;
     margin: 0 0 10px 10px;
   }
   .balance {
-    font-size: 18px;
-    font-family: Poppins-SemiBold, Poppins;
+    font-size: 20px;
+    font-family: Poppins-SemiBold;
     display: flex;
     gap: 16px;
     align-items: center;
-  }
-  @media (max-width: 950px) {
-    padding: 12px 16px;
+    font-weight: 600;
+    padding: 9px 0;
   }
 `;
 
 const Tag = styled.div`
-  background: #ebe9ff;
-  color: var(--bs-primary);
   text-align: center;
-  border-radius: 8px;
-  width: 128px;
-  line-height: 30px;
+  color: rgba(255, 255, 255, 0.6);
+  margin-left: 15px;
   span {
     margin-left: 5px;
   }

@@ -158,6 +158,9 @@ const GlobalStyle = createGlobalStyle`
       &.center {
         text-align: center;
       }
+      &.right {
+        text-align: right;
+      }
     }
     tr td {
       &:first-child {

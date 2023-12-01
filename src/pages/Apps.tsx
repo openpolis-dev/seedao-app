@@ -69,4 +69,7 @@ const AppBox = styled(Row)`
     display: flex;
     margin-bottom: 24px;
   }
+  .link {
+    display: none !important;
+  }
 `;

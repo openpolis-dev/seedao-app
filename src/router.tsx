@@ -40,6 +40,9 @@ import Audit from 'pages/cityhall/governance/audit';
 import AuditProject from 'pages/cityhall/governance/projectAudit';
 import Issue from 'pages/cityhall/governance/issue';
 import SCRRank from 'pages/scrRank';
+import SNSEntrancePage from 'pages/sns/entrance';
+import RegisterSNS from 'pages/sns/register';
+import UserSNS from 'pages/sns/userSNS';
 
 export default function RouterLink() {
   return (
@@ -60,7 +63,7 @@ export default function RouterLink() {
           <Route path="/event/view" element={<EventView />} />
           <Route path="/event/edit" element={<EventEdit />} />
           <Route path="/online-event" element={<CalendarPage />} />
-          <Route path="/pub" element={<Pub />} />
+          <Route path="/hub" element={<Pub />} />
           <Route path="/pubDetail/:id" element={<PubDetail />} />
 
           <Route path="/assets" element={<Assets />} />
@@ -82,10 +85,14 @@ export default function RouterLink() {
           <Route path="/city-hall/governance/governance-node-result" element={<GoveranceNodeResult />} />
           <Route path="/city-hall/governance/audit" element={<Audit />} />
           <Route path="/city-hall/governance/audit-project" element={<AuditProject />} />
-          {/* <Route path="/city-hall/governance/issue" element={<Issue />} /> */}
+          <Route path="/city-hall/governance/issue" element={<Issue />} />
           {/* <Route path="/chat" element={<Chat />} /> */}
           <Route path="/ranking" element={<SCRRank />} />
           <Route path="/feedback" element={<Canny />} />
+          {/* SNS */}
+          <Route path="/sns" element={<SNSEntrancePage />} />
+          <Route path="/sns/register" element={<RegisterSNS />} />
+          <Route path="/sns/user" element={<UserSNS />} />
         </Routes>
       </Layout>
       <RouterChecker />

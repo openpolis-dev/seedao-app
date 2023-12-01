@@ -16,6 +16,11 @@ import DeleteMemberModal from 'components/modals/deleteMemberModal';
 import { updateStaffs, IUpdateStaffsParams } from 'requests/project';
 import useToast, { ToastType } from 'hooks/useToast';
 
+import PlusImg from '../../assets/Imgs/light/plus.svg';
+import MinusImg from '../../assets/Imgs/light/minus.svg';
+import { MemberGroupType } from '../../requests/cityHall';
+import { Button } from 'react-bootstrap';
+
 interface Iprops {
   detail: ReTurnProject | undefined;
   updateProject: () => void;
@@ -40,12 +45,15 @@ export default function Members(props: Iprops) {
   const [adminArr, setAdminArr] = useState<any[]>([]);
   const [memberList, setMemberList] = useState<any[]>([]);
   const [adminList, setAdminList] = useState<any[]>([]);
-
+  const [edit, setEdit] = useState(false);
   const [userMap, setUserMap] = useState<UserMap>({});
   const [toDeleteUser, setToDeleteUser] = useState<{
     user: IUser;
     role: UserRole;
   }>();
+
+  const [selectUsers, setSelectUsers] = useState<any[]>([]);
+  const [showDel, setShowDel] = useState(false);
 
   const uniqueUsers = useMemo(() => {
     return Array.from(new Set([...memberArr, ...adminArr]));
@@ -127,18 +135,25 @@ export default function Members(props: Iprops) {
   };
 
   const handleCloseRemoveModal = () => {
-    setToDeleteUser(undefined);
+    setShowDel(false);
+    setSelectUsers([]);
+  };
+
+  const startRemove = () => {
+    setEdit(true);
   };
 
   const handleRemove = async () => {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
-      const params: IUpdateStaffsParams = { action: 'remove' };
-      if (toDeleteUser?.role === UserRole.Admin) {
-        params.sponsors = [toDeleteUser.user.wallet || ''];
-      } else if (toDeleteUser) {
-        params.members = [toDeleteUser.user.wallet || ''];
-      }
+      const params: IUpdateStaffsParams = { action: 'remove', sponsors: [], members: [] };
+      selectUsers.map((user) => {
+        if (user?.role === UserRole.Admin) {
+          params.sponsors?.push(user.user.wallet);
+        } else {
+          params.members?.push(user.user.wallet);
+        }
+      });
       await updateStaffs(id as string, params);
       handleCloseRemoveModal();
       showToast(t('Project.RemoveMemSuccess'), ToastType.Success);
@@ -151,16 +166,42 @@ export default function Members(props: Iprops) {
     }
   };
 
+  const handleAdminSelect = (selItem: IUser, role: number) => {
+    const selectHas = selectUsers.findIndex((item) => item?.wallet === selItem.wallet);
+    const arr = [...selectUsers];
+    if (selectHas > -1) {
+      arr.splice(selectHas, 1);
+    } else {
+      arr.push({ user: selItem, role });
+    }
+    setSelectUsers(arr);
+  };
+
+  const closeRemove = (shouldUpdate?: boolean) => {
+    // setShowDel(false);
+    setEdit(false);
+    setShowDel(false);
+    setSelectUsers([]);
+    // getDetail();
+    // shouldUpdate && getDetail();
+  };
+
+  const closeDel = () => {
+    setEdit(false);
+    setShowDel(true);
+    // setShowDel(true);
+  };
+
   return (
     <Box>
       {show && detail && (
         <Add closeAdd={closeAdd} id={id as string} oldMembers={[...detail.sponsors, ...detail.members]} />
       )}
-      {toDeleteUser && (
+      {showDel && (
         <DeleteMemberModal
           title={t('Project.RemoveMember')}
-          sns={nameMap[toDeleteUser.user.wallet || '']}
-          user={toDeleteUser.user}
+          sns={nameMap}
+          users={selectUsers}
           onClose={handleCloseRemoveModal}
           onConfirm={handleRemove}
         />
@@ -168,10 +209,16 @@ export default function Members(props: Iprops) {
       <TopBox>
         <BlockTitle>{t('Project.Members')}</BlockTitle>
         {(canUpdateMember || canUpdateSponsor) && (
-          <AdeBox onClick={() => setShow(true)}>
-            <img src={InviteImg} alt="" />
-            <span>{t('Project.invite')}</span>
-          </AdeBox>
+          <TopRht>
+            <AddBox onClick={() => setShow(true)}>
+              <img src={PlusImg} alt="" />
+              {/*<span>{t('Project.invite')}</span>*/}
+            </AddBox>
+            <AddBox onClick={() => startRemove()}>
+              <img src={MinusImg} alt="" />
+              {/*<span>{t('Project.invite')}</span>*/}
+            </AddBox>
+          </TopRht>
         )}
       </TopBox>
       <ItemBox>
@@ -182,7 +229,9 @@ export default function Members(props: Iprops) {
               user={item}
               role={UserRole.Admin}
               sns={nameMap[item.wallet]}
-              removeText={canUpdateSponsor ? t('Project.RemoveMember') : ''}
+              showEdit={edit}
+              onSelectUser={(u) => handleAdminSelect(u, UserRole.Admin)}
+              removeText=""
               showRemoveModal={handleShowRemoveModal}
             />
           ))}
@@ -194,12 +243,25 @@ export default function Members(props: Iprops) {
               user={item}
               role={UserRole.Member}
               sns={nameMap[item?.wallet]}
-              removeText={canUpdateSponsor ? t('Project.RemoveMember') : ''}
+              showEdit={edit}
+              onSelectUser={(u) => handleAdminSelect(u, UserRole.Member)}
+              removeText=""
+              // removeText={canUpdateSponsor ? t('Project.RemoveMember') : ''}
               showRemoveModal={handleShowRemoveModal}
             />
           ))}
         </div>
       </ItemBox>
+      {edit && (
+        <FlexLine>
+          <Button onClick={() => closeDel()} disabled={!selectUsers.length}>
+            {t('general.confirm')}
+          </Button>
+          <Button variant="outline-primary" onClick={() => closeRemove()}>
+            {t('general.cancel')}
+          </Button>
+        </FlexLine>
+      )}
     </Box>
   );
 }
@@ -211,22 +273,23 @@ const ItemBox = styled.div`
   flex-direction: column;
 `;
 
-const AdeBox = styled.div`
+const AddBox = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 12px;
-  border-radius: 8px;
+  border-radius: 4px;
   border: 1px solid var(--bs-border-color);
-  padding: 0 8px;
-  gap: 6px;
   cursor: pointer;
+  margin-left: 9px;
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
 `;
 
 const TopBox = styled.div`
   display: flex;
   justify-content: space-between;
-  margin-bottom: 70px;
+  margin-bottom: 30px;
   button {
     margin-left: 20px;
   }
@@ -235,6 +298,18 @@ const TopBox = styled.div`
 const BlockTitle = styled.div`
   color: var(--bs-body-color_active);
   font-size: 24px;
-  font-family: Poppins-Bold, Poppins;
+  font-family: Poppins-Bold;
   font-weight: bold;
+`;
+const TopRht = styled.div`
+  display: flex;
+`;
+
+const FlexLine = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  .btn {
+    width: 48%;
+  }
 `;

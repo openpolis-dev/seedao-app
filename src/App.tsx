@@ -11,10 +11,11 @@ import GlobalStyle from 'assets/styles/global';
 import { EthereumClient, w3mConnectors, w3mProvider } from '@web3modal/ethereum';
 import { Web3Modal } from '@web3modal/react';
 import { configureChains, createConfig, WagmiConfig } from 'wagmi';
-import { mainnet } from 'wagmi/chains';
+import { mainnet, sepolia } from 'wagmi/chains';
+import getConfig from 'utils/envCofnig';
 import 'md-editor-rt/lib/style.css';
 
-const chains = [mainnet];
+const chains = getConfig().NETWORK.chainId === 1 ? [mainnet] : [sepolia, mainnet];
 
 const projectId = 'da76ddd6c7d31632ed7fc9b88e28a410';
 

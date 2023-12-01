@@ -10,7 +10,7 @@ import publicJs from 'utils/publicJs';
 import NoItem from 'components/noItem';
 import { useTranslation } from 'react-i18next';
 import useToast, { ToastType } from 'hooks/useToast';
-import ApplicationStatusTag from 'components/common/applicationStatusTag';
+import ApplicationStatusTagNew from 'components/common/applicationStatusTagNew';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import BackerNav from 'components/common/backNav';
 import { ContainerPadding } from 'assets/styles/global';
@@ -41,6 +41,7 @@ export default function ProjectAudit() {
 
   const [list, setList] = useState<IApplicationDisplay[]>([]);
   const [showApplication, setShowApplication] = useState<IApplicationDisplay>();
+  const [snsMap, setSnsMap] = useState<Map<string, string>>(new Map());
 
   const { getMultiSNS } = useQuerySNS();
 
@@ -53,6 +54,11 @@ export default function ProjectAudit() {
   };
   const handlePageSize = (num: number) => {
     setPageSize(num);
+  };
+
+  const handleSNS = async (wallets: string[]) => {
+    const sns_map = await getMultiSNS(wallets);
+    setSnsMap(sns_map);
   };
 
   const getRecords = async () => {
@@ -75,13 +81,14 @@ export default function ProjectAudit() {
         r.applicant_wallet && _wallets.add(r.applicant_wallet?.toLocaleLowerCase());
         _wallets.add(r.reviewer_wallet?.toLocaleLowerCase());
       });
-      const sns_map = await getMultiSNS(Array.from(_wallets));
+      handleSNS(Array.from(_wallets));
 
       const _list = res.data.rows.map((item) => ({
         ...item,
         created_date: formatTime(item.create_ts * 1000),
-        submitter_name: item.applicant_wallet && (sns_map.get(item.applicant_wallet?.toLocaleLowerCase()) as string),
-        reviewer_name: sns_map.get(item.reviewer_wallet?.toLocaleLowerCase()) as string,
+        review_date: formatTime(item.review_ts * 1000),
+        submitter_name: item.applicant_wallet?.toLocaleLowerCase(),
+        reviewer_name: item.reviewer_wallet?.toLocaleLowerCase(),
       }));
       setList(_list);
     } catch (error) {
@@ -122,14 +129,22 @@ export default function ProjectAudit() {
       showLoading(false);
     }
   };
-  const formatSNS = (name: string) => {
-    return name?.endsWith('.seedao') ? name : publicJs.AddressToShow(name, 6);
+
+  const formatSNS = (wallet: string) => {
+    const name = snsMap.get(wallet) || wallet;
+    return name?.endsWith('.seedao') ? name : publicJs.AddressToShow(name, 4);
   };
 
   return (
     <Box>
       {showApplication && (
-        <CloseProjectModal application={showApplication} handleClose={() => setShowApplication(undefined)} />
+        <CloseProjectModal
+          application={showApplication}
+          handleClose={() => setShowApplication(undefined)}
+          handleApprove={handleApprove}
+          handleReject={handleReject}
+          snsMap={snsMap}
+        />
       )}
       <BackerNav to="/city-hall/governance" title={t('city-hall.CloseProjectAudit')} />
       <section>
@@ -137,45 +152,47 @@ export default function ProjectAudit() {
           {list.length ? (
             <>
               <table className="table" cellPadding="0" cellSpacing="0">
+                <colgroup>
+                  {/* name */}
+                  <col style={{ width: '200px' }} />
+                  {/* reason */}
+                  <col />
+                  {/* state */}
+                  <col style={{ width: '170px' }} />
+                  {/* applicant */}
+                  <col style={{ width: '180px' }} />
+                  {/* time */}
+                  <col style={{ width: '180px' }} />
+                  {/* more */}
+                  <col style={{ width: '130px' }} />
+                </colgroup>
                 <thead>
                   <tr>
                     <th>{t('application.Project')}</th>
                     <th>{t('application.CloseReason')}</th>
-                    <th style={{ width: '180px' }}>{t('Project.State')}</th>
+                    <th className="center">{t('application.State')}</th>
                     <th>{t('application.Applicant')}</th>
-                    <th style={{ width: '180px' }}>{t('application.ApplyTime')}</th>
-                    <th className="center">{t('application.Operation')}</th>
+                    <th>{t('application.ApplyTime')}</th>
+                    <th></th>
                   </tr>
                 </thead>
                 <tbody>
                   {list.map((item, index) => (
                     <tr key={index}>
-                      <td>{item.budget_source}</td>
+                      <td>
+                        <ContentCell>{item.budget_source}</ContentCell>
+                      </td>
                       <td>
                         <ContentCell>{item.detailed_type}</ContentCell>
                       </td>
-                      <td style={{ width: '180px' }}>
-                        <ApplicationStatusTag status={item.status} isProj={true} />
+                      <td className="center">
+                        <ApplicationStatusTagNew status={item.status} isProj={true} />
                       </td>
                       <td>{formatSNS(item.submitter_name)}</td>
-                      <td style={{ width: '180px' }}>{item.created_date}</td>
+                      <td>{item.created_date}</td>
                       <td>
                         <OperationBox>
-                          <Button variant="outline-primary" onClick={() => setShowApplication(item)}>
-                            {t('city-hall.Detail')}
-                          </Button>
-                          <Button
-                            onClick={() => handleApprove(item.application_id)}
-                            disabled={item.status !== ApplicationStatus.Open}
-                          >
-                            {t('city-hall.Pass')}
-                          </Button>
-                          <PinkButton
-                            onClick={() => handleReject(item.application_id)}
-                            disabled={item.status !== ApplicationStatus.Open}
-                          >
-                            {t('city-hall.Reject')}
-                          </PinkButton>
+                          <MoreButton onClick={() => setShowApplication(item)}>{t('application.Detail')}</MoreButton>
                         </OperationBox>
                       </td>
                     </tr>
@@ -217,4 +234,17 @@ const ContentCell = styled.div`
   display: -webkit-box;
   -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
+`;
+
+const MoreButton = styled.div`
+  padding-inline: 26px;
+  height: 34px;
+  line-height: 34px;
+  box-sizing: border-box;
+  display: inline-block;
+  background: var(--bs-box--background);
+  border-radius: 8px;
+  cursor: pointer;
+  border: 1px solid var(--bs-border-color);
+  font-size: 14px;
 `;

@@ -2,9 +2,6 @@ import React, { useState, useEffect, useMemo } from 'react';
 import styled from 'styled-components';
 import { Row, Col } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
-import axios from 'axios';
-import { GOV_NODE_CONTRACT, SEED_CONTRACT } from 'utils/constant';
-
 import AppCard from 'components/common/appCard';
 import Links from 'utils/links';
 import BgImg from '../../assets/Imgs/home/banner.png';
@@ -22,6 +19,7 @@ import ArrowImg from '../../assets/Imgs/arrow.png';
 import LinkImg from '../../assets/Imgs/link.svg';
 import { Link, useNavigate } from 'react-router-dom';
 import ProposalImg from '../../assets/Imgs/home/proposal.png';
+import getConfig from 'utils/envCofnig';
 
 const CITY_HALL = 'https://seedao.notion.site/07c258913c5d4847b59271e2ae6f7c66';
 const CITY_HALL_MEMBERS = 'https://www.notion.so/3913d631d7bc49e1a0334140e3cd84f5';
@@ -51,7 +49,6 @@ const BannerBox = styled.div`
 
 const ActiveBox = styled.div`
   margin: 0 40px 0 0;
-
   div[class^='col'] {
     min-height: 116px;
     display: flex;
@@ -60,6 +57,9 @@ const ActiveBox = styled.div`
   .boxApp {
     border: 1px solid var(--bs-border-color);
     box-shadow: var(--box-shadow);
+  }
+  .link {
+    display: none !important;
   }
 `;
 
@@ -253,14 +253,6 @@ const BtmBox = styled.div`
   }
 `;
 
-const getDatafromNftscan = (contract: string, base?: string) => {
-  return axios.get(`${base || 'https://polygonapi.nftscan.com'}/api/v2/statistics/collection/${contract}`, {
-    headers: {
-      'X-API-KEY': process.env.REACT_APP_NFTSCAN_KEY,
-    },
-  });
-};
-
 export default function Home() {
   const { t } = useTranslation();
   const [seedHolders, setSEEDHolders] = useState(0);
@@ -286,26 +278,35 @@ export default function Home() {
 
   useEffect(() => {
     const handleSEEDHolders = async () => {
-      try {
-        const res = await getDatafromNftscan(SEED_CONTRACT, 'https://restapi.nftscan.com');
-        setSEEDHolders(res.data?.data?.items_total || 0);
-      } catch (error) {
-        console.error('[SBT] get sgn owners failed', error);
-      }
+      fetch(`${getConfig().INDEXER_ENDPOINT}/insight/erc721/total_supply/0x30093266E34a816a53e302bE3e59a93B52792FD4
+`)
+        .then((res: any) => res.json())
+        .then((r) => {
+          setSEEDHolders(Number(r.totalSupply));
+        })
+        .catch((error: any) => {
+          console.error('[SBT] get sgn owners failed', error);
+        });
     };
-    if (process.env.NODE_ENV !== 'development') handleSEEDHolders();
+    handleSEEDHolders();
   }, []);
 
   useEffect(() => {
     const handleGovNodes = async () => {
-      try {
-        const res = await getDatafromNftscan(GOV_NODE_CONTRACT, 'https://restapi.nftscan.com');
-        setGovernNodes(res.data?.data?.owners_total || 0);
-      } catch (error) {
-        console.error('[SBT] get gov nodes failed', error);
-      }
+      fetch(
+        `${
+          getConfig().INDEXER_ENDPOINT
+        }/insight/erc1155/total_supply_of_tokenId/0x9d34D407D8586478b3e4c39BE633ED3D7be1c80C/4`,
+      )
+        .then((res: any) => res.json())
+        .then((r) => {
+          setGovernNodes(Number(r.totalSupply));
+        })
+        .catch((error: any) => {
+          console.error('[SBT] get gov nodes failed', error);
+        });
     };
-    if (process.env.NODE_ENV !== 'development') handleGovNodes();
+    handleGovNodes();
   }, []);
 
   const sbtHolders = useMemo(() => {
@@ -315,25 +316,31 @@ export default function Home() {
 
   useEffect(() => {
     const getOnboardingHolders = async () => {
-      try {
-        const res = await getDatafromNftscan('0x0D9ea891B4C30e17437D00151399990ED7965F00');
-        setOnboardingHolders(res.data?.data?.owners_total || 0);
-      } catch (error) {
-        console.error('[SBT] get onboading holders failed', error);
-      }
+      fetch(
+        `${
+          getConfig().INDEXER_ENDPOINT
+        }/insight/erc1155/total_supply_of_tokenId/0x0D9ea891B4C30e17437D00151399990ED7965F00/157`,
+      )
+        .then((res: any) => res.json())
+        .then((r) => {
+          setOnboardingHolders(Number(r.totalSupply));
+        })
+        .catch((error: any) => {
+          console.error('[SBT] get onboarding-sbt holders failed', error);
+        });
     };
     const getNewHolders = async () => {
-      try {
-        const res = await getDatafromNftscan('0x2221F5d189c611B09D7f7382Ce557ec66365C8fc');
-        setNewHolders(res.data?.data?.owners_total || 0);
-      } catch (error) {
-        console.error('[SBT] get new-sbt holders failed', error);
-      }
+      fetch(`${getConfig().INDEXER_ENDPOINT}/insight/erc1155/total_supply/0x2221F5d189c611B09D7f7382Ce557ec66365C8fc`)
+        .then((res: any) => res.json())
+        .then((r) => {
+          setNewHolders(Number(r.totalSupply));
+        })
+        .catch((error: any) => {
+          console.error('[SBT] get new-sbt holders failed', error);
+        });
     };
-    if (process.env.NODE_ENV !== 'development') {
-      getOnboardingHolders();
-      getNewHolders();
-    }
+    getOnboardingHolders();
+    getNewHolders();
   }, []);
 
   const togo = (url: string) => {

@@ -12,7 +12,7 @@
     "connectWallet": "Connect Wallet",
     "Resources": "Apply Now",
     "Explore": "Explore",
-    "Pub": "SeeDAO Pub"
+    "Pub": "SeeDAO Hub"
   },
   "general": {
     "back": "Back",
@@ -203,6 +203,7 @@
     "MemberExist": "Please do not add members repeatedly"
   },
   "city-hall": {
+    "Cityhall": "City Hall",
     "Members": "Members",
     "Asset": "Asset",
     "Proposal": "Proposal",
@@ -263,6 +264,7 @@
   "GovernanceNodeResult": {
     "SearchTip": "SNS",
     "Export": "Export",
+    "ExportBtn": "Export",
     "MinerReward": "{{season}} Reward",
     "Total": "Total",
     "ActiveSCR": "Active SCR",
@@ -271,8 +273,8 @@
     "SheetName": "Result",
     "FileName": "SeeDAO Node Qualification",
     "VoteCount": "{{season}} Vote Count",
-    "TotalSNS": "Total SNS",
-    "TotalActiveSNS": "Total Active SNS",
+    "TotalSNS": "Total SNS (including wallet address)",
+    "TotalActiveSNS": "Total Active SNS (including wallet address)",
     "TotalSentSCR": "{{season}} Sent SCR ",
     "TotalMinerReward": "{{season}} Miner Reward (SCR)",
     "SeedSnapshot": "SEED Snapshot",
@@ -302,7 +304,7 @@
     "Canceled": "Canceled"
   },
   "Assets": {
-    "TotalBalance": "Vault Balance",
+    "TotalBalance": "Total Assets",
     "Wallet": "Wallet",
     "MultiSign": "Multi-Signer",
     "Chain": "Chain",
@@ -327,7 +329,9 @@
     "RegisterSubmit": "Submit",
     "TemplateFileName": "SeeDAO Submission Template",
     "Total": "Total",
-    "Export": "Export"
+    "Export": "Export",
+    "record": "资产发放记录",
+    "Apply": "申请资产发放"
   },
   "My": {
     "MyProfile": "My Profile",
@@ -354,17 +358,18 @@
     "EmptySBT": "Not Owning SBT",
     "current": "Current",
     "level": "Level",
+    "levelTips": "To LV {{level}} you need",
     "nextLevel": "Next Level",
     "DefaultName": "No Name",
     "DefaultBio": "No Bio"
   },
   "roles": {
-    "SGN_HOLDER": "SGN Holder",
-    "NODE_S1": "SeeDAO Node S1",
-    "NODE_S2": "SeeDAO Node S2",
-    "NODE_S3": "SeeDAO Node S3",
-    "NODE_S4": "SeeDAO Node S4",
-    "NODE_S5": "SeeDAO Node S5",
+    "SGN_HOLDER": "SEED Holder",
+    "NODE_S1": "Node S1",
+    "NODE_S2": "Node S2",
+    "NODE_S3": "Node S3",
+    "NODE_S4": "Node S4",
+    "NODE_S5": "Node S5",
     "CITYHALL_S1": "Cityhall S1",
     "CITYHALL_S2": "Cityhall S2",
     "CITYHALL_S3": "Cityhall S3",
@@ -379,7 +384,7 @@
     "CONTRIBUTOR_L7": "L7 Contributor",
     "CONTRIBUTOR_L8": "L8 Contributor",
     "CONTRIBUTOR_L9": "L9 Contributor",
-    "SEEDAO_MEMBER": "SeeDAO Member",
+    "SEEDAO_MEMBER": "Member",
     "SEEDAO_ONBOARDING": "SeeDAO Onboarding"
   },
   "Msg": {
@@ -395,7 +400,9 @@
     "RequiredWallet": "Required SNS/address",
     "SNSError": "SNS error",
     "RepeatProposal": "Repeated proposal",
-    "SelectRole": "Required role"
+    "SelectRole": "Required role",
+    "SnsNotFound": "SNS Not Found: {{sns}}",
+    "InvalidAddress": "Invalid Address: {{address}}"
   },
   "event": {
     "events": "Events",
@@ -446,10 +453,14 @@
     "Time": "Time",
     "TotalAssets": "Total Assets",
     "RegisterNote": "Note",
+    "RegisterAddressHint": "SNS/Address",
     "RegisterSource": "Project / Guild",
+    "ApplyIntro": "Apply intro",
     "Operator": "Operator",
     "Receiver": "Receiver",
     "Auditor": "Auditor",
+    "AuditTime": "Audit time",
+    "detail": "查看项目详情",
     "TotalCount": "total {{count}}",
     "AddAssets": "Add Assets",
     "Season": "Season",
@@ -465,7 +476,16 @@
     "CloseReason": "Close Reason",
     "Applicant": "Applicant",
     "ApplyTime": "Apply Time",
-    "Operation": "Operation"
+    "Operation": "Operation",
+    "Detail": "Detail",
+    "SelectAsset": "All Asset Types",
+    "AllAssets": "All Assets Types",
+    "SearchTargetUserHint": "SNS",
+    "SearchApplicantHint": "SNS",
+    "SearchDetailHint": "Content",
+    "OutputVault": "Spending Vault",
+    "CityhallVault": "Cityhall Vault",
+    "ProcessTime": "Transaction Time"
   },
   "members": {
     "RemoveTitle": "Remove Member",
@@ -473,7 +493,7 @@
     "RemoveConfirm": "Confirm remove the following members?",
     "AddressName": "SNS/Wallet",
     "NotRegister": "Not Register",
-    "NotFilled" : "Not available"
+    "NotFilled": "Not available"
   },
   "apps": {
     "DeschoolDesc": "DeSchool is building education infrastructure in Web3.",
@@ -482,9 +502,40 @@
     "DAOLinkDesc": "DAOLink is a web3 cowork platform perfect for DAOs, remote teams, and digital nomads.",
     "Wormhole3Desc": "A Wormhole From Web2 to Web3.",
     "MetaforoDesc": "Decisions get made by members, for members. Metaforo is the only community platform that supports quorum and quadratic token voting.",
-    "Pub": "SeeDAO Pub",
+    "Pub": "SeeDAO Hub",
     "PubDesc": "The events hub for SeeDAO community.",
     "SeeU": "SeeU Network",
-    "SeeUDesc": "SeeU Network is a decentralized social network that allows users to create and manage their own communities."
+    "SeeUDesc": "SeeU Network is a decentralized social network that allows users to create and manage their own communities.",
+    "SNS": "SNS",
+    "SNSDesc": "SNS is your identity based on blockchain in SeeDAO."
+  },
+  "SNS": {
+    "EntranceTitle": "INVOLVED IN SEEDAO IN YOUR NAME",
+    "EntranceDesc": "SNS is your identity based on blockchain in SeeDAO",
+    "Started": "Start",
+    "Step1Title": "Your name in SeeDAO",
+    "Step1Desc": "Your identity across SeeDAO, one name for all your SeeDAO ecosystem apps and scenarios.",
+    "Available": "Available",
+    "Uavailable": "Uavailable",
+    "FreeMint": "Free mint",
+    "SpentMint": "{{money}} mint",
+    "TimerTitle": "Almost here",
+    "TimerDesc": "This timer helps prevent others from registering the name before you do. Your name is not registered until you’ve completed the second transaction.",
+    "Finish": "Finish",
+    "FinishSucess": "Registered successfully!",
+    "StepLoadingTitle": "Three steps to get your SNS",
+    "Step1Intro": "Complete the transaction and start counting",
+    "StepMiddleIntro": "Wait 60 seconds for the timer to complete",
+    "Step2Intro": "Complete the second transaction to get your SNS",
+    "InputTip": "*Please input 4-15 numbers(0-9)、lower letter(a-z) or special( ! $ ( ) * + - _ )",
+    "Switch": "Switch",
+    "MySNS": "My SNS"
+  },
+  "Governance": {
+    "GovernanceRule": "Governance Rules",
+    "MetaRule": "SeeDAO Meta Rules",
+    "GovernanceBook": "Governance Book",
+    "NodesConferenceRule": "Nodes Conference Rules",
+    "apply": "资产发放"
   }
 }

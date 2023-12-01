@@ -7,11 +7,14 @@ import DefaultImgLight from '../../assets/Imgs/light/default.png';
 import { AppActionType, useAuthContext } from '../../providers/authProvider';
 import AddImg from '../../assets/Imgs/dark/add.svg';
 import AddImgLight from '../../assets/Imgs/light/add.svg';
+import LinkImg from '../../assets/Imgs/link.svg';
+import React from 'react';
 
 const AppCard = ({
   icon,
   name,
   link,
+  Nolink,
   id,
   desc,
   hiddenFields,
@@ -21,6 +24,7 @@ const AppCard = ({
   name: string;
   link: string;
   id: string;
+  Nolink?: boolean;
   desc?: string;
   hiddenFields?: string[];
   handleShow?: (arg0: string) => void;
@@ -46,7 +50,7 @@ const AppCard = ({
     }
   };
   return (
-    <AppCardStyle className="boxApp" onClick={handleClickEvent}>
+    <AppCardStyle className="boxApp" onClick={handleClickEvent} Nolink={Nolink?.toString()}>
       <div className="iconBox">
         <img src={icon ? icon : theme ? DefaultImg : DefaultImgLight} alt="" />
         <div className="inner" />
@@ -54,6 +58,9 @@ const AppCard = ({
       <div className="Rht">
         <div className="title">{name}</div>
         <div className="desc">{desc}</div>
+      </div>
+      <div className="link">
+        <img src={LinkImg} alt="" />
       </div>
     </AppCardStyle>
   );
@@ -74,8 +81,11 @@ export const EmptyAppCard = ({ theme }: any) => {
     </AppCardStyleEmp>
   );
 };
+interface Iprops {
+  Nolink?: any;
+}
 
-const AppCardStyle = styled.div`
+const AppCardStyle = styled.div<Iprops>`
   padding: 14px;
   border-radius: 16px;
   overflow: hidden;
@@ -87,9 +97,19 @@ const AppCardStyle = styled.div`
   box-shadow: var(--box-shadow);
   width: 100%;
   height: 100%;
-
+  position: relative;
+  .link {
+    display: none;
+  }
   &:hover {
     background-color: var(--home-right_hover);
+    .link {
+      display: ${(props) => (props.Nolink === 'true' ? 'none' : 'block')};
+      //display: block;
+      position: absolute;
+      right: 10px;
+      top: 10px;
+    }
   }
   .iconBox {
     border-radius: 16px;
@@ -164,7 +184,8 @@ const AppCardStyle = styled.div`
 `;
 
 const AppCardStyleEmp = styled(AppCardStyle)`
+  
   &:hover {
     background-color: var(--bs-box--background);
-  }
+ 
 `;

@@ -60,13 +60,13 @@ export default function Header() {
     dispatch({ type: AppActionType.SET_LAN, payload: v });
     localStorage.setItem('language', v);
     i18n.changeLanguage(v);
-    if (select && isLogin && userData) {
-      try {
-        requestSetDeviceLanguage({ device: getPushDevice(), language: v });
-      } catch (error) {
-        console.error('Set Device Language Failed', error);
-      }
-    }
+    // if (select && isLogin && userData) {
+    //   try {
+    //     requestSetDeviceLanguage({ device: getPushDevice(), language: v });
+    //   } catch (error) {
+    //     console.error('Set Device Language Failed', error);
+    //   }
+    // }
   };
 
   useEffect(() => {
@@ -137,13 +137,13 @@ export default function Header() {
     if (!window.ethereum) return;
     const initProvider = async () => {
       const { ethereum } = window as any;
-      ethereum?.on('chainChanged', handleChainChanged);
+      // ethereum?.on('chainChanged', handleChainChanged);
       ethereum?.on('accountsChanged', handleAccountChanged);
     };
     initProvider();
     return () => {
       const { ethereum } = window as any;
-      ethereum?.removeListener('chainChanged', handleChainChanged);
+      // ethereum?.removeListener('chainChanged', handleChainChanged);
       ethereum?.removeListener('accountsChanged', handleAccountChanged);
     };
   });

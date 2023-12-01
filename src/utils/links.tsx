@@ -7,6 +7,7 @@ import Cascad3Icon from '../assets/Imgs/home/Cascad3.png';
 import Wormhole3Icon from '../assets/Imgs/home/Wormhole3.png';
 import SeedIcon from '../assets/images/seed.png';
 import SeeUImg from '../assets/Imgs/home/seeuNetwork.jpg';
+import SNSImg from '../assets/Imgs/home/SNS.jpg';
 
 import RImg1 from '../assets/Imgs/resources/1.png';
 import RImg2 from '../assets/Imgs/resources/2.png';
@@ -20,6 +21,11 @@ import RImg9 from '../assets/Imgs/resources/9.png';
 import RImg10 from '../assets/Imgs/resources/10.png';
 import RImg11 from '../assets/Imgs/resources/11.png';
 import RImg12 from '../assets/Imgs/resources/12.png';
+
+import CreateImg from '../assets/Imgs/governance/create.png';
+import GuildImg from '../assets/Imgs/governance/guild.png';
+import DistributeImg from '../assets/Imgs/governance/distribute.png';
+import NodeImg from '../assets/Imgs/governance/node.png';
 
 /**
  * NOTE:
@@ -124,7 +130,13 @@ const links = {
       icon: RImg11,
       desc: 'city-hall.CalendarReviewDesc',
     },
-
+    {
+      name: 'city-hall.PubReview',
+      link: 'https://www.notion.so/ab122e6e19f14ff5a212fb6e77d5b366?v=34760c2c81e648549f5a40a79dc3b198&pvs=4',
+      id: 'community',
+      icon: RImg3,
+      desc: 'city-hall.PubReviewDesc',
+    },
     {
       name: 'city-hall.ProjectReview',
       link: 'https://tally.so/forms/w2AWlp/submissions',
@@ -140,39 +152,12 @@ const links = {
       desc: 'city-hall.GuildReviewDesc',
     },
     {
-      name: 'city-hall.PubReview',
-      link: 'https://www.notion.so/ab122e6e19f14ff5a212fb6e77d5b366?v=34760c2c81e648549f5a40a79dc3b198&pvs=4',
-      id: 'community',
-      icon: RImg3,
-      desc: 'city-hall.PubReviewDesc',
-    },
-    {
-      name: 'city-hall.GovernanceNodeResult',
-      link: '/city-hall/governance/governance-node-result',
-      id: 'module-governance-node-result',
-      icon: RImg2,
-      desc: 'city-hall.GovernanceNodeResultDesc',
-    },
-    {
-      name: 'city-hall.CreateProject',
-      link: '/create-project',
-      id: 'module-create-project',
-      icon: RImg4,
-      desc: 'city-hall.CreateProjectDesc',
-    },
-    {
-      name: 'city-hall.CreateGuild',
-      link: '/create-guild',
-      id: 'module-create-guild',
-      icon: RImg6,
-      desc: 'city-hall.CreateGuildDesc',
-    },
-    {
       name: 'city-hall.PointsAndTokenAudit',
       link: '/city-hall/governance/audit',
       id: 'module-governance-audit',
       icon: RImg7,
       desc: 'city-hall.PointsAndTokenAuditDesc',
+      Nolink: true,
     },
     {
       name: 'city-hall.CloseProjectAudit',
@@ -180,6 +165,37 @@ const links = {
       id: 'module-governance-audit-project',
       icon: RImg8,
       desc: 'city-hall.CloseProjectAuditDesc',
+      Nolink: true,
+    },
+  ],
+  governanceBtm: [
+    {
+      name: 'city-hall.CreateProject',
+      link: '/create-project',
+      id: 'module-create-project',
+      icon: CreateImg,
+      desc: 'city-hall.CreateProjectDesc',
+    },
+    {
+      name: 'city-hall.CreateGuild',
+      link: '/create-guild',
+      id: 'module-create-guild',
+      icon: GuildImg,
+      desc: 'city-hall.CreateGuildDesc',
+    },
+    {
+      name: 'Governance.apply',
+      link: '/city-hall/governance/issue',
+      id: 'module-issue',
+      icon: DistributeImg,
+      desc: '',
+    },
+    {
+      name: 'city-hall.GovernanceNodeResult',
+      link: '/city-hall/governance/governance-node-result',
+      id: 'module-governance-node-result',
+      icon: NodeImg,
+      desc: 'city-hall.GovernanceNodeResultDesc',
     },
   ],
   brand: [
@@ -267,7 +283,7 @@ const links = {
     // {
     //   id: 'module-pub',
     //   name: 'apps.Pub',
-    //   link: '/pub',
+    //   link: '/hub',
     //   icon: '',
     //   desc: 'apps.PubDesc',
     // },
@@ -284,6 +300,13 @@ const links = {
       link: 'https://seeu.network/',
       icon: SeeUImg,
       desc: 'apps.SeeUDesc',
+    },
+    {
+      id: 'module-sns',
+      name: 'apps.SNS',
+      link: '/sns/register',
+      icon: SNSImg,
+      desc: 'apps.SNSDesc',
     },
   ],
   publicity: [

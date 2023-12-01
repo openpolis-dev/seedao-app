@@ -9,6 +9,12 @@ const CardBody = styled.div`
   font-size: 14px;
   line-height: 24px;
   width: 400px;
+  .box {
+    padding: 12px 21px;
+    &::placeholder {
+      color: #bbbbbb;
+    }
+  }
 `;
 const CardFooter = styled.div`
   display: flex;
@@ -18,6 +24,9 @@ const CardFooter = styled.div`
   .btn {
     width: 110px;
   }
+`;
+const TipsBox = styled.div`
+  margin-bottom: 8px;
 `;
 
 interface Iprops {
@@ -37,11 +46,13 @@ export default function CloseTips(props: Iprops) {
   return (
     <BasicModal title={t('Project.CloseProject')} handleClose={closeModal}>
       <CardBody>
+        <TipsBox>{t('Project.CloseProjectPlaceholder')}</TipsBox>
         <Form.Control
           as="textarea"
           rows={5}
-          placeholder={t('Project.CloseProjectPlaceholder')}
+          placeholder={t('general.Placeholder')}
           value={content}
+          className="box"
           onChange={(e) => setContent(e.target.value)}
         />
       </CardBody>

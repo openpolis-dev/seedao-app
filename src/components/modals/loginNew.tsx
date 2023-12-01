@@ -8,21 +8,21 @@ import CloseImgLight from '../../assets/Imgs/light/close-circle.svg';
 
 import WalletConnect from '../login/walletconnect';
 import Metamask from '../login/metamask';
-import Unipass, { upProvider } from '../login/unipass';
+import UniPass, { upProvider } from '../login/unipass';
 import Joyid from '../login/joyid';
 import JoyidWeb from 'components/login/joyidWeb';
 
 import { useNetwork } from 'wagmi';
-import { useEthersSigner } from '../login/ethersNew';
+import { useEthersProvider, useEthersSigner } from '../login/ethersNew';
 import { SELECT_WALLET } from '../../utils/constant';
 import { ethers } from 'ethers';
-import { mainnet } from 'wagmi/chains';
 import getConfig from 'utils/envCofnig';
 import useCheckInstallPWA from 'hooks/useCheckInstallPWA';
 import { Wallet } from 'wallet/wallet';
 
 export default function LoginModal({ showModal }: any) {
   const { t } = useTranslation();
+  const network = getConfig().NETWORK;
 
   const {
     state: { account, provider, theme },
@@ -31,33 +31,54 @@ export default function LoginModal({ showModal }: any) {
 
   const { chain } = useNetwork();
 
-  const signer = useEthersSigner({ chainId: chain });
+  const walletconnect_provider = useEthersProvider({ chainId: chain });
   const isInstalled = useCheckInstallPWA();
 
-  useEffect(() => {
+  const handleProvider = (checkProvider = true) => {
     let type = localStorage.getItem(SELECT_WALLET);
     let walletType = type as Wallet;
 
-    if (account && provider) return;
+    if (checkProvider && provider) return;
     if (walletType === Wallet.METAMASK_INJECTED && window.ethereum) {
       // metamask
       const provider = new ethers.providers.Web3Provider(window.ethereum);
-      dispatch({ type: AppActionType.SET_PROVIDER, payload: provider.getSigner() });
-    } else if (walletType === Wallet.METAMASK && signer) {
+      dispatch({ type: AppActionType.SET_PROVIDER, payload: provider });
+    } else if (walletType === Wallet.METAMASK && walletconnect_provider) {
       // metamask in walletconnect
-      dispatch({ type: AppActionType.SET_PROVIDER, payload: signer });
+      dispatch({ type: AppActionType.SET_PROVIDER, payload: walletconnect_provider });
     } else if (walletType === Wallet.UNIPASS) {
       // unipass
       const providerUnipass = new ethers.providers.Web3Provider(upProvider, 'any');
       dispatch({ type: AppActionType.SET_PROVIDER, payload: providerUnipass });
     } else if ([Wallet.JOYID, Wallet.JOYID_WEB].includes(walletType)) {
       // joyid
-      const url = mainnet.rpcUrls.public.http[0];
-      const id = mainnet.id;
-      const providerJoyId = new ethers.providers.JsonRpcProvider(url, id);
+      const providerJoyId = new ethers.providers.JsonRpcProvider(network.rpc, {
+        chainId: network.chainId,
+        name: network.name,
+      });
       dispatch({ type: AppActionType.SET_PROVIDER, payload: providerJoyId });
     }
-  }, [account, provider, chain, signer]);
+  };
+
+  useEffect(() => {
+    handleProvider();
+  }, [account, provider, chain, walletconnect_provider]);
+
+  useEffect(() => {
+    if (!window.ethereum) return;
+    const handleProviderEvents = () => {
+      handleProvider(false);
+    };
+    const initProvider = async () => {
+      const { ethereum } = window as any;
+      ethereum?.on('chainChanged', handleProviderEvents);
+    };
+    initProvider();
+    return () => {
+      const { ethereum } = window as any;
+      ethereum?.removeListener('chainChanged', handleProviderEvents);
+    };
+  });
 
   const closeModal = () => {
     dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: false });
@@ -72,8 +93,8 @@ export default function LoginModal({ showModal }: any) {
           </span>
           <Title>{t('general.ConnectWallet')}</Title>
           {isInstalled ? <WalletConnect /> : <Metamask />}
-          <Unipass />
           {getConfig().REACT_APP_JOYID_ENABLE && (isInstalled ? <Joyid /> : <JoyidWeb />)}
+          <UniPass />
         </Modal>
       </Mask>
     </>
@@ -112,8 +133,8 @@ const Modal = styled.div`
   justify-content: space-between;
   .icon-close {
     position: absolute;
-    right: -50px;
-    top: 10px;
+    right: 10px;
+    top: 5px;
     cursor: pointer;
     font-size: 24px;
   }

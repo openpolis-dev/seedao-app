@@ -40,6 +40,7 @@ export interface IApplication {
   asset_name: string;
   create_ts: number;
   update_ts: number;
+  app_bundle_comment: string;
   // target_user
   target_user_wallet: string;
   target_user_avatar: string;
@@ -61,10 +62,14 @@ export interface IApplication {
   credit_amount: number;
   submitter_name: string;
   reviewer_name: string;
+  entity_id: string;
+  entity_type: string;
 }
 
 export interface IApplicationDisplay extends IApplication {
   created_date: string;
+  review_date?: string;
+  process_date?: string;
   transactions?: string[];
   // NEW FIELDS
   asset_display?: string;

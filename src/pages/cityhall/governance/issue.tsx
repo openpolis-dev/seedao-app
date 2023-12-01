@@ -19,8 +19,33 @@ import { AppActionType, useAuthContext } from 'providers/authProvider';
 import useQuerySNS from 'hooks/useQuerySNS';
 import { formatNumber } from 'utils/number';
 import ApplicationStatusTag from 'components/common/applicationStatusTag';
+import ApplicationStatusTagNew from 'components/common/applicationStatusTagNew';
 import ApplicationModal from 'components/modals/applicationModal';
 import BackerNav from 'components/common/backNav';
+import { PlainButton } from 'components/common/button';
+
+const Colgroups = () => {
+  return (
+    <colgroup>
+      {/* receiver */}
+      <col style={{ width: '160px' }} />
+      {/* add assets */}
+      <col style={{ width: '180px' }} />
+      {/* season */}
+      <col style={{ width: '120px' }} />
+      {/* Content */}
+      <col />
+      {/* source */}
+      <col style={{ width: '140px' }} />
+      {/* auditor */}
+      <col style={{ width: '160px' }} />
+      {/* state */}
+      <col style={{ width: '170px' }} />
+      {/* more */}
+      <col style={{ width: '130px' }} />
+    </colgroup>
+  );
+};
 
 export default function Issued() {
   const { t } = useTranslation();
@@ -30,22 +55,12 @@ export default function Issued() {
   const [pageSize, setPageSize] = useState(10);
   const [total, setTotal] = useState(0);
   const [show, setShow] = useState(false);
-  const [startDate, setStartDate] = useState<Date>();
-  const [endDate, setEndData] = useState<Date>();
   const [list, setList] = useState<IApplicationDisplay[]>([]);
-  const [selectMap, setSelectMap] = useState<{ [id: number]: ApplicationStatus | boolean }>({});
-  const [selectStatus, setSelectStatus] = useState<ApplicationStatus>(ApplicationStatus.Approved);
+  const [selectStatus, setSelectStatus] = useState<ApplicationStatus>();
   const [isProcessing, setIsProcessing] = useState(false);
   const [detailDisplay, setDetailDisplay] = useState<IApplicationDisplay>();
   const [snsMap, setSnsMap] = useState<Map<string, string>>(new Map());
 
-  const statusOption = useMemo(() => {
-    return [
-      { label: t(formatApplicationStatus(ApplicationStatus.Approved)), value: ApplicationStatus.Approved },
-      { label: t(formatApplicationStatus(ApplicationStatus.Processing)), value: ApplicationStatus.Processing },
-      { label: t(formatApplicationStatus(ApplicationStatus.Completed)), value: ApplicationStatus.Completed },
-    ];
-  }, [t]);
   const { getMultiSNS } = useQuerySNS();
 
   const handlePage = (num: number) => {
@@ -61,18 +76,6 @@ export default function Issued() {
     setShow(false);
   };
 
-  const changeDate = (rg: Date[]) => {
-    setStartDate(rg[0]);
-    setEndData(rg[1]);
-    if ((rg[0] && rg[1]) || (!rg[0] && !rg[1])) {
-      setSelectMap({});
-      setPage(1);
-    }
-  };
-  const onChangeCheckbox = (value: boolean, id: number, status: ApplicationStatus) => {
-    setSelectMap({ ...selectMap, [id]: value && status });
-  };
-
   const handleSNS = async (wallets: string[]) => {
     const sns_map = await getMultiSNS(wallets);
     setSnsMap(sns_map);
@@ -81,12 +84,7 @@ export default function Issued() {
   const getRecords = async () => {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
-      const queryData: IQueryApplicationsParams = {};
-      if (selectStatus) queryData.state = selectStatus;
-      if (startDate && endDate) {
-        queryData.start_date = formatDate(startDate);
-        queryData.end_date = formatDate(endDate);
-      }
+      const queryData: IQueryApplicationsParams = { state: selectStatus };
       const res = await requests.application.getProjectApplications(
         {
           page,
@@ -121,51 +119,35 @@ export default function Issued() {
     }
   };
 
-  useEffect(() => {
-    const selectOrClearDate = (startDate && endDate) || (!startDate && !endDate);
-    selectOrClearDate && getRecords();
-  }, [selectStatus, page, pageSize, startDate, endDate]);
-
   const handleComplete = async (data: string[]) => {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
 
     try {
       await requests.application.compeleteApplications(data);
       closeShow();
-      getRecords();
+      setSelectStatus(ApplicationStatus.Completed);
       setIsProcessing(false);
       showToast(t('city-hall.SendSuccess'), ToastType.Success);
-    } catch (error) {
+    } catch (error: any) {
       console.error('compeleteApplications failed', error);
-      showToast(t('Msg.ApproveFailed'), ToastType.Danger);
+      let msg = error?.data?.msg || t('Msg.ApproveFailed');
+      showToast(msg, ToastType.Danger);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }
   };
 
   const handleProcess = async () => {
-    const ids = Object.keys(selectMap);
-    const select_ids: number[] = [];
-    for (const id of ids) {
-      const _id = Number(id);
-      if (selectMap[_id]) {
-        select_ids.push(_id);
-      }
-    }
-    if (!select_ids.length) {
-      return;
-    }
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
-
     try {
-      await requests.application.processApplications(select_ids);
-      getRecords();
-      setSelectMap({});
+      await requests.application.processApplications();
+      setSelectStatus(ApplicationStatus.Processing);
       setIsProcessing(true);
       showToast(t('Msg.ApproveSuccess'), ToastType.Success);
-    } catch (error) {
+    } catch (error: any) {
       console.error('processApplications failed', error);
-      showToast(t('Msg.ApproveFailed'), ToastType.Danger);
+      let msg = error?.data?.msg || t('Msg.ApproveFailed');
+      showToast(msg, ToastType.Danger);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }
@@ -183,66 +165,32 @@ export default function Issued() {
         state: ApplicationStatus.Processing,
       },
     );
-    if (!!res.data.rows.length) {
-      setIsProcessing(true);
-    }
+    setIsProcessing(!!res.data.rows.length);
+    setSelectStatus(res.data.rows.length ? ApplicationStatus.Processing : ApplicationStatus.Approved);
   };
 
   useEffect(() => {
     handleStatus();
   }, []);
 
-  const getSelectIds = (): number[] => {
-    const ids = Object.keys(selectMap);
-    const select_ids: number[] = [];
-    for (const id of ids) {
-      const _id = Number(id);
-      if (selectMap[_id]) {
-        select_ids.push(_id);
-      }
-    }
-    return select_ids;
-  };
+  useEffect(() => {
+    selectStatus && getRecords();
+  }, [selectStatus]);
 
   const handleExport = async () => {
-    const select_ids = getSelectIds();
-    window.open(requests.application.getExportFileUrl(select_ids), '_blank');
+    window.open(requests.application.getExportFileUrlFromVault({ state: selectStatus }), '_blank');
   };
-
-  const onSelectAll = (v: boolean) => {
-    const newMap = { ...selectMap };
-    list.forEach((item) => {
-      newMap[item.application_id] = v && item.status;
-    });
-    setSelectMap(newMap);
-  };
-
-  const selectOne = useMemo(() => {
-    const select_ids = getSelectIds();
-    return select_ids.length > 0;
-  }, [selectMap]);
-
-  const ifSelectAll = useMemo(() => {
-    let _is_select_all = true;
-    for (const item of list) {
-      if (!selectMap[item.application_id]) {
-        _is_select_all = false;
-        break;
-      }
-    }
-    return _is_select_all;
-  }, [list, selectMap]);
 
   const showProcessButton = () => {
     if (selectStatus === ApplicationStatus.Approved) {
       return (
         <TopBox>
-          <SendButtonBox>
-            <Button onClick={handleProcess} disabled={isProcessing || !selectOne} className="btn-send">
-              {t('city-hall.Send')}
-            </Button>
-            <div className="tip">{t('city-hall.Tips')}</div>
-          </SendButtonBox>
+          {/* <SendButtonBox> */}
+          <Button onClick={handleProcess} disabled={isProcessing} className="btn-send">
+            {t('city-hall.Send')}
+          </Button>
+          {/* <div className="tip">{t('city-hall.Tips')}</div> */}
+          {/* </SendButtonBox> */}
         </TopBox>
       );
     } else if (selectStatus === ApplicationStatus.Processing) {
@@ -259,102 +207,57 @@ export default function Issued() {
 
   const formatSNS = (wallet: string) => {
     const name = snsMap.get(wallet) || wallet;
-    return name?.endsWith('.seedao') ? name : publicJs.AddressToShow(name, 6);
+    return name?.endsWith('.seedao') ? name : publicJs.AddressToShow(name, 4);
   };
 
   return (
     <Box>
-      <BackerNav to="/city-hall/governance" title={t('city-hall.IssueAssets')} />
+      <BackerNav to="/city-hall/governance" title={t('city-hall.IssueAssets')} mb="16px" />
       {detailDisplay && (
         <ApplicationModal application={detailDisplay} handleClose={() => setDetailDisplay(undefined)} snsMap={snsMap} />
       )}
       {show && <IssuedModal closeShow={closeShow} handleConfirm={handleComplete} showToast={showToast} />}
-      <FirstLine>
-        <TopLine>
-          <li>
-            <span className="tit">{t('Project.State')}</span>
-            <Select
-              options={statusOption}
-              placeholder=""
-              value={statusOption.find((s) => s.value === selectStatus)}
-              onChange={(value: any) => {
-                setSelectStatus(value?.value as ApplicationStatus);
-                setSelectMap({});
-              }}
-            ></Select>
-          </li>
-          <li>
-            <Button onClick={handleExport} disabled={!selectOne}>
-              {t('Project.Export')}
-            </Button>
-          </li>
-        </TopLine>
+      <TopLine>
         {showProcessButton()}
-      </FirstLine>
+        <li>
+          <ExportButton onClick={handleExport}>{t('Project.Export')}</ExportButton>
+        </li>
+      </TopLine>
 
       <TableBox>
         {list.length ? (
           <>
             <table className="table" cellPadding="0" cellSpacing="0">
+              <Colgroups />
               <thead>
                 <tr>
-                  {ApplicationStatus.Processing !== selectStatus && (
-                    <th>
-                      <Form.Check
-                        checked={ifSelectAll}
-                        onChange={(e) => {
-                          e.stopPropagation();
-                          onSelectAll(e.target.checked);
-                        }}
-                      />
-                    </th>
-                  )}
-                  <th style={{ width: '160px' }}>{t('application.Receiver')}</th>
-                  <th className="center" style={{ width: '200px' }}>
-                    {t('application.AddAssets')}
-                  </th>
-                  <th className="center" style={{ width: '200px' }}>
-                    {t('application.Season')}
-                  </th>
+                  <th>{t('application.Receiver')}</th>
+                  <th className="right">{t('application.AddAssets')}</th>
+                  <th className="center">{t('application.Season')}</th>
                   <th>{t('application.Content')}</th>
-                  <th className="center" style={{ width: '200px' }}>
-                    {t('application.BudgetSource')}
-                  </th>
-                  <th className="center" style={{ width: '200px' }}>
-                    {t('application.Auditor')}
-                  </th>
-                  <th style={{ width: '200px' }}>{t('application.State')}</th>
+                  <th>{t('application.BudgetSource')}</th>
+                  <th>{t('application.Auditor')}</th>
+                  <th className="center">{t('application.State')}</th>
+                  <th></th>
                 </tr>
               </thead>
 
               <tbody>
                 {list.map((item) => (
-                  <tr key={item.application_id} onClick={() => setDetailDisplay(item)}>
-                    {ApplicationStatus.Processing !== selectStatus && (
-                      <td>
-                        <Form.Check
-                          checked={!!selectMap[item.application_id]}
-                          onChange={(e) => onChangeCheckbox(e.target.checked, item.application_id, item.status)}
-                        ></Form.Check>
-                      </td>
-                    )}
-
+                  <tr key={item.application_id}>
                     <td>{formatSNS(item.target_user_wallet.toLocaleLowerCase())}</td>
-                    <td className="center" style={{ width: '200px' }}>
-                      {item.asset_display}
-                    </td>
-                    <td className="center" style={{ width: '200px' }}>
-                      {item.season_name}
-                    </td>
+                    <td className="right">{item.asset_display}</td>
+                    <td className="center">{item.season_name}</td>
                     <td>
                       <BudgetContent>{item.detailed_type}</BudgetContent>
                     </td>
-                    <td className="center" style={{ width: '200px' }}>
-                      {item.budget_source}
-                    </td>
+                    <td>{item.budget_source}</td>
                     <td>{formatSNS(item.reviewer_wallet.toLocaleLowerCase())}</td>
-                    <td style={{ width: '200px' }}>
-                      <ApplicationStatusTag status={item.status} />
+                    <td className="center">
+                      <ApplicationStatusTagNew status={item.status} />
+                    </td>
+                    <td className="center">
+                      <MoreButton onClick={() => setDetailDisplay(item)}>{t('application.Detail')}</MoreButton>
                     </td>
                   </tr>
                 ))}
@@ -382,18 +285,13 @@ const Box = styled.div`
   min-height: 100%;
   ${ContainerPadding};
 `;
-const FirstLine = styled.div`
-  display: flex;
-  margin-bottom: 20px;
-  align-items: center;
-  flex-wrap: wrap;
-  justify-content: space-between;
-`;
 
 const TopLine = styled.ul`
   display: flex;
   align-items: center;
-  gap: 20px 40px;
+  justify-content: flex-end;
+  gap: 16px;
+  margin-bottom: 16px;
   li {
     display: flex;
     align-items: center;
@@ -402,17 +300,11 @@ const TopLine = styled.ul`
       white-space: nowrap;
     }
   }
-  @media (max-width: 1024px) {
-    gap: 20px;
-  }
 `;
 
-const TopBox = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  padding: 10px;
+const TopBox = styled.li`
   button {
-    margin-left: 20px;
+    width: 110px;
   }
 `;
 
@@ -421,6 +313,11 @@ const TableBox = styled.div`
   td {
     vertical-align: middle;
   }
+`;
+
+const ExportButton = styled(PlainButton)`
+  font-size: 14px;
+  font-family: Poppins-Regular;
 `;
 
 const SendButtonBox = styled.div`
@@ -448,4 +345,17 @@ const BudgetContent = styled.div`
   display: -webkit-box;
   -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
+`;
+
+const MoreButton = styled.div`
+  padding-inline: 26px;
+  height: 34px;
+  line-height: 34px;
+  box-sizing: border-box;
+  display: inline-block;
+  background: var(--bs-box--background);
+  border-radius: 8px;
+  cursor: pointer;
+  border: 1px solid var(--bs-border-color);
+  font-size: 14px;
 `;

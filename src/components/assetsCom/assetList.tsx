@@ -6,10 +6,8 @@ import Page from 'components/pagination';
 import requests from 'requests';
 import { IQueryParams } from 'requests/applications';
 import { IApplicationDisplay, ApplicationStatus } from 'type/application.type';
-import utils from 'utils/publicJs';
 import NoItem from 'components/noItem';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
-import Loading from 'components/loading';
 import { formatTime } from 'utils/time';
 import publicJs from 'utils/publicJs';
 import { useTranslation } from 'react-i18next';
@@ -17,66 +15,100 @@ import { formatApplicationStatus } from 'utils/index';
 import Select from 'components/common/select';
 import { formatNumber } from 'utils/number';
 import ApplicationModal from 'components/modals/applicationModal';
-import ApplicationStatusTag from 'components/common/applicationStatusTag';
+import ApplicationStatusTagNew from 'components/common/applicationStatusTagNew';
 import useSeasons from 'hooks/useSeasons';
 import useQuerySNS from 'hooks/useQuerySNS';
 import useBudgetSource from 'hooks/useBudgetSource';
-import { Link, useNavigate } from 'react-router-dom';
-import { PrimaryOutlinedButton } from 'components/common/button';
+import { useNavigate } from 'react-router-dom';
 import getConfig from 'utils/envCofnig';
+import useAssets from 'hooks/useAssets';
+
+import RecordImg from 'assets/Imgs/light/record.svg';
+import ApplyImg from 'assets/Imgs/light/apply.svg';
+import RankImg from 'assets/Imgs/light/rank.svg';
+import SearchImg from 'assets/Imgs/light/search.svg';
+
+import RecordWhite from 'assets/Imgs/dark/record.svg';
+import ApplyWhite from 'assets/Imgs/dark/apply.svg';
+import RankWhite from 'assets/Imgs/dark/rank.svg';
+import SearchWhite from 'assets/Imgs/light/search.svg';
+import useToast, { ToastType } from 'hooks/useToast';
+import sns from '@seedao/sns-js';
+import { ethers } from 'ethers';
+import { PlainButton } from 'components/common/button';
+
+const Colgroups = () => {
+  return (
+    <colgroup>
+      {/* receiver */}
+      <col style={{ width: '160px' }} />
+      {/* add assets */}
+      <col style={{ width: '180px' }} />
+      {/* season */}
+      <col style={{ width: '120px' }} />
+      {/* Content */}
+      <col />
+      {/* source */}
+      <col style={{ width: '140px' }} />
+      {/* operator */}
+      <col style={{ width: '160px' }} />
+      {/* state */}
+      <col style={{ width: '170px' }} />
+      {/* more */}
+      <col style={{ width: '130px' }} />
+    </colgroup>
+  );
+};
 
 const Box = styled.div``;
 const TitBox = styled.div`
-  margin: 40px 0 26px;
-  font-size: 24px;
-  font-family: Poppins-Bold, Poppins;
-  font-weight: bold;
+  margin: 60px 0 40px;
+  font-size: 20px;
+  font-family: Poppins-Bold;
   line-height: 30px;
   display: flex;
   align-items: center;
-  gap: 20px;
-`;
-
-const FirstLine = styled.div`
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  align-items: end;
-  margin-bottom: 20px;
-  .btn-export {
-    min-width: 111px;
-  }
-  @media (max-width: 1100px) {
-    justify-content: flex-start;
-    flex-direction: column;
-    gap: 20px;
-    align-items: start;
-  }
-  @media (max-width: 1000px) {
-    justify-content: space-between;
-    flex-direction: row;
-    align-items: end;
-  }
-`;
-
-const TopLine = styled.ul`
-  display: flex;
-  align-items: end;
-  flex-wrap: wrap;
-  gap: 24px;
-  li {
+  dl {
     display: flex;
-    flex-direction: column;
-    > span {
-      margin-bottom: 10px;
-    }
-    .tit {
-      padding-right: 20px;
-      white-space: nowrap;
+    align-items: center;
+    justify-content: center;
+    margin-right: 40px;
+    cursor: pointer;
+    &.active,
+    &:hover {
+      font-weight: bold;
+      dd:after {
+        content: '';
+        width: 50px;
+        height: 4px;
+        background: var(--bs-primary);
+        position: absolute;
+        bottom: -10px;
+        left: calc((100% - 50px) / 2);
+      }
     }
   }
-  @media (max-width: 1100px) {
-    width: 100%;
+  dd {
+    position: relative;
+  }
+  dt {
+    margin-right: 8px;
+    img {
+      width: 24px;
+      height: 24px;
+    }
+  }
+`;
+
+const FilterLine = styled.div`
+  width: 100%;
+  table {
+    td {
+      border: none !important;
+    }
+    tr:hover td {
+      background: transparent;
+    }
   }
 `;
 
@@ -84,16 +116,57 @@ const TableBox = styled.div`
   width: 100%;
   overflow-x: auto;
   overflow-y: hidden;
-  padding-bottom: 3rem;
+  th {
+    &:first-child,
+    &:nth-child(4) {
+      text-align: left;
+    }
+  }
   td {
     vertical-align: middle;
+    border-top: 1px solid var(--bs-border-color);
+    border-bottom: 0;
+  }
+  tbody tr {
+    border: 0;
   }
   tr:hover {
     td {
-      //border-bottom: 1px solid #fff !important;
-      //&+td{
-      //  border-bottom: 1px solid #fff !important;
-      //}
+      border-top: 0;
+    }
+    & + tr {
+      td {
+        border-top: 0;
+      }
+    }
+
+    //td {
+    //  border-bottom: 1px solid #fff !important;
+    //}
+  }
+`;
+
+const SearchBox = styled.div`
+  width: 100%;
+  height: 40px;
+  background: var(--bs-box-background);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 8px;
+  border: 1px solid var(--bs-border-color);
+  input {
+    width: calc(100% - 15px);
+    border: 0;
+    background: transparent;
+    margin-left: 9px;
+    height: 24px;
+    &::placeholder {
+      color: var(--bs-body-color);
+    }
+    &:focus {
+      outline: none;
     }
   }
 `;
@@ -101,16 +174,16 @@ const TableBox = styled.div`
 export default function AssetList() {
   const navigate = useNavigate();
 
-  const { dispatch } = useAuthContext();
+  const {
+    state: { theme },
+    dispatch,
+  } = useAuthContext();
   const { t } = useTranslation();
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [total, setTotal] = useState(0);
   const [list, setList] = useState<IApplicationDisplay[]>([]);
   const [selectStatus, setSelectStatus] = useState<ApplicationStatus>();
-  const [selectMap, setSelectMap] = useState<{ [id: number]: ApplicationStatus | boolean }>({});
-  const [applicants, setApplicants] = useState<ISelectItem[]>([]);
-  const [selectApplicant, setSelectApplicant] = useState<string>();
   // budget source
   const allSource = useBudgetSource();
   const [selectSource, setSelectSource] = useState<{ id: number; type: 'project' | 'guild' }>();
@@ -118,6 +191,18 @@ export default function AssetList() {
   // season
   const seasons = useSeasons();
   const [selectSeason, setSelectSeason] = useState<number>();
+  // assets
+  const assets = useAssets();
+  const [selectAsset, setSelectAsset] = useState();
+
+  // search target user
+  const [targetKeyword, setTargetKeyword] = useState('');
+  const [searchTargetVal, setSearchTargetVal] = useState('');
+  // search applicant
+  const [applicantKeyword, setApplicantKeyword] = useState('');
+  const [searchApplicantVal, setSearchApplicantVal] = useState('');
+  // search content
+  const [searchContentVal, setSearchContentVal] = useState('');
 
   const [snsMap, setSnsMap] = useState<Map<string, string>>(new Map());
 
@@ -131,6 +216,8 @@ export default function AssetList() {
     ];
   }, [t]);
 
+  const { showToast } = useToast();
+
   const { getMultiSNS } = useQuerySNS();
 
   const handlePage = (num: number) => {
@@ -140,26 +227,42 @@ export default function AssetList() {
     setPageSize(num);
   };
 
-  const onChangeCheckbox = (value: boolean, id: number, status: ApplicationStatus) => {
-    setSelectMap({ ...selectMap, [id]: value && status });
-  };
-
-  const getApplicants = async () => {
-    try {
-      const res = await requests.application.getApplicants();
-      const options = res.data.map((item) => ({
-        label: item.Name || utils.AddressToShow(item.Applicant),
-        value: item.Applicant,
-      }));
-      setApplicants(options);
-    } catch (error) {
-      console.error('getApplicants error', error);
+  const handleSearch = async (keyword: string, setSearchVal: (v: string) => void) => {
+    if (keyword.endsWith('.seedao')) {
+      // sns
+      dispatch({ type: AppActionType.SET_LOADING, payload: true });
+      const w = await sns.resolve(keyword);
+      if (w && w !== ethers.constants.AddressZero) {
+        setSearchVal(w?.toLocaleLowerCase());
+      } else {
+        showToast(t('Msg.SnsNotFound', { sns: keyword }), ToastType.Danger);
+      }
+      dispatch({ type: AppActionType.SET_LOADING, payload: false });
+    } else if (ethers.utils.isAddress(keyword)) {
+      // address
+      setSearchVal(keyword?.toLocaleLowerCase());
+    } else {
+      showToast(t('Msg.InvalidAddress', { address: keyword }), ToastType.Danger);
     }
   };
-
-  useEffect(() => {
-    getApplicants();
-  }, []);
+  const onKeyUp = (e: any, type: string) => {
+    if (e.keyCode === 13) {
+      // document.activeElement.blur();
+      switch (type) {
+        case 'target':
+          handleSearch(targetKeyword, setSearchTargetVal);
+          break;
+        case 'applicant':
+          handleSearch(applicantKeyword, setSearchApplicantVal);
+          break;
+        case 'content':
+          getRecords();
+          break;
+        default:
+          return;
+      }
+    }
+  };
 
   const handleSNS = async (wallets: string[]) => {
     const sns_map = await getMultiSNS(wallets);
@@ -169,13 +272,25 @@ export default function AssetList() {
   const getQuerydata = () => {
     const queryData: IQueryParams = {};
     if (selectStatus) queryData.state = selectStatus;
-    if (selectApplicant) queryData.applicant = selectApplicant;
+    // if (selectApplicant) queryData.applicant = selectApplicant;
     if (selectSeason) {
       queryData.season_id = selectSeason;
     }
     if (selectSource && selectSource.type) {
       queryData.entity_id = selectSource.id;
       queryData.entity = selectSource.type;
+    }
+    if (selectAsset) {
+      queryData.asset_name = selectAsset;
+    }
+    if (searchTargetVal) {
+      queryData.user_wallet = searchTargetVal;
+    }
+    if (searchApplicantVal) {
+      queryData.applicant = searchApplicantVal;
+    }
+    if (searchContentVal) {
+      queryData.detailed_type = searchContentVal;
     }
     return queryData;
   };
@@ -204,6 +319,8 @@ export default function AssetList() {
       const _list = res.data.rows.map((item, idx) => ({
         ...item,
         created_date: formatTime(item.create_ts * 1000),
+        review_date: formatTime(item.review_ts * 1000),
+        process_date: formatTime(item.process_ts * 1000),
         transactions: item.transaction_ids.split(','),
         asset_display: formatNumber(Number(item.amount)) + ' ' + item.asset_name,
         submitter_name: item.applicant_wallet?.toLocaleLowerCase(),
@@ -220,53 +337,20 @@ export default function AssetList() {
 
   useEffect(() => {
     getRecords();
-  }, [selectSeason, selectStatus, selectApplicant, page, pageSize, selectSource]);
-
-  const getSelectIds = (): number[] => {
-    const ids = Object.keys(selectMap);
-    const select_ids: number[] = [];
-    for (const id of ids) {
-      const _id = Number(id);
-      if (selectMap[_id]) {
-        select_ids.push(_id);
-      }
-    }
-    return select_ids;
-  };
+  }, [selectSeason, selectStatus, page, pageSize, selectSource, selectAsset, searchTargetVal, searchApplicantVal]);
 
   const handleExport = async () => {
     window.open(requests.application.getExportFileUrlFromVault(getQuerydata()), '_blank');
   };
 
-  const onSelectAll = (v: boolean) => {
-    const newMap = { ...selectMap };
-    list.forEach((item) => {
-      newMap[item.application_id] = v && item.status;
-    });
-    setSelectMap(newMap);
-  };
-
-  const selectOne = useMemo(() => {
-    const select_ids = getSelectIds();
-    return select_ids.length > 0;
-  }, [selectMap]);
-
-  const ifSelectAll = useMemo(() => {
-    let _is_select_all = true;
-    for (const item of list) {
-      if (!selectMap[item.application_id]) {
-        _is_select_all = false;
-        break;
-      }
-    }
-    return _is_select_all;
-  }, [list, selectMap]);
-
   const formatSNS = (wallet: string) => {
     const name = snsMap.get(wallet) || wallet;
-    return name?.endsWith('.seedao') ? name : publicJs.AddressToShow(name, 6);
+    return name?.endsWith('.seedao') ? name : publicJs.AddressToShow(name, 4);
   };
 
+  const openApply = () => {
+    navigate('/assets/register', { state: '/assets' });
+  };
   const openRank = () => {
     navigate('/ranking', { state: '/assets' });
   };
@@ -277,106 +361,147 @@ export default function AssetList() {
       )}
 
       <TitBox>
-        <span>{t('Project.Record')}</span>
-        <PrimaryOutlinedButton onClick={openRank}>{t('GovernanceNodeResult.SCRRank')}</PrimaryOutlinedButton>
+        <dl className="active">
+          <dt>
+            <img src={theme ? RecordWhite : RecordImg} alt="" />
+          </dt>
+          <dd>{t('Assets.record')}</dd>
+        </dl>
+        <dl onClick={() => openApply()}>
+          <dt>
+            <img src={theme ? ApplyWhite : ApplyImg} alt="" />
+          </dt>
+          <dd>{t('Assets.Apply')}</dd>
+        </dl>
+        <dl onClick={() => openRank()}>
+          <dt>
+            <img src={theme ? RankWhite : RankImg} alt="" />
+          </dt>
+          <dd>{t('GovernanceNodeResult.SCRRank')}</dd>
+        </dl>
       </TitBox>
-      <FirstLine>
-        <TopLine>
-          <li>
-            <span className="tit">{t('Project.State')}</span>
-            <Select
-              options={statusOption}
-              placeholder=""
-              onChange={(value: any) => {
-                setSelectStatus(value?.value as ApplicationStatus);
-                setSelectMap({});
-                setPage(1);
-              }}
-            />
-          </li>
-          <li>
-            <span className="tit">{t('application.BudgetSource')}</span>
-            <Select
-              options={allSource}
-              placeholder=""
-              onChange={(value: any) => {
-                setSelectSource({ id: value?.value as number, type: value?.data });
-                setSelectMap({});
-                setPage(1);
-              }}
-            />
-          </li>
-          <li>
-            <span className="tit">{t('application.Operator')}</span>
-            <Select
-              options={applicants}
-              placeholder=""
-              onChange={(value: any) => {
-                setSelectApplicant(value?.value);
-                setSelectMap({});
-                setPage(1);
-              }}
-            />
-          </li>
-          <li>
-            <span className="tit">{t('application.Season')}</span>
-            <Select
-              options={seasons}
-              placeholder=""
-              onChange={(value: any) => {
-                setSelectSeason(value?.value);
-                setSelectMap({});
-                setPage(1);
-              }}
-            />
-          </li>
-        </TopLine>
-        {getConfig().REACT_APP_ENV !== 'prod' && getConfig().REACT_APP_ENV !== 'preview' && (
-          <div>
-            <Button onClick={handleExport} className="btn-export">
-              {t('Assets.Export')}
-            </Button>
-          </div>
-        )}
-      </FirstLine>
+      <FilterLine>
+        <Table responsive>
+          <Colgroups />
+          <tbody>
+            <tr>
+              <td>
+                <SearchBox>
+                  <img src={theme ? SearchWhite : SearchImg} alt="" />
+                  <input
+                    type="text"
+                    placeholder={t('application.SearchTargetUserHint')}
+                    onKeyUp={(e) => onKeyUp(e, 'target')}
+                    onChange={(e) => setTargetKeyword(e.target.value)}
+                  />
+                </SearchBox>
+              </td>
+
+              <td>
+                <Select
+                  menuPortalTarget={document.body}
+                  width="100%"
+                  options={assets}
+                  closeClear={true}
+                  isSearchable={false}
+                  placeholder={t('application.SelectAsset')}
+                  onChange={(value: any) => {
+                    setSelectAsset(value?.value);
+                    setPage(1);
+                  }}
+                />
+              </td>
+              <td>
+                <Select
+                  menuPortalTarget={document.body}
+                  width="100%"
+                  options={seasons}
+                  placeholder={t('application.Season')}
+                  onChange={(value: any) => {
+                    setSelectSeason(value?.value);
+                    setPage(1);
+                  }}
+                />
+              </td>
+              <td>
+                <SearchBox style={{ maxWidth: '200px' }}>
+                  <img src={theme ? SearchWhite : SearchImg} alt="" />
+                  <input
+                    type="text"
+                    placeholder={t('application.SearchDetailHint')}
+                    onKeyUp={(e) => onKeyUp(e, 'content')}
+                    onChange={(e) => setSearchContentVal(e.target.value)}
+                  />
+                </SearchBox>
+              </td>
+              <td>
+                <Select
+                  menuPortalTarget={document.body}
+                  width="100%"
+                  options={allSource}
+                  placeholder={t('application.BudgetSource')}
+                  onChange={(value: any) => {
+                    setSelectSource({ id: value?.value as number, type: value?.data });
+                    setPage(1);
+                  }}
+                />
+              </td>
+              <td>
+                <SearchBox>
+                  <img src={theme ? SearchWhite : SearchImg} alt="" />
+                  <input
+                    type="text"
+                    placeholder={t('application.SearchApplicantHint')}
+                    onKeyUp={(e) => onKeyUp(e, 'applicant')}
+                    onChange={(e) => setApplicantKeyword(e.target.value)}
+                  />
+                </SearchBox>
+              </td>
+              <td>
+                <Select
+                  menuPortalTarget={document.body}
+                  width="100%"
+                  options={statusOption}
+                  placeholder={t('Project.State')}
+                  onChange={(value: any) => {
+                    setSelectStatus(value?.value as ApplicationStatus);
+                    setPage(1);
+                  }}
+                />
+              </td>
+              <td>
+                {getConfig().REACT_APP_ENV !== 'prod' && getConfig().REACT_APP_ENV !== 'preview' && (
+                  <PlainButton onClick={handleExport}>{t('Assets.Export')}</PlainButton>
+                )}
+              </td>
+            </tr>
+          </tbody>
+        </Table>
+      </FilterLine>
 
       <TableBox>
         {list.length ? (
           <>
             <Table responsive>
-              <colgroup>
-                {/* receiver */}
-                <col style={{ width: '160px' }} />
-                {/* add assets */}
-                <col style={{ width: '140px' }} />
-                {/* season */}
-                <col style={{ width: '100px' }} />
-                {/* Content */}
-                <col />
-                {/* source */}
-                <col style={{ width: '140px' }} />
-                {/* operator */}
-                <col style={{ width: '160px' }} />
-                {/* state */}
-                <col style={{ width: '170px' }} />
-              </colgroup>
+              <Colgroups />
               <thead>
                 <tr>
                   {/* <th className="chech-th">
                     <Form.Check checked={ifSelectAll} onChange={(e) => onSelectAll(e.target.checked)} />
                   </th> */}
                   <th>{t('application.Receiver')}</th>
-                  <th className="center">{t('application.AddAssets')}</th>
+                  <th className="right">{t('application.AddAssets')}</th>
                   <th className="center">{t('application.Season')}</th>
                   <th>{t('application.Content')}</th>
                   <th className="center">{t('application.BudgetSource')}</th>
-                  <th className="center">{t('application.Operator')}</th>
-                  <th>{t('application.State')}</th>
+                  <th>{t('application.Operator')}</th>
+                  <th className="center">{t('application.State')}</th>
+                  <th></th>
                 </tr>
               </thead>
               <tbody>
                 {list.map((item) => (
-                  <tr key={item.application_id} onClick={() => setDetailDisplay(item)}>
+                  <tr key={item.application_id}>
                     {/* <td>
                       <Form.Check
                         checked={!!selectMap[item.application_id]}
@@ -385,15 +510,18 @@ export default function AssetList() {
                     </td> */}
                     <td>{formatSNS(item.receiver_name || '')}</td>
 
-                    <td className="center">{item.asset_display}</td>
+                    <td className="right">{item.asset_display}</td>
                     <td className="center">{item.season_name}</td>
                     <td>
                       <BudgetContent>{item.detailed_type}</BudgetContent>
                     </td>
                     <td className="center">{item.budget_source}</td>
-                    <td className="center">{formatSNS(item.submitter_name)}</td>
-                    <td>
-                      <ApplicationStatusTag status={item.status} />
+                    <td>{formatSNS(item.submitter_name)}</td>
+                    <td className="center">
+                      <ApplicationStatusTagNew status={item.status} />
+                    </td>
+                    <td className="center">
+                      <MoreButton onClick={() => setDetailDisplay(item)}>{t('application.Detail')}</MoreButton>
                     </td>
                   </tr>
                 ))}
@@ -421,4 +549,25 @@ const BudgetContent = styled.div`
   display: -webkit-box;
   -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
+`;
+
+const MoreButton = styled.div`
+  padding-inline: 26px;
+  height: 34px;
+  line-height: 34px;
+  box-sizing: border-box;
+  display: inline-block;
+  background: var(--bs-box--background);
+  border-radius: 8px;
+  cursor: pointer;
+  border: 1px solid var(--bs-border-color);
+  font-size: 14px;
+`;
+
+const ExportButton = styled(MoreButton)`
+  width: 100%;
+  height: 40px;
+  line-height: 40px;
+  font-family: 'Poppins-SemiBold';
+  text-align: center;
 `;

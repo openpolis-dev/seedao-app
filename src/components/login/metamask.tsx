@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { ethers } from 'ethers';
 import { createSiweMessage } from '../../utils/sign';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import ReactGA from 'react-ga4';
 import requests from '../../requests';
 import { AppActionType, useAuthContext } from '../../providers/authProvider';
@@ -14,8 +14,12 @@ import { SELECT_WALLET } from '../../utils/constant';
 import styled from 'styled-components';
 import MetamaskIcon from '../../assets/Imgs/home/METAmask.svg';
 import OneSignal from 'react-onesignal';
+import getConfig from 'utils/envCofnig';
+
+const network = getConfig().NETWORK;
 
 export default function Metamask() {
+  const { pathname } = useLocation();
   const navigate = useNavigate();
   const { dispatch } = useAuthContext();
 
@@ -73,7 +77,7 @@ export default function Metamask() {
       const nonce = await getMyNonce(account);
       const eip55Addr = ethers.utils.getAddress(account);
       console.error(eip55Addr);
-      const siweMessage = createSiweMessage(eip55Addr, 1, nonce, 'Welcome to SeeDAO!');
+      const siweMessage = createSiweMessage(eip55Addr, network.chainId, nonce, 'Welcome to SeeDAO!');
       setMsg(siweMessage);
       const signer = provider.getSigner();
       const signData = await signer.signMessage(siweMessage);
@@ -87,7 +91,9 @@ export default function Metamask() {
 
   useEffect(() => {
     if (!result) return;
-    navigate('/home');
+    if (!pathname.includes('/sns')) {
+      navigate('/home');
+    }
   }, [result]);
 
   const LoginTo = async () => {
@@ -109,7 +115,7 @@ export default function Metamask() {
       dispatch({ type: AppActionType.SET_LOGIN_DATA, payload: res.data });
 
       dispatch({ type: AppActionType.SET_ACCOUNT, payload: account });
-      dispatch({ type: AppActionType.SET_PROVIDER, payload: provider.getSigner() });
+      dispatch({ type: AppActionType.SET_PROVIDER, payload: provider });
 
       const authorizer = new Authorizer('auto', { endpoint: readPermissionUrl });
       await authorizer.setUser(account.toLowerCase());

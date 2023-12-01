@@ -69,7 +69,7 @@ export default function TallyForm({item,id,account,userData}){
          rt = `sns=${sns}`
          break;
        case "seed":
-         const seedArr = seed.map(obj => obj.token_id);
+         const seedArr = seed?.map(obj => obj.token_id)??[];
          rt = `seed=${seedArr.join(",")}`
          break;
      }

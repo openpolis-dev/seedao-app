@@ -7,19 +7,22 @@ import SocialIconBox from './socialIcon';
 import { useMemo } from 'react';
 import CopyBox from 'components/copy';
 import CopyIconSVG from 'components/svgs/copy';
+import { Form } from 'react-bootstrap';
 
 interface IProps {
   user: IUser;
   sns: string;
   role: UserRole;
+  showEdit?: boolean;
   removeText?: string;
+  onSelectUser?: (user: IUser) => void;
   showRemoveModal?: (user: IUser, role: UserRole) => void;
 }
 
-export default function MemberCard({ user, sns, role, removeText, showRemoveModal }: IProps) {
+export default function MemberCard({ user, sns, role, removeText, showRemoveModal, showEdit, onSelectUser }: IProps) {
   const { t } = useTranslation();
   const snsDisplay = useMemo(() => {
-    return sns || PublicJs.AddressToShow(user.wallet || '', 6);
+    return sns || PublicJs.AddressToShow(user.wallet || '', 4);
   }, [sns, user]);
 
   const handleClockRemove = () => {
@@ -27,6 +30,11 @@ export default function MemberCard({ user, sns, role, removeText, showRemoveModa
   };
   return (
     <InnerBox>
+      {showEdit && (
+        <CheckLft>
+          <Form.Check type="checkbox" onChange={() => onSelectUser && onSelectUser(user)} />
+        </CheckLft>
+      )}
       <ImgBox>
         <img className="avatar" src={user.avatar || DefaultAvatar} alt="" />
       </ImgBox>
@@ -84,6 +92,8 @@ const ImgBox = styled.div`
   img {
     width: 44px;
     height: 44px;
+    object-fit: cover;
+    object-position: center;
     border-radius: 44px;
   }
 `;
@@ -117,6 +127,8 @@ const HoverCardAvatar = styled.div`
   img {
     width: 80px;
     height: 80px;
+    object-fit: cover;
+    object-position: center;
     border-radius: 50%;
   }
 `;
@@ -167,4 +179,8 @@ const RemoveButton = styled.button`
   color: var(--bs-body-color);
   margin-top: 47px;
   text-align: center;
+`;
+
+const CheckLft = styled.div`
+  margin-right: 10px;
 `;

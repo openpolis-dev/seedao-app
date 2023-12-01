@@ -25,6 +25,8 @@ export interface IQueryApplicationsParams {
   user_wallet?: string;
   state?: ApplicationStatus;
   season_id?: number;
+  asset_name?: string;
+  detailed_type?: string;
 }
 
 export interface IQueryParams extends IQueryApplicationsParams {
@@ -135,8 +137,8 @@ export const compeleteApplications = (data: string[]) => {
   });
 };
 // process
-export const processApplications = (data: number[]) => {
-  return request.post(`/apps_process`, data);
+export const processApplications = () => {
+  return request.post(`/apps_process`);
 };
 
 // download
