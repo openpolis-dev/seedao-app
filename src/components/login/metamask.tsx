@@ -112,7 +112,7 @@ export default function Metamask() {
       dispatch({ type: AppActionType.SET_LOGIN_DATA, payload: res.data });
 
       dispatch({ type: AppActionType.SET_ACCOUNT, payload: account });
-      dispatch({ type: AppActionType.SET_PROVIDER, payload: provider.getSigner() });
+      dispatch({ type: AppActionType.SET_PROVIDER, payload: provider });
 
       const authorizer = new Authorizer('auto', { endpoint: readPermissionUrl });
       await authorizer.setUser(account.toLowerCase());

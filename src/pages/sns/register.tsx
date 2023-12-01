@@ -57,7 +57,7 @@ const RegisterSNSWrapper = () => {
   useEffect(() => {
     console.log('account', account);
     console.log('localData', localData);
-    if (account && !localData) {
+    if (!localData) {
       const localsns = localStorage.getItem('sns') || '';
       let data: LocalSNS;
       try {
@@ -67,6 +67,9 @@ const RegisterSNSWrapper = () => {
         return;
       }
       dispatchSNS({ type: ACTIONS.SET_LOCAL_DATA, payload: data });
+      if (!account || !data || !data[account]) {
+        dispatchSNS({ type: ACTIONS.SET_STEP, payload: 1 });
+      }
     }
   }, [account, localData]);
 
@@ -109,7 +112,10 @@ const RegisterSNSWrapper = () => {
   }, [account, localData]);
 
   const goStep1 = () => {
-    dispatchSNS({ type: ACTIONS.SET_STEP, payload: 1 });
+    if (step === 3) {
+      dispatchSNS({ type: ACTIONS.SET_STEP, payload: 1 });
+      dispatchSNS({ type: ACTIONS.SET_LOCAL_DATA, payload: undefined });
+    }
   };
 
   return (
