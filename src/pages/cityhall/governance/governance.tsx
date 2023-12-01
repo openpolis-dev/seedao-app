@@ -6,6 +6,7 @@ import Links from 'utils/links';
 import AppCard, { EmptyAppCard } from 'components/common/appCard';
 import { useAuthContext } from 'providers/authProvider';
 import { useNavigate } from 'react-router-dom';
+import LinkImg from '../../../assets/Imgs/link.svg';
 
 const AppBox = styled(Row)`
   div[class^='col'] {

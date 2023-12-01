@@ -7,6 +7,8 @@ import DefaultImgLight from '../../assets/Imgs/light/default.png';
 import { AppActionType, useAuthContext } from '../../providers/authProvider';
 import AddImg from '../../assets/Imgs/dark/add.svg';
 import AddImgLight from '../../assets/Imgs/light/add.svg';
+import LinkImg from '../../assets/Imgs/link.svg';
+import React from 'react';
 
 const AppCard = ({
   icon,
@@ -55,6 +57,9 @@ const AppCard = ({
         <div className="title">{name}</div>
         <div className="desc">{desc}</div>
       </div>
+      <div className="link">
+        <img src={LinkImg} alt="" />
+      </div>
     </AppCardStyle>
   );
 };
@@ -87,9 +92,18 @@ const AppCardStyle = styled.div`
   box-shadow: var(--box-shadow);
   width: 100%;
   height: 100%;
-
+  position: relative;
+  .link {
+    display: none;
+  }
   &:hover {
     background-color: var(--home-right_hover);
+    .link {
+      display: block;
+      position: absolute;
+      right: 10px;
+      top: 10px;
+    }
   }
   .iconBox {
     border-radius: 16px;
@@ -164,7 +178,8 @@ const AppCardStyle = styled.div`
 `;
 
 const AppCardStyleEmp = styled(AppCardStyle)`
+  
   &:hover {
     background-color: var(--bs-box--background);
-  }
+ 
 `;
