@@ -38,7 +38,7 @@ export default function LoginModal({ showModal }: any) {
     let type = localStorage.getItem(SELECT_WALLET);
     let walletType = type as Wallet;
 
-    if (account && provider) return;
+    if (provider) return;
     if (walletType === Wallet.METAMASK_INJECTED && window.ethereum) {
       // metamask
       const provider = new ethers.providers.Web3Provider(window.ethereum);
