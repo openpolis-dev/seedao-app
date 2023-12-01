@@ -4,7 +4,6 @@ import Page from 'components/pagination';
 import requests from 'requests';
 import { IApplicantBundleDisplay, ApplicationStatus, IApplicationDisplay } from 'type/application.type';
 import { formatTime } from 'utils/time';
-import utils from 'utils/publicJs';
 import { IQueryParams } from 'requests/applications';
 import NoItem from 'components/noItem';
 import publicJs from 'utils/publicJs';
@@ -23,6 +22,11 @@ import { ContainerPadding } from 'assets/styles/global';
 import ApplicationStatusTag from 'components/common/applicationStatusTagNew';
 import useApplicants from 'hooks/useApplicants';
 import { formatApplicationStatus } from 'utils';
+import sns from '@seedao/sns-js';
+import { ethers } from 'ethers';
+
+import SearchImg from 'assets/Imgs/light/search.svg';
+import SearchWhite from 'assets/Imgs/light/search.svg';
 
 const Box = styled.div`
   position: relative;
@@ -77,7 +81,10 @@ const TableBox = styled.div`
 
 export default function Register() {
   const { t } = useTranslation();
-  const { dispatch } = useAuthContext();
+  const {
+    dispatch,
+    state: { theme },
+  } = useAuthContext();
   const { showToast } = useToast();
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -87,9 +94,10 @@ export default function Register() {
   // budget source
   const allSource = useBudgetSource();
   const [selectSource, setSelectSource] = useState<{ id: number; type: 'project' | 'guild' }>();
-  // applicant
-  const applicants = useApplicants();
-  const [selectApplicant, setSelectApplicant] = useState<string>();
+
+  // search applicant
+  const [applicantKeyword, setApplicantKeyword] = useState('');
+  const [searchApplicantVal, setSearchApplicantVal] = useState('');
   // State
   const allStates = useMemo(() => {
     return [
@@ -150,7 +158,7 @@ export default function Register() {
     const queryData: IQueryParams = {
       //   state: ApplicationStatus.Open,
     };
-    if (selectApplicant) queryData.applicant = selectApplicant;
+    if (searchApplicantVal) queryData.applicant = searchApplicantVal;
     if (selectSource && selectSource.type) {
       queryData.entity_id = selectSource.id;
       queryData.entity = selectSource.type;
@@ -208,7 +216,7 @@ export default function Register() {
 
   useEffect(() => {
     selectSeason && getRecords();
-  }, [selectState, selectApplicant, selectSource, selectSeason, page, pageSize]);
+  }, [selectState, searchApplicantVal, selectSource, selectSeason, page, pageSize]);
 
   const formatSNS = (wallet: string) => {
     const name = snsMap.get(wallet) || wallet;
@@ -228,6 +236,38 @@ export default function Register() {
     setShowMore([...showMore.map((r) => ({ ...r, status }))]);
     setShowBundleStatus(status);
     getRecords();
+  };
+
+  const handleSearch = async (keyword: string, setSearchVal: (v: string) => void) => {
+    if (keyword.endsWith('.seedao')) {
+      // sns
+      dispatch({ type: AppActionType.SET_LOADING, payload: true });
+      const w = await sns.resolve(keyword);
+      if (w && w !== ethers.constants.AddressZero) {
+        setSearchVal(w?.toLocaleLowerCase());
+      } else {
+        showToast(t('Msg.SnsNotFound', { sns: keyword }), ToastType.Danger);
+      }
+      dispatch({ type: AppActionType.SET_LOADING, payload: false });
+    } else if (ethers.utils.isAddress(keyword)) {
+      // address
+      setSearchVal(keyword?.toLocaleLowerCase());
+    } else {
+      showToast(t('Msg.InvalidAddress', { address: keyword }), ToastType.Danger);
+    }
+  };
+
+  const onKeyUp = (e: any, type: string) => {
+    if (e.keyCode === 13) {
+      // document.activeElement.blur();
+      switch (type) {
+        case 'applicant':
+          handleSearch(applicantKeyword, setSearchApplicantVal);
+          break;
+        default:
+          return;
+      }
+    }
   };
 
   return (
@@ -260,17 +300,6 @@ export default function Register() {
               />
             </li>
             <li>
-              <div className="tit">{t('application.Operator')}</div>
-              <FilterSelect
-                options={applicants}
-                placeholder=""
-                onChange={(value: ISelectItem) => {
-                  setSelectApplicant(value?.value);
-                  setPage(1);
-                }}
-              />
-            </li>
-            <li>
               <div className="tit">{t('application.State')}</div>
               <Select
                 width="150px"
@@ -281,6 +310,18 @@ export default function Register() {
                   setPage(1);
                 }}
               />
+            </li>
+            <li>
+              <div className="tit">{t('application.Operator')}</div>
+              <SearchBox>
+                <img src={theme ? SearchWhite : SearchImg} alt="" />
+                <input
+                  type="text"
+                  placeholder={t('application.SearchApplicantHint')}
+                  onKeyUp={(e) => onKeyUp(e, 'applicant')}
+                  onChange={(e) => setApplicantKeyword(e.target.value)}
+                />
+              </SearchBox>
             </li>
           </TopLine>
 
@@ -398,4 +439,29 @@ const TotalAssets = styled.div`
   line-height: 20px;
   box-sizing: border-box;
   height: 100%;
+`;
+
+const SearchBox = styled.div`
+  width: 200px;
+  height: 40px;
+  background: var(--bs-box-background);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 8px;
+  border: 1px solid var(--bs-border-color);
+  input {
+    width: calc(100% - 15px);
+    border: 0;
+    background: transparent;
+    margin-left: 9px;
+    height: 24px;
+    &::placeholder {
+      color: var(--bs-body-color);
+    }
+    &:focus {
+      outline: none;
+    }
+  }
 `;
