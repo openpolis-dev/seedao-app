@@ -122,13 +122,16 @@ const Content = styled.div`
 const Block = styled.ul<{ underline?: boolean }>`
   display: flex;
   flex-direction: column;
-  gap: 18px;
-  padding-block: 24px;
+  gap: 14px;
+  padding-block: 16px;
   border-bottom: ${({ underline }) => (underline ? '1px solid var(--bs-border-color)' : 'none')};
   li {
     display: flex;
     gap: 20px;
-    min-height: 18px;
+    min-height: 24px;
+  }
+  &:first-child {
+    padding-top: 26px;
   }
   &:last-child {
     padding-bottom: 0;
@@ -138,16 +141,16 @@ const Block = styled.ul<{ underline?: boolean }>`
 const BlockLeft = styled.div`
   color: var(--bs-body-color);
   min-width: 102px;
-  &.text-field-label {
+  /* &.text-field-label {
     line-height: 40px;
-  }
+  } */
 `;
 const BlockRight = styled.div`
   flex: 1;
   color: var(--bs-body-color_active);
   &.text-field {
     border-radius: 8px;
-    padding-block: 10px;
+    /* padding-block: 10px; */
     word-break: break-all;
   }
 `;
