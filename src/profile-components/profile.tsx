@@ -9,8 +9,8 @@ import TwitterIcon from '../assets/Imgs/profileCom/twitter.svg';
 import EmailIcon from '../assets/Imgs/profileCom/message.svg';
 import MirrorImg from '../assets/Imgs/profileCom/mirror.svg';
 import GithubImg from '../assets/Imgs/profileCom/github.svg';
-import SeedList from '../components/profile/seed';
-import Sbt from '../components/profile/Sbt';
+import SeedList from './seed';
+import Sbt from './Sbt';
 
 const Box = styled.div`
   width: 512px;
@@ -149,10 +149,11 @@ const LinkBox = styled.ul`
 
 const BgBox = styled.div`
   background: var(--bs-box--background);
-  padding: 20px 24px;
+  padding: 20px 0;
   border-radius: 16px;
   box-shadow: var(--box-shadow);
   display: flex;
+  //flex-direction: column;
   align-items: center;
   margin: 10px 14px;
 `;
@@ -167,7 +168,21 @@ const RhtBoxB = styled.div`
 
 const BgBox2 = styled(BgBox)`
   margin-top: 0;
+  margin-bottom: 25px;
 `;
+
+const TitTop = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 11px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--bs-body-color_active);
+  line-height: 16px;
+  padding: 0 24px;
+`;
+
+const InneBox = styled.div``;
 
 export default function ProfileComponent() {
   const {
@@ -411,14 +426,20 @@ export default function ProfileComponent() {
         </InfoBox>
       </TopBox>
       <BgBox>
-        <RhtBoxB>
-          <SeedList list={list} />
-        </RhtBoxB>
+        <InneBox>
+          <TitTop>SEED({list.length})</TitTop>
+          <RhtBoxB>
+            <SeedList list={list} />
+          </RhtBoxB>
+        </InneBox>
       </BgBox>
       <BgBox2>
-        <RhtBoxB>
-          <Sbt list={sbtArr} />
-        </RhtBoxB>
+        <InneBox>
+          <TitTop>SBT({sbtList.length})</TitTop>
+          <RhtBoxB>
+            <Sbt list={sbtArr} />
+          </RhtBoxB>
+        </InneBox>
       </BgBox2>
     </Box>
   );

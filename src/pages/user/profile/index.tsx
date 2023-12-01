@@ -23,7 +23,6 @@ import SbtImg from '../../../assets/Imgs/profile/sbt.svg';
 
 import SeedList from '../../../components/profile/seed';
 import Sbt from '../../../components/profile/Sbt';
-import ProfileComponent from '../../../profile-components/profile';
 
 const OuterBox = styled.div`
   margin-bottom: 50px;
@@ -264,7 +263,6 @@ export default function Profile() {
     <OuterBox>
       {Toast}
       <TitleBox>{t('My.MyProfile')}</TitleBox>
-      {/*<ProfileComponent/>*/}
       <HeadBox>
         <LftBox>
           <AvatarBox>
