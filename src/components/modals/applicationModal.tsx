@@ -111,7 +111,7 @@ const ApplicationModalWrapper = styled(BasicModal)`
 
 const Content = styled.div`
   font-size: 14px;
-  max-height: 60vh;
+  max-height: 85vh;
   overflow-y: auto;
   section {
     display: flex;
