@@ -1,6 +1,6 @@
 import EthereumIcon from 'assets/Imgs/network/ethereum.png';
 
-const VERSION = '0.2.2';
+const VERSION = '0.2.3';
 
 const LOCAL = {
   REACT_APP_BASE_ENDPOINT: 'https://test-api.seedao.tech',
