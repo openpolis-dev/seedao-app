@@ -11,6 +11,9 @@ import { SELECT_WALLET } from 'utils/constant';
 import { Wallet } from '../../wallet/wallet';
 import { sendTransaction } from '@joyid/evm';
 import useToast, { ToastType } from 'hooks/useToast';
+import getConfig from 'utils/envCofnig';
+
+const networkConfig = getConfig().NETWORK;
 
 const buildSwitchData = (sns: string) => {
   const iface = new ethers.utils.Interface(ABI);
@@ -79,7 +82,10 @@ export default function SwitchModal({ select, handleClose }: IProps) {
   return (
     <SwitchModalStyle handleClose={handleClose}>
       <SelectSNS>{select}</SelectSNS>
-      <Content>{account}</Content>
+      <Content>
+        <img src={networkConfig.icon} alt="" />
+        <span>{account}</span>
+      </Content>
       <Footer>
         <PrimaryOutlinedButton
           onClick={() => handleClose()}
