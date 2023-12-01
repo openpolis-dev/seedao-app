@@ -203,6 +203,7 @@
     "MemberExist": "Please do not add members repeatedly"
   },
   "city-hall": {
+    "Cityhall": "City Hall",
     "Members": "Members",
     "Asset": "Asset",
     "Proposal": "Proposal",

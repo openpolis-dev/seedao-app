@@ -49,7 +49,7 @@ export default function Index() {
   const tabs = useMemo(() => {
     return canUseCityhall
       ? [
-          { key: SubPage.Members, title: t('city-hall.Members'), path: 'members' },
+          { key: SubPage.Members, title: `S4 ${t('city-hall.Cityhall')}`, path: 'members' },
           { key: SubPage.Governance, title: t('city-hall.Governance'), path: 'governance' },
           { key: SubPage.Brand, title: t('city-hall.Brand'), path: 'brand' },
           { key: SubPage.Tech, title: t('city-hall.Tech'), path: 'tech' },

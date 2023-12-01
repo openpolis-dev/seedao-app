@@ -204,6 +204,7 @@
     "MemberExist": "请不要重复添加成员"
   },
   "city-hall": {
+    "Cityhall": "市政厅",
     "Members": "成员",
     "Asset": "资产",
     "Proposal": "提案",
