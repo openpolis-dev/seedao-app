@@ -45,5 +45,7 @@ const AvatarStyle = styled.div`
     width: 28px;
     height: 28px;
     border-radius: 50%;
+    object-fit: cover;
+    object-position: center;
   }
 `;
