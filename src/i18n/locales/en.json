@@ -357,7 +357,7 @@
     "EmptySBT": "Not Owning SBT",
     "current": "Current",
     "level": "Level",
-    "levelTips": "To LV{{level}} you need",
+    "levelTips": "To LV {{level}} you need",
     "nextLevel": "Next Level",
     "DefaultName": "No Name",
     "DefaultBio": "No Bio"

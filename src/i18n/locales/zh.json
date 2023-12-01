@@ -357,7 +357,7 @@
     "EmptySBT": "您还未拥有SBT",
     "current": "当前",
     "level": "等级",
-    "levelTips": "距离升级到LV{{level}}还需",
+    "levelTips": "距离升级到 LV{{level}} 还需",
     "nextLevel": "下一等级" ,
     "DefaultName": "TA没有留下昵称",
     "DefaultBio": "TA很神秘哦，并没有介绍自己"

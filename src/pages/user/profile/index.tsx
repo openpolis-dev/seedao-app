@@ -262,7 +262,7 @@ export default function Profile() {
   return (
     <OuterBox>
       {Toast}
-      <TitleBox>{t('My.MyProfile')}</TitleBox>
+      {/*<TitleBox>{t('My.MyProfile')}</TitleBox>*/}
       <HeadBox>
         <LftBox>
           <AvatarBox>
