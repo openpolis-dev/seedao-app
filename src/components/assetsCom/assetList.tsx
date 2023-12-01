@@ -102,7 +102,6 @@ const TitBox = styled.div`
 
 const FilterLine = styled.div`
   width: 100%;
-  margin-bottom: 20px;
   table {
     td {
       border: none !important;
@@ -117,7 +116,6 @@ const TableBox = styled.div`
   width: 100%;
   overflow-x: auto;
   overflow-y: hidden;
-  padding-bottom: 3rem;
   th {
     text-align: center;
     &:first-child,

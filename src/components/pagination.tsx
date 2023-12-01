@@ -11,7 +11,7 @@ const Box = styled.div<{ dir: string }>`
   //justify-content: space-between;
   align-items: center;
 
-  margin-top: 40px;
+  margin-top: 20px;
   width: 100%;
   justify-content: ${(props) => (props.dir === 'right' ? 'flex-end' : 'flex-start')};
   a {
