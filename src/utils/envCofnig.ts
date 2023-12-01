@@ -19,6 +19,7 @@ const LOCAL = {
     rpc: 'https://ethereum-sepolia.blockpi.network/v1/rpc/public',
     icon: EthereumIcon,
   },
+  INDEXER_ENDPOINT: 'https://test-spp-indexer.seedao.tech',
 };
 const DEVELOPMENT = {
   ...LOCAL,
@@ -55,6 +56,7 @@ const PRODUCTION = {
     // chainId: 1,
     // rpc: 'https://mainnet.infura.io/v3/',
   },
+  INDEXER_ENDPOINT: 'https://spp-indexer.seedao.tech',
 };
 
 export default function getConfig() {
