@@ -353,19 +353,19 @@ export default function GoveranceNodeResult() {
             <th>SNS</th>
             {allSeasons.map((s, i) => {
               return i === allSeasons.length - 1 ? (
-                <th>
+                <th className="right">
                   <CurrentSeason>{currentSeason}</CurrentSeason>(SCR)
                 </th>
               ) : (
-                <th key={s}>{`S${s}(SCR)`}</th>
+                <th key={s} className="right">{`S${s}(SCR)`}</th>
               );
             })}
-            <th>{t('GovernanceNodeResult.VoteCount', { season: currentSeason })}</th>
-            <th>{t('GovernanceNodeResult.MinerReward', { season: currentSeason })}(SCR)</th>
-            <th>{t('GovernanceNodeResult.Total')}(SCR)</th>
-            <th>{t('GovernanceNodeResult.ActiveSCR')}</th>
-            <th>{t('GovernanceNodeResult.EffectiveSCR')}</th>
-            <th>{t('GovernanceNodeResult.SeedCount')}</th>
+            <th className="center">{t('GovernanceNodeResult.VoteCount', { season: currentSeason })}</th>
+            <th className="right">{t('GovernanceNodeResult.MinerReward', { season: currentSeason })}(SCR)</th>
+            <th className="right">{t('GovernanceNodeResult.Total')}(SCR)</th>
+            <th className="right">{t('GovernanceNodeResult.ActiveSCR')}</th>
+            <th className="right">{t('GovernanceNodeResult.EffectiveSCR')}</th>
+            <th className="center">{t('GovernanceNodeResult.SeedCount')}</th>
           </thead>
         </Table>
         <Table id="body-table">
@@ -375,17 +375,17 @@ export default function GoveranceNodeResult() {
               <tr key={item.wallet}>
                 <td>{formatSNS(item.wallet)}</td>
                 {[...allSeasons].map((season) => (
-                  <td key={season}>
+                  <td key={season} className="right">
                     {formatNumber(Number(item.seasons_credit?.find((s) => s.season_idx === season)?.total || 0))}
                   </td>
                 ))}
 
-                <td>{formatNumber(Number(item.metaforo_vote_count) || 0)}</td>
-                <td>{formatNumber(Number(item.metaforo_credit) || 0)}</td>
-                <td>{formatNumber(Number(item.season_total_credit) || 0)}</td>
-                <td>{formatNumber(Number(item.activity_credit) || 0)}</td>
-                <td>{formatNumber(Number(item.effective_credit) || 0)}</td>
-                <td>{item.seed_count}</td>
+                <td className="center">{formatNumber(Number(item.metaforo_vote_count) || 0)}</td>
+                <td className="right">{formatNumber(Number(item.metaforo_credit) || 0)}</td>
+                <td className="right">{formatNumber(Number(item.season_total_credit) || 0)}</td>
+                <td className="right">{formatNumber(Number(item.activity_credit) || 0)}</td>
+                <td className="right">{formatNumber(Number(item.effective_credit) || 0)}</td>
+                <td className="center">{item.seed_count}</td>
               </tr>
             ))}
           </tbody>
@@ -443,6 +443,9 @@ const TableBox = styled.div`
     &#head-table {
       position: sticky;
       top: 0;
+      th {
+        padding-right: 0;
+      }
     }
     thead tr:first-child {
       th {
@@ -464,11 +467,9 @@ const TableBox = styled.div`
     th {
       border-style: inherit;
       box-sizing: border-box;
-      text-align: center;
     }
     td {
       padding: 0;
-      text-align: center;
       box-sizing: border-box;
       line-height: 74px;
     }

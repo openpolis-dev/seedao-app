@@ -232,11 +232,11 @@ export default function Issued() {
               <thead>
                 <tr>
                   <th>{t('application.Receiver')}</th>
-                  <th className="center">{t('application.AddAssets')}</th>
+                  <th className="right">{t('application.AddAssets')}</th>
                   <th className="center">{t('application.Season')}</th>
                   <th>{t('application.Content')}</th>
-                  <th className="center">{t('application.BudgetSource')}</th>
-                  <th className="center">{t('application.Auditor')}</th>
+                  <th>{t('application.BudgetSource')}</th>
+                  <th>{t('application.Auditor')}</th>
                   <th className="center">{t('application.State')}</th>
                   <th></th>
                 </tr>
@@ -246,13 +246,13 @@ export default function Issued() {
                 {list.map((item) => (
                   <tr key={item.application_id}>
                     <td>{formatSNS(item.target_user_wallet.toLocaleLowerCase())}</td>
-                    <td className="center">{item.asset_display}</td>
+                    <td className="right">{item.asset_display}</td>
                     <td className="center">{item.season_name}</td>
                     <td>
                       <BudgetContent>{item.detailed_type}</BudgetContent>
                     </td>
-                    <td className="center">{item.budget_source}</td>
-                    <td className="center">{formatSNS(item.reviewer_wallet.toLocaleLowerCase())}</td>
+                    <td>{item.budget_source}</td>
+                    <td>{formatSNS(item.reviewer_wallet.toLocaleLowerCase())}</td>
                     <td className="center">
                       <ApplicationStatusTagNew status={item.status} />
                     </td>

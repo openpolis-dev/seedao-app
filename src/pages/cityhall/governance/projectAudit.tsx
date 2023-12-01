@@ -170,7 +170,7 @@ export default function ProjectAudit() {
                   <tr>
                     <th>{t('application.Project')}</th>
                     <th>{t('application.CloseReason')}</th>
-                    <th>{t('application.State')}</th>
+                    <th className="center">{t('application.State')}</th>
                     <th>{t('application.Applicant')}</th>
                     <th>{t('application.ApplyTime')}</th>
                     <th></th>
@@ -185,7 +185,7 @@ export default function ProjectAudit() {
                       <td>
                         <ContentCell>{item.detailed_type}</ContentCell>
                       </td>
-                      <td>
+                      <td className="center">
                         <ApplicationStatusTagNew status={item.status} isProj={true} />
                       </td>
                       <td>{formatSNS(item.submitter_name)}</td>
