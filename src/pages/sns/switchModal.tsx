@@ -87,12 +87,9 @@ export default function SwitchModal({ select, handleClose }: IProps) {
         <span>{account}</span>
       </Content>
       <Footer>
-        <PrimaryOutlinedButton
-          onClick={() => handleClose()}
-          style={{ width: '110px', height: '40px', lineHeight: '40px' }}
-        >
+        <Button variant="outline-primary" onClick={() => handleClose()} style={{ width: '110px' }}>
           {t('general.cancel')}
-        </PrimaryOutlinedButton>
+        </Button>
         <Button variant="primary" onClick={handleSwitch} style={{ width: '110px' }}>
           {t('general.confirm')}
         </Button>
