@@ -169,7 +169,7 @@ export default function ExpandTable({
             </span>
           </TotalAssets>
           <MoreInfo>
-            <MoreInfoTitle>{t('application.RegisterNote')}</MoreInfoTitle>
+            <MoreInfoTitle>{t('application.ApplyIntro')}</MoreInfoTitle>
             <MoreInfoDesc>{applyIntro}</MoreInfoDesc>
           </MoreInfo>
           <OperateBox>

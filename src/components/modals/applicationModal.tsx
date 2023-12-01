@@ -64,7 +64,7 @@ export default function ApplicationModal({ application, handleClose, snsMap }: I
             <BlockRight>{application.created_date}</BlockRight>
           </li>
           <li>
-            <BlockLeft>{t('application.RegisterNote')}</BlockLeft>
+            <BlockLeft>{t('application.ApplyIntro')}</BlockLeft>
             <BlockRight>{application.app_bundle_comment}</BlockRight>
           </li>
         </Block>
