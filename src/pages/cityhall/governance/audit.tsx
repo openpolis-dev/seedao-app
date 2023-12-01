@@ -102,6 +102,8 @@ export default function Register() {
   // season
   const seasons = useSeasons();
   const selectSeason = seasons.length ? seasons[seasons.length - 1].value : undefined;
+  // process flag
+  const [isProcessing, setIsProcessing] = useState(true);
 
   const [showMore, setShowMore] = useState<IApplicationDisplay[]>();
   const [showBundleId, setShowBundleId] = useState<number>();
@@ -126,6 +128,21 @@ export default function Register() {
   const handleSNS = async (wallets: string[]) => {
     const sns_map = await getMultiSNS(wallets);
     setSnsMap(sns_map);
+  };
+
+  const checkProcessStatus = async () => {
+    const res = await requests.application.getProjectApplications(
+      {
+        page: 1,
+        size: 1,
+        sort_field: 'create_ts',
+        sort_order: 'desc',
+      },
+      {
+        state: ApplicationStatus.Processing,
+      },
+    );
+    setIsProcessing(!!res.data.rows.length);
   };
 
   const getRecords = async () => {
@@ -186,6 +203,10 @@ export default function Register() {
   };
 
   useEffect(() => {
+    checkProcessStatus();
+  }, []);
+
+  useEffect(() => {
     selectSeason && getRecords();
   }, [selectState, selectApplicant, selectSource, selectSeason, page, pageSize]);
 
@@ -220,6 +241,7 @@ export default function Register() {
           updateStatus={updateStatus}
           showLoading={showLoading}
           applyIntro={applyIntro}
+          isProcessing={isProcessing}
         />
       ) : (
         <>

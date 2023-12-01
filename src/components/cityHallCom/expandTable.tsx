@@ -26,6 +26,7 @@ interface IProps {
   showLoading: (show: boolean) => void;
   status?: ApplicationStatus;
   applyIntro: string;
+  isProcessing: boolean;
 }
 
 export default function ExpandTable({
@@ -36,6 +37,7 @@ export default function ExpandTable({
   showLoading,
   status,
   applyIntro,
+  isProcessing,
 }: IProps) {
   const { t } = useTranslation();
   const { showToast } = useToast();
@@ -172,11 +174,11 @@ export default function ExpandTable({
           <OperateBox>
             <Button
               onClick={handleApprove}
-              disabled={status !== ApplicationStatus.Open && status !== ApplicationStatus.Rejected}
+              disabled={isProcessing || (status !== ApplicationStatus.Open && status !== ApplicationStatus.Rejected)}
             >
               {t('city-hall.Pass')}
             </Button>
-            <PinkButton onClick={handleReject} disabled={status !== ApplicationStatus.Open}>
+            <PinkButton onClick={handleReject} disabled={isProcessing || status !== ApplicationStatus.Open}>
               {t('city-hall.Reject')}
             </PinkButton>
           </OperateBox>
