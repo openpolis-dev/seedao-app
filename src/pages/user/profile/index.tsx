@@ -36,7 +36,7 @@ const HeadBox = styled.div`
   justify-content: space-between;
   background: var(--bs-box--background);
   margin-bottom: 24px;
-  padding: 20px 24px;
+  padding: 20px 24px 5px;
   border-radius: 16px;
   box-shadow: var(--box-shadow);
 `;
@@ -480,7 +480,7 @@ const LinkBox = styled.ul`
   display: flex;
   margin-top: 40px;
   li {
-    margin-right: 16px;
+    margin-left: 16px;
   }
   .copy-content {
     display: inline-block;
