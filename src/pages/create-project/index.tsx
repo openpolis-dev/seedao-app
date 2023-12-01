@@ -424,7 +424,7 @@ const CardBody = styled.div`
 `;
 
 const BtmBox = styled.div`
-  margin-top: 24px;
+  margin-top: 10px;
   button {
     width: 76px;
     height: 34px;
@@ -438,8 +438,9 @@ const BtmBox = styled.div`
 const UlBox = styled.ul`
   display: flex;
   flex-direction: column;
-  gap: 40px;
+  //gap: 40px;
   li {
+    margin-bottom: 40px;
     .title {
       font-size: 16px;
       font-family: Poppins-SemiBold, Poppins;
