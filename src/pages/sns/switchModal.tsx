@@ -117,6 +117,9 @@ const Footer = styled.div`
   justify-content: center;
   gap: 24px;
   margin-top: 77px;
+  button.btn {
+    margin-right: 0;
+  }
 `;
 
 const Content = styled.div`
