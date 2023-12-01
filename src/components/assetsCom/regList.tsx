@@ -196,7 +196,6 @@ const FirstBox = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 20px;
 `;
 
 const RhtBox = styled.div`

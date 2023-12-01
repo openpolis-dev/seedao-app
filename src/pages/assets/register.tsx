@@ -269,4 +269,5 @@ const ButtonSection = styled(SectionBlock)`
 
 const SourceSelect = styled(Select)`
   width: 348px;
+  margin-bottom: -10px;
 `;
