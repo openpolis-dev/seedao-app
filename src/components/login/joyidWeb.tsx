@@ -97,7 +97,7 @@ export default function JoyidWeb() {
       let res = await requests.user.login(obj);
       console.log('LoginTo', res);
       setResult(res.data);
-      dispatch({ type: AppActionType.SET_ACCOUNT, payload: account });
+      dispatch({ type: AppActionType.SET_ACCOUNT, payload: account.toLowerCase() });
 
       const now = Date.now();
       res.data.token_exp = now + res.data.token_exp * 1000;
