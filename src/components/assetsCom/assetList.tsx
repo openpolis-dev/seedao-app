@@ -117,7 +117,6 @@ const TableBox = styled.div`
   overflow-x: auto;
   overflow-y: hidden;
   th {
-    text-align: center;
     &:first-child,
     &:nth-child(4) {
       text-align: left;
@@ -491,11 +490,11 @@ export default function AssetList() {
                     <Form.Check checked={ifSelectAll} onChange={(e) => onSelectAll(e.target.checked)} />
                   </th> */}
                   <th>{t('application.Receiver')}</th>
-                  <th className="center">{t('application.AddAssets')}</th>
+                  <th className="right">{t('application.AddAssets')}</th>
                   <th className="center">{t('application.Season')}</th>
                   <th>{t('application.Content')}</th>
                   <th className="center">{t('application.BudgetSource')}</th>
-                  <th className="center">{t('application.Operator')}</th>
+                  <th>{t('application.Operator')}</th>
                   <th className="center">{t('application.State')}</th>
                   <th></th>
                 </tr>
@@ -511,13 +510,13 @@ export default function AssetList() {
                     </td> */}
                     <td>{formatSNS(item.receiver_name || '')}</td>
 
-                    <td className="center">{item.asset_display}</td>
+                    <td className="right">{item.asset_display}</td>
                     <td className="center">{item.season_name}</td>
                     <td>
                       <BudgetContent>{item.detailed_type}</BudgetContent>
                     </td>
                     <td className="center">{item.budget_source}</td>
-                    <td className="center">{formatSNS(item.submitter_name)}</td>
+                    <td>{formatSNS(item.submitter_name)}</td>
                     <td className="center">
                       <ApplicationStatusTagNew status={item.status} />
                     </td>
