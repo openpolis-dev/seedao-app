@@ -485,7 +485,7 @@ const TableBox = styled.div`
     }
   }
   @media (max-width: 1520px) {
-    height: calc(100vh - 440px);
+    height: calc(100vh - 410px);
   }
 `;
 
