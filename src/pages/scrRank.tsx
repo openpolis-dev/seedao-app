@@ -24,7 +24,7 @@ const ColGroup = ({ seasons }: { seasons: number[] }) => {
   return (
     <colgroup>
       <col style={{ width: '80px' }} />
-      <col style={{ width: '220px' }} />
+      <col style={{ width: '170px' }} />
       {seasons.map((s) => (
         <col style={{ width: '150px' }} key={s} />
       ))}
@@ -216,21 +216,21 @@ export default function SCRRank() {
         <Table id="head-table">
           <ColGroup seasons={allSeasons} />
           <thead>
-            <th>No.</th>
+            <th className="center">No.</th>
             <th>SNS</th>
             {allSeasons.map((s, i) => {
               return i === allSeasons.length - 1 ? (
-                <th key={i}>
+                <th key={i} className="right">
                   <ColumnSort onClick={onClickCurrentRank}>
                     <span>{currentSeason} (SCR)</span>
                     <img src={getRankIcon(rankCurrent)} alt="" />
                   </ColumnSort>
                 </th>
               ) : (
-                <th key={s}>{`S${s}(SCR)`}</th>
+                <th className="right" key={s}>{`S${s}(SCR)`}</th>
               );
             })}
-            <th>
+            <th className="right">
               <ColumnSort onClick={onClicktotalRank}>
                 <span>{t('GovernanceNodeResult.Total')}(SCR)</span>
                 <img src={getRankIcon(rankTotal)} alt="" />
@@ -243,16 +243,16 @@ export default function SCRRank() {
           <tbody>
             {displayList.map((item, index) => (
               <tr key={item.wallet}>
-                <td>{index + 1}</td>
+                <td className="center">{index + 1}</td>
                 <td>{formatSNS(item.wallet)}</td>
                 {[...allSeasons].map((season) => (
-                  <td key={season}>
+                  <td key={season} className="right">
                     {formatNumber(
                       Number(getShortDisplay(item.seasons_credit?.find((s) => s.season_idx === season)?.total || 0, 2)),
                     )}
                   </td>
                 ))}
-                <td>{formatNumber(Number(getShortDisplay(item.season_total_credit || 0, 2)))}</td>
+                <td className="right">{formatNumber(Number(getShortDisplay(item.season_total_credit || 0, 2)))}</td>
               </tr>
             ))}
           </tbody>
@@ -282,6 +282,9 @@ const TableBox = styled.div`
     &#head-table {
       position: sticky;
       top: 0;
+      th {
+        padding-right: 0;
+      }
     }
     thead tr:first-child {
       th {
@@ -303,11 +306,12 @@ const TableBox = styled.div`
     th {
       border-style: inherit;
       box-sizing: border-box;
-      text-align: center;
+    }
+    th:first-child {
+      padding-left: 0 !important;
     }
     td {
       padding: 0;
-      text-align: center;
       box-sizing: border-box;
       line-height: 74px;
     }
@@ -315,7 +319,7 @@ const TableBox = styled.div`
       padding: 0 !important;
     }
     tr td:last-child {
-      padding: 0 !important;
+      padding: 0 20px 0 0 !important;
     }
     th.sticky,
     td.sticky {
