@@ -49,7 +49,7 @@ export default function UserSNS() {
       <BackerNav title={t('SNS.MySNS')} to="/sns/register" mb="0" />
       <Container>
         <ContainerWrapper>
-          <CurrentUsed>{userSNS || account}</CurrentUsed>
+          <CurrentUsed>{userSNS}</CurrentUsed>
           {loading ? (
             <Loading />
           ) : !!snsList.length ? (
