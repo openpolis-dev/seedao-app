@@ -47,9 +47,10 @@ const AppCardBox = (props: { children: React.ReactNode }) => {
 };
 
 const BtmBox = styled.div`
-  margin-top: 40px;
+  margin-top: 20px;
   border-top: 1px solid var(--bs-border-color);
   padding-top: 40px;
+  margin-left: 12px;
 `;
 
 const LiBox = styled(Col)`
