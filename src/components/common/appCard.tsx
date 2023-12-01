@@ -14,6 +14,7 @@ const AppCard = ({
   icon,
   name,
   link,
+  Nolink,
   id,
   desc,
   hiddenFields,
@@ -23,6 +24,7 @@ const AppCard = ({
   name: string;
   link: string;
   id: string;
+  Nolink?: boolean;
   desc?: string;
   hiddenFields?: string[];
   handleShow?: (arg0: string) => void;
@@ -48,7 +50,7 @@ const AppCard = ({
     }
   };
   return (
-    <AppCardStyle className="boxApp" onClick={handleClickEvent}>
+    <AppCardStyle className="boxApp" onClick={handleClickEvent} Nolink={Nolink?.toString()}>
       <div className="iconBox">
         <img src={icon ? icon : theme ? DefaultImg : DefaultImgLight} alt="" />
         <div className="inner" />
@@ -79,8 +81,11 @@ export const EmptyAppCard = ({ theme }: any) => {
     </AppCardStyleEmp>
   );
 };
+interface Iprops {
+  Nolink?: any;
+}
 
-const AppCardStyle = styled.div`
+const AppCardStyle = styled.div<Iprops>`
   padding: 14px;
   border-radius: 16px;
   overflow: hidden;
@@ -99,7 +104,8 @@ const AppCardStyle = styled.div`
   &:hover {
     background-color: var(--home-right_hover);
     .link {
-      display: block;
+      display: ${(props) => (props.Nolink === 'true' ? 'none' : 'block')};
+      //display: block;
       position: absolute;
       right: 10px;
       top: 10px;

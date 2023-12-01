@@ -157,6 +157,7 @@ const links = {
       id: 'module-governance-audit',
       icon: RImg7,
       desc: 'city-hall.PointsAndTokenAuditDesc',
+      Nolink: true,
     },
     {
       name: 'city-hall.CloseProjectAudit',
@@ -164,6 +165,7 @@ const links = {
       id: 'module-governance-audit-project',
       icon: RImg8,
       desc: 'city-hall.CloseProjectAuditDesc',
+      Nolink: true,
     },
   ],
   governanceBtm: [
