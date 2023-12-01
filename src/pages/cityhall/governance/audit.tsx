@@ -331,36 +331,36 @@ export default function Register() {
                 <table className="table" cellPadding="0" cellSpacing="0">
                   <thead>
                     <tr>
-                      <th className="center">{t('application.BudgetSource')}</th>
-                      <th className="center">{t('application.TotalAssets')}</th>
-                      <th>{t('application.State')}</th>
+                      <th>{t('application.BudgetSource')}</th>
+                      <th className="right">{t('application.TotalAssets')}</th>
+                      <th className="center">{t('application.State')}</th>
                       <th>{t('application.ApplyIntro')}</th>
-                      <th className="center">{t('application.Operator')}</th>
-                      <th className="center">{t('application.ApplyTime')}</th>
+                      <th>{t('application.Operator')}</th>
+                      <th>{t('application.ApplyTime')}</th>
                       <th>&nbsp;</th>
                     </tr>
                   </thead>
                   <tbody>
                     {list.map((item) => (
                       <tr key={item.id}>
-                        <td className="center">
+                        <td>
                           <CommentBox>{item.entity.name}</CommentBox>
                         </td>
-                        <td className="center">
+                        <td className="right">
                           <TotalAssets>
                             {item.assets_display.map((asset, idx) => (
                               <div key={idx}>{asset}</div>
                             ))}
                           </TotalAssets>
                         </td>
-                        <td>
+                        <td className="center">
                           <ApplicationStatusTag status={item.state} />
                         </td>
                         <td>
                           <CommentBox>{item.comment}</CommentBox>
                         </td>
-                        <td className="center">{formatSNS(item.applicant)}</td>
-                        <td className="center">{item.created_date}</td>
+                        <td>{formatSNS(item.applicant)}</td>
+                        <td>{item.created_date}</td>
                         <td>
                           <TotalCountButton
                             onClick={() => {

@@ -126,12 +126,12 @@ export default function ExpandTable({
             <thead>
               <tr>
                 <th>{t('application.Receiver')}</th>
-                <th className="center">{t('application.AddAssets')}</th>
+                <th className="right">{t('application.AddAssets')}</th>
                 <th className="center">{t('application.Season')}</th>
                 <th>{t('application.Content')}</th>
-                <th className="center">{t('application.BudgetSource')}</th>
-                <th className="center">{t('application.Operator')}</th>
-                <th>{t('application.State')}</th>
+                <th>{t('application.BudgetSource')}</th>
+                <th>{t('application.Operator')}</th>
+                <th className="center">{t('application.State')}</th>
                 <th></th>
               </tr>
             </thead>
@@ -139,19 +139,17 @@ export default function ExpandTable({
               {list.map((item) => (
                 <tr key={item.application_id}>
                   <td>{formatSNS(item.target_user_wallet?.toLocaleLowerCase())}</td>
-                  <td className="center">{item.asset_display}</td>
+                  <td className="right">{item.asset_display}</td>
                   <td className="center">{item.season_name}</td>
                   <td>
                     <BudgetContent>{item.detailed_type}</BudgetContent>
                   </td>
-                  <td className="center">{item.budget_source}</td>
+                  <td>{item.budget_source}</td>
+                  <td>{item.applicant_wallet && formatSNS(item.applicant_wallet?.toLocaleLowerCase())}</td>
                   <td className="center">
-                    {item.applicant_wallet && formatSNS(item.applicant_wallet?.toLocaleLowerCase())}
-                  </td>
-                  <td>
                     <ApplicationStatusTag status={item.status} />
                   </td>
-                  <td>
+                  <td className="center">
                     <MoreButton onClick={() => setDetailDisplay(item)}>{t('application.Detail')}</MoreButton>
                   </td>
                 </tr>
