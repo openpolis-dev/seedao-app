@@ -511,10 +511,10 @@
   },
   "SNS": {
     "EntranceTitle": "INVOLVED IN SEEDAO IN YOUR NAME",
-    "EntranceDesc": "SeeDAO Name Service (SNS) is your unique symbol at seedao",
+    "EntranceDesc": "SeeDAO Name Service (SNS) is your unique symbol at SeeDAO",
     "Started": "Started",
     "Step1Title": "Your SeeDAO Username",
-    "Step1Desc": "Your identity across SeeDAO,one name for all your SeeDAO address, and your SeeDAO website.",
+    "Step1Desc": "Your identity across SeeDAO, one name for all your SeeDAO address, and your SeeDAO website.",
     "Available": "Available",
     "Uavailable": "Uavailable",
     "FreeMint": "Free mint",
