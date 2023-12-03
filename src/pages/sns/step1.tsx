@@ -20,6 +20,7 @@ import { sendTransaction } from '@joyid/evm';
 import { SELECT_WALLET } from 'utils/constant';
 import { Wallet } from '../../wallet/wallet';
 import ABI from 'assets/abi/snsRegister.json';
+import getConfig from 'utils/envCofnig';
 
 enum AvailableStatus {
   DEFAULT = 'default',
@@ -124,6 +125,8 @@ export default function RegisterSNSStep1() {
     if (!account) {
       return;
     }
+    const wallet = localStorage.getItem(SELECT_WALLET);
+    const networConfig = wallet === Wallet.UNIPASS ? getConfig().UNIPASS_NETWORK : getConfig().NETWORK;
     // mint
     try {
       const _s = getRandomCode();
@@ -132,16 +135,15 @@ export default function RegisterSNSStep1() {
       const commitment = await contract.makeCommitment(
         searchVal,
         account,
-        builtin.PUBLIC_RESOLVER_ADDR,
+        networConfig.PUBLIC_RESOLVER_ADDR,
         ethers.utils.formatBytes32String(_s),
       );
       // commit
       dispatchSNS({ type: ACTIONS.SHOW_LOADING });
-      const wallet = localStorage.getItem(SELECT_WALLET);
       let txHash: string;
       if (wallet && wallet === Wallet.JOYID_WEB) {
         txHash = await sendTransaction({
-          to: builtin.SEEDAO_REGISTRAR_CONTROLLER_ADDR,
+          to: networConfig.SEEDAO_REGISTRAR_CONTROLLER_ADDR,
           from: account,
           value: '0',
           data: buildCommitData(commitment),

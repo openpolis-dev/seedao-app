@@ -15,6 +15,8 @@ import { clearStorage } from "../../utils/auth";
 import styled from "styled-components";
 import UnipassIcon from "../../assets/Imgs/home/UniPass.svg";
 import OneSignal from 'react-onesignal';
+import getConfig from "utils/envCofnig";
+const networkConfig = getConfig().UNIPASS_NETWORK;
 
 const WalletOption = styled.li`
     display: flex;
@@ -39,17 +41,18 @@ const WalletOption = styled.li`
 `;
 
 export const upProvider = new UniPassProvider({
-    chainId: 1,
-    returnEmail: false,
-    appSetting: {
-        appName: 'test dapp',
-        appIcon: 'your icon url',
-    },
-    rpcUrls: {
-        mainnet: "https://eth.llamarpc.com",
-        // polygon: "https://polygon.llamarpc.com",
-        // bscTestnet:"https://data-seed-prebsc-1-s1.binance.org:8545"
-    },
+  chainId: networkConfig.chainId,
+  returnEmail: false,
+  appSetting: {
+    appName: 'SeeDAO',
+    appIcon: `${window.location.origin}/icon192.png`,
+  },
+  rpcUrls: {
+    mainnet: 'https://eth.llamarpc.com',
+    goerli: networkConfig.rpc,
+    // polygon: "https://polygon.llamarpc.com",
+    // bscTestnet:"https://data-seed-prebsc-1-s1.binance.org:8545"
+  },
 });
 
 

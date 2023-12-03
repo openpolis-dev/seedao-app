@@ -12,13 +12,13 @@ import BackerNav from 'components/common/backNav';
 import ABI from 'assets/abi/snsRegister.json';
 import { builtin } from '@seedao/sns-js';
 import getConfig from 'utils/envCofnig';
+import { Wallet } from 'wallet/wallet';
+import { SELECT_WALLET } from 'utils/constant';
 
 const RegisterSNSWrapper = () => {
   const {
     state: { account, provider },
   } = useAuthContext();
-
-  const networkConfig = getConfig().NETWORK;
 
   const {
     state: { step, localData, loading },
@@ -35,6 +35,9 @@ const RegisterSNSWrapper = () => {
         return;
       }
       const network = await provider.getNetwork();
+      const wallet = localStorage.getItem(SELECT_WALLET);
+      const networkConfig = wallet === Wallet.UNIPASS ? getConfig().UNIPASS_NETWORK : getConfig().NETWORK;
+
       if (network?.chainId !== networkConfig.chainId) {
         // switch network;
         try {
@@ -48,7 +51,11 @@ const RegisterSNSWrapper = () => {
         }
       }
       console.log('signer', provider.getSigner(account));
-      const _contract = new ethers.Contract(builtin.SEEDAO_REGISTRAR_CONTROLLER_ADDR, ABI, provider.getSigner(account));
+      const _contract = new ethers.Contract(
+        networkConfig.SEEDAO_REGISTRAR_CONTROLLER_ADDR,
+        ABI,
+        provider.getSigner(account),
+      );
       dispatchSNS({ type: ACTIONS.SET_CONTRACT, payload: _contract });
     };
     provider && initContract();

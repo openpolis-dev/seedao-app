@@ -1,4 +1,5 @@
 import EthereumIcon from 'assets/Imgs/network/ethereum.png';
+import { builtin } from '@seedao/sns-js';
 
 const VERSION = '0.2.3';
 
@@ -18,6 +19,16 @@ const LOCAL = {
     chainId: 11155111,
     rpc: 'https://ethereum-sepolia.blockpi.network/v1/rpc/public',
     icon: EthereumIcon,
+    SEEDAO_REGISTRAR_CONTROLLER_ADDR: builtin.SEEDAO_REGISTRAR_CONTROLLER_ADDR,
+    PUBLIC_RESOLVER_ADDR: builtin.PUBLIC_RESOLVER_ADDR,
+  },
+  UNIPASS_NETWORK: {
+    name: 'Goerli',
+    chainId: 5,
+    rpc: 'https://rpc.ankr.com/eth_goerli',
+    icon: EthereumIcon,
+    SEEDAO_REGISTRAR_CONTROLLER_ADDR: '0xEF6fcD9e393D1953605D535760e7009ff7509Af2',
+    PUBLIC_RESOLVER_ADDR: '0x076951424DA36F5DCDBAf2d7D155BF92c855Edc6',
   },
   INDEXER_ENDPOINT: 'https://test-spp-indexer.seedao.tech',
 };
@@ -46,16 +57,16 @@ const PRODUCTION = {
   REACT_APP_ONESIGNAL_ID: '8ecd086b-3e15-4537-9f8b-c55c72a8dcf7',
   REACT_APP_MOBILE_URL: 'https://m.seedao.xyz',
   // JOY_ID_URL: 'https://app.joy.id',
-  NETWORK: {
-    // [TODO] when publish sns contract, change to mainnet
-    name: 'Sepolia',
-    chainId: 11155111,
-    rpc: 'https://ethereum-sepolia.blockpi.network/v1/rpc/public',
-    icon: EthereumIcon,
-    // name: 'Ethereum Mainnet',
-    // chainId: 1,
-    // rpc: 'https://mainnet.infura.io/v3/',
-  },
+  // NETWORK: {
+  //   // [TODO] when publish sns contract, change to mainnet
+  //   name: 'Sepolia',
+  //   chainId: 11155111,
+  //   rpc: 'https://ethereum-sepolia.blockpi.network/v1/rpc/public',
+  //   icon: EthereumIcon,
+  //   // name: 'Ethereum Mainnet',
+  //   // chainId: 1,
+  //   // rpc: 'https://mainnet.infura.io/v3/',
+  // },
   INDEXER_ENDPOINT: 'https://spp-indexer.seedao.tech',
 };
 
