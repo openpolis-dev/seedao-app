@@ -184,7 +184,7 @@ const AppCardStyle = styled.div<Iprops>`
 `;
 
 const AppCardStyleEmp = styled(AppCardStyle)`
-  
+ cursor: auto;
   &:hover {
     background-color: var(--bs-box--background);
  

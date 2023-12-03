@@ -232,9 +232,6 @@ const ContentBox = styled.div`
   img {
     max-width: 100%;
   }
-  .md-editor-dark {
-    background: var(--bs-box--background);
-  }
 `;
 
 const StatusTag = styled.span`
