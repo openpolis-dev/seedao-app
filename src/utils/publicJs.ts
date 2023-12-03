@@ -62,4 +62,30 @@ const getImage = async (img: string) => {
   }
 };
 
-export default { AddressToShow, getImage };
+const filterTags = (html: string) => {
+  const decodedStr = html.replace(/&#(\d+);/g, function (match, dec) {
+    return String.fromCharCode(dec);
+  });
+  const decodedHtmlWithHex = decodedStr.replace(/&#x([0-9A-Fa-f]+);/g, function (match, hex) {
+    return String.fromCharCode(parseInt(hex, 16));
+  });
+  const decodedHtml = decodedHtmlWithHex.replace(/&(amp|lt|gt|quot|#39);/g, function (match, entity) {
+    const entities: any = {
+      amp: '&',
+      lt: '<',
+      gt: '>',
+      quot: '"',
+      '#39': "'",
+    };
+    return entities[entity];
+  });
+  const unicodeDecodedStr = decodedHtml.replace(/\\u([\d\w]{4})/gi, function (match, hex) {
+    return String.fromCharCode(parseInt(hex, 16));
+  });
+  const unicodeHexDecodedStr = unicodeDecodedStr.replace(/\\x([\d\w]{2})/gi, function (match, hex) {
+    return String.fromCharCode(parseInt(hex, 16));
+  });
+  return unicodeHexDecodedStr.replace(/(<([^>]+)>)/gi, '');
+};
+
+export default { AddressToShow, getImage, filterTags };
