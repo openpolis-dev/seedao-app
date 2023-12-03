@@ -377,7 +377,6 @@ const Loading = styled.img`
 const Tip = styled.div`
   width: 394px;
   font-size: 10px;
-  font-family: Poppins, Poppins;
   font-weight: 400;
   color: var(--bs-body-color_active);
   line-height: 17px;
