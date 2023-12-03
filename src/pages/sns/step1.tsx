@@ -84,18 +84,16 @@ export default function RegisterSNSStep1() {
     }
   };
   const onChangeVal = useCallback(debounce(handleSearchAvailable, 1000), [contract]);
-
-  const handleInput = (v: string) => {
+  const checkLogin = () => {
     // check login status
-    if (!account || !isLogin) {
+    if (!account || !isLogin || !contract) {
       dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: true });
       return;
     }
+  };
+
+  const handleInput = (v: string) => {
     if (v?.length > 15) {
-      return;
-    }
-    if (!contract) {
-      // TODO check login status?
       return;
     }
     if (!v) {
@@ -223,7 +221,7 @@ export default function RegisterSNSStep1() {
         <StepDesc>{t('SNS.Step1Desc')}</StepDesc>
         <SearchBox>
           <InputBox>
-            <InputStyled autoFocus value={val} onChange={(e) => handleInput(e.target.value)} />
+            <InputStyled onFocus={checkLogin} value={val} onChange={(e) => handleInput(e.target.value)} />
             <span className="endfill">.seedao</span>
           </InputBox>
           <SearchRight>
