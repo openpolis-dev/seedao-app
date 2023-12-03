@@ -11,6 +11,7 @@ import { useAuthContext } from '../providers/authProvider';
 import CopyIconSVG from 'components/svgs/copy';
 import { useTranslation } from 'react-i18next';
 import SocialIconBox from 'components/common/socialIcon';
+import ProfileComponent from '../profile-components/profile';
 
 interface IUserProps {
   user: IUser;
@@ -36,6 +37,9 @@ export default function UserCard({ user, showEdit, onSelectUser, formatActive, s
   return (
     <UserCardBox sm={12} md={6} lg={4} xl={3} border={borderStyle}>
       <div className="boxAll">
+        <div className="modalBox">
+          <ProfileComponent userData={user} theme={theme} />
+        </div>
         <div className="fst">
           <img className="avatar" src={user.avatar || DefaultAvatar} alt="" />
           <div>
@@ -69,6 +73,7 @@ export default function UserCard({ user, showEdit, onSelectUser, formatActive, s
 const UserCardBox = styled(Col)<{ border: string }>`
   margin-bottom: 24px;
   .boxAll {
+    position: relative;
     background: var(--bs-box--background);
     border: ${(props) => props.border};
     padding: 14px;
@@ -78,9 +83,19 @@ const UserCardBox = styled(Col)<{ border: string }>`
     height: 100%;
     &:hover {
       background: var(--bs-menu-hover);
+      .modalBox {
+        display: block;
+      }
     }
     .svg-stroke {
       stroke: var(--bs-body-color_active) !important;
+    }
+    .modalBox {
+      position: absolute;
+      left: 50%;
+      top: -120%;
+      z-index: 9999;
+      display: none;
     }
   }
 

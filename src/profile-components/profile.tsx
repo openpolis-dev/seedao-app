@@ -5,24 +5,29 @@ import { useAuthContext } from '../providers/authProvider';
 import { useTranslation } from 'react-i18next';
 import useToast from '../hooks/useToast';
 import PublicJs from '../utils/publicJs';
-import TwitterIcon from '../assets/Imgs/profileCom/twitter.svg';
-import EmailIcon from '../assets/Imgs/profileCom/message.svg';
-import MirrorImg from '../assets/Imgs/profileCom/mirror.svg';
-import GithubImg from '../assets/Imgs/profileCom/github.svg';
+
+import TwitterIcon from 'assets/Imgs/social/twitter.png';
+import MirrorImg from 'assets/Imgs/social/mirror.png';
+import MirrorImgDark from 'assets/Imgs/social/mirror_dark.png';
+import EmailIcon from 'assets/Imgs/social/email.png';
+import GithubImg from 'assets/Imgs/social/github.png';
+import GithubImgDark from 'assets/Imgs/social/github_dark.png';
+
 import SeedList from './seed';
 import Sbt from './Sbt';
 
 const Box = styled.div`
   width: 512px;
-  background: #fafafa;
-  box-shadow: 2px 4px 4px 0 rgba(211, 206, 221, 0.1);
+  background: var(--profile-bg);
+  box-shadow: var(--box-shadow);
+  border: 1px solid var(--border-box);
   border-radius: 16px;
   display: flex;
   flex-direction: column;
   margin-bottom: 200px;
 `;
 const TopBox = styled.div`
-  background: #fff;
+  background: var(--bs-background);
   padding: 27px 24px;
   border-top-left-radius: 16px;
   border-top-right-radius: 16px;
@@ -184,12 +189,8 @@ const TitTop = styled.div`
 
 const InneBox = styled.div``;
 
-export default function ProfileComponent() {
-  const {
-    state: { userData, sns },
-  } = useAuthContext();
+export default function ProfileComponent({ userData, theme }: any) {
   const { t } = useTranslation();
-  const { Toast, showToast } = useToast();
   const [userName, setUserName] = useState<string | undefined>('');
 
   const [avatar, setAvatar] = useState('');
@@ -251,20 +252,23 @@ export default function ProfileComponent() {
 
   const getDetail = async () => {
     if (userData) {
-      let detail = (userData as any).data;
+      let detail = (userData as any)?.sp;
+
+      console.log(userData);
       setDetail(detail);
-      setUserName(detail.nickname);
+      setUserName(detail?.nickname);
+      console.error('==detail.name==', detail);
       let avarUrl = await PublicJs.getImage(detail?.avatar);
       setAvatar(avarUrl!);
-      setWallet(detail.wallet);
-      setBio(detail.bio);
-      setRoles(detail.roles!);
+      setWallet(detail?.wallet);
+      setBio(detail?.bio);
+      setRoles(detail?.roles!);
 
-      let sbtArr = detail.sbt;
+      let sbtArr = detail?.sbt ?? [];
 
       const sbtFor = sbtArr?.filter((item: any) => item.name && item.image_uri);
       setSbt(sbtFor);
-      setSeed(detail.seed);
+      setSeed(detail?.seed ?? []);
     }
   };
 
@@ -372,13 +376,13 @@ export default function ProfileComponent() {
       case 'mirror':
         return (
           <a href={val} target="_blank">
-            <img src={MirrorImg} alt="" />
+            <img src={theme ? MirrorImgDark : MirrorImg} alt="" />
           </a>
         );
       case 'github':
         return (
           <a href={val} target="_blank">
-            <img src={GithubImg} alt="" />
+            <img src={theme ? GithubImgDark : GithubImg} alt="" />
           </a>
         );
       case 'discord':
