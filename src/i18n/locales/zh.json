@@ -520,7 +520,7 @@
     "FreeMint": "免费 mint",
     "SpentMint": "{{money}} mint",
     "TimerTitle": "快要完成了",
-    "TimerDesc": "计时器帮助你避免被抢注，你所选的名字将被锁定，直至你完成第二笔交易。",
+    "TimerDesc": "计时器帮助你避免被抢注，直至你完成第二笔交易。",
     "Finish": "已完成",
     "FinishSucess": "注册成功！",
     "StepLoadingTitle": "注册SNS需要三步",
