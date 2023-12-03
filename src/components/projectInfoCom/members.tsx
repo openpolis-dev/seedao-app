@@ -266,7 +266,9 @@ export default function Members(props: Iprops) {
   );
 }
 
-const Box = styled.div``;
+const Box = styled.div`
+  width: 246px;
+`;
 
 const ItemBox = styled.div`
   display: flex;
