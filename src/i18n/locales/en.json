@@ -512,7 +512,7 @@
   "SNS": {
     "EntranceTitle": "INVOLVED IN SEEDAO IN YOUR NAME",
     "EntranceDesc": "SNS is your identity based on blockchain in SeeDAO",
-    "Started": "Start",
+    "Started": "Claim SNS",
     "Step1Title": "Your name in SeeDAO",
     "Step1Desc": "Your identity across SeeDAO, one name for all your SeeDAO ecosystem apps and scenarios.",
     "Available": "Available",
@@ -536,6 +536,6 @@
     "MetaRule": "SeeDAO Meta Rules",
     "GovernanceBook": "Governance Book",
     "NodesConferenceRule": "Nodes Conference Rules",
-    "apply": "资产发放"
+    "apply": "Assets Applications"
   }
 }
