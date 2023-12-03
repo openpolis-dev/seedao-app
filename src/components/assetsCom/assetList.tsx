@@ -43,13 +43,13 @@ const Colgroups = () => {
       {/* receiver */}
       <col style={{ width: '160px' }} />
       {/* add assets */}
-      <col style={{ width: '180px' }} />
+      <col style={{ width: '190px' }} />
       {/* season */}
       <col style={{ width: '120px' }} />
       {/* Content */}
       <col />
       {/* source */}
-      <col style={{ width: '140px' }} />
+      <col style={{ width: '190px' }} />
       {/* operator */}
       <col style={{ width: '160px' }} />
       {/* state */}
