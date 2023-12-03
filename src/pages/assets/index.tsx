@@ -351,11 +351,6 @@ export default function Index() {
                       </span>
                       <div className="balance">
                         <span> ${formatNumber(Number(vaultsMap[v.id]?.balance || 0.0))}</span>
-                        <a
-                          href={`https://app.safe.global/balances?safe=${SAFE_CHAIN[v.chainId].short}:${v.address}`}
-                          target="_blank"
-                          rel="noreferrer"
-                        ></a>
                       </div>
                       <div className="info">
                         <div className="address">
@@ -363,15 +358,21 @@ export default function Index() {
                             <span>{publicJs.AddressToShow(v.address)}</span>
                           </CopyBox>
                         </div>
-                        <div className="tag">
-                          <Tag>
-                            <img src={v.icon} alt="" />
+                        <a
+                          href={`https://app.safe.global/balances?safe=${SAFE_CHAIN[v.chainId].short}:${v.address}`}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          <div className="tag">
+                            <Tag>
+                              <img src={v.icon} alt="" />
 
-                            <span>
-                              {vaultsMap[v.id]?.threshold || 0}/{vaultsMap[v.id]?.total || 0}
-                            </span>
-                          </Tag>
-                        </div>
+                              <span>
+                                {vaultsMap[v.id]?.threshold || 0}/{vaultsMap[v.id]?.total || 0}
+                              </span>
+                            </Tag>
+                          </div>
+                        </a>
                       </div>
                     </div>
                   </VaultItem>
