@@ -38,7 +38,7 @@ export default function UserCard({ user, showEdit, onSelectUser, formatActive, s
     <UserCardBox sm={12} md={6} lg={4} xl={3} border={borderStyle}>
       <div className="boxAll">
         <div className="modalBox">
-          <ProfileComponent userData={user} theme={theme} />
+          <ProfileComponent userData={user} theme={theme} sns={sns} />
         </div>
         <div className="fst">
           <img className="avatar" src={user.avatar || DefaultAvatar} alt="" />

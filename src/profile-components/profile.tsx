@@ -76,6 +76,14 @@ const InfoBox = styled.div`
     line-height: 23px;
     margin-bottom: 6px;
   }
+  .lineBox {
+    display: flex;
+    align-items: flex-start;
+  }
+  .sns {
+    color: var(--bs-body-color);
+    font-size: 12px;
+  }
 `;
 
 const BioBox = styled.section`
@@ -187,9 +195,20 @@ const TitTop = styled.div`
   padding: 0 24px;
 `;
 
+const LevelBox = styled.div`
+  font-size: 16px;
+  font-weight: normal;
+  font-family: 'Poppins-Bold';
+  background: linear-gradient(90deg, #efbc80 0%, #ffda93 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-style: italic;
+  padding-inline: 10px;
+`;
+
 const InneBox = styled.div``;
 
-export default function ProfileComponent({ userData, theme }: any) {
+export default function ProfileComponent({ userData, theme, sns }: any) {
   const { t } = useTranslation();
   const [userName, setUserName] = useState<string | undefined>('');
 
@@ -404,7 +423,11 @@ export default function ProfileComponent({ userData, theme }: any) {
           </AvatarBox>
         </LftBox>
         <InfoBox>
-          <div className="userName">{userName}</div>
+          <div className="lineBox">
+            <div className="userName">{userName}</div>
+            <LevelBox>LV{detail?.level?.current_lv}</LevelBox>
+          </div>
+          <div className="sns">{sns}</div>
           <BioBox>
             <div>{bio || '-'}</div>
           </BioBox>

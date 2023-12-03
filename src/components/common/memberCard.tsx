@@ -48,7 +48,7 @@ export default function MemberCard({ user, sns, role, removeText, showRemoveModa
         {UserRole.Admin === role && <RoleTag>{t('Project.Moderator')}</RoleTag>}
       </div>
       <HoverCard className="hover-card">
-        <ProfileComponent userData={user} theme={theme} />
+        <ProfileComponent userData={user} theme={theme} sns={sns} />
         {/*<HoverCardAvatar>*/}
         {/*  <img src={user.avatar || DefaultAvatar} alt="" />*/}
         {/*</HoverCardAvatar>*/}

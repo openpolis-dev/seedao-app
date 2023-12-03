@@ -570,7 +570,7 @@ const TitleLft = styled.div`
     font-family: 'Poppins-SemiBold';
     font-size: 14px;
     font-weight: 600;
-    color: #1a1323;
+    color: var(--bs-body-color_active);
     line-height: 18px;
   }
 `;
@@ -588,7 +588,7 @@ const LevelBox = styled.div`
 const LevelInfo = styled.div`
   font-size: 12px;
   font-weight: 400;
-  color: #1a1323;
+  color: var(--bs-body-color_active);
   line-height: 16px;
   span {
     padding-right: 5px;
