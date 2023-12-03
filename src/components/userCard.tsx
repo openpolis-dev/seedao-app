@@ -11,7 +11,6 @@ import { useAuthContext } from '../providers/authProvider';
 import CopyIconSVG from 'components/svgs/copy';
 import { useTranslation } from 'react-i18next';
 import SocialIconBox from 'components/common/socialIcon';
-import ProfileComponent from '../profile-components/profile';
 
 interface IUserProps {
   user: IUser;
@@ -19,9 +18,10 @@ interface IUserProps {
   sns?: string;
   onSelectUser?: (user: IUser) => void;
   formatActive?: (wallet: string) => boolean;
+  handleProfile?: (arg0: any, arg1: string) => void;
 }
 
-export default function UserCard({ user, showEdit, onSelectUser, formatActive, sns }: IUserProps) {
+export default function UserCard({ user, showEdit, onSelectUser, formatActive, sns, handleProfile }: IUserProps) {
   // const { account } = useWeb3React();
 
   const {
@@ -34,12 +34,14 @@ export default function UserCard({ user, showEdit, onSelectUser, formatActive, s
     return theme ? '1px solid #29282F' : 'unset';
   }, [theme]);
 
+  const handleShow = () => {
+    if (showEdit) return;
+    handleProfile && handleProfile(user, sns ?? '');
+  };
+
   return (
-    <UserCardBox sm={12} md={6} lg={4} xl={3} border={borderStyle}>
+    <UserCardBox sm={12} md={6} lg={4} xl={3} border={borderStyle} key={user.wallet} onClick={() => handleShow()}>
       <div className="boxAll">
-        <div className="modalBox">
-          <ProfileComponent userData={user} theme={theme} sns={sns} />
-        </div>
         <div className="fst">
           <img className="avatar" src={user.avatar || DefaultAvatar} alt="" />
           <div>
@@ -83,20 +85,20 @@ const UserCardBox = styled(Col)<{ border: string }>`
     height: 100%;
     &:hover {
       background: var(--bs-menu-hover);
-      .modalBox {
-        display: block;
-      }
+      //.modalBox {
+      //  display: block;
+      //}
     }
     .svg-stroke {
       stroke: var(--bs-body-color_active) !important;
     }
-    .modalBox {
-      position: absolute;
-      left: 50%;
-      top: -120%;
-      z-index: 9999;
-      display: none;
-    }
+    //.modalBox {
+    //  position: absolute;
+    //  left: 50%;
+    //  top: -120%;
+    //  z-index: 9999;
+    //  display: block;
+    //}
   }
 
   .fst {

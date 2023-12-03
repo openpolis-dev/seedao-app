@@ -20,6 +20,7 @@ import PlusImg from '../../assets/Imgs/light/plus.svg';
 import MinusImg from '../../assets/Imgs/light/minus.svg';
 import { MemberGroupType } from '../../requests/cityHall';
 import { Button } from 'react-bootstrap';
+import ProfileComponent from '../../profile-components/profile';
 
 interface Iprops {
   detail: ReTurnProject | undefined;
@@ -37,7 +38,10 @@ export default function Members(props: Iprops) {
   const canUpdateSponsor = usePermission(PermissionAction.UpdateSponsor, PermissionObject.ProjPrefix + id);
 
   const { t } = useTranslation();
-  const { dispatch } = useAuthContext();
+  const {
+    state: { theme },
+    dispatch,
+  } = useAuthContext();
   const { showToast } = useToast();
 
   const [show, setShow] = useState(false);
@@ -51,9 +55,12 @@ export default function Members(props: Iprops) {
     user: IUser;
     role: UserRole;
   }>();
-
+  const [showModal, setShowModal] = useState(false);
   const [selectUsers, setSelectUsers] = useState<any[]>([]);
   const [showDel, setShowDel] = useState(false);
+
+  const [user, setUser] = useState<any>();
+  const [sns, setSns] = useState<string>('');
 
   const uniqueUsers = useMemo(() => {
     return Array.from(new Set([...memberArr, ...adminArr]));
@@ -192,6 +199,17 @@ export default function Members(props: Iprops) {
     // setShowDel(true);
   };
 
+  const handleProfile = (user: any, sns: string) => {
+    console.error('======', user, sns);
+    setShowModal(true);
+    setSns(sns);
+    setUser(user);
+  };
+
+  const handleClose = () => {
+    setShowModal(false);
+  };
+
   return (
     <Box>
       {show && detail && (
@@ -206,6 +224,7 @@ export default function Members(props: Iprops) {
           onConfirm={handleRemove}
         />
       )}
+      {!showDel && showModal && <ProfileComponent userData={user} theme={theme} sns={sns} handleClose={handleClose} />}
       <TopBox>
         <BlockTitle>{t('Project.Members')}</BlockTitle>
         {(canUpdateMember || canUpdateSponsor) && (
@@ -233,6 +252,7 @@ export default function Members(props: Iprops) {
               onSelectUser={(u) => handleAdminSelect(u, UserRole.Admin)}
               removeText=""
               showRemoveModal={handleShowRemoveModal}
+              handleProfile={handleProfile}
             />
           ))}
         </div>
@@ -248,6 +268,7 @@ export default function Members(props: Iprops) {
               removeText=""
               // removeText={canUpdateSponsor ? t('Project.RemoveMember') : ''}
               showRemoveModal={handleShowRemoveModal}
+              handleProfile={handleProfile}
             />
           ))}
         </div>

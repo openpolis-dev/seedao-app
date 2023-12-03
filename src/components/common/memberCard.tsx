@@ -8,7 +8,6 @@ import { useMemo } from 'react';
 import CopyBox from 'components/copy';
 import CopyIconSVG from 'components/svgs/copy';
 import { Form } from 'react-bootstrap';
-import ProfileComponent from '../../profile-components/profile';
 import { useAuthContext } from '../../providers/authProvider';
 
 interface IProps {
@@ -19,9 +18,19 @@ interface IProps {
   removeText?: string;
   onSelectUser?: (user: IUser) => void;
   showRemoveModal?: (user: IUser, role: UserRole) => void;
+  handleProfile?: (arg0: any, arg1: string) => void;
 }
 
-export default function MemberCard({ user, sns, role, removeText, showRemoveModal, showEdit, onSelectUser }: IProps) {
+export default function MemberCard({
+  user,
+  sns,
+  role,
+  removeText,
+  showRemoveModal,
+  showEdit,
+  onSelectUser,
+  handleProfile,
+}: IProps) {
   const { t } = useTranslation();
   const {
     state: { theme },
@@ -33,8 +42,13 @@ export default function MemberCard({ user, sns, role, removeText, showRemoveModa
   const handleClockRemove = () => {
     showRemoveModal && showRemoveModal(user, role);
   };
+
+  const handleShow = () => {
+    if (showEdit) return;
+    handleProfile && handleProfile(user, sns ?? '');
+  };
   return (
-    <InnerBox>
+    <InnerBox onClick={() => handleShow()}>
       {showEdit && (
         <CheckLft>
           <Form.Check type="checkbox" onChange={() => onSelectUser && onSelectUser(user)} />
@@ -47,25 +61,25 @@ export default function MemberCard({ user, sns, role, removeText, showRemoveModa
         <div className="sns-box">{snsDisplay}</div>
         {UserRole.Admin === role && <RoleTag>{t('Project.Moderator')}</RoleTag>}
       </div>
-      <HoverCard className="hover-card">
-        <ProfileComponent userData={user} theme={theme} sns={sns} />
-        {/*<HoverCardAvatar>*/}
-        {/*  <img src={user.avatar || DefaultAvatar} alt="" />*/}
-        {/*</HoverCardAvatar>*/}
-        {/*<HoverNameBox>*/}
-        {/*  <div className="sns-display">*/}
-        {/*    <span className="sns">{snsDisplay}</span>*/}
-        {/*    <CopyBox text={user.wallet || ''} dir="left">*/}
-        {/*      <CopyIconSVG />*/}
-        {/*    </CopyBox>*/}
-        {/*  </div>*/}
-        {/*  <div className="name">{user.name || t('My.DefaultName')}</div>*/}
-        {/*</HoverNameBox>*/}
-        {/*<SocialBox>*/}
-        {/*  <SocialIconBox user={user} />*/}
-        {/*</SocialBox>*/}
-        {/*{removeText && <RemoveButton onClick={handleClockRemove}>{removeText}</RemoveButton>}*/}
-      </HoverCard>
+      {/*<HoverCard className="hover-card">*/}
+
+      {/*  /!*<HoverCardAvatar>*!/*/}
+      {/*  /!*  <img src={user.avatar || DefaultAvatar} alt="" />*!/*/}
+      {/*  /!*</HoverCardAvatar>*!/*/}
+      {/*  /!*<HoverNameBox>*!/*/}
+      {/*  /!*  <div className="sns-display">*!/*/}
+      {/*  /!*    <span className="sns">{snsDisplay}</span>*!/*/}
+      {/*  /!*    <CopyBox text={user.wallet || ''} dir="left">*!/*/}
+      {/*  /!*      <CopyIconSVG />*!/*/}
+      {/*  /!*    </CopyBox>*!/*/}
+      {/*  /!*  </div>*!/*/}
+      {/*  /!*  <div className="name">{user.name || t('My.DefaultName')}</div>*!/*/}
+      {/*  /!*</HoverNameBox>*!/*/}
+      {/*  /!*<SocialBox>*!/*/}
+      {/*  /!*  <SocialIconBox user={user} />*!/*/}
+      {/*  /!*</SocialBox>*!/*/}
+      {/*  /!*{removeText && <RemoveButton onClick={handleClockRemove}>{removeText}</RemoveButton>}*!/*/}
+      {/*</HoverCard>*/}
     </InnerBox>
   );
 }

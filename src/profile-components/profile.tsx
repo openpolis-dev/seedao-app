@@ -15,6 +15,21 @@ import GithubImgDark from 'assets/Imgs/social/github_dark.png';
 
 import SeedList from './seed';
 import Sbt from './Sbt';
+import BasicModal from '../components/modals/basicModal';
+import CloseIcon from '../assets/Imgs/close.svg';
+
+const Mask = styled.div`
+  background: rgba(13, 12, 15, 0.8);
+  width: 100vw;
+  height: 100vh;
+  z-index: 99;
+  left: 0;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+`;
 
 const Box = styled.div`
   width: 512px;
@@ -24,7 +39,13 @@ const Box = styled.div`
   border-radius: 16px;
   display: flex;
   flex-direction: column;
-  margin-bottom: 200px;
+  position: fixed;
+  .btn-close-modal {
+    cursor: pointer;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+  }
 `;
 const TopBox = styled.div`
   background: var(--bs-background);
@@ -208,7 +229,7 @@ const LevelBox = styled.div`
 
 const InneBox = styled.div``;
 
-export default function ProfileComponent({ userData, theme, sns }: any) {
+export default function ProfileComponent({ userData, theme, sns, handleClose }: any) {
   const { t } = useTranslation();
   const [userName, setUserName] = useState<string | undefined>('');
 
@@ -272,11 +293,8 @@ export default function ProfileComponent({ userData, theme, sns }: any) {
   const getDetail = async () => {
     if (userData) {
       let detail = (userData as any)?.sp;
-
-      console.log(userData);
       setDetail(detail);
       setUserName(detail?.nickname);
-      console.error('==detail.name==', detail);
       let avarUrl = await PublicJs.getImage(detail?.avatar);
       setAvatar(avarUrl!);
       setWallet(detail?.wallet);
@@ -413,61 +431,64 @@ export default function ProfileComponent({ userData, theme, sns }: any) {
     }
   };
   return (
-    <Box>
-      <TopBox>
-        <LftBox>
-          <AvatarBox>
-            <ImgBox>
-              <img src={avatar ? avatar : defaultImg} alt="" />
-            </ImgBox>
-          </AvatarBox>
-        </LftBox>
-        <InfoBox>
-          <div className="lineBox">
-            <div className="userName">{userName}</div>
-            <LevelBox>LV{detail?.level?.current_lv}</LevelBox>
-          </div>
-          <div className="sns">{sns}</div>
-          <BioBox>
-            <div>{bio || '-'}</div>
-          </BioBox>
-          <TagBox>
-            {roles?.map((item, index) => (
-              <li key={`tag_${index}`}>{switchRoles(item)}</li>
-            ))}
-          </TagBox>
-          <LinkBox>
-            {detail?.social_accounts?.map((item: any, index: number) =>
-              returnSocial(item.network, item.identity) ? (
-                <li key={`sbtInner_${index}`}>
-                  <span className="iconLft">{returnSocial(item.network, item.identity)}</span>
+    <Mask>
+      <Box>
+        <img className="btn-close-modal" src={CloseIcon} alt="" onClick={() => handleClose && handleClose()} />
+        <TopBox>
+          <LftBox>
+            <AvatarBox>
+              <ImgBox>
+                <img src={avatar ? avatar : defaultImg} alt="" />
+              </ImgBox>
+            </AvatarBox>
+          </LftBox>
+          <InfoBox>
+            <div className="lineBox">
+              <div className="userName">{userName}</div>
+              <LevelBox>LV{detail?.level?.current_lv}</LevelBox>
+            </div>
+            <div className="sns">{sns}</div>
+            <BioBox>
+              <div>{bio || '-'}</div>
+            </BioBox>
+            <TagBox>
+              {roles?.map((item, index) => (
+                <li key={`tag_${index}`}>{switchRoles(item)}</li>
+              ))}
+            </TagBox>
+            <LinkBox>
+              {detail?.social_accounts?.map((item: any, index: number) =>
+                returnSocial(item.network, item.identity) ? (
+                  <li key={`sbtInner_${index}`}>
+                    <span className="iconLft">{returnSocial(item.network, item.identity)}</span>
+                  </li>
+                ) : null,
+              )}
+              {detail?.email && (
+                <li>
+                  <span className="iconLft">{returnSocial('email', detail?.email)}</span>
                 </li>
-              ) : null,
-            )}
-            {detail?.email && (
-              <li>
-                <span className="iconLft">{returnSocial('email', detail?.email)}</span>
-              </li>
-            )}
-          </LinkBox>
-        </InfoBox>
-      </TopBox>
-      <BgBox>
-        <InneBox>
-          <TitTop>SEED({list.length})</TitTop>
-          <RhtBoxB>
-            <SeedList list={list} />
-          </RhtBoxB>
-        </InneBox>
-      </BgBox>
-      <BgBox2>
-        <InneBox>
-          <TitTop>SBT({sbtList.length})</TitTop>
-          <RhtBoxB>
-            <Sbt list={sbtArr} />
-          </RhtBoxB>
-        </InneBox>
-      </BgBox2>
-    </Box>
+              )}
+            </LinkBox>
+          </InfoBox>
+        </TopBox>
+        <BgBox>
+          <InneBox>
+            <TitTop>SEED({list.length})</TitTop>
+            <RhtBoxB>
+              <SeedList list={list} />
+            </RhtBoxB>
+          </InneBox>
+        </BgBox>
+        <BgBox2>
+          <InneBox>
+            <TitTop>SBT({sbtList.length})</TitTop>
+            <RhtBoxB>
+              <Sbt list={sbtArr} />
+            </RhtBoxB>
+          </InneBox>
+        </BgBox2>
+      </Box>
+    </Mask>
   );
 }
