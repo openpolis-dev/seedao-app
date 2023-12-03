@@ -36,8 +36,8 @@ const VersionBox = styled.div`
   font-size: 12px;
   line-height: 22px;
   box-sizing: border-box;
-  overflow: hidden;
-  text-align: center;
+  //overflow: hidden;
+  text-align: left;
   //padding: 0 0 20px 0;
   //background: #f00;
   &.lft {
