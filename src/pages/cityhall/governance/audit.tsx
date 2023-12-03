@@ -199,6 +199,7 @@ export default function Register() {
             created_date: formatTime(record.create_ts * 1000),
             transactions: record.transaction_ids.split(','),
             asset_display: formatNumber(Number(record.amount)) + ' ' + record.asset_name,
+            app_bundle_comment: item.comment,
           })),
           assets_display: item.assets.map((a) => `${formatNumber(Number(a.amount))} ${a.name}`),
         })),
