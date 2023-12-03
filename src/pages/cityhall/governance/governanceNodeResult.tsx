@@ -256,7 +256,7 @@ export default function GoveranceNodeResult() {
           season={`S${currentSeasonNumber + 1}`}
         />
       )}
-      <BackerNav title={t('city-hall.GovernanceNodeResult')} to="/city-hall/governance" />
+      <BackerNav title={t('city-hall.GovernanceNodeResult')} to="/city-hall/governance" mb="24px" />
       <TopLine>
         <StaticCards>
           <Col md={2}>
@@ -485,8 +485,11 @@ const TableBox = styled.div`
       left: 0; */
     }
   }
-  @media (max-width: 1520px) {
-    height: calc(100vh - 410px);
+  @media (max-width: 1470px) {
+    height: calc(100vh - 400px);
+  }
+  @media (max-width: 1440px) {
+    height: calc(100vh - 380px);
   }
 `;
 
@@ -511,16 +514,13 @@ const TopLine = styled.div`
 `;
 const StaticCards = styled(Row)`
   .li {
-    //min-width: 180px;
+    min-height: 106px;
     border-radius: 16px;
-    padding: 20px 25px;
+    padding: 25px 16px;
     background-color: var(--bs-box--background);
     border: 1px solid var(--border-box);
     box-shadow: var(--box-shadow);
     height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
     .num {
       font-size: 18px;
       font-weight: 600;
