@@ -196,7 +196,7 @@ export default function Issued() {
     } else if (selectStatus === ApplicationStatus.Processing) {
       return (
         <TopBox>
-          <Button onClick={() => handleShow()} disabled={!isProcessing}>
+          <Button onClick={() => handleShow()} disabled={!isProcessing} className="btn-com">
             {t('city-hall.SendCompleted')}
           </Button>
         </TopBox>
@@ -305,6 +305,10 @@ const TopLine = styled.ul`
 const TopBox = styled.li`
   button {
     width: 110px;
+  }
+  .btn-com {
+    width: auto;
+    min-width: 110px;
   }
 `;
 
