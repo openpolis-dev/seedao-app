@@ -521,7 +521,7 @@
     "SpentMint": "{{money}} mint",
     "TimerTitle": "Almost here",
     "TimerDesc": "This timer helps prevent others from registering the name before you do. Your name is not registered until you’ve completed the second transaction.",
-    "Finish": "Finish",
+    "Finish": "Continue",
     "FinishSucess": "Registered successfully!",
     "StepLoadingTitle": "Three steps to get your SNS",
     "Step1Intro": "Complete the transaction and start counting",
