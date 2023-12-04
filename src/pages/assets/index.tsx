@@ -21,6 +21,7 @@ import { Link } from 'react-router-dom';
 import BalanceIcon from 'assets/Imgs/vault/balance.png';
 import EthImg from 'assets/Imgs/vault/ethereum.svg';
 import PolygonImg from 'assets/Imgs/vault/polygon.svg';
+import getConfig from 'utils/envCofnig';
 // import WalletIcon from 'assets/Imgs/vault/wallet.png';
 // import ChainIcon from 'assets/Imgs/vault/chain.png';
 // import SignerIcon from 'assets/Imgs/vault/signer.png';
@@ -213,16 +214,14 @@ export default function Index() {
 
   const getFloorPrice = async () => {
     try {
-      const url = 'https://restapi.nftscan.com/api/v2/statistics/collection/0x30093266e34a816a53e302be3e59a93b52792fd4';
-      const res = await axios.get(url, {
-        headers: {
-          'X-API-KEY': 'laP3Go52WW4oBXdt7zhJ7aoj',
-        },
-      });
-      setNftData({
-        floorPrice: formatNumber(res.data?.data?.floor_price || 0),
-        totalSupply: formatNumber(res.data?.data?.items_total || 0),
-      });
+      fetch(`${getConfig().INDEXER_ENDPOINT}/insight/erc721/total_supply/0x30093266E34a816a53e302bE3e59a93B52792FD4`)
+        .then((res) => res.json())
+        .then((r) => {
+          setNftData({
+            floorPrice: '0',
+            totalSupply: r.totalSupply,
+          });
+        });
     } catch (error) {
       console.error('getFloorPrice error', error);
     }
@@ -313,7 +312,7 @@ export default function Index() {
 
   useEffect(() => {
     getSCR();
-    process.env.NODE_ENV === 'production' && getFloorPrice();
+    getFloorPrice();
     getVaultsInfo();
   }, []);
 
@@ -455,9 +454,7 @@ export default function Index() {
           </li>
           <li className="center">
             <LiHead>
-              <LiTitle>
-                {t('Assets.SeasonUsedSCR')}({t('Assets.SCRTip')})
-              </LiTitle>
+              <LiTitle>{t('Assets.SeasonUsedSCR')}</LiTitle>
             </LiHead>
             <div className="num">{Number(asset.credit_used_amount).format()}</div>
             {/*<AssetBox className="tips">*/}

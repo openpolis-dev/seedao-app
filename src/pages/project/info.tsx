@@ -167,7 +167,6 @@ const LftBox = styled.div`
 
 const InnerLft = styled.div`
   box-sizing: border-box;
-  padding: 24px;
 `;
 
 const TopBox = styled.div`
