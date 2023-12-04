@@ -454,9 +454,7 @@ export default function Index() {
           </li>
           <li className="center">
             <LiHead>
-              <LiTitle>
-                {t('Assets.SeasonUsedSCR')}({t('Assets.SCRTip')})
-              </LiTitle>
+              <LiTitle>{t('Assets.SeasonUsedSCR')}</LiTitle>
             </LiHead>
             <div className="num">{Number(asset.credit_used_amount).format()}</div>
             {/*<AssetBox className="tips">*/}
