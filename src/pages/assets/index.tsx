@@ -431,7 +431,7 @@ export default function Index() {
             <LiHead>
               <LiTitle>{t('Assets.SupplySGN')}</LiTitle>
             </LiHead>
-            <div className="num">{Number(nftData.totalSupply).format()}</div>
+            <div className="num">{nftData.totalSupply}</div>
             {/*<div className="tips">*/}
             {/*  {t('Assets.FloorPrice')} : <span>{nftData.floorPrice} ETH</span>*/}
             {/*</div>*/}
