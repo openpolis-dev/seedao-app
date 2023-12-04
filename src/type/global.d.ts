@@ -38,3 +38,7 @@ declare interface ISelectItem {
   label: string;
   data?: any;
 }
+
+declare interface Number {
+  format: (n?: number) => string;
+}
