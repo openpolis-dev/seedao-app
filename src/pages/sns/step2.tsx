@@ -92,7 +92,6 @@ export default function RegisterSNSStep2() {
       } else {
         const tx = await contract.register(
           sns,
-          account,
           networConfig.PUBLIC_RESOLVER_ADDR,
           ethers.utils.formatBytes32String(secret),
         );
