@@ -17,6 +17,7 @@ import { formatNumber } from 'utils/number';
 import ApplicationModal from 'components/modals/applicationModal';
 import VaultSVGIcon from 'components/svgs/vault';
 import { PinkButton } from 'components/common/button';
+import AlertImg from 'assets/Imgs/alert.png';
 
 interface IProps {
   bund_id: number;
@@ -181,7 +182,12 @@ export default function ExpandTable({
               {t('city-hall.Reject')}
             </PinkButton>
           </OperateBox>
-          {isProcessing && <TipsBtm>{t('application.applyTips')}</TipsBtm>}
+          {isProcessing && (
+            <TipsBtm>
+              <img src={AlertImg} alt="" />
+              {t('application.applyTips')}
+            </TipsBtm>
+          )}
         </ContentBox>
       ) : (
         <NoItem />
@@ -193,6 +199,10 @@ export default function ExpandTable({
 const TipsBtm = styled.div`
   padding-top: 0;
   font-size: 14px;
+  img {
+    width: 20px;
+    margin-right: 10px;
+  }
 `;
 
 const TableBox = styled.div`
