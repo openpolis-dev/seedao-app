@@ -253,7 +253,7 @@ export default function Index() {
         provider,
       );
       const supply = await contract.totalSupply();
-      setTotalSCR(ethers.utils.formatEther(supply));
+      setTotalSCR(Number(ethers.utils.formatEther(supply)).format());
     } catch (error) {
       console.error('getSCR error', error);
     }
@@ -423,7 +423,7 @@ export default function Index() {
             <LiHead>
               <LiTitle>{t('Assets.SupplySCR')}</LiTitle>
             </LiHead>
-            <div className="num">{formatNumber(Number(totalSCR))}</div>
+            <div className="num">{totalSCR}</div>
             {/*<AssetBox></AssetBox>*/}
             <BorderDecoration color="#FF86CB" />
           </li>
@@ -431,7 +431,7 @@ export default function Index() {
             <LiHead>
               <LiTitle>{t('Assets.SupplySGN')}</LiTitle>
             </LiHead>
-            <div className="num">{nftData.totalSupply}</div>
+            <div className="num">{Number(nftData.totalSupply).format()}</div>
             {/*<div className="tips">*/}
             {/*  {t('Assets.FloorPrice')} : <span>{nftData.floorPrice} ETH</span>*/}
             {/*</div>*/}
@@ -441,7 +441,7 @@ export default function Index() {
             <LiHead>
               <LiTitle>{t('Assets.SeasonUseUSD')}</LiTitle>
             </LiHead>
-            <div className="num">{formatNumber(asset.token_used_amount)}</div>
+            <div className="num">{Number(asset.token_used_amount).format()}</div>
             {/*<AssetBox className="tips">*/}
             {/*  /!* <span>{t('Assets.SeasonBudget')} : </span>*/}
             {/*  <span>{formatNumber(asset.token_total_amount)}</span>*/}
@@ -459,7 +459,7 @@ export default function Index() {
                 {t('Assets.SeasonUsedSCR')}({t('Assets.SCRTip')})
               </LiTitle>
             </LiHead>
-            <div className="num">{formatNumber(asset.credit_used_amount)}</div>
+            <div className="num">{Number(asset.credit_used_amount).format()}</div>
             {/*<AssetBox className="tips">*/}
             {/*  /!* <span>{t('Assets.SeasonBudget')} : </span>*/}
             {/*  <span>{formatNumber(asset.credit_total_amount)}</span>*/}
