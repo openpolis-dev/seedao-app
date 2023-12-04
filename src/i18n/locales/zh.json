@@ -517,7 +517,7 @@
     "Step1Title": "获取你的SNS",
     "Step1Desc": "SNS 将是你在 SeeDAO 中的独有昵称，能够连接 SeeDAO 生态中的所有场景和应用。",
     "Available": "可注册",
-    "Uavailable": "已被注册",
+    "Uavailable": "不可用",
     "FreeMint": "免费 mint",
     "SpentMint": "{{money}} mint",
     "TimerTitle": "快要完成了",

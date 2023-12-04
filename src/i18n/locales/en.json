@@ -517,7 +517,7 @@
     "Step1Title": "Your name in SeeDAO",
     "Step1Desc": "Your identity across SeeDAO, one name for all your SeeDAO ecosystem apps and scenarios.",
     "Available": "Available",
-    "Uavailable": "Uavailable",
+    "Uavailable": "Unavailable",
     "FreeMint": "Free mint",
     "SpentMint": "{{money}} mint",
     "TimerTitle": "Almost here",
