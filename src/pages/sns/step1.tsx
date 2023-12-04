@@ -87,7 +87,7 @@ export default function RegisterSNSStep1() {
   const onChangeVal = useCallback(debounce(handleSearchAvailable, 1000), [contract]);
   const checkLogin = () => {
     // check login status
-    if (!account || !isLogin || !contract) {
+    if (!account || !isLogin) {
       dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: true });
       return;
     }
