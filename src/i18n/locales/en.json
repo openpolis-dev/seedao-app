@@ -330,8 +330,8 @@
     "TemplateFileName": "SeeDAO Submission Template",
     "Total": "Total",
     "Export": "Export",
-    "record": "资产发放记录",
-    "Apply": "申请资产发放"
+    "record": "Assets Distribution Records",
+    "Apply": "Assets Applications"
   },
   "My": {
     "MyProfile": "My Profile",
@@ -461,7 +461,7 @@
     "Receiver": "Receiver",
     "Auditor": "Auditor",
     "AuditTime": "Audit time",
-    "detail": "查看项目详情",
+    "detail": "View project details",
     "TotalCount": "total {{count}}",
     "AddAssets": "Add Assets",
     "Season": "Season",
