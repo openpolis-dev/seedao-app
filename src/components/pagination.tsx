@@ -104,7 +104,6 @@ const GoToBox = styled.div`
   input {
     width: 64px;
     height: 32px;
-    background: transparent;
     text-align: center;
     font-size: 14px;
     border: unset;
@@ -112,7 +111,9 @@ const GoToBox = styled.div`
     border-top-left-radius: 8px;
     border-bottom-left-radius: 8px;
     background-color: var(--bs-box-background);
-
+    &::placeholder {
+      opacity: 0.3;
+    }
     &:focus {
       outline: none;
     }
