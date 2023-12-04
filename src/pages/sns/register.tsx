@@ -14,6 +14,7 @@ import { builtin } from '@seedao/sns-js';
 import getConfig from 'utils/envCofnig';
 import { Wallet } from 'wallet/wallet';
 import { SELECT_WALLET } from 'utils/constant';
+const networkConfig = getConfig().NETWORK;
 
 const RegisterSNSWrapper = () => {
   const {
@@ -36,7 +37,6 @@ const RegisterSNSWrapper = () => {
       }
       const network = await provider.getNetwork();
       const wallet = localStorage.getItem(SELECT_WALLET);
-      const networkConfig = wallet === Wallet.UNIPASS ? getConfig().UNIPASS_NETWORK : getConfig().NETWORK;
 
       if (network?.chainId !== networkConfig.chainId) {
         // switch network;

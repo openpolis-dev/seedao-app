@@ -16,7 +16,7 @@ import styled from "styled-components";
 import UnipassIcon from "../../assets/Imgs/home/UniPass.svg";
 import OneSignal from 'react-onesignal';
 import getConfig from "utils/envCofnig";
-const networkConfig = getConfig().UNIPASS_NETWORK;
+const networkConfig = getConfig().NETWORK;
 
 const WalletOption = styled.li`
     display: flex;

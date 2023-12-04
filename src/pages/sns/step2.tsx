@@ -13,6 +13,7 @@ import { SELECT_WALLET } from 'utils/constant';
 import { Wallet } from '../../wallet/wallet';
 import ABI from 'assets/abi/snsRegister.json';
 import getConfig from 'utils/envCofnig';
+const networConfig = getConfig().NETWORK;
 
 const buildRegisterData = (sns: string, account: string, resolveAddress: string, secret: string) => {
   const iface = new ethers.utils.Interface(ABI);
@@ -77,7 +78,6 @@ export default function RegisterSNSStep2() {
       const d = { ...localData };
 
       const wallet = localStorage.getItem(SELECT_WALLET);
-      const networConfig = wallet === Wallet.UNIPASS ? getConfig().UNIPASS_NETWORK : getConfig().NETWORK;
 
       let txHash: string;
       if (wallet && wallet === Wallet.JOYID_WEB) {

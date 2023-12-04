@@ -15,20 +15,12 @@ const LOCAL = {
   REACT_APP_THEME_ENABLE: true,
   JOY_ID_URL: 'https://testnet.joyid.dev',
   NETWORK: {
-    name: 'Sepolia',
-    chainId: 11155111,
-    rpc: 'https://ethereum-sepolia.blockpi.network/v1/rpc/public',
+    name: 'Goerli',
+    chainId: 5,
+    rpc: 'https://eth-goerli.g.alchemy.com/v2/MATWeLJN1bEGTjSmtyLedn0i34o1ISLD',
     icon: EthereumIcon,
     SEEDAO_REGISTRAR_CONTROLLER_ADDR: builtin.SEEDAO_REGISTRAR_CONTROLLER_ADDR,
     PUBLIC_RESOLVER_ADDR: builtin.PUBLIC_RESOLVER_ADDR,
-  },
-  UNIPASS_NETWORK: {
-    name: 'Goerli',
-    chainId: 5,
-    rpc: 'https://rpc.ankr.com/eth_goerli',
-    icon: EthereumIcon,
-    SEEDAO_REGISTRAR_CONTROLLER_ADDR: '0xEF6fcD9e393D1953605D535760e7009ff7509Af2',
-    PUBLIC_RESOLVER_ADDR: '0x076951424DA36F5DCDBAf2d7D155BF92c855Edc6',
   },
   INDEXER_ENDPOINT: 'https://test-spp-indexer.seedao.tech',
 };
