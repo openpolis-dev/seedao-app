@@ -105,6 +105,13 @@ const FilterLine = styled.div`
   table {
     td {
       border: none !important;
+      &:first-child,
+      &:last-child {
+        padding: 0 !important;
+        button {
+          width: 100%;
+        }
+      }
     }
     tr:hover td {
       background: transparent;
