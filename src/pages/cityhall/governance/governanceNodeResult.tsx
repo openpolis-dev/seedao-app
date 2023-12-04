@@ -597,7 +597,7 @@ const ButtonGroup = styled.div`
   display: flex;
   gap: 16px;
   .btn {
-    width: 120px !important;
+    width: 130px !important;
   }
   .export {
     border: 1px solid var(--bs-border-color);
