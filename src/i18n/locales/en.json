@@ -450,7 +450,7 @@
   "application": {
     "Register": "Register",
     "DetailModalHeader": "Detail",
-    "applyTips": "当前资产发放列表中存在发放中的资产申请，请在该批申请发放完成后进行审核",
+    "applyTips": "The asset application currently exists in the transaction, please review after the transaction is completed",
     "Time": "Time",
     "TotalAssets": "Total Assets",
     "RegisterNote": "Note",
