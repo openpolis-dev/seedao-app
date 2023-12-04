@@ -196,7 +196,9 @@ export default function Register() {
           created_date: formatTime(item.apply_ts * 1000),
           records: item.records.map((record) => ({
             ...record,
+            review_date: formatTime(record.review_ts * 1000),
             created_date: formatTime(record.create_ts * 1000),
+            process_date: formatTime(record.process_ts * 1000),
             transactions: record.transaction_ids.split(','),
             asset_display: formatNumber(Number(record.amount)) + ' ' + record.asset_name,
             app_bundle_comment: item.comment,
