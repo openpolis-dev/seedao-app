@@ -170,6 +170,8 @@ const TopImg = styled.div`
   img {
     width: 110px;
     height: 110px;
+    object-fit: cover;
+    object-position: center;
     border-radius: 16px;
   }
 `;
