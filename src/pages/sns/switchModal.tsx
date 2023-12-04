@@ -66,7 +66,11 @@ export default function SwitchModal({ select, handleClose }: IProps) {
         console.log('joyid txHash:', txHash);
         handleCheckTx(txHash);
       } else {
-        const contract = new ethers.Contract(builtin.SEEDAO_REGISTRAR_CONTROLLER_ADDR, ABI, provider.getSigner());
+        const contract = new ethers.Contract(
+          builtin.SEEDAO_REGISTRAR_CONTROLLER_ADDR,
+          ABI,
+          provider.getSigner(account),
+        );
         const tx = await contract.setDefaultAddr(select.replace('.seedao', ''), builtin.PUBLIC_RESOLVER_ADDR);
         console.log('tx:', tx);
         await tx.wait();

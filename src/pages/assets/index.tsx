@@ -253,7 +253,7 @@ export default function Index() {
         provider,
       );
       const supply = await contract.totalSupply();
-      setTotalSCR(ethers.utils.formatEther(supply));
+      setTotalSCR(Number(ethers.utils.formatEther(supply)).format());
     } catch (error) {
       console.error('getSCR error', error);
     }
@@ -351,11 +351,6 @@ export default function Index() {
                       </span>
                       <div className="balance">
                         <span> ${formatNumber(Number(vaultsMap[v.id]?.balance || 0.0))}</span>
-                        <a
-                          href={`https://app.safe.global/balances?safe=${SAFE_CHAIN[v.chainId].short}:${v.address}`}
-                          target="_blank"
-                          rel="noreferrer"
-                        ></a>
                       </div>
                       <div className="info">
                         <div className="address">
@@ -363,15 +358,21 @@ export default function Index() {
                             <span>{publicJs.AddressToShow(v.address)}</span>
                           </CopyBox>
                         </div>
-                        <div className="tag">
-                          <Tag>
-                            <img src={v.icon} alt="" />
+                        <a
+                          href={`https://app.safe.global/balances?safe=${SAFE_CHAIN[v.chainId].short}:${v.address}`}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          <div className="tag">
+                            <Tag>
+                              <img src={v.icon} alt="" />
 
-                            <span>
-                              {vaultsMap[v.id]?.threshold || 0}/{vaultsMap[v.id]?.total || 0}
-                            </span>
-                          </Tag>
-                        </div>
+                              <span>
+                                {vaultsMap[v.id]?.threshold || 0}/{vaultsMap[v.id]?.total || 0}
+                              </span>
+                            </Tag>
+                          </div>
+                        </a>
                       </div>
                     </div>
                   </VaultItem>
@@ -422,7 +423,7 @@ export default function Index() {
             <LiHead>
               <LiTitle>{t('Assets.SupplySCR')}</LiTitle>
             </LiHead>
-            <div className="num">{formatNumber(Number(totalSCR))}</div>
+            <div className="num">{totalSCR}</div>
             {/*<AssetBox></AssetBox>*/}
             <BorderDecoration color="#FF86CB" />
           </li>
@@ -440,7 +441,7 @@ export default function Index() {
             <LiHead>
               <LiTitle>{t('Assets.SeasonUseUSD')}</LiTitle>
             </LiHead>
-            <div className="num">{formatNumber(asset.token_used_amount)}</div>
+            <div className="num">{Number(asset.token_used_amount).format()}</div>
             {/*<AssetBox className="tips">*/}
             {/*  /!* <span>{t('Assets.SeasonBudget')} : </span>*/}
             {/*  <span>{formatNumber(asset.token_total_amount)}</span>*/}
@@ -458,7 +459,7 @@ export default function Index() {
                 {t('Assets.SeasonUsedSCR')}({t('Assets.SCRTip')})
               </LiTitle>
             </LiHead>
-            <div className="num">{formatNumber(asset.credit_used_amount)}</div>
+            <div className="num">{Number(asset.credit_used_amount).format()}</div>
             {/*<AssetBox className="tips">*/}
             {/*  /!* <span>{t('Assets.SeasonBudget')} : </span>*/}
             {/*  <span>{formatNumber(asset.credit_total_amount)}</span>*/}

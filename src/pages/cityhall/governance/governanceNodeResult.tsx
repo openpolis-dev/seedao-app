@@ -256,7 +256,7 @@ export default function GoveranceNodeResult() {
           season={`S${currentSeasonNumber + 1}`}
         />
       )}
-      <BackerNav title={t('city-hall.GovernanceNodeResult')} to="/city-hall/governance" />
+      <BackerNav title={t('city-hall.GovernanceNodeResult')} to="/city-hall/governance" mb="24px" />
       <TopLine>
         <StaticCards>
           <Col md={2}>
@@ -277,7 +277,7 @@ export default function GoveranceNodeResult() {
           </Col>
           <Col md={2}>
             <div className="li">
-              <div className="num f3">{formatNumber(Number(totalSCR))}</div>
+              <div className="num f3">{Number(totalSCR).format()}</div>
               <div>
                 <LiTitle>{t('GovernanceNodeResult.TotalSentSCR', { season: currentSeason })}</LiTitle>
               </div>
@@ -285,7 +285,7 @@ export default function GoveranceNodeResult() {
           </Col>
           <Col md={2}>
             <div className="li">
-              <div className="num f4">{formatNumber(Number(totalReward))}</div>
+              <div className="num f4">{Number(totalReward).format()}</div>
               <div>
                 <LiTitle>{t('GovernanceNodeResult.TotalMinerReward', { season: currentSeason })}</LiTitle>
               </div>
@@ -322,7 +322,7 @@ export default function GoveranceNodeResult() {
       </TopLine>
       <OperateBox>
         <SearchBox>
-          <img src={theme ? SearchWhite : SearchImg} alt="" />
+          <img src={SearchImg} alt="" />
           <Form.Control
             type="text"
             placeholder={t('GovernanceNodeResult.SearchTip')}
@@ -376,15 +376,15 @@ export default function GoveranceNodeResult() {
                 <td>{formatSNS(item.wallet)}</td>
                 {[...allSeasons].map((season) => (
                   <td key={season} className="right">
-                    {formatNumber(Number(item.seasons_credit?.find((s) => s.season_idx === season)?.total || 0))}
+                    {Number(item.seasons_credit?.find((s) => s.season_idx === season)?.total || 0).format()}
                   </td>
                 ))}
 
-                <td className="center">{formatNumber(Number(item.metaforo_vote_count) || 0)}</td>
-                <td className="right">{formatNumber(Number(item.metaforo_credit) || 0)}</td>
-                <td className="right">{formatNumber(Number(item.season_total_credit) || 0)}</td>
-                <td className="right">{formatNumber(Number(item.activity_credit) || 0)}</td>
-                <td className="right">{formatNumber(Number(item.effective_credit) || 0)}</td>
+                <td className="center">{Number(item.metaforo_vote_count).format()}</td>
+                <td className="right">{Number(item.metaforo_credit).format()}</td>
+                <td className="right">{Number(item.season_total_credit).format()}</td>
+                <td className="right">{Number(item.activity_credit).format()}</td>
+                <td className="right">{Number(item.effective_credit).format()}</td>
                 <td className="center">{item.seed_count}</td>
               </tr>
             ))}
@@ -485,8 +485,11 @@ const TableBox = styled.div`
       left: 0; */
     }
   }
-  @media (max-width: 1520px) {
-    height: calc(100vh - 410px);
+  @media (max-width: 1470px) {
+    height: calc(100vh - 400px);
+  }
+  @media (max-width: 1440px) {
+    height: calc(100vh - 380px);
   }
 `;
 
@@ -511,16 +514,13 @@ const TopLine = styled.div`
 `;
 const StaticCards = styled(Row)`
   .li {
-    //min-width: 180px;
+    min-height: 106px;
     border-radius: 16px;
-    padding: 20px 25px;
+    padding: 25px 16px;
     background-color: var(--bs-box--background);
     border: 1px solid var(--border-box);
     box-shadow: var(--box-shadow);
     height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
     .num {
       font-size: 18px;
       font-weight: 600;
@@ -597,7 +597,7 @@ const ButtonGroup = styled.div`
   display: flex;
   gap: 16px;
   .btn {
-    width: 120px !important;
+    width: 130px !important;
   }
   .export {
     border: 1px solid var(--bs-border-color);

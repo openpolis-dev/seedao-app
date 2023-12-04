@@ -11,6 +11,10 @@ const GlobalStyle = createGlobalStyle`
     margin: 0;
   }
 
+  .md-editor-dark {
+    background: var(--bs-box--background);
+  }
+
   w3m-modal{
     position: relative;
     z-index: 9999!important;

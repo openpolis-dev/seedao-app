@@ -43,13 +43,13 @@ const Colgroups = () => {
       {/* receiver */}
       <col style={{ width: '160px' }} />
       {/* add assets */}
-      <col style={{ width: '180px' }} />
+      <col style={{ width: '190px' }} />
       {/* season */}
-      <col style={{ width: '120px' }} />
+      <col style={{ width: '140px' }} />
       {/* Content */}
       <col />
       {/* source */}
-      <col style={{ width: '140px' }} />
+      <col style={{ width: '190px' }} />
       {/* operator */}
       <col style={{ width: '160px' }} />
       {/* state */}
@@ -105,6 +105,13 @@ const FilterLine = styled.div`
   table {
     td {
       border: none !important;
+      &:first-child,
+      &:last-child {
+        padding: 0 !important;
+        button {
+          width: 100%;
+        }
+      }
     }
     tr:hover td {
       background: transparent;
@@ -322,7 +329,7 @@ export default function AssetList() {
         review_date: formatTime(item.review_ts * 1000),
         process_date: formatTime(item.process_ts * 1000),
         transactions: item.transaction_ids.split(','),
-        asset_display: formatNumber(Number(item.amount)) + ' ' + item.asset_name,
+        asset_display: Number(item.amount).format() + ' ' + item.asset_name,
         submitter_name: item.applicant_wallet?.toLocaleLowerCase(),
         reviewer_name: item.reviewer_wallet?.toLocaleLowerCase(),
         receiver_name: item.target_user_wallet?.toLocaleLowerCase(),

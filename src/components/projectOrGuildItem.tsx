@@ -49,6 +49,7 @@ const ImageBox = styled.div`
     height: 68px;
     border-radius: 16px;
     object-fit: cover;
+    object-position: center;
   }
 `;
 

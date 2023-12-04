@@ -189,6 +189,8 @@ const TopImg = styled.div`
   img {
     width: 110px;
     height: 110px;
+    object-fit: cover;
+    object-position: center;
     border-radius: 16px;
   }
 `;
@@ -231,9 +233,6 @@ const ContentBox = styled.div`
 
   img {
     max-width: 100%;
-  }
-  .md-editor-dark {
-    background: var(--bs-box--background);
   }
 `;
 

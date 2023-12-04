@@ -107,8 +107,10 @@ export default function Issued() {
       const _list = res.data.rows.map((item, idx) => ({
         ...item,
         created_date: formatTime(item.create_ts * 1000),
+        process_date: formatTime(item.process_ts * 1000),
+        review_date: formatTime(item.review_ts * 1000),
         transactions: item.transaction_ids.split(','),
-        asset_display: formatNumber(Number(item.amount)) + ' ' + item.asset_name,
+        asset_display: Number(item.amount).format() + ' ' + item.asset_name,
       }));
       setTotal(res.data.total);
       setList(_list);
@@ -186,7 +188,7 @@ export default function Issued() {
       return (
         <TopBox>
           {/* <SendButtonBox> */}
-          <Button onClick={handleProcess} disabled={isProcessing} className="btn-send">
+          <Button onClick={handleProcess} disabled={!list.length || isProcessing} className="btn-send">
             {t('city-hall.Send')}
           </Button>
           {/* <div className="tip">{t('city-hall.Tips')}</div> */}
@@ -196,7 +198,7 @@ export default function Issued() {
     } else if (selectStatus === ApplicationStatus.Processing) {
       return (
         <TopBox>
-          <Button onClick={() => handleShow()} disabled={!isProcessing}>
+          <Button onClick={() => handleShow()} disabled={!list.length || !isProcessing} className="btn-com">
             {t('city-hall.SendCompleted')}
           </Button>
         </TopBox>
@@ -305,6 +307,10 @@ const TopLine = styled.ul`
 const TopBox = styled.li`
   button {
     width: 110px;
+  }
+  .btn-com {
+    width: auto;
+    min-width: 110px;
   }
 `;
 

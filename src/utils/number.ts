@@ -14,6 +14,12 @@ export const getShortDisplay = (v: any, num?: number) => {
   let res = arr[0];
   if (arr[1]) {
     res += `.${arr[1].slice(0, num || 6)}`;
+  } else {
+    res += '.00';
   }
   return res;
+};
+
+Number.prototype.format = function (n = 2) {
+  return getShortDisplay(formatNumber(Number(this)), n);
 };

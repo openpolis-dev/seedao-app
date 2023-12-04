@@ -98,7 +98,7 @@ export default function SeedList(props: Iprops) {
               <SwiperSlide key={index}>
                 <LiBox>
                   <img src={item.url} alt="" />
-                  <span>ID {item.token_id}</span>
+                  <span># {item.token_id}</span>
                 </LiBox>
               </SwiperSlide>
             ))}

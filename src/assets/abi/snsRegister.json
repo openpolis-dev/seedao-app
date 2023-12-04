@@ -92,11 +92,6 @@
             },
             {
                 "internalType": "address",
-                "name": "owner",
-                "type": "address"
-            },
-            {
-                "internalType": "address",
                 "name": "resolver",
                 "type": "address"
             },

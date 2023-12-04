@@ -5,24 +5,50 @@ import { useAuthContext } from '../providers/authProvider';
 import { useTranslation } from 'react-i18next';
 import useToast from '../hooks/useToast';
 import PublicJs from '../utils/publicJs';
-import TwitterIcon from '../assets/Imgs/profileCom/twitter.svg';
-import EmailIcon from '../assets/Imgs/profileCom/message.svg';
-import MirrorImg from '../assets/Imgs/profileCom/mirror.svg';
-import GithubImg from '../assets/Imgs/profileCom/github.svg';
+
+import TwitterIcon from 'assets/Imgs/social/twitter.png';
+import MirrorImg from 'assets/Imgs/social/mirror.png';
+import MirrorImgDark from 'assets/Imgs/social/mirror_dark.png';
+import EmailIcon from 'assets/Imgs/social/email.png';
+import GithubImg from 'assets/Imgs/social/github.png';
+import GithubImgDark from 'assets/Imgs/social/github_dark.png';
+
 import SeedList from './seed';
 import Sbt from './Sbt';
+import BasicModal from '../components/modals/basicModal';
+import CloseIcon from '../assets/Imgs/close.svg';
+
+const Mask = styled.div`
+  background: rgba(13, 12, 15, 0.8);
+  width: 100vw;
+  height: 100vh;
+  z-index: 99;
+  left: 0;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+`;
 
 const Box = styled.div`
   width: 512px;
-  background: #fafafa;
-  box-shadow: 2px 4px 4px 0 rgba(211, 206, 221, 0.1);
+  background: var(--profile-bg);
+  box-shadow: var(--box-shadow);
+  border: 1px solid var(--border-box);
   border-radius: 16px;
   display: flex;
   flex-direction: column;
-  margin-bottom: 200px;
+  position: fixed;
+  .btn-close-modal {
+    cursor: pointer;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+  }
 `;
 const TopBox = styled.div`
-  background: #fff;
+  background: var(--bs-background);
   padding: 27px 24px;
   border-top-left-radius: 16px;
   border-top-right-radius: 16px;
@@ -70,6 +96,14 @@ const InfoBox = styled.div`
     font-weight: 600;
     line-height: 23px;
     margin-bottom: 6px;
+  }
+  .lineBox {
+    display: flex;
+    align-items: flex-start;
+  }
+  .sns {
+    color: var(--bs-body-color);
+    font-size: 12px;
   }
 `;
 
@@ -182,14 +216,21 @@ const TitTop = styled.div`
   padding: 0 24px;
 `;
 
+const LevelBox = styled.div`
+  font-size: 16px;
+  font-weight: normal;
+  font-family: 'Poppins-Bold';
+  background: linear-gradient(90deg, #efbc80 0%, #ffda93 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-style: italic;
+  padding-inline: 10px;
+`;
+
 const InneBox = styled.div``;
 
-export default function ProfileComponent() {
-  const {
-    state: { userData, sns },
-  } = useAuthContext();
+export default function ProfileComponent({ userData, theme, sns, handleClose }: any) {
   const { t } = useTranslation();
-  const { Toast, showToast } = useToast();
   const [userName, setUserName] = useState<string | undefined>('');
 
   const [avatar, setAvatar] = useState('');
@@ -251,20 +292,20 @@ export default function ProfileComponent() {
 
   const getDetail = async () => {
     if (userData) {
-      let detail = (userData as any).data;
+      let detail = (userData as any)?.sp;
       setDetail(detail);
-      setUserName(detail.nickname);
+      setUserName(detail?.nickname);
       let avarUrl = await PublicJs.getImage(detail?.avatar);
       setAvatar(avarUrl!);
-      setWallet(detail.wallet);
-      setBio(detail.bio);
-      setRoles(detail.roles!);
+      setWallet(detail?.wallet);
+      setBio(detail?.bio);
+      setRoles(detail?.roles!);
 
-      let sbtArr = detail.sbt;
+      let sbtArr = detail?.sbt ?? [];
 
       const sbtFor = sbtArr?.filter((item: any) => item.name && item.image_uri);
       setSbt(sbtFor);
-      setSeed(detail.seed);
+      setSeed(detail?.seed ?? []);
     }
   };
 
@@ -372,13 +413,13 @@ export default function ProfileComponent() {
       case 'mirror':
         return (
           <a href={val} target="_blank">
-            <img src={MirrorImg} alt="" />
+            <img src={theme ? MirrorImgDark : MirrorImg} alt="" />
           </a>
         );
       case 'github':
         return (
           <a href={val} target="_blank">
-            <img src={GithubImg} alt="" />
+            <img src={theme ? GithubImgDark : GithubImg} alt="" />
           </a>
         );
       case 'discord':
@@ -390,57 +431,64 @@ export default function ProfileComponent() {
     }
   };
   return (
-    <Box>
-      <TopBox>
-        <LftBox>
-          <AvatarBox>
-            <ImgBox>
-              <img src={avatar ? avatar : defaultImg} alt="" />
-            </ImgBox>
-          </AvatarBox>
-        </LftBox>
-        <InfoBox>
-          <div className="userName">{userName}</div>
-          <BioBox>
-            <div>{bio || '-'}</div>
-          </BioBox>
-          <TagBox>
-            {roles?.map((item, index) => (
-              <li key={`tag_${index}`}>{switchRoles(item)}</li>
-            ))}
-          </TagBox>
-          <LinkBox>
-            {detail?.social_accounts?.map((item: any, index: number) =>
-              returnSocial(item.network, item.identity) ? (
-                <li key={`sbtInner_${index}`}>
-                  <span className="iconLft">{returnSocial(item.network, item.identity)}</span>
+    <Mask>
+      <Box>
+        <img className="btn-close-modal" src={CloseIcon} alt="" onClick={() => handleClose && handleClose()} />
+        <TopBox>
+          <LftBox>
+            <AvatarBox>
+              <ImgBox>
+                <img src={avatar ? avatar : defaultImg} alt="" />
+              </ImgBox>
+            </AvatarBox>
+          </LftBox>
+          <InfoBox>
+            <div className="lineBox">
+              <div className="userName">{userName}</div>
+              <LevelBox>LV{detail?.level?.current_lv}</LevelBox>
+            </div>
+            <div className="sns">{sns}</div>
+            <BioBox>
+              <div>{bio || '-'}</div>
+            </BioBox>
+            <TagBox>
+              {roles?.map((item, index) => (
+                <li key={`tag_${index}`}>{switchRoles(item)}</li>
+              ))}
+            </TagBox>
+            <LinkBox>
+              {detail?.social_accounts?.map((item: any, index: number) =>
+                returnSocial(item.network, item.identity) ? (
+                  <li key={`sbtInner_${index}`}>
+                    <span className="iconLft">{returnSocial(item.network, item.identity)}</span>
+                  </li>
+                ) : null,
+              )}
+              {detail?.email && (
+                <li>
+                  <span className="iconLft">{returnSocial('email', detail?.email)}</span>
                 </li>
-              ) : null,
-            )}
-            {detail?.email && (
-              <li>
-                <span className="iconLft">{returnSocial('email', detail?.email)}</span>
-              </li>
-            )}
-          </LinkBox>
-        </InfoBox>
-      </TopBox>
-      <BgBox>
-        <InneBox>
-          <TitTop>SEED({list.length})</TitTop>
-          <RhtBoxB>
-            <SeedList list={list} />
-          </RhtBoxB>
-        </InneBox>
-      </BgBox>
-      <BgBox2>
-        <InneBox>
-          <TitTop>SBT({sbtList.length})</TitTop>
-          <RhtBoxB>
-            <Sbt list={sbtArr} />
-          </RhtBoxB>
-        </InneBox>
-      </BgBox2>
-    </Box>
+              )}
+            </LinkBox>
+          </InfoBox>
+        </TopBox>
+        <BgBox>
+          <InneBox>
+            <TitTop>SEED({list.length})</TitTop>
+            <RhtBoxB>
+              <SeedList list={list} />
+            </RhtBoxB>
+          </InneBox>
+        </BgBox>
+        <BgBox2>
+          <InneBox>
+            <TitTop>SBT({sbtList.length})</TitTop>
+            <RhtBoxB>
+              <Sbt list={sbtArr} />
+            </RhtBoxB>
+          </InneBox>
+        </BgBox2>
+      </Box>
+    </Mask>
   );
 }

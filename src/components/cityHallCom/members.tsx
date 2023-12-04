@@ -16,6 +16,7 @@ import useQuerySNS from 'hooks/useQuerySNS';
 import publicJs from 'utils/publicJs';
 import BookImg from 'assets/Imgs/handbook.svg';
 import LinkImg from '../../assets/Imgs/link.svg';
+import ProfileComponent from '../../profile-components/profile';
 
 type UserMap = { [w: string]: IUser };
 
@@ -31,9 +32,12 @@ export default function Members() {
   const [edit, setEdit] = useState(false);
   const [show, setShow] = useState(false);
   const [showDel, setShowDel] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const [selectUsers, setSelectUsers] = useState<{ user: IUser; group: MemberGroupType }[]>([]);
 
   const [userMap, setUserMap] = useState<UserMap>({});
+  const [user, setUser] = useState<any>();
+  const [sns, setSns] = useState<string>('');
 
   const { getMultiSNS } = useQuerySNS();
 
@@ -166,6 +170,7 @@ export default function Members() {
   };
 
   const handleAdminSelect = (selItem: IUser, group: MemberGroupType) => {
+    console.log(showDel);
     const selectHas = selectUsers.findIndex((item) => item.user?.wallet === selItem.wallet);
     const arr = [...selectUsers];
     if (selectHas > -1) {
@@ -183,10 +188,21 @@ export default function Members() {
     return theme ? '1px solid #29282F' : 'unset';
   }, [theme]);
 
+  const handleProfile = (user: any, sns: string) => {
+    setShowModal(true);
+    setSns(sns);
+    setUser(user);
+  };
+
+  const handleClose = () => {
+    setShowModal(false);
+  };
+
   return (
     <Box>
       {show && <Add closeAdd={closeAdd} canUpdateSponsor={canUpdateSponsor} oldMembers={allMembers} />}
       {showDel && <Del closeRemove={closeRemove} selectUsers={selectUsers} />}
+      {!showDel && showModal && <ProfileComponent userData={user} theme={theme} sns={sns} handleClose={handleClose} />}
       <TopList>
         <Grouptitle>{t('Governance.GovernanceRule')}</Grouptitle>
         <UlBox border={borderStyle}>
@@ -220,6 +236,7 @@ export default function Members() {
               formatActive={formatAdminActive}
               showEdit={edit && canUpdateSponsor}
               sns={item?.sns}
+              handleProfile={handleProfile}
             />
           ))}
         </Row>
@@ -235,6 +252,7 @@ export default function Members() {
               formatActive={formatAdminActive}
               showEdit={edit && canUpdateSponsor}
               sns={item?.sns}
+              handleProfile={handleProfile}
             />
           ))}
         </Row>
@@ -250,6 +268,7 @@ export default function Members() {
               formatActive={formatAdminActive}
               showEdit={edit && canUpdateSponsor}
               sns={item?.sns}
+              handleProfile={handleProfile}
             />
           ))}
         </Row>

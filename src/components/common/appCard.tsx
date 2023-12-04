@@ -5,7 +5,7 @@ import { WindowPlus } from 'react-bootstrap-icons';
 import DefaultImg from '../../assets/Imgs/dark/default.png';
 import DefaultImgLight from '../../assets/Imgs/light/default.png';
 import { AppActionType, useAuthContext } from '../../providers/authProvider';
-import AddImg from '../../assets/Imgs/dark/add.svg';
+import AddImg from '../../assets/Imgs/dark/addWhite.svg';
 import AddImgLight from '../../assets/Imgs/light/add.svg';
 import LinkImg from '../../assets/Imgs/link.svg';
 import React from 'react';
@@ -184,7 +184,7 @@ const AppCardStyle = styled.div<Iprops>`
 `;
 
 const AppCardStyleEmp = styled(AppCardStyle)`
-  
+ cursor: auto;
   &:hover {
     background-color: var(--bs-box--background);
  

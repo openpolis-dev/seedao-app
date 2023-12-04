@@ -20,6 +20,8 @@ import { sendTransaction } from '@joyid/evm';
 import { SELECT_WALLET } from 'utils/constant';
 import { Wallet } from '../../wallet/wallet';
 import ABI from 'assets/abi/snsRegister.json';
+import getConfig from 'utils/envCofnig';
+const networkConfig = getConfig().NETWORK;
 
 enum AvailableStatus {
   DEFAULT = 'default',
@@ -83,18 +85,16 @@ export default function RegisterSNSStep1() {
     }
   };
   const onChangeVal = useCallback(debounce(handleSearchAvailable, 1000), [contract]);
-
-  const handleInput = (v: string) => {
+  const checkLogin = () => {
     // check login status
-    if (!account || !isLogin) {
+    if (!account || !isLogin || !contract) {
       dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: true });
       return;
     }
+  };
+
+  const handleInput = (v: string) => {
     if (v?.length > 15) {
-      return;
-    }
-    if (!contract) {
-      // TODO check login status?
       return;
     }
     if (!v) {
@@ -124,6 +124,7 @@ export default function RegisterSNSStep1() {
     if (!account) {
       return;
     }
+    const wallet = localStorage.getItem(SELECT_WALLET);
     // mint
     try {
       const _s = getRandomCode();
@@ -132,16 +133,15 @@ export default function RegisterSNSStep1() {
       const commitment = await contract.makeCommitment(
         searchVal,
         account,
-        builtin.PUBLIC_RESOLVER_ADDR,
+        networkConfig.PUBLIC_RESOLVER_ADDR,
         ethers.utils.formatBytes32String(_s),
       );
       // commit
       dispatchSNS({ type: ACTIONS.SHOW_LOADING });
-      const wallet = localStorage.getItem(SELECT_WALLET);
       let txHash: string;
       if (wallet && wallet === Wallet.JOYID_WEB) {
         txHash = await sendTransaction({
-          to: builtin.SEEDAO_REGISTRAR_CONTROLLER_ADDR,
+          to: networkConfig.SEEDAO_REGISTRAR_CONTROLLER_ADDR,
           from: account,
           value: '0',
           data: buildCommitData(commitment),
@@ -221,7 +221,7 @@ export default function RegisterSNSStep1() {
         <StepDesc>{t('SNS.Step1Desc')}</StepDesc>
         <SearchBox>
           <InputBox>
-            <InputStyled autoFocus value={val} onChange={(e) => handleInput(e.target.value)} />
+            <InputStyled onFocus={checkLogin} value={val} onChange={(e) => handleInput(e.target.value)} />
             <span className="endfill">.seedao</span>
           </InputBox>
           <SearchRight>
@@ -377,7 +377,6 @@ const Loading = styled.img`
 const Tip = styled.div`
   width: 394px;
   font-size: 10px;
-  font-family: Poppins, Poppins;
   font-weight: 400;
   color: var(--bs-body-color_active);
   line-height: 17px;

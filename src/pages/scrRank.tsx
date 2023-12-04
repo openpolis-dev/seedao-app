@@ -247,12 +247,10 @@ export default function SCRRank() {
                 <td>{formatSNS(item.wallet)}</td>
                 {[...allSeasons].map((season) => (
                   <td key={season} className="right">
-                    {formatNumber(
-                      Number(getShortDisplay(item.seasons_credit?.find((s) => s.season_idx === season)?.total || 0, 2)),
-                    )}
+                    {Number(item.seasons_credit?.find((s) => s.season_idx === season)?.total || 0).format()}
                   </td>
                 ))}
-                <td className="right">{formatNumber(Number(getShortDisplay(item.season_total_credit || 0, 2)))}</td>
+                <td className="right">{Number(item.season_total_credit || 0).format()}</td>
               </tr>
             ))}
           </tbody>
@@ -274,7 +272,7 @@ const OperateBox = styled.div`
 `;
 
 const TableBox = styled.div`
-  height: calc(100vh - 240px);
+  height: calc(100vh - 160px);
   overflow-y: auto;
   .table {
     table-layout: fixed;

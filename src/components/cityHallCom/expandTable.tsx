@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { IApplicationDisplay } from 'type/application.type';
 import NoItem from 'components/noItem';
 import { useTranslation } from 'react-i18next';
@@ -181,6 +181,7 @@ export default function ExpandTable({
               {t('city-hall.Reject')}
             </PinkButton>
           </OperateBox>
+          {isProcessing && <TipsBtm>{t('application.applyTips')}</TipsBtm>}
         </ContentBox>
       ) : (
         <NoItem />
@@ -188,6 +189,11 @@ export default function ExpandTable({
     </TableBox>
   );
 }
+
+const TipsBtm = styled.div`
+  padding-top: 0;
+  font-size: 14px;
+`;
 
 const TableBox = styled.div`
   width: 100%;

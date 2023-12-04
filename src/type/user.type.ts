@@ -22,6 +22,7 @@ export interface IUser {
   seed?: any;
   roles?: string[];
   sns?: string;
+  sp?: any;
 }
 
 export interface IUserInfo {
