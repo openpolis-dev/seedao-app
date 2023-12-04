@@ -322,7 +322,7 @@ export default function GoveranceNodeResult() {
       </TopLine>
       <OperateBox>
         <SearchBox>
-          <img src={theme ? SearchWhite : SearchImg} alt="" />
+          <img src={SearchImg} alt="" />
           <Form.Control
             type="text"
             placeholder={t('GovernanceNodeResult.SearchTip')}
