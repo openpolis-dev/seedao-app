@@ -110,7 +110,7 @@ export default function Issued() {
         process_date: formatTime(item.process_ts * 1000),
         review_date: formatTime(item.review_ts * 1000),
         transactions: item.transaction_ids.split(','),
-        asset_display: formatNumber(Number(item.amount)) + ' ' + item.asset_name,
+        asset_display: Number(item.amount).format() + ' ' + item.asset_name,
       }));
       setTotal(res.data.total);
       setList(_list);
