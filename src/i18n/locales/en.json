@@ -207,7 +207,7 @@
     "Members": "Members",
     "Asset": "Asset",
     "Proposal": "Proposal",
-    "Pass": "Pass",
+    "Pass": "Approve",
     "Reject": "Reject",
     "ProjectAudit": "Project Audit",
     "ProjectName": "Project Name",
@@ -218,7 +218,7 @@
     "Send": "Send",
     "Add": "Add",
     "Tips": "After clicking the [Send] button, the status of the selected user changes to [Sending], and only after the sending is completed can it be sent to other users",
-    "SendCompleted": "Send Completed",
+    "SendCompleted": "Complete",
     "FillInId": "Please fill in the transaction ID of the sending record(use ; to split)",
     "SendSuccess": "Sent",
     "Push": "Notification",
@@ -450,15 +450,15 @@
   "application": {
     "Register": "Register",
     "DetailModalHeader": "Detail",
-    "applyTips": "The asset application currently exists in the transaction, please review after the transaction is completed",
+    "applyTips": "",
     "Time": "Time",
     "TotalAssets": "Total Assets",
     "RegisterNote": "Note",
     "RegisterAddressHint": "SNS/Address",
     "RegisterSource": "Project / Guild",
-    "ApplyIntro": "Apply intro",
+    "ApplyIntro": "Application Memo",
     "Operator": "Operator",
-    "Receiver": "Receiver",
+    "Receiver": "Recipient",
     "Auditor": "Auditor",
     "AuditTime": "Audit time",
     "detail": "View project details",
@@ -537,6 +537,6 @@
     "MetaRule": "SeeDAO Meta Rules",
     "GovernanceBook": "Governance Book",
     "NodesConferenceRule": "Nodes Conference Rules",
-    "apply": "Assets Applications"
+    "apply": "Issue Assets"
   }
 }
