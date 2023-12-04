@@ -181,10 +181,7 @@ export default function ExpandTable({
               {t('city-hall.Reject')}
             </PinkButton>
           </OperateBox>
-          {isProcessing ||
-            (status !== ApplicationStatus.Open && status !== ApplicationStatus.Rejected && (
-              <TipsBtm>{t('application.applyTips')}</TipsBtm>
-            ))}
+          {isProcessing && <TipsBtm>{t('application.applyTips')}</TipsBtm>}
         </ContentBox>
       ) : (
         <NoItem />
