@@ -376,15 +376,15 @@ export default function GoveranceNodeResult() {
                 <td>{formatSNS(item.wallet)}</td>
                 {[...allSeasons].map((season) => (
                   <td key={season} className="right">
-                    {formatNumber(Number(item.seasons_credit?.find((s) => s.season_idx === season)?.total || 0))}
+                    {Number(item.seasons_credit?.find((s) => s.season_idx === season)?.total || 0).format()}
                   </td>
                 ))}
 
-                <td className="center">{formatNumber(Number(item.metaforo_vote_count) || 0)}</td>
-                <td className="right">{formatNumber(Number(item.metaforo_credit) || 0)}</td>
-                <td className="right">{formatNumber(Number(item.season_total_credit) || 0)}</td>
-                <td className="right">{formatNumber(Number(item.activity_credit) || 0)}</td>
-                <td className="right">{formatNumber(Number(item.effective_credit) || 0)}</td>
+                <td className="center">{Number(item.metaforo_vote_count).format()}</td>
+                <td className="right">{Number(item.metaforo_credit).format()}</td>
+                <td className="right">{Number(item.season_total_credit).format()}</td>
+                <td className="right">{Number(item.activity_credit).format()}</td>
+                <td className="right">{Number(item.effective_credit).format()}</td>
                 <td className="center">{item.seed_count}</td>
               </tr>
             ))}
