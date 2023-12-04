@@ -1,7 +1,7 @@
 import EthereumIcon from 'assets/Imgs/network/ethereum.png';
 import { builtin } from '@seedao/sns-js';
 
-const VERSION = '0.2.3';
+const VERSION = '0.2.4';
 
 const LOCAL = {
   REACT_APP_BASE_ENDPOINT: 'https://test-api.seedao.tech',
