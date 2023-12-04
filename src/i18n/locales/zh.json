@@ -450,6 +450,7 @@
   "application": {
     "Register": "登记",
     "DetailModalHeader": "资产发放记录",
+    "applyTips": "当前资产发放列表中存在发放中的资产申请，请在该批申请发放完成后进行审核",
     "Time": "时间",
     "TotalAssets": "总资产",
     "RegisterNote": "备注",
