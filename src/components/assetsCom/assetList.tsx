@@ -45,7 +45,7 @@ const Colgroups = () => {
       {/* add assets */}
       <col style={{ width: '190px' }} />
       {/* season */}
-      <col style={{ width: '120px' }} />
+      <col style={{ width: '140px' }} />
       {/* Content */}
       <col />
       {/* source */}
