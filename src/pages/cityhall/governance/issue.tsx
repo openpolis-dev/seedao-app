@@ -107,6 +107,8 @@ export default function Issued() {
       const _list = res.data.rows.map((item, idx) => ({
         ...item,
         created_date: formatTime(item.create_ts * 1000),
+        process_date: formatTime(item.process_ts * 1000),
+        review_date: formatTime(item.review_ts * 1000),
         transactions: item.transaction_ids.split(','),
         asset_display: formatNumber(Number(item.amount)) + ' ' + item.asset_name,
       }));
