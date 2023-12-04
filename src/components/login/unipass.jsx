@@ -110,7 +110,7 @@ export default function UniPass(){
             const eip55Addr = ethers.utils.getAddress(account);
             console.error(eip55Addr)
 
-            const siweMessage = createSiweMessage(eip55Addr, 1, nonce, 'Welcome to SeeDAO!');
+            const siweMessage = createSiweMessage(eip55Addr, networkConfig.chainId, nonce, 'Welcome to SeeDAO!');
             setMsg(siweMessage)
             console.log("siweMessage", siweMessage)
             const signer = provider.getSigner();
