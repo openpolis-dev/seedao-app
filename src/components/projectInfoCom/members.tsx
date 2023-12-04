@@ -289,6 +289,10 @@ export default function Members(props: Iprops) {
 
 const Box = styled.div`
   width: 246px;
+  padding: 24px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
 `;
 
 const ItemBox = styled.div`
