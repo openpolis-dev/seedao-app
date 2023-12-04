@@ -186,7 +186,7 @@ export default function Issued() {
       return (
         <TopBox>
           {/* <SendButtonBox> */}
-          <Button onClick={handleProcess} disabled={isProcessing} className="btn-send">
+          <Button onClick={handleProcess} disabled={!list.length || isProcessing} className="btn-send">
             {t('city-hall.Send')}
           </Button>
           {/* <div className="tip">{t('city-hall.Tips')}</div> */}
@@ -196,7 +196,7 @@ export default function Issued() {
     } else if (selectStatus === ApplicationStatus.Processing) {
       return (
         <TopBox>
-          <Button onClick={() => handleShow()} disabled={!isProcessing} className="btn-com">
+          <Button onClick={() => handleShow()} disabled={!list.length || !isProcessing} className="btn-com">
             {t('city-hall.SendCompleted')}
           </Button>
         </TopBox>
