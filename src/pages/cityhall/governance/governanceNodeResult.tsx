@@ -277,7 +277,7 @@ export default function GoveranceNodeResult() {
           </Col>
           <Col md={2}>
             <div className="li">
-              <div className="num f3">{formatNumber(Number(totalSCR))}</div>
+              <div className="num f3">{Number(totalSCR).format()}</div>
               <div>
                 <LiTitle>{t('GovernanceNodeResult.TotalSentSCR', { season: currentSeason })}</LiTitle>
               </div>
@@ -285,7 +285,7 @@ export default function GoveranceNodeResult() {
           </Col>
           <Col md={2}>
             <div className="li">
-              <div className="num f4">{formatNumber(Number(totalReward))}</div>
+              <div className="num f4">{Number(totalReward).format()}</div>
               <div>
                 <LiTitle>{t('GovernanceNodeResult.TotalMinerReward', { season: currentSeason })}</LiTitle>
               </div>
