@@ -144,7 +144,7 @@ export default function GoveranceNodeResult() {
 
   const formatSNS = (wallet: string) => {
     const sns = dataMap.get(wallet) || wallet;
-    return sns.endsWith('.seedao') ? sns : publicJs.AddressToShow(sns, 6);
+    return sns.endsWith('.seedao') ? sns : publicJs.AddressToShow(sns);
   };
 
   const handleExport = () => {
@@ -254,6 +254,7 @@ export default function GoveranceNodeResult() {
           walletList={filterResult}
           handleClose={closeModal}
           season={`S${currentSeasonNumber + 1}`}
+          formatSNS={formatSNS}
         />
       )}
       <BackerNav title={t('city-hall.GovernanceNodeResult')} to="/city-hall/governance" mb="24px" />
