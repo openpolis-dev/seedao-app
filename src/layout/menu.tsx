@@ -433,6 +433,12 @@ export default function Menu({ isMedium }: { isMedium: boolean }) {
     return (isMedium ? 'float ' : '') + (open ? 'expand' : 'unexpand');
   }, [isMedium, open]);
 
+  const returnSelected = (url: string) => {
+    const projectGuild = url.startsWith('/explore') && (pathname.includes('/project') || pathname.includes('/guild'));
+    const assets = pathname.includes('/ranking') && url.startsWith('/assets');
+    const apps = pathname.startsWith('/sns') && url.startsWith('/apps');
+    return pathname.startsWith(url) || projectGuild || assets || apps;
+  };
   return (
     <Box className={boxClassName}>
       <div>
@@ -450,10 +456,7 @@ export default function Menu({ isMedium }: { isMedium: boolean }) {
             data={item}
             theme={theme}
             onSelectMenu={onSelectMenu}
-            selected={
-              pathname.startsWith(item.link.href) ||
-              (item.link.href.startsWith('/explore') && (pathname.includes('/project') || pathname.includes('/guild')))
-            }
+            selected={returnSelected(item.link.href)}
           />
         ))}
       </div>
