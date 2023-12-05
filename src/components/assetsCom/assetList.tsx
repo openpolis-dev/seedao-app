@@ -248,8 +248,10 @@ export default function AssetList() {
     } else if (ethers.utils.isAddress(keyword)) {
       // address
       setSearchVal(keyword?.toLocaleLowerCase());
-    } else {
+    } else if (keyword) {
       showToast(t('Msg.InvalidAddress', { address: keyword }), ToastType.Danger);
+    } else {
+      setSearchVal('');
     }
   };
   const onKeyUp = (e: any, type: string) => {
