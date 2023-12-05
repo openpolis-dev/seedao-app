@@ -272,6 +272,7 @@ const BudgetContent = styled.div`
   max-width: 300px;
   overflow: hidden;
   text-overflow: ellipsis;
+  word-break: break-word;
   display: -webkit-box;
   -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;

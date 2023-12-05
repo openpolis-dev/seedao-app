@@ -407,6 +407,7 @@ const CommentBox = styled.div`
   display: -webkit-box;
   -webkit-line-clamp: 1;
   overflow: hidden;
+  word-break: break-word;
 
   /*! autoprefixer: off */
   -webkit-box-orient: vertical;
