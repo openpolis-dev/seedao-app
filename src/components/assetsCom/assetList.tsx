@@ -36,6 +36,7 @@ import useToast, { ToastType } from 'hooks/useToast';
 import sns from '@seedao/sns-js';
 import { ethers } from 'ethers';
 import { PlainButton } from 'components/common/button';
+import ClearSVGIcon from 'components/svgs/clear';
 
 const Colgroups = () => {
   return (
@@ -164,7 +165,7 @@ const SearchBox = styled.div`
   padding: 0 8px;
   border: 1px solid var(--bs-border-color);
   input {
-    width: calc(100% - 15px);
+    width: calc(100% - 40px);
     border: 0;
     background: transparent;
     margin-left: 9px;
@@ -175,6 +176,9 @@ const SearchBox = styled.div`
     &:focus {
       outline: none;
     }
+  }
+  svg {
+    cursor: pointer;
   }
 `;
 
@@ -209,6 +213,7 @@ export default function AssetList() {
   const [applicantKeyword, setApplicantKeyword] = useState('');
   const [searchApplicantVal, setSearchApplicantVal] = useState('');
   // search content
+  const [contentKeyword, setContentKeyword] = useState('');
   const [searchContentVal, setSearchContentVal] = useState('');
 
   const [snsMap, setSnsMap] = useState<Map<string, string>>(new Map());
@@ -265,11 +270,29 @@ export default function AssetList() {
           handleSearch(applicantKeyword, setSearchApplicantVal);
           break;
         case 'content':
-          getRecords();
+          setSearchContentVal(contentKeyword);
           break;
         default:
           return;
       }
+    }
+  };
+  const clearSearch = (type: string) => {
+    switch (type) {
+      case 'target':
+        setSearchTargetVal('');
+        setTargetKeyword('');
+        break;
+      case 'applicant':
+        setSearchApplicantVal('');
+        setApplicantKeyword('');
+        break;
+      case 'content':
+        setSearchContentVal('');
+        setContentKeyword('');
+        break;
+      default:
+        return;
     }
   };
 
@@ -346,7 +369,17 @@ export default function AssetList() {
 
   useEffect(() => {
     getRecords();
-  }, [selectSeason, selectStatus, page, pageSize, selectSource, selectAsset, searchTargetVal, searchApplicantVal]);
+  }, [
+    selectSeason,
+    selectStatus,
+    page,
+    pageSize,
+    selectSource,
+    selectAsset,
+    searchTargetVal,
+    searchApplicantVal,
+    searchContentVal,
+  ]);
 
   const handleExport = async () => {
     window.open(requests.application.getExportFileUrlFromVault(getQuerydata()), '_blank');
@@ -401,8 +434,10 @@ export default function AssetList() {
                     type="text"
                     placeholder={t('application.SearchTargetUserHint')}
                     onKeyUp={(e) => onKeyUp(e, 'target')}
+                    value={targetKeyword}
                     onChange={(e) => setTargetKeyword(e.target.value)}
                   />
+                  {targetKeyword && <ClearSVGIcon onClick={() => clearSearch('target')} />}
                 </SearchBox>
               </td>
 
@@ -439,8 +474,10 @@ export default function AssetList() {
                     type="text"
                     placeholder={t('application.SearchDetailHint')}
                     onKeyUp={(e) => onKeyUp(e, 'content')}
-                    onChange={(e) => setSearchContentVal(e.target.value)}
+                    value={contentKeyword}
+                    onChange={(e) => setContentKeyword(e.target.value)}
                   />
+                  {searchContentVal && <ClearSVGIcon onClick={() => clearSearch('content')} />}
                 </SearchBox>
               </td>
               <td>
@@ -462,8 +499,10 @@ export default function AssetList() {
                     type="text"
                     placeholder={t('application.SearchApplicantHint')}
                     onKeyUp={(e) => onKeyUp(e, 'applicant')}
+                    value={applicantKeyword}
                     onChange={(e) => setApplicantKeyword(e.target.value)}
                   />
+                  {applicantKeyword && <ClearSVGIcon onClick={() => clearSearch('applicant')} />}
                 </SearchBox>
               </td>
               <td>
