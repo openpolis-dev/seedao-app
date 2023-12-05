@@ -175,7 +175,7 @@ export default function RegisterSNSStep1() {
     } catch (error: any) {
       console.error('mint failed', error);
       dispatchSNS({ type: ACTIONS.CLOSE_LOADING });
-      showToast(error?.reason || error?.data?.message || 'error', ToastType.Danger);
+      showToast(error?.reason || error?.data?.message || error, ToastType.Danger);
     }
   };
 
