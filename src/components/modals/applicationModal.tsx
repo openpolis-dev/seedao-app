@@ -112,7 +112,12 @@ const ApplicationModalWrapper = styled(BasicModal)`
 const Content = styled.div`
   font-size: 14px;
   max-height: 85vh;
+  padding-right: 10px;
   overflow-y: auto;
+  //&::-webkit-scrollbar {
+  //  display: none;
+  //  width: 0;
+  //}
   section {
     display: flex;
     gap: 37px;
