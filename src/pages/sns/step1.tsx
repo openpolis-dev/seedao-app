@@ -87,9 +87,16 @@ export default function RegisterSNSStep1() {
   const onChangeVal = useCallback(debounce(handleSearchAvailable, 1000), [contract]);
   const checkLogin = () => {
     // check login status
-    if (!account || !isLogin) {
+    if (!account || !isLogin || !provider) {
       dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: true });
       return;
+    }
+    const wallet = localStorage.getItem(SELECT_WALLET);
+    if (wallet === Wallet.UNIPASS) {
+      if (!provider.provider.isConnected()) {
+        dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: true });
+        return;
+      }
     }
   };
 
