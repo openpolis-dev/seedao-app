@@ -27,6 +27,7 @@ import { ethers } from 'ethers';
 
 import SearchImg from 'assets/Imgs/light/search.svg';
 import SearchWhite from 'assets/Imgs/light/search.svg';
+import ClearSVGIcon from 'components/svgs/clear';
 
 const Box = styled.div`
   position: relative;
@@ -272,6 +273,16 @@ export default function Register() {
       }
     }
   };
+  const clearSearch = (type: string) => {
+    switch (type) {
+      case 'applicant':
+        setSearchApplicantVal('');
+        setApplicantKeyword('');
+        break;
+      default:
+        return;
+    }
+  };
 
   return (
     <Box>
@@ -322,8 +333,10 @@ export default function Register() {
                   type="text"
                   placeholder={t('application.SearchApplicantHint')}
                   onKeyUp={(e) => onKeyUp(e, 'applicant')}
+                  value={applicantKeyword}
                   onChange={(e) => setApplicantKeyword(e.target.value)}
                 />
+                {applicantKeyword && <ClearSVGIcon onClick={() => clearSearch('applicant')} />}
               </SearchBox>
             </li>
           </TopLine>
@@ -456,7 +469,7 @@ const SearchBox = styled.div`
   padding: 0 8px;
   border: 1px solid var(--bs-border-color);
   input {
-    width: calc(100% - 15px);
+    width: calc(100% - 30px);
     border: 0;
     background: transparent;
     margin-left: 9px;
@@ -467,5 +480,8 @@ const SearchBox = styled.div`
     &:focus {
       outline: none;
     }
+  }
+  svg {
+    cursor: pointer;
   }
 `;
