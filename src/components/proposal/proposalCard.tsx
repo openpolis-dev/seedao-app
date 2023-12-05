@@ -21,7 +21,6 @@ export default function ProposalCard({ data }: { data: IBaseProposal }) {
     let delta: any[] = [];
     try {
       delta = JSON.parse(data.first_post.content);
-      console.log(delta);
     } catch (e) {
       // console.info('illegal json:' + JSON.stringify(data));
     }
