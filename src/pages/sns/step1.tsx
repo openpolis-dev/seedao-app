@@ -98,6 +98,7 @@ export default function RegisterSNSStep1() {
         return;
       }
     }
+    return true;
   };
 
   const handleInput = (v: string) => {
@@ -128,7 +129,7 @@ export default function RegisterSNSStep1() {
     setAvailable(AvailableStatus.DEFAULT);
   };
   const handleMint = async () => {
-    if (!account) {
+    if (!account || !checkLogin()) {
       return;
     }
     const wallet = localStorage.getItem(SELECT_WALLET);
