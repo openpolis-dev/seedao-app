@@ -352,7 +352,7 @@ export default function AssetList() {
         ...item,
         created_date: formatTime(item.create_ts * 1000),
         review_date: formatTime(item.review_ts * 1000),
-        process_date: formatTime(item.process_ts * 1000),
+        complete_date: formatTime(item.complete_ts * 1000),
         transactions: item.transaction_ids.split(','),
         asset_display: Number(item.amount).format() + ' ' + item.asset_name,
         submitter_name: item.applicant_wallet?.toLocaleLowerCase(),

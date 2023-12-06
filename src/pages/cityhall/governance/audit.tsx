@@ -199,7 +199,7 @@ export default function Register() {
             ...record,
             review_date: formatTime(record.review_ts * 1000),
             created_date: formatTime(record.create_ts * 1000),
-            process_date: formatTime(record.process_ts * 1000),
+            complete_date: formatTime(record.complete_ts * 1000),
             transactions: record.transaction_ids.split(','),
             asset_display: Number(record.amount).format() + ' ' + record.asset_name,
             app_bundle_comment: item.comment,

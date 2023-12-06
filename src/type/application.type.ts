@@ -70,6 +70,7 @@ export interface IApplicationDisplay extends IApplication {
   created_date: string;
   review_date?: string;
   process_date?: string;
+  complete_date?: string;
   transactions?: string[];
   // NEW FIELDS
   asset_display?: string;

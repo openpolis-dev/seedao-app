@@ -93,7 +93,7 @@ export default function ApplicationModal({ application, handleClose, snsMap }: I
           </li>
           <li>
             <BlockLeft>{t('application.ProcessTime')}</BlockLeft>
-            <BlockRight>{application.process_date}</BlockRight>
+            <BlockRight>{application.complete_date}</BlockRight>
           </li>
         </Block>
       </Content>

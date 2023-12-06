@@ -47,12 +47,12 @@ export const upProvider = new UniPassProvider({
     appName: 'SeeDAO',
     appIcon: `${window.location.origin}/icon192.png`,
   },
-  rpcUrls: {
-    mainnet: 'https://eth.llamarpc.com',
-    goerli: networkConfig.rpc,
-    // polygon: "https://polygon.llamarpc.com",
-    // bscTestnet:"https://data-seed-prebsc-1-s1.binance.org:8545"
-  },
+//   rpcUrls: {
+//     mainnet: 'https://eth.llamarpc.com',
+//     goerli: networkConfig.rpc,
+//     // polygon: "https://polygon.llamarpc.com",
+//     // bscTestnet:"https://data-seed-prebsc-1-s1.binance.org:8545"
+//   },
 });
 
 
