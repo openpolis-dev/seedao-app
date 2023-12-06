@@ -114,10 +114,10 @@ const Content = styled.div`
   max-height: 85vh;
   padding-right: 10px;
   overflow-y: auto;
-  //&::-webkit-scrollbar {
-  //  display: none;
-  //  width: 0;
-  //}
+  &::-webkit-scrollbar {
+    display: none;
+    width: 0;
+  }
   section {
     display: flex;
     gap: 37px;
