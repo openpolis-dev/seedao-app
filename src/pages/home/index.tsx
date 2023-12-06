@@ -21,9 +21,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import ProposalImg from '../../assets/Imgs/home/proposal.png';
 import getConfig from 'utils/envCofnig';
 
-const CITY_HALL = 'https://seedao.notion.site/07c258913c5d4847b59271e2ae6f7c66';
-const CITY_HALL_MEMBERS = 'https://www.notion.so/3913d631d7bc49e1a0334140e3cd84f5';
-
 const Box = styled.div`
   background: var(--bs-background);
   display: flex;
