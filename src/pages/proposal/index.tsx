@@ -56,6 +56,8 @@ export default function Index() {
   };
 
   const handleChangeOrder = (index: number) => {
+    let str: 'latest' | 'old' = index === 0 ? 'latest' : 'old';
+    if (str === orderType) return;
     setPage(1);
     setProposals([]);
     setOrderType(index === 0 ? 'latest' : 'old');
