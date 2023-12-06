@@ -46,6 +46,8 @@ import UserSNS from 'pages/sns/userSNS';
 import LearnCourse from 'pages/deschool/learn';
 import Onboarding from 'pages/deschool/onboarding';
 
+import Wiki from './pages/notion/wiki';
+
 export default function RouterLink() {
   return (
     <Router>
@@ -98,6 +100,8 @@ export default function RouterLink() {
           {/* deschool */}
           <Route path="/onboarding/learn" element={<LearnCourse />} />
           <Route path="/onboarding/done" element={<Onboarding />} />
+
+          <Route path="/notion/:id" element={<Wiki />} />
         </Routes>
       </Layout>
       <RouterChecker />
