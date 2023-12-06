@@ -281,7 +281,7 @@ export default function CreateGuild() {
       <CardBody>
         <BtnBox htmlFor="fileUpload" onChange={(e) => updateLogo(e)}>
           <ImgBox>
-            <img src={url} alt="" />
+            {url && <img src={url} alt="" />}
             <UpladBox
               className="upload"
               bg={

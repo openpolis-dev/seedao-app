@@ -273,7 +273,7 @@ export default function CreateProject() {
       <CardBody>
         <BtnBox htmlFor="fileUpload" onChange={(e) => updateLogo(e)}>
           <ImgBox>
-            <img src={url} alt="" />
+            {url && <img src={url} alt="" />}
             <UpladBox
               className="upload"
               bg={
