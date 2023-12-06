@@ -83,7 +83,7 @@ export default function InfoPage() {
                     <TitleBox>{detail?.name}</TitleBox>
                     <div className="desc">{detail?.desc}</div>
                     <ProposalBox>
-                      {detail?.proposals.map((item, index) => (
+                      {detail?.proposals?.map((item, index) => (
                         <SipTag key={index} slug={item} />
                       ))}
                     </ProposalBox>

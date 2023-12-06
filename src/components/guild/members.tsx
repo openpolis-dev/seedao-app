@@ -100,7 +100,9 @@ export default function Members(props: Iprops) {
     setAdminList([...sList]);
 
     let Mlist = memberArr.map((item: string) => getUser(item));
-    const uniqueArray = Mlist.filter((item2) => !sList.some((item1) => item1.id === item2.id));
+    const uniqueArray = Mlist.filter(
+      (item2) => !sList.some((item1) => item1.wallet?.toLowerCase() === item2.wallet?.toLowerCase()),
+    );
 
     setMemberList([...uniqueArray]);
   }, [memberArr, adminArr, userMap]);
@@ -222,7 +224,7 @@ export default function Members(props: Iprops) {
 
       <ItemBox>
         <div>
-          {adminList.map((item, index) => (
+          {adminList?.map((item, index) => (
             <MemberCard
               key={`admin_${index}`}
               user={item}
