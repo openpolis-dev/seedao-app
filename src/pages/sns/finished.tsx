@@ -29,7 +29,9 @@ export default function FinishedComponent() {
       </ContainerTop>
       <ContainerBottom>
         <Cover></Cover>
-        <WatchButton>{t('Onboarding.WatchButton')}</WatchButton>
+        <Link to="/onboarding/learn">
+          <WatchButton>{t('Onboarding.WatchButton')}</WatchButton>
+        </Link>
       </ContainerBottom>
       <UserEntrance to="/sns/user">
         <UserSVGIcon />
