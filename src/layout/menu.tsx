@@ -45,6 +45,7 @@ import PubImg from '../assets/Imgs/darkMenu/pub.svg';
 import PubImgActive from '../assets/Imgs/darkMenu/pub_active.png';
 import PubImgLight from '../assets/Imgs/lightMenu/pub.svg';
 
+import WikiImg from '../assets/Imgs/wiki.png';
 import React from 'react';
 import useCheckLogin from 'hooks/useCheckLogin';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
@@ -339,6 +340,7 @@ const items: MenuItemType[] = [
     },
     link: { href: '/city-hall' },
   },
+
   // {
   //   title: 'menus.Chat',
   //   icon: { name: <ChatDots /> },
@@ -365,6 +367,20 @@ const items: MenuItemType[] = [
       },
     },
     link: { href: '/resources' },
+  },
+  {
+    title: 'Wiki',
+    icon: {
+      dark: {
+        nor: WikiImg,
+        active: WikiImg,
+      },
+      light: {
+        nor: WikiImg,
+        active: WikiImg,
+      },
+    },
+    link: { href: '/wiki' },
   },
 ];
 

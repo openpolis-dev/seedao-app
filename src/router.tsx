@@ -102,6 +102,7 @@ export default function RouterLink() {
           <Route path="/onboarding/done" element={<Onboarding />} />
 
           <Route path="/notion/:id" element={<Wiki />} />
+          <Route path="/wiki" element={<Wiki />} />
         </Routes>
       </Layout>
       <RouterChecker />
