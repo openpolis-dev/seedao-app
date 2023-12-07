@@ -118,16 +118,9 @@ const RegisterSNSWrapper = () => {
     parseLocalData();
   }, [account, localData]);
 
-  const goStep1 = () => {
-    if (step === 3) {
-      dispatchSNS({ type: ACTIONS.SET_STEP, payload: 1 });
-      dispatchSNS({ type: ACTIONS.SET_LOCAL_DATA, payload: undefined });
-    }
-  };
-
   return (
     <Container>
-      <BackerNav to={step === 3 ? '/sns/register' : '/home'} title="SNS" mb="0" onClick={goStep1} />
+      <BackerNav to="/home" title="SNS" mb="0" />
       <StepContainer>
         {step === 1 && <RegisterSNSStep1 />}
         {step === 2 && <RegisterSNSStep2 />}
