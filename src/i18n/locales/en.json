@@ -508,7 +508,9 @@
     "SeeU": "SeeU Network",
     "SeeUDesc": "SeeU Network is a decentralized social network that allows users to create and manage their own communities.",
     "SNS": "SNS",
-    "SNSDesc": "SNS is your identity based on blockchain in SeeDAO."
+    "SNSDesc": "SNS is your identity based on blockchain in SeeDAO.",
+    "Newer": "新手村",
+    "NewerDesc": ""
   },
   "SNS": {
     "EntranceTitle": "INVOLVED IN SEEDAO IN YOUR NAME",
@@ -538,5 +540,10 @@
     "GovernanceBook": "Governance Book",
     "NodesConferenceRule": "Nodes Conference Rules",
     "apply": "Issue Assets"
+  },
+  "Onboarding": {
+    "HomeEntranceButton": "-> Onboarding",
+    "WatchButton": "观看视频，领取SBT",
+    "Congrats": "Onboarding 成功！🎉 恭喜你获得一枚 SBT 和 50 SCR。现在你已经是SeeDAO成员啦，加入新手村成为SeeDAO贡献者，领取 5,000 SCR 奖励"
   }
 }

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import styled from 'styled-components';
-import { Row, Col } from 'react-bootstrap';
+import { Row, Col, Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import AppCard from 'components/common/appCard';
 import Links from 'utils/links';
@@ -20,6 +20,7 @@ import LinkImg from '../../assets/Imgs/link.svg';
 import { Link, useNavigate } from 'react-router-dom';
 import ProposalImg from '../../assets/Imgs/home/proposal.png';
 import getConfig from 'utils/envCofnig';
+import { check } from 'prettier';
 
 const Box = styled.div`
   background: var(--bs-background);
@@ -42,6 +43,7 @@ const BannerBox = styled.div`
   border-radius: 16px;
   box-sizing: border-box;
   margin: 24px 32px 40px;
+  position: relative;
 `;
 
 const ActiveBox = styled.div`
@@ -357,6 +359,9 @@ export default function Home() {
             {t('Home.SloganVison')}:{t('Home.SloganDesc')}
           </div>
         </FontBox>
+        <OnboadingButton onClick={() => navigate('/onboarding/learn')}>
+          {t('Onboarding.HomeEntranceButton')}
+        </OnboadingButton>
       </BannerBox>
       <LineBox>
         <dl>
@@ -495,3 +500,9 @@ export default function Home() {
     </Box>
   );
 }
+
+const OnboadingButton = styled(Button)`
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+`;

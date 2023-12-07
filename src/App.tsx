@@ -14,6 +14,8 @@ import { configureChains, createConfig, WagmiConfig } from 'wagmi';
 import { mainnet, goerli } from 'wagmi/chains';
 import getConfig from 'utils/envCofnig';
 import 'md-editor-rt/lib/style.css';
+import { DeSchoolProvider, CourseContextProvider } from '@deschool-protocol/react';
+import '@deschool-protocol/react/dist/styles/index.css';
 
 const chains = getConfig().NETWORK.chainId === 1 ? [mainnet] : [goerli, mainnet];
 
@@ -33,8 +35,12 @@ function App() {
     <WagmiConfig config={wagmiConfig}>
       <AuthProvider>
         <GlobalStyle />
-        <RouterLink />
-        {/* <InstallCheck /> */}
+        <DeSchoolProvider config={{ baseUrl: 'https://deschool.app/goapiProduction' }}>
+          <CourseContextProvider>
+            <RouterLink />
+          </CourseContextProvider>
+          {/* <InstallCheck /> */}
+        </DeSchoolProvider>
 
         <Web3Modal
           defaultChain={goerli}
