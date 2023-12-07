@@ -13,6 +13,7 @@ import { Button } from 'react-bootstrap';
 import BackerNav from 'components/common/backNav';
 import SipTag from 'components/common/sipTag';
 import { MdPreview } from 'md-editor-rt';
+import DefaultLogo from 'assets/Imgs/defaultLogo.png';
 
 export default function Index() {
   const { t } = useTranslation();
@@ -55,7 +56,7 @@ export default function Index() {
             <AllBox>
               <TopBox>
                 <TopImg>
-                  <img src={detail?.logo} alt="" />
+                  <img src={detail?.logo || DefaultLogo} alt="" />
                 </TopImg>
                 <TopInfo>
                   <TitleBox>{detail?.name}</TitleBox>

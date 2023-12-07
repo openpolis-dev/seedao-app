@@ -13,6 +13,7 @@ import { useTranslation } from 'react-i18next';
 import Members from 'components/projectInfoCom/members';
 import SipTag from 'components/common/sipTag';
 import { MdPreview } from 'md-editor-rt';
+import DefaultLogo from 'assets/Imgs/defaultLogo.png';
 
 export default function InfoPage() {
   const { t } = useTranslation();
@@ -77,7 +78,7 @@ export default function InfoPage() {
               <TopBox>
                 <TopBoxLeft>
                   <TopImg>
-                    <img src={detail?.logo} alt="" />
+                    <img src={detail?.logo || DefaultLogo} alt="" />
                   </TopImg>
                   <TopInfo>
                     <TitleBox>{detail?.name}</TitleBox>
