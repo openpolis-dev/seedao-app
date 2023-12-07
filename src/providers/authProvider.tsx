@@ -21,6 +21,7 @@ interface IState {
   theme: boolean;
   snsMap: Map<string, string>;
   hadOnboarding?: boolean;
+  currentSeason: string;
 }
 
 export enum AppActionType {
@@ -40,6 +41,7 @@ export enum AppActionType {
   SET_SNS_MAP = 'set_sns_map',
   SET_SNS = 'set_sns',
   SET_HAD_ONBOARDING = 'set_had_onboarding',
+  SET_CURRENT_SEASON = 'set_current_season',
 }
 
 interface IAction {
@@ -70,6 +72,7 @@ const INIT_STATE: IState = {
   language: '',
   loading: null,
   snsMap: new Map(),
+  currentSeason: '',
 };
 
 const AuthContext = createContext<{
@@ -127,6 +130,8 @@ const reducer = (state: IState, action: IAction): IState => {
       return { ...state, sns: action.payload };
     case AppActionType.SET_HAD_ONBOARDING:
       return { ...state, hadOnboarding: action.payload };
+    case AppActionType.SET_CURRENT_SEASON:
+      return { ...state, currentSeason: action.payload };
     default:
       throw new Error(`Unknown type: ${action.type}`);
   }
