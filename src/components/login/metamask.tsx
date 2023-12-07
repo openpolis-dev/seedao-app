@@ -118,7 +118,7 @@ export default function Metamask() {
       dispatch({ type: AppActionType.SET_PROVIDER, payload: provider });
 
       const authorizer = new Authorizer('auto', { endpoint: readPermissionUrl });
-      await authorizer.setUser(account.toLowerCase());
+      await authorizer.setUser(ethers.utils.getAddress(account));
       dispatch({ type: AppActionType.SET_AUTHORIZER, payload: authorizer });
       dispatch({ type: AppActionType.SET_WALLET_TYPE, payload: WalletType.EOA });
       dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: false });

@@ -20,6 +20,7 @@ interface IState {
   provider?: any;
   theme: boolean;
   snsMap: Map<string, string>;
+  hadOnboarding?: boolean;
 }
 
 export enum AppActionType {
@@ -38,6 +39,7 @@ export enum AppActionType {
   SET_THEME = 'set_theme',
   SET_SNS_MAP = 'set_sns_map',
   SET_SNS = 'set_sns',
+  SET_HAD_ONBOARDING = 'set_had_onboarding',
 }
 
 interface IAction {
@@ -123,6 +125,8 @@ const reducer = (state: IState, action: IAction): IState => {
       return { ...state, snsMap: action.payload };
     case AppActionType.SET_SNS:
       return { ...state, sns: action.payload };
+    case AppActionType.SET_HAD_ONBOARDING:
+      return { ...state, hadOnboarding: action.payload };
     default:
       throw new Error(`Unknown type: ${action.type}`);
   }

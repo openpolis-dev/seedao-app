@@ -5,8 +5,6 @@ import { useTranslation } from 'react-i18next';
 import AppCard from 'components/common/appCard';
 import Links from 'utils/links';
 import BgImg from '../../assets/Imgs/home/banner.png';
-import CityHallImg from '../../assets/Imgs/home/cityHall.png';
-import MembersImg from '../../assets/Imgs/home/members.png';
 
 import SGNImg from '../../assets/Imgs/dark/sgnHome.png';
 import SbtImg from '../../assets/Imgs/dark/sbt.png';
@@ -18,9 +16,7 @@ import { useAuthContext } from '../../providers/authProvider';
 import ArrowImg from '../../assets/Imgs/arrow.png';
 import LinkImg from '../../assets/Imgs/link.svg';
 import { Link, useNavigate } from 'react-router-dom';
-import ProposalImg from '../../assets/Imgs/home/proposal.png';
 import getConfig from 'utils/envCofnig';
-import { check } from 'prettier';
 
 const Box = styled.div`
   background: var(--bs-background);
@@ -262,7 +258,7 @@ export default function Home() {
   const navigate = useNavigate();
 
   const {
-    state: { theme },
+    state: { theme, hadOnboarding, sns: userSNS },
   } = useAuthContext();
 
   const events = useMemo(() => {
@@ -359,9 +355,11 @@ export default function Home() {
             {t('Home.SloganVison')}:{t('Home.SloganDesc')}
           </div>
         </FontBox>
-        <OnboadingButton onClick={() => navigate('/onboarding/learn')}>
-          {t('Onboarding.HomeEntranceButton')}
-        </OnboadingButton>
+        {!hadOnboarding && (
+          <OnboadingButton onClick={() => navigate(userSNS ? '/onboarding/learn' : '/sns/register')}>
+            {t('Onboarding.HomeEntranceButton')}
+          </OnboadingButton>
+        )}
       </BannerBox>
       <LineBox>
         <dl>

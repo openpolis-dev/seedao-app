@@ -16,6 +16,7 @@ import getConfig from 'utils/envCofnig';
 import 'md-editor-rt/lib/style.css';
 import { DeSchoolProvider, CourseContextProvider } from '@deschool-protocol/react';
 import '@deschool-protocol/react/dist/styles/index.css';
+import CheckOnboarding from 'components/checkOnboarding';
 
 const chains = getConfig().NETWORK.chainId === 1 ? [mainnet] : [goerli, mainnet];
 
@@ -41,7 +42,7 @@ function App() {
           </CourseContextProvider>
           {/* <InstallCheck /> */}
         </DeSchoolProvider>
-
+        <CheckOnboarding />
         <Web3Modal
           defaultChain={goerli}
           projectId={projectId}
