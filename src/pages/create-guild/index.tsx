@@ -208,18 +208,7 @@ export default function CreateGuild() {
       proposals: slugs,
       desc,
       intro,
-      budgets: [
-        {
-          name: AssetName.Token,
-          total_amount: token || 0,
-          budget_type: BudgetType.Token,
-        },
-        {
-          name: AssetName.Credit,
-          total_amount: credit || 0,
-          budget_type: BudgetType.Credit,
-        },
-      ],
+      budgets: [],
     };
     try {
       let rt = await createProjects(obj);
@@ -398,9 +387,6 @@ export default function CreateGuild() {
               onClick={() => handleSubmit()}
               disabled={
                 proName?.length === 0 ||
-                url?.length === 0 ||
-                (credit && credit < 0) ||
-                (token && token < 0) ||
                 (adminList?.length === 1 && adminList[0]?.length === 0) ||
                 (proList?.length === 1 && proList[0]?.length === 0)
               }

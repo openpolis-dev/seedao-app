@@ -41,7 +41,7 @@ export interface IBaseProject {
   sponsors: string[];
   members: string[];
   proposals: string[];
-  budgets: IBaseBudgetItem[];
+  budgets?: IBaseBudgetItem[];
   desc: string;
   intro: string;
 }

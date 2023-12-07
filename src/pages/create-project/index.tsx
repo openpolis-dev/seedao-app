@@ -206,18 +206,7 @@ export default function CreateProject() {
       proposals: slugs,
       desc,
       intro,
-      budgets: [
-        {
-          name: AssetName.Token,
-          total_amount: token || 0,
-          budget_type: BudgetType.Token,
-        },
-        {
-          name: AssetName.Credit,
-          total_amount: credit || 0,
-          budget_type: BudgetType.Credit,
-        },
-      ],
+      budgets: [],
     };
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
@@ -394,7 +383,6 @@ export default function CreateProject() {
               onClick={() => handleSubmit()}
               disabled={
                 !proName ||
-                !url ||
                 (adminList?.length === 1 && adminList[0]?.length === 0) ||
                 (proList?.length === 1 && proList[0]?.length === 0)
               }
