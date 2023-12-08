@@ -43,7 +43,7 @@ export default function UserCard({ user, showEdit, onSelectUser, formatActive, s
     <UserCardBox sm={12} md={6} lg={4} xl={3} border={borderStyle} key={user.wallet} onClick={() => handleShow()}>
       <div className="boxAll">
         <div className="fst">
-          <img className="avatar" src={user.avatar || DefaultAvatar} alt="" />
+          <img className="avatar" src={user.avatar || user.sp?.avatar || DefaultAvatar} alt="" />
           <div>
             <div style={{ display: 'flex', gap: '6px', marginBottom: '8px' }}>
               <span className="wallet">{sns || PublicJs.AddressToShow(user.wallet || '')}</span>
