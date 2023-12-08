@@ -145,6 +145,7 @@ const LftBox = styled.div`
   width: 246px;
   background: var(--bs-box--background);
   border-radius: 16px;
+  flex-shrink: 0;
 `;
 
 const InnerLft = styled.div`

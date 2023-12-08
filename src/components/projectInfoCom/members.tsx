@@ -202,7 +202,6 @@ export default function Members(props: Iprops) {
   };
 
   const handleProfile = (user: any, sns: string) => {
-    console.error('======', user, sns);
     setShowModal(true);
     setSns(sns);
     setUser(user);
