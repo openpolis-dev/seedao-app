@@ -47,9 +47,11 @@ export default function UserCard({ user, showEdit, onSelectUser, formatActive, s
           <div>
             <div style={{ display: 'flex', gap: '6px', marginBottom: '8px' }}>
               <span className="wallet">{sns || PublicJs.AddressToShow(user.wallet || '')}</span>
-              <CopyBox text={user.wallet || ''} dir="left">
-                <CopyIconSVG />
-              </CopyBox>
+              <div onClick={(e) => e.stopPropagation()}>
+                <CopyBox text={user.wallet || ''} dir="left">
+                  <CopyIconSVG />
+                </CopyBox>
+              </div>
             </div>
             <div className="name">{user.name || t('My.DefaultName')}</div>
           </div>
