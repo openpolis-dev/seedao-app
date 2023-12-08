@@ -45,8 +45,10 @@ import PubImg from '../assets/Imgs/darkMenu/pub.svg';
 import PubImgActive from '../assets/Imgs/darkMenu/pub_active.png';
 import PubImgLight from '../assets/Imgs/lightMenu/pub.svg';
 
-import WikiImg from '../assets/Imgs/light/wiki.png';
-import WikiWhite from '../assets/Imgs/dark/wiki.png';
+import WikiImg from '../assets/Imgs/lightMenu/wiki.png';
+import WikiWhite from '../assets/Imgs/darkMenu/wiki.png';
+import WikiImgActive from '../assets/Imgs/darkMenu/wiki_active.png';
+
 import React from 'react';
 import useCheckLogin from 'hooks/useCheckLogin';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
@@ -374,11 +376,11 @@ const items: MenuItemType[] = [
     icon: {
       dark: {
         nor: WikiWhite,
-        active: WikiWhite,
+        active: WikiImgActive,
       },
       light: {
         nor: WikiImg,
-        active: WikiImg,
+        active: WikiImgActive,
       },
     },
     link: { href: '/wiki' },
