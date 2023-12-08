@@ -143,7 +143,7 @@ export default function GoveranceNodeResult() {
   }, []);
 
   const formatSNS = (wallet: string) => {
-    const sns = dataMap.get(wallet) || wallet;
+    const sns = dataMap.get(wallet.toLocaleLowerCase()) || wallet;
     return sns.endsWith('.seedao') ? sns : publicJs.AddressToShow(sns);
   };
 
@@ -164,7 +164,7 @@ export default function GoveranceNodeResult() {
               t('GovernanceNodeResult.SeedCount'),
             ],
             ...allList.map((item) => [
-              dataMap.get(item.wallet) || item.wallet,
+              dataMap.get(item.wallet.toLocaleLowerCase()) || item.wallet,
               ...allSeasons.map((i) => {
                 return item.seasons_credit?.find((s) => s.season_idx === i)?.total || 0;
               }),
@@ -194,7 +194,9 @@ export default function GoveranceNodeResult() {
       setDisplayList([...allList]);
     } else {
       const filter_list = allList.filter(
-        (item) => item.wallet.includes(trim_search_key) || dataMap.get(item.wallet)?.includes(trim_search_key),
+        (item) =>
+          item.wallet.includes(trim_search_key) ||
+          dataMap.get(item.wallet.toLocaleLowerCase())?.includes(trim_search_key),
       );
       setDisplayList([...filter_list]);
     }
