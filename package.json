@@ -7,7 +7,7 @@
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@deschool-protocol/react": "^0.1.2",
     "@ericz1803/react-google-calendar": "^4.3.1",
-    "@joyid/evm": "^0.2.4",
+    "@joyid/evm": "^0.2.6",
     "@seedao/sns-js": "^0.6.0",
     "@types/xlsx": "^0.0.36",
     "@unipasswallet/popup-types": "^1.1.11",

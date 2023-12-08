@@ -34,7 +34,6 @@ export default function JoyidWeb() {
       logo: `${window.location.origin}/favicon.ico`,
       // optional
       joyidAppURL: getConfig().JOY_ID_URL,
-      rpcURL: network.rpc,
       network: {
         name: network.name,
         chainId: network.chainId,
