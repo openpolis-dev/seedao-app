@@ -1,4 +1,5 @@
 import request, { ResponseData } from './http';
+import { ISeason } from 'type/application.type';
 
 const PATH_PREFIX = '/cityhall';
 
@@ -52,4 +53,8 @@ export const requestSnapshotSeed = () => {
 // send reward
 export const requestApproveMintReward = () => {
   return request.post('rewards/approve_mint_reward');
+};
+
+export const getCurrentSeason = (): Promise<ResponseData<ISeason>> => {
+  return request.get(`/seasons/current`);
 };

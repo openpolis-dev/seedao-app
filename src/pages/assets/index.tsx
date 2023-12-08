@@ -5,8 +5,6 @@ import requests from 'requests';
 import { useTranslation } from 'react-i18next';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import useToast, { ToastType } from 'hooks/useToast';
-import usePermission from 'hooks/usePermission';
-import { PermissionAction, PermissionObject } from 'utils/constant';
 import publicJs from 'utils/publicJs';
 import axios from 'axios';
 import CopyBox from 'components/copy';
@@ -14,20 +12,12 @@ import { ethers } from 'ethers';
 import ModifyBudgetModal from 'components/assetsCom/modifyBudget';
 import { BudgetType } from 'type/project.type';
 import { formatNumber } from 'utils/number';
-import { Button } from 'react-bootstrap';
-import { ChevronDown, ChevronUp, Pencil } from 'react-bootstrap-icons';
 import { ContainerPadding } from 'assets/styles/global';
-import { Link } from 'react-router-dom';
 import BalanceIcon from 'assets/Imgs/vault/balance.png';
 import EthImg from 'assets/Imgs/vault/ethereum.svg';
 import PolygonImg from 'assets/Imgs/vault/polygon.svg';
 import getConfig from 'utils/envCofnig';
-// import WalletIcon from 'assets/Imgs/vault/wallet.png';
-// import ChainIcon from 'assets/Imgs/vault/chain.png';
-// import SignerIcon from 'assets/Imgs/vault/signer.png';
-// import CopyIconSVG from 'components/svgs/copy';
-// import ShareIconSVG from 'components/svgs/share';
-// import ArrowIconSVG from 'components/svgs/downArrow';
+import useCurrentSeason from 'hooks/useCurrentSeason';
 
 const BoxOuter = styled.div`
   ${ContainerPadding};
@@ -154,7 +144,9 @@ export default function Index() {
     state: { theme },
   } = useAuthContext();
   const { Toast, showToast } = useToast();
-  const canUseCityhall = usePermission(PermissionAction.AssetsBudget, PermissionObject.Treasury);
+  // const canUseCityhall = usePermission(PermissionAction.AssetsBudget, PermissionObject.Treasury);
+
+  const currentSeason = useCurrentSeason();
 
   const [asset, setAsset] = useState({
     token_used_amount: 0,
@@ -438,7 +430,7 @@ export default function Index() {
           </li>
           <li>
             <LiHead>
-              <LiTitle>{t('Assets.SeasonUseUSD')}</LiTitle>
+              <LiTitle>{t('Assets.SeasonUseUSD', { season: currentSeason })}</LiTitle>
             </LiHead>
             <div className="num">{Number(asset.token_used_amount).format()}</div>
             {/*<AssetBox className="tips">*/}
@@ -454,7 +446,7 @@ export default function Index() {
           </li>
           <li className="center">
             <LiHead>
-              <LiTitle>{t('Assets.SeasonUsedSCR')}</LiTitle>
+              <LiTitle>{t('Assets.SeasonUsedSCR', { season: currentSeason })}</LiTitle>
             </LiHead>
             <div className="num">{Number(asset.credit_used_amount).format()}</div>
             {/*<AssetBox className="tips">*/}
