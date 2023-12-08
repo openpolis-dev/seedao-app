@@ -106,7 +106,7 @@ export default function ProjectOrGuildItem({ data, onClickItem }: Iprops) {
           <div className="title">{data.name}</div>
           <Desc>{data.desc ? data.desc : t('Project.ProjectOrGuildItem')}</Desc>
           <MemBox>
-            <span>{data?.members?.length + data?.sponsors?.length}</span> {t('Project.Members')}
+            <span>{(data?.members?.length || 0) + (data?.sponsors?.length || 0)}</span> {t('Project.Members')}
           </MemBox>
         </Item>
       </CardBox>
