@@ -366,6 +366,7 @@ const HeadeStyle = styled.header`
     margin-top: 10px;
     overflow: hidden;
     padding: 0;
+    z-index: 999999;
   }
   .dropdown-item {
     color: var(--bs-body-color_active);

@@ -2258,8 +2258,7 @@ svg.notion-page-icon {
   position: sticky;
   top: 0;
   left: 0;
-  z-index: 200;
-
+  z-index: 80;
   width: 100%;
   max-width: 100vw;
   overflow: hidden;
@@ -2281,7 +2280,6 @@ svg.notion-page-icon {
   align-items: center;
   padding: 0 12px;
   text-size-adjust: 100%;
-  line-height: 1.5;
   line-height: 1.2;
   font-size: 14px;
   gap: 12px;
