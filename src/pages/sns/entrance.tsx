@@ -19,7 +19,7 @@ const TopBox = styled.div`
   position: absolute;
   left: 0;
   top: 0;
-  z-index: 9;
+  z-index: 9999;
   display: flex;
   align-items: center;
   justify-content: center;

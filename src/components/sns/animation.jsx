@@ -12,6 +12,17 @@ const Box = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  .mask{
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    z-index: 99;
+    position: absolute;
+    background: rgba(224,211,251,0.3);
+    -webkit-backdrop-filter: blur(60px);
+
+  }
 `
 
 const OuterBox = styled.div`
@@ -62,6 +73,7 @@ export default function Animation(){
 
   return <Box ref={divRef}>
     <OuterBox>
+      <div className="mask"></div>
       <div>
         <Lottie animationData={FlowJson} loop={true} style={style}  />
       </div>
