@@ -32,11 +32,19 @@ const wagmiConfig = createConfig({
 const ethereumClient = new EthereumClient(wagmiConfig, chains);
 
 function App() {
+  const { search } = window.location;
+  const dtoken = new URLSearchParams(search).get('dtoken') || '';
+
   return (
     <WagmiConfig config={wagmiConfig}>
       <AuthProvider>
         <GlobalStyle />
-        <DeSchoolProvider config={{ baseUrl: 'https://deschool.app/goapiProduction' }}>
+        <DeSchoolProvider
+          config={{
+            baseUrl: 'https://deschool.app/goapiProduction',
+            token: dtoken,
+          }}
+        >
           <CourseContextProvider>
             <RouterLink />
           </CourseContextProvider>
