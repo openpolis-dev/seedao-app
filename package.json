@@ -5,7 +5,7 @@
   "type": "module",
   "dependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
-    "@deschool-protocol/react": "^0.1.2",
+    "@deschool-protocol/react": "^0.1.4",
     "@ericz1803/react-google-calendar": "^4.3.1",
     "@joyid/evm": "^0.2.6",
     "@seedao/sns-js": "^0.6.0",
