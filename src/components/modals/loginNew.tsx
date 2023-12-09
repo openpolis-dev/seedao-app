@@ -10,7 +10,7 @@ import WalletConnect from '../login/walletconnect';
 import Metamask from '../login/metamask';
 import UniPass, { upProvider } from '../login/unipass';
 import Joyid from '../login/joyid';
-import JoyidWeb from 'components/login/joyidWeb';
+import JoyidWeb, { initJoyId } from 'components/login/joyidWeb';
 
 import { useNetwork } from 'wagmi';
 import { useEthersProvider, useEthersSigner } from '../login/ethersNew';
@@ -52,6 +52,7 @@ export default function LoginModal({ showModal }: any) {
       dispatch({ type: AppActionType.SET_PROVIDER, payload: providerUnipass });
     } else if ([Wallet.JOYID, Wallet.JOYID_WEB].includes(walletType)) {
       // joyid
+      initJoyId();
       const providerJoyId = new ethers.providers.JsonRpcProvider(network.rpc, {
         chainId: network.chainId,
         name: network.name,

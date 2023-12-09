@@ -14,31 +14,32 @@ import JoyIdImg from '../../assets/Imgs/home/JOYID.png';
 import styled from 'styled-components';
 import OneSignal from 'react-onesignal';
 import { connect, disconnect, signMessage, initConfig } from '@joyid/evm';
-import { clearStorage } from 'utils/auth';
 import getConfig from 'utils/envCofnig';
+const network = getConfig().NETWORK;
+
+export const initJoyId = () => {
+  initConfig({
+    name: 'SeeDAO',
+    logo: `${window.location.origin}/icon76.png`,
+    // optional
+    joyidAppURL: getConfig().JOY_ID_URL,
+    network: {
+      name: network.name,
+      chainId: network.chainId,
+    },
+  });
+};
 
 export default function JoyidWeb() {
   const navigate = useNavigate();
   const [msg, setMsg] = useState('');
   const [signInfo, setSignInfo] = useState('');
   const [result, setResult] = useState<any>();
-  const [provider, setProvider] = useState<any>();
   const [account, setAccount] = useState<string>('');
   const { dispatch } = useAuthContext();
 
-  const network = getConfig().NETWORK;
-
   useEffect(() => {
-    initConfig({
-      name: 'SeeDAO',
-      logo: `${window.location.origin}/favicon.ico`,
-      // optional
-      joyidAppURL: getConfig().JOY_ID_URL,
-      network: {
-        name: network.name,
-        chainId: network.chainId,
-      },
-    });
+    initJoyId();
   }, []);
 
   const onClickConnect = async () => {
@@ -101,11 +102,15 @@ export default function JoyidWeb() {
       const now = Date.now();
       res.data.token_exp = now + res.data.token_exp * 1000;
       dispatch({ type: AppActionType.SET_LOGIN_DATA, payload: res.data });
+      const provider = new ethers.providers.JsonRpcProvider(network.rpc, {
+        chainId: network.chainId,
+        name: network.name,
+      });
       dispatch({ type: AppActionType.SET_PROVIDER, payload: provider });
       const authorizer = new Authorizer('auto', { endpoint: readPermissionUrl });
       await authorizer.setUser(account.toLowerCase());
       dispatch({ type: AppActionType.SET_AUTHORIZER, payload: authorizer });
-      dispatch({ type: AppActionType.SET_WALLET_TYPE, payload: WalletType.AA });
+      dispatch({ type: AppActionType.SET_WALLET_TYPE, payload: WalletType.EOA });
       dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: false });
       ReactGA.event('login_success', {
         type: Wallet.JOYID_WEB,
