@@ -47,6 +47,7 @@ import LearnCourse from 'pages/deschool/learn';
 import Onboarding from 'pages/deschool/onboarding';
 
 import Wiki from './pages/notion/wiki';
+import getConfig from 'utils/envCofnig';
 
 export default function RouterLink() {
   return (
@@ -90,7 +91,7 @@ export default function RouterLink() {
           <Route path="/city-hall/governance/audit" element={<Audit />} />
           <Route path="/city-hall/governance/audit-project" element={<AuditProject />} />
           <Route path="/city-hall/governance/issue" element={<Issue />} />
-          {/* <Route path="/chat" element={<Chat />} /> */}
+          {getConfig().REACT_APP_ENV === 'test' && <Route path="/chat" element={<Chat />} />}
           <Route path="/ranking" element={<SCRRank />} />
           <Route path="/feedback" element={<Canny />} />
           {/* SNS */}
