@@ -19,6 +19,8 @@ const network = getConfig().NETWORK;
 const Box = styled.div`
   height: 100%;
   ${ContainerPadding};
+  width: 430px;
+  margin: 0 auto;
 `;
 
 export default function Index() {
