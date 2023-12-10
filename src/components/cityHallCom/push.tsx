@@ -21,7 +21,7 @@ import PushDetailModal, {
   StatusTag,
   PushItemBottomLeft,
 } from 'components/modals/pushDetailModal';
-import sns from '@seedao/sns-js';
+import useQuerySNS from 'hooks/useQuerySNS';
 
 enum PUSH_TAB {
   CREATE = 1,
@@ -127,6 +127,19 @@ const PushHistoryContent = () => {
   const [hasMore, setHasMore] = useState(false);
   const [showRecord, setShowRecord] = useState<IPushDisplay>();
   const [wallet2snsMap] = useState<{ [k: string]: string }>({});
+  const [snsMap, setSnsMap] = useState<Map<string, string>>(new Map());
+
+  const { getMultiSNS } = useQuerySNS();
+
+  const handleSNS = async (wallets: string[]) => {
+    const sns_map = await getMultiSNS(wallets);
+    setSnsMap(sns_map);
+  };
+
+  const formatSNS = (wallet: string) => {
+    const name = snsMap.get(wallet) || wallet;
+    return name?.endsWith('.seedao') ? name : publicJs.AddressToShow(name, 4);
+  };
 
   const handleCancel = () => {
     // TODO
@@ -144,24 +157,12 @@ const PushHistoryContent = () => {
       setList(_list);
       setHasMore(_list.length < data.total);
       setPage(page + 1);
-      const _wallets: string[] = [];
+
+      const wallets = new Set<string>();
       _list.forEach((item) => {
-        const _wallet = item.creator_wallet.toLocaleLowerCase();
-        if (!wallet2snsMap[_wallet]) {
-          _wallets.push(_wallet);
-        }
+        wallets.add(item.creator_wallet.toLocaleLowerCase());
       });
-      if (_wallets.length) {
-        try {
-          const res = await sns.names(_wallets);
-          const _map = { ...wallet2snsMap };
-          res.forEach((r, idx) => {
-            _map[_wallets[idx]] = r || publicJs.AddressToShow(_wallets[idx]);
-          });
-        } catch (error) {
-          console.error('parse sns failed', error);
-        }
-      }
+      handleSNS(Array.from(wallets));
     } catch (error) {
       console.error(error);
     }
@@ -210,10 +211,7 @@ const PushHistoryContent = () => {
 
                   <PushItemBottom>
                     <PushItemBottomLeft>
-                      <div className="name">
-                        {wallet2snsMap[item.creator_wallet.toLocaleLowerCase()] ||
-                          publicJs.AddressToShow(item.creator_wallet)}
-                      </div>
+                      <div className="name">{formatSNS(item.creator_wallet)}</div>
                       <div className="date">{item.timeDisplay}</div>
                     </PushItemBottomLeft>
                     <StatusTag>{t('Push.Pushed')}</StatusTag>
