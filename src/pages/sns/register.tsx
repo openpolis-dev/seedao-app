@@ -9,11 +9,11 @@ import { useEffect } from 'react';
 import { ethers } from 'ethers';
 import StepLoading from './stepLoading';
 import BackerNav from 'components/common/backNav';
-import ABI from 'assets/abi/snsRegister.json';
-import { builtin } from '@seedao/sns-js';
+import CONTROLLER_ABI from 'assets/abi/SeeDAORegistrarController.json';
+import MINTER_ABI from 'assets/abi/SeeDAOMinter.json';
 import getConfig from 'utils/envCofnig';
-import { Wallet } from 'wallet/wallet';
 import { SELECT_WALLET } from 'utils/constant';
+import { builtin } from '@seedao/sns-js';
 const networkConfig = getConfig().NETWORK;
 
 const RegisterSNSWrapper = () => {
@@ -51,12 +51,14 @@ const RegisterSNSWrapper = () => {
         }
       }
       console.log('signer', provider.getSigner(account));
-      const _contract = new ethers.Contract(
-        networkConfig.SEEDAO_REGISTRAR_CONTROLLER_ADDR,
-        ABI,
+      const _controller_contract = new ethers.Contract(
+        builtin.SEEDAO_REGISTRAR_CONTROLLER_ADDR,
+        CONTROLLER_ABI,
         provider.getSigner(account),
       );
-      dispatchSNS({ type: ACTIONS.SET_CONTRACT, payload: _contract });
+      dispatchSNS({ type: ACTIONS.SET_CONTROLLER_CONTRACT, payload: _controller_contract });
+      const _minter_contract = new ethers.Contract(builtin.SEEDAO_MINTER_ADDR, MINTER_ABI, provider.getSigner(account));
+      dispatchSNS({ type: ACTIONS.SET_MINTER_CONTRACT, payload: _minter_contract });
     };
     provider && initContract();
   }, [provider, provider?.getNetwork]);

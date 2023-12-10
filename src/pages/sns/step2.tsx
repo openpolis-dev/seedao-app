@@ -11,7 +11,7 @@ import { ethers } from 'ethers';
 import { sendTransaction } from '@joyid/evm';
 import { SELECT_WALLET } from 'utils/constant';
 import { Wallet } from '../../wallet/wallet';
-import ABI from 'assets/abi/snsRegister.json';
+import ABI from 'assets/abi/SeeDAOMinter.json';
 import getConfig from 'utils/envCofnig';
 const networConfig = getConfig().NETWORK;
 
@@ -26,7 +26,7 @@ export default function RegisterSNSStep2() {
     state: { account, provider, theme },
   } = useAuthContext();
   const {
-    state: { localData, contract, sns },
+    state: { localData, minterContract, sns },
     dispatch: dispatchSNS,
   } = useSNSContext();
   const { showToast } = useToast();
@@ -90,7 +90,7 @@ export default function RegisterSNSStep2() {
         console.log('joyid txHash:', txHash);
         d[account].registerHash = txHash;
       } else {
-        const tx = await contract.register(
+        const tx = await minterContract.register(
           sns,
           networConfig.PUBLIC_RESOLVER_ADDR,
           ethers.utils.formatBytes32String(secret),

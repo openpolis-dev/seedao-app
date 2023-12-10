@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import { ethers } from 'ethers';
 import { builtin } from '@seedao/sns-js';
-import ABI from 'assets/abi/snsRegister.json';
+import ABI from 'assets/abi/SeeDAORegistrarController.json';
 import { SELECT_WALLET } from 'utils/constant';
 import { Wallet } from '../../wallet/wallet';
 import { sendTransaction } from '@joyid/evm';
@@ -17,7 +17,7 @@ const networkConfig = getConfig().NETWORK;
 
 const buildSwitchData = (sns: string) => {
   const iface = new ethers.utils.Interface(ABI);
-  return iface.encodeFunctionData('setDefaultAddr', [sns.replace('.seedao', ''), builtin.PUBLIC_RESOLVER_ADDR]);
+  return iface.encodeFunctionData('setDefaultName', [sns.replace('.seedao', ''), builtin.PUBLIC_RESOLVER_ADDR]);
 };
 
 interface IProps {
@@ -71,7 +71,7 @@ export default function SwitchModal({ select, handleClose }: IProps) {
           ABI,
           provider.getSigner(account),
         );
-        const tx = await contract.setDefaultAddr(select.replace('.seedao', ''), builtin.PUBLIC_RESOLVER_ADDR);
+        const tx = await contract.setDefaultName(select.replace('.seedao', ''), builtin.PUBLIC_RESOLVER_ADDR);
         console.log('tx:', tx);
         await tx.wait();
         handleClose(select);

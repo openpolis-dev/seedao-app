@@ -19,7 +19,7 @@ import { Link } from 'react-router-dom';
 import { sendTransaction } from '@joyid/evm';
 import { SELECT_WALLET } from 'utils/constant';
 import { Wallet } from '../../wallet/wallet';
-import ABI from 'assets/abi/snsRegister.json';
+import ABI from 'assets/abi/SeeDAORegistrarController.json';
 import getConfig from 'utils/envCofnig';
 const networkConfig = getConfig().NETWORK;
 
@@ -49,7 +49,7 @@ export default function RegisterSNSStep1() {
 
   const {
     dispatch: dispatchSNS,
-    state: { contract, localData },
+    state: { controllerContract, localData },
   } = useSNSContext();
 
   const { showToast } = useToast();
@@ -68,7 +68,7 @@ export default function RegisterSNSStep1() {
         return;
       }
       // onchain check
-      const res1 = await contract.available(v);
+      const res1 = await controllerContract.available(v);
       console.log('online check', v, res1);
 
       if (!res1) {
@@ -84,7 +84,7 @@ export default function RegisterSNSStep1() {
       setPending(false);
     }
   };
-  const onChangeVal = useCallback(debounce(handleSearchAvailable, 1000), [contract]);
+  const onChangeVal = useCallback(debounce(handleSearchAvailable, 1000), [controllerContract]);
   const checkLogin = () => {
     // check login status
     if (!account || !isLogin || !provider) {
@@ -138,7 +138,7 @@ export default function RegisterSNSStep1() {
       const _s = getRandomCode();
       setRandomSecret(_s);
       // get commitment
-      const commitment = await contract.makeCommitment(
+      const commitment = await controllerContract.makeCommitment(
         searchVal,
         account,
         networkConfig.PUBLIC_RESOLVER_ADDR,
@@ -156,7 +156,7 @@ export default function RegisterSNSStep1() {
         });
         console.log('joyid txHash:', txHash);
       } else {
-        const tx = await contract.commit(commitment);
+        const tx = await controllerContract.commit(commitment);
         console.log('tx:', tx);
         txHash = tx.hash;
       }
