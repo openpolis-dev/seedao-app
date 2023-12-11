@@ -137,7 +137,7 @@ const PushHistoryContent = () => {
   };
 
   const formatSNS = (wallet: string) => {
-    const name = snsMap.get(wallet) || wallet;
+    const name = snsMap.get(wallet.toLocaleLowerCase()) || wallet;
     return name?.endsWith('.seedao') ? name : publicJs.AddressToShow(name, 4);
   };
 
