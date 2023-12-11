@@ -43,7 +43,7 @@ export default function SwitchModal({ select, handleClose }: IProps) {
           handleClose(select);
           dispatch({ type: AppActionType.SET_SNS, payload: select });
           dispatch({ type: AppActionType.SET_LOADING, payload: false });
-        } else if (r && r.status === 2) {
+        } else if (r && (r.status === 2 || r.status === 0)) {
           dispatch({ type: AppActionType.SET_LOADING, payload: false });
           showToast('transaction failed', ToastType.Danger);
         }
