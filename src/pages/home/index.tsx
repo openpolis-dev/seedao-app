@@ -355,11 +355,11 @@ export default function Home() {
             {t('Home.SloganVison')}:{t('Home.SloganDesc')}
           </div>
         </FontBox>
-        {!hadOnboarding && (
+        {/* {!hadOnboarding && (
           <OnboadingButton onClick={() => navigate(userSNS ? '/onboarding/learn' : '/sns/register')}>
             {t('Onboarding.HomeEntranceButton')}
           </OnboadingButton>
-        )}
+        )} */}
       </BannerBox>
       <LineBox>
         <dl>

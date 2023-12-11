@@ -525,7 +525,7 @@
     "TimerTitle": "Almost here",
     "TimerDesc": "This timer helps prevent others from registering the name before you do. Your name is not registered until you’ve completed the second transaction.",
     "Finish": "Continue",
-    "FinishSucess": "Registered successfully! 🎉 恭喜你获得 10 SCR 奖励",
+    "FinishSucess": "Registered successfully!",
     "StepLoadingTitle": "Three steps to get your SNS",
     "Step1Intro": "Complete the transaction and start counting",
     "StepMiddleIntro": "Wait 60 seconds for the timer to complete",

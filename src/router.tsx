@@ -99,8 +99,8 @@ export default function RouterLink() {
           <Route path="/sns/register" element={<RegisterSNS />} />
           <Route path="/sns/user" element={<UserSNS />} />
           {/* deschool */}
-          <Route path="/onboarding/learn" element={<LearnCourse />} />
-          <Route path="/onboarding/done" element={<Onboarding />} />
+          {/* <Route path="/onboarding/learn" element={<LearnCourse />} />
+          <Route path="/onboarding/done" element={<Onboarding />} /> */}
 
           <Route path="/notion/:id" element={<Wiki />} />
           <Route path="/wiki" element={<Wiki />} />

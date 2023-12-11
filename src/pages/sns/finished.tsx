@@ -6,6 +6,8 @@ import { useEffect } from 'react';
 import { Button } from 'react-bootstrap';
 import UserSVGIcon from 'components/svgs/user';
 import { Link } from 'react-router-dom';
+import NiceIcon from 'assets/Imgs/sns/nice.svg';
+import NiceDarkIcon from 'assets/Imgs/sns/nice_dark.svg';
 
 export default function FinishedComponent() {
   const { t } = useTranslation();
@@ -24,19 +26,20 @@ export default function FinishedComponent() {
   return (
     <Container>
       <ContainerTop bg={theme ? 'dark' : 'light'}>
-        <div className="title">{sns}.seedao</div>
-        <div className="success">{t('SNS.FinishSucess')}</div>
+        <img src={theme ? NiceDarkIcon : NiceIcon} alt="" />
       </ContainerTop>
       <ContainerBottom>
-        <Cover></Cover>
+        <div className="title">{sns}.seedao</div>
+        <div className="success">{t('SNS.FinishSucess')}</div>
+        {/* <Cover></Cover>
         <Link to="/onboarding/learn">
           <WatchButton>{t('Onboarding.WatchButton')}</WatchButton>
-        </Link>
+        </Link> */}
       </ContainerBottom>
-      <UserEntrance to="/sns/user">
+      {/* <UserEntrance to="/sns/user">
         <UserSVGIcon />
         <span>{t('SNS.MySNS')}</span>
-      </UserEntrance>
+      </UserEntrance> */}
     </Container>
   );
 }
@@ -59,6 +62,10 @@ const ContainerTop = styled.div<{ bg: string }>`
   text-align: center;
   padding-top: 16px;
   box-sizing: border-box;
+`;
+const ContainerBottom = styled.div`
+  text-align: center;
+  padding-top: 82px;
   .title {
     font-family: 'Poppins-SemiBold';
     font-size: 34px;
@@ -73,9 +80,6 @@ const ContainerTop = styled.div<{ bg: string }>`
     font-weight: 500;
     color: var(--sns-font-color);
   }
-`;
-const ContainerBottom = styled.div`
-  text-align: center;
 `;
 
 const Cover = styled.div`
