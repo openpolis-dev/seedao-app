@@ -182,7 +182,8 @@ const FontBox = styled.div`
   display: flex;
   flex-direction: column;
   color: #fff;
-  width: 600px;
+  min-width: 50%;
+  max-width: 670px;
   .tit {
     font-size: 32px;
     font-weight: bold;
