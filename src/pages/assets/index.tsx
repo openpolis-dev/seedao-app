@@ -6,18 +6,17 @@ import { useTranslation } from 'react-i18next';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import useToast, { ToastType } from 'hooks/useToast';
 import publicJs from 'utils/publicJs';
-import axios from 'axios';
 import CopyBox from 'components/copy';
 import { ethers } from 'ethers';
 import ModifyBudgetModal from 'components/assetsCom/modifyBudget';
 import { BudgetType } from 'type/project.type';
-import { formatNumber } from 'utils/number';
 import { ContainerPadding } from 'assets/styles/global';
 import BalanceIcon from 'assets/Imgs/vault/balance.png';
 import EthImg from 'assets/Imgs/vault/ethereum.svg';
 import PolygonImg from 'assets/Imgs/vault/polygon.svg';
 import getConfig from 'utils/envCofnig';
 import useCurrentSeason from 'hooks/useCurrentSeason';
+import { getVaultBalance, IVaultBalance } from 'requests/publicData';
 
 const BoxOuter = styled.div`
   ${ContainerPadding};
@@ -81,60 +80,44 @@ const enum CHAINS {
   Polygon = 137,
 }
 
-const SAFE_CHAIN = {
-  [CHAINS.ETH]: {
+const SAFE_CHAIN: { [k: string]: { short: string; name: string } } = {
+  '1': {
     short: 'eth',
     name: 'Ethereum',
   },
-  [CHAINS.Polygon]: {
+  '137': {
     short: 'matic',
     name: 'Polygon',
   },
 };
 
-const VAULTS = [
-  {
-    name: 'Assets.CommunityVault',
-    address: '0x7FdA3253c94F09fE6950710E5273165283f8b283',
-    chainId: CHAINS.ETH,
-    id: 1,
-    icon: EthImg,
-  },
-  {
-    name: 'Assets.CommunityVault',
-    address: '0x4876eaD85CE358133fb80276EB3631D192196e24',
-    chainId: CHAINS.Polygon,
-    id: 2,
-    icon: PolygonImg,
-  },
-  {
-    name: 'Assets.CityHallVault',
-    address: '0x70F97Ad9dd7E1bFf40c3374A497a7583B0fAdd25',
-    chainId: CHAINS.ETH,
-    id: 3,
-    icon: EthImg,
-  },
-  {
-    name: 'Assets.IncubatorVault',
-    address: '0x444C1Cf57b65C011abA9BaBEd05C6b13C11b03b5',
-    chainId: CHAINS.ETH,
-    id: 4,
-    icon: EthImg,
-  },
-];
-
 const SCR_CONTRACT = '0xc74dee15a4700d5df797bdd3982ee649a3bb8c6c';
 const SCR_PRICE = 0.03;
 
-type VaultType = {
-  name: string;
-  address: string;
-  chainId: CHAINS;
-  id: number;
+const getChainIcon = (chainId: number) => {
+  switch (chainId) {
+    case 1:
+      return EthImg;
+    case 137:
+      return PolygonImg;
+    default:
+      return '';
+  }
 };
 
-type VaultInfoMap = {
-  [k: number]: { balance?: string; total?: number; threshold?: number };
+const getVaultName = (address: string) => {
+  switch (address) {
+    case '0x7FdA3253c94F09fE6950710E5273165283f8b283':
+      return 'Assets.CommunityVault';
+    case '0x4876eaD85CE358133fb80276EB3631D192196e24':
+      return 'Assets.CommunityVault';
+    case '0x70F97Ad9dd7E1bFf40c3374A497a7583B0fAdd25':
+      return 'Assets.CityHallVault';
+    case '0x444C1Cf57b65C011abA9BaBEd05C6b13C11b03b5':
+      return 'Assets.IncubatorVault';
+    default:
+      return '';
+  }
 };
 
 export default function Index() {
@@ -155,15 +138,13 @@ export default function Index() {
     credit_total_amount: 0,
   });
   const [showModifyModal, setshowModifyModal] = useState<BudgetType>();
-  const [showVaultDetail, setShowVaultDetail] = useState(false);
-  const [vaultsMap, setVaultsMap] = useState<VaultInfoMap>({});
-  const [totalSigner, setTotalSigner] = useState(0);
   const [totalBalance, setTotalBalance] = useState('0.00');
   const [totalSCR, setTotalSCR] = useState('0');
   const [nftData, setNftData] = useState({
     floorPrice: '0',
     totalSupply: '0',
   });
+  const [wallets, setWallets] = useState<IVaultBalance[]>([]);
 
   const getAssets = async () => {
     try {
@@ -250,62 +231,22 @@ export default function Index() {
     }
   };
 
-  const getVaultBalance = async ({ chainId, address }: VaultType) => {
-    return axios.get(`https://safe-client.safe.global/v1/chains/${chainId}/safes/${address}/balances/usd?trusted=true`);
-  };
-  const getVaultInfo = async ({ chainId, address }: VaultType) => {
-    return axios.get(`https://safe-client.safe.global/v1/chains/${chainId}/safes/${address}`);
-  };
-  const getVaultsInfo = async () => {
-    const vaults_map: VaultInfoMap = {};
-    const users: any[] = [];
-    let _total = 0;
-
+  const getVaultData = async () => {
     try {
-      const reqs = VAULTS.map((item) => getVaultBalance(item));
-      const results = await Promise.allSettled(reqs);
-      results.forEach((res, index) => {
-        if (res.status === 'fulfilled') {
-          const _v = Number(res.value.data?.fiatTotal || 0);
-          vaults_map[VAULTS[index].id] = {
-            balance: _v.toFixed(2),
-          };
-          _total += _v;
-        }
-      });
+      const res = await getVaultBalance();
+      setWallets(res.data.wallets);
+      let v: number = 0;
+      res.data.wallets.forEach((w) => (v += Number(w.fiatTotal)));
+      setTotalBalance(v.format());
     } catch (error) {
-      console.error('getVaultBalance error', error);
+      console.error(error);
     }
-    try {
-      const reqs = VAULTS.map((item) => getVaultInfo(item));
-      const results = await Promise.allSettled(reqs);
-      results.forEach((res, index) => {
-        if (res.status === 'fulfilled') {
-          const _id = VAULTS[index].id;
-          if (!vaults_map[_id]) {
-            vaults_map[_id] = {};
-          }
-          vaults_map[_id].total = res.value.data?.owners.length || 0;
-          vaults_map[_id].threshold = res.value.data?.threshold || 0;
-          users.push(...res.value.data?.owners.map((item: any) => item.value));
-        }
-      });
-    } catch (error) {
-      console.error('getVaultInfo error', error);
-    }
-    setTotalSigner([...new Set(users)].length);
-    setTotalBalance(_total.toFixed(2));
-    setVaultsMap(vaults_map);
   };
-
-  const SCRValue = useMemo(() => {
-    return Number(totalSCR) * SCR_PRICE;
-  }, [totalSCR]);
 
   useEffect(() => {
     getSCR();
     getFloorPrice();
-    getVaultsInfo();
+    getVaultData();
   }, []);
 
   const borderStyle = useMemo(() => {
@@ -328,38 +269,39 @@ export default function Index() {
                 </div>
                 <div className="info-right">
                   <div className="title">{t('Assets.TotalBalance')}</div>
-                  <div className="balance num topLft">${formatNumber(Number(totalBalance))}</div>
+                  <div className="balance num topLft">${totalBalance}</div>
                 </div>
               </InfoItem>
               {/*<div className="right">*/}
 
               <VaultInfo>
-                {VAULTS.map((v) => (
-                  <VaultItem key={v.address}>
+                {wallets.map((v) => (
+                  <VaultItem key={v.wallet}>
                     <div className="info-left">
                       <span className="name">
-                        <span>{t(v.name as any)}</span>
+                        <span>{t(getVaultName(v.wallet) as any)}</span>
                       </span>
                       <div className="balance">
-                        <span> ${formatNumber(Number(vaultsMap[v.id]?.balance || 0.0))}</span>
+                        <span> ${Number(v.fiatTotal).format()}</span>
                       </div>
                       <div className="info">
                         <div className="address">
-                          <CopyBox text={v.address}>
-                            <span>{publicJs.AddressToShow(v.address)}</span>
+                          <CopyBox text={v.wallet}>
+                            <span>{publicJs.AddressToShow(v.wallet)}</span>
                           </CopyBox>
                         </div>
                         <a
-                          href={`https://app.safe.global/balances?safe=${SAFE_CHAIN[v.chainId].short}:${v.address}`}
+                          href={`https://app.safe.global/balances?safe=${SAFE_CHAIN[String(v.chainId)].short}:${
+                            v.wallet
+                          }`}
                           target="_blank"
                           rel="noreferrer"
                         >
                           <div className="tag">
                             <Tag>
-                              <img src={v.icon} alt="" />
-
+                              <img src={getChainIcon(v.chainId)} alt="" />
                               <span>
-                                {vaultsMap[v.id]?.threshold || 0}/{vaultsMap[v.id]?.total || 0}
+                                {v.threshold}/{v.owners}
                               </span>
                             </Tag>
                           </div>
@@ -369,43 +311,6 @@ export default function Index() {
                   </VaultItem>
                 ))}
               </VaultInfo>
-              {/*<InfoItem>*/}
-              {/*  <div>*/}
-              {/*    <IconStyle src={WalletIcon} alt="" />*/}
-              {/*  </div>*/}
-              {/*  <div className="info-right">*/}
-              {/*    <div className="title">{t('Assets.Wallet')}</div>*/}
-              {/*    <div className="num">4</div>*/}
-              {/*  </div>*/}
-              {/*</InfoItem>*/}
-              {/*<InfoItem>*/}
-              {/*  <div>*/}
-              {/*    <IconStyle src={SignerIcon} alt="" />*/}
-              {/*  </div>*/}
-              {/*  <div className="info-right">*/}
-              {/*    <div className="title">{t('Assets.MultiSign')}</div>*/}
-              {/*    <div className="num">{totalSigner}</div>*/}
-              {/*  </div>*/}
-              {/*</InfoItem>*/}
-              {/*<InfoItem>*/}
-              {/*  <div>*/}
-              {/*    <IconStyle src={ChainIcon} alt="" />*/}
-              {/*  </div>*/}
-              {/*  <div className="info-right">*/}
-              {/*    <div className="title">{t('Assets.Chain')}</div>*/}
-              {/*    <div className="num">2</div>*/}
-              {/*  </div>*/}
-              {/*</InfoItem>*/}
-              {/*<OptionBox>*/}
-              {/*  <Link to="/assets/register">*/}
-              {/*    <Button style={{ height: '36px' }}>{t('application.Register')}</Button>*/}
-              {/*  </Link>*/}
-              {/*  <DetailButton onClick={() => setShowVaultDetail(!showVaultDetail)}>*/}
-              {/*    <span>{t('Assets.Detail')}</span>*/}
-              {/*    <ArrowIconSVG style={{ transform: showVaultDetail ? 'rotate(180deg)' : 'unset' }} />*/}
-              {/*  </DetailButton>*/}
-              {/*</OptionBox>*/}
-              {/*</div>*/}
             </div>
           </VaultOverview>
         </Vault>
