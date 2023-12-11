@@ -94,6 +94,7 @@ export default function RegisterSNSStep2() {
           sns,
           networConfig.PUBLIC_RESOLVER_ADDR,
           ethers.utils.formatBytes32String(secret),
+          ethers.constants.AddressZero,
         );
         console.log('tx:', tx);
         d[account].registerHash = tx.hash;
