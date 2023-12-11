@@ -38,7 +38,7 @@ export default function EditProject({ detail }: { detail: ReTurnProject | undefi
       setDesc(detail.desc);
       setUrl(detail.logo);
       setIntro(detail.intro);
-      setProList(detail.proposals.map((item) => `https://forum.seedao.xyz/thread/${item}`));
+      setProList(detail?.proposals?.map((item) => `https://forum.seedao.xyz/thread/${item}`));
     }
   }, [detail]);
 
@@ -244,7 +244,7 @@ export default function EditProject({ detail }: { detail: ReTurnProject | undefi
           <li>
             <div className="title">{t('Project.AssociatedProposal')}</div>
             <div>
-              {proList.map((item, index) => (
+              {proList?.map((item, index) => (
                 <ItemBox key={`mem_${index}`}>
                   <InputBox>
                     <Form.Control
