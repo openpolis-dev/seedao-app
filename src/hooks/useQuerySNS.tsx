@@ -1,11 +1,10 @@
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import sns from '@seedao/sns-js';
-import { ALCHEMY_RPC } from 'utils/constant';
 import { ethers } from 'ethers';
 
 export default function useQuerySNS() {
   const {
-    state: { snsMap },
+    state: { snsMap, rpc },
     dispatch,
   } = useAuthContext();
 
@@ -41,7 +40,7 @@ export default function useQuerySNS() {
     const _snsMap = new Map(snsMap);
     if (_to_be_queried.length) {
       try {
-        const data = await sns.names(_to_be_queried, ALCHEMY_RPC as any);
+        const data = await sns.names(_to_be_queried, rpc);
         data.forEach((d, idx) => {
           _snsMap.set(_to_be_queried[idx], d || ethers.utils.getAddress(_to_be_queried[idx]));
         });

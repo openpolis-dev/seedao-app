@@ -19,6 +19,7 @@ import { ethers } from 'ethers';
 import getConfig from 'utils/envCofnig';
 import useCheckInstallPWA from 'hooks/useCheckInstallPWA';
 import { Wallet } from 'wallet/wallet';
+import publicJs from 'utils/publicJs';
 
 export default function LoginModal({ showModal }: any) {
   const { t } = useTranslation();
@@ -33,6 +34,21 @@ export default function LoginModal({ showModal }: any) {
 
   const walletconnect_provider = useEthersProvider({ chainId: chain });
   const isInstalled = useCheckInstallPWA();
+
+  const chooseRPC = async () => {
+    const _rpc = await publicJs.checkRPCavailable(network.rpcs, {
+      chainId: network.chainId,
+      name: network.name,
+    });
+    dispatch({ type: AppActionType.SET_RPC, payload: _rpc });
+    return _rpc;
+  };
+
+  const handleJoyidProvider = async () => {
+    const _rpc = await chooseRPC();
+    const provider = new ethers.providers.JsonRpcProvider(_rpc, network);
+    dispatch({ type: AppActionType.SET_PROVIDER, payload: provider });
+  };
 
   const handleProvider = (checkProvider = true) => {
     let type = localStorage.getItem(SELECT_WALLET);
@@ -53,13 +69,16 @@ export default function LoginModal({ showModal }: any) {
     } else if ([Wallet.JOYID, Wallet.JOYID_WEB].includes(walletType)) {
       // joyid
       initJoyId();
-      const providerJoyId = new ethers.providers.JsonRpcProvider(network.rpc, {
-        chainId: network.chainId,
-        name: network.name,
-      });
-      dispatch({ type: AppActionType.SET_PROVIDER, payload: providerJoyId });
+      handleJoyidProvider();
     }
   };
+
+  useEffect(() => {
+    const walletType = localStorage.getItem(SELECT_WALLET) as Wallet;
+    if (walletType) {
+      chooseRPC();
+    }
+  }, []);
 
   useEffect(() => {
     handleProvider();
@@ -69,6 +88,7 @@ export default function LoginModal({ showModal }: any) {
     if (!window.ethereum) return;
     const handleProviderEvents = () => {
       handleProvider(false);
+      chooseRPC();
     };
     const initProvider = async () => {
       const { ethereum } = window as any;

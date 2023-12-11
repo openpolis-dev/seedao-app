@@ -1,4 +1,6 @@
 import axios from 'axios';
+import { ethers } from 'ethers';
+
 const AddressToShow = (address: string, num?: number) => {
   if (!address) return '';
   const n = num || 4;
@@ -88,4 +90,21 @@ const filterTags = (html: string) => {
   return unicodeHexDecodedStr.replace(/(<([^>]+)>)/gi, '');
 };
 
-export default { AddressToShow, getImage, filterTags };
+const checkRPCavailable = (rpc_list: string[], network: { chainId: number; name: string }) => {
+  return Promise.any(
+    rpc_list.map((r) => {
+      const provider = new ethers.providers.JsonRpcProvider(r, network);
+      try {
+        provider.getBlock('latest');
+        return r;
+      } catch (error) {
+        throw Error(`[rpc] not available - ${r}`);
+      }
+    }),
+  ).then((result) => {
+    console.log('[rpc] choose', result);
+    return result;
+  });
+};
+
+export default { AddressToShow, getImage, filterTags, checkRPCavailable };

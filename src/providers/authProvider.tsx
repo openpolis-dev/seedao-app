@@ -4,6 +4,7 @@ import { ICategory } from 'type/proposal.type';
 import { Authorizer } from 'casbin.js';
 import { SEEDAO_ACCOUNT, SEEDAO_USER, SEEDAO_USER_DATA, SENDING_ME_USER } from '../utils/constant';
 import { WalletType } from '../wallet/wallet';
+import getConfig from 'utils/envCofnig';
 
 interface IState {
   account?: string;
@@ -22,6 +23,7 @@ interface IState {
   snsMap: Map<string, string>;
   hadOnboarding?: boolean;
   currentSeason: string;
+  rpc?: string;
 }
 
 export enum AppActionType {
@@ -37,6 +39,7 @@ export enum AppActionType {
   SET_WALLET_TYPE = 'set_wallet_type',
   SET_EXPAND_MENU = 'set_expand_menu',
   SET_PROVIDER = 'set_provider',
+  SET_RPC = 'set_rpc',
   SET_THEME = 'set_theme',
   SET_SNS_MAP = 'set_sns_map',
   SET_SNS = 'set_sns',
@@ -116,6 +119,8 @@ const reducer = (state: IState, action: IAction): IState => {
       return { ...state, authorizer: action.payload };
     case AppActionType.SET_PROVIDER:
       return { ...state, provider: action.payload };
+    case AppActionType.SET_RPC:
+      return { ...state, rpc: action.payload };
 
     case AppActionType.SET_THEME:
       return { ...state, theme: action.payload };

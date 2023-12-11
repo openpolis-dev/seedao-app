@@ -36,7 +36,10 @@ export default function JoyidWeb() {
   const [signInfo, setSignInfo] = useState('');
   const [result, setResult] = useState<any>();
   const [account, setAccount] = useState<string>('');
-  const { dispatch } = useAuthContext();
+  const {
+    dispatch,
+    state: { rpc },
+  } = useAuthContext();
 
   useEffect(() => {
     initJoyId();
@@ -102,7 +105,7 @@ export default function JoyidWeb() {
       const now = Date.now();
       res.data.token_exp = now + res.data.token_exp * 1000;
       dispatch({ type: AppActionType.SET_LOGIN_DATA, payload: res.data });
-      const provider = new ethers.providers.JsonRpcProvider(network.rpc, {
+      const provider = new ethers.providers.JsonRpcProvider(rpc || network.rpcs[0], {
         chainId: network.chainId,
         name: network.name,
       });

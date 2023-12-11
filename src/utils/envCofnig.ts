@@ -18,7 +18,11 @@ const LOCAL = {
   NETWORK: {
     name: 'Goerli',
     chainId: 5,
-    rpc: 'https://eth-goerli.g.alchemy.com/v2/MATWeLJN1bEGTjSmtyLedn0i34o1ISLD',
+    rpcs: [
+      'https://eth-goerli.g.alchemy.com/v2/MATWeLJN1bEGTjSmtyLedn0i34o1ISLD',
+      'https://rpc.ankr.com/eth_goerli',
+      'https://endpoints.omniatech.io/v1/eth/goerli/public',
+    ],
     icon: EthereumIcon,
     SEEDAO_REGISTRAR_CONTROLLER_ADDR: builtin.SEEDAO_REGISTRAR_CONTROLLER_ADDR,
     PUBLIC_RESOLVER_ADDR: builtin.PUBLIC_RESOLVER_ADDR,
