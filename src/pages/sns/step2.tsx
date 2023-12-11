@@ -15,9 +15,9 @@ import ABI from 'assets/abi/SeeDAOMinter.json';
 import getConfig from 'utils/envCofnig';
 const networConfig = getConfig().NETWORK;
 
-const buildRegisterData = (sns: string, resolveAddress: string, secret: string) => {
+const buildRegisterData = (sns: string, resolveAddress: string, secret: string, address: string) => {
   const iface = new ethers.utils.Interface(ABI);
-  return iface.encodeFunctionData('register', [sns, resolveAddress, secret]);
+  return iface.encodeFunctionData('register', [sns, resolveAddress, secret, address]);
 };
 
 export default function RegisterSNSStep2() {
@@ -85,7 +85,12 @@ export default function RegisterSNSStep2() {
           to: networConfig.SEEDAO_REGISTRAR_CONTROLLER_ADDR,
           from: account,
           value: '0',
-          data: buildRegisterData(sns, networConfig.PUBLIC_RESOLVER_ADDR, ethers.utils.formatBytes32String(secret)),
+          data: buildRegisterData(
+            sns,
+            networConfig.PUBLIC_RESOLVER_ADDR,
+            ethers.utils.formatBytes32String(secret),
+            ethers.constants.AddressZero,
+          ),
         });
         console.log('joyid txHash:', txHash);
         d[account].registerHash = txHash;
