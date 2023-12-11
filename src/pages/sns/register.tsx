@@ -10,7 +10,7 @@ import { ethers } from 'ethers';
 import StepLoading from './stepLoading';
 import BackerNav from 'components/common/backNav';
 import CONTROLLER_ABI from 'assets/abi/SeeDAORegistrarController.json';
-import MINTER_ABI from 'assets/abi/SeeDAOMinter.json';
+import MINTER_ABI from 'assets/abi/SeeDAOActivityMinter.json';
 import getConfig from 'utils/envCofnig';
 import { SELECT_WALLET } from 'utils/constant';
 import { builtin } from '@seedao/sns-js';
@@ -57,7 +57,11 @@ const RegisterSNSWrapper = () => {
         provider.getSigner(account),
       );
       dispatchSNS({ type: ACTIONS.SET_CONTROLLER_CONTRACT, payload: _controller_contract });
-      const _minter_contract = new ethers.Contract(builtin.SEEDAO_MINTER_ADDR, MINTER_ABI, provider.getSigner(account));
+      const _minter_contract = new ethers.Contract(
+        builtin.SEEDAO_ACTIVITY_MINTER_ADDR,
+        MINTER_ABI,
+        provider.getSigner(account),
+      );
       dispatchSNS({ type: ACTIONS.SET_MINTER_CONTRACT, payload: _minter_contract });
     };
     provider && initContract();
