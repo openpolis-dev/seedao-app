@@ -20,6 +20,8 @@ import { sendTransaction } from '@joyid/evm';
 import { SELECT_WALLET } from 'utils/constant';
 import { Wallet } from '../../wallet/wallet';
 import ABI from 'assets/abi/SeeDAORegistrarController.json';
+import { clearStorage } from 'utils/auth';
+
 import getConfig from 'utils/envCofnig';
 const networkConfig = getConfig().NETWORK;
 
@@ -44,7 +46,7 @@ export default function RegisterSNSStep1() {
 
   const {
     dispatch,
-    state: { provider, account },
+    state: { provider, account, userData },
   } = useAuthContext();
 
   const {
@@ -95,6 +97,11 @@ export default function RegisterSNSStep1() {
     if (wallet === Wallet.UNIPASS) {
       if (!provider.provider.isConnected()) {
         dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: true });
+        // clear login status
+        if (userData) {
+          dispatch({ type: AppActionType.CLEAR_AUTH, payload: undefined });
+          clearStorage();
+        }
         return;
       }
     }
