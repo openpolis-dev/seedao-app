@@ -26,7 +26,7 @@ export default function DeleteMemberModal({ title, sns, users, onConfirm, onClos
         {users.map((item, index) => (
           <ItemBox key={`user_${index}`}>
             <div>
-              <img src={item.user.avatar || DefaultAvatar} alt="" />
+              <img src={item.user.avatar || item.user.sp?.avatar || DefaultAvatar} alt="" />
             </div>
             <div>
               <div className="wallet"> {sns[item.user.wallet || ''] || item.user.wallet}</div>
