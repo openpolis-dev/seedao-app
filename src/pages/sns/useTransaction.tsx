@@ -92,7 +92,7 @@ export default function useTransaction() {
   const handleFreeMint = async (wallet: Wallet, sns: string, secret: string, whitelistId: number, proof: string) => {
     if (wallet === Wallet.JOYID_WEB) {
       return await sendTransaction({
-        to: builtin.SEEDAO_ACTIVITY_MINTER_ADDR,
+        to: builtin.SEEDAO_MINTER_ADDR,
         from: account,
         value: '0',
         data: buildWhitelistRegisterData(sns, ethers.utils.formatBytes32String(secret), whitelistId, proof),
