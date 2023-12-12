@@ -34,12 +34,7 @@ const buildCommitData = (commitment: string) => {
 
 const buildRegisterData = (sns: string, secret: string) => {
   const iface = new ethers.utils.Interface(REGISTER_ABI);
-  return iface.encodeFunctionData('register', [
-    sns,
-    builtin.PUBLIC_RESOLVER_ADDR,
-    secret,
-    networkConfig.tokens[0].address, // TODO: test token
-  ]);
+  return iface.encodeFunctionData('register', [sns, builtin.PUBLIC_RESOLVER_ADDR, secret, PAY_TOKEN.address]);
 };
 
 const buildWhitelistRegisterData = (sns: string, secret: string, whitelistId: number, proof: string) => {
@@ -84,7 +79,12 @@ export default function useTransaction() {
         data: buildRegisterData(sns, ethers.utils.formatBytes32String(secret)),
       });
     } else {
-      const tx = await minterContract.register(sns, ethers.utils.formatBytes32String(secret));
+      const tx = await minterContract.register(
+        sns,
+        builtin.PUBLIC_RESOLVER_ADDR,
+        ethers.utils.formatBytes32String(secret),
+        PAY_TOKEN.address,
+      );
       return tx?.hash;
     }
   };
@@ -125,8 +125,9 @@ export default function useTransaction() {
     const tokenContract = new ethers.Contract(PAY_TOKEN.address, erc20ABI, provider.getSigner(account));
     // check approve balance
     const approve_balance = await tokenContract.allowance(account, builtin.SEEDAO_MINTER_ADDR);
+    const not_enough = approve_balance.lt(ethers.utils.parseUnits(String(PAY_NUMBER), PAY_TOKEN.decimals));
     if (wallet === Wallet.JOYID_WEB) {
-      if (approve_balance.lt(ethers.utils.parseUnits(String(PAY_NUMBER)))) {
+      if (not_enough) {
         await sendTransaction({
           to: PAY_TOKEN.address,
           from: account,
@@ -135,7 +136,7 @@ export default function useTransaction() {
         });
       }
     } else {
-      if (approve_balance.lt(ethers.utils.parseUnits(String(PAY_NUMBER)))) {
+      if (not_enough) {
         // approve
         const tx = await tokenContract.approve(
           builtin.SEEDAO_MINTER_ADDR,

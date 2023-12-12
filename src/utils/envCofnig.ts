@@ -28,7 +28,7 @@ const LOCAL = {
       {
         address: '0xC2C527C0CACF457746Bd31B2a698Fe89de2b6d49',
         name: 'USDT',
-        decimals: 18,
+        decimals: 6,
       },
     ],
   },
