@@ -69,7 +69,7 @@ export default function RouterLink() {
           <Route path="/event/edit" element={<EventEdit />} />
           <Route path="/online-event" element={<CalendarPage />} />
           <Route path="/hub" element={<Pub />} />
-          <Route path="/pubDetail/:id" element={<PubDetail />} />
+          <Route path="/hubDetail/:id" element={<PubDetail />} />
 
           <Route path="/assets" element={<Assets />} />
           <Route path="/assets/register" element={<RegisterAssets />} />
