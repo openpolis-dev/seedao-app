@@ -59,7 +59,7 @@ export default function Index() {
           { key: SubPage.Push, title: t('city-hall.Push'), path: 'notification' },
         ]
       : [{ key: SubPage.Members, title: `${currentSeason} ${t('city-hall.Cityhall')}`, path: 'members' }];
-  }, [canUseCityhall, t]);
+  }, [canUseCityhall, t, currentSeason]);
 
   const handleChangeSubPage = (v: number | string) => {
     const t = tabs.find((t) => t.key === v);
