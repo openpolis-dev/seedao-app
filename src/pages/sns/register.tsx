@@ -14,6 +14,8 @@ import MINTER_ABI from 'assets/abi/SeeDAOMinter.json';
 import getConfig from 'utils/envCofnig';
 import { builtin } from '@seedao/sns-js';
 import WhiteListData from 'utils/whitelist.json';
+import { useTranslation } from 'react-i18next';
+import HelperIcon from 'assets/Imgs/sns/helper.svg';
 
 const whiteList = WhiteListData as {
   rootHash: string;
@@ -23,6 +25,7 @@ const whiteList = WhiteListData as {
 const networkConfig = getConfig().NETWORK;
 
 const RegisterSNSWrapper = () => {
+  const { t } = useTranslation();
   const {
     state: { account, provider },
   } = useAuthContext();
@@ -171,6 +174,10 @@ const RegisterSNSWrapper = () => {
         {step === 2 && <RegisterSNSStep2 />}
         {step === 3 && <FinishedComponent />}
       </StepContainer>
+      <SNSHelper href="https://seedao.notion.site/SNS-1a2e97530715430abc115967f219d05b?pvs=4" target="_blank">
+        <img src={HelperIcon} alt="" />
+        {t('SNS.Helper')}
+      </SNSHelper>
       {loading && <StepLoading />}
     </Container>
   );
@@ -195,4 +202,29 @@ const StepContainer = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
+`;
+
+const SNSHelper = styled.a`
+  display: inline-flex;
+  padding-inline: 16px;
+  min-width: 100px;
+  height: 40px;
+  line-height: 40px;
+  border-radius: 8px;
+  background-color: var(--bs-primary);
+  color: #fff;
+  position: fixed;
+  right: 30px;
+  bottom: 30px;
+  cursor: pointer;
+  font-size: 14px;
+  gap: 6px;
+  align-items: center;
+  justify-content: center;
+  &:hover {
+    color: #fff;
+  }
+  img {
+    width: 20px;
+  }
 `;

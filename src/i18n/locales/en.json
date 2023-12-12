@@ -535,7 +535,8 @@
     "InputTip": "*Please input 4-15 numbers(0-9)、lower letter(a-z) or special( ! $ ( ) * + - _ )",
     "Switch": "Switch",
     "MySNS": "My SNS",
-    "HadSNS": "Already have SNS"
+    "HadSNS": "Already have SNS",
+    "Helper": "Ask for help"
   },
   "Governance": {
     "GovernanceRule": "Governance Rules",

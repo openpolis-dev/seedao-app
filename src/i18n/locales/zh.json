@@ -535,7 +535,8 @@
     "InputTip": "*请输入4-15位数字（0～9）、小写字母（a～z）或特殊字符（ ! $ ( ) * + - _ ）",
     "Switch": "切换",
     "MySNS": "我的 SNS",
-    "HadSNS": "已拥有SNS"
+    "HadSNS": "已拥有SNS",
+    "Helper": "帮助"
   },
   "Governance": {
     "GovernanceRule": "治理规则",
