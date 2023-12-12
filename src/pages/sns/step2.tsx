@@ -7,9 +7,7 @@ import { ACTIONS, useSNSContext } from './snsProvider';
 import { useAuthContext } from 'providers/authProvider';
 import useToast, { ToastType } from 'hooks/useToast';
 import useTransaction, { TX_ACTION } from './useTransaction';
-import { ethers } from 'ethers';
-import getConfig from 'utils/envCofnig';
-const networkConfig = getConfig().NETWORK;
+import CancelModal from './cancelModal';
 
 export default function RegisterSNSStep2() {
   const { t } = useTranslation();
@@ -27,6 +25,7 @@ export default function RegisterSNSStep2() {
   const startTimeRef = useRef<number>(0);
   const [leftTime, setLeftTime] = useState<number>(0);
   const [secret, setSecret] = useState('');
+  const [showCancelModal, setShowCancelModal] = useState(false);
 
   useEffect(() => {
     const parseLocalData = () => {
@@ -137,6 +136,12 @@ export default function RegisterSNSStep2() {
     return () => timer && clearInterval(timer);
   }, [localData, account, provider]);
 
+  const handleCancel = () => {
+    setShowCancelModal(false);
+    dispatchSNS({ type: ACTIONS.SET_STEP, payload: 1 });
+    dispatchSNS({ type: ACTIONS.SET_LOCAL_DATA, payload: undefined });
+  };
+
   return (
     <Container>
       <ContainerWrapper>
@@ -153,7 +158,9 @@ export default function RegisterSNSStep2() {
         <FinishButton onClick={handleRegister} disabled={!!leftTime}>
           {t('SNS.Finish')}
         </FinishButton>
+        <CancelButton onClick={() => setShowCancelModal(true)}>{t('SNS.CancelRegister')}</CancelButton>
       </ContainerWrapper>
+      {showCancelModal && <CancelModal handleClose={() => setShowCancelModal(false)} handleCancel={handleCancel} />}
     </Container>
   );
 }
@@ -179,7 +186,7 @@ const CurrentSNS = styled.div`
   color: var(--bs-body-color_active);
   line-height: 54px;
   letter-spacing: 1px;
-  margin-top: 47px;
+  margin-top: 30px;
   margin-bottom: 26px;
 `;
 
@@ -226,4 +233,14 @@ const CircleBox = styled.div<{ color: string }>`
 const FinishButton = styled(Button)`
   width: 394px;
   margin-top: 26px;
+`;
+
+const CancelButton = styled.span`
+  text-align: center;
+  display: block;
+  margin: 16px auto;
+  font-size: 12px;
+  cursor: pointer;
+  min-width: 100px;
+  max-width: 200px;
 `;

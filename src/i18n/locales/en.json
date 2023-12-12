@@ -536,7 +536,9 @@
     "Switch": "Switch",
     "MySNS": "My SNS",
     "HadSNS": "Already have SNS",
-    "Helper": "Ask for help"
+    "Helper": "Ask for help",
+    "CancelRegister": "Give up registration",
+    "CancelTip": "Give up means you'll start to register from step one"
   },
   "Governance": {
     "GovernanceRule": "Governance Rules",

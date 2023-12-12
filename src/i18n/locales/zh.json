@@ -536,7 +536,9 @@
     "Switch": "切换",
     "MySNS": "我的 SNS",
     "HadSNS": "已拥有SNS",
-    "Helper": "帮助"
+    "Helper": "帮助",
+    "CancelRegister": "放弃注册",
+    "CancelTip": "放弃后，注册流程将从第一步开始"
   },
   "Governance": {
     "GovernanceRule": "治理规则",
