@@ -44,6 +44,12 @@ export default function LoginModal({ showModal }: any) {
     return _rpc;
   };
 
+  const handleUnipassProvider = async () => {
+    await upProvider.connect();
+    const providerUnipass = new ethers.providers.Web3Provider(upProvider, 'any');
+    dispatch({ type: AppActionType.SET_PROVIDER, payload: providerUnipass });
+  };
+
   const handleJoyidProvider = async () => {
     const _rpc = await chooseRPC();
     const provider = new ethers.providers.JsonRpcProvider(_rpc, network);
@@ -64,8 +70,7 @@ export default function LoginModal({ showModal }: any) {
       dispatch({ type: AppActionType.SET_PROVIDER, payload: walletconnect_provider });
     } else if (walletType === Wallet.UNIPASS) {
       // unipass
-      const providerUnipass = new ethers.providers.Web3Provider(upProvider, 'any');
-      dispatch({ type: AppActionType.SET_PROVIDER, payload: providerUnipass });
+      handleUnipassProvider();
     } else if ([Wallet.JOYID, Wallet.JOYID_WEB].includes(walletType)) {
       // joyid
       initJoyId();
