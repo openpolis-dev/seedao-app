@@ -15,7 +15,7 @@ import { builtin } from '@seedao/sns-js';
 import { getRandomCode } from 'utils';
 import useToast, { ToastType } from 'hooks/useToast';
 import UserSVGIcon from 'components/svgs/user';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { SELECT_WALLET } from 'utils/constant';
 import { Wallet } from '../../wallet/wallet';
 import { clearStorage } from 'utils/auth';
@@ -30,6 +30,8 @@ enum AvailableStatus {
 
 export default function RegisterSNSStep1() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+
   const [val, setVal] = useState<string>();
   const [searchVal, setSearchVal] = useState<string>('');
   const [isPending, setPending] = useState(false);
@@ -230,6 +232,13 @@ export default function RegisterSNSStep1() {
       );
     }
   };
+
+  const handleGoUserSNS = () => {
+    if (!account || !checkLogin()) {
+      return;
+    }
+    navigate('/sns/user');
+  };
   return (
     <Container>
       <ContainerWrapper>
@@ -250,7 +259,7 @@ export default function RegisterSNSStep1() {
         <Tip>{t('SNS.InputTip')}</Tip>
         <OperateBox>{showButton()}</OperateBox>
       </ContainerWrapper>
-      <UserEntrance to="/sns/user">
+      <UserEntrance onClick={handleGoUserSNS}>
         <UserSVGIcon />
         <span>{t('SNS.MySNS')}</span>
       </UserEntrance>
@@ -392,7 +401,7 @@ const Tip = styled.div`
   text-align: left;
 `;
 
-const UserEntrance = styled(Link)`
+const UserEntrance = styled.span`
   position: absolute;
   background: var(--home-right);
   border-radius: 8px;
@@ -408,8 +417,6 @@ const UserEntrance = styled(Link)`
   top: 24px;
   right: 24px;
   user-select: none;
-  color: var(--bs-body-color_active) !important;
-  &:hover {
-    color: var(--bs-body-color_active);
-  }
+  color: var(--bs-body-color_active);
+  cursor: pointer;
 `;
