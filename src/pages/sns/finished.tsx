@@ -3,8 +3,6 @@ import styled from 'styled-components';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import { useSNSContext } from './snsProvider';
 import { useEffect } from 'react';
-import { Button } from 'react-bootstrap';
-import UserSVGIcon from 'components/svgs/user';
 import { Link } from 'react-router-dom';
 import NiceIcon from 'assets/Imgs/sns/nice.svg';
 import NiceDarkIcon from 'assets/Imgs/sns/nice_dark.svg';
@@ -24,26 +22,23 @@ export default function FinishedComponent() {
     dispatch({ type: AppActionType.SET_SNS, payload: `${sns}.seedao` });
   }, []);
   return (
-    <Container>
-      <ContainerTop bg={theme ? 'dark' : 'light'}>
+    <Container bg={theme ? 'dark' : 'light'}>
+      <ContainerTop>
         <img src={theme ? NiceDarkIcon : NiceIcon} alt="" />
+        <div className="title">{t('SNS.FinishSucess', { sns: `${sns}.seedao` })}</div>
       </ContainerTop>
       <ContainerBottom>
-        <div className="title">{sns}.seedao</div>
-        <div className="success">{t('SNS.FinishSucess')}</div>
-        {/* <Cover></Cover>
-        <Link to="/onboarding/learn">
-          <WatchButton>{t('Onboarding.WatchButton')}</WatchButton>
-        </Link> */}
+        <HomeLink to="/home">
+          <LinkBox>{t('SNS.Polis')}</LinkBox>
+        </HomeLink>
+        <ContributeLink href="https://discord.com/channels/841189467128594442/1183811608967921795" target="_blank">
+          <LinkBox>{t('SNS.PolisContribute')}</LinkBox>
+        </ContributeLink>
       </ContainerBottom>
-      {/* <UserEntrance to="/sns/user">
-        <UserSVGIcon />
-        <span>{t('SNS.MySNS')}</span>
-      </UserEntrance> */}
     </Container>
   );
 }
-const Container = styled.div`
+const Container = styled.div<{ bg: string }>`
   background-color: var(--bs-box-background);
   height: 482px;
   width: 669px;
@@ -51,65 +46,44 @@ const Container = styled.div`
   border-radius: 16px;
   overflow: hidden;
   position: relative;
-`;
 
-const ContainerTop = styled.div<{ bg: string }>`
-  height: 120px;
   background: ${(props) =>
     props.bg === 'dark'
       ? 'linear-gradient(207deg, #ff4974 10%, #9668f2 58%, #4500d6 100%)'
       : 'linear-gradient(207deg, #f7e1ed 10%, #f8fff8 58%, #e9deff 100%)'};
+`;
+
+const ContainerTop = styled.div`
   text-align: center;
-  padding-top: 16px;
+  padding-top: 60px;
   box-sizing: border-box;
+
+  .title {
+    font-family: 'Poppins-Medium';
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: 1;
+    color: var(--bs-body-color_active);
+    margin-block: 30px;
+  }
 `;
 const ContainerBottom = styled.div`
   text-align: center;
-  padding-top: 82px;
-  .title {
-    font-family: 'Poppins-SemiBold';
-    font-size: 34px;
-    font-weight: 600;
-    line-height: 54px;
-    letter-spacing: 1;
-    color: var(--bs-body-color_active);
-  }
-  .success {
-    font-family: 'Poppins-Medium';
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--sns-font-color);
-  }
-`;
-
-const Cover = styled.div`
-  width: 80%;
-  height: 260px;
-  background-color: #000;
-  border-radius: 8px;
-  margin: 20px auto;
-`;
-
-const WatchButton = styled(Button)``;
-
-const UserEntrance = styled(Link)`
-  position: absolute;
-  background: var(--home-right);
-  border-radius: 8px;
-  opacity: 1;
-  border: 1px solid var(--table-border);
-  font-size: 14px;
-  height: 36px;
-  padding-inline: 12px;
   display: flex;
-  align-items: center;
   justify-content: center;
-  gap: 3px;
-  top: 24px;
-  right: 24px;
-  user-select: none;
-  color: var(--bs-body-color_active) !important;
-  &:hover {
-    color: var(--bs-body-color_active);
-  }
+  gap: 30px;
+  margin-top: 30px;
 `;
+
+const LinkBox = styled.div`
+  width: 160px;
+  height: 50px;
+  background-color: #fff;
+  color: #000;
+  border-radius: 8px;
+  line-height: 50px;
+`;
+
+const HomeLink = styled(Link)``;
+
+const ContributeLink = styled.a``;
