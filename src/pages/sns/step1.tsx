@@ -16,25 +16,17 @@ import { getRandomCode } from 'utils';
 import useToast, { ToastType } from 'hooks/useToast';
 import UserSVGIcon from 'components/svgs/user';
 import { Link } from 'react-router-dom';
-import { sendTransaction } from '@joyid/evm';
 import { SELECT_WALLET } from 'utils/constant';
 import { Wallet } from '../../wallet/wallet';
-import ABI from 'assets/abi/SeeDAORegistrarController.json';
 import { clearStorage } from 'utils/auth';
 
-import getConfig from 'utils/envCofnig';
-const networkConfig = getConfig().NETWORK;
+import useTransaction, { TX_ACTION } from './useTransaction';
 
 enum AvailableStatus {
   DEFAULT = 'default',
   OK = 'ok',
   NOT_OK = 'not_ok',
 }
-
-const buildCommitData = (commitment: string) => {
-  const iface = new ethers.utils.Interface(ABI);
-  return iface.encodeFunctionData('commit', [commitment]);
-};
 
 export default function RegisterSNSStep1() {
   const { t } = useTranslation();
@@ -51,8 +43,10 @@ export default function RegisterSNSStep1() {
 
   const {
     dispatch: dispatchSNS,
-    state: { controllerContract, localData },
+    state: { controllerContract, localData, hasReached, user_proof },
   } = useSNSContext();
+
+  const { handleTransaction, approveToken } = useTransaction();
 
   const { showToast } = useToast();
 
@@ -139,7 +133,6 @@ export default function RegisterSNSStep1() {
     if (!account || !checkLogin()) {
       return;
     }
-    const wallet = localStorage.getItem(SELECT_WALLET);
     // mint
     try {
       const _s = getRandomCode();
@@ -153,20 +146,8 @@ export default function RegisterSNSStep1() {
       );
       // commit
       dispatchSNS({ type: ACTIONS.SHOW_LOADING });
-      let txHash: string;
-      if (wallet && wallet === Wallet.JOYID_WEB) {
-        txHash = await sendTransaction({
-          to: builtin.SEEDAO_REGISTRAR_CONTROLLER_ADDR,
-          from: account,
-          value: '0',
-          data: buildCommitData(commitment),
-        });
-        console.log('joyid txHash:', txHash);
-      } else {
-        const tx = await controllerContract.commit(commitment);
-        console.log('tx:', tx);
-        txHash = tx.hash;
-      }
+
+      const txHash = await handleTransaction(TX_ACTION.COMMIT, commitment);
       // record to localstorage
       const data = { ...localData };
       data[account] = {
@@ -229,6 +210,26 @@ export default function RegisterSNSStep1() {
     timer = setInterval(timerFunc, 1000);
     return () => timer && clearInterval(timer);
   }, [localData, account, provider]);
+
+  const showButton = () => {
+    if (hasReached) {
+      return (
+        <MintButton variant="primary" disabled={true}>
+          {t('SNS.HadSNS')}
+        </MintButton>
+      );
+    } else {
+      return (
+        <MintButton
+          variant="primary"
+          disabled={isPending || availableStatus !== AvailableStatus.OK}
+          onClick={handleMint}
+        >
+          {user_proof ? t('SNS.FreeMint') : t('SNS.SpentMint', { money: '5 USDT' })}
+        </MintButton>
+      );
+    }
+  };
   return (
     <Container>
       <ContainerWrapper>
@@ -247,16 +248,7 @@ export default function RegisterSNSStep1() {
           </SearchRight>
         </SearchBox>
         <Tip>{t('SNS.InputTip')}</Tip>
-        <OperateBox>
-          {/* <MintButton variant="primary" onClick={handleMint}> */}
-          <MintButton
-            variant="primary"
-            onClick={handleMint}
-            disabled={isPending || availableStatus !== AvailableStatus.OK}
-          >
-            {t('SNS.FreeMint')}
-          </MintButton>
-        </OperateBox>
+        <OperateBox>{showButton()}</OperateBox>
       </ContainerWrapper>
       <UserEntrance to="/sns/user">
         <UserSVGIcon />

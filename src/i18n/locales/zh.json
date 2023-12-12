@@ -532,7 +532,8 @@
     "Step2Intro": "完成第二笔交易获得 SNS",
     "InputTip": "*请输入4-15位数字（0～9）、小写字母（a～z）或特殊字符（ ! $ ( ) * + - _ ）",
     "Switch": "切换",
-    "MySNS": "我的 SNS"
+    "MySNS": "我的 SNS",
+    "HadSNS": "已拥有SNS"
   },
   "Governance": {
     "GovernanceRule": "治理规则",

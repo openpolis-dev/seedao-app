@@ -532,7 +532,8 @@
     "Step2Intro": "Complete the second transaction to get your SNS",
     "InputTip": "*Please input 4-15 numbers(0-9)、lower letter(a-z) or special( ! $ ( ) * + - _ )",
     "Switch": "Switch",
-    "MySNS": "My SNS"
+    "MySNS": "My SNS",
+    "HadSNS": "Already have SNS"
   },
   "Governance": {
     "GovernanceRule": "Governance Rules",

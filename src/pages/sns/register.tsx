@@ -10,10 +10,16 @@ import { ethers } from 'ethers';
 import StepLoading from './stepLoading';
 import BackerNav from 'components/common/backNav';
 import CONTROLLER_ABI from 'assets/abi/SeeDAORegistrarController.json';
-import MINTER_ABI from 'assets/abi/SeeDAOActivityMinter.json';
+import MINTER_ABI from 'assets/abi/SeeDAOMinter.json';
 import getConfig from 'utils/envCofnig';
-import { SELECT_WALLET } from 'utils/constant';
 import { builtin } from '@seedao/sns-js';
+import WhiteListData from 'utils/whitelist.json';
+
+const whiteList = WhiteListData as {
+  rootHash: string;
+  proofs: { address: string; proof: string[] }[];
+};
+
 const networkConfig = getConfig().NETWORK;
 
 const RegisterSNSWrapper = () => {
@@ -22,21 +28,51 @@ const RegisterSNSWrapper = () => {
   } = useAuthContext();
 
   const {
-    state: { step, localData, loading },
+    state: { step, localData, loading, controllerContract },
     dispatch: dispatchSNS,
   } = useSNSContext();
 
-  console.log('step', step);
+  const checkUserStatus = async () => {
+    try {
+      const hasReached = await controllerContract.maxOwnedNumberReached(account);
+      dispatchSNS({ type: ACTIONS.SET_HAS_REACHED, payload: hasReached });
+    } catch (error) {
+      console.error('query maxOwnedNumberReached failed', error);
+    }
+  };
 
   useEffect(() => {
-    console.log('222provider', provider);
+    const checkUserInwhitelist = async () => {
+      try {
+        const isInWhitelist = whiteList.proofs.find(
+          (item) => item.address.toLocaleLowerCase() === account?.toLocaleLowerCase(),
+        );
+        if (isInWhitelist) {
+          dispatchSNS({ type: ACTIONS.SET_USER_PROOF, payload: isInWhitelist.proof });
+        }
+      } catch (error) {
+        console.error('checkUserInwhitelist failed', error);
+      }
+    };
+    if (account && controllerContract) {
+      checkUserStatus();
+      checkUserInwhitelist();
+    }
+  }, [account, controllerContract]);
+
+  useEffect(() => {
+    if (account && controllerContract && step === 3) {
+      checkUserStatus();
+    }
+  }, [account, controllerContract, step]);
+
+  useEffect(() => {
     const initContract = async () => {
       // check network
       if (!provider?.getNetwork) {
         return;
       }
       const network = await provider.getNetwork();
-      const wallet = localStorage.getItem(SELECT_WALLET);
 
       if (network?.chainId !== networkConfig.chainId) {
         // switch network;
@@ -57,11 +93,7 @@ const RegisterSNSWrapper = () => {
         provider.getSigner(account),
       );
       dispatchSNS({ type: ACTIONS.SET_CONTROLLER_CONTRACT, payload: _controller_contract });
-      const _minter_contract = new ethers.Contract(
-        builtin.SEEDAO_ACTIVITY_MINTER_ADDR,
-        MINTER_ABI,
-        provider.getSigner(account),
-      );
+      const _minter_contract = new ethers.Contract(builtin.SEEDAO_MINTER_ADDR, MINTER_ABI, provider.getSigner(account));
       dispatchSNS({ type: ACTIONS.SET_MINTER_CONTRACT, payload: _minter_contract });
     };
     provider && initContract();

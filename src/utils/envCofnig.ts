@@ -24,6 +24,13 @@ const LOCAL = {
       'https://endpoints.omniatech.io/v1/eth/goerli/public',
     ],
     icon: EthereumIcon,
+    tokens: [
+      {
+        address: '0xC2C527C0CACF457746Bd31B2a698Fe89de2b6d49',
+        name: 'USDT',
+        decimals: 18,
+      },
+    ],
   },
   INDEXER_ENDPOINT: 'https://test-spp-indexer.seedao.tech',
 };

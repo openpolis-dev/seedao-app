@@ -23,6 +23,8 @@ export enum ACTIONS {
   CLOSE_LOADING = 'close_loading',
   SET_SNS = 'set_sns',
   SET_STORAGE = 'set_storage',
+  SET_HAS_REACHED = 'set_has_reached',
+  SET_USER_PROOF = 'set_user_proof',
 }
 
 interface IState {
@@ -32,6 +34,8 @@ interface IState {
   localData?: LocalSNS;
   loading?: boolean;
   sns: string;
+  hasReached?: boolean;
+  user_proof?: string[];
 }
 interface IAction {
   type: ACTIONS;
@@ -69,6 +73,10 @@ const reducer = (state: IState, action: IAction): IState => {
     case ACTIONS.SET_STORAGE:
       localStorage.setItem('sns', action.payload);
       return { ...state, localData: action.payload ? JSON.parse(action.payload) : undefined };
+    case ACTIONS.SET_HAS_REACHED:
+      return { ...state, hasReached: action.payload };
+    case ACTIONS.SET_USER_PROOF:
+      return { ...state, user_proof: action.payload };
     default:
       throw new Error(`Unknown type: ${action.type}`);
   }
