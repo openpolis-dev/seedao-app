@@ -24,8 +24,6 @@ const LOCAL = {
       'https://endpoints.omniatech.io/v1/eth/goerli/public',
     ],
     icon: EthereumIcon,
-    SEEDAO_REGISTRAR_CONTROLLER_ADDR: builtin.SEEDAO_REGISTRAR_CONTROLLER_ADDR,
-    PUBLIC_RESOLVER_ADDR: builtin.PUBLIC_RESOLVER_ADDR,
   },
   INDEXER_ENDPOINT: 'https://test-spp-indexer.seedao.tech',
 };

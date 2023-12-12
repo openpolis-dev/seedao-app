@@ -148,7 +148,7 @@ export default function RegisterSNSStep1() {
       const commitment = await controllerContract.makeCommitment(
         searchVal,
         account,
-        networkConfig.PUBLIC_RESOLVER_ADDR,
+        builtin.PUBLIC_RESOLVER_ADDR,
         ethers.utils.formatBytes32String(_s),
       );
       // commit
@@ -156,7 +156,7 @@ export default function RegisterSNSStep1() {
       let txHash: string;
       if (wallet && wallet === Wallet.JOYID_WEB) {
         txHash = await sendTransaction({
-          to: networkConfig.SEEDAO_REGISTRAR_CONTROLLER_ADDR,
+          to: builtin.SEEDAO_REGISTRAR_CONTROLLER_ADDR,
           from: account,
           value: '0',
           data: buildCommitData(commitment),

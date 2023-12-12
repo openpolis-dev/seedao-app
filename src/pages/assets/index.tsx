@@ -75,11 +75,6 @@ const FirstLine = styled.ul<{ border: string }>`
   }
 `;
 
-const enum CHAINS {
-  ETH = 1,
-  Polygon = 137,
-}
-
 const SAFE_CHAIN: { [k: string]: { short: string; name: string } } = {
   '1': {
     short: 'eth',
