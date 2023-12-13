@@ -50,7 +50,7 @@ const buildWhitelistRegisterData = (sns: string, secret: string, whitelistId: nu
 
 export default function useTransaction() {
   const {
-    state: { account, provider },
+    state: { account, provider, rpc },
   } = useAuthContext();
   const {
     state: { minterContract, controllerContract },
@@ -67,10 +67,7 @@ export default function useTransaction() {
         },
         account,
         {
-          network: {
-            name: networkConfig.name,
-            chainId: networkConfig.chainId,
-          },
+          rpcURL: rpc || networkConfig.rpcs[0],
         },
       );
     } else {
@@ -90,10 +87,7 @@ export default function useTransaction() {
         },
         account,
         {
-          network: {
-            name: networkConfig.name,
-            chainId: networkConfig.chainId,
-          },
+          rpcURL: rpc || networkConfig.rpcs[0],
         },
       );
     } else {
@@ -118,10 +112,7 @@ export default function useTransaction() {
         },
         account,
         {
-          network: {
-            name: networkConfig.name,
-            chainId: networkConfig.chainId,
-          },
+          rpcURL: rpc || networkConfig.rpcs[0],
         },
       );
     } else {
