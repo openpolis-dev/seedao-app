@@ -12,7 +12,7 @@ import ModifyBudgetModal from 'components/assetsCom/modifyBudget';
 import { BudgetType } from 'type/project.type';
 import { ContainerPadding } from 'assets/styles/global';
 import BalanceIcon from 'assets/Imgs/vault/balance.png';
-import EthImg from 'assets/Imgs/network/ethereum.svg';
+import EthImg from 'assets/Imgs/network/ethereumWhite.jpg';
 import PolygonImg from 'assets/Imgs/network/polygonWhite.jpg';
 import getConfig from 'utils/envCofnig';
 import useCurrentSeason from 'hooks/useCurrentSeason';
@@ -94,7 +94,7 @@ const getChainIcon = (chainId: number) => {
     case 1:
       return <img src={EthImg} alt="" />;
     case 137:
-      return <img src={PolygonImg} alt="" style={{ width: '16px' }} />;
+      return <img src={PolygonImg} alt="" />;
     default:
       return '';
   }
@@ -535,7 +535,7 @@ const Tag = styled.div`
     margin-left: 5px;
   }
   img {
-    width: 18px;
+    width: 16px;
   }
 `;
 
