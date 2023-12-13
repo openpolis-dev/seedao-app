@@ -34,6 +34,7 @@ export default function LoginModal({ showModal }: any) {
 
   const walletconnect_provider = useEthersProvider({ chainId: chain });
   const isInstalled = useCheckInstallPWA();
+  const [handledProvider, setHandledProvider] = useState(false);
 
   const chooseRPC = async () => {
     const _rpc = await publicJs.checkRPCavailable(network.rpcs, {
@@ -45,15 +46,32 @@ export default function LoginModal({ showModal }: any) {
   };
 
   const handleUnipassProvider = async () => {
-    await upProvider.connect();
-    const providerUnipass = new ethers.providers.Web3Provider(upProvider, 'any');
-    dispatch({ type: AppActionType.SET_PROVIDER, payload: providerUnipass });
+    if (handledProvider) {
+      return;
+    }
+    setHandledProvider(true);
+    try {
+      await upProvider.connect();
+      const providerUnipass = new ethers.providers.Web3Provider(upProvider, 'any');
+      dispatch({ type: AppActionType.SET_PROVIDER, payload: providerUnipass });
+    } catch (error) {
+      setHandledProvider(false);
+    }
   };
 
   const handleJoyidProvider = async () => {
-    const _rpc = await chooseRPC();
-    const provider = new ethers.providers.JsonRpcProvider(_rpc, network);
-    dispatch({ type: AppActionType.SET_PROVIDER, payload: provider });
+    if (handledProvider) {
+      return;
+    }
+    setHandledProvider(true);
+    try {
+      const _rpc = await chooseRPC();
+      const provider = new ethers.providers.JsonRpcProvider(_rpc, network);
+      dispatch({ type: AppActionType.SET_PROVIDER, payload: provider });
+    } catch (error) {
+      const provider = new ethers.providers.JsonRpcProvider(network.rpcs[0], network);
+      dispatch({ type: AppActionType.SET_PROVIDER, payload: provider });
+    } 
   };
 
   const handleProvider = (checkProvider = true) => {

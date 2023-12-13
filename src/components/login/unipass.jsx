@@ -8,7 +8,7 @@ import requests from "../../requests";
 import { AppActionType, useAuthContext } from "../../providers/authProvider";
 import { Authorizer } from "casbin.js";
 import { readPermissionUrl } from "../../requests/user";
-import { WalletType } from "../../wallet/wallet";
+import { WalletType, Wallet } from '../../wallet/wallet';
 import { SELECT_WALLET } from "../../utils/constant";
 import { clearStorage } from "../../utils/auth";
 
@@ -67,7 +67,7 @@ export default function UniPass(){
 
     const getP = async() =>{
         try{
-            localStorage.setItem(SELECT_WALLET, 'UNIPASS');
+            localStorage.setItem(SELECT_WALLET, Wallet.UNIPASS);
             await upProvider.disconnect();
             await upProvider.connect();
             const provider = new ethers.providers.Web3Provider(upProvider, "any");

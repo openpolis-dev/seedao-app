@@ -105,11 +105,11 @@ export default function Header() {
     if (selectWallet) {
       switch (selectWallet) {
         case Wallet.METAMASK:
+        case Wallet.JOYID:
+        case Wallet.JOYID_WEB:
           wallet_type = WalletType.EOA;
           break;
         case Wallet.UNIPASS:
-        case Wallet.JOYID:
-        case Wallet.JOYID_WEB:
           wallet_type = WalletType.AA;
           break;
       }
