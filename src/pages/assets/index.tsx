@@ -12,8 +12,8 @@ import ModifyBudgetModal from 'components/assetsCom/modifyBudget';
 import { BudgetType } from 'type/project.type';
 import { ContainerPadding } from 'assets/styles/global';
 import BalanceIcon from 'assets/Imgs/vault/balance.png';
-import EthImg from 'assets/Imgs/vault/ethereum.svg';
-import PolygonImg from 'assets/Imgs/vault/polygon.svg';
+import EthImg from 'assets/Imgs/network/ethereum.svg';
+import PolygonImg from 'assets/Imgs/network/polygonWhite.jpg';
 import getConfig from 'utils/envCofnig';
 import useCurrentSeason from 'hooks/useCurrentSeason';
 import { getVaultBalance, IVaultBalance } from 'requests/publicData';
@@ -533,6 +533,9 @@ const Tag = styled.div`
   margin-left: 15px;
   span {
     margin-left: 5px;
+  }
+  img {
+    width: 18px;
   }
 `;
 

@@ -1,5 +1,5 @@
-import EthereumIcon from 'assets/Imgs/network/ethereum.png';
-import PolygonIcon from 'assets/Imgs/vault/polygon.svg';
+import EthereumIcon from 'assets/Imgs/network/ethereum.svg';
+import PolygonIcon from 'assets/Imgs/network/polygon.svg';
 
 const VERSION = '0.2.4';
 
