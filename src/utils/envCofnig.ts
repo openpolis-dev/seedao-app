@@ -37,6 +37,7 @@ const LOCAL = {
         price: 1,
       },
     ],
+    whitelistId: 1,
   },
   INDEXER_ENDPOINT: 'https://test-spp-indexer.seedao.tech',
 };
