@@ -63,6 +63,24 @@ const getImage = async (img: string) => {
     }
   }
 };
+const getSeedUrl = async (img: string) => {
+  if (!img) return;
+  if (img.indexOf('http://') > -1 || img.indexOf('https://') > -1) {
+    return img;
+  } else {
+    let str = img;
+    if (img.indexOf('ipfs://') > -1) {
+      str = img.split('ipfs://')[1];
+    }
+    return `http://ipfs-proxy-bkt.s3-website-ap-northeast-1.amazonaws.com/${str}`;
+    // try {
+    //   let imgAA = await agumentedIpfsGet(str);
+    //   return imgAA;
+    // } catch (e) {
+    //   return Promise.reject(e);
+    // }
+  }
+};
 
 const filterTags = (html: string) => {
   const decodedStr = html.replace(/&#(\d+);/g, function (match, dec) {
@@ -107,4 +125,4 @@ const checkRPCavailable = (rpc_list: string[], network: { chainId: number; name:
   });
 };
 
-export default { AddressToShow, getImage, filterTags, checkRPCavailable };
+export default { AddressToShow, getImage, filterTags, checkRPCavailable, getSeedUrl };
