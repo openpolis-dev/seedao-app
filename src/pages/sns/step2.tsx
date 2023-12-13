@@ -96,10 +96,6 @@ export default function RegisterSNSStep2() {
   };
 
   useEffect(() => {
-    const checkIfInWhite = () => {};
-  }, []);
-
-  useEffect(() => {
     if (!account || !localData || !provider) {
       return;
     }
