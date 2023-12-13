@@ -72,7 +72,8 @@ const getSeedUrl = async (img: string) => {
     if (img.indexOf('ipfs://') > -1) {
       str = img.split('ipfs://')[1];
     }
-    return `http://ipfs-proxy-bkt.s3-website-ap-northeast-1.amazonaws.com/${str}`;
+    // return `http://ipfs-proxy-bkt.s3-website-ap-northeast-1.amazonaws.com/${str}`;
+    return `https://nftcdn.seedao.tech/${str}`;
     // try {
     //   let imgAA = await agumentedIpfsGet(str);
     //   return imgAA;
