@@ -146,12 +146,18 @@ export default function useTransaction() {
     const not_enough = approve_balance.lt(ethers.utils.parseUnits(String(PAY_NUMBER), PAY_TOKEN.decimals));
     if (wallet === Wallet.JOYID_WEB) {
       if (not_enough) {
-        await sendTransaction({
-          to: PAY_TOKEN.address,
-          from: account,
-          value: '0',
-          data: buildApproveData(),
-        });
+        await sendTransaction(
+          {
+            to: PAY_TOKEN.address,
+            from: account,
+            value: '0',
+            data: buildApproveData(),
+          },
+          account,
+          {
+            rpcURL: rpc || networkConfig.rpcs[0],
+          },
+        );
       }
     } else {
       if (not_enough) {
