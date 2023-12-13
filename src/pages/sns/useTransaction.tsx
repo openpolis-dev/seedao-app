@@ -11,7 +11,7 @@ import { erc20ABI } from 'wagmi';
 import getConfig from 'utils/envCofnig';
 const networkConfig = getConfig().NETWORK;
 const PAY_TOKEN = networkConfig.tokens[0];
-const PAY_NUMBER = 5;
+const PAY_NUMBER = PAY_TOKEN.price;
 
 export enum TX_ACTION {
   COMMIT = 'commit',

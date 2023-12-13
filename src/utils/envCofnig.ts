@@ -1,5 +1,5 @@
 import EthereumIcon from 'assets/Imgs/network/ethereum.png';
-import { builtin } from '@seedao/sns-js';
+import PolygonIcon from 'assets/Imgs/vault/polygon.svg';
 
 const VERSION = '0.2.4';
 
@@ -14,21 +14,27 @@ const LOCAL = {
   REACT_APP_APP_VERSION: `A ${VERSION}`,
   REACT_APP_THEME_ENABLE: true,
   DESCHOOL_BASE_API: 'https://deschool.app/goapiDevelopment',
-  JOY_ID_URL: 'https://testnet.joyid.dev',
+  JOY_ID_URL: 'https://app.joy.id',
   NETWORK: {
-    name: 'Goerli',
-    chainId: 5,
+    name: 'Polygon',
+    chainId: 137,
+    // rpcs: [
+    //   "https://eth-goerli.g.alchemy.com/v2/MATWeLJN1bEGTjSmtyLedn0i34o1ISLD",
+    //   "https://rpc.ankr.com/eth_goerli",
+    //   "https://endpoints.omniatech.io/v1/eth/goerli/public",
+    // ],
     rpcs: [
-      'https://eth-goerli.g.alchemy.com/v2/MATWeLJN1bEGTjSmtyLedn0i34o1ISLD',
-      'https://rpc.ankr.com/eth_goerli',
-      'https://endpoints.omniatech.io/v1/eth/goerli/public',
+      'https://polygon-mainnet.g.alchemy.com/v2/-MLinGy2l91vLVZWXmRfNYf9DavMxaEA',
+      'https://polygon-pokt.nodies.app',
+      'https://polygon.llamarpc.com',
     ],
-    icon: EthereumIcon,
+    icon: PolygonIcon,
     tokens: [
       {
-        address: '0xC2C527C0CACF457746Bd31B2a698Fe89de2b6d49',
+        address: '0xc2132D05D31c914a87C6611C10748AEb04B58e8F',
         name: 'USDT',
         decimals: 6,
+        price: 1,
       },
     ],
   },

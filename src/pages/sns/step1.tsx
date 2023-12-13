@@ -21,6 +21,9 @@ import { Wallet } from '../../wallet/wallet';
 import { clearStorage } from 'utils/auth';
 
 import useTransaction, { TX_ACTION } from './useTransaction';
+import getConfig from 'utils/envCofnig';
+const networkConfig = getConfig().NETWORK;
+const PAY_NUMBER = networkConfig.tokens[0].price;
 
 enum AvailableStatus {
   DEFAULT = 'default',
@@ -227,7 +230,7 @@ export default function RegisterSNSStep1() {
           disabled={isPending || availableStatus !== AvailableStatus.OK}
           onClick={handleMint}
         >
-          {user_proof ? t('SNS.FreeMint') : t('SNS.SpentMint', { money: '5 USDT' })}
+          {user_proof ? t('SNS.FreeMint') : t('SNS.SpentMint', { money: `${PAY_NUMBER} USDT` })}
         </MintButton>
       );
     }
