@@ -92,9 +92,9 @@ const SCR_PRICE = 0.03;
 const getChainIcon = (chainId: number) => {
   switch (chainId) {
     case 1:
-      return EthImg;
+      return <img src={EthImg} alt="" />;
     case 137:
-      return PolygonImg;
+      return <img src={PolygonImg} alt="" style={{ width: '16px' }} />;
     default:
       return '';
   }
@@ -294,7 +294,7 @@ export default function Index() {
                         >
                           <div className="tag">
                             <Tag>
-                              <img src={getChainIcon(v.chainId)} alt="" />
+                              {getChainIcon(v.chainId)}
                               <span>
                                 {v.threshold}/{v.owners}
                               </span>
