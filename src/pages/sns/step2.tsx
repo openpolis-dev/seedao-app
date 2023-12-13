@@ -134,6 +134,7 @@ export default function RegisterSNSStep2() {
 
   const handleCancel = () => {
     setShowCancelModal(false);
+    localStorage.removeItem('sns');
     dispatchSNS({ type: ACTIONS.SET_STEP, payload: 1 });
     dispatchSNS({ type: ACTIONS.SET_LOCAL_DATA, payload: undefined });
   };
