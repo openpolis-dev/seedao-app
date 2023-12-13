@@ -55,7 +55,7 @@ export default function RegisterSNSStep2() {
       setLeftTime(60 - delta);
     };
     timerFunc();
-    timer = setInterval(timerFunc, 1000);
+    timer = setInterval(timerFunc, 2000);
     return () => clearInterval(timer);
   }, []);
 
