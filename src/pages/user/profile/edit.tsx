@@ -200,9 +200,10 @@ export default function Profile() {
         dispatch({ type: AppActionType.SET_LOADING, payload: false });
         window.location.reload();
       }, 1000);
-    } catch (error) {
+    } catch (error: any) {
       console.error('updateUser failed', error);
-      showToast(t('My.ModifiedFailed'), ToastType.Danger);
+      const msg = error?.data?.msg || error;
+      showToast(msg, ToastType.Danger);
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }
   };
