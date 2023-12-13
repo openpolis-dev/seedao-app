@@ -71,7 +71,7 @@ export default function RegisterSNSStep2() {
 
       let txHash: string = '';
       if (user_proof) {
-        txHash = await handleTransaction(TX_ACTION.WHITE_MINT, { sns, secret, whitelistId: 0, proof: user_proof });
+        txHash = await handleTransaction(TX_ACTION.WHITE_MINT, { sns, secret, proof: user_proof });
       } else {
         // approve
         await approveToken();

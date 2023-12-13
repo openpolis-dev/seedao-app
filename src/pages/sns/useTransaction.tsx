@@ -37,13 +37,13 @@ const buildRegisterData = (sns: string, secret: string) => {
   return iface.encodeFunctionData('register', [sns, builtin.PUBLIC_RESOLVER_ADDR, secret, PAY_TOKEN.address]);
 };
 
-const buildWhitelistRegisterData = (sns: string, secret: string, whitelistId: number, proof: string) => {
+const buildWhitelistRegisterData = (sns: string, secret: string, proof: string) => {
   const iface = new ethers.utils.Interface(REGISTER_ABI);
   return iface.encodeFunctionData('registerWithWhitelist', [
     sns,
     builtin.PUBLIC_RESOLVER_ADDR,
     secret,
-    whitelistId,
+    networkConfig.whitelistId,
     proof,
   ]);
 };
@@ -101,14 +101,14 @@ export default function useTransaction() {
     }
   };
 
-  const handleFreeMint = async (wallet: Wallet, sns: string, secret: string, whitelistId: number, proof: string) => {
+  const handleFreeMint = async (wallet: Wallet, sns: string, secret: string, proof: string) => {
     if (wallet === Wallet.JOYID_WEB) {
       return await sendTransaction(
         {
           to: builtin.SEEDAO_MINTER_ADDR,
           from: account,
           value: '0',
-          data: buildWhitelistRegisterData(sns, ethers.utils.formatBytes32String(secret), whitelistId, proof),
+          data: buildWhitelistRegisterData(sns, ethers.utils.formatBytes32String(secret), proof),
         },
         account,
         {
@@ -120,7 +120,6 @@ export default function useTransaction() {
         sns,
         builtin.PUBLIC_RESOLVER_ADDR,
         ethers.utils.formatBytes32String(secret),
-        whitelistId,
         proof,
       );
       return tx?.hash;
@@ -134,7 +133,7 @@ export default function useTransaction() {
     } else if (action === TX_ACTION.PAY_MINT) {
       return handleRegister(wallet as Wallet, data.sns, data.secret);
     } else if (action === TX_ACTION.WHITE_MINT) {
-      return handleFreeMint(wallet as Wallet, data.sns, data.secret, data.whitelistId, data.proof);
+      return handleFreeMint(wallet as Wallet, data.sns, data.secret, data.proof);
     }
   };
 
