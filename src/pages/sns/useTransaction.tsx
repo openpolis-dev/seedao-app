@@ -81,12 +81,21 @@ export default function useTransaction() {
 
   const handleRegister = async (wallet: Wallet, sns: string, secret: string) => {
     if (wallet === Wallet.JOYID_WEB) {
-      return await sendTransaction({
-        to: builtin.SEEDAO_MINTER_ADDR,
-        from: account,
-        value: '0',
-        data: buildRegisterData(sns, ethers.utils.formatBytes32String(secret)),
-      });
+      return await sendTransaction(
+        {
+          to: builtin.SEEDAO_MINTER_ADDR,
+          from: account,
+          value: '0',
+          data: buildRegisterData(sns, ethers.utils.formatBytes32String(secret)),
+        },
+        account,
+        {
+          network: {
+            name: networkConfig.name,
+            chainId: networkConfig.chainId,
+          },
+        },
+      );
     } else {
       const tx = await minterContract.register(
         sns,
