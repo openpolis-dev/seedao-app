@@ -97,7 +97,7 @@ export default function RouterLink() {
           {/* SNS */}
           <Route path="/sns" element={<SNSEntrancePage />} />
           <Route path="/sns/register" element={<RegisterSNS />} />
-          <Route path="/sns/user" element={<UserSNS />} />
+          {/* <Route path="/sns/user" element={<UserSNS />} /> */}
           {/* deschool */}
           {/* <Route path="/onboarding/learn" element={<LearnCourse />} />
           <Route path="/onboarding/done" element={<Onboarding />} /> */}

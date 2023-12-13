@@ -259,10 +259,10 @@ export default function RegisterSNSStep1() {
         <Tip>{t('SNS.InputTip')}</Tip>
         <OperateBox>{showButton()}</OperateBox>
       </ContainerWrapper>
-      <UserEntrance onClick={handleGoUserSNS}>
+      {/* <UserEntrance onClick={handleGoUserSNS}>
         <UserSVGIcon />
         <span>{t('SNS.MySNS')}</span>
-      </UserEntrance>
+      </UserEntrance> */}
     </Container>
   );
 }
