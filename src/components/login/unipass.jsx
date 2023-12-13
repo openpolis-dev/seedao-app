@@ -43,7 +43,7 @@ const WalletOption = styled.li`
 export const upProvider = new UniPassProvider({
   chainId: networkConfig.chainId,
   returnEmail: false,
-  appSetting: {
+  appSettings: {
     appName: 'SeeDAO',
     appIcon: `${window.location.origin}/icon192.png`,
   },
