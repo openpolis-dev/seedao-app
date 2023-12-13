@@ -58,12 +58,21 @@ export default function useTransaction() {
 
   const handleCommit = async (wallet: Wallet, commitment: string) => {
     if (wallet === Wallet.JOYID_WEB) {
-      return await sendTransaction({
-        to: builtin.SEEDAO_REGISTRAR_CONTROLLER_ADDR,
-        from: account,
-        value: '0',
-        data: buildCommitData(commitment),
-      });
+      return await sendTransaction(
+        {
+          to: builtin.SEEDAO_REGISTRAR_CONTROLLER_ADDR,
+          from: account,
+          value: '0',
+          data: buildCommitData(commitment),
+        },
+        account,
+        {
+          network: {
+            name: networkConfig.name,
+            chainId: networkConfig.chainId,
+          },
+        },
+      );
     } else {
       const tx = await controllerContract.commit(commitment);
       return tx?.hash;
@@ -91,12 +100,21 @@ export default function useTransaction() {
 
   const handleFreeMint = async (wallet: Wallet, sns: string, secret: string, whitelistId: number, proof: string) => {
     if (wallet === Wallet.JOYID_WEB) {
-      return await sendTransaction({
-        to: builtin.SEEDAO_MINTER_ADDR,
-        from: account,
-        value: '0',
-        data: buildWhitelistRegisterData(sns, ethers.utils.formatBytes32String(secret), whitelistId, proof),
-      });
+      return await sendTransaction(
+        {
+          to: builtin.SEEDAO_MINTER_ADDR,
+          from: account,
+          value: '0',
+          data: buildWhitelistRegisterData(sns, ethers.utils.formatBytes32String(secret), whitelistId, proof),
+        },
+        account,
+        {
+          network: {
+            name: networkConfig.name,
+            chainId: networkConfig.chainId,
+          },
+        },
+      );
     } else {
       const tx = await minterContract.registerWithWhitelist(
         sns,
