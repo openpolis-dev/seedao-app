@@ -241,7 +241,9 @@ const LeftAssets = styled.div`
   gap: 10px;
   display: flex;
   align-items: center;
+  justify-content: center;
   font-size: 14px;
+  margin-top: 30px;
   svg {
     margin-right: -2px;
   }
