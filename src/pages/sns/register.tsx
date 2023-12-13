@@ -63,7 +63,7 @@ const RegisterSNSWrapper = () => {
         .then((n: ethers.BigNumber) => {
           dispatchSNS({ type: ACTIONS.SET_MAX_OWNED_NUMBER, payload: n.toNumber() });
         })
-        .then((error: any) => {
+        .catch((error: any) => {
           console.error('checkMaxOwnedNumber failed', error);
         });
     };
@@ -88,7 +88,7 @@ const RegisterSNSWrapper = () => {
     };
     const checkHadMintByWhitelist = async () => {
       minterContract
-        .registeredWithWhitelist()
+        .registeredWithWhitelist(account)
         .then((r: boolean) => {
           dispatchSNS({ type: ACTIONS.SET_HAD_MINT_BY_WHITELIST, payload: r });
         })
@@ -128,7 +128,6 @@ const RegisterSNSWrapper = () => {
           return;
         }
       }
-      console.log('signer', provider.getSigner(account));
       const _controller_contract = new ethers.Contract(
         builtin.SEEDAO_REGISTRAR_CONTROLLER_ADDR,
         CONTROLLER_ABI,
@@ -142,8 +141,6 @@ const RegisterSNSWrapper = () => {
   }, [provider, provider?.getNetwork]);
 
   useEffect(() => {
-    console.log('account', account);
-    console.log('localData', localData);
     if (!localData) {
       const localsns = localStorage.getItem('sns') || '';
       let data: LocalSNS;

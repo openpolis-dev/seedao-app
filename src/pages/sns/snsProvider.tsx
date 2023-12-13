@@ -40,7 +40,7 @@ interface IState {
   hasReached?: boolean;
   user_proof?: string[];
   hadMintByWhitelist?: boolean;
-  whitelistNotOpen?: boolean;
+  whitelistIsOpen?: boolean;
   maxOwnedNumber: number;
 }
 interface IAction {
@@ -86,7 +86,7 @@ const reducer = (state: IState, action: IAction): IState => {
     case ACTIONS.SET_HAD_MINT_BY_WHITELIST:
       return { ...state, hadMintByWhitelist: action.payload };
     case ACTIONS.SET_WHITELIST_IS_OPEN:
-      return { ...state, whitelistNotOpen: action.payload };
+      return { ...state, whitelistIsOpen: action.payload };
     case ACTIONS.SET_MAX_OWNED_NUMBER:
       return { ...state, maxOwnedNumber: action.payload };
     default:
