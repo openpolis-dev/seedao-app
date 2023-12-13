@@ -521,6 +521,7 @@
     "Available": "Available",
     "Uavailable": "Unavailable",
     "FreeMint": "Free mint",
+    "FreeMintNotOpen": "Free mint not open",
     "SpentMint": "{{money}} mint",
     "TimerTitle": "Almost here",
     "TimerDesc": "This timer helps prevent others from registering the name before you do. Your name is not registered until you’ve completed the second transaction.",
@@ -535,7 +536,7 @@
     "InputTip": "*Please input 4-15 numbers(0-9)、lower letter(a-z) or special( ! $ ( ) * + - _ )",
     "Switch": "Switch",
     "MySNS": "My SNS",
-    "HadSNS": "Already have SNS",
+    "HadSNS": "Your SNS reached the limit",
     "Helper": "Ask for help",
     "CancelRegister": "Cancel registration",
     "CancelTip": "Cancel means you'll start to register from step one"

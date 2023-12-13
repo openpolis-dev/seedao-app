@@ -25,6 +25,9 @@ export enum ACTIONS {
   SET_STORAGE = 'set_storage',
   SET_HAS_REACHED = 'set_has_reached',
   SET_USER_PROOF = 'set_user_proof',
+  SET_HAD_MINT_BY_WHITELIST = 'set_had_mint_by_whitelist',
+  SET_WHITELIST_IS_OPEN = 'set_whitelist_is_open',
+  SET_MAX_OWNED_NUMBER = 'set_max_owned_number',
 }
 
 interface IState {
@@ -36,13 +39,16 @@ interface IState {
   sns: string;
   hasReached?: boolean;
   user_proof?: string[];
+  hadMintByWhitelist?: boolean;
+  whitelistNotOpen?: boolean;
+  maxOwnedNumber: number;
 }
 interface IAction {
   type: ACTIONS;
   payload?: any;
 }
 
-const INIT_STATE: IState = { step: 0, sns: '' };
+const INIT_STATE: IState = { step: 0, sns: '', maxOwnedNumber: 1 };
 
 const SNSContext = createContext<{
   state: IState;
@@ -77,6 +83,12 @@ const reducer = (state: IState, action: IAction): IState => {
       return { ...state, hasReached: action.payload };
     case ACTIONS.SET_USER_PROOF:
       return { ...state, user_proof: action.payload };
+    case ACTIONS.SET_HAD_MINT_BY_WHITELIST:
+      return { ...state, hadMintByWhitelist: action.payload };
+    case ACTIONS.SET_WHITELIST_IS_OPEN:
+      return { ...state, whitelistNotOpen: action.payload };
+    case ACTIONS.SET_MAX_OWNED_NUMBER:
+      return { ...state, maxOwnedNumber: action.payload };
     default:
       throw new Error(`Unknown type: ${action.type}`);
   }

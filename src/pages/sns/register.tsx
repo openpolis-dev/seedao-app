@@ -31,7 +31,7 @@ const RegisterSNSWrapper = () => {
   } = useAuthContext();
 
   const {
-    state: { step, localData, loading, controllerContract },
+    state: { step, localData, loading, controllerContract, minterContract },
     dispatch: dispatchSNS,
   } = useSNSContext();
 
@@ -57,11 +57,50 @@ const RegisterSNSWrapper = () => {
         console.error('checkUserInwhitelist failed', error);
       }
     };
+    const checkMaxOwnedNumber = () => {
+      controllerContract
+        .maxOwnedNumber()
+        .then((n: ethers.BigNumber) => {
+          dispatchSNS({ type: ACTIONS.SET_MAX_OWNED_NUMBER, payload: n.toNumber() });
+        })
+        .then((error: any) => {
+          console.error('checkMaxOwnedNumber failed', error);
+        });
+    };
     if (account && controllerContract) {
       checkUserStatus();
       checkUserInwhitelist();
+      checkMaxOwnedNumber();
     }
   }, [account, controllerContract]);
+
+  useEffect(() => {
+    const checkWhitelistOpen = async () => {
+      minterContract
+        .registrableWithWhitelist()
+        .then((r: boolean) => {
+          dispatchSNS({ type: ACTIONS.SET_WHITELIST_IS_OPEN, payload: r });
+        })
+        .catch((error: any) => {
+          dispatchSNS({ type: ACTIONS.SET_WHITELIST_IS_OPEN, payload: true });
+          console.error('checkWhitelistOpen failed', error);
+        });
+    };
+    const checkHadMintByWhitelist = async () => {
+      minterContract
+        .registeredWithWhitelist()
+        .then((r: boolean) => {
+          dispatchSNS({ type: ACTIONS.SET_HAD_MINT_BY_WHITELIST, payload: r });
+        })
+        .catch((error: any) => {
+          console.error('checkWhitelistOpen failed', error);
+        });
+    };
+    if (account && minterContract) {
+      checkWhitelistOpen();
+      checkHadMintByWhitelist();
+    }
+  }, [account, minterContract]);
 
   useEffect(() => {
     if (account && controllerContract && step === 3) {

@@ -15,7 +15,7 @@ export default function RegisterSNSStep2() {
     state: { account, provider, theme },
   } = useAuthContext();
   const {
-    state: { localData, sns, user_proof },
+    state: { localData, sns, user_proof, hadMintByWhitelist },
     dispatch: dispatchSNS,
   } = useSNSContext();
   const { showToast } = useToast();
@@ -70,7 +70,7 @@ export default function RegisterSNSStep2() {
       const d = { ...localData };
 
       let txHash: string = '';
-      if (user_proof) {
+      if (user_proof && !hadMintByWhitelist) {
         txHash = await handleTransaction(TX_ACTION.WHITE_MINT, { sns, secret, proof: user_proof });
       } else {
         // approve

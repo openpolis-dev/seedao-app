@@ -40,6 +40,7 @@ export default function RegisterSNSStep1() {
   const [isPending, setPending] = useState(false);
   const [availableStatus, setAvailable] = useState(AvailableStatus.DEFAULT);
   const [randomSecret, setRandomSecret] = useState<string>('');
+  const [whitelistOpen, setWhitelistOpen] = useState(false);
 
   const {
     dispatch,
@@ -48,7 +49,7 @@ export default function RegisterSNSStep1() {
 
   const {
     dispatch: dispatchSNS,
-    state: { controllerContract, localData, hasReached, user_proof },
+    state: { controllerContract, localData, hasReached, user_proof, hadMintByWhitelist, whitelistNotOpen },
   } = useSNSContext();
 
   const { handleTransaction, approveToken } = useTransaction();
@@ -224,13 +225,22 @@ export default function RegisterSNSStep1() {
         </MintButton>
       );
     } else {
+      if (user_proof && !hadMintByWhitelist) {
+        if (whitelistNotOpen) {
+          return (
+            <MintButton variant="primary" disabled={true}>
+              {t('SNS.FreeMintNotOpen')}
+            </MintButton>
+          );
+        }
+      }
       return (
         <MintButton
           variant="primary"
           disabled={isPending || availableStatus !== AvailableStatus.OK}
           onClick={handleMint}
         >
-          {user_proof ? t('SNS.FreeMint') : t('SNS.SpentMint', { money: `${PAY_NUMBER} USDT` })}
+          {user_proof && !hadMintByWhitelist ? t('SNS.FreeMint') : t('SNS.SpentMint', { money: `${PAY_NUMBER} USDT` })}
         </MintButton>
       );
     }

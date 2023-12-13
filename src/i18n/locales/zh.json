@@ -521,6 +521,7 @@
     "Available": "可注册",
     "Uavailable": "不可用",
     "FreeMint": "免费 mint",
+    "FreeMintNotOpen": "免费 mint 未开启",
     "SpentMint": "{{money}} mint",
     "TimerTitle": "快要完成了",
     "TimerDesc": "等待是为帮助你避免SNS名字被抢注，完成第二笔交易才能最终获得SNS。",
@@ -535,10 +536,10 @@
     "InputTip": "*请输入4-15位数字（0～9）、小写字母（a～z）或特殊字符（ ! $ ( ) * + - _ ）",
     "Switch": "切换",
     "MySNS": "我的 SNS",
-    "HadSNS": "已拥有SNS",
+    "HadSNS": "您的 SNS 已达上限",
     "Helper": "帮助",
-    "CancelRegister": "放弃注册",
-    "CancelTip": "放弃后，注册流程将从第一步开始"
+    "CancelRegister": "取消注册",
+    "CancelTip": "取消后，注册流程将从第一步开始"
   },
   "Governance": {
     "GovernanceRule": "治理规则",
