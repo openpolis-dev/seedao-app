@@ -1,24 +1,50 @@
 {
-  "rootHash": "0x1dd5dc073424c27b3e790b945cbc2c01e610a0ea260b280ca34ef4ff6d578248",
+  "rootHash": "0x58ab442a084f72c0aae68a6c88fc6e6d54821fa1b973c85d7733fa06f588c220",
   "proofs": [
     {
-      "address": "0xb7Ee50e775f943eCC4F5F178eF6A076AeF65a7CA",
+      "address": "0xEBAEf7C0F5Bd0fa3E15D188a7545FcEdA76609C7",
       "proof": [
-        "0x06d46f2c4c953a97e87e64504842d192c52a40730e4b61d38e270656c257a603"
+        "0x59cf9b4884757353ab9dfff80986b328078047ba76d890d773fdb2a631474edf",
+        "0xcdbc90b423bf4a6fd88473563fc59b33b32716ed7112cc7be5ef80b5b23a9032",
+        "0xe131e89d80bde779e551e08b86baabd95a4d29302a6ea490b7d05cd5af188b2c"
       ]
     },
     {
-      "address": "0x43d2e5Bf680b90587c45F323C9aD0a8C56630F65",
+      "address": "0xFb8cDd6BD47484b8bF969cA66A791280A89aF3Bb",
       "proof": [
-        "0x816d87fa3e4ffffc8101e2ddf8519b4ecfea6e87aff1a2ef5b4aea99d6e7a0ee",
-        "0xd2569bb65538676720fec0e5bfe7d2f40df9b9d8c3949e4c41e7c1fb509bac78"
+        "0x1cb568f8e7fd43783276b07c2fbc4a188f34970b0a8836c85b37c749dec10a4b",
+        "0x9bdb24a5ba411fab5298f85c08d23072571627a4d891c70e0872723fdcd3b402",
+        "0xe131e89d80bde779e551e08b86baabd95a4d29302a6ea490b7d05cd5af188b2c"
       ]
     },
     {
-      "address": "0x868De05cddb6Bc1F9bFC2677b53dC3ce1040Df9F",
+      "address": "0xEe3d9DeFdD97560c56402b3467869f293bfa35dC",
       "proof": [
-        "0xcfc8205cfeb91e9f0a3f7087d5d47eae9d13788d7d654100a5d28410907600e6",
-        "0xd2569bb65538676720fec0e5bfe7d2f40df9b9d8c3949e4c41e7c1fb509bac78"
+        "0xe58792a5a247e0c835c821592fb27eea45db76d4533652654a5e9f57301ed0cd",
+        "0x23fe8e0f64d6a7284df595e34da81a3e4d3baf65837fc23f7dee78d63dd3221a"
+      ]
+    },
+    {
+      "address": "0x8EE514cD859ee6Fe71638bA7Ed804631f93DA699",
+      "proof": [
+        "0xeacc4dd4a7ea4e7ca068d4e27bebb71866cc9ec03a00048cfb30cdfa2d087263",
+        "0x23fe8e0f64d6a7284df595e34da81a3e4d3baf65837fc23f7dee78d63dd3221a"
+      ]
+    },
+    {
+      "address": "0xB692Cd916277E1cf3B72dfbCcFca0319eBee6d9d",
+      "proof": [
+        "0x2507905f32368e9afcbb87afa6f6e19aab428b4f71140439bbe3f4e9fff126db",
+        "0x9bdb24a5ba411fab5298f85c08d23072571627a4d891c70e0872723fdcd3b402",
+        "0xe131e89d80bde779e551e08b86baabd95a4d29302a6ea490b7d05cd5af188b2c"
+      ]
+    },
+    {
+      "address": "0x513914639A737058d0D89f80aCDfAbAd974262A9",
+      "proof": [
+        "0x8a6c087d08426319766914c150092cacd27b24eb2b98081f1bcda6185505f44e",
+        "0xcdbc90b423bf4a6fd88473563fc59b33b32716ed7112cc7be5ef80b5b23a9032",
+        "0xe131e89d80bde779e551e08b86baabd95a4d29302a6ea490b7d05cd5af188b2c"
       ]
     }
   ]
