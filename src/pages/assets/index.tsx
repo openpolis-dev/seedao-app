@@ -18,6 +18,7 @@ import getConfig from 'utils/envCofnig';
 import useCurrentSeason from 'hooks/useCurrentSeason';
 import { getVaultBalance, IVaultBalance } from 'requests/publicData';
 
+
 const BoxOuter = styled.div`
   ${ContainerPadding};
   color: var(--bs-body-color_active);
