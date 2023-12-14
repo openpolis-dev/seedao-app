@@ -536,7 +536,7 @@
     "InputTip": "*Please input 4-15 numbers(0-9)、lower letter(a-z) or special( ! $ ( ) * + - _ )",
     "Switch": "Switch",
     "MySNS": "My SNS",
-    "HadSNS": "Your SNS reached the limit",
+    "HadSNS": "Your SNS has reached the limit",
     "Helper": "Ask for help",
     "CancelRegister": "Cancel registration",
     "CancelTip": "Cancel means you'll start to register from step one"
