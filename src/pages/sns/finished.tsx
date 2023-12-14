@@ -76,12 +76,13 @@ const ContainerBottom = styled.div`
 `;
 
 const LinkBox = styled.div`
-  width: 160px;
+  width: 180px;
   height: 50px;
   background-color: #fff;
   color: #000;
   border-radius: 8px;
   line-height: 50px;
+  font-size: 14px;
 `;
 
 const HomeLink = styled(Link)``;
