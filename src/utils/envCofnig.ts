@@ -34,10 +34,10 @@ const LOCAL = {
         address: '0xc2132D05D31c914a87C6611C10748AEb04B58e8F',
         name: 'USDT',
         decimals: 6,
-        price: 1,
+        price: 5,
       },
     ],
-    whitelistId: 2,
+    whitelistId: 0,
   },
   INDEXER_ENDPOINT: 'https://test-spp-indexer.seedao.tech',
 };
