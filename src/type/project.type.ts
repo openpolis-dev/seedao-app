@@ -41,13 +41,13 @@ export interface IBaseProject {
   sponsors: string[];
   members: string[];
   proposals: string[];
-  budgets: IBaseBudgetItem[];
+  budgets?: IBaseBudgetItem[];
   desc: string;
   intro: string;
 }
 
 export interface ReTurnProject {
-  created_at: string;
+  create_ts: number;
   id: number;
   logo: string;
   desc: string;

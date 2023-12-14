@@ -6,10 +6,10 @@ export const getUTC = () => {
 };
 
 export const formatTime = (time: number, formatter?: '-' | '.') => {
-  if (formatter === '-') {
-    return dayjs(time).format('YYYY-MM-DD HH:mm');
-  }
-  return dayjs(time).format('YYYY.MM.DD HH:mm');
+  if (!time) return '';
+  const f = formatter || '-';
+
+  return dayjs(time).format(`YYYY${f}MM${f}DD HH:mm`);
 };
 
 export const formatLeftTime = (targetTime: number) => {

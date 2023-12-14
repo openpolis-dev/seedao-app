@@ -44,6 +44,9 @@ const SelectStyle = styled<any>(Select)`
   .react-select__menu {
     padding: 0;
   }
+  .react-select__placeholder {
+    color: var(--bs-body-color);
+  }
   .react-select__menu,
   .react-select__option--is-selected {
     font-size: 14px;

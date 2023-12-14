@@ -38,7 +38,7 @@ export default function EditProject({ detail }: { detail: ReTurnProject | undefi
       setDesc(detail.desc);
       setUrl(detail.logo);
       setIntro(detail.intro);
-      setProList(detail.proposals.map((item) => `https://forum.seedao.xyz/thread/${item}`));
+      setProList(detail?.proposals?.map((item) => `https://forum.seedao.xyz/thread/${item}`));
     }
   }, [detail]);
 
@@ -88,8 +88,9 @@ export default function EditProject({ detail }: { detail: ReTurnProject | undefi
     const slugs: string[] = [];
     for (const l of proList) {
       if (l) {
-        if (l.startsWith('https://forum.seedao.xyz/thread/sip-')) {
-          const items = l.split('/').reverse();
+        const _l = l.trim().toLocaleLowerCase();
+        if (_l.startsWith('https://forum.seedao.xyz/thread/sip-')) {
+          const items = _l.split('/').reverse();
           slugs.push(items[0]);
           for (const it of items) {
             if (it) {
@@ -243,12 +244,12 @@ export default function EditProject({ detail }: { detail: ReTurnProject | undefi
           <li>
             <div className="title">{t('Project.AssociatedProposal')}</div>
             <div>
-              {proList.map((item, index) => (
+              {proList?.map((item, index) => (
                 <ItemBox key={`mem_${index}`}>
                   <InputBox>
                     <Form.Control
                       type="text"
-                      placeholder={`${t('Project.AssociatedProposal')}, eg. https://forum.seedao.xyz/thread...`}
+                      placeholder={`https://forum.seedao.xyz/thread...`}
                       value={item}
                       onChange={(e) => handleInput(e, index, 'proposal')}
                     />
@@ -349,6 +350,12 @@ const ImgBox = styled.div`
   align-items: center;
   justify-content: center;
   position: relative;
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
   .upload {
     display: none;
   }
@@ -384,6 +391,7 @@ const BtmBox = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
+  min-width: 104px;
 `;
 
 const UlBox = styled.ul`

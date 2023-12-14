@@ -16,6 +16,11 @@ const MESSAGE_TYPE = {
   CUSTOM: 'custom',
 };
 
+// log for test
+self.addEventListener('push', function (event) {
+  console.log("[notification] push event received");
+});
+
 self.addEventListener('notificationclick', async function (event) {
   console.log('-- click event:', event);
   console.log('-- notificationt:', event.notification);

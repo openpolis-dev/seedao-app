@@ -12,6 +12,9 @@ interface Window {
   seeDAOosApi: {
     getUsers: (wallets: string[]) => Promise<any>;
   };
+  AppConfig: {
+    host: string;
+  };
 }
 
 declare interface IPageParams {
@@ -34,4 +37,8 @@ declare interface ISelectItem {
   value: any;
   label: string;
   data?: any;
+}
+
+declare interface Number {
+  format: (n?: number) => string;
 }

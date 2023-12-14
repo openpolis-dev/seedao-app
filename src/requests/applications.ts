@@ -8,6 +8,7 @@ import {
   ApplicationEntity,
   ISeason,
 } from 'type/application.type';
+import { ReTurnProject } from 'type/project.type';
 import { AssetName } from 'utils/constant';
 
 const PATH_PREFIX = '/applications/';
@@ -24,6 +25,8 @@ export interface IQueryApplicationsParams {
   user_wallet?: string;
   state?: ApplicationStatus;
   season_id?: number;
+  asset_name?: string;
+  detailed_type?: string;
 }
 
 export interface IQueryParams extends IQueryApplicationsParams {
@@ -134,8 +137,8 @@ export const compeleteApplications = (data: string[]) => {
   });
 };
 // process
-export const processApplications = (data: number[]) => {
-  return request.post(`/apps_process`, data);
+export const processApplications = () => {
+  return request.post(`/apps_process`);
 };
 
 // download
@@ -146,6 +149,16 @@ export const getTemplateFileUrl = (language?: string) => {
 };
 export const getExportFileUrl = (ids: number[]) => {
   return `${getBaseURL()}/download_applications?ids=${ids.join(',')}`;
+};
+
+export const getExportFileUrlFromVault = (queryData: IQueryParams) => {
+  const url = new URL(`${getBaseURL()}/download_applications?type=${ApplicationType.NewReward}`);
+  for (const k in queryData) {
+    // @ts-ignore
+    url.searchParams.set(k, String(queryData[k]));
+  }
+  console.log('url.href', url.href);
+  return url.href;
 };
 
 interface IApplicantRequest {
@@ -219,4 +232,13 @@ export const rejectBundleByID = (bundle_id: number) => {
 };
 export const rejectBundles = (bundle_ids: number[]) => {
   return request.post('/app_bundle_reject', bundle_ids);
+};
+
+interface ISourceResponse {
+  projects: ReTurnProject[];
+  guilds: ReTurnProject[];
+}
+
+export const getAvailiableProjectsAndGuilds = (): Promise<ResponseData<ISourceResponse>> => {
+  return request.get(`${BUNDLE_PATH_PREFIX}available_projects_guilds`);
 };

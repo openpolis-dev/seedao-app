@@ -1,15 +1,23 @@
 import styled from 'styled-components';
+import React, { useEffect, useState, useMemo } from 'react';
 import { IApplicationDisplay } from 'type/application.type';
 import NoItem from 'components/noItem';
-import publicJs from 'utils/publicJs';
 import { useTranslation } from 'react-i18next';
-import BackIconSVG from 'components/svgs/back';
-import ApplicationStatusTag from 'components/common/applicationStatusTag';
+import BackIcon from 'assets/Imgs/back.svg';
+import ApplicationStatusTag from 'components/common/applicationStatusTagNew';
 import { Button } from 'react-bootstrap';
 import requests from 'requests';
 import useToast, { ToastType } from 'hooks/useToast';
 import { ContainerPadding } from 'assets/styles/global';
 import { ApplicationStatus } from 'type/application.type';
+import useQuerySNS from 'hooks/useQuerySNS';
+import publicJs from 'utils/publicJs';
+import { AssetName } from 'utils/constant';
+import { formatNumber } from 'utils/number';
+import ApplicationModal from 'components/modals/applicationModal';
+import VaultSVGIcon from 'components/svgs/vault';
+import { PinkButton } from 'components/common/button';
+import AlertImg from 'assets/Imgs/alert.png';
 
 interface IProps {
   bund_id: number;
@@ -18,11 +26,51 @@ interface IProps {
   updateStatus: (status: ApplicationStatus) => void;
   showLoading: (show: boolean) => void;
   status?: ApplicationStatus;
+  applyIntro: string;
+  isProcessing: boolean;
 }
 
-export default function ExpandTable({ bund_id, list, handleClose, updateStatus, showLoading, status }: IProps) {
+export default function ExpandTable({
+  bund_id,
+  list,
+  handleClose,
+  updateStatus,
+  showLoading,
+  status,
+  applyIntro,
+  isProcessing,
+}: IProps) {
   const { t } = useTranslation();
   const { showToast } = useToast();
+
+  const [snsMap, setSnsMap] = useState<Map<string, string>>(new Map());
+  const [detailDisplay, setDetailDisplay] = useState<IApplicationDisplay>();
+
+  const { getMultiSNS } = useQuerySNS();
+
+  const formatSNS = (wallet: string) => {
+    const name = snsMap.get(wallet) || wallet;
+    return name?.endsWith('.seedao') ? name : publicJs.AddressToShow(name, 6);
+  };
+
+  const handleSNS = async (wallets: string[]) => {
+    try {
+      const sns_map = await getMultiSNS(wallets);
+      setSnsMap(sns_map);
+    } catch (error) {
+      console.error('get sns failed', error);
+    }
+  };
+
+  useEffect(() => {
+    const _wallets = new Set<string>();
+    list.forEach((r) => {
+      r.applicant_wallet && _wallets.add(r.applicant_wallet?.toLocaleLowerCase());
+      _wallets.add(r.reviewer_wallet?.toLocaleLowerCase());
+      r.target_user_wallet && _wallets.add(r.target_user_wallet?.toLocaleLowerCase());
+    });
+    handleSNS(Array.from(_wallets));
+  }, [list]);
 
   const handleApprove = async () => {
     showLoading(true);
@@ -52,16 +100,25 @@ export default function ExpandTable({ bund_id, list, handleClose, updateStatus, 
     }
   };
 
-  const formatSNS = (name: string) => {
-    return name?.endsWith('.seedao') ? name : publicJs.AddressToShow(name, 6);
-  };
+  const totalAssets = useMemo(() => {
+    let usdt_count = 0;
+    let scr_count = 0;
+    list.forEach((item) => {
+      if (item.asset_name === AssetName.Credit) scr_count += Number(item.amount) || 0;
+      if (item.asset_name === AssetName.Token) usdt_count += Number(item.amount) || 0;
+    });
+    return [formatNumber(usdt_count), formatNumber(scr_count)];
+  }, [list]);
 
   return (
     <TableBox>
+      {detailDisplay && (
+        <ApplicationModal application={detailDisplay} handleClose={() => setDetailDisplay(undefined)} snsMap={snsMap} />
+      )}
       <BackBox onClick={handleClose}>
-        <BackIcon>
-          <BackIconSVG />
-        </BackIcon>
+        <BackIconBox>
+          <img src={BackIcon} alt="" />
+        </BackIconBox>
         <span>{t('general.back')}</span>
       </BackBox>
       {list.length ? (
@@ -70,41 +127,67 @@ export default function ExpandTable({ bund_id, list, handleClose, updateStatus, 
             <thead>
               <tr>
                 <th>{t('application.Receiver')}</th>
-                <th className="center">{t('application.AddAssets')}</th>
+                <th className="right">{t('application.AddAssets')}</th>
                 <th className="center">{t('application.Season')}</th>
                 <th>{t('application.Content')}</th>
-                <th className="center">{t('application.BudgetSource')}</th>
-                <th className="center">{t('application.Operator')}</th>
-                <th>{t('application.State')}</th>
+                <th>{t('application.BudgetSource')}</th>
+                <th>{t('application.Operator')}</th>
+                <th className="center">{t('application.State')}</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
               {list.map((item) => (
                 <tr key={item.application_id}>
-                  <td>{formatSNS(item.receiver_name || '')}</td>
-                  <td className="center">{item.asset_display}</td>
+                  <td>{formatSNS(item.target_user_wallet?.toLocaleLowerCase())}</td>
+                  <td className="right">{item.asset_display}</td>
                   <td className="center">{item.season_name}</td>
-                  <td>{item.detailed_type}</td>
-                  <td className="center">{item.budget_source}</td>
-                  <td className="center">{formatSNS(item.submitter_name)}</td>
                   <td>
+                    <BudgetContent>{item.detailed_type}</BudgetContent>
+                  </td>
+                  <td>{item.budget_source}</td>
+                  <td>{item.applicant_wallet && formatSNS(item.applicant_wallet?.toLocaleLowerCase())}</td>
+                  <td className="center">
                     <ApplicationStatusTag status={item.status} />
+                  </td>
+                  <td className="center">
+                    <MoreButton onClick={() => setDetailDisplay(item)}>{t('application.Detail')}</MoreButton>
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
+          <TotalAssets>
+            <VaultSVGIcon />
+            <span>{t('Assets.Total')}</span>
+            <span className="value">
+              {totalAssets[0]} {AssetName.Token}
+            </span>
+            <span className="value">
+              {totalAssets[1]} {AssetName.Credit}
+            </span>
+          </TotalAssets>
+          <MoreInfo>
+            <MoreInfoTitle>{t('application.ApplyIntro')}</MoreInfoTitle>
+            <MoreInfoDesc>{applyIntro}</MoreInfoDesc>
+          </MoreInfo>
           <OperateBox>
             <Button
               onClick={handleApprove}
-              disabled={status !== ApplicationStatus.Open && status !== ApplicationStatus.Rejected}
+              disabled={isProcessing || (status !== ApplicationStatus.Open && status !== ApplicationStatus.Rejected)}
             >
               {t('city-hall.Pass')}
             </Button>
-            <Button variant="outline-primary" onClick={handleReject} disabled={status !== ApplicationStatus.Open}>
+            <PinkButton onClick={handleReject} disabled={isProcessing || status !== ApplicationStatus.Open}>
               {t('city-hall.Reject')}
-            </Button>
+            </PinkButton>
           </OperateBox>
+          {isProcessing && (
+            <TipsBtm>
+              <img src={AlertImg} alt="" />
+              {t('application.applyTips')}
+            </TipsBtm>
+          )}
         </ContentBox>
       ) : (
         <NoItem />
@@ -112,6 +195,15 @@ export default function ExpandTable({ bund_id, list, handleClose, updateStatus, 
     </TableBox>
   );
 }
+
+const TipsBtm = styled.div`
+  padding-top: 0;
+  font-size: 14px;
+  img {
+    width: 20px;
+    margin-right: 10px;
+  }
+`;
 
 const TableBox = styled.div`
   width: 100%;
@@ -128,20 +220,19 @@ const BackBox = styled.div`
   align-items: center;
   gap: 12px;
   cursor: pointer;
-  font-family: Poppins-SemiBold, Poppins;
-  font-weight: 600;
-  color: var(--bs-svg-color);
+  font-size: 14px;
+  color: var(--bs-body-color_active);
 `;
 
-const BackIcon = styled.span`
+const BackIconBox = styled.span`
   display: inline-block;
   width: 32px;
   height: 32px;
-  background-color: var(--bs-box-background);
+  border: 1px solid rgba(217, 217, 217, 0.5);
   border-radius: 8px;
   text-align: center;
-  svg {
-    margin-top: 8px;
+  img {
+    margin-top: 5px;
   }
 `;
 
@@ -152,12 +243,14 @@ const ContentBox = styled.div`
 
 const OperateBox = styled.div`
   display: flex;
-  gap: 18px;
-  margin-top: 32px;
+  gap: 10px;
+  margin-top: 24px;
   margin-bottom: 20px;
   button {
-    height: 40px;
-    min-width: 120px;
+    height: 34px;
+    line-height: 34px;
+    width: 80px;
+    padding-block: 0;
     &.btn-outline-primary {
       background-color: transparent;
       color: #ff7193;
@@ -174,4 +267,58 @@ const OperateBox = styled.div`
       }
     }
   }
+`;
+const BudgetContent = styled.div`
+  max-width: 300px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+`;
+
+const TotalAssets = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 36px;
+  color: var(--bs-body-color_active);
+  display: flex;
+  gap: 8px;
+  width: 100%;
+  height: 54px;
+  background: var(--table-header);
+  font-size: 14px;
+  .value {
+    color: #ff1c52;
+    font-size: 14px;
+  }
+`;
+
+const MoreInfo = styled.div`
+  color: var(--bs-body-color_active);
+  margin-top: 24px;
+  font-size: 14px;
+`;
+
+const MoreInfoTitle = styled.div`
+  font-family: Poppins-Medium;
+`;
+
+const MoreInfoDesc = styled.div`
+  margin-top: 8px;
+`;
+
+const MoreButton = styled.div`
+  padding-inline: 26px;
+  height: 34px;
+  line-height: 34px;
+  box-sizing: border-box;
+  display: inline-block;
+  background: var(--bs-box--background);
+  border-radius: 8px;
+  cursor: pointer;
+  border: 1px solid var(--bs-border-color);
+  font-size: 14px;
 `;

@@ -274,7 +274,7 @@ export default function PubDetail() {
         {/*  <span>{title}</span>*/}
         {/*</BackBox>*/}
 
-        <BackerNav title={title} to={`/pub`} mb="40px" />
+        <BackerNav title={title} to={`/hub`} mb="40px" />
         {!!imgUrl && (
           <ImgBox>
             <img src={imgUrl} alt="" />

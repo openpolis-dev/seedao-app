@@ -13,6 +13,9 @@ import ExcellentExport from 'excellentexport';
 import { PrimaryOutlinedButton } from 'components/common/button';
 import FilterNodesNodal from 'components/modals/filterNodesModal';
 import useToast, { ToastType } from 'hooks/useToast';
+import { Row, Col } from 'react-bootstrap';
+import SearchImg from 'assets/Imgs/light/search.svg';
+import SearchWhite from 'assets/Imgs/dark/search.svg';
 
 const PAGE_SIZE = 15;
 
@@ -60,7 +63,10 @@ const ColGroup = ({ seasons }: { seasons: number[] }) => {
 
 export default function GoveranceNodeResult() {
   const { t } = useTranslation();
-  const { dispatch } = useAuthContext();
+  const {
+    state: { theme },
+    dispatch,
+  } = useAuthContext();
   const { showToast } = useToast();
   const [page, setPage] = useState(1);
   const [total, setToal] = useState(0);
@@ -137,8 +143,8 @@ export default function GoveranceNodeResult() {
   }, []);
 
   const formatSNS = (wallet: string) => {
-    const sns = dataMap.get(wallet) || wallet;
-    return sns.endsWith('.seedao') ? sns : publicJs.AddressToShow(sns, 6);
+    const sns = dataMap.get(wallet.toLocaleLowerCase()) || wallet;
+    return sns.endsWith('.seedao') ? sns : publicJs.AddressToShow(sns);
   };
 
   const handleExport = () => {
@@ -158,7 +164,7 @@ export default function GoveranceNodeResult() {
               t('GovernanceNodeResult.SeedCount'),
             ],
             ...allList.map((item) => [
-              dataMap.get(item.wallet) || item.wallet,
+              dataMap.get(item.wallet.toLocaleLowerCase()) || item.wallet,
               ...allSeasons.map((i) => {
                 return item.seasons_credit?.find((s) => s.season_idx === i)?.total || 0;
               }),
@@ -188,7 +194,9 @@ export default function GoveranceNodeResult() {
       setDisplayList([...allList]);
     } else {
       const filter_list = allList.filter(
-        (item) => item.wallet.includes(trim_search_key) || dataMap.get(item.wallet)?.includes(trim_search_key),
+        (item) =>
+          item.wallet.includes(trim_search_key) ||
+          dataMap.get(item.wallet.toLocaleLowerCase())?.includes(trim_search_key),
       );
       setDisplayList([...filter_list]);
     }
@@ -248,64 +256,76 @@ export default function GoveranceNodeResult() {
           walletList={filterResult}
           handleClose={closeModal}
           season={`S${currentSeasonNumber + 1}`}
+          formatSNS={formatSNS}
         />
       )}
-      <BackerNav title={t('city-hall.GovernanceNodeResult')} to="/city-hall/governance" />
+      <BackerNav title={t('city-hall.GovernanceNodeResult')} to="/city-hall/governance" mb="24px" />
       <TopLine>
         <StaticCards>
-          <li>
-            <div>
-              <LiTitle>{t('GovernanceNodeResult.TotalSNS')}</LiTitle>
+          <Col md={2}>
+            <div className="li">
+              <div className="num f1">{formatNumber(Number(totalWallet))}</div>
+              <div>
+                <LiTitle>{t('GovernanceNodeResult.TotalSNS')}</LiTitle>
+              </div>
             </div>
-            <div className="num">{formatNumber(Number(totalWallet))}</div>
-          </li>
-          <li>
-            <div>
-              <LiTitle>{t('GovernanceNodeResult.TotalActiveSNS')}</LiTitle>
+          </Col>
+          <Col md={2}>
+            <div className="li">
+              <div className="num f2">{formatNumber(Number(totalActive))}</div>
+              <div>
+                <LiTitle>{t('GovernanceNodeResult.TotalActiveSNS')}</LiTitle>
+              </div>
             </div>
-            <div className="num">{formatNumber(Number(totalActive))}</div>
-          </li>
-          <li>
-            <div>
-              <LiTitle>{t('GovernanceNodeResult.TotalSentSCR', { season: currentSeason })}</LiTitle>
+          </Col>
+          <Col md={2}>
+            <div className="li">
+              <div className="num f3">{Number(totalSCR).format()}</div>
+              <div>
+                <LiTitle>{t('GovernanceNodeResult.TotalSentSCR', { season: currentSeason })}</LiTitle>
+              </div>
             </div>
-            <div className="num">{formatNumber(Number(totalSCR))}</div>
-          </li>
-          <li>
-            <div>
-              <LiTitle>{t('GovernanceNodeResult.TotalMinerReward', { season: currentSeason })}</LiTitle>
+          </Col>
+          <Col md={2}>
+            <div className="li">
+              <div className="num f4">{Number(totalReward).format()}</div>
+              <div>
+                <LiTitle>{t('GovernanceNodeResult.TotalMinerReward', { season: currentSeason })}</LiTitle>
+              </div>
             </div>
-            <div className="num">{formatNumber(Number(totalReward))}</div>
-          </li>
+          </Col>
+          <Col md={4}>
+            <FilterInputBox>
+              <FilterInputBoxTop>
+                <FilterInputItem>
+                  <span>{t('GovernanceNodeResult.ActiveSCR')}</span>
+                  <input
+                    type="number"
+                    value={filterActiveNum}
+                    onChange={(e) => setFilterActiveNum(e.target.value)}
+                    placeholder={t('general.Placeholder')}
+                  />
+                </FilterInputItem>
+                <FilterInputItem>
+                  <span>{t('GovernanceNodeResult.EffectiveSCR')}</span>
+                  <input
+                    type="number"
+                    value={filterEffectiveNum}
+                    onChange={(e) => setFilterEffectiveNum(e.target.value)}
+                    placeholder={t('general.Placeholder')}
+                  />
+                </FilterInputItem>
+              </FilterInputBoxTop>
+              <Button variant="primary" onClick={handleFilter} disabled={!hasSnapshot}>
+                {t('GovernanceNodeResult.StartFilter')}
+              </Button>
+            </FilterInputBox>
+          </Col>
         </StaticCards>
-        <FilterInputBox>
-          <FilterInputBoxTop>
-            <FilterInputItem>
-              <span>{t('GovernanceNodeResult.ActiveSCR')}</span>
-              <input
-                type="number"
-                value={filterActiveNum}
-                onChange={(e) => setFilterActiveNum(e.target.value)}
-                placeholder={t('general.Placeholder')}
-              />
-            </FilterInputItem>
-            <FilterInputItem>
-              <span>{t('GovernanceNodeResult.EffectiveSCR')}</span>
-              <input
-                type="number"
-                value={filterEffectiveNum}
-                onChange={(e) => setFilterEffectiveNum(e.target.value)}
-                placeholder={t('general.Placeholder')}
-              />
-            </FilterInputItem>
-          </FilterInputBoxTop>
-          <Button variant="primary" onClick={handleFilter} disabled={!hasSnapshot}>
-            {t('GovernanceNodeResult.StartFilter')}
-          </Button>
-        </FilterInputBox>
       </TopLine>
       <OperateBox>
         <SearchBox>
+          <img src={SearchImg} alt="" />
           <Form.Control
             type="text"
             placeholder={t('GovernanceNodeResult.SearchTip')}
@@ -314,7 +334,7 @@ export default function GoveranceNodeResult() {
           />
         </SearchBox>
         <ButtonGroup>
-          <Button variant="outline-primary" onClick={onClickSnapshot} disabled={hasSnapshot}>
+          <Button variant="primary" onClick={onClickSnapshot} disabled={hasSnapshot}>
             {t('GovernanceNodeResult.SeedSnapshot')}
           </Button>
           <PrimaryOutlinedButton
@@ -324,7 +344,7 @@ export default function GoveranceNodeResult() {
           >
             {t('GovernanceNodeResult.SendReward')}
           </PrimaryOutlinedButton>
-          <Button variant="primary" onClick={handleExport}>
+          <Button className="export" variant="outline-secondary" onClick={handleExport}>
             {t('GovernanceNodeResult.Export')}
           </Button>
         </ButtonGroup>
@@ -336,19 +356,19 @@ export default function GoveranceNodeResult() {
             <th>SNS</th>
             {allSeasons.map((s, i) => {
               return i === allSeasons.length - 1 ? (
-                <th>
+                <th className="right">
                   <CurrentSeason>{currentSeason}</CurrentSeason>(SCR)
                 </th>
               ) : (
-                <th key={s}>{`S${s}(SCR)`}</th>
+                <th key={s} className="right">{`S${s}(SCR)`}</th>
               );
             })}
-            <th>{t('GovernanceNodeResult.VoteCount', { season: currentSeason })}</th>
-            <th>{t('GovernanceNodeResult.MinerReward', { season: currentSeason })}(SCR)</th>
-            <th>{t('GovernanceNodeResult.Total')}(SCR)</th>
-            <th>{t('GovernanceNodeResult.ActiveSCR')}</th>
-            <th>{t('GovernanceNodeResult.EffectiveSCR')}</th>
-            <th>{t('GovernanceNodeResult.SeedCount')}</th>
+            <th className="center">{t('GovernanceNodeResult.VoteCount', { season: currentSeason })}</th>
+            <th className="right">{t('GovernanceNodeResult.MinerReward', { season: currentSeason })}(SCR)</th>
+            <th className="right">{t('GovernanceNodeResult.Total')}(SCR)</th>
+            <th className="right">{t('GovernanceNodeResult.ActiveSCR')}</th>
+            <th className="right">{t('GovernanceNodeResult.EffectiveSCR')}</th>
+            <th className="center">{t('GovernanceNodeResult.SeedCount')}</th>
           </thead>
         </Table>
         <Table id="body-table">
@@ -358,17 +378,17 @@ export default function GoveranceNodeResult() {
               <tr key={item.wallet}>
                 <td>{formatSNS(item.wallet)}</td>
                 {[...allSeasons].map((season) => (
-                  <td key={season}>
-                    {formatNumber(Number(item.seasons_credit?.find((s) => s.season_idx === season)?.total || 0))}
+                  <td key={season} className="right">
+                    {Number(item.seasons_credit?.find((s) => s.season_idx === season)?.total || 0).format()}
                   </td>
                 ))}
 
-                <td>{formatNumber(Number(item.metaforo_vote_count) || 0)}</td>
-                <td>{formatNumber(Number(item.metaforo_credit) || 0)}</td>
-                <td>{formatNumber(Number(item.season_total_credit) || 0)}</td>
-                <td>{formatNumber(Number(item.activity_credit) || 0)}</td>
-                <td>{formatNumber(Number(item.effective_credit) || 0)}</td>
-                <td>{item.seed_count}</td>
+                <td className="center">{Number(item.metaforo_vote_count).format()}</td>
+                <td className="right">{Number(item.metaforo_credit).format()}</td>
+                <td className="right">{Number(item.season_total_credit).format()}</td>
+                <td className="right">{Number(item.activity_credit).format()}</td>
+                <td className="right">{Number(item.effective_credit).format()}</td>
+                <td className="center">{item.seed_count}</td>
               </tr>
             ))}
           </tbody>
@@ -382,6 +402,12 @@ const OuterBox = styled.div`
   box-sizing: border-box;
   min-height: 100%;
   ${ContainerPadding};
+  .backTitle {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--bs-body-color_active);
+    line-height: 20px;
+  }
 `;
 
 const OperateBox = styled.div`
@@ -391,8 +417,24 @@ const OperateBox = styled.div`
 `;
 
 const SearchBox = styled.div`
-  width: 200px;
+  width: 320px;
+  height: 40px;
   position: relative;
+  img {
+    width: 24px;
+    height: 24px;
+    position: absolute;
+    left: 8px;
+    top: 8px;
+  }
+  input {
+    height: 40px;
+    box-sizing: border-box;
+    padding-left: 40px;
+    &::placeholder {
+      color: #b0b0b0;
+    }
+  }
 `;
 
 const TableBox = styled.div`
@@ -404,6 +446,9 @@ const TableBox = styled.div`
     &#head-table {
       position: sticky;
       top: 0;
+      th {
+        padding-right: 0;
+      }
     }
     thead tr:first-child {
       th {
@@ -425,11 +470,9 @@ const TableBox = styled.div`
     th {
       border-style: inherit;
       box-sizing: border-box;
-      text-align: center;
     }
     td {
       padding: 0;
-      text-align: center;
       box-sizing: border-box;
       line-height: 74px;
     }
@@ -445,8 +488,11 @@ const TableBox = styled.div`
       left: 0; */
     }
   }
-  @media (max-width: 1520px) {
-    height: calc(100vh - 440px);
+  @media (max-width: 1470px) {
+    height: calc(100vh - 400px);
+  }
+  @media (max-width: 1440px) {
+    height: calc(100vh - 380px);
   }
 `;
 
@@ -464,34 +510,54 @@ const CurrentSeason = styled(HeaderCell)`
 `;
 
 const TopLine = styled.div`
-  display: flex;
   margin-bottom: 30px;
-  gap: 20px;
-  justify-content: space-between;
   @media (max-width: 1520px) {
     flex-direction: column;
   }
 `;
-const StaticCards = styled.ul`
-  display: flex;
-  gap: 20px;
-  li {
-    min-width: 180px;
+const StaticCards = styled(Row)`
+  .li {
+    min-height: 106px;
     border-radius: 16px;
-    padding: 20px 25px;
+    padding: 25px 16px;
     background-color: var(--bs-box--background);
-    border: 1px solid var(--bs-border-color);
+    border: 1px solid var(--border-box);
+    box-shadow: var(--box-shadow);
+    height: 100%;
     .num {
-      color: var(--bs-body-color_active);
-      margin-top: 10px;
+      font-size: 18px;
+      font-weight: 600;
+      line-height: 24px;
+      margin-bottom: 6px;
     }
+  }
+  .f1 {
+    color: #5200ff;
+  }
+  .f2 {
+    color: #1f9e14;
+  }
+  .f3 {
+    color: #1da1f2;
+  }
+  .f4 {
+    color: #ff7193;
   }
 `;
 
 const FilterInputBox = styled.div`
+  height: 100%;
   display: flex;
-  flex-direction: column;
-  gap: 16px;
+  border-radius: 16px;
+  padding: 13px 15px 4px;
+  background-color: var(--bs-box--background);
+  border: 1px solid var(--border-box);
+  box-shadow: var(--box-shadow);
+  align-items: center;
+  .btn {
+    width: 95px;
+    font-size: 14px !important;
+  }
   @media (max-width: 1520px) {
     flex-direction: row;
   }
@@ -499,26 +565,25 @@ const FilterInputBox = styled.div`
 
 const FilterInputBoxTop = styled.div`
   display: flex;
-  border: 1px solid var(--bs-border-color);
-  border-radius: 16px;
-  height: 40px;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
 `;
 
 const FilterInputItem = styled.div`
-  padding-inline: 16px;
   display: flex;
   align-items: center;
-  gap: 6px;
-  &:first-child {
-    border-right: 1px solid var(--bs-border-color);
-  }
+  margin: 0 30px 9px 10px;
+  flex-grow: 1;
+  font-size: 12px;
   input {
-    width: 90px;
-    height: 40px;
-    line-height: 40px;
-    border: none;
+    height: 32px;
     background-color: transparent;
     padding-left: 10px;
+    border-radius: 8px;
+    border: 1px solid rgba(217, 217, 217, 0.5);
+    flex-grow: 1;
+    margin-left: 17px;
   }
   input:focus-visible {
     outline: none;
@@ -528,10 +593,16 @@ const FilterInputItem = styled.div`
 const LiTitle = styled.div`
   color: var(--bs-body-color);
   line-height: 18px;
-  font-size: 14px;
+  font-size: 12px;
 `;
 
 const ButtonGroup = styled.div`
   display: flex;
   gap: 16px;
+  .btn {
+    width: 130px !important;
+  }
+  .export {
+    border: 1px solid var(--bs-border-color);
+  }
 `;

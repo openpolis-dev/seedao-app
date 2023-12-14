@@ -53,7 +53,8 @@ export const PushItemBottom = styled.div`
   border-top: 1px solid var(--bs-border-color);
   display: flex;
   justify-content: space-between;
-  padding: 9px 24px;
+  padding-block: 9px;
+  margin-inline: 24px;
   align-items: center;
 `;
 

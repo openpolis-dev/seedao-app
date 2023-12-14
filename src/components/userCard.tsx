@@ -18,9 +18,10 @@ interface IUserProps {
   sns?: string;
   onSelectUser?: (user: IUser) => void;
   formatActive?: (wallet: string) => boolean;
+  handleProfile?: (arg0: any, arg1: string) => void;
 }
 
-export default function UserCard({ user, showEdit, onSelectUser, formatActive, sns }: IUserProps) {
+export default function UserCard({ user, showEdit, onSelectUser, formatActive, sns, handleProfile }: IUserProps) {
   // const { account } = useWeb3React();
 
   const {
@@ -33,17 +34,24 @@ export default function UserCard({ user, showEdit, onSelectUser, formatActive, s
     return theme ? '1px solid #29282F' : 'unset';
   }, [theme]);
 
+  const handleShow = () => {
+    if (showEdit) return;
+    handleProfile && handleProfile(user, sns ?? '');
+  };
+
   return (
-    <UserCardBox sm={12} md={6} lg={4} xl={3} border={borderStyle}>
+    <UserCardBox sm={12} md={6} lg={4} xl={3} border={borderStyle} key={user.wallet} onClick={() => handleShow()}>
       <div className="boxAll">
         <div className="fst">
-          <img className="avatar" src={user.avatar || DefaultAvatar} alt="" />
+          <img className="avatar" src={user.avatar || user.sp?.avatar || DefaultAvatar} alt="" />
           <div>
             <div style={{ display: 'flex', gap: '6px', marginBottom: '8px' }}>
               <span className="wallet">{sns || PublicJs.AddressToShow(user.wallet || '')}</span>
-              <CopyBox text={user.wallet || ''} dir="left">
-                <CopyIconSVG />
-              </CopyBox>
+              <div onClick={(e) => e.stopPropagation()}>
+                <CopyBox text={user.wallet || ''} dir="left">
+                  <CopyIconSVG />
+                </CopyBox>
+              </div>
             </div>
             <div className="name">{user.name || t('My.DefaultName')}</div>
           </div>
@@ -69,6 +77,7 @@ export default function UserCard({ user, showEdit, onSelectUser, formatActive, s
 const UserCardBox = styled(Col)<{ border: string }>`
   margin-bottom: 24px;
   .boxAll {
+    position: relative;
     background: var(--bs-box--background);
     border: ${(props) => props.border};
     padding: 14px;
@@ -78,10 +87,20 @@ const UserCardBox = styled(Col)<{ border: string }>`
     height: 100%;
     &:hover {
       background: var(--bs-menu-hover);
+      //.modalBox {
+      //  display: block;
+      //}
     }
     .svg-stroke {
       stroke: var(--bs-body-color_active) !important;
     }
+    //.modalBox {
+    //  position: absolute;
+    //  left: 50%;
+    //  top: -120%;
+    //  z-index: 9999;
+    //  display: block;
+    //}
   }
 
   .fst {
@@ -100,6 +119,8 @@ const UserCardBox = styled(Col)<{ border: string }>`
   img.avatar {
     width: 60px;
     height: 60px;
+    object-fit: cover;
+    object-position: center;
     border-radius: 50%;
     margin-right: 20px;
   }

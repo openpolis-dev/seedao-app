@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { Link, useNavigate } from 'react-router-dom';
 import { formatDate } from 'utils/time';
 import { useAuthContext } from 'providers/authProvider';
+import PublicJs from '../../utils/publicJs';
 
 const CardBody = styled.div``;
 
@@ -20,7 +21,6 @@ export default function ProposalCard({ data }: { data: IBaseProposal }) {
     let delta: any[] = [];
     try {
       delta = JSON.parse(data.first_post.content);
-      console.log(delta);
     } catch (e) {
       // console.info('illegal json:' + JSON.stringify(data));
     }
@@ -101,7 +101,8 @@ export default function ProposalCard({ data }: { data: IBaseProposal }) {
         </CardHeaderStyled>
         <CardBody>
           <Title>{data.title}</Title>
-          <ProposalContent dangerouslySetInnerHTML={{ __html: content }}></ProposalContent>
+          {/*<ProposalContent dangerouslySetInnerHTML={{ __html: content }}></ProposalContent>*/}
+          <ProposalContent>{PublicJs.filterTags(content)}</ProposalContent>
         </CardBody>
       </div>
     </CardBox>

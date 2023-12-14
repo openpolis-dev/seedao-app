@@ -60,13 +60,13 @@ export default function Header() {
     dispatch({ type: AppActionType.SET_LAN, payload: v });
     localStorage.setItem('language', v);
     i18n.changeLanguage(v);
-    if (select && isLogin && userData) {
-      try {
-        requestSetDeviceLanguage({ device: getPushDevice(), language: v });
-      } catch (error) {
-        console.error('Set Device Language Failed', error);
-      }
-    }
+    // if (select && isLogin && userData) {
+    //   try {
+    //     requestSetDeviceLanguage({ device: getPushDevice(), language: v });
+    //   } catch (error) {
+    //     console.error('Set Device Language Failed', error);
+    //   }
+    // }
   };
 
   useEffect(() => {
@@ -105,10 +105,11 @@ export default function Header() {
     if (selectWallet) {
       switch (selectWallet) {
         case Wallet.METAMASK:
+        case Wallet.JOYID:
+        case Wallet.JOYID_WEB:
           wallet_type = WalletType.EOA;
           break;
         case Wallet.UNIPASS:
-        case Wallet.JOYID:
           wallet_type = WalletType.AA;
           break;
       }
@@ -122,22 +123,30 @@ export default function Header() {
     initAuth();
   };
 
+  const handleChainChanged = (chainId: any) => {
+    if (parseInt(chainId, 16) !== mainnet.id) {
+      onClickLogout();
+    }
+  };
+
+  const handleAccountChanged = (data: any) => {
+    if (!show_login_modal) onClickLogout();
+  };
+
   useEffect(() => {
     if (!window.ethereum) return;
     const initProvider = async () => {
       const { ethereum } = window as any;
-      ethereum?.on('chainChanged', (chainId: any) => {
-        if (parseInt(chainId, 16) !== mainnet.id) {
-          onClickLogout();
-        }
-      });
-      ethereum?.on('accountsChanged', function () {
-        onClickLogout();
-      });
+      // ethereum?.on('chainChanged', handleChainChanged);
+      ethereum?.on('accountsChanged', handleAccountChanged);
     };
-
     initProvider();
-  }, []);
+    return () => {
+      const { ethereum } = window as any;
+      // ethereum?.removeListener('chainChanged', handleChainChanged);
+      ethereum?.removeListener('accountsChanged', handleAccountChanged);
+    };
+  });
 
   useEffect(() => {
     isLogin && getUser();
@@ -207,7 +216,11 @@ export default function Header() {
     dispatch({ type: AppActionType.SET_AUTHORIZER, payload: null });
     dispatch({ type: AppActionType.SET_WALLET_TYPE, payload: null });
     dispatch({ type: AppActionType.SET_ACCOUNT, payload: null });
-    await OneSignal.logout();
+    try {
+      await OneSignal.logout();
+    } catch (error) {
+      console.error('onesignal logout failed', error);
+    }
     toGo();
     window.location.reload();
   };
@@ -353,6 +366,7 @@ const HeadeStyle = styled.header`
     margin-top: 10px;
     overflow: hidden;
     padding: 0;
+    z-index: 999999;
   }
   .dropdown-item {
     color: var(--bs-body-color_active);

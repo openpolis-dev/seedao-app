@@ -4,33 +4,39 @@ import { IUser } from 'type/user.type';
 import { Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import DefaultAvatar from 'assets/Imgs/defaultAvatar.png';
+import { useMemo } from 'react';
+import PublicJs from '../../utils/publicJs';
+import { useParseSNSList } from '../../hooks/useParseSNS';
 
 interface IProps {
   title: string;
-  user: IUser;
-  sns: string;
+  users: any[];
+  sns?: any;
   onConfirm: () => void;
   onClose: () => void;
 }
 
-export default function DeleteMemberModal({ title, sns, user, onConfirm, onClose }: IProps) {
+export default function DeleteMemberModal({ title, sns, users, onConfirm, onClose }: IProps) {
   const { t } = useTranslation();
+
   return (
-    <BasicModal title={title}>
+    <BasicModal title={title} handleClose={onClose}>
       <CardText>{t('members.RemoveConfirm')}</CardText>
       <CardBody>
-        <ItemBox>
-          <div>
-            <img src={user.avatar || DefaultAvatar} alt="" />
-          </div>
-          <div>
-            <div className="wallet">{sns || user.wallet}</div>
-            <div className="name">{user.name}</div>
-          </div>
-        </ItemBox>
+        {users.map((item, index) => (
+          <ItemBox key={`user_${index}`}>
+            <div>
+              <img src={item.user.avatar || item.user.sp?.avatar || DefaultAvatar} alt="" />
+            </div>
+            <div>
+              <div className="wallet"> {sns[item.user.wallet || ''] || item.user.wallet}</div>
+              <div className="name">{item.user.name}</div>
+            </div>
+          </ItemBox>
+        ))}
       </CardBody>
       <CardFooter>
-        <Button variant="outline-primary" className="btnBtm" onClick={onClose}>
+        <Button variant="outline-primary" className="btnBtm" onClick={() => onClose()}>
           {t('general.cancel')}
         </Button>
         <Button onClick={onConfirm}> {t('general.confirm')}</Button>
@@ -69,6 +75,8 @@ const ItemBox = styled.div`
     width: 44px;
     height: 44px;
     border-radius: 50%;
+    object-fit: cover;
+    object-position: center;
   }
   .name {
     font-size: 12px;

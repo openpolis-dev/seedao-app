@@ -32,18 +32,20 @@ export default function AppVersion({ open }: any) {
 }
 
 const VersionBox = styled.div`
-  position: absolute;
-  bottom: 0;
-  left: 0;
   width: 100%;
   font-size: 12px;
   line-height: 22px;
   box-sizing: border-box;
-  overflow: hidden;
-  padding: 0 0 20px 30px;
+  //overflow: hidden;
+  text-align: left;
+  //padding: 0 0 20px 0;
+  //background: #f00;
   &.lft {
     text-align: center;
     left: -15px;
+  }
+  @media (max-height: 740px) {
+    display: none;
   }
 `;
 

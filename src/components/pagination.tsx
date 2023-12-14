@@ -3,15 +3,15 @@ import ReactPaginate from 'react-paginate';
 import styled from 'styled-components';
 import { Button } from 'react-bootstrap';
 import InputNumber from 'components/inputNumber';
-import LftImg from '../assets/images/left.svg';
-import RhtImg from '../assets/images/right.svg';
+import LftImg from '../assets/Imgs/left.svg';
+import RhtImg from '../assets/Imgs/right.svg';
 
 const Box = styled.div<{ dir: string }>`
   display: flex;
   //justify-content: space-between;
   align-items: center;
 
-  margin-top: 40px;
+  margin-top: 20px;
   width: 100%;
   justify-content: ${(props) => (props.dir === 'right' ? 'flex-end' : 'flex-start')};
   a {
@@ -104,7 +104,6 @@ const GoToBox = styled.div`
   input {
     width: 64px;
     height: 32px;
-    background: transparent;
     text-align: center;
     font-size: 14px;
     border: unset;
@@ -112,7 +111,9 @@ const GoToBox = styled.div`
     border-top-left-radius: 8px;
     border-bottom-left-radius: 8px;
     background-color: var(--bs-box-background);
-
+    &::placeholder {
+      opacity: 0.3;
+    }
     &:focus {
       outline: none;
     }

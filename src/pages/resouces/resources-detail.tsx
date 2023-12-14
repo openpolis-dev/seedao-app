@@ -7,6 +7,8 @@ import { useAuthContext } from '../../providers/authProvider';
 // import BackerNav from '../../components/common/backNav';
 // import useParseSNS from '../../hooks/useParseSNS';
 import { X } from 'react-bootstrap-icons';
+import CloseImg from '../../assets/Imgs/dark/close-circle.svg';
+import CloseImgLight from '../../assets/Imgs/light/close-circle.svg';
 
 const Box = styled.div`
   background: rgba(0, 0, 0, 0.3);
@@ -30,22 +32,32 @@ const BoxOuter = styled.div`
   height: 80vh;
   position: relative;
   border-radius: 16px;
-  overflow: hidden;
 `;
 
 const BoxInner = styled.div`
   height: 100%;
   box-sizing: border-box;
-  padding: 40px;
+  //padding: 40px;
   overflow-y: auto;
   box-sizing: border-box;
+  border-radius: 16px;
+  &::-webkit-scrollbar {
+    display: none;
+    width: 0;
+  }
 
   .icon-close {
     position: absolute;
     right: 10px;
-    top: 0;
-    font-size: 34px;
+    top: 10px;
     cursor: pointer;
+    width: 24px;
+    height: 24px;
+    background: var(--bs-box-background);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 24px;
   }
 `;
 
@@ -60,7 +72,7 @@ export default function ResourcesDetail(props: Iprops) {
   const [item, setItem] = useState<any>();
 
   const {
-    state: { userData, account },
+    state: { userData, account, theme },
   } = useAuthContext();
 
   const getDetail = () => {
@@ -80,7 +92,8 @@ export default function ResourcesDetail(props: Iprops) {
         <BoxInner>
           <div className="icon-close" onClick={() => closeModal()}>
             {/*<EvaIcon name="close-outline" />*/}
-            <X />
+            {/*<X />*/}
+            <img src={theme ? CloseImg : CloseImgLight} alt="" />
           </div>
           <TallyForm id={id} item={item} userData={userData} account={account} />
         </BoxInner>

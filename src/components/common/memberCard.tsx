@@ -7,51 +7,79 @@ import SocialIconBox from './socialIcon';
 import { useMemo } from 'react';
 import CopyBox from 'components/copy';
 import CopyIconSVG from 'components/svgs/copy';
+import { Form } from 'react-bootstrap';
+import { useAuthContext } from '../../providers/authProvider';
 
 interface IProps {
   user: IUser;
   sns: string;
   role: UserRole;
+  showEdit?: boolean;
   removeText?: string;
+  onSelectUser?: (user: IUser) => void;
   showRemoveModal?: (user: IUser, role: UserRole) => void;
+  handleProfile?: (arg0: any, arg1: string) => void;
 }
 
-export default function MemberCard({ user, sns, role, removeText, showRemoveModal }: IProps) {
+export default function MemberCard({
+  user,
+  sns,
+  role,
+  removeText,
+  showRemoveModal,
+  showEdit,
+  onSelectUser,
+  handleProfile,
+}: IProps) {
   const { t } = useTranslation();
+  const {
+    state: { theme },
+  } = useAuthContext();
   const snsDisplay = useMemo(() => {
-    return sns || PublicJs.AddressToShow(user.wallet || '', 6);
+    return sns || PublicJs.AddressToShow(user.wallet || '', 4);
   }, [sns, user]);
 
   const handleClockRemove = () => {
     showRemoveModal && showRemoveModal(user, role);
   };
+
+  const handleShow = () => {
+    if (showEdit) return;
+    handleProfile && handleProfile(user, sns ?? '');
+  };
   return (
-    <InnerBox>
+    <InnerBox onClick={() => handleShow()}>
+      {showEdit && (
+        <CheckLft>
+          <Form.Check type="checkbox" onChange={() => onSelectUser && onSelectUser(user)} />
+        </CheckLft>
+      )}
       <ImgBox>
-        <img className="avatar" src={user.avatar || DefaultAvatar} alt="" />
+        <img className="avatar" src={user.avatar || user?.sp?.avatar || DefaultAvatar} alt="" />
       </ImgBox>
       <div>
         <div className="sns-box">{snsDisplay}</div>
         {UserRole.Admin === role && <RoleTag>{t('Project.Moderator')}</RoleTag>}
       </div>
-      <HoverCard className="hover-card">
-        <HoverCardAvatar>
-          <img src={user.avatar || DefaultAvatar} alt="" />
-        </HoverCardAvatar>
-        <HoverNameBox>
-          <div className="sns-display">
-            <span className="sns">{snsDisplay}</span>
-            <CopyBox text={user.wallet || ''} dir="left">
-              <CopyIconSVG />
-            </CopyBox>
-          </div>
-          <div className="name">{user.name || t('My.DefaultName')}</div>
-        </HoverNameBox>
-        <SocialBox>
-          <SocialIconBox user={user} />
-        </SocialBox>
-        {removeText && <RemoveButton onClick={handleClockRemove}>{removeText}</RemoveButton>}
-      </HoverCard>
+      {/*<HoverCard className="hover-card">*/}
+
+      {/*  /!*<HoverCardAvatar>*!/*/}
+      {/*  /!*  <img src={user.avatar || DefaultAvatar} alt="" />*!/*/}
+      {/*  /!*</HoverCardAvatar>*!/*/}
+      {/*  /!*<HoverNameBox>*!/*/}
+      {/*  /!*  <div className="sns-display">*!/*/}
+      {/*  /!*    <span className="sns">{snsDisplay}</span>*!/*/}
+      {/*  /!*    <CopyBox text={user.wallet || ''} dir="left">*!/*/}
+      {/*  /!*      <CopyIconSVG />*!/*/}
+      {/*  /!*    </CopyBox>*!/*/}
+      {/*  /!*  </div>*!/*/}
+      {/*  /!*  <div className="name">{user.name || t('My.DefaultName')}</div>*!/*/}
+      {/*  /!*</HoverNameBox>*!/*/}
+      {/*  /!*<SocialBox>*!/*/}
+      {/*  /!*  <SocialIconBox user={user} />*!/*/}
+      {/*  /!*</SocialBox>*!/*/}
+      {/*  /!*{removeText && <RemoveButton onClick={handleClockRemove}>{removeText}</RemoveButton>}*!/*/}
+      {/*</HoverCard>*/}
     </InnerBox>
   );
 }
@@ -84,6 +112,8 @@ const ImgBox = styled.div`
   img {
     width: 44px;
     height: 44px;
+    object-fit: cover;
+    object-position: center;
     border-radius: 44px;
   }
 `;
@@ -101,22 +131,29 @@ const RoleTag = styled.span`
 `;
 
 const HoverCard = styled.div`
-  width: 292px;
   position: absolute;
-  padding: 32px;
-  background: var(--bs-background);
-  border-radius: 16px 16px 16px 16px;
-  opacity: 1;
-  border: 1px solid var(--option-button-border-color);
-  left: 84px;
-  bottom: -50px;
-  z-index: 9;
+  left: 50%;
+  top: -300%;
+  z-index: 9999;
+  display: none;
+  //width: 292px;
+  //position: absolute;
+  //padding: 32px;
+  //background: var(--bs-background);
+  //border-radius: 16px 16px 16px 16px;
+  //opacity: 1;
+  //border: 1px solid var(--option-button-border-color);
+  //left: 84px;
+  //bottom: -50px;
+  //z-index: 9;
 `;
 
 const HoverCardAvatar = styled.div`
   img {
     width: 80px;
     height: 80px;
+    object-fit: cover;
+    object-position: center;
     border-radius: 50%;
   }
 `;
@@ -167,4 +204,8 @@ const RemoveButton = styled.button`
   color: var(--bs-body-color);
   margin-top: 47px;
   text-align: center;
+`;
+
+const CheckLft = styled.div`
+  margin-right: 10px;
 `;

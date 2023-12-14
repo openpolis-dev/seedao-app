@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Spinner } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import LoadingImg from '../assets/Imgs/loading.png';
 
@@ -29,6 +28,9 @@ const Box = styled.div`
   position: relative;
 
   img {
+    user-select: none;
+    width: 40px;
+    height: 40px;
     animation: rotate 1s infinite linear;
   }
   @keyframes rotate {

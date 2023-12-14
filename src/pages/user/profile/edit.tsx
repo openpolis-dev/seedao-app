@@ -174,6 +174,10 @@ export default function Profile() {
       showToast(t('My.IncorrectLink', { media: 'Twitter' }), ToastType.Danger);
       return;
     }
+    if (github && !github.startsWith('https://github.com/')) {
+      showToast(t('My.IncorrectLink', { media: 'Github' }), ToastType.Danger);
+      return;
+    }
 
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
@@ -196,9 +200,10 @@ export default function Profile() {
         dispatch({ type: AppActionType.SET_LOADING, payload: false });
         window.location.reload();
       }, 1000);
-    } catch (error) {
+    } catch (error: any) {
       console.error('updateUser failed', error);
-      showToast(t('My.ModifiedFailed'), ToastType.Danger);
+      const msg = error?.data?.msg || error;
+      showToast(msg, ToastType.Danger);
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }
   };
@@ -389,7 +394,12 @@ export default function Profile() {
                 {t('My.Github')}
               </div>
               <InputBox>
-                <Form.Control type="text" placeholder="" value={github} onChange={(e) => handleInput(e, 'github')} />
+                <Form.Control
+                  type="text"
+                  placeholder="https://github.com/..."
+                  value={github}
+                  onChange={(e) => handleInput(e, 'github')}
+                />
               </InputBox>
             </li>
             <RhtLi>
@@ -431,8 +441,10 @@ const UploadBox = styled.label`
     margin-right: 10px;
   }
   img {
-    max-width: 100%;
-    max-height: 100%;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
   }
 `;
 

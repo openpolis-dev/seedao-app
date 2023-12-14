@@ -158,7 +158,7 @@ export default function AssetList() {
         page: 1,
         size: 1000,
         sort_order: 'desc',
-        sort_field: 'created_at',
+        sort_field: 'create_ts',
       });
       return res.data.rows.map((item) => ({
         label: item.name,
@@ -176,7 +176,7 @@ export default function AssetList() {
         page: 1,
         size: 1000,
         sort_order: 'desc',
-        sort_field: 'created_at',
+        sort_field: 'create_ts',
       });
       return res.data.rows.map((item) => ({
         label: item.name,
@@ -237,7 +237,7 @@ export default function AssetList() {
         {
           page,
           size: pageSize,
-          sort_field: 'created_at',
+          sort_field: 'create_ts',
           sort_order: 'desc',
         },
         queryData,
@@ -245,7 +245,7 @@ export default function AssetList() {
       setTotal(res.data.total);
       const _list = res.data.rows.map((item) => ({
         ...item,
-        created_date: formatTime(item.created_at),
+        created_date: formatTime(item.create_ts * 1000),
         transactions: item.transaction_ids.split(','),
       }));
       setList(_list);
@@ -409,7 +409,7 @@ export default function AssetList() {
                     <td>{item.budget_source}</td>
                     <td>{item.comment}</td>
                     <td>{t(formatApplicationStatus(item.status))}</td>
-                    <td>{item.submitter_name || publicJs.AddressToShow(item.submitter_wallet)}</td>
+                    <td>{item.submitter_name || publicJs.AddressToShow(item.applicant_wallet)}</td>
                     <td>{item.reviewer_name || publicJs.AddressToShow(item.reviewer_wallet)}</td>
                     <td>
                       {item.status === ApplicationStatus.Completed && (

@@ -8,13 +8,15 @@ import requests from "../../requests";
 import { AppActionType, useAuthContext } from "../../providers/authProvider";
 import { Authorizer } from "casbin.js";
 import { readPermissionUrl } from "../../requests/user";
-import { WalletType } from "../../wallet/wallet";
+import { WalletType, Wallet } from '../../wallet/wallet';
 import { SELECT_WALLET } from "../../utils/constant";
 import { clearStorage } from "../../utils/auth";
 
 import styled from "styled-components";
-import UnipassIcon from "../../assets/Imgs/home/Unipass.svg";
+import UnipassIcon from "../../assets/Imgs/home/UniPass.svg";
 import OneSignal from 'react-onesignal';
+import getConfig from "utils/envCofnig";
+const networkConfig = getConfig().NETWORK;
 
 const WalletOption = styled.li`
     display: flex;
@@ -39,21 +41,22 @@ const WalletOption = styled.li`
 `;
 
 export const upProvider = new UniPassProvider({
-    chainId: 1,
-    returnEmail: false,
-    appSetting: {
-        appName: 'test dapp',
-        appIcon: 'your icon url',
-    },
-    rpcUrls: {
-        mainnet: "https://eth.llamarpc.com",
-        // polygon: "https://polygon.llamarpc.com",
-        // bscTestnet:"https://data-seed-prebsc-1-s1.binance.org:8545"
-    },
+  chainId: networkConfig.chainId,
+  returnEmail: false,
+  appSettings: {
+    appName: 'SeeDAO',
+    appIcon: `${window.location.origin}/icon192.png`,
+  },
+//   rpcUrls: {
+//     mainnet: 'https://eth.llamarpc.com',
+//     goerli: networkConfig.rpc,
+//     // polygon: "https://polygon.llamarpc.com",
+//     // bscTestnet:"https://data-seed-prebsc-1-s1.binance.org:8545"
+//   },
 });
 
 
-export default function Unipass(){
+export default function UniPass(){
     const navigate = useNavigate();
     const [msg,setMsg] = useState(null);
     const [signInfo,setSignInfo] = useState();
@@ -64,7 +67,7 @@ export default function Unipass(){
 
     const getP = async() =>{
         try{
-            localStorage.setItem(SELECT_WALLET, 'UNIPASS');
+            localStorage.setItem(SELECT_WALLET, Wallet.UNIPASS);
             await upProvider.disconnect();
             await upProvider.connect();
             const provider = new ethers.providers.Web3Provider(upProvider, "any");
@@ -107,7 +110,7 @@ export default function Unipass(){
             const eip55Addr = ethers.utils.getAddress(account);
             console.error(eip55Addr)
 
-            const siweMessage = createSiweMessage(eip55Addr, 1, nonce, 'Welcome to SeeDAO!');
+            const siweMessage = createSiweMessage(eip55Addr, networkConfig.chainId, nonce, 'Welcome to SeeDAO!');
             setMsg(siweMessage)
             console.log("siweMessage", siweMessage)
             const signer = provider.getSigner();
@@ -180,7 +183,7 @@ export default function Unipass(){
 
     return <WalletOption onClick={() => getP()}>
         <img src={UnipassIcon} alt=""/>
-        <span>Unipass</span>
+        <span>UniPass</span>
     </WalletOption>
 
 }

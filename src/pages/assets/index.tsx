@@ -5,26 +5,19 @@ import requests from 'requests';
 import { useTranslation } from 'react-i18next';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import useToast, { ToastType } from 'hooks/useToast';
-import usePermission from 'hooks/usePermission';
-import { PermissionAction, PermissionObject } from 'utils/constant';
 import publicJs from 'utils/publicJs';
-import axios from 'axios';
 import CopyBox from 'components/copy';
 import { ethers } from 'ethers';
 import ModifyBudgetModal from 'components/assetsCom/modifyBudget';
 import { BudgetType } from 'type/project.type';
-import { formatNumber } from 'utils/number';
-import { Button } from 'react-bootstrap';
-import { ChevronDown, ChevronUp, Pencil } from 'react-bootstrap-icons';
 import { ContainerPadding } from 'assets/styles/global';
-import { Link } from 'react-router-dom';
 import BalanceIcon from 'assets/Imgs/vault/balance.png';
-import WalletIcon from 'assets/Imgs/vault/wallet.png';
-import ChainIcon from 'assets/Imgs/vault/chain.png';
-import SignerIcon from 'assets/Imgs/vault/signer.png';
-import CopyIconSVG from 'components/svgs/copy';
-import ShareIconSVG from 'components/svgs/share';
-import ArrowIconSVG from 'components/svgs/downArrow';
+import EthImg from 'assets/Imgs/network/ethereumWhite.jpg';
+import PolygonImg from 'assets/Imgs/network/polygonWhite.jpg';
+import getConfig from 'utils/envCofnig';
+import useCurrentSeason from 'hooks/useCurrentSeason';
+import { getVaultBalance, IVaultBalance } from 'requests/publicData';
+
 
 const BoxOuter = styled.div`
   ${ContainerPadding};
@@ -74,6 +67,7 @@ const FirstLine = styled.ul<{ border: string }>`
     font-size: 28px;
     font-family: Poppins-Medium, Poppins;
     font-weight: 500;
+    margin-bottom: 25px;
   }
   @media (max-width: 1100px) {
     .num {
@@ -82,61 +76,44 @@ const FirstLine = styled.ul<{ border: string }>`
   }
 `;
 
-const enum CHAINS {
-  ETH = 1,
-  Polygon = 137,
-}
-
-const SAFE_CHAIN = {
-  [CHAINS.ETH]: {
+const SAFE_CHAIN: { [k: string]: { short: string; name: string } } = {
+  '1': {
     short: 'eth',
     name: 'Ethereum',
   },
-  [CHAINS.Polygon]: {
+  '137': {
     short: 'matic',
     name: 'Polygon',
   },
 };
 
-const VAULTS = [
-  {
-    name: 'Assets.CommunityVault',
-    address: '0x7FdA3253c94F09fE6950710E5273165283f8b283',
-    chainId: CHAINS.ETH,
-    id: 1,
-  },
-  {
-    name: 'Assets.CommunityVault',
-    address: '0x4876eaD85CE358133fb80276EB3631D192196e24',
-    chainId: CHAINS.Polygon,
-    id: 2,
-  },
-  {
-    name: 'Assets.CityHallVault',
-    address: '0x70F97Ad9dd7E1bFf40c3374A497a7583B0fAdd25',
-    chainId: CHAINS.ETH,
-    id: 3,
-  },
-  {
-    name: 'Assets.IncubatorVault',
-    address: '0x444C1Cf57b65C011abA9BaBEd05C6b13C11b03b5',
-    chainId: CHAINS.ETH,
-    id: 4,
-  },
-];
-
 const SCR_CONTRACT = '0xc74dee15a4700d5df797bdd3982ee649a3bb8c6c';
 const SCR_PRICE = 0.03;
 
-type VaultType = {
-  name: string;
-  address: string;
-  chainId: CHAINS;
-  id: number;
+const getChainIcon = (chainId: number) => {
+  switch (chainId) {
+    case 1:
+      return <img src={EthImg} alt="" />;
+    case 137:
+      return <img src={PolygonImg} alt="" />;
+    default:
+      return '';
+  }
 };
 
-type VaultInfoMap = {
-  [k: number]: { balance?: string; total?: number; threshold?: number };
+const getVaultName = (address: string) => {
+  switch (address) {
+    case '0x7FdA3253c94F09fE6950710E5273165283f8b283':
+      return 'Assets.CommunityVault';
+    case '0x4876eaD85CE358133fb80276EB3631D192196e24':
+      return 'Assets.CommunityVault';
+    case '0x70F97Ad9dd7E1bFf40c3374A497a7583B0fAdd25':
+      return 'Assets.CityHallVault';
+    case '0x444C1Cf57b65C011abA9BaBEd05C6b13C11b03b5':
+      return 'Assets.IncubatorVault';
+    default:
+      return '';
+  }
 };
 
 export default function Index() {
@@ -146,7 +123,9 @@ export default function Index() {
     state: { theme },
   } = useAuthContext();
   const { Toast, showToast } = useToast();
-  const canUseCityhall = usePermission(PermissionAction.AssetsBudget, PermissionObject.Treasury);
+  // const canUseCityhall = usePermission(PermissionAction.AssetsBudget, PermissionObject.Treasury);
+
+  const currentSeason = useCurrentSeason();
 
   const [asset, setAsset] = useState({
     token_used_amount: 0,
@@ -155,15 +134,13 @@ export default function Index() {
     credit_total_amount: 0,
   });
   const [showModifyModal, setshowModifyModal] = useState<BudgetType>();
-  const [showVaultDetail, setShowVaultDetail] = useState(false);
-  const [vaultsMap, setVaultsMap] = useState<VaultInfoMap>({});
-  const [totalSigner, setTotalSigner] = useState(0);
   const [totalBalance, setTotalBalance] = useState('0.00');
   const [totalSCR, setTotalSCR] = useState('0');
   const [nftData, setNftData] = useState({
     floorPrice: '0',
     totalSupply: '0',
   });
+  const [wallets, setWallets] = useState<IVaultBalance[]>([]);
 
   const getAssets = async () => {
     try {
@@ -206,16 +183,14 @@ export default function Index() {
 
   const getFloorPrice = async () => {
     try {
-      const url = 'https://restapi.nftscan.com/api/v2/statistics/collection/0x30093266e34a816a53e302be3e59a93b52792fd4';
-      const res = await axios.get(url, {
-        headers: {
-          'X-API-KEY': 'laP3Go52WW4oBXdt7zhJ7aoj',
-        },
-      });
-      setNftData({
-        floorPrice: formatNumber(res.data?.data?.floor_price || 0),
-        totalSupply: formatNumber(res.data?.data?.items_total || 0),
-      });
+      fetch(`${getConfig().INDEXER_ENDPOINT}/insight/erc721/total_supply/0x30093266E34a816a53e302bE3e59a93B52792FD4`)
+        .then((res) => res.json())
+        .then((r) => {
+          setNftData({
+            floorPrice: '0',
+            totalSupply: r.totalSupply,
+          });
+        });
     } catch (error) {
       console.error('getFloorPrice error', error);
     }
@@ -246,68 +221,28 @@ export default function Index() {
         provider,
       );
       const supply = await contract.totalSupply();
-      setTotalSCR(ethers.utils.formatEther(supply));
+      setTotalSCR(Number(ethers.utils.formatEther(supply)).format());
     } catch (error) {
       console.error('getSCR error', error);
     }
   };
 
-  const getVaultBalance = async ({ chainId, address }: VaultType) => {
-    return axios.get(`https://safe-client.safe.global/v1/chains/${chainId}/safes/${address}/balances/usd?trusted=true`);
-  };
-  const getVaultInfo = async ({ chainId, address }: VaultType) => {
-    return axios.get(`https://safe-client.safe.global/v1/chains/${chainId}/safes/${address}`);
-  };
-  const getVaultsInfo = async () => {
-    const vaults_map: VaultInfoMap = {};
-    const users: any[] = [];
-    let _total = 0;
-
+  const getVaultData = async () => {
     try {
-      const reqs = VAULTS.map((item) => getVaultBalance(item));
-      const results = await Promise.allSettled(reqs);
-      results.forEach((res, index) => {
-        if (res.status === 'fulfilled') {
-          const _v = Number(res.value.data?.fiatTotal || 0);
-          vaults_map[VAULTS[index].id] = {
-            balance: _v.toFixed(2),
-          };
-          _total += _v;
-        }
-      });
+      const res = await getVaultBalance();
+      setWallets(res.data.wallets);
+      let v: number = 0;
+      res.data.wallets.forEach((w) => (v += Number(w.fiatTotal)));
+      setTotalBalance(v.format());
     } catch (error) {
-      console.error('getVaultBalance error', error);
+      console.error(error);
     }
-    try {
-      const reqs = VAULTS.map((item) => getVaultInfo(item));
-      const results = await Promise.allSettled(reqs);
-      results.forEach((res, index) => {
-        if (res.status === 'fulfilled') {
-          const _id = VAULTS[index].id;
-          if (!vaults_map[_id]) {
-            vaults_map[_id] = {};
-          }
-          vaults_map[_id].total = res.value.data?.owners.length || 0;
-          vaults_map[_id].threshold = res.value.data?.threshold || 0;
-          users.push(...res.value.data?.owners.map((item: any) => item.value));
-        }
-      });
-    } catch (error) {
-      console.error('getVaultInfo error', error);
-    }
-    setTotalSigner([...new Set(users)].length);
-    setTotalBalance(_total.toFixed(2));
-    setVaultsMap(vaults_map);
   };
-
-  const SCRValue = useMemo(() => {
-    return Number(totalSCR) * SCR_PRICE;
-  }, [totalSCR]);
 
   useEffect(() => {
     getSCR();
-    process.env.NODE_ENV === 'production' && getFloorPrice();
-    getVaultsInfo();
+    getFloorPrice();
+    getVaultData();
   }, []);
 
   const borderStyle = useMemo(() => {
@@ -330,90 +265,49 @@ export default function Index() {
                 </div>
                 <div className="info-right">
                   <div className="title">{t('Assets.TotalBalance')}</div>
-                  <div className="balance num topLft">${formatNumber(Number(totalBalance))}</div>
+                  <div className="balance num topLft">${totalBalance}</div>
                 </div>
               </InfoItem>
               {/*<div className="right">*/}
-              <InfoItem>
-                <div>
-                  <IconStyle src={WalletIcon} alt="" />
-                </div>
-                <div className="info-right">
-                  <div className="title">{t('Assets.Wallet')}</div>
-                  <div className="num">4</div>
-                </div>
-              </InfoItem>
-              <InfoItem>
-                <div>
-                  <IconStyle src={SignerIcon} alt="" />
-                </div>
-                <div className="info-right">
-                  <div className="title">{t('Assets.MultiSign')}</div>
-                  <div className="num">{totalSigner}</div>
-                </div>
-              </InfoItem>
-              <InfoItem>
-                <div>
-                  <IconStyle src={ChainIcon} alt="" />
-                </div>
-                <div className="info-right">
-                  <div className="title">{t('Assets.Chain')}</div>
-                  <div className="num">2</div>
-                </div>
-              </InfoItem>
-              <OptionBox>
-                <Link to="/assets/register">
-                  <Button style={{ height: '36px' }}>{t('application.Register')}</Button>
-                </Link>
-                <DetailButton onClick={() => setShowVaultDetail(!showVaultDetail)}>
-                  <span>{t('Assets.Detail')}</span>
-                  <ArrowIconSVG style={{ transform: showVaultDetail ? 'rotate(180deg)' : 'unset' }} />
-                </DetailButton>
-              </OptionBox>
-              {/*</div>*/}
-            </div>
-            {showVaultDetail && (
+
               <VaultInfo>
-                {VAULTS.map((v) => (
-                  <VaultItem key={v.address}>
+                {wallets.map((v) => (
+                  <VaultItem key={v.wallet}>
                     <div className="info-left">
                       <span className="name">
-                        <DotIcon />
-                        <span>{t(v.name as any)}</span>
+                        <span>{t(getVaultName(v.wallet) as any)}</span>
                       </span>
+                      <div className="balance">
+                        <span> ${Number(v.fiatTotal).format()}</span>
+                      </div>
                       <div className="info">
                         <div className="address">
-                          <span>{publicJs.AddressToShow(v.address)}</span>
-                          <div>
-                            <CopyBox text={v.address}>
-                              <CopyIconSVG />
-                            </CopyBox>
+                          <CopyBox text={v.wallet}>
+                            <span>{publicJs.AddressToShow(v.wallet)}</span>
+                          </CopyBox>
+                        </div>
+                        <a
+                          href={`https://app.safe.global/balances?safe=${SAFE_CHAIN[String(v.chainId)].short}:${
+                            v.wallet
+                          }`}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          <div className="tag">
+                            <Tag>
+                              {getChainIcon(v.chainId)}
+                              <span>
+                                {v.threshold}/{v.owners}
+                              </span>
+                            </Tag>
                           </div>
-                        </div>
-                        <div className="tag">
-                          <Tag>
-                            {SAFE_CHAIN[v.chainId].name}
-                            <span>
-                              {vaultsMap[v.id]?.threshold || 0}/{vaultsMap[v.id]?.total || 0}
-                            </span>
-                          </Tag>
-                        </div>
+                        </a>
                       </div>
-                    </div>
-                    <div className="balance">
-                      <span> ${formatNumber(Number(vaultsMap[v.id]?.balance || 0.0))}</span>
-                      <a
-                        href={`https://app.safe.global/balances?safe=${SAFE_CHAIN[v.chainId].short}:${v.address}`}
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        <ShareIconSVG />
-                      </a>
                     </div>
                   </VaultItem>
                 ))}
               </VaultInfo>
-            )}
+            </div>
           </VaultOverview>
         </Vault>
         <FirstLine border={borderStyle}>
@@ -421,10 +315,8 @@ export default function Index() {
             <LiHead>
               <LiTitle>{t('Assets.SupplySCR')}</LiTitle>
             </LiHead>
-            <div className="num">{formatNumber(Number(totalSCR))}</div>
-            <div style={{ textAlign: 'left' }}>
-              <p className="tips">{/* ≈ {formatNumber(Number(SCRValue.toFixed(2)))} U 1SCR ≈ {SCR_PRICE} U */}</p>
-            </div>
+            <div className="num">{totalSCR}</div>
+            {/*<AssetBox></AssetBox>*/}
             <BorderDecoration color="#FF86CB" />
           </li>
           <li className="center">
@@ -432,45 +324,41 @@ export default function Index() {
               <LiTitle>{t('Assets.SupplySGN')}</LiTitle>
             </LiHead>
             <div className="num">{nftData.totalSupply}</div>
-            <div className="tips">
-              {t('Assets.FloorPrice')} : <span>{nftData.floorPrice} ETH</span>
-            </div>
+            {/*<div className="tips">*/}
+            {/*  {t('Assets.FloorPrice')} : <span>{nftData.floorPrice} ETH</span>*/}
+            {/*</div>*/}
             <BorderDecoration color="#FFB842" />
           </li>
           <li>
             <LiHead>
-              <LiTitle>{t('Assets.SeasonUseUSD')}</LiTitle>
+              <LiTitle>{t('Assets.SeasonUseUSD', { season: currentSeason })}</LiTitle>
             </LiHead>
-            <div className="num">{formatNumber(asset.token_used_amount)}</div>
-            <AssetBox className="tips">
-              <span>{t('Assets.SeasonBudget')} : </span>
-              <span>{formatNumber(asset.token_total_amount)}</span>
-              {canUseCityhall && (
-                <span className="btn-edit" onClick={() => setshowModifyModal(BudgetType.Token)}>
-                  <Pencil />
-                  {/*<EvaIcon name="edit-2-outline" options={{ width: '16px', height: '16px' }} />*/}
-                </span>
-              )}
-            </AssetBox>
+            <div className="num">{Number(asset.token_used_amount).format()}</div>
+            {/*<AssetBox className="tips">*/}
+            {/*  /!* <span>{t('Assets.SeasonBudget')} : </span>*/}
+            {/*  <span>{formatNumber(asset.token_total_amount)}</span>*/}
+            {/*  {canUseCityhall && (*/}
+            {/*    <span className="btn-edit" onClick={() => setshowModifyModal(BudgetType.Token)}>*/}
+            {/*      <Pencil />*/}
+            {/*    </span>*/}
+            {/*  )} *!/*/}
+            {/*</AssetBox>*/}
             <BorderDecoration color="#03DACD" />
           </li>
           <li className="center">
             <LiHead>
-              <LiTitle>
-                {t('Assets.SeasonUsedSCR')}({t('Assets.SCRTip')})
-              </LiTitle>
+              <LiTitle>{t('Assets.SeasonUsedSCR', { season: currentSeason })}</LiTitle>
             </LiHead>
-            <div className="num">{formatNumber(asset.credit_used_amount)}</div>
-            <AssetBox className="tips">
-              <span>{t('Assets.SeasonBudget')} : </span>
-              <span>{formatNumber(asset.credit_total_amount)}</span>
-              {canUseCityhall && (
-                <span className="btn-edit" onClick={() => setshowModifyModal(BudgetType.Credit)}>
-                  <Pencil />
-                  {/*<EvaIcon name="edit-2-outline" options={{ width: '16px', height: '16px' }} />*/}
-                </span>
-              )}
-            </AssetBox>
+            <div className="num">{Number(asset.credit_used_amount).format()}</div>
+            {/*<AssetBox className="tips">*/}
+            {/*  /!* <span>{t('Assets.SeasonBudget')} : </span>*/}
+            {/*  <span>{formatNumber(asset.credit_total_amount)}</span>*/}
+            {/*  {canUseCityhall && (*/}
+            {/*    <span className="btn-edit" onClick={() => setshowModifyModal(BudgetType.Credit)}>*/}
+            {/*      <Pencil />*/}
+            {/*    </span>*/}
+            {/*  )} *!/*/}
+            {/*</AssetBox>*/}
             <BorderDecoration color="#4378FF" />
           </li>
         </FirstLine>
@@ -494,6 +382,7 @@ const AssetBox = styled.div`
     margin-bottom: 5px;
     z-index: 9;
   }
+  min-height: 24px;
 `;
 
 const Vault = styled.div`
@@ -504,7 +393,7 @@ const Vault = styled.div`
 `;
 
 const VaultOverview = styled.div<{ border: string }>`
-  background: var(--bs-box--background);
+  background: #8145ff;
   border: ${(props) => props.border};
   border-radius: 16px;
   overflow: hidden;
@@ -527,7 +416,6 @@ const VaultOverview = styled.div<{ border: string }>`
   @media (max-width: 950px) {
     .vaultInner {
       flex-direction: column;
-      padding-top: 20px;
       padding: 20px 16px 0 16px;
       align-items: flex-start;
     }
@@ -549,22 +437,26 @@ const InfoItem = styled.li`
   display: flex;
   align-items: center;
   gap: 22px;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  margin-right: 40px;
+  min-width: 300px;
+  flex-shrink: 0;
   .topLft {
     color: #ffa842;
   }
   .title {
-    font-size: 14px;
-    color: var(--bs-body-color);
+    font-size: 12px;
+    color: #fff;
   }
   .num {
-    font-size: 28px;
+    font-size: 22px;
     font-family: Poppins-Medium, Poppins;
   }
 
   .info-right {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 5px;
   }
 
   &.detail {
@@ -592,70 +484,59 @@ const InfoItem = styled.li`
 `;
 
 const VaultInfo = styled.ul`
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-  border-bottom-left-radius: 10px;
-  border-bottom-right-radius: 10px;
-  padding-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 1;
 `;
 const VaultItem = styled.li`
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  padding: 12px 40px;
-  &:hover {
-    background-color: var(--bs-menu-hover);
-  }
-  &:last-child {
-    border-bottom: 0;
-  }
+  align-items: center;
+  width: 25%;
+  color: #fff;
   .info-left {
-    display: flex;
-    gap: 60px;
-    align-items: center;
     .name {
       width: 160px;
-      font-size: 14px;
+      font-size: 12px;
       font-family: Poppins-SemiBold, Poppins;
       font-weight: 600;
     }
-  }
-  .tag {
-    margin-left: 20px;
   }
   .info,
   .address {
     display: flex;
     align-items: center;
-    font-size: 14px;
-  }
-  .address {
-    gap: 8px;
+    font-size: 12px;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.6);
+    line-height: 14px;
   }
   .iconBox {
     cursor: pointer;
     margin: 0 0 10px 10px;
   }
   .balance {
-    font-size: 18px;
-    font-family: Poppins-SemiBold, Poppins;
+    font-size: 20px;
+    font-family: Poppins-SemiBold;
     display: flex;
     gap: 16px;
     align-items: center;
-  }
-  @media (max-width: 950px) {
-    padding: 12px 16px;
+    font-weight: 600;
+    padding: 9px 0;
   }
 `;
 
 const Tag = styled.div`
-  background: #ebe9ff;
-  color: var(--bs-primary);
   text-align: center;
-  border-radius: 8px;
-  width: 128px;
-  line-height: 30px;
+  color: rgba(255, 255, 255, 0.6);
+  margin-left: 15px;
   span {
     margin-left: 5px;
+  }
+  img {
+    width: 16px;
   }
 `;
 

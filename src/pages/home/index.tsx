@@ -1,12 +1,10 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import styled from 'styled-components';
-import { Row, Col } from 'react-bootstrap';
+import { Row, Col, Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import AppCard from 'components/common/appCard';
 import Links from 'utils/links';
 import BgImg from '../../assets/Imgs/home/banner.png';
-import CityHallImg from '../../assets/Imgs/home/cityHall.png';
-import MembersImg from '../../assets/Imgs/home/members.png';
 
 import SGNImg from '../../assets/Imgs/dark/sgnHome.png';
 import SbtImg from '../../assets/Imgs/dark/sbt.png';
@@ -18,17 +16,16 @@ import { useAuthContext } from '../../providers/authProvider';
 import ArrowImg from '../../assets/Imgs/arrow.png';
 import LinkImg from '../../assets/Imgs/link.svg';
 import { Link, useNavigate } from 'react-router-dom';
-import ProposalImg from '../../assets/Imgs/home/proposal.png';
 import getConfig from 'utils/envCofnig';
-
-const CITY_HALL = 'https://seedao.notion.site/07c258913c5d4847b59271e2ae6f7c66';
-const CITY_HALL_MEMBERS = 'https://www.notion.so/3913d631d7bc49e1a0334140e3cd84f5';
 
 const Box = styled.div`
   background: var(--bs-background);
+  display: flex;
+  flex-grow: 1;
+  flex-direction: column;
   .lline {
     display: flex;
-    margin: 40px 20px;
+    margin: 40px 20px 0;
   }
 `;
 
@@ -42,11 +39,11 @@ const BannerBox = styled.div`
   border-radius: 16px;
   box-sizing: border-box;
   margin: 24px 32px 40px;
+  position: relative;
 `;
 
 const ActiveBox = styled.div`
   margin: 0 40px 0 0;
-
   div[class^='col'] {
     min-height: 116px;
     display: flex;
@@ -55,6 +52,9 @@ const ActiveBox = styled.div`
   .boxApp {
     border: 1px solid var(--bs-border-color);
     box-shadow: var(--box-shadow);
+  }
+  .link {
+    display: none !important;
   }
 `;
 
@@ -182,7 +182,8 @@ const FontBox = styled.div`
   display: flex;
   flex-direction: column;
   color: #fff;
-  width: 600px;
+  min-width: 50%;
+  max-width: 670px;
   .tit {
     font-size: 32px;
     font-weight: bold;
@@ -258,7 +259,7 @@ export default function Home() {
   const navigate = useNavigate();
 
   const {
-    state: { theme },
+    state: { theme, hadOnboarding, sns: userSNS },
   } = useAuthContext();
 
   const events = useMemo(() => {
@@ -355,6 +356,11 @@ export default function Home() {
             {t('Home.SloganVison')}:{t('Home.SloganDesc')}
           </div>
         </FontBox>
+        {/* {!hadOnboarding && (
+          <OnboadingButton onClick={() => navigate(userSNS ? '/onboarding/learn' : '/sns/register')}>
+            {t('Onboarding.HomeEntranceButton')}
+          </OnboadingButton>
+        )} */}
       </BannerBox>
       <LineBox>
         <dl>
@@ -457,7 +463,7 @@ export default function Home() {
 
               {Publicitys.map((item: any, index) => {
                 return item.id.startsWith('module') ? (
-                  <Col>
+                  <Col key={index}>
                     <Link to={item.link}>
                       <BtmBox>
                         <div>
@@ -493,3 +499,9 @@ export default function Home() {
     </Box>
   );
 }
+
+const OnboadingButton = styled(Button)`
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+`;

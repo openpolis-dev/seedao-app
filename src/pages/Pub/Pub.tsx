@@ -240,7 +240,7 @@ export default function Pub() {
   };
 
   const ToGo = (id: string) => {
-    navigate(`/pubDetail/${id}`);
+    navigate(`/hubDetail/${id}`);
   };
 
   const returnStatus = (str: string) => {

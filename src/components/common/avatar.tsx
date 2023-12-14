@@ -4,30 +4,35 @@ import PublicJs from 'utils/publicJs';
 // import DefaultAvatar from 'assets/images/avatar.svg';
 import useParseSNS from 'hooks/useParseSNS';
 import DefaultAvatar from '../../assets/Imgs/defaultAvatarT.png';
-import { useEffect } from 'react';
-import requests from '../../requests';
+import { useEffect, useState } from 'react';
 import { AppActionType, useAuthContext } from '../../providers/authProvider';
 
 export default function Avatar({ user }: { user?: IUser }) {
   const sns = useParseSNS(user?.wallet);
+  const [avatar, setAvatar] = useState('');
 
   const {
-    state: { userData },
+    state: { sns: userSNS },
     dispatch,
   } = useAuthContext();
 
   useEffect(() => {
-    const { data } = userData as any;
-    if (!data) return;
-    data.sns = sns;
-
-    dispatch({ type: AppActionType.SET_USER_DATA, payload: userData });
+    dispatch({ type: AppActionType.SET_SNS, payload: sns });
   }, [sns]);
 
+  useEffect(() => {
+    if (!user) return;
+    getAvatar();
+  }, [user]);
+
+  const getAvatar = async () => {
+    let avarUrl = await PublicJs.getImage(user?.avatar ?? '');
+    setAvatar(avarUrl!);
+  };
   return (
     <AvatarStyle>
-      <span>{sns || user?.name || PublicJs.AddressToShow(user?.wallet || '')}</span>
-      <img src={user?.avatar || DefaultAvatar} alt="" />
+      <span>{userSNS || user?.name || PublicJs.AddressToShow(user?.wallet || '')}</span>
+      <img src={avatar || DefaultAvatar} alt="" />
     </AvatarStyle>
   );
 }
@@ -40,5 +45,7 @@ const AvatarStyle = styled.div`
     width: 28px;
     height: 28px;
     border-radius: 50%;
+    object-fit: cover;
+    object-position: center;
   }
 `;

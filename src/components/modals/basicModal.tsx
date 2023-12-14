@@ -49,8 +49,8 @@ const CardBox = styled.div`
   .btn-close-modal {
     cursor: pointer;
     position: absolute;
-    right: -48px;
-    top: 0;
+    right: 10px;
+    top: 10px;
   }
 `;
 

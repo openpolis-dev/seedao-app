@@ -1,9 +1,10 @@
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import sns from '@seedao/sns-js';
+import { ethers } from 'ethers';
 
 export default function useQuerySNS() {
   const {
-    state: { snsMap },
+    state: { snsMap, rpc },
     dispatch,
   } = useAuthContext();
 
@@ -37,15 +38,17 @@ export default function useQuerySNS() {
     const _to_be_queried = _wallets.filter((w) => !snsMap.get(w));
 
     const _snsMap = new Map(snsMap);
-
-    try {
-      const data = await sns.names(_to_be_queried);
-      data.forEach((d, idx) => {
-        _snsMap.set(_to_be_queried[idx], d || _to_be_queried[idx]);
-      });
-    } catch (error) {
-      console.log(error);
+    if (_to_be_queried.length) {
+      try {
+        const data = await sns.names(_to_be_queried, rpc);
+        data.forEach((d, idx) => {
+          _snsMap.set(_to_be_queried[idx], d || ethers.utils.getAddress(_to_be_queried[idx]));
+        });
+      } catch (error) {
+        console.log(error);
+      }
     }
+
     dispatch({ type: AppActionType.SET_SNS_MAP, payload: _snsMap });
 
     _wallets.forEach((w) => {

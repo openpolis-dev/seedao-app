@@ -161,8 +161,9 @@ export default function CreateProject() {
     const slugs: string[] = [];
     for (const l of proList) {
       if (l) {
-        if (l.startsWith('https://forum.seedao.xyz/thread/sip-')) {
-          const items = l.split('/').reverse();
+        const _l = l.trim().toLocaleLowerCase();
+        if (_l.startsWith('https://forum.seedao.xyz/thread/sip-')) {
+          const items = _l.split('/').reverse();
           slugs.push(items[0]);
           for (const it of items) {
             if (it) {
@@ -205,18 +206,7 @@ export default function CreateProject() {
       proposals: slugs,
       desc,
       intro,
-      budgets: [
-        {
-          name: AssetName.Token,
-          total_amount: token || 0,
-          budget_type: BudgetType.Token,
-        },
-        {
-          name: AssetName.Credit,
-          total_amount: credit || 0,
-          budget_type: BudgetType.Credit,
-        },
-      ],
+      budgets: [],
     };
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
@@ -269,146 +259,161 @@ export default function CreateProject() {
   return (
     <OuterBox>
       <BackerNav title={t('Project.create')} to="/city-hall/governance" />
-      <CardBody>
-        <BtnBox htmlFor="fileUpload" onChange={(e) => updateLogo(e)}>
-          <ImgBox>
-            <img src={url} alt="" />
-            <UpladBox
-              className="upload"
-              bg={
-                theme
-                  ? 'linear-gradient(180deg, rgba(13,12,15,0) 0%, rgba(38,27,70,0.6) 100%)'
-                  : 'linear-gradient(180deg, rgba(217,217,217,0) 0%, rgba(0,0,0,0.6) 100%)'
-              }
-            >
-              <input id="fileUpload" type="file" hidden accept=".jpg, .jpeg, .png, .svg" />
-              <CameraIconSVG />
-              <UploadImgText>{t('Project.upload')}</UploadImgText>
-            </UpladBox>
-          </ImgBox>
-          {!url && (
-            <UpladBox>
-              <input id="fileUpload" type="file" hidden accept=".jpg, .jpeg, .png, .svg" />
-              <CameraIconSVG />
-              <UploadImgText>{t('Project.upload')}</UploadImgText>
-            </UpladBox>
-          )}
-        </BtnBox>
-        <RightContent>
-          <UlBox>
-            <li>
-              <div className="title">{t('Project.ProjectName')}</div>
-              <InputBox>
-                <Form.Control
-                  type="text"
-                  placeholder={t('Project.ProjectName')}
-                  value={proName}
-                  onChange={(e) => handleInput(e, 0, 'proName')}
-                />
-              </InputBox>
-            </li>
+      <FlexBox>
+        <CardBody>
+          <BtnBox htmlFor="fileUpload" onChange={(e) => updateLogo(e)}>
+            <ImgBox>
+              {url && <img src={url} alt="" />}
+              <UpladBox
+                className="upload"
+                bg={
+                  theme
+                    ? 'linear-gradient(180deg, rgba(13,12,15,0) 0%, rgba(38,27,70,0.6) 100%)'
+                    : 'linear-gradient(180deg, rgba(217,217,217,0) 0%, rgba(0,0,0,0.6) 100%)'
+                }
+              >
+                <input id="fileUpload" type="file" hidden accept=".jpg, .jpeg, .png, .svg" />
+                <CameraIconSVG />
+                <UploadImgText>{t('Project.upload')}</UploadImgText>
+              </UpladBox>
+            </ImgBox>
+            {!url && (
+              <UpladBox>
+                <input id="fileUpload" type="file" hidden accept=".jpg, .jpeg, .png, .svg" />
+                <CameraIconSVG />
+                <UploadImgText>{t('Project.upload')}</UploadImgText>
+              </UpladBox>
+            )}
+          </BtnBox>
+          <RightContent>
+            <UlBox>
+              <li>
+                <div className="title">{t('Project.ProjectName')}</div>
+                <InputBox>
+                  <Form.Control
+                    type="text"
+                    placeholder={t('Project.ProjectName')}
+                    value={proName}
+                    onChange={(e) => handleInput(e, 0, 'proName')}
+                  />
+                </InputBox>
+              </li>
 
-            <li>
-              <div className="title">{t('Project.Desc')}</div>
-              <DescInputBox>
-                <Form.Control
-                  placeholder=""
-                  as="textarea"
-                  rows={2}
-                  value={desc}
-                  onChange={(e) => handleInput(e, 0, 'desc')}
-                />
-              </DescInputBox>
-            </li>
+              <li>
+                <div className="title">{t('Project.Desc')}</div>
+                <DescInputBox>
+                  <Form.Control
+                    placeholder=""
+                    as="textarea"
+                    rows={2}
+                    value={desc}
+                    onChange={(e) => handleInput(e, 0, 'desc')}
+                  />
+                </DescInputBox>
+              </li>
 
-            <li>
-              <div className="title">{t('Project.AssociatedProposal')}</div>
-              <div>
-                {proList.map((item, index) => (
-                  <ItemBox key={`mem_${index}`}>
-                    <ProposalInputBox>
-                      <Form.Control
-                        type="text"
-                        placeholder={`eg. https://forum.seedao.xyz/thread/sip-...`}
-                        value={item}
-                        onChange={(e) => handleInput(e, index, 'proposal')}
+              <li>
+                <div className="title">{t('Project.AssociatedProposal')}</div>
+                <div>
+                  {proList.map((item, index) => (
+                    <ItemBox key={`mem_${index}`}>
+                      <ProposalInputBox>
+                        <Form.Control
+                          type="text"
+                          placeholder={`https://forum.seedao.xyz/thread/sip-...`}
+                          value={item}
+                          onChange={(e) => handleInput(e, index, 'proposal')}
+                        />
+                      </ProposalInputBox>
+                      <PlusMinusButton
+                        showMinus={!(!index && index === proList.length - 1)}
+                        showPlus={index === proList.length - 1}
+                        onClickMinus={() => removeItem(index, 'proposal')}
+                        onClickPlus={() => handleAdd('proposal')}
                       />
-                    </ProposalInputBox>
-                    <PlusMinusButton
-                      showMinus={!(!index && index === proList.length - 1)}
-                      showPlus={index === proList.length - 1}
-                      onClickMinus={() => removeItem(index, 'proposal')}
-                      onClickPlus={() => handleAdd('proposal')}
-                    />
-                  </ItemBox>
-                ))}
-              </div>
-            </li>
-            <li>
-              <div className="title">{t('Project.Members')}</div>
-              <div>
-                {adminList.map((item, index) => (
-                  <ItemBox key={`mem_${index}`}>
-                    <MemberInputBox>
-                      <Form.Control
-                        type="text"
-                        placeholder={t('Project.AddMemberAddress')}
-                        value={item}
-                        onChange={(e) => handleInput(e, index, 'admin')}
+                    </ItemBox>
+                  ))}
+                </div>
+              </li>
+              <li>
+                <div className="title">{t('Project.Members')}</div>
+                <div>
+                  {adminList.map((item, index) => (
+                    <ItemBox key={`mem_${index}`}>
+                      <MemberInputBox>
+                        <Form.Control
+                          type="text"
+                          placeholder={t('Project.AddMemberAddress')}
+                          value={item}
+                          onChange={(e) => handleInput(e, index, 'admin')}
+                        />
+                        <RoleSelect
+                          width="120px"
+                          options={roleOptions}
+                          defaultValue={roleOptions[0]}
+                          NotClear={true}
+                          isSearchable={false}
+                        />
+                      </MemberInputBox>
+                      <PlusMinusButton
+                        showMinus={!(!index && index === adminList.length - 1)}
+                        showPlus={index === adminList.length - 1}
+                        onClickMinus={() => removeItem(index, 'admin')}
+                        onClickPlus={() => handleAdd('admin')}
                       />
-                      <RoleSelect
-                        width="120px"
-                        options={roleOptions}
-                        defaultValue={roleOptions[0]}
-                        NotClear={true}
-                        isSearchable={false}
-                      />
-                    </MemberInputBox>
-                    <PlusMinusButton
-                      showMinus={!(!index && index === adminList.length - 1)}
-                      showPlus={index === adminList.length - 1}
-                      onClickMinus={() => removeItem(index, 'admin')}
-                      onClickPlus={() => handleAdd('admin')}
-                    />
-                  </ItemBox>
-                ))}
-              </div>
-            </li>
+                    </ItemBox>
+                  ))}
+                </div>
+              </li>
 
-            <li>
-              <div className="title">{t('Project.Intro')}</div>
-              <IntroBox>
-                <MarkdownEditor
-                  value={intro}
-                  onChange={(val) => {
-                    setIntro(val);
-                  }}
-                />
-              </IntroBox>
-            </li>
-          </UlBox>
-          <BtmBox>
-            <Button
-              style={{ width: '80px' }}
-              onClick={() => handleSubmit()}
-              disabled={
-                !proName ||
-                !url ||
-                (adminList?.length === 1 && adminList[0]?.length === 0) ||
-                (proList?.length === 1 && proList[0]?.length === 0)
-              }
-            >
-              {t('general.confirm')}
-            </Button>
-            <BlackButton style={{ width: '80px' }} onClick={handleBack}>
-              {t('general.cancel')}
-            </BlackButton>
-          </BtmBox>
-        </RightContent>
-      </CardBody>
+              <li>
+                <div className="title">{t('Project.Intro')}</div>
+                <IntroBox>
+                  <MarkdownEditor
+                    value={intro}
+                    onChange={(val) => {
+                      setIntro(val);
+                    }}
+                  />
+                </IntroBox>
+              </li>
+            </UlBox>
+          </RightContent>
+        </CardBody>
+        <RhtBtnBox>
+          <Button
+            style={{ width: '80px' }}
+            onClick={() => handleSubmit()}
+            disabled={
+              !proName ||
+              (adminList?.length === 1 && adminList[0]?.length === 0) ||
+              (proList?.length === 1 && proList[0]?.length === 0)
+            }
+          >
+            {t('general.confirm')}
+          </Button>
+          <Button variant="light" style={{ width: '80px' }} onClick={handleBack}>
+            {t('general.cancel')}
+          </Button>
+        </RhtBtnBox>
+      </FlexBox>
     </OuterBox>
   );
 }
+
+const FlexBox = styled.div`
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+`;
+
+const RhtBtnBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  .btn {
+    margin-bottom: 20px;
+  }
+`;
 
 const OuterBox = styled.div`
   box-sizing: border-box;
@@ -423,7 +428,7 @@ const CardBody = styled.div`
 `;
 
 const BtmBox = styled.div`
-  margin-top: 24px;
+  margin-top: 10px;
   button {
     width: 76px;
     height: 34px;
@@ -437,8 +442,9 @@ const BtmBox = styled.div`
 const UlBox = styled.ul`
   display: flex;
   flex-direction: column;
-  gap: 40px;
+  //gap: 40px;
   li {
+    margin-bottom: 40px;
     .title {
       font-size: 16px;
       font-family: Poppins-SemiBold, Poppins;
@@ -521,6 +527,12 @@ const ImgBox = styled.div`
   align-items: center;
   justify-content: center;
   position: relative;
+  img {
+    width: 100%;
+    height: 100%;
+    object-position: center;
+    object-fit: cover;
+  }
   .upload {
     display: none;
   }

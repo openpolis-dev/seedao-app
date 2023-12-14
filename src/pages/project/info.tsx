@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import ReactMarkdown from 'react-markdown';
 import { useParams, Link } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
 import { getProjectById } from 'requests/project';
@@ -13,10 +12,16 @@ import { PermissionObject, PermissionAction } from 'utils/constant';
 import { useTranslation } from 'react-i18next';
 import Members from 'components/projectInfoCom/members';
 import SipTag from 'components/common/sipTag';
+import { MdPreview } from 'md-editor-rt';
+import DefaultLogo from 'assets/Imgs/defaultLogo.png';
 
 export default function InfoPage() {
   const { t } = useTranslation();
-  const { dispatch } = useAuthContext();
+
+  const {
+    state: { theme },
+    dispatch,
+  } = useAuthContext();
 
   const { id } = useParams();
 
@@ -73,13 +78,13 @@ export default function InfoPage() {
               <TopBox>
                 <TopBoxLeft>
                   <TopImg>
-                    <img src={detail?.logo} alt="" />
+                    <img src={detail?.logo || DefaultLogo} alt="" />
                   </TopImg>
                   <TopInfo>
                     <TitleBox>{detail?.name}</TitleBox>
                     <div className="desc">{detail?.desc}</div>
                     <ProposalBox>
-                      {detail?.proposals.map((item, index) => (
+                      {detail?.proposals?.map((item, index) => (
                         <SipTag key={index} slug={item} />
                       ))}
                     </ProposalBox>
@@ -95,7 +100,7 @@ export default function InfoPage() {
                   </InnerLft>
                 </LftBox>
                 <ContentBox>
-                  <ReactMarkdown>{detail?.intro || ''}</ReactMarkdown>
+                  <MdPreview theme={theme ? 'dark' : 'light'} modelValue={detail?.intro || ''} />
                 </ContentBox>
               </LastLine>
             </AllBox>
@@ -130,6 +135,7 @@ const Content = styled.div`
   box-sizing: border-box;
   flex-grow: 1;
   display: flex;
+  margin-top: -30px;
 `;
 
 const AllBox = styled.div`
@@ -148,27 +154,30 @@ const LastLine = styled.div`
   display: flex;
   align-items: stretch;
   justify-content: space-between;
-  margin-top: 60px;
+  margin-top: 15px;
   padding-bottom: 60px;
   flex-shrink: 0;
-  min-height: calc(100% - 200px);
+  min-height: calc(100% - 110px);
 `;
 
 const LftBox = styled.div`
   width: 246px;
+  background: var(--bs-box--background);
+  border-radius: 16px;
 `;
 
 const InnerLft = styled.div`
-  background: var(--bs-box--background);
-  border-radius: 16px;
-  width: 246px;
   box-sizing: border-box;
-  padding: 24px;
 `;
 
 const TopBox = styled.div`
   display: flex;
   justify-content: space-between;
+
+  background: var(--bs-box--background);
+  box-shadow: var(--box-shadow);
+  border-radius: 16px;
+  padding: 22px 24px;
 `;
 
 const TopBoxLeft = styled.div`
@@ -180,6 +189,8 @@ const TopImg = styled.div`
   img {
     width: 110px;
     height: 110px;
+    object-fit: cover;
+    object-position: center;
     border-radius: 16px;
   }
 `;

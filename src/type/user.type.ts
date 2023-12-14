@@ -6,8 +6,8 @@ export interface IUser {
   avatar: string;
   email?: string;
   github?: string;
-  created_at?: string;
-  updated_at?: string;
+  // created_at?: string;
+  // updated_at?: string;
   wallet?: string;
   discord_profile: string;
   twitter_profile: string;
@@ -21,6 +21,8 @@ export interface IUser {
   sbt?: any;
   seed?: any;
   roles?: string[];
+  sns?: string;
+  sp?: any;
 }
 
 export interface IUserInfo {

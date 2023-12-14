@@ -5,7 +5,7 @@ import { IUser } from 'type/user.type';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import DefaultAvatar from 'assets/Imgs/defaultAvatar.png';
 import useToast, { ToastType } from 'hooks/useToast';
-import { updateMembers } from 'requests/cityHall';
+import { MemberGroupType, batchUpdateMembers } from 'requests/cityHall';
 import BasicModal from 'components/modals/basicModal';
 import { NameMapType } from 'hooks/useParseSNS';
 
@@ -53,26 +53,50 @@ const ItemBox = styled.div`
 `;
 
 interface Iprops {
-  nameMap: NameMapType;
   closeRemove: (shouldUpdate?: boolean) => void;
-  selectAdminArr: IUser[];
+  selectUsers: { user: IUser; group: MemberGroupType }[];
   selectMemArr?: IUser[];
 }
 export default function Del(props: Iprops) {
-  const { closeRemove, selectAdminArr, nameMap } = props;
+  const { closeRemove, selectUsers } = props;
   const { t } = useTranslation();
   const { dispatch } = useAuthContext();
 
   const { showToast } = useToast();
 
   const submitUpdate = async () => {
-    const params = {
-      remove: selectAdminArr.map((item) => item.wallet || ''),
-    };
+    const governance_list = selectUsers
+      .filter((item) => item.group === MemberGroupType.Governance)
+      .map((item) => item.user.wallet || '');
+    const brand_list = selectUsers
+      .filter((item) => item.group === MemberGroupType.Brand)
+      .map((item) => item.user.wallet || '');
+    const tech_list = selectUsers
+      .filter((item) => item.group === MemberGroupType.Tech)
+      .map((item) => item.user.wallet || '');
 
+    const reqArr: any[] = [];
+    if (governance_list.length) {
+      reqArr.push({
+        remove: governance_list,
+        group_name: MemberGroupType.Governance,
+      });
+    }
+    if (brand_list.length) {
+      reqArr.push({
+        remove: brand_list,
+        group_name: MemberGroupType.Brand,
+      });
+    }
+    if (tech_list.length) {
+      reqArr.push({
+        remove: tech_list,
+        group_name: MemberGroupType.Tech,
+      });
+    }
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
-      await updateMembers(params);
+      await batchUpdateMembers(reqArr);
       showToast(t('Guild.RemoveMemSuccess'), ToastType.Success);
     } catch (e) {
       console.error(e);
@@ -87,14 +111,14 @@ export default function Del(props: Iprops) {
     <RemoveMemberModalWrapper title={t('members.RemoveTitle')} handleClose={closeRemove}>
       <CardText>{t('members.RemoveConfirm')}</CardText>
       <CardBody>
-        {selectAdminArr.map((item, index) => (
+        {selectUsers.map((item, index) => (
           <ItemBox key={index}>
             <div>
-              <img src={item.avatar || DefaultAvatar} alt="" />
+              <img src={item.user.avatar || item.user.sp?.avatar || DefaultAvatar} alt="" />
             </div>
             <div>
-              <div className="wallet">{nameMap[item.wallet || ''] || item.wallet}</div>
-              <div className="name">{item.name}</div>
+              <div className="wallet">{item.user.sns || item.user.wallet}</div>
+              <div className="name">{item.user.name}</div>
             </div>
           </ItemBox>
         ))}

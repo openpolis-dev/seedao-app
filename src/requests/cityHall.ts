@@ -1,18 +1,35 @@
-import request from './http';
-import { IUpdateStaffsParams } from 'requests/guild';
+import request, { ResponseData } from './http';
+import { ISeason } from 'type/application.type';
 
 const PATH_PREFIX = '/cityhall';
 
-export const getCityHallDetail = () => {
+export enum MemberGroupType {
+  Governance = 'G_GOVERNANCE',
+  Brand = 'G_BRANDING',
+  Tech = 'G_TECH',
+}
+
+interface ICityHallResponse {
+  id: number;
+  grouped_sponsors: { [k: string]: string[] };
+}
+
+export const getCityHallDetail = (): Promise<ResponseData<ICityHallResponse>> => {
   return request.get(`${PATH_PREFIX}/info`);
 };
 
-export interface MemberObj {
+interface IUpdateMemberParams {
   add?: string[];
   remove?: string[];
+  group_name?: MemberGroupType;
 }
-export const updateMembers = (data: MemberObj) => {
+
+export const updateMembers = (data: IUpdateMemberParams) => {
   return request.post(`${PATH_PREFIX}/update_members`, data);
+};
+
+export const batchUpdateMembers = (data: IUpdateMemberParams[]) => {
+  return request.post(`${PATH_PREFIX}/batch_update_members`, data);
 };
 
 export interface IUpdateBudgetParams {
@@ -36,4 +53,8 @@ export const requestSnapshotSeed = () => {
 // send reward
 export const requestApproveMintReward = () => {
   return request.post('rewards/approve_mint_reward');
+};
+
+export const getCurrentSeason = (): Promise<ResponseData<ISeason>> => {
+  return request.get(`/seasons/current`);
 };

@@ -21,7 +21,7 @@ import PushDetailModal, {
   StatusTag,
   PushItemBottomLeft,
 } from 'components/modals/pushDetailModal';
-import sns from '@seedao/sns-js';
+import useQuerySNS from 'hooks/useQuerySNS';
 
 enum PUSH_TAB {
   CREATE = 1,
@@ -69,11 +69,11 @@ const CreatePushContent = () => {
     }
   };
   const createBtnDisabled = useMemo(() => {
-    return !title || !href || !title.trim() || !href.trim();
+    return !title || !href || !title.trim() || !href.trim() || !href.trim().startsWith('https://');
   }, [title, href]);
   return (
     <CreateBox>
-      <BlockTitle>{t('Push.CreatePush')}</BlockTitle>
+      {/* <BlockTitle>{t('Push.CreatePush')}</BlockTitle> */}
       <Form>
         <FormGroup>
           <FormLabel>
@@ -95,7 +95,12 @@ const CreatePushContent = () => {
           <FormLabel>
             {t('Push.Href')} <span className="required">*</span>
           </FormLabel>
-          <FormInput type="text" value={href} onChange={(e: any) => setHref(e.target.value)} />
+          <FormInput
+            type="text"
+            value={href}
+            onChange={(e: any) => setHref(e.target.value)}
+            placeholder="https://..."
+          />
         </FormGroup>
         {/* <FormGroup>
           <div className="timer-group">
@@ -122,41 +127,42 @@ const PushHistoryContent = () => {
   const [hasMore, setHasMore] = useState(false);
   const [showRecord, setShowRecord] = useState<IPushDisplay>();
   const [wallet2snsMap] = useState<{ [k: string]: string }>({});
+  const [snsMap, setSnsMap] = useState<Map<string, string>>(new Map());
+
+  const { getMultiSNS } = useQuerySNS();
+
+  const handleSNS = async (wallets: string[]) => {
+    const sns_map = await getMultiSNS(wallets);
+    setSnsMap(sns_map);
+  };
+
+  const formatSNS = (wallet: string) => {
+    const name = snsMap.get(wallet.toLocaleLowerCase()) || wallet;
+    return name?.endsWith('.seedao') ? name : publicJs.AddressToShow(name, 4);
+  };
 
   const handleCancel = () => {
     // TODO
   };
   const getList = async () => {
     try {
-      const { data } = await getPushList({ page, size: pageSize, sort_field: 'created_at', sort_order: 'desc' });
+      const { data } = await getPushList({ page, size: pageSize, sort_field: 'create_ts', sort_order: 'desc' });
       const _list = [
         ...list,
         ...data.rows.map((item) => ({
           ...item,
-          timeDisplay: formatTime(new Date(item.created_at).getTime()),
+          timeDisplay: formatTime(item.create_ts * 1000),
         })),
       ];
       setList(_list);
       setHasMore(_list.length < data.total);
       setPage(page + 1);
-      const _wallets: string[] = [];
+
+      const wallets = new Set<string>();
       _list.forEach((item) => {
-        const _wallet = item.creator_wallet.toLocaleLowerCase();
-        if (!wallet2snsMap[_wallet]) {
-          _wallets.push(_wallet);
-        }
+        wallets.add(item.creator_wallet.toLocaleLowerCase());
       });
-      if (_wallets.length) {
-        try {
-          const res = await sns.names(_wallets);
-          const _map = { ...wallet2snsMap };
-          res.forEach((r, idx) => {
-            _map[_wallets[idx]] = r || publicJs.AddressToShow(_wallets[idx]);
-          });
-        } catch (error) {
-          console.error('parse sns failed', error);
-        }
-      }
+      handleSNS(Array.from(wallets));
     } catch (error) {
       console.error(error);
     }
@@ -205,10 +211,7 @@ const PushHistoryContent = () => {
 
                   <PushItemBottom>
                     <PushItemBottomLeft>
-                      <div className="name">
-                        {wallet2snsMap[item.creator_wallet.toLocaleLowerCase()] ||
-                          publicJs.AddressToShow(item.creator_wallet)}
-                      </div>
+                      <div className="name">{formatSNS(item.creator_wallet)}</div>
                       <div className="date">{item.timeDisplay}</div>
                     </PushItemBottomLeft>
                     <StatusTag>{t('Push.Pushed')}</StatusTag>
@@ -276,7 +279,7 @@ const FormGroup = styled(Form.Group)`
   .checkbox {
     width: unset;
   }
-  margin-bottom: 40px;
+  margin-bottom: 30px;
   .timer-group {
     display: flex;
     align-items: center;
@@ -285,7 +288,7 @@ const FormGroup = styled(Form.Group)`
 `;
 
 const FormLabel = styled(Form.Label)`
-  margin-bottom: 24px;
+  margin-bottom: 14px;
   font-family: unset;
   .required {
     color: darkred;
@@ -297,14 +300,14 @@ const FormInput = styled(Form.Control)`
 `;
 
 const SubmitBox = styled.div`
-  margin-top: 52px;
+  margin-top: 30px;
   button {
     min-width: 120px;
   }
 `;
 
 const BlockTitle = styled.div`
-  font-size: 24px;
+  font-size: 20px;
   font-family: Poppins-Bold;
   font-weight: bold;
   line-height: 30px;

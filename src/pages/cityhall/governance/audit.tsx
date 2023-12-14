@@ -4,7 +4,6 @@ import Page from 'components/pagination';
 import requests from 'requests';
 import { IApplicantBundleDisplay, ApplicationStatus, IApplicationDisplay } from 'type/application.type';
 import { formatTime } from 'utils/time';
-import utils from 'utils/publicJs';
 import { IQueryParams } from 'requests/applications';
 import NoItem from 'components/noItem';
 import publicJs from 'utils/publicJs';
@@ -20,9 +19,15 @@ import useBudgetSource from 'hooks/useBudgetSource';
 import BackerNav from 'components/common/backNav';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import { ContainerPadding } from 'assets/styles/global';
-import ApplicationStatusTag from 'components/common/applicationStatusTag';
+import ApplicationStatusTag from 'components/common/applicationStatusTagNew';
 import useApplicants from 'hooks/useApplicants';
 import { formatApplicationStatus } from 'utils';
+import sns from '@seedao/sns-js';
+import { ethers } from 'ethers';
+
+import SearchImg from 'assets/Imgs/light/search.svg';
+import SearchWhite from 'assets/Imgs/light/search.svg';
+import ClearSVGIcon from 'components/svgs/clear';
 
 const Box = styled.div`
   position: relative;
@@ -77,7 +82,10 @@ const TableBox = styled.div`
 
 export default function Register() {
   const { t } = useTranslation();
-  const { dispatch } = useAuthContext();
+  const {
+    dispatch,
+    state: { theme },
+  } = useAuthContext();
   const { showToast } = useToast();
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -87,9 +95,10 @@ export default function Register() {
   // budget source
   const allSource = useBudgetSource();
   const [selectSource, setSelectSource] = useState<{ id: number; type: 'project' | 'guild' }>();
-  // applicant
-  const applicants = useApplicants();
-  const [selectApplicant, setSelectApplicant] = useState<string>();
+
+  // search applicant
+  const [applicantKeyword, setApplicantKeyword] = useState('');
+  const [searchApplicantVal, setSearchApplicantVal] = useState('');
   // State
   const allStates = useMemo(() => {
     return [
@@ -101,11 +110,16 @@ export default function Register() {
   const [selectState, setSelectState] = useState<ApplicationStatus>();
   // season
   const seasons = useSeasons();
-  const [selectSeason, setSelectSeason] = useState<number>();
+  const selectSeason = seasons.length ? seasons[seasons.length - 1].value : undefined;
+  // process flag
+  const [isProcessing, setIsProcessing] = useState(true);
 
   const [showMore, setShowMore] = useState<IApplicationDisplay[]>();
   const [showBundleId, setShowBundleId] = useState<number>();
   const [bundleStatus, setShowBundleStatus] = useState<ApplicationStatus>();
+  const [applyIntro, setApplyIntro] = useState('');
+
+  const [snsMap, setSnsMap] = useState<Map<string, string>>(new Map());
 
   const { getMultiSNS } = useQuerySNS();
 
@@ -120,12 +134,32 @@ export default function Register() {
     setPageSize(num);
   };
 
+  const handleSNS = async (wallets: string[]) => {
+    const sns_map = await getMultiSNS(wallets);
+    setSnsMap(sns_map);
+  };
+
+  const checkProcessStatus = async () => {
+    const res = await requests.application.getProjectApplications(
+      {
+        page: 1,
+        size: 1,
+        sort_field: 'create_ts',
+        sort_order: 'desc',
+      },
+      {
+        state: ApplicationStatus.Processing,
+      },
+    );
+    setIsProcessing(!!res.data.rows.length);
+  };
+
   const getRecords = async () => {
     showLoading(true);
     const queryData: IQueryParams = {
       //   state: ApplicationStatus.Open,
     };
-    if (selectApplicant) queryData.applicant = selectApplicant;
+    if (searchApplicantVal) queryData.applicant = searchApplicantVal;
     if (selectSource && selectSource.type) {
       queryData.entity_id = selectSource.id;
       queryData.entity = selectSource.type;
@@ -141,7 +175,7 @@ export default function Register() {
         {
           page,
           size: pageSize,
-          sort_field: 'created_at',
+          sort_field: 'create_ts',
           sort_order: 'desc',
         },
         queryData,
@@ -151,28 +185,26 @@ export default function Register() {
       const _wallets = new Set<string>();
       res.data.rows.forEach((item) => {
         item.records.forEach((r) => {
-          _wallets.add(r.submitter_wallet?.toLocaleLowerCase());
+          r.applicant_wallet && _wallets.add(r.applicant_wallet?.toLocaleLowerCase());
           _wallets.add(r.reviewer_wallet?.toLocaleLowerCase());
-          _wallets.add(r.target_user_wallet?.toLocaleLowerCase());
+          r.target_user_wallet && _wallets.add(r.target_user_wallet?.toLocaleLowerCase());
         });
       });
-      const sns_map = await getMultiSNS(Array.from(_wallets));
-
+      handleSNS(Array.from(_wallets));
       setList(
         res.data.rows.map((item) => ({
           ...item,
-          created_date: formatTime(item.apply_time),
+          created_date: formatTime(item.apply_ts * 1000),
           records: item.records.map((record) => ({
             ...record,
-            created_date: formatTime(record.created_at),
+            review_date: formatTime(record.review_ts * 1000),
+            created_date: formatTime(record.create_ts * 1000),
+            complete_date: formatTime(record.complete_ts * 1000),
             transactions: record.transaction_ids.split(','),
-            asset_display: formatNumber(Number(record.amount)) + ' ' + record.asset_name,
-            submitter_name: sns_map.get(record.submitter_wallet?.toLocaleLowerCase()) as string,
-            reviewer_name: sns_map.get(record.reviewer_wallet?.toLocaleLowerCase()) as string,
-            receiver_name: sns_map.get(record.target_user_wallet?.toLocaleLowerCase()) as string,
+            asset_display: Number(record.amount).format() + ' ' + record.asset_name,
+            app_bundle_comment: item.comment,
           })),
-          submitter_name: sns_map.get(item.applicant?.toLocaleLowerCase()) as string,
-          assets_display: item.assets.map((a) => `${formatNumber(Number(a.amount))} ${a.name}`),
+          assets_display: item.assets.map((a) => `${Number(a.amount).format()} ${a.name}`),
         })),
       );
     } catch (error) {
@@ -183,10 +215,15 @@ export default function Register() {
   };
 
   useEffect(() => {
-    getRecords();
-  }, [selectState, selectApplicant, selectSource, selectSeason, page, pageSize]);
+    checkProcessStatus();
+  }, []);
 
-  const formatSNS = (name: string) => {
+  useEffect(() => {
+    selectSeason && getRecords();
+  }, [selectState, searchApplicantVal, selectSource, selectSeason, page, pageSize]);
+
+  const formatSNS = (wallet: string) => {
+    const name = snsMap.get(wallet) || wallet;
     return name?.endsWith('.seedao') ? name : publicJs.AddressToShow(name, 6);
   };
 
@@ -194,6 +231,7 @@ export default function Register() {
     setShowMore(undefined);
     setShowBundleId(undefined);
     setShowBundleStatus(undefined);
+    setApplyIntro('');
   };
   const updateStatus = (status: ApplicationStatus) => {
     if (!showMore) {
@@ -202,6 +240,48 @@ export default function Register() {
     setShowMore([...showMore.map((r) => ({ ...r, status }))]);
     setShowBundleStatus(status);
     getRecords();
+  };
+
+  const handleSearch = async (keyword: string, setSearchVal: (v: string) => void) => {
+    if (keyword.endsWith('.seedao')) {
+      // sns
+      dispatch({ type: AppActionType.SET_LOADING, payload: true });
+      const w = await sns.resolve(keyword);
+      if (w && w !== ethers.constants.AddressZero) {
+        setSearchVal(w?.toLocaleLowerCase());
+      } else {
+        showToast(t('Msg.SnsNotFound', { sns: keyword }), ToastType.Danger);
+      }
+      dispatch({ type: AppActionType.SET_LOADING, payload: false });
+    } else if (ethers.utils.isAddress(keyword)) {
+      // address
+      setSearchVal(keyword?.toLocaleLowerCase());
+    } else {
+      showToast(t('Msg.InvalidAddress', { address: keyword }), ToastType.Danger);
+    }
+  };
+
+  const onKeyUp = (e: any, type: string) => {
+    if (e.keyCode === 13) {
+      // document.activeElement.blur();
+      switch (type) {
+        case 'applicant':
+          handleSearch(applicantKeyword, setSearchApplicantVal);
+          break;
+        default:
+          return;
+      }
+    }
+  };
+  const clearSearch = (type: string) => {
+    switch (type) {
+      case 'applicant':
+        setSearchApplicantVal('');
+        setApplicantKeyword('');
+        break;
+      default:
+        return;
+    }
   };
 
   return (
@@ -214,6 +294,8 @@ export default function Register() {
           handleClose={handleclose}
           updateStatus={updateStatus}
           showLoading={showLoading}
+          applyIntro={applyIntro}
+          isProcessing={isProcessing}
         />
       ) : (
         <>
@@ -232,17 +314,6 @@ export default function Register() {
               />
             </li>
             <li>
-              <div className="tit">{t('application.Operator')}</div>
-              <FilterSelect
-                options={applicants}
-                placeholder=""
-                onChange={(value: ISelectItem) => {
-                  setSelectApplicant(value?.value);
-                  setPage(1);
-                }}
-              />
-            </li>
-            <li>
               <div className="tit">{t('application.State')}</div>
               <Select
                 width="150px"
@@ -255,21 +326,18 @@ export default function Register() {
               />
             </li>
             <li>
-              <div className="tit">{t('application.Season')}</div>
-              <TimeBox>
-                <BorderBox>
-                  <Select
-                    width="90px"
-                    options={seasons}
-                    placeholder=""
-                    NotClear={true}
-                    onChange={(value: any) => {
-                      setSelectSeason(value?.value);
-                      setPage(1);
-                    }}
-                  />
-                </BorderBox>
-              </TimeBox>
+              <div className="tit">{t('application.Operator')}</div>
+              <SearchBox>
+                <img src={theme ? SearchWhite : SearchImg} alt="" />
+                <input
+                  type="text"
+                  placeholder={t('application.SearchApplicantHint')}
+                  onKeyUp={(e) => onKeyUp(e, 'applicant')}
+                  value={applicantKeyword}
+                  onChange={(e) => setApplicantKeyword(e.target.value)}
+                />
+                {applicantKeyword && <ClearSVGIcon onClick={() => clearSearch('applicant')} />}
+              </SearchBox>
             </li>
           </TopLine>
 
@@ -279,42 +347,43 @@ export default function Register() {
                 <table className="table" cellPadding="0" cellSpacing="0">
                   <thead>
                     <tr>
-                      <th className="center">{t('application.RegisterSource')}</th>
-                      <th className="center">{t('application.TotalAssets')}</th>
-                      <th>{t('application.State')}</th>
-                      <th>{t('application.RegisterNote')}</th>
-                      <th className="center">{t('application.Operator')}</th>
-                      <th className="center">{t('application.Season')}</th>
-                      <th className="center">{t('application.Time')}</th>
+                      <th>{t('application.BudgetSource')}</th>
+                      <th className="right">{t('application.TotalAssets')}</th>
+                      <th className="center">{t('application.State')}</th>
+                      <th>{t('application.ApplyIntro')}</th>
+                      <th>{t('application.Operator')}</th>
+                      <th>{t('application.ApplyTime')}</th>
                       <th>&nbsp;</th>
                     </tr>
                   </thead>
                   <tbody>
                     {list.map((item) => (
                       <tr key={item.id}>
-                        <td className="center">{item.entity.name}</td>
-                        <td className="center">
+                        <td>
+                          <CommentBox>{item.entity.name}</CommentBox>
+                        </td>
+                        <td className="right">
                           <TotalAssets>
                             {item.assets_display.map((asset, idx) => (
                               <div key={idx}>{asset}</div>
                             ))}
                           </TotalAssets>
                         </td>
-                        <td>
+                        <td className="center">
                           <ApplicationStatusTag status={item.state} />
                         </td>
                         <td>
                           <CommentBox>{item.comment}</CommentBox>
                         </td>
-                        <td className="center">{formatSNS(item.submitter_name)}</td>
-                        <td className="center">{item.season_name}</td>
-                        <td className="center">{item.created_date}</td>
+                        <td>{formatSNS(item.applicant)}</td>
+                        <td>{item.created_date}</td>
                         <td>
                           <TotalCountButton
                             onClick={() => {
                               setShowMore(item.records);
                               setShowBundleId(item.id);
                               setShowBundleStatus(item.state);
+                              setApplyIntro(item.comment);
                             }}
                           >
                             {t('application.TotalCount', { count: item.records.length })}
@@ -351,6 +420,7 @@ const CommentBox = styled.div`
   display: -webkit-box;
   -webkit-line-clamp: 1;
   overflow: hidden;
+  word-break: break-word;
 
   /*! autoprefixer: off */
   -webkit-box-orient: vertical;
@@ -386,4 +456,32 @@ const TotalAssets = styled.div`
   line-height: 20px;
   box-sizing: border-box;
   height: 100%;
+`;
+
+const SearchBox = styled.div`
+  width: 200px;
+  height: 40px;
+  background: var(--bs-box-background);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 8px;
+  border: 1px solid var(--bs-border-color);
+  input {
+    width: calc(100% - 30px);
+    border: 0;
+    background: transparent;
+    margin-left: 9px;
+    height: 24px;
+    &::placeholder {
+      color: var(--bs-body-color);
+    }
+    &:focus {
+      outline: none;
+    }
+  }
+  svg {
+    cursor: pointer;
+  }
 `;

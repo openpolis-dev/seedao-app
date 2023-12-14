@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { Form } from 'react-bootstrap';
 import RegList from 'components/assetsCom/regList';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { IExcelObj } from 'type/project.type';
 import requests from 'requests';
@@ -10,13 +10,13 @@ import useToast, { ToastType } from 'hooks/useToast';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import { ContainerPadding } from 'assets/styles/global';
 import Select from 'components/common/select';
-import BackIconSVG from 'components/svgs/back';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
-import useBudgetSource from 'hooks/useBudgetSource';
 import { ethers } from 'ethers';
 import sns from '@seedao/sns-js';
 import { AssetName } from 'utils/constant';
+import { getAvailiableProjectsAndGuilds } from 'requests/applications';
+import BackerNav from 'components/common/backNav';
 
 type ErrorDataType = {
   line: number;
@@ -27,13 +27,41 @@ export default function Register() {
   const { t } = useTranslation();
   const { dispatch } = useAuthContext();
   const { showToast } = useToast();
+  const navigate = useNavigate();
 
   const [list, setList] = useState<IExcelObj[]>([]);
 
-  const allSource = useBudgetSource(true);
+  const [allSource, setAllSource] = useState<ISelectItem[]>([]);
   const [selectSource, setSelectSource] = useState<ISelectItem | null>(null);
 
   const [content, setContent] = useState('');
+
+  useEffect(() => {
+    const getAllSources = async () => {
+      try {
+        const res = await getAvailiableProjectsAndGuilds();
+        const { projects, guilds } = res.data;
+        setAllSource(
+          projects
+            .map((item) => ({
+              value: item.id,
+              label: item.name,
+              data: ApplicationEntity.Project,
+            }))
+            .concat(
+              guilds.map((item) => ({
+                value: item.id,
+                label: item.name,
+                data: ApplicationEntity.Guild,
+              })),
+            ),
+        );
+      } catch (error) {
+        console.error('getAvailiableProjectsAndGuilds failed:', error);
+      }
+    };
+    getAllSources();
+  }, []);
 
   const Clear = () => {
     setList([]);
@@ -168,10 +196,7 @@ export default function Register() {
 
   return (
     <OuterBox>
-      <BackBox to="/assets">
-        <BackIconSVG />
-        <span>{t('Assets.RegisterTitle')}</span>
-      </BackBox>
+      <BackerNav to="/assets" title={t('Assets.Apply')} mb="0" />
       <SectionBlock>
         <div className="title">{t('Assets.RegisterSelect')}</div>
         <SourceSelect
@@ -223,7 +248,7 @@ const OuterBox = styled.div`
 `;
 
 const SectionBlock = styled.section`
-  margin-top: 20px;
+  margin-top: 40px;
   position: relative;
   .title {
     margin-bottom: 16px;
@@ -242,19 +267,7 @@ const ButtonSection = styled(SectionBlock)`
   }
 `;
 
-const BackBox = styled(Link)`
-  padding: 10px 0 20px;
-  display: inline-flex;
-  align-items: center;
-  color: var(--bs-svg-color);
-  gap: 20px;
-  font-family: Poppins-SemiBold;
-  font-weight: 600;
-  &:hover {
-    color: var(--bs-svg-color);
-  }
-`;
-
 const SourceSelect = styled(Select)`
   width: 348px;
+  margin-bottom: -10px;
 `;

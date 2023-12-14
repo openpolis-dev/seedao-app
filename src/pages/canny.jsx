@@ -9,16 +9,17 @@ const BoardToken = "9adfb174-5898-2265-ea68-cdc3f23e9168";
 const OuterBox = styled.div`
   min-height: 100%;
   ${ContainerPadding};
+  filter: ${props=>props.theme==="true"?'invert(100%)':'invert(0)'};
 `;
 
 const InnerBox = styled.div`
-  background: #fff;
   padding: 20px;
   min-height: 100%;
 `;
 
 const Feedback = () => {
   const {
+    state: { theme },
     dispatch
   } = useAuthContext();
 
@@ -57,12 +58,10 @@ const Feedback = () => {
     },3000)
   }, []);
 
-
-
   return (
-    <OuterBox>
-      <InnerBox>
-        <div data-canny id="aaa" />
+    <OuterBox theme={theme.toString()}>
+      <InnerBox >
+        <div data-canny id="seedao" />
       </InnerBox>
     </OuterBox>
 

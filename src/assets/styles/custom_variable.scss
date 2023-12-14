@@ -36,6 +36,8 @@
   --push-border:#fafafa;
   --input-border:#5200FF;
   --button-hover-bg: #2D2736;
+  --sns-font-color: #534e59;
+  --profile-bg:#F5F5F5;
 }
 
 :root[data-bs-theme="dark"] {
@@ -71,4 +73,6 @@
   --push-border:#0D0C0F;
   --input-border:#fff;
   --button-hover-bg: #C9C9C9;
+  --sns-font-color: #B0B0B0;
+  --profile-bg:#0D0C0F;
 }

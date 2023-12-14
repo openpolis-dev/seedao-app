@@ -1,12 +1,12 @@
 import styled from 'styled-components';
 import { useState, useMemo, useEffect } from 'react';
-import { Table, Button } from 'react-bootstrap';
+import { Table } from 'react-bootstrap';
 
 import { ContainerPadding } from 'assets/styles/global';
 import BackerNav from 'components/common/backNav';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
-import { formatNumber } from 'utils/number';
+import { formatNumber, getShortDisplay } from 'utils/number';
 import ExcellentExport from 'excellentexport';
 import { getGovernanceNodeResult } from 'requests/cityHall';
 import useQuerySNS from 'hooks/useQuerySNS';
@@ -17,12 +17,14 @@ import RankIcon from 'assets/Imgs/rank.svg';
 
 import { PermissionObject, PermissionAction } from 'utils/constant';
 import usePermission from 'hooks/usePermission';
+import { PlainButton } from 'components/common/button';
+import publicJs from 'utils/publicJs';
 
 const ColGroup = ({ seasons }: { seasons: number[] }) => {
   return (
     <colgroup>
       <col style={{ width: '80px' }} />
-      <col style={{ width: '340px' }} />
+      <col style={{ width: '170px' }} />
       {seasons.map((s) => (
         <col style={{ width: '150px' }} key={s} />
       ))}
@@ -119,7 +121,8 @@ export default function SCRRank() {
   }, [allList, rankCurrent, rankTotal]);
 
   const formatSNS = (wallet: string) => {
-    return dataMap.get(wallet) || wallet;
+    const _sns = dataMap.get(wallet.toLocaleLowerCase()) || wallet;
+    return _sns?.endsWith('.seedao') ? _sns : publicJs.AddressToShow(_sns, 4);
   };
 
   const handleExport = () => {
@@ -202,12 +205,10 @@ export default function SCRRank() {
 
   return (
     <OuterBox>
-      <BackerNav title={t('GovernanceNodeResult.SCRRank')} to={state || '/home'} />
+      <BackerNav title={t('GovernanceNodeResult.SCRRank')} to={state || '/home'} mb="16px" />
       {canUseCityhall && (
         <OperateBox>
-          <Button variant="primary" onClick={handleExport}>
-            {t('GovernanceNodeResult.Export')}
-          </Button>
+          <PlainButton onClick={handleExport}>{t('GovernanceNodeResult.Export')}</PlainButton>
         </OperateBox>
       )}
 
@@ -215,21 +216,21 @@ export default function SCRRank() {
         <Table id="head-table">
           <ColGroup seasons={allSeasons} />
           <thead>
-            <th>No.</th>
+            <th className="center">No.</th>
             <th>SNS</th>
             {allSeasons.map((s, i) => {
               return i === allSeasons.length - 1 ? (
-                <th key={i}>
+                <th key={i} className="right">
                   <ColumnSort onClick={onClickCurrentRank}>
                     <span>{currentSeason} (SCR)</span>
                     <img src={getRankIcon(rankCurrent)} alt="" />
                   </ColumnSort>
                 </th>
               ) : (
-                <th key={s}>{`S${s}(SCR)`}</th>
+                <th className="right" key={s}>{`S${s}(SCR)`}</th>
               );
             })}
-            <th>
+            <th className="right">
               <ColumnSort onClick={onClicktotalRank}>
                 <span>{t('GovernanceNodeResult.Total')}(SCR)</span>
                 <img src={getRankIcon(rankTotal)} alt="" />
@@ -242,15 +243,14 @@ export default function SCRRank() {
           <tbody>
             {displayList.map((item, index) => (
               <tr key={item.wallet}>
-                <td>{index + 1}</td>
+                <td className="center">{index + 1}</td>
                 <td>{formatSNS(item.wallet)}</td>
                 {[...allSeasons].map((season) => (
-                  <td key={season}>
-                    {formatNumber(Number(item.seasons_credit?.find((s) => s.season_idx === season)?.total || 0))}
+                  <td key={season} className="right">
+                    {Number(item.seasons_credit?.find((s) => s.season_idx === season)?.total || 0).format()}
                   </td>
                 ))}
-
-                <td>{formatNumber(Number(item.season_total_credit) || 0)}</td>
+                <td className="right">{Number(item.season_total_credit || 0).format()}</td>
               </tr>
             ))}
           </tbody>
@@ -268,11 +268,11 @@ const OuterBox = styled.div`
 const OperateBox = styled.div`
   display: flex;
   justify-content: flex-end;
-  margin-bottom: 30px;
+  margin-bottom: 16px;
 `;
 
 const TableBox = styled.div`
-  height: calc(100vh - 240px);
+  height: calc(100vh - 160px);
   overflow-y: auto;
   .table {
     table-layout: fixed;
@@ -280,6 +280,9 @@ const TableBox = styled.div`
     &#head-table {
       position: sticky;
       top: 0;
+      th {
+        padding-right: 0;
+      }
     }
     thead tr:first-child {
       th {
@@ -301,11 +304,12 @@ const TableBox = styled.div`
     th {
       border-style: inherit;
       box-sizing: border-box;
-      text-align: center;
+    }
+    th:first-child {
+      padding-left: 0 !important;
     }
     td {
       padding: 0;
-      text-align: center;
       box-sizing: border-box;
       line-height: 74px;
     }
@@ -313,7 +317,7 @@ const TableBox = styled.div`
       padding: 0 !important;
     }
     tr td:last-child {
-      padding: 0 !important;
+      padding: 0 20px 0 0 !important;
     }
     th.sticky,
     td.sticky {
@@ -329,6 +333,11 @@ const ColumnSort = styled.div`
   background-color: transparent !important;
   color: var(--bs-body-color_active) !important;
   cursor: pointer;
+
+  span {
+    font-size: 14px;
+    font-family: Poppins-SemiBold, Poppins;
+  }
   img {
     width: 20px;
   }
