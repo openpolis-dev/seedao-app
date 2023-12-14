@@ -109,7 +109,9 @@ export default function Members(props: Iprops) {
 
     let Mlist = memberArr.map((item: string) => getUser(item));
 
-    const uniqueArray = Mlist.filter((item2) => !sList.some((item1) => item1.id === item2.id));
+    const uniqueArray = Mlist.filter(
+      (item2) => !sList.some((item1) => item1.wallet?.toLowerCase() === item2.wallet?.toLowerCase()),
+    );
 
     setMemberList([...uniqueArray]);
   }, [memberArr, adminArr, userMap]);
@@ -200,7 +202,6 @@ export default function Members(props: Iprops) {
   };
 
   const handleProfile = (user: any, sns: string) => {
-    console.error('======', user, sns);
     setShowModal(true);
     setSns(sns);
     setUser(user);

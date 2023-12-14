@@ -253,7 +253,7 @@ export default function ProfileComponent({ userData, theme, sns, handleClose }: 
       let arr = [];
       for (let i = 0; i < seed.length; i++) {
         let seedItem = seed[i];
-        let url = await PublicJs.getImage(seedItem.image_uri);
+        let url = await PublicJs.getSeedUrl(seedItem.image_uri);
         arr.push({ ...seedItem, url });
       }
       setList([...arr]);

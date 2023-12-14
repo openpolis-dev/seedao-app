@@ -10,6 +10,7 @@ interface IProps {
   filterEffectiveNum: string;
   season: string;
   handleClose: () => void;
+  formatSNS: (wallet: string) => string;
   walletList: string[];
 }
 
@@ -19,8 +20,13 @@ export default function FilterNodesNodal({
   season,
   walletList,
   handleClose,
+  formatSNS,
 }: IProps) {
   const { t } = useTranslation();
+  const showSNS = (wallet: string) => {
+    const sns = formatSNS(wallet);
+    return sns.endsWith('.seedao') ? sns : '';
+  };
   const handleExport = () => {
     ExcellentExport.convert(
       { filename: t('GovernanceNodeResult.FilterNodesFilename', { season }), format: 'xlsx', openAsDownload: true },
@@ -28,7 +34,7 @@ export default function FilterNodesNodal({
         {
           name: t('GovernanceNodeResult.FilterNodesFilename', { season }),
           from: {
-            array: [...walletList.map((item) => [item])],
+            array: [['Wallet', 'SNS'], ...walletList.map((item) => [item, showSNS(item)])],
           },
         },
       ],

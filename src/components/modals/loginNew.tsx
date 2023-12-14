@@ -10,7 +10,7 @@ import WalletConnect from '../login/walletconnect';
 import Metamask from '../login/metamask';
 import UniPass, { upProvider } from '../login/unipass';
 import Joyid from '../login/joyid';
-import JoyidWeb from 'components/login/joyidWeb';
+import JoyidWeb, { initJoyId } from 'components/login/joyidWeb';
 
 import { useNetwork } from 'wagmi';
 import { useEthersProvider, useEthersSigner } from '../login/ethersNew';
@@ -19,6 +19,7 @@ import { ethers } from 'ethers';
 import getConfig from 'utils/envCofnig';
 import useCheckInstallPWA from 'hooks/useCheckInstallPWA';
 import { Wallet } from 'wallet/wallet';
+import publicJs from 'utils/publicJs';
 
 export default function LoginModal({ showModal }: any) {
   const { t } = useTranslation();
@@ -33,6 +34,45 @@ export default function LoginModal({ showModal }: any) {
 
   const walletconnect_provider = useEthersProvider({ chainId: chain });
   const isInstalled = useCheckInstallPWA();
+  const [handledProvider, setHandledProvider] = useState(false);
+
+  const chooseRPC = async () => {
+    const _rpc = await publicJs.checkRPCavailable(network.rpcs, {
+      chainId: network.chainId,
+      name: network.name,
+    });
+    dispatch({ type: AppActionType.SET_RPC, payload: _rpc });
+    return _rpc;
+  };
+
+  const handleUnipassProvider = async () => {
+    if (handledProvider) {
+      return;
+    }
+    setHandledProvider(true);
+    try {
+      await upProvider.connect();
+      const providerUnipass = new ethers.providers.Web3Provider(upProvider, 'any');
+      dispatch({ type: AppActionType.SET_PROVIDER, payload: providerUnipass });
+    } catch (error) {
+      setHandledProvider(false);
+    }
+  };
+
+  const handleJoyidProvider = async () => {
+    if (handledProvider) {
+      return;
+    }
+    setHandledProvider(true);
+    try {
+      const _rpc = await chooseRPC();
+      const provider = new ethers.providers.JsonRpcProvider(_rpc, network);
+      dispatch({ type: AppActionType.SET_PROVIDER, payload: provider });
+    } catch (error) {
+      const provider = new ethers.providers.JsonRpcProvider(network.rpcs[0], network);
+      dispatch({ type: AppActionType.SET_PROVIDER, payload: provider });
+    } 
+  };
 
   const handleProvider = (checkProvider = true) => {
     let type = localStorage.getItem(SELECT_WALLET);
@@ -48,17 +88,20 @@ export default function LoginModal({ showModal }: any) {
       dispatch({ type: AppActionType.SET_PROVIDER, payload: walletconnect_provider });
     } else if (walletType === Wallet.UNIPASS) {
       // unipass
-      const providerUnipass = new ethers.providers.Web3Provider(upProvider, 'any');
-      dispatch({ type: AppActionType.SET_PROVIDER, payload: providerUnipass });
+      handleUnipassProvider();
     } else if ([Wallet.JOYID, Wallet.JOYID_WEB].includes(walletType)) {
       // joyid
-      const providerJoyId = new ethers.providers.JsonRpcProvider(network.rpc, {
-        chainId: network.chainId,
-        name: network.name,
-      });
-      dispatch({ type: AppActionType.SET_PROVIDER, payload: providerJoyId });
+      initJoyId();
+      handleJoyidProvider();
     }
   };
+
+  useEffect(() => {
+    const walletType = localStorage.getItem(SELECT_WALLET) as Wallet;
+    if (walletType) {
+      chooseRPC();
+    }
+  }, []);
 
   useEffect(() => {
     handleProvider();
@@ -68,6 +111,7 @@ export default function LoginModal({ showModal }: any) {
     if (!window.ethereum) return;
     const handleProviderEvents = () => {
       handleProvider(false);
+      chooseRPC();
     };
     const initProvider = async () => {
       const { ethereum } = window as any;

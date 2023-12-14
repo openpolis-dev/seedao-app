@@ -9,10 +9,18 @@ import styled from 'styled-components';
 // import { useRouter } from 'next/router';
 // import Script from 'next/script';
 import { ContainerPadding } from 'assets/styles/global';
+import { signMessage } from '@joyid/evm';
+import { SELECT_WALLET } from 'utils/constant';
+import { Wallet } from 'wallet/wallet';
+import getConfig from 'utils/envCofnig';
+import { ethers } from 'ethers';
+const network = getConfig().NETWORK;
 
 const Box = styled.div`
   height: 100%;
   ${ContainerPadding};
+  width: 430px;
+  margin: 0 auto;
 `;
 
 export default function Index() {
@@ -38,9 +46,21 @@ export default function Index() {
     if (!provider || !account) {
       return '';
     }
-    // const signData = await provider.send('personal_sign', [message, account]);
-    const signData = await provider.signMessage(message);
-    return signData as string;
+    const wallet = localStorage.getItem(SELECT_WALLET);
+    let signMsg = '';
+    if (wallet === Wallet.JOYID_WEB) {
+      console.log('===account', account);
+      signMsg = await signMessage(message, ethers.utils.getAddress(account), {
+        network: {
+          name: network.name,
+          chainId: network.chainId,
+        },
+      });
+    } else if (wallet !== Wallet.METAMASK) {
+      signMsg = await provider.send('personal_sign', [message, account]);
+    }
+    // const signData = await provider.signMessage(message);
+    return signMsg;
   };
   const loginCallback = (r: any) => {
     console.log('loginCallback: ', r);
@@ -58,11 +78,11 @@ export default function Index() {
     isLogin && handleLogin();
   }, [isLogin, status]);
 
-  useEffect(() => {
-    if (!userData && window?.chatWidgetApi) {
-      navigate('/proposal');
-    }
-  }, [userData]);
+  // useEffect(() => {
+  //   if (!userData && window?.chatWidgetApi) {
+  //     navigate('/proposal');
+  //   }
+  // }, [userData]);
 
   return (
     <>

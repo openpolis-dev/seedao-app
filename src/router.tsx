@@ -43,6 +43,11 @@ import SCRRank from 'pages/scrRank';
 import SNSEntrancePage from 'pages/sns/entrance';
 import RegisterSNS from 'pages/sns/register';
 import UserSNS from 'pages/sns/userSNS';
+import LearnCourse from 'pages/deschool/learn';
+import Onboarding from 'pages/deschool/onboarding';
+
+import Wiki from './pages/notion/wiki';
+import getConfig from 'utils/envCofnig';
 
 export default function RouterLink() {
   return (
@@ -64,7 +69,7 @@ export default function RouterLink() {
           <Route path="/event/edit" element={<EventEdit />} />
           <Route path="/online-event" element={<CalendarPage />} />
           <Route path="/hub" element={<Pub />} />
-          <Route path="/pubDetail/:id" element={<PubDetail />} />
+          <Route path="/hubDetail/:id" element={<PubDetail />} />
 
           <Route path="/assets" element={<Assets />} />
           <Route path="/assets/register" element={<RegisterAssets />} />
@@ -86,13 +91,19 @@ export default function RouterLink() {
           <Route path="/city-hall/governance/audit" element={<Audit />} />
           <Route path="/city-hall/governance/audit-project" element={<AuditProject />} />
           <Route path="/city-hall/governance/issue" element={<Issue />} />
-          {/* <Route path="/chat" element={<Chat />} /> */}
+          {getConfig().REACT_APP_ENV === 'test' && <Route path="/chat" element={<Chat />} />}
           <Route path="/ranking" element={<SCRRank />} />
           <Route path="/feedback" element={<Canny />} />
           {/* SNS */}
           <Route path="/sns" element={<SNSEntrancePage />} />
           <Route path="/sns/register" element={<RegisterSNS />} />
-          <Route path="/sns/user" element={<UserSNS />} />
+          {/* <Route path="/sns/user" element={<UserSNS />} /> */}
+          {/* deschool */}
+          {/* <Route path="/onboarding/learn" element={<LearnCourse />} />
+          <Route path="/onboarding/done" element={<Onboarding />} /> */}
+
+          <Route path="/notion/:id" element={<Wiki />} />
+          <Route path="/wiki" element={<Wiki />} />
         </Routes>
       </Layout>
       <RouterChecker />

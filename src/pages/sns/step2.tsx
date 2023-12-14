@@ -5,20 +5,9 @@ import { Button } from 'react-bootstrap';
 import { useEffect, useState, useRef } from 'react';
 import { ACTIONS, useSNSContext } from './snsProvider';
 import { useAuthContext } from 'providers/authProvider';
-import { builtin } from '@seedao/sns-js';
 import useToast, { ToastType } from 'hooks/useToast';
-import { ethers } from 'ethers';
-import { sendTransaction } from '@joyid/evm';
-import { SELECT_WALLET } from 'utils/constant';
-import { Wallet } from '../../wallet/wallet';
-import ABI from 'assets/abi/snsRegister.json';
-import getConfig from 'utils/envCofnig';
-const networConfig = getConfig().NETWORK;
-
-const buildRegisterData = (sns: string, resolveAddress: string, secret: string) => {
-  const iface = new ethers.utils.Interface(ABI);
-  return iface.encodeFunctionData('register', [sns, resolveAddress, secret]);
-};
+import useTransaction, { TX_ACTION } from './useTransaction';
+import CancelModal from './cancelModal';
 
 export default function RegisterSNSStep2() {
   const { t } = useTranslation();
@@ -26,14 +15,17 @@ export default function RegisterSNSStep2() {
     state: { account, provider, theme },
   } = useAuthContext();
   const {
-    state: { localData, contract, sns },
+    state: { localData, sns, user_proof, hadMintByWhitelist },
     dispatch: dispatchSNS,
   } = useSNSContext();
   const { showToast } = useToast();
 
+  const { handleTransaction, approveToken } = useTransaction();
+
   const startTimeRef = useRef<number>(0);
   const [leftTime, setLeftTime] = useState<number>(0);
   const [secret, setSecret] = useState('');
+  const [showCancelModal, setShowCancelModal] = useState(false);
 
   useEffect(() => {
     const parseLocalData = () => {
@@ -63,7 +55,7 @@ export default function RegisterSNSStep2() {
       setLeftTime(60 - delta);
     };
     timerFunc();
-    timer = setInterval(timerFunc, 1000);
+    timer = setInterval(timerFunc, 2000);
     return () => clearInterval(timer);
   }, []);
 
@@ -77,27 +69,19 @@ export default function RegisterSNSStep2() {
     try {
       const d = { ...localData };
 
-      const wallet = localStorage.getItem(SELECT_WALLET);
-
-      let txHash: string;
-      if (wallet && wallet === Wallet.JOYID_WEB) {
-        txHash = await sendTransaction({
-          to: networConfig.SEEDAO_REGISTRAR_CONTROLLER_ADDR,
-          from: account,
-          value: '0',
-          data: buildRegisterData(sns, networConfig.PUBLIC_RESOLVER_ADDR, ethers.utils.formatBytes32String(secret)),
-        });
-        console.log('joyid txHash:', txHash);
-        d[account].registerHash = txHash;
+      let txHash: string = '';
+      if (user_proof && !hadMintByWhitelist) {
+        txHash = await handleTransaction(TX_ACTION.WHITE_MINT, { sns, secret, proof: user_proof });
       } else {
-        const tx = await contract.register(
-          sns,
-          networConfig.PUBLIC_RESOLVER_ADDR,
-          ethers.utils.formatBytes32String(secret),
-        );
-        console.log('tx:', tx);
-        d[account].registerHash = tx.hash;
+        // approve
+        await approveToken();
+        txHash = await handleTransaction(TX_ACTION.PAY_MINT, { sns, secret });
       }
+      if (!txHash) {
+        throw new Error('txHash is empty');
+      }
+
+      d[account].registerHash = txHash;
       d[account].step = 'register';
       d[account].stepStatus = 'pending';
       dispatchSNS({ type: ACTIONS.SET_STORAGE, payload: JSON.stringify(d) });
@@ -135,7 +119,7 @@ export default function RegisterSNSStep2() {
           dispatchSNS({ type: ACTIONS.SET_STORAGE, payload: JSON.stringify(_d) });
           dispatchSNS({ type: ACTIONS.CLOSE_LOADING });
           clearInterval(timer);
-        } else if (r && r.status === 2) {
+        } else if (r && (r.status === 2 || r.status === 0)) {
           // means tx failed
           _d[account].stepStatus = 'failed';
           dispatchSNS({ type: ACTIONS.SET_STORAGE, payload: JSON.stringify(_d) });
@@ -147,6 +131,13 @@ export default function RegisterSNSStep2() {
     timer = setInterval(timerFunc, 1000);
     return () => timer && clearInterval(timer);
   }, [localData, account, provider]);
+
+  const handleCancel = () => {
+    setShowCancelModal(false);
+    localStorage.removeItem('sns');
+    dispatchSNS({ type: ACTIONS.SET_STEP, payload: 1 });
+    dispatchSNS({ type: ACTIONS.SET_LOCAL_DATA, payload: undefined });
+  };
 
   return (
     <Container>
@@ -164,7 +155,9 @@ export default function RegisterSNSStep2() {
         <FinishButton onClick={handleRegister} disabled={!!leftTime}>
           {t('SNS.Finish')}
         </FinishButton>
+        <CancelButton onClick={() => setShowCancelModal(true)}>{t('SNS.CancelRegister')}</CancelButton>
       </ContainerWrapper>
+      {showCancelModal && <CancelModal handleClose={() => setShowCancelModal(false)} handleCancel={handleCancel} />}
     </Container>
   );
 }
@@ -190,7 +183,7 @@ const CurrentSNS = styled.div`
   color: var(--bs-body-color_active);
   line-height: 54px;
   letter-spacing: 1px;
-  margin-top: 47px;
+  margin-top: 30px;
   margin-bottom: 26px;
 `;
 
@@ -237,4 +230,14 @@ const CircleBox = styled.div<{ color: string }>`
 const FinishButton = styled(Button)`
   width: 394px;
   margin-top: 26px;
+`;
+
+const CancelButton = styled.span`
+  text-align: center;
+  display: block;
+  margin: 16px auto;
+  font-size: 12px;
+  cursor: pointer;
+  min-width: 100px;
+  max-width: 200px;
 `;

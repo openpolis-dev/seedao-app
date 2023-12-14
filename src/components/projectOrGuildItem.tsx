@@ -1,6 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
+import DefaultLogo from 'assets/Imgs/defaultLogo.png';
+
 const Box = styled.div`
   width: 20%;
   height: 100%;
@@ -99,12 +101,12 @@ export default function ProjectOrGuildItem({ data, onClickItem }: Iprops) {
       <CardBox>
         <Item onClick={() => onClickItem(data.id)}>
           <ImageBox>
-            <img src={data.logo} alt="" />
+            <img src={data.logo || DefaultLogo} alt="" />
           </ImageBox>
           <div className="title">{data.name}</div>
           <Desc>{data.desc ? data.desc : t('Project.ProjectOrGuildItem')}</Desc>
           <MemBox>
-            <span>{data?.members?.length + data?.sponsors?.length}</span> {t('Project.Members')}
+            <span>{(data?.members?.length || 0) + (data?.sponsors?.length || 0)}</span> {t('Project.Members')}
           </MemBox>
         </Item>
       </CardBox>

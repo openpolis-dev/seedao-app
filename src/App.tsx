@@ -14,6 +14,9 @@ import { configureChains, createConfig, WagmiConfig } from 'wagmi';
 import { mainnet, goerli } from 'wagmi/chains';
 import getConfig from 'utils/envCofnig';
 import 'md-editor-rt/lib/style.css';
+// import { DeSchoolProvider, CourseContextProvider } from '@deschool-protocol/react';
+// import '@deschool-protocol/react/dist/styles/index.css';
+// import CheckOnboarding from 'components/checkOnboarding';
 
 const chains = getConfig().NETWORK.chainId === 1 ? [mainnet] : [goerli, mainnet];
 
@@ -29,13 +32,25 @@ const wagmiConfig = createConfig({
 const ethereumClient = new EthereumClient(wagmiConfig, chains);
 
 function App() {
+  // const { search } = window.location;
+  // const dtoken = new URLSearchParams(search).get('dtoken') || '';
+
   return (
     <WagmiConfig config={wagmiConfig}>
       <AuthProvider>
         <GlobalStyle />
+        {/* <DeSchoolProvider
+          config={{
+            baseUrl: 'https://deschool.app/goapiProduction',
+            token: dtoken,
+          }}
+        >
+          <CourseContextProvider> */}
         <RouterLink />
+        {/* </CourseContextProvider> */}
         {/* <InstallCheck /> */}
-
+        {/* </DeSchoolProvider> */}
+        {/* <CheckOnboarding /> */}
         <Web3Modal
           defaultChain={goerli}
           projectId={projectId}

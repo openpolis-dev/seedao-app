@@ -121,7 +121,7 @@ export default function SCRRank() {
   }, [allList, rankCurrent, rankTotal]);
 
   const formatSNS = (wallet: string) => {
-    const _sns = dataMap.get(wallet) || wallet;
+    const _sns = dataMap.get(wallet.toLocaleLowerCase()) || wallet;
     return _sns?.endsWith('.seedao') ? _sns : publicJs.AddressToShow(_sns, 4);
   };
 

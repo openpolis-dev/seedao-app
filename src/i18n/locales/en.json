@@ -11,7 +11,7 @@
     "feedback": "Feedback",
     "connectWallet": "Connect Wallet",
     "Resources": "Apply Now",
-    "Explore": "Explore",
+    "Explore": "Project/Guild",
     "Pub": "SeeDAO Hub"
   },
   "general": {
@@ -508,7 +508,9 @@
     "SeeU": "SeeU Network",
     "SeeUDesc": "SeeU Network is a decentralized social network that allows users to create and manage their own communities.",
     "SNS": "SNS",
-    "SNSDesc": "SNS is your identity based on blockchain in SeeDAO."
+    "SNSDesc": "SNS is your identity based on blockchain in SeeDAO.",
+    "Newer": "新手村",
+    "NewerDesc": ""
   },
   "SNS": {
     "EntranceTitle": "INVOLVED IN SEEDAO IN YOUR NAME",
@@ -519,18 +521,25 @@
     "Available": "Available",
     "Uavailable": "Unavailable",
     "FreeMint": "Free mint",
+    "FreeMintNotOpen": "Free mint not open",
     "SpentMint": "{{money}} mint",
     "TimerTitle": "Almost here",
     "TimerDesc": "This timer helps prevent others from registering the name before you do. Your name is not registered until you’ve completed the second transaction.",
     "Finish": "Continue",
-    "FinishSucess": "Registered successfully!",
+    "FinishSucess": "Congratulations to {{sns}} for officially entering the SeeDAO network polis!",
+    "Polis": "Take a tour of SeeDAO",
+    "PolisContribute": "Be a contributor",
     "StepLoadingTitle": "Three steps to get your SNS",
     "Step1Intro": "Complete the transaction and start counting",
     "StepMiddleIntro": "Wait 60 seconds for the timer to complete",
     "Step2Intro": "Complete the second transaction to get your SNS",
     "InputTip": "*Please input 4-15 numbers(0-9)、lower letter(a-z) or special( ! $ ( ) * + - _ )",
     "Switch": "Switch",
-    "MySNS": "My SNS"
+    "MySNS": "My SNS",
+    "HadSNS": "Your SNS reached the limit",
+    "Helper": "Ask for help",
+    "CancelRegister": "Cancel registration",
+    "CancelTip": "Cancel means you'll start to register from step one"
   },
   "Governance": {
     "GovernanceRule": "Governance Rules",
@@ -538,5 +547,10 @@
     "GovernanceBook": "Governance Book",
     "NodesConferenceRule": "Nodes Conference Rules",
     "apply": "Issue Assets"
+  },
+  "Onboarding": {
+    "HomeEntranceButton": "-> Onboarding",
+    "WatchButton": "观看视频，领取SBT",
+    "Congrats": "Onboarding 成功！🎉 恭喜你获得一枚 SBT 和 50 SCR。现在你已经是SeeDAO成员啦，加入新手村成为SeeDAO贡献者，领取 5,000 SCR 奖励"
   }
 }

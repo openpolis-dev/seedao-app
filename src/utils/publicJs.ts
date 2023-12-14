@@ -1,4 +1,6 @@
 import axios from 'axios';
+import { ethers } from 'ethers';
+
 const AddressToShow = (address: string, num?: number) => {
   if (!address) return '';
   const n = num || 4;
@@ -61,6 +63,25 @@ const getImage = async (img: string) => {
     }
   }
 };
+const getSeedUrl = async (img: string) => {
+  if (!img) return;
+  if (img.indexOf('http://') > -1 || img.indexOf('https://') > -1) {
+    return img;
+  } else {
+    let str = img;
+    if (img.indexOf('ipfs://') > -1) {
+      str = img.split('ipfs://')[1];
+    }
+    // return `http://ipfs-proxy-bkt.s3-website-ap-northeast-1.amazonaws.com/${str}`;
+    return `https://nftcdn.seedao.tech/${str}`;
+    // try {
+    //   let imgAA = await agumentedIpfsGet(str);
+    //   return imgAA;
+    // } catch (e) {
+    //   return Promise.reject(e);
+    // }
+  }
+};
 
 const filterTags = (html: string) => {
   const decodedStr = html.replace(/&#(\d+);/g, function (match, dec) {
@@ -88,4 +109,21 @@ const filterTags = (html: string) => {
   return unicodeHexDecodedStr.replace(/(<([^>]+)>)/gi, '');
 };
 
-export default { AddressToShow, getImage, filterTags };
+const checkRPCavailable = (rpc_list: string[], network: { chainId: number; name: string }) => {
+  return Promise.any(
+    rpc_list.map((r) => {
+      const provider = new ethers.providers.JsonRpcProvider(r, network);
+      try {
+        provider.getBlock('latest');
+        return r;
+      } catch (error) {
+        throw Error(`[rpc] not available - ${r}`);
+      }
+    }),
+  ).then((result) => {
+    console.log('[rpc] choose', result);
+    return result;
+  });
+};
+
+export default { AddressToShow, getImage, filterTags, checkRPCavailable, getSeedUrl };

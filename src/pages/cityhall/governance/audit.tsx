@@ -27,6 +27,7 @@ import { ethers } from 'ethers';
 
 import SearchImg from 'assets/Imgs/light/search.svg';
 import SearchWhite from 'assets/Imgs/light/search.svg';
+import ClearSVGIcon from 'components/svgs/clear';
 
 const Box = styled.div`
   position: relative;
@@ -198,7 +199,7 @@ export default function Register() {
             ...record,
             review_date: formatTime(record.review_ts * 1000),
             created_date: formatTime(record.create_ts * 1000),
-            process_date: formatTime(record.process_ts * 1000),
+            complete_date: formatTime(record.complete_ts * 1000),
             transactions: record.transaction_ids.split(','),
             asset_display: Number(record.amount).format() + ' ' + record.asset_name,
             app_bundle_comment: item.comment,
@@ -272,6 +273,16 @@ export default function Register() {
       }
     }
   };
+  const clearSearch = (type: string) => {
+    switch (type) {
+      case 'applicant':
+        setSearchApplicantVal('');
+        setApplicantKeyword('');
+        break;
+      default:
+        return;
+    }
+  };
 
   return (
     <Box>
@@ -322,8 +333,10 @@ export default function Register() {
                   type="text"
                   placeholder={t('application.SearchApplicantHint')}
                   onKeyUp={(e) => onKeyUp(e, 'applicant')}
+                  value={applicantKeyword}
                   onChange={(e) => setApplicantKeyword(e.target.value)}
                 />
+                {applicantKeyword && <ClearSVGIcon onClick={() => clearSearch('applicant')} />}
               </SearchBox>
             </li>
           </TopLine>
@@ -407,6 +420,7 @@ const CommentBox = styled.div`
   display: -webkit-box;
   -webkit-line-clamp: 1;
   overflow: hidden;
+  word-break: break-word;
 
   /*! autoprefixer: off */
   -webkit-box-orient: vertical;
@@ -455,7 +469,7 @@ const SearchBox = styled.div`
   padding: 0 8px;
   border: 1px solid var(--bs-border-color);
   input {
-    width: calc(100% - 15px);
+    width: calc(100% - 30px);
     border: 0;
     background: transparent;
     margin-left: 9px;
@@ -466,5 +480,8 @@ const SearchBox = styled.div`
     &:focus {
       outline: none;
     }
+  }
+  svg {
+    cursor: pointer;
   }
 `;

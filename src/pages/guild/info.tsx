@@ -13,6 +13,7 @@ import { Button } from 'react-bootstrap';
 import BackerNav from 'components/common/backNav';
 import SipTag from 'components/common/sipTag';
 import { MdPreview } from 'md-editor-rt';
+import DefaultLogo from 'assets/Imgs/defaultLogo.png';
 
 export default function Index() {
   const { t } = useTranslation();
@@ -55,13 +56,13 @@ export default function Index() {
             <AllBox>
               <TopBox>
                 <TopImg>
-                  <img src={detail?.logo} alt="" />
+                  <img src={detail?.logo || DefaultLogo} alt="" />
                 </TopImg>
                 <TopInfo>
                   <TitleBox>{detail?.name}</TitleBox>
                   <div className="desc">{detail?.desc}</div>
                   <ProposalBox>
-                    {detail?.proposals.map((item, index) => (
+                    {detail?.proposals?.map((item, index) => (
                       <SipTag key={index} slug={item} />
                     ))}
                   </ProposalBox>
@@ -144,6 +145,7 @@ const LftBox = styled.div`
   width: 246px;
   background: var(--bs-box--background);
   border-radius: 16px;
+  flex-shrink: 0;
 `;
 
 const InnerLft = styled.div`

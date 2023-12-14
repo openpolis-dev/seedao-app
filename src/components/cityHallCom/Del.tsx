@@ -114,7 +114,7 @@ export default function Del(props: Iprops) {
         {selectUsers.map((item, index) => (
           <ItemBox key={index}>
             <div>
-              <img src={item.user.avatar || DefaultAvatar} alt="" />
+              <img src={item.user.avatar || item.user.sp?.avatar || DefaultAvatar} alt="" />
             </div>
             <div>
               <div className="wallet">{item.user.sns || item.user.wallet}</div>

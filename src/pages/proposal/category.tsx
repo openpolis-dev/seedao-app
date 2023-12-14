@@ -47,7 +47,9 @@ export default function ProposalCategory() {
   };
 
   const handleChangeOrder = (index: number) => {
-    setOrderType(index === 0 ? 'new' : 'old');
+    let str: 'new' | 'old' = index === 0 ? 'new' : 'old';
+    if (str === orderType) return;
+    setOrderType(str);
     setPage(1);
     setProposals([]);
   };

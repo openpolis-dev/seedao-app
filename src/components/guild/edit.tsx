@@ -31,7 +31,7 @@ export default function EditGuild({ detail }: { detail?: ReTurnProject }) {
       setProName(detail.name);
       setDesc(detail.desc);
       setUrl(detail.logo);
-      setProList(detail.proposals.map((item) => `https://forum.seedao.xyz/thread/${item}`));
+      setProList(detail?.proposals?.map((item) => `https://forum.seedao.xyz/thread/${item}`));
       setIntro(detail.intro);
     }
   }, [detail]);
@@ -201,7 +201,7 @@ export default function EditGuild({ detail }: { detail?: ReTurnProject }) {
           <li>
             <div className="title">{t('Guild.AssociatedProposal')}</div>
             <div>
-              {proList.map((item, index) => (
+              {proList?.map((item, index) => (
                 <ItemBox key={`mem_${index}`}>
                   <InputBox>
                     <Form.Control
@@ -304,6 +304,12 @@ const ImgBox = styled.div`
   align-items: center;
   justify-content: center;
   position: relative;
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
   .upload {
     display: none;
   }

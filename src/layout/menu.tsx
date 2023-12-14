@@ -45,6 +45,10 @@ import PubImg from '../assets/Imgs/darkMenu/pub.svg';
 import PubImgActive from '../assets/Imgs/darkMenu/pub_active.png';
 import PubImgLight from '../assets/Imgs/lightMenu/pub.svg';
 
+import WikiImg from '../assets/Imgs/lightMenu/wiki.png';
+import WikiWhite from '../assets/Imgs/darkMenu/wiki.png';
+import WikiImgActive from '../assets/Imgs/darkMenu/wiki_active.png';
+
 import React from 'react';
 import useCheckLogin from 'hooks/useCheckLogin';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
@@ -124,7 +128,7 @@ const Box = styled.div`
   border-right: 1px solid var(--bs-border-color);
   box-sizing: border-box;
   padding: 20px;
-  width: 153px;
+  width: 173px;
   flex-shrink: 0;
   position: relative;
   display: flex;
@@ -166,12 +170,12 @@ const Box = styled.div`
       width: 130px;
     }
     100% {
-      width: 153px;
+      width: 173px;
     }
   }
   @keyframes unexpand {
     0% {
-      width: 153px;
+      width: 173px;
     }
     50% {
       width: 130px;
@@ -339,6 +343,7 @@ const items: MenuItemType[] = [
     },
     link: { href: '/city-hall' },
   },
+
   // {
   //   title: 'menus.Chat',
   //   icon: { name: <ChatDots /> },
@@ -365,6 +370,20 @@ const items: MenuItemType[] = [
       },
     },
     link: { href: '/resources' },
+  },
+  {
+    title: 'Wiki',
+    icon: {
+      dark: {
+        nor: WikiWhite,
+        active: WikiImgActive,
+      },
+      light: {
+        nor: WikiImg,
+        active: WikiImgActive,
+      },
+    },
+    link: { href: '/wiki' },
   },
 ];
 
@@ -433,6 +452,12 @@ export default function Menu({ isMedium }: { isMedium: boolean }) {
     return (isMedium ? 'float ' : '') + (open ? 'expand' : 'unexpand');
   }, [isMedium, open]);
 
+  const returnSelected = (url: string) => {
+    const projectGuild = url.startsWith('/explore') && (pathname.includes('/project') || pathname.includes('/guild'));
+    const assets = pathname.includes('/ranking') && url.startsWith('/assets');
+    const apps = pathname.startsWith('/sns') && url.startsWith('/apps');
+    return pathname.startsWith(url) || projectGuild || assets || apps;
+  };
   return (
     <Box className={boxClassName}>
       <div>
@@ -450,10 +475,7 @@ export default function Menu({ isMedium }: { isMedium: boolean }) {
             data={item}
             theme={theme}
             onSelectMenu={onSelectMenu}
-            selected={
-              pathname.startsWith(item.link.href) ||
-              (item.link.href.startsWith('/explore') && (pathname.includes('/project') || pathname.includes('/guild')))
-            }
+            selected={returnSelected(item.link.href)}
           />
         ))}
       </div>

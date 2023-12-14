@@ -18,6 +18,7 @@ import useToast, { ToastType } from 'hooks/useToast';
 import PlusImg from '../../assets/Imgs/light/plus.svg';
 import MinusImg from '../../assets/Imgs/light/minus.svg';
 import { Button } from 'react-bootstrap';
+import ProfileComponent from '../../profile-components/profile';
 
 interface Iprops {
   detail: ReTurnProject | undefined;
@@ -34,8 +35,14 @@ export default function Members(props: Iprops) {
   const canUpdateSponsor = usePermission(PermissionAction.UpdateSponsor, PermissionObject.GuildPrefix + id);
 
   const { t } = useTranslation();
-  const { dispatch } = useAuthContext();
+  const {
+    state: { theme },
+    dispatch,
+  } = useAuthContext();
   const { showToast } = useToast();
+
+  const [user, setUser] = useState<any>();
+  const [sns, setSns] = useState<string>('');
 
   const [show, setShow] = useState(false);
   const [memberArr, setMemberArr] = useState<string[]>([]);
@@ -50,6 +57,7 @@ export default function Members(props: Iprops) {
     role: UserRole;
   }>();
 
+  const [showModal, setShowModal] = useState(false);
   const [selectUsers, setSelectUsers] = useState<any[]>([]);
   const [showDel, setShowDel] = useState(false);
 
@@ -100,7 +108,9 @@ export default function Members(props: Iprops) {
     setAdminList([...sList]);
 
     let Mlist = memberArr.map((item: string) => getUser(item));
-    const uniqueArray = Mlist.filter((item2) => !sList.some((item1) => item1.id === item2.id));
+    const uniqueArray = Mlist.filter(
+      (item2) => !sList.some((item1) => item1.wallet?.toLowerCase() === item2.wallet?.toLowerCase()),
+    );
 
     setMemberList([...uniqueArray]);
   }, [memberArr, adminArr, userMap]);
@@ -190,6 +200,16 @@ export default function Members(props: Iprops) {
     // setShowDel(true);
   };
 
+  const handleProfile = (user: any, sns: string) => {
+    setShowModal(true);
+    setSns(sns);
+    setUser(user);
+  };
+
+  const handleClose = () => {
+    setShowModal(false);
+  };
+
   return (
     <Box>
       {show && detail && (
@@ -204,6 +224,7 @@ export default function Members(props: Iprops) {
           onConfirm={handleRemove}
         />
       )}
+      {!showDel && showModal && <ProfileComponent userData={user} theme={theme} sns={sns} handleClose={handleClose} />}
       <TopBox>
         <BlockTitle>{t('Guild.Members')}</BlockTitle>
         {(canUpdateMember || canUpdateSponsor) && (
@@ -222,7 +243,7 @@ export default function Members(props: Iprops) {
 
       <ItemBox>
         <div>
-          {adminList.map((item, index) => (
+          {adminList?.map((item, index) => (
             <MemberCard
               key={`admin_${index}`}
               user={item}
@@ -232,6 +253,7 @@ export default function Members(props: Iprops) {
               onSelectUser={(u) => handleAdminSelect(u, UserRole.Admin)}
               removeText=""
               showRemoveModal={handleShowRemoveModal}
+              handleProfile={handleProfile}
             />
           ))}
         </div>
@@ -247,6 +269,7 @@ export default function Members(props: Iprops) {
               removeText=""
               // removeText={canUpdateSponsor ? t('Project.RemoveMember') : ''}
               showRemoveModal={handleShowRemoveModal}
+              handleProfile={handleProfile}
             />
           ))}
         </div>

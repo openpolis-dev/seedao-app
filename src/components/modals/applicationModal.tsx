@@ -93,7 +93,7 @@ export default function ApplicationModal({ application, handleClose, snsMap }: I
           </li>
           <li>
             <BlockLeft>{t('application.ProcessTime')}</BlockLeft>
-            <BlockRight>{application.process_date}</BlockRight>
+            <BlockRight>{application.complete_date}</BlockRight>
           </li>
         </Block>
       </Content>
@@ -112,7 +112,12 @@ const ApplicationModalWrapper = styled(BasicModal)`
 const Content = styled.div`
   font-size: 14px;
   max-height: 85vh;
+  padding-right: 10px;
   overflow-y: auto;
+  &::-webkit-scrollbar {
+    display: none;
+    width: 0;
+  }
   section {
     display: flex;
     gap: 37px;

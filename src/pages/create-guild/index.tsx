@@ -208,18 +208,7 @@ export default function CreateGuild() {
       proposals: slugs,
       desc,
       intro,
-      budgets: [
-        {
-          name: AssetName.Token,
-          total_amount: token || 0,
-          budget_type: BudgetType.Token,
-        },
-        {
-          name: AssetName.Credit,
-          total_amount: credit || 0,
-          budget_type: BudgetType.Credit,
-        },
-      ],
+      budgets: [],
     };
     try {
       let rt = await createProjects(obj);
@@ -278,144 +267,157 @@ export default function CreateGuild() {
   return (
     <OuterBox>
       <BackerNav title={t('Guild.create')} to="/city-hall/governance" />
-      <CardBody>
-        <BtnBox htmlFor="fileUpload" onChange={(e) => updateLogo(e)}>
-          <ImgBox>
-            <img src={url} alt="" />
-            <UpladBox
-              className="upload"
-              bg={
-                theme
-                  ? 'linear-gradient(180deg, rgba(13,12,15,0) 0%, rgba(38,27,70,0.6) 100%)'
-                  : 'linear-gradient(180deg, rgba(217,217,217,0) 0%, rgba(0,0,0,0.6) 100%)'
-              }
-            >
-              <input id="fileUpload" type="file" hidden accept=".jpg, .jpeg, .png, .svg" />
-              <CameraIconSVG />
-              <UploadImgText>{t('Guild.upload')}</UploadImgText>
-            </UpladBox>
-          </ImgBox>
-          {!url && (
-            <UpladBox>
-              <input id="fileUpload" type="file" hidden accept=".jpg, .jpeg, .png, .svg" />
-              <CameraIconSVG />
-              <UploadImgText>{t('Guild.upload')}</UploadImgText>
-            </UpladBox>
-          )}
-        </BtnBox>
-        <RightContent>
-          <UlBox>
-            <li>
-              <div className="title">{t('Guild.ProjectName')}</div>
-              <InputBox>
-                <Form.Control
-                  type="text"
-                  placeholder={t('Guild.ProjectName')}
-                  value={proName}
-                  onChange={(e) => handleInput(e, 0, 'proName')}
-                />
-              </InputBox>
-            </li>
-            <li>
-              <div className="title">{t('Guild.Desc')}</div>
-              <InputBox>
-                <Form.Control
-                  placeholder=""
-                  as="textarea"
-                  rows={2}
-                  value={desc}
-                  onChange={(e) => handleInput(e, 0, 'desc')}
-                />
-              </InputBox>
-            </li>
-            <li>
-              <div className="title">{t('Guild.AssociatedProposal')}</div>
-              <div>
-                {proList.map((item, index) => (
-                  <ItemBox key={`mem_${index}`}>
-                    <ProposalInputBox>
-                      <Form.Control
-                        type="text"
-                        placeholder={`https://forum.seedao.xyz/thread/sip-...`}
-                        value={item}
-                        onChange={(e) => handleInput(e, index, 'proposal')}
+      <FlexBox>
+        <CardBody>
+          <BtnBox htmlFor="fileUpload" onChange={(e) => updateLogo(e)}>
+            <ImgBox>
+              {url && <img src={url} alt="" />}
+              <UpladBox
+                className="upload"
+                bg={
+                  theme
+                    ? 'linear-gradient(180deg, rgba(13,12,15,0) 0%, rgba(38,27,70,0.6) 100%)'
+                    : 'linear-gradient(180deg, rgba(217,217,217,0) 0%, rgba(0,0,0,0.6) 100%)'
+                }
+              >
+                <input id="fileUpload" type="file" hidden accept=".jpg, .jpeg, .png, .svg" />
+                <CameraIconSVG />
+                <UploadImgText>{t('Guild.upload')}</UploadImgText>
+              </UpladBox>
+            </ImgBox>
+            {!url && (
+              <UpladBox>
+                <input id="fileUpload" type="file" hidden accept=".jpg, .jpeg, .png, .svg" />
+                <CameraIconSVG />
+                <UploadImgText>{t('Guild.upload')}</UploadImgText>
+              </UpladBox>
+            )}
+          </BtnBox>
+          <RightContent>
+            <UlBox>
+              <li>
+                <div className="title">{t('Guild.ProjectName')}</div>
+                <InputBox>
+                  <Form.Control
+                    type="text"
+                    placeholder={t('Guild.ProjectName')}
+                    value={proName}
+                    onChange={(e) => handleInput(e, 0, 'proName')}
+                  />
+                </InputBox>
+              </li>
+              <li>
+                <div className="title">{t('Guild.Desc')}</div>
+                <InputBox>
+                  <Form.Control
+                    placeholder=""
+                    as="textarea"
+                    rows={2}
+                    value={desc}
+                    onChange={(e) => handleInput(e, 0, 'desc')}
+                  />
+                </InputBox>
+              </li>
+              <li>
+                <div className="title">{t('Guild.AssociatedProposal')}</div>
+                <div>
+                  {proList.map((item, index) => (
+                    <ItemBox key={`mem_${index}`}>
+                      <ProposalInputBox>
+                        <Form.Control
+                          type="text"
+                          placeholder={`https://forum.seedao.xyz/thread/sip-...`}
+                          value={item}
+                          onChange={(e) => handleInput(e, index, 'proposal')}
+                        />
+                      </ProposalInputBox>
+                      <PlusMinusButton
+                        showMinus={!(!index && index === proList.length - 1)}
+                        showPlus={index === proList.length - 1}
+                        onClickMinus={() => removeItem(index, 'proposal')}
+                        onClickPlus={() => handleAdd('proposal')}
                       />
-                    </ProposalInputBox>
-                    <PlusMinusButton
-                      showMinus={!(!index && index === proList.length - 1)}
-                      showPlus={index === proList.length - 1}
-                      onClickMinus={() => removeItem(index, 'proposal')}
-                      onClickPlus={() => handleAdd('proposal')}
-                    />
-                  </ItemBox>
-                ))}
-              </div>
-            </li>
-            <li>
-              <div className="title">{t('Guild.Members')}</div>
-              <div>
-                {adminList.map((item, index) => (
-                  <ItemBox key={`mem_${index}`}>
-                    <MemberInputBox>
-                      <Form.Control
-                        type="text"
-                        placeholder={t('Guild.AddMemberAddress')}
-                        value={item}
-                        onChange={(e) => handleInput(e, index, 'admin')}
+                    </ItemBox>
+                  ))}
+                </div>
+              </li>
+              <li>
+                <div className="title">{t('Guild.Members')}</div>
+                <div>
+                  {adminList.map((item, index) => (
+                    <ItemBox key={`mem_${index}`}>
+                      <MemberInputBox>
+                        <Form.Control
+                          type="text"
+                          placeholder={t('Guild.AddMemberAddress')}
+                          value={item}
+                          onChange={(e) => handleInput(e, index, 'admin')}
+                        />
+                        <RoleSelect
+                          width="120px"
+                          options={roleOptions}
+                          defaultValue={roleOptions[0]}
+                          NotClear={true}
+                          isSearchable={false}
+                        />
+                      </MemberInputBox>
+                      <PlusMinusButton
+                        showMinus={!(!index && index === adminList.length - 1)}
+                        showPlus={index === adminList.length - 1}
+                        onClickMinus={() => removeItem(index, 'admin')}
+                        onClickPlus={() => handleAdd('admin')}
                       />
-                      <RoleSelect
-                        width="120px"
-                        options={roleOptions}
-                        defaultValue={roleOptions[0]}
-                        NotClear={true}
-                        isSearchable={false}
-                      />
-                    </MemberInputBox>
-                    <PlusMinusButton
-                      showMinus={!(!index && index === adminList.length - 1)}
-                      showPlus={index === adminList.length - 1}
-                      onClickMinus={() => removeItem(index, 'admin')}
-                      onClickPlus={() => handleAdd('admin')}
-                    />
-                  </ItemBox>
-                ))}
-              </div>
-            </li>
-            <li>
-              <div className="title">{t('Guild.Intro')}</div>
-              <IntroBox>
-                <MarkdownEditor
-                  value={intro}
-                  onChange={(val) => {
-                    setIntro(val);
-                  }}
-                />
-              </IntroBox>
-            </li>
-          </UlBox>
-          <BtmBox>
-            <Button
-              onClick={() => handleSubmit()}
-              disabled={
-                proName?.length === 0 ||
-                url?.length === 0 ||
-                (credit && credit < 0) ||
-                (token && token < 0) ||
-                (adminList?.length === 1 && adminList[0]?.length === 0) ||
-                (proList?.length === 1 && proList[0]?.length === 0)
-              }
-            >
-              {t('general.confirm')}
-            </Button>
-            <BlackButton style={{ width: '80px' }} onClick={handleBack}>
-              {t('general.cancel')}
-            </BlackButton>
-          </BtmBox>
-        </RightContent>
-      </CardBody>
+                    </ItemBox>
+                  ))}
+                </div>
+              </li>
+              <li>
+                <div className="title">{t('Guild.Intro')}</div>
+                <IntroBox>
+                  <MarkdownEditor
+                    value={intro}
+                    onChange={(val) => {
+                      setIntro(val);
+                    }}
+                  />
+                </IntroBox>
+              </li>
+            </UlBox>
+          </RightContent>
+        </CardBody>
+        <RhtBtnBox>
+          <Button
+            onClick={() => handleSubmit()}
+            disabled={
+              proName?.length === 0 ||
+              (adminList?.length === 1 && adminList[0]?.length === 0) ||
+              (proList?.length === 1 && proList[0]?.length === 0)
+            }
+          >
+            {t('general.confirm')}
+          </Button>
+          <Button variant="light" style={{ width: '80px' }} onClick={handleBack}>
+            {t('general.cancel')}
+          </Button>
+        </RhtBtnBox>
+      </FlexBox>
     </OuterBox>
   );
 }
+
+const FlexBox = styled.div`
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+`;
+
+const RhtBtnBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  .btn {
+    margin-bottom: 20px;
+  }
+`;
 
 const OuterBox = styled.div`
   box-sizing: border-box;

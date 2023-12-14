@@ -3,8 +3,8 @@ import ReactPaginate from 'react-paginate';
 import styled from 'styled-components';
 import { Button } from 'react-bootstrap';
 import InputNumber from 'components/inputNumber';
-import LftImg from '../assets/images/left.svg';
-import RhtImg from '../assets/images/right.svg';
+import LftImg from '../assets/Imgs/left.svg';
+import RhtImg from '../assets/Imgs/right.svg';
 
 const Box = styled.div<{ dir: string }>`
   display: flex;

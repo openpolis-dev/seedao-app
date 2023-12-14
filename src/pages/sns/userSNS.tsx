@@ -49,18 +49,24 @@ export default function UserSNS() {
       <BackerNav title={t('SNS.MySNS')} to="/sns/register" mb="0" />
       <Container>
         <ContainerWrapper>
-          <CurrentUsed>{userSNS}</CurrentUsed>
           {loading ? (
             <Loading />
           ) : !!snsList.length ? (
-            <NameList>
-              {list.map((item) => (
-                <li key={item}>
-                  <span>{item}</span>
-                  <PrimaryOutlinedButton onClick={() => setShowModal(item)}>{t('SNS.Switch')}</PrimaryOutlinedButton>
-                </li>
-              ))}
-            </NameList>
+            <>
+              {userSNS && <CurrentUsed>{userSNS}</CurrentUsed>}
+              <NameList>
+                {list.map((item) => (
+                  <li key={item}>
+                    <span>{item}</span>
+                    {userSNS && (
+                      <PrimaryOutlinedButton onClick={() => setShowModal(item)}>
+                        {t('SNS.Switch')}
+                      </PrimaryOutlinedButton>
+                    )}
+                  </li>
+                ))}
+              </NameList>
+            </>
           ) : (
             <NoItem />
           )}

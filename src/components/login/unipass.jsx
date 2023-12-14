@@ -8,7 +8,7 @@ import requests from "../../requests";
 import { AppActionType, useAuthContext } from "../../providers/authProvider";
 import { Authorizer } from "casbin.js";
 import { readPermissionUrl } from "../../requests/user";
-import { WalletType } from "../../wallet/wallet";
+import { WalletType, Wallet } from '../../wallet/wallet';
 import { SELECT_WALLET } from "../../utils/constant";
 import { clearStorage } from "../../utils/auth";
 
@@ -43,16 +43,16 @@ const WalletOption = styled.li`
 export const upProvider = new UniPassProvider({
   chainId: networkConfig.chainId,
   returnEmail: false,
-  appSetting: {
+  appSettings: {
     appName: 'SeeDAO',
     appIcon: `${window.location.origin}/icon192.png`,
   },
-  rpcUrls: {
-    mainnet: 'https://eth.llamarpc.com',
-    goerli: networkConfig.rpc,
-    // polygon: "https://polygon.llamarpc.com",
-    // bscTestnet:"https://data-seed-prebsc-1-s1.binance.org:8545"
-  },
+//   rpcUrls: {
+//     mainnet: 'https://eth.llamarpc.com',
+//     goerli: networkConfig.rpc,
+//     // polygon: "https://polygon.llamarpc.com",
+//     // bscTestnet:"https://data-seed-prebsc-1-s1.binance.org:8545"
+//   },
 });
 
 
@@ -67,7 +67,7 @@ export default function UniPass(){
 
     const getP = async() =>{
         try{
-            localStorage.setItem(SELECT_WALLET, 'UNIPASS');
+            localStorage.setItem(SELECT_WALLET, Wallet.UNIPASS);
             await upProvider.disconnect();
             await upProvider.connect();
             const provider = new ethers.providers.Web3Provider(upProvider, "any");

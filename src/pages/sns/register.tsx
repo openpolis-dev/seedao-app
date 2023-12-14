@@ -9,34 +9,112 @@ import { useEffect } from 'react';
 import { ethers } from 'ethers';
 import StepLoading from './stepLoading';
 import BackerNav from 'components/common/backNav';
-import ABI from 'assets/abi/snsRegister.json';
-import { builtin } from '@seedao/sns-js';
+import CONTROLLER_ABI from 'assets/abi/SeeDAORegistrarController.json';
+import MINTER_ABI from 'assets/abi/SeeDAOMinter.json';
 import getConfig from 'utils/envCofnig';
-import { Wallet } from 'wallet/wallet';
-import { SELECT_WALLET } from 'utils/constant';
+import { builtin } from '@seedao/sns-js';
+import WhiteListData from 'utils/whitelist.json';
+import { useTranslation } from 'react-i18next';
+import HelperIcon from 'assets/Imgs/sns/helper.svg';
+
+const whiteList = WhiteListData as {
+  rootHash: string;
+  proofs: { address: string; proof: string[] }[];
+};
+
 const networkConfig = getConfig().NETWORK;
 
 const RegisterSNSWrapper = () => {
+  const { t } = useTranslation();
   const {
     state: { account, provider },
   } = useAuthContext();
 
   const {
-    state: { step, localData, loading },
+    state: { step, localData, loading, controllerContract, minterContract },
     dispatch: dispatchSNS,
   } = useSNSContext();
 
-  console.log('step', step);
+  const checkUserStatus = async () => {
+    try {
+      const hasReached = await controllerContract.maxOwnedNumberReached(account);
+      dispatchSNS({ type: ACTIONS.SET_HAS_REACHED, payload: hasReached });
+    } catch (error) {
+      console.error('query maxOwnedNumberReached failed', error);
+    }
+  };
 
   useEffect(() => {
-    console.log('222provider', provider);
+    const checkUserInwhitelist = async () => {
+      try {
+        const isInWhitelist = whiteList.proofs.find(
+          (item) => item.address.toLocaleLowerCase() === account?.toLocaleLowerCase(),
+        );
+        if (isInWhitelist) {
+          dispatchSNS({ type: ACTIONS.SET_USER_PROOF, payload: isInWhitelist.proof });
+        }
+      } catch (error) {
+        console.error('checkUserInwhitelist failed', error);
+      }
+    };
+    const checkMaxOwnedNumber = () => {
+      controllerContract
+        .maxOwnedNumber()
+        .then((n: ethers.BigNumber) => {
+          dispatchSNS({ type: ACTIONS.SET_MAX_OWNED_NUMBER, payload: n.toNumber() });
+        })
+        .catch((error: any) => {
+          console.error('checkMaxOwnedNumber failed', error);
+        });
+    };
+    if (account && controllerContract) {
+      checkUserStatus();
+      checkUserInwhitelist();
+      checkMaxOwnedNumber();
+    }
+  }, [account, controllerContract]);
+
+  useEffect(() => {
+    const checkWhitelistOpen = async () => {
+      minterContract
+        .registrableWithWhitelist()
+        .then((r: boolean) => {
+          dispatchSNS({ type: ACTIONS.SET_WHITELIST_IS_OPEN, payload: r });
+        })
+        .catch((error: any) => {
+          dispatchSNS({ type: ACTIONS.SET_WHITELIST_IS_OPEN, payload: true });
+          console.error('checkWhitelistOpen failed', error);
+        });
+    };
+    const checkHadMintByWhitelist = async () => {
+      minterContract
+        .registeredWithWhitelist(account)
+        .then((r: boolean) => {
+          dispatchSNS({ type: ACTIONS.SET_HAD_MINT_BY_WHITELIST, payload: r });
+        })
+        .catch((error: any) => {
+          console.error('checkWhitelistOpen failed', error);
+        });
+    };
+    if (account && minterContract) {
+      checkWhitelistOpen();
+      checkHadMintByWhitelist();
+    }
+  }, [account, minterContract]);
+
+  useEffect(() => {
+    if (account && controllerContract && step === 3) {
+      checkUserStatus();
+    }
+  }, [account, controllerContract, step]);
+
+  useEffect(() => {
     const initContract = async () => {
       // check network
       if (!provider?.getNetwork) {
         return;
       }
       const network = await provider.getNetwork();
-      const wallet = localStorage.getItem(SELECT_WALLET);
 
       if (network?.chainId !== networkConfig.chainId) {
         // switch network;
@@ -50,20 +128,19 @@ const RegisterSNSWrapper = () => {
           return;
         }
       }
-      console.log('signer', provider.getSigner(account));
-      const _contract = new ethers.Contract(
-        networkConfig.SEEDAO_REGISTRAR_CONTROLLER_ADDR,
-        ABI,
+      const _controller_contract = new ethers.Contract(
+        builtin.SEEDAO_REGISTRAR_CONTROLLER_ADDR,
+        CONTROLLER_ABI,
         provider.getSigner(account),
       );
-      dispatchSNS({ type: ACTIONS.SET_CONTRACT, payload: _contract });
+      dispatchSNS({ type: ACTIONS.SET_CONTROLLER_CONTRACT, payload: _controller_contract });
+      const _minter_contract = new ethers.Contract(builtin.SEEDAO_MINTER_ADDR, MINTER_ABI, provider.getSigner(account));
+      dispatchSNS({ type: ACTIONS.SET_MINTER_CONTRACT, payload: _minter_contract });
     };
     provider && initContract();
   }, [provider, provider?.getNetwork]);
 
   useEffect(() => {
-    console.log('account', account);
-    console.log('localData', localData);
     if (!localData) {
       const localsns = localStorage.getItem('sns') || '';
       let data: LocalSNS;
@@ -133,6 +210,10 @@ const RegisterSNSWrapper = () => {
         {step === 2 && <RegisterSNSStep2 />}
         {step === 3 && <FinishedComponent />}
       </StepContainer>
+      <SNSHelper href="https://seedao.notion.site/SNS-1a2e97530715430abc115967f219d05b?pvs=4" target="_blank">
+        <img src={HelperIcon} alt="" />
+        {t('SNS.Helper')}
+      </SNSHelper>
       {loading && <StepLoading />}
     </Container>
   );
@@ -157,4 +238,29 @@ const StepContainer = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
+`;
+
+const SNSHelper = styled.a`
+  display: inline-flex;
+  padding-inline: 16px;
+  min-width: 100px;
+  height: 40px;
+  line-height: 40px;
+  border-radius: 8px;
+  background-color: var(--bs-primary);
+  color: #fff;
+  position: fixed;
+  right: 30px;
+  bottom: 30px;
+  cursor: pointer;
+  font-size: 14px;
+  gap: 6px;
+  align-items: center;
+  justify-content: center;
+  &:hover {
+    color: #fff;
+  }
+  img {
+    width: 20px;
+  }
 `;

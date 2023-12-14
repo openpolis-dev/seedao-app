@@ -105,11 +105,11 @@ export default function Header() {
     if (selectWallet) {
       switch (selectWallet) {
         case Wallet.METAMASK:
+        case Wallet.JOYID:
+        case Wallet.JOYID_WEB:
           wallet_type = WalletType.EOA;
           break;
         case Wallet.UNIPASS:
-        case Wallet.JOYID:
-        case Wallet.JOYID_WEB:
           wallet_type = WalletType.AA;
           break;
       }
@@ -366,6 +366,7 @@ const HeadeStyle = styled.header`
     margin-top: 10px;
     overflow: hidden;
     padding: 0;
+    z-index: 999999;
   }
   .dropdown-item {
     color: var(--bs-body-color_active);

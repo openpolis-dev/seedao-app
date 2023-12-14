@@ -55,7 +55,7 @@ export default function MemberCard({
         </CheckLft>
       )}
       <ImgBox>
-        <img className="avatar" src={user.avatar || DefaultAvatar} alt="" />
+        <img className="avatar" src={user.avatar || user?.sp?.avatar || DefaultAvatar} alt="" />
       </ImgBox>
       <div>
         <div className="sns-box">{snsDisplay}</div>
