@@ -120,6 +120,7 @@ export default function useTransaction() {
         sns,
         builtin.PUBLIC_RESOLVER_ADDR,
         ethers.utils.formatBytes32String(secret),
+        networkConfig.whitelistId,
         proof,
       );
       return tx?.hash;
