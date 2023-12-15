@@ -18,7 +18,6 @@ import getConfig from 'utils/envCofnig';
 import useCurrentSeason from 'hooks/useCurrentSeason';
 import { getVaultBalance, IVaultBalance } from 'requests/publicData';
 
-
 const BoxOuter = styled.div`
   ${ContainerPadding};
   color: var(--bs-body-color_active);
@@ -445,8 +444,10 @@ const InfoItem = styled.li`
     color: #ffa842;
   }
   .title {
-    font-size: 12px;
+    font-size: 14px;
     color: #fff;
+    font-family: Poppins-SemiBold, Poppins;
+    font-weight: 600;
   }
   .num {
     font-size: 22px;
@@ -499,7 +500,7 @@ const VaultItem = styled.li`
   .info-left {
     .name {
       width: 160px;
-      font-size: 12px;
+      font-size: 14px;
       font-family: Poppins-SemiBold, Poppins;
       font-weight: 600;
     }
