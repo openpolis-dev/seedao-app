@@ -320,10 +320,10 @@ export default function Index() {
               {/*<div className="right">*/}
 
               <VaultInfo>
+                <SeeVault v={wallets[VaultAddress.CommunityVaultPolygon.toLocaleLowerCase()]} t={t} />
+                <SeeVault v={wallets[VaultAddress.CommunityVault.toLocaleLowerCase()]} t={t} />
                 <SeeVault v={wallets[VaultAddress.CityHallVault.toLocaleLowerCase()]} t={t} />
                 <SeeVault v={wallets[VaultAddress.IncubatorVault.toLocaleLowerCase()]} t={t} />
-                <SeeVault v={wallets[VaultAddress.CommunityVault.toLocaleLowerCase()]} t={t} />
-                <SeeVault v={wallets[VaultAddress.CommunityVaultPolygon.toLocaleLowerCase()]} t={t} />
               </VaultInfo>
             </div>
           </VaultOverview>
