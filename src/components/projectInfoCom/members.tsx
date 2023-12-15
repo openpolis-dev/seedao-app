@@ -289,7 +289,7 @@ export default function Members(props: Iprops) {
 }
 
 const Box = styled.div`
-  width: 246px;
+  width: 100%;
   padding: 24px;
   box-sizing: border-box;
   display: flex;

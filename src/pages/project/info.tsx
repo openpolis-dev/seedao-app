@@ -161,9 +161,10 @@ const LastLine = styled.div`
 `;
 
 const LftBox = styled.div`
-  width: 246px;
+  width: 290px;
   background: var(--bs-box--background);
   border-radius: 16px;
+  flex-shrink: 0;
 `;
 
 const InnerLft = styled.div`
