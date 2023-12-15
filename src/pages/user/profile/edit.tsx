@@ -200,7 +200,7 @@ export default function Profile() {
         navigate('/user/profile');
         dispatch({ type: AppActionType.SET_LOADING, payload: false });
         dispatch({ type: AppActionType.SET_USER_DATA, payload: { ...userData, ...data } });
-        // window.location.reload();
+        window.location.reload();
       }, 1000);
     } catch (error: any) {
       console.error('updateUser failed', error);
