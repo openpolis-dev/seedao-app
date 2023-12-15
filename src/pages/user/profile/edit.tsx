@@ -192,12 +192,14 @@ export default function Profile() {
         mirror,
         bio,
       };
+      console.log(bio);
       await requests.user.updateUser(data);
-      dispatch({ type: AppActionType.SET_USER_DATA, payload: { ...userData, ...data } });
+
       showToast(t('My.ModifiedSuccess'), ToastType.Success);
       setTimeout(() => {
         navigate('/user/profile');
         dispatch({ type: AppActionType.SET_LOADING, payload: false });
+        dispatch({ type: AppActionType.SET_USER_DATA, payload: { ...userData, ...data } });
         window.location.reload();
       }, 1000);
     } catch (error: any) {
