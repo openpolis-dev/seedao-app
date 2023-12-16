@@ -106,6 +106,15 @@ const links = {
       hideTitle: 0,
       hiddenFields: ['name', 'sns', 'wallet'],
     },
+    {
+      name: 'resources.externalResources',
+      link: 'https://www.wjx.top/vm/QvQmfTy.aspx',
+      id: 'outer',
+      icon: RImg10,
+      desc: 'resources.externalResourcesDesc',
+      hideTitle: 0,
+      hiddenFields: [],
+    },
     // {
     //   name: 'resources.Seed',
     //   link: 'https://seed.seedao.xyz/',

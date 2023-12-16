@@ -446,7 +446,9 @@
     "Guild": "公会创建申请",
     "GuildDesc": "申请创建新的公会",
     "Incubator": "SeeDAO孵化器申请",
-    "IncubatorDesc": "申请加入SeeDAO孵化器"
+    "IncubatorDesc": "申请加入SeeDAO孵化器",
+    "externalResources": "对外资源申请",
+    "externalResourcesDesc": "申请加入对外资源"
   },
   "application": {
     "Register": "登记",
