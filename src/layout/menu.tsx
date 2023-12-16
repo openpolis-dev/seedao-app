@@ -372,6 +372,20 @@ const items: MenuItemType[] = [
     link: { href: '/resources' },
   },
   {
+    title: 'menus.Newcomer',
+    icon: {
+      dark: {
+        nor: WikiWhite,
+        active: WikiImgActive,
+      },
+      light: {
+        nor: WikiImg,
+        active: WikiImgActive,
+      },
+    },
+    link: { href: '/newcomer' },
+  },
+  {
     title: 'Wiki',
     icon: {
       dark: {

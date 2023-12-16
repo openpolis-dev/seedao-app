@@ -12,7 +12,8 @@
     "connectWallet": "Connect Wallet",
     "Resources": "Apply Now",
     "Explore": "Project/Guild",
-    "Pub": "SeeDAO Hub"
+    "Pub": "SeeDAO Hub",
+    "Newcomer": "Newcomer Village"
   },
   "general": {
     "back": "Back",
@@ -550,7 +551,6 @@
   },
   "Onboarding": {
     "HomeEntranceButton": "-> Onboarding",
-    "WatchButton": "观看视频，领取SBT",
-    "Congrats": "Onboarding 成功！🎉 恭喜你获得一枚 SBT 和 50 SCR。现在你已经是SeeDAO成员啦，加入新手村成为SeeDAO贡献者，领取 5,000 SCR 奖励"
+    "CourseTitle": "SeeDAO 新手入门系列课程"
   }
 }

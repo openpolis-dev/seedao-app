@@ -43,8 +43,7 @@ import SCRRank from 'pages/scrRank';
 import SNSEntrancePage from 'pages/sns/entrance';
 import RegisterSNS from 'pages/sns/register';
 import UserSNS from 'pages/sns/userSNS';
-import LearnCourse from 'pages/deschool/learn';
-import Onboarding from 'pages/deschool/onboarding';
+import Newcomer from 'pages/newcomer';
 
 import Wiki from './pages/notion/wiki';
 import getConfig from 'utils/envCofnig';
@@ -98,9 +97,7 @@ export default function RouterLink() {
           <Route path="/sns" element={<SNSEntrancePage />} />
           <Route path="/sns/register" element={<RegisterSNS />} />
           {/* <Route path="/sns/user" element={<UserSNS />} /> */}
-          {/* deschool */}
-          {/* <Route path="/onboarding/learn" element={<LearnCourse />} />
-          <Route path="/onboarding/done" element={<Onboarding />} /> */}
+          <Route path="/newcomer" element={<Newcomer />} />
 
           <Route path="/notion/:id" element={<Wiki />} />
           <Route path="/wiki" element={<Wiki />} />
