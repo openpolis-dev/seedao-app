@@ -4,37 +4,41 @@ import BackerNav from 'components/common/backNav';
 import { useTranslation } from 'react-i18next';
 import ProposalProvider from './store';
 import ChooseTypeStep from './chooseType';
+import ChooseTemplateStep from './chooseTemplate';
 import { useProposalContext } from './store';
 
 const CreateProposalSteps = () => {
   const { t } = useTranslation();
-  const { currentStep, changeStep } = useProposalContext();
+  const { currentStep, changeStep, proposalType, goBackStepOne } = useProposalContext();
 
   const showstep = () => {
     switch (currentStep) {
       case 1:
         return <ChooseTypeStep />;
+      case 2:
+        return <ChooseTemplateStep />;
       default:
         return null;
     }
   };
 
   const backTo = () => {
-    if (currentStep === 1) {
-      return '/proposal-v2';
-    } else {
+    if (currentStep !== 1) {
       // back to step 1
-      changeStep(1);
+      goBackStepOne();
     }
   };
 
+  const backNavTitle = currentStep === 2 && proposalType ? t(proposalType.name as any) : t('Proposal.CreateProposal');
+
   return (
     <>
-      <BackerNav title={t('Proposal.CreateProposal')} to="/proposal-v2" onClick={backTo} />
-      <ProposalProvider>
-        {showstep()}
-        <CreateProposalSteps />
-      </ProposalProvider>
+      <BackerNav
+        title={backNavTitle}
+        to={currentStep === 1 ? '/proposal-v2' : '/proposal-v2/create'}
+        onClick={backTo}
+      />
+      {showstep()}
     </>
   );
 };
