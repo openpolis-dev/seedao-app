@@ -125,6 +125,8 @@ const RegisterSNSWrapper = () => {
           return;
         } catch (error) {
           console.error('switch network error', error);
+          dispatchSNS({ type: ACTIONS.SET_CONTROLLER_CONTRACT, payload: undefined });
+          dispatchSNS({ type: ACTIONS.SET_MINTER_CONTRACT, payload: undefined });
           return;
         }
       }

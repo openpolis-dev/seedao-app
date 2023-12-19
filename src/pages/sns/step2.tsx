@@ -8,6 +8,11 @@ import { useAuthContext } from 'providers/authProvider';
 import useToast, { ToastType } from 'hooks/useToast';
 import useTransaction, { TX_ACTION } from './useTransaction';
 import CancelModal from './cancelModal';
+import getConfig from 'utils/envCofnig';
+import { ethers } from 'ethers';
+import useCheckBalance from './useCheckBalance';
+
+const networkConfig = getConfig().NETWORK;
 
 export default function RegisterSNSStep2() {
   const { t } = useTranslation();
@@ -15,12 +20,13 @@ export default function RegisterSNSStep2() {
     state: { account, provider, theme },
   } = useAuthContext();
   const {
-    state: { localData, sns, user_proof, hadMintByWhitelist },
+    state: { localData, sns, user_proof, hadMintByWhitelist, whitelistIsOpen },
     dispatch: dispatchSNS,
   } = useSNSContext();
   const { showToast } = useToast();
 
   const { handleTransaction, approveToken } = useTransaction();
+  const checkBalance = useCheckBalance();
 
   const startTimeRef = useRef<number>(0);
   const [leftTime, setLeftTime] = useState<number>(0);
@@ -65,16 +71,46 @@ export default function RegisterSNSStep2() {
     if (!account) {
       return;
     }
+    // check network
+    if (!provider?.getNetwork) {
+      return;
+    }
+    const network = await provider.getNetwork();
+
+    if (network?.chainId !== networkConfig.chainId) {
+      // switch network;
+      try {
+        await provider.send('wallet_switchEthereumChain', [{ chainId: ethers.utils.hexValue(networkConfig.chainId) }]);
+        return;
+      } catch (error) {
+        console.error('switch network error', error);
+        return;
+      }
+    }
+    // check native balance
+    const token = await checkBalance(true);
+    if (token) {
+      showToast(t('SNS.NotEnoughBalance', { token }), ToastType.Danger, { hideProgressBar: true });
+      dispatchSNS({ type: ACTIONS.CLOSE_LOADING });
+      return;
+    }
     dispatchSNS({ type: ACTIONS.SHOW_LOADING });
     try {
       const d = { ...localData };
 
       let txHash: string = '';
-      if (user_proof && !hadMintByWhitelist) {
+      if (user_proof && !hadMintByWhitelist && whitelistIsOpen) {
         txHash = await handleTransaction(TX_ACTION.WHITE_MINT, { sns, secret, proof: user_proof });
       } else {
         // approve
         await approveToken();
+        // check balance
+        const token = await checkBalance(true, true);
+        if (token) {
+          showToast(t('SNS.NotEnoughBalance', { token }), ToastType.Danger, { hideProgressBar: true });
+          dispatchSNS({ type: ACTIONS.CLOSE_LOADING });
+          return;
+        }
         txHash = await handleTransaction(TX_ACTION.PAY_MINT, { sns, secret });
       }
       if (!txHash) {

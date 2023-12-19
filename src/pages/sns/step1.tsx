@@ -22,6 +22,7 @@ import { clearStorage } from 'utils/auth';
 
 import useTransaction, { TX_ACTION } from './useTransaction';
 import getConfig from 'utils/envCofnig';
+import useCheckBalance from './useCheckBalance';
 const networkConfig = getConfig().NETWORK;
 const PAY_NUMBER = networkConfig.tokens[0].price;
 
@@ -55,6 +56,7 @@ export default function RegisterSNSStep1() {
   const { handleTransaction, approveToken } = useTransaction();
 
   const { showToast } = useToast();
+  const checkBalance = useCheckBalance();
 
   const isLogin = useCheckLogin(account);
 
@@ -70,6 +72,14 @@ export default function RegisterSNSStep1() {
         return;
       }
       // onchain check
+      if (!controllerContract) {
+        showToast(t('SNS.ContractNotReady'), ToastType.Danger, {
+          hideProgressBar: true,
+        });
+        setPending(false);
+        setAvailable(AvailableStatus.DEFAULT);
+        return;
+      }
       const res1 = await controllerContract.available(v);
       console.log('online check', v, res1);
 
@@ -137,6 +147,29 @@ export default function RegisterSNSStep1() {
   };
   const handleMint = async () => {
     if (!account || !checkLogin()) {
+      return;
+    }
+    // check network
+    if (!provider?.getNetwork) {
+      return;
+    }
+    const network = await provider.getNetwork();
+
+    if (network?.chainId !== networkConfig.chainId) {
+      // switch network;
+      try {
+        await provider.send('wallet_switchEthereumChain', [{ chainId: ethers.utils.hexValue(networkConfig.chainId) }]);
+        return;
+      } catch (error) {
+        console.error('switch network error', error);
+        return;
+      }
+    }
+    // check balance
+    const token = await checkBalance(true, !(whitelistIsOpen && user_proof && !hadMintByWhitelist));
+    if (token) {
+      showToast(t('SNS.NotEnoughBalance', { token }), ToastType.Danger, { hideProgressBar: true });
+      dispatchSNS({ type: ACTIONS.CLOSE_LOADING });
       return;
     }
     // mint
@@ -219,28 +252,32 @@ export default function RegisterSNSStep1() {
 
   const showButton = () => {
     if (hasReached) {
+      // reach max mint
       return (
         <MintButton variant="primary" disabled={true}>
           {t('SNS.HadSNS')}
         </MintButton>
       );
-    } else {
-      if (user_proof && !hadMintByWhitelist) {
-        if (!whitelistIsOpen) {
-          return (
-            <MintButton variant="primary" disabled={true}>
-              {t('SNS.FreeMintNotOpen')}
-            </MintButton>
-          );
-        }
-      }
+    } else if (whitelistIsOpen && user_proof && !hadMintByWhitelist) {
+      // whitelist mint
       return (
         <MintButton
           variant="primary"
           disabled={isPending || availableStatus !== AvailableStatus.OK}
           onClick={handleMint}
         >
-          {user_proof && !hadMintByWhitelist ? t('SNS.FreeMint') : t('SNS.SpentMint', { money: `${PAY_NUMBER} USDT` })}
+          {t('SNS.FreeMint')}
+        </MintButton>
+      );
+    } else {
+      // pay mint
+      return (
+        <MintButton
+          variant="primary"
+          disabled={isPending || availableStatus !== AvailableStatus.OK}
+          onClick={handleMint}
+        >
+          {t('SNS.SpentMint', { money: `${PAY_NUMBER} USDT(${networkConfig.name})` })}
         </MintButton>
       );
     }
