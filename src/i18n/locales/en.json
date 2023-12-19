@@ -63,7 +63,10 @@
     "PollNFT": "Poll NFT address",
     "VoteClose": "Voting Closed",
     "VoteEndAt": "Voting ends in {{leftTime}}",
-    "TotalVotes": "Total Votes"
+    "TotalVotes": "Total Votes",
+    "Draft": "Draft",
+    "Rejected": "Rejected",
+    "WithDrawn": "WithDrawn"
   },
   "Project": {
     "ProjectOrGuildItem": "Nothing left here.",

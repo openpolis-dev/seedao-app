@@ -63,7 +63,10 @@
     "PollNFT": "投票NFT地址",
     "VoteClose": "投票结束",
     "VoteEndAt": "投票剩余时间{{leftTime}}",
-    "TotalVotes": "总投票数"
+    "TotalVotes": "总投票数",
+    "Draft": "草稿",
+    "Rejected": "被驳回",
+    "WithDrawn": "已撤回"
   },
   "Project": {
     "ProjectOrGuildItem": "还没有填写相关介绍信息～",
