@@ -7,20 +7,41 @@ import ChooseTypeStep from './chooseType';
 import { useProposalContext } from './store';
 
 const CreateProposalSteps = () => {
-  const { currentStep } = useProposalContext();
-  switch (currentStep) {
-    case 1:
-      return <ChooseTypeStep />;
-    default:
-      return null;
-  }
+  const { t } = useTranslation();
+  const { currentStep, changeStep } = useProposalContext();
+
+  const showstep = () => {
+    switch (currentStep) {
+      case 1:
+        return <ChooseTypeStep />;
+      default:
+        return null;
+    }
+  };
+
+  const backTo = () => {
+    if (currentStep === 1) {
+      return '/proposal-v2';
+    } else {
+      // back to step 1
+      changeStep(1);
+    }
+  };
+
+  return (
+    <>
+      <BackerNav title={t('Proposal.CreateProposal')} to="/proposal-v2" onClick={backTo} />
+      <ProposalProvider>
+        {showstep()}
+        <CreateProposalSteps />
+      </ProposalProvider>
+    </>
+  );
 };
 
 export default function CreateProposalPage() {
-  const { t } = useTranslation();
   return (
     <Page>
-      <BackerNav title={t('Proposal.CreateProposal')} to="/proposal-v2" />
       <ProposalProvider>
         <CreateProposalSteps />
       </ProposalProvider>

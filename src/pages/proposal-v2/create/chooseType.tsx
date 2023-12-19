@@ -1,13 +1,13 @@
 import styled from 'styled-components';
 import { useProposalContext } from './store';
 import { useTranslation } from 'react-i18next';
-import { PROPOSAL_TYPES } from 'type/proposal.type';
+import { PROPOSAL_TYPES, ProposalType } from 'type/proposal.type';
 
 export default function ChooseTypeStep() {
   const { t } = useTranslation();
   const { chooseProposalType } = useProposalContext();
 
-  const onChooseType = (tp: string) => {
+  const onChooseType = (tp: ProposalType) => {
     chooseProposalType(tp);
   };
 
@@ -17,7 +17,7 @@ export default function ChooseTypeStep() {
         <StepTitle>{t('Proposal.ChooseType')}</StepTitle>
         <TypeBox>
           {PROPOSAL_TYPES.map((tp, index) => (
-            <li key={index} onClick={() => onChooseType(tp.id)}>
+            <li key={index} onClick={() => onChooseType(tp)}>
               {t(tp.name as any)}
             </li>
           ))}

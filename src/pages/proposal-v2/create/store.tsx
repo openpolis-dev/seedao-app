@@ -1,10 +1,11 @@
 import React, { createContext, useContext, useState } from 'react';
+import { ProposalType } from 'type/proposal.type';
 
 type ProposalContext = {
   currentStep: number;
-  proposalType?: string;
+  proposalType?: ProposalType;
   changeStep: (step: number) => void;
-  chooseProposalType: (type: string) => void;
+  chooseProposalType: (tp: ProposalType) => void;
 };
 
 const context = createContext<ProposalContext>({
@@ -15,11 +16,11 @@ const context = createContext<ProposalContext>({
 
 const ProposalProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [currentStep, setCurrentStep] = useState(1);
-  const [proposalType, setProposalType] = useState<string>();
+  const [proposalType, setProposalType] = useState<ProposalType>();
   const addStep = () => setCurrentStep(currentStep + 1);
   const changeStep = (newStep: number) => setCurrentStep(newStep);
 
-  const chooseProposalType = (tp: string) => {
+  const chooseProposalType = (tp: ProposalType) => {
     setProposalType(tp);
     addStep();
   };

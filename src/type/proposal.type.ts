@@ -80,7 +80,12 @@ export enum ProposalStatus {
   End = 'end',
 }
 
-export const PROPOSAL_TYPES = [
+export type ProposalType = {
+  id: string;
+  name: string;
+};
+
+export const PROPOSAL_TYPES: ProposalType[] = [
   {
     id: '',
     name: 'Proposal.ThreeLayerType',
