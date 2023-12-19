@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
 import ClearSVGIcon from 'components/svgs/clear';
 import SearchSVGIcon from 'components/svgs/search';
+import { Button } from 'react-bootstrap';
 
 export default function ProposalIndexPage() {
   const { t } = useTranslation();
@@ -47,38 +48,44 @@ export default function ProposalIndexPage() {
 
   return (
     <Page>
-      <FilterBox>
-        <FilterSelect
-          options={TYPE_OPTIONS}
-          isSearchable={false}
-          placeholder={t('Proposal.TypeSelectHint')}
-          onChange={(v: ISelectItem) => setSelectType(v)}
-        />
-        <FilterSelect
-          options={TIME_OPTIONS}
-          defaultValue={TIME_OPTIONS[0]}
-          isClearable={false}
-          isSearchable={false}
-          onChange={(v: ISelectItem) => setSelectTime(v)}
-        />
-        <FilterSelect
-          options={STATUS_OPTIONS}
-          isSearchable={false}
-          placeholder={t('Proposal.StatusSelectHint')}
-          onChange={(v: ISelectItem) => setSelectStatus(v)}
-        />
-        <SearchBox>
-          <SearchSVGIcon />
-          <input
-            type="text"
-            placeholder=""
-            onKeyUp={(e) => onKeyUp(e)}
-            value={inputKeyword}
-            onChange={(e) => setInputKeyword(e.target.value)}
+      <OperateBox>
+        <FilterBox>
+          <SeeSelect
+            width="180px"
+            options={TYPE_OPTIONS}
+            isSearchable={false}
+            placeholder={t('Proposal.TypeSelectHint')}
+            onChange={(v: ISelectItem) => setSelectType(v)}
           />
-          {inputKeyword && <ClearSVGIcon onClick={() => clearSearch()} className="btn-clear" />}
-        </SearchBox>
-      </FilterBox>
+          <SeeSelect
+            width="120px"
+            options={TIME_OPTIONS}
+            defaultValue={TIME_OPTIONS[0]}
+            isClearable={false}
+            isSearchable={false}
+            onChange={(v: ISelectItem) => setSelectTime(v)}
+          />
+          <SeeSelect
+            width="120px"
+            options={STATUS_OPTIONS}
+            isSearchable={false}
+            placeholder={t('Proposal.StatusSelectHint')}
+            onChange={(v: ISelectItem) => setSelectStatus(v)}
+          />
+          <SearchBox>
+            <SearchSVGIcon />
+            <input
+              type="text"
+              placeholder=""
+              onKeyUp={(e) => onKeyUp(e)}
+              value={inputKeyword}
+              onChange={(e) => setInputKeyword(e.target.value)}
+            />
+            {inputKeyword && <ClearSVGIcon onClick={() => clearSearch()} className="btn-clear" />}
+          </SearchBox>
+        </FilterBox>
+        <Button variant="primary">{t('Proposal.CreateProposal')}</Button>
+      </OperateBox>
     </Page>
   );
 }
@@ -87,17 +94,18 @@ const Page = styled.div`
   ${ContainerPadding};
 `;
 
+const OperateBox = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+
 const FilterBox = styled.div`
   display: flex;
   gap: 16px;
 `;
 
-const FilterSelect = styled(SeeSelect)`
-  width: 180px;
-`;
-
 const SearchBox = styled.div`
-  width: 240px;
+  width: 180px;
   background: var(--bs-box-background);
   border-radius: 8px;
   display: flex;
