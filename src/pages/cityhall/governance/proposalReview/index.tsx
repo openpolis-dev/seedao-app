@@ -5,6 +5,7 @@ import BackerNav from 'components/common/backNav';
 import { useTranslation } from 'react-i18next';
 import { IBaseProposal, ProposalStatus } from 'type/proposal.type';
 import ClearSVGIcon from 'components/svgs/clear';
+import SearchSVGIcon from 'components/svgs/search';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import ProposalReviewCard from 'components/proposal/proposalReivewCard';
 
@@ -57,7 +58,7 @@ export default function ProposalReview() {
           ))}
         </StatusBox>
         <SearchBox>
-          {/* <img src={theme ? SearchWhite : SearchImg} alt="" /> */}
+          <SearchSVGIcon />
           <input
             type="text"
             placeholder=""
@@ -65,7 +66,7 @@ export default function ProposalReview() {
             value={inputKeyword}
             onChange={(e) => setInputKeyword(e.target.value)}
           />
-          {inputKeyword && <ClearSVGIcon onClick={() => clearSearch()} />}
+          {inputKeyword && <ClearSVGIcon onClick={() => clearSearch()} className="btn-clear" />}
         </SearchBox>
         <InfiniteScroll
           scrollableTarget="scrollableDiv"
@@ -116,7 +117,7 @@ const SearchBox = styled.div`
   padding: 0 8px;
   border: 1px solid var(--bs-border-color);
   input {
-    width: calc(100% - 40px);
+    flex: 1;
     border: 0;
     background: transparent;
     margin-left: 9px;
@@ -128,7 +129,7 @@ const SearchBox = styled.div`
       outline: none;
     }
   }
-  svg {
+  svg.btn-clear {
     cursor: pointer;
   }
 `;
