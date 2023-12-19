@@ -3,16 +3,10 @@ import { useEffect, useState } from 'react';
 import { ContainerPadding } from 'assets/styles/global';
 import BackerNav from 'components/common/backNav';
 import { useTranslation } from 'react-i18next';
-import { IBaseProposal } from 'type/proposal.type';
+import { IBaseProposal, ProposalStatus } from 'type/proposal.type';
 import ClearSVGIcon from 'components/svgs/clear';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import ProposalReviewCard from 'components/proposal/proposalReivewCard';
-
-enum ProposalStatus {
-  Draft = 'draft',
-  Rejected = 'rejected',
-  WithDrawn = 'withdrawn',
-}
 
 const STATUS = [
   { name: 'Proposal.Draft', value: ProposalStatus.Draft },

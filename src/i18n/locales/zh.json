@@ -66,7 +66,17 @@
     "TotalVotes": "总投票数",
     "Draft": "草稿",
     "Rejected": "被驳回",
-    "WithDrawn": "已撤回"
+    "WithDrawn": "已撤回",
+    "Voting": "投票中",
+    "End": "已结束",
+    "ThreeLayerType": "三层提案 - P3",
+    "TwoLayerType": "二层提案 - P2",
+    "OneLayerType": "一层提案 - P1",
+    "CityhallType": "市政厅联席会议提案",
+    "NodesType": "节点共识大会提案",
+    "TypeSelectHint": "全部类型",
+    "StatusSelectHint": "全部状态",
+    "HistoryRecord": "历史记录"
   },
   "Project": {
     "ProjectOrGuildItem": "还没有填写相关介绍信息～",

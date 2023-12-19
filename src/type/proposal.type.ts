@@ -70,3 +70,40 @@ export interface IBaseProposal {
   };
   polls: Poll[];
 }
+
+export enum ProposalStatus {
+  Draft = 'draft',
+  Rejected = 'rejected',
+  WithDrawn = 'withdrawn',
+  Approved = 'approved',
+  Voting = 'voting',
+  End = 'end',
+}
+
+export const PROPOSAL_TYPES = [
+  {
+    id: '',
+    name: 'Proposal.ThreeLayerType',
+  },
+  {
+    id: '',
+    name: 'Proposal.TwoLayerType',
+  },
+  {
+    id: '',
+    name: 'Proposal.OneLayerType',
+  },
+  {
+    id: '',
+    name: 'Proposal.CityhallType',
+  },
+  {
+    id: '',
+    name: 'Proposal.NodesType',
+  },
+];
+
+export enum PROPOSAL_TIME {
+  LATEST = 'latest',
+  OLDEST = 'oldest',
+}
