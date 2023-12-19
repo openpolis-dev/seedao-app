@@ -70,6 +70,16 @@ export default function RegisterSNSStep1() {
         return;
       }
       // onchain check
+      if (!controllerContract) {
+        showToast(t('SNS.ContractNotReady'), ToastType.Danger, {
+          hideProgressBar: true,
+          position: 'top-center',
+          autoClose: 3000,
+        });
+        setPending(false);
+        setAvailable(AvailableStatus.DEFAULT);
+        return;
+      }
       const res1 = await controllerContract.available(v);
       console.log('online check', v, res1);
 
