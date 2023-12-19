@@ -76,7 +76,9 @@
     "NodesType": "节点共识大会提案",
     "TypeSelectHint": "全部类型",
     "StatusSelectHint": "全部状态",
-    "HistoryRecord": "历史记录"
+    "HistoryRecord": "历史记录",
+    "ChooseType": "请选择提案类型",
+    "CreateBlank": "创建新提案"
   },
   "Project": {
     "ProjectOrGuildItem": "还没有填写相关介绍信息～",

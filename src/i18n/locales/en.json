@@ -76,7 +76,9 @@
     "NodesType": "节点共识大会提案",
     "TypeSelectHint": "All Types",
     "StatusSelectHint": "All Status",
-    "HistoryRecord": "History"
+    "HistoryRecord": "History",
+    "ChooseType": "Choose Proposal Type",
+    "CreateBlank": "Create New"
   },
   "Project": {
     "ProjectOrGuildItem": "Nothing left here.",

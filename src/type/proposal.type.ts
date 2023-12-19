@@ -107,3 +107,8 @@ export enum PROPOSAL_TIME {
   LATEST = 'latest',
   OLDEST = 'oldest',
 }
+
+export type ProposalTemplateType = {
+  id: number;
+  name: string;
+};
