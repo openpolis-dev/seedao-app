@@ -7,7 +7,7 @@ import { IBaseProposal, ProposalStatus } from 'type/proposal.type';
 import ClearSVGIcon from 'components/svgs/clear';
 import SearchSVGIcon from 'components/svgs/search';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import ProposalReviewCard from 'components/proposal/proposalReivewCard';
+import ProposalItem from 'components/proposalCom/proposalItem';
 
 const STATUS = [
   { name: 'Proposal.Draft', value: ProposalStatus.Draft },
@@ -76,7 +76,7 @@ export default function ProposalReview() {
           loader={<></>}
         >
           {proposalList.map((p) => (
-            <ProposalReviewCard key={p.id} data={p} />
+            <ProposalItem key={p.id} data={p} />
           ))}
         </InfiniteScroll>
       </FilterBox>

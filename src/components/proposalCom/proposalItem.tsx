@@ -7,7 +7,7 @@ import { useAuthContext } from 'providers/authProvider';
 
 const CardBody = styled.div``;
 
-export default function ProposalReviewCard({ data }: { data: IBaseProposal }) {
+export default function ProposalItem({ data }: { data: IBaseProposal }) {
   const navigate = useNavigate();
   const {
     state: { theme },
