@@ -540,7 +540,8 @@
     "Helper": "Ask for help",
     "CancelRegister": "Cancel registration",
     "CancelTip": "Cancel means you'll start to register from step one",
-    "ContractNotReady": "Contract is not ready, check network please."
+    "ContractNotReady": "Contract is not ready, check network please.",
+    "NotEnoughBalance": "{{token}} not enough"
   },
   "Governance": {
     "GovernanceRule": "Governance Rules",
