@@ -260,7 +260,9 @@
     "MemberGroup": "Member Group",
     "GovernanceGroup": "Governance Group",
     "BrandGroup": "Branding Group",
-    "TechGroup": "Tech Group"
+    "TechGroup": "Tech Group",
+    "ReviewProposal": "Review Proposal",
+    "ReviewProposalDesc": "Review the request of proposal"
   },
   "GovernanceNodeResult": {
     "SearchTip": "SNS",

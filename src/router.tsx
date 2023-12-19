@@ -36,6 +36,7 @@ import PubDetail from './pages/Pub/detail';
 
 import GoveranceNodeResult from 'pages/cityhall/governance/governanceNodeResult';
 // import ResourcesDetail from './pages/resouces/resources-detail';
+import ProposalReview from 'pages/cityhall/governance/proposalReview';
 import Audit from 'pages/cityhall/governance/audit';
 import AuditProject from 'pages/cityhall/governance/projectAudit';
 import Issue from 'pages/cityhall/governance/issue';
@@ -90,6 +91,7 @@ export default function RouterLink() {
           <Route path="/city-hall/governance/audit" element={<Audit />} />
           <Route path="/city-hall/governance/audit-project" element={<AuditProject />} />
           <Route path="/city-hall/governance/issue" element={<Issue />} />
+          <Route path="/city-hall/governance/review-proposal" element={<ProposalReview />} />
           {getConfig().REACT_APP_ENV === 'test' && <Route path="/chat" element={<Chat />} />}
           <Route path="/ranking" element={<SCRRank />} />
           <Route path="/feedback" element={<Canny />} />

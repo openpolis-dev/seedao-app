@@ -260,7 +260,9 @@
     "MemberGroup": "成员分组",
     "GovernanceGroup": "治理小组",
     "BrandGroup": "品牌小组",
-    "TechGroup": "技术小组"
+    "TechGroup": "技术小组",
+    "ReviewProposal": "提案审核",
+    "ReviewProposalDesc": "审核提案的申请"
   },
   "GovernanceNodeResult": {
     "SearchTip": "SNS",

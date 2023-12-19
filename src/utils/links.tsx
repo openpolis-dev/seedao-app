@@ -176,6 +176,14 @@ const links = {
       desc: 'city-hall.CloseProjectAuditDesc',
       Nolink: true,
     },
+    {
+      name: 'city-hall.ReviewProposal',
+      link: '/city-hall/governance/review-proposal',
+      id: 'module-governance-review-proposal',
+      icon: RImg9,
+      desc: 'city-hall.ReviewProposalDesc',
+      Nolink: true,
+    },
   ],
   governanceBtm: [
     {
