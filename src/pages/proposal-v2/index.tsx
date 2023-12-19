@@ -1,12 +1,14 @@
 import styled from 'styled-components';
 import { ContainerPadding } from 'assets/styles/global';
-import { ProposalStatus, PROPOSAL_TYPES, PROPOSAL_TIME } from 'type/proposal.type';
+import { IBaseProposal, ProposalStatus, PROPOSAL_TYPES, PROPOSAL_TIME } from 'type/proposal.type';
 import SeeSelect from 'components/common/select';
 import { useTranslation } from 'react-i18next';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ClearSVGIcon from 'components/svgs/clear';
 import SearchSVGIcon from 'components/svgs/search';
 import { Button } from 'react-bootstrap';
+import InfiniteScroll from 'react-infinite-scroll-component';
+import ProposalItem from 'components/proposalCom/proposalItem';
 
 export default function ProposalIndexPage() {
   const { t } = useTranslation();
@@ -35,6 +37,20 @@ export default function ProposalIndexPage() {
 
   const [searchKeyword, setSearchKeyword] = useState('');
   const [inputKeyword, setInputKeyword] = useState('');
+
+  const [proposalList, setProposalList] = useState<IBaseProposal[]>([]);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(false);
+
+  const getProposalList = (init?: boolean) => {
+    //   TODO: get proposal list
+    const _page = init ? 1 : page;
+    setPage(_page + 1);
+  };
+
+  useEffect(() => {
+    getProposalList(true);
+  }, [selectType, selectTime, selectStatus, searchKeyword]);
 
   const onKeyUp = (e: any) => {
     if (e.keyCode === 13) {
@@ -86,6 +102,17 @@ export default function ProposalIndexPage() {
         </FilterBox>
         <Button variant="primary">{t('Proposal.CreateProposal')}</Button>
       </OperateBox>
+      <InfiniteScroll
+        scrollableTarget="scrollableDiv"
+        dataLength={proposalList.length}
+        next={getProposalList}
+        hasMore={hasMore}
+        loader={<></>}
+      >
+        {proposalList.map((p) => (
+          <ProposalItem key={p.id} data={p} />
+        ))}
+      </InfiniteScroll>
     </Page>
   );
 }
