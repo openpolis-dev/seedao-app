@@ -4,6 +4,8 @@ import { ProposalStatus, PROPOSAL_TYPES, PROPOSAL_TIME } from 'type/proposal.typ
 import SeeSelect from 'components/common/select';
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
+import ClearSVGIcon from 'components/svgs/clear';
+import SearchSVGIcon from 'components/svgs/search';
 
 export default function ProposalIndexPage() {
   const { t } = useTranslation();
@@ -30,6 +32,19 @@ export default function ProposalIndexPage() {
   const [selectTime, setSelectTime] = useState<ISelectItem>(TIME_OPTIONS[0]);
   const [selectStatus, setSelectStatus] = useState<ISelectItem>();
 
+  const [searchKeyword, setSearchKeyword] = useState('');
+  const [inputKeyword, setInputKeyword] = useState('');
+
+  const onKeyUp = (e: any) => {
+    if (e.keyCode === 13) {
+      setSearchKeyword(e.target.value);
+    }
+  };
+  const clearSearch = () => {
+    setInputKeyword('');
+    setSearchKeyword('');
+  };
+
   return (
     <Page>
       <FilterBox>
@@ -52,6 +67,17 @@ export default function ProposalIndexPage() {
           placeholder={t('Proposal.StatusSelectHint')}
           onChange={(v: ISelectItem) => setSelectStatus(v)}
         />
+        <SearchBox>
+          <SearchSVGIcon />
+          <input
+            type="text"
+            placeholder=""
+            onKeyUp={(e) => onKeyUp(e)}
+            value={inputKeyword}
+            onChange={(e) => setInputKeyword(e.target.value)}
+          />
+          {inputKeyword && <ClearSVGIcon onClick={() => clearSearch()} className="btn-clear" />}
+        </SearchBox>
       </FilterBox>
     </Page>
   );
@@ -68,4 +94,30 @@ const FilterBox = styled.div`
 
 const FilterSelect = styled(SeeSelect)`
   width: 180px;
+`;
+
+const SearchBox = styled.div`
+  width: 240px;
+  background: var(--bs-box-background);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+  border: 1px solid var(--bs-border-color);
+  input {
+    border: 0;
+    background: transparent;
+    margin-left: 9px;
+    height: 24px;
+    flex: 1;
+    &::placeholder {
+      color: var(--bs-body-color);
+    }
+    &:focus {
+      outline: none;
+    }
+  }
+  svg.btn-clear {
+    cursor: pointer;
+  }
 `;
