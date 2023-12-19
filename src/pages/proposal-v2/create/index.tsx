@@ -5,11 +5,12 @@ import { useTranslation } from 'react-i18next';
 import ProposalProvider from './store';
 import ChooseTypeStep from './chooseType';
 import ChooseTemplateStep from './chooseTemplate';
+import CreateStep from './createStep';
 import { useProposalContext } from './store';
 
 const CreateProposalSteps = () => {
   const { t } = useTranslation();
-  const { currentStep, changeStep, proposalType, goBackStepOne } = useProposalContext();
+  const { currentStep, proposalType, goBackStepOne } = useProposalContext();
 
   const showstep = () => {
     switch (currentStep) {
@@ -17,6 +18,8 @@ const CreateProposalSteps = () => {
         return <ChooseTypeStep />;
       case 2:
         return <ChooseTemplateStep />;
+      case 3:
+        return <CreateStep />;
       default:
         return null;
     }
