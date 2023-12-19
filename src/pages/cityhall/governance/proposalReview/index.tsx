@@ -5,6 +5,8 @@ import BackerNav from 'components/common/backNav';
 import { useTranslation } from 'react-i18next';
 import { IBaseProposal } from 'type/proposal.type';
 import ClearSVGIcon from 'components/svgs/clear';
+import InfiniteScroll from 'react-infinite-scroll-component';
+import ProposalReviewCard from 'components/proposal/proposalReivewCard';
 
 enum ProposalStatus {
   Draft = 'draft',
@@ -29,10 +31,12 @@ export default function ProposalReview() {
   const [searchKeyword, setSearchKeyword] = useState('');
   const [inputKeyword, setInputKeyword] = useState('');
 
-  const getProposalList = () => {};
+  const getProposalList = (init?: boolean) => {
+    //   TODO: get proposal list
+  };
   useEffect(() => {
-    getProposalList();
-  }, [selectStatus]);
+    getProposalList(true);
+  }, [selectStatus, searchKeyword]);
 
   const onKeyUp = (e: any) => {
     if (e.keyCode === 13) {
@@ -69,6 +73,17 @@ export default function ProposalReview() {
           />
           {inputKeyword && <ClearSVGIcon onClick={() => clearSearch()} />}
         </SearchBox>
+        <InfiniteScroll
+          scrollableTarget="scrollableDiv"
+          dataLength={proposalList.length}
+          next={getProposalList}
+          hasMore={hasMore}
+          loader={<></>}
+        >
+          {proposalList.map((p) => (
+            <ProposalReviewCard key={p.id} data={p} />
+          ))}
+        </InfiniteScroll>
       </FilterBox>
     </Page>
   );
