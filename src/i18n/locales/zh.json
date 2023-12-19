@@ -540,7 +540,7 @@
     "Helper": "帮助",
     "CancelRegister": "取消注册",
     "CancelTip": "取消后，注册流程将从第一步开始",
-    "ContractNotReady": "合约未初始化完成"
+    "ContractNotReady": "合约未初始化完成, 请检查网络"
   },
   "Governance": {
     "GovernanceRule": "治理规则",

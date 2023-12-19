@@ -8,6 +8,10 @@ import { useAuthContext } from 'providers/authProvider';
 import useToast, { ToastType } from 'hooks/useToast';
 import useTransaction, { TX_ACTION } from './useTransaction';
 import CancelModal from './cancelModal';
+import getConfig from 'utils/envCofnig';
+import { ethers } from 'ethers';
+
+const networkConfig = getConfig().NETWORK;
 
 export default function RegisterSNSStep2() {
   const { t } = useTranslation();
@@ -64,6 +68,22 @@ export default function RegisterSNSStep2() {
   const handleRegister = async () => {
     if (!account) {
       return;
+    }
+    // check network
+    if (!provider?.getNetwork) {
+      return;
+    }
+    const network = await provider.getNetwork();
+
+    if (network?.chainId !== networkConfig.chainId) {
+      // switch network;
+      try {
+        await provider.send('wallet_switchEthereumChain', [{ chainId: ethers.utils.hexValue(networkConfig.chainId) }]);
+        return;
+      } catch (error) {
+        console.error('switch network error', error);
+        return;
+      }
     }
     dispatchSNS({ type: ACTIONS.SHOW_LOADING });
     try {
