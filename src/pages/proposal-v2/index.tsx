@@ -9,6 +9,7 @@ import SearchSVGIcon from 'components/svgs/search';
 import { Button } from 'react-bootstrap';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import ProposalItem from 'components/proposalCom/proposalItem';
+import { Link } from 'react-router-dom';
 
 export default function ProposalIndexPage() {
   const { t } = useTranslation();
@@ -100,7 +101,9 @@ export default function ProposalIndexPage() {
             {inputKeyword && <ClearSVGIcon onClick={() => clearSearch()} className="btn-clear" />}
           </SearchBox>
         </FilterBox>
-        <Button variant="primary">{t('Proposal.CreateProposal')}</Button>
+        <Link to="/proposal-v2/create">
+          <Button variant="primary">{t('Proposal.CreateProposal')}</Button>
+        </Link>
       </OperateBox>
       <InfiniteScroll
         scrollableTarget="scrollableDiv"

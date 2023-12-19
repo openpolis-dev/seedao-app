@@ -46,6 +46,10 @@ import RegisterSNS from 'pages/sns/register';
 import UserSNS from 'pages/sns/userSNS';
 import Newcomer from 'pages/newcomer';
 
+// proposal v2
+import ProposalIndexPage from 'pages/proposal-v2';
+import CreateProposalPage from 'pages/proposal-v2/create';
+
 import Wiki from './pages/notion/wiki';
 import getConfig from 'utils/envCofnig';
 
@@ -86,6 +90,10 @@ export default function RouterLink() {
           <Route path="/proposal" element={<Proposal />} />
           <Route path="/proposal/category/:id" element={<ProposalCategory />} />
           <Route path="/proposal/thread/:id" element={<ProposalThread />} />
+          {/* proposal v2 */}
+          <Route path="/proposal-v2" element={<ProposalIndexPage />} />
+          <Route path="/proposal-v2/create" element={<CreateProposalPage />} />
+
           <Route path="/city-hall/*" element={<CityHall />} />
           <Route path="/city-hall/governance/governance-node-result" element={<GoveranceNodeResult />} />
           <Route path="/city-hall/governance/audit" element={<Audit />} />
