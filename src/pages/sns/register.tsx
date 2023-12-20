@@ -16,6 +16,7 @@ import { builtin } from '@seedao/sns-js';
 import WhiteListData from 'utils/whitelist.json';
 import { useTranslation } from 'react-i18next';
 import HelperIcon from 'assets/Imgs/sns/helper.svg';
+import useToast, { ToastType } from 'hooks/useToast';
 
 const whiteList = WhiteListData as {
   rootHash: string;
@@ -34,6 +35,8 @@ const RegisterSNSWrapper = () => {
     state: { step, localData, loading, controllerContract, minterContract },
     dispatch: dispatchSNS,
   } = useSNSContext();
+
+  const { showToast } = useToast();
 
   const checkUserStatus = async () => {
     try {
@@ -127,6 +130,7 @@ const RegisterSNSWrapper = () => {
           console.error('switch network error', error);
           dispatchSNS({ type: ACTIONS.SET_CONTROLLER_CONTRACT, payload: undefined });
           dispatchSNS({ type: ACTIONS.SET_MINTER_CONTRACT, payload: undefined });
+          showToast(t('SNS.NetworkNotReady'), ToastType.Danger, { hideProgressBar: true });
           return;
         }
       }
