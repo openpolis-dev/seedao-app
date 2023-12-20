@@ -264,7 +264,9 @@ export default function PubDetail() {
             <Col md={2} key={key}>
               {key}
             </Col>
-            <Col md={10}>{str}</Col>
+            <Col md={10}>
+              <PreBox>{str}</PreBox>
+            </Col>
           </Row>,
         );
     }
@@ -308,7 +310,7 @@ export default function PubDetail() {
           </TopRht>
           <Title>{title}</Title>
           <ContentBox>
-            <PreBox>{renderElement(props)}</PreBox>
+            <>{renderElement(props)}</>
             <Row>
               <Col md={2}>👫 对接人</Col>
               <Col md={10}>
