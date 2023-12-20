@@ -84,6 +84,7 @@ export default function RegisterSNSStep2() {
         return;
       } catch (error) {
         console.error('switch network error', error);
+        showToast(t('SNS.NetworkNotReady'), ToastType.Danger, { hideProgressBar: true });
         return;
       }
     }

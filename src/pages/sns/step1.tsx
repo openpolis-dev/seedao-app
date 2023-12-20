@@ -118,6 +118,26 @@ export default function RegisterSNSStep1() {
     return true;
   };
 
+  // check network
+  const checkNetwork = useCallback(() => {
+    const handleCheckNetwork = async () => {
+      if (!provider?.getNetwork) {
+        return;
+      }
+      const network = await provider.getNetwork();
+      if (network?.chainId !== networkConfig.chainId) {
+        // switch network;
+        provider
+          .send('wallet_switchEthereumChain', [{ chainId: ethers.utils.hexValue(networkConfig.chainId) }])
+          .catch((error: any) => {
+            console.error('switch network error', error);
+            showToast(t('SNS.NetworkNotReady'), ToastType.Danger, { hideProgressBar: true });
+          });
+      }
+    };
+    handleCheckNetwork();
+  }, [provider]);
+
   const handleInput = (v: string) => {
     if (v?.length > 15) {
       return;
@@ -138,6 +158,7 @@ export default function RegisterSNSStep1() {
       setPending(true);
       onChangeVal(v_normalized);
     }
+    checkNetwork();
   };
 
   const handleClearInput = () => {
