@@ -561,7 +561,11 @@
     "HadSNS": "Your SNS has reached the limit",
     "Helper": "Ask for help",
     "CancelRegister": "Cancel registration",
-    "CancelTip": "Cancel means you'll start to register from step one"
+    "CancelTip": "Cancel means you'll start to register from step one",
+    "ContractNotReady": "Contract is not ready, switch metamask network to Polygon please.",
+    "NetworkNotReady": "switch metamask network to Polygon please",
+    "NotEnoughBalance": "{{token}} not enough"
+
   },
   "Governance": {
     "GovernanceRule": "Governance Rules",

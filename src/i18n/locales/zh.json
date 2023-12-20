@@ -561,7 +561,11 @@
     "HadSNS": "您的 SNS 已达上限",
     "Helper": "帮助",
     "CancelRegister": "取消注册",
-    "CancelTip": "取消后，注册流程将从第一步开始"
+    "CancelTip": "取消后，注册流程将从第一步开始",
+    "ContractNotReady": "合约未初始化完成, 请切换您的钱包网络到Polygon",
+    "NetworkNotReady": "请切换您的钱包网络到Polygon",
+    "NotEnoughBalance": "{{token}}余额不足"
+
   },
   "Governance": {
     "GovernanceRule": "治理规则",

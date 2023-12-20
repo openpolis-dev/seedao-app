@@ -65,6 +65,30 @@ export default function RegisterSNSStep2() {
     if (!account) {
       return;
     }
+    // check network
+    if (!provider?.getNetwork) {
+      return;
+    }
+    const network = await provider.getNetwork();
+
+    if (network?.chainId !== networkConfig.chainId) {
+      // switch network;
+      try {
+        await provider.send('wallet_switchEthereumChain', [{ chainId: ethers.utils.hexValue(networkConfig.chainId) }]);
+        return;
+      } catch (error) {
+        console.error('switch network error', error);
+        showToast(t('SNS.NetworkNotReady'), ToastType.Danger, { hideProgressBar: true });
+        return;
+      }
+    }
+    // check native balance
+    const token = await checkBalance(true);
+    if (token) {
+      showToast(t('SNS.NotEnoughBalance', { token }), ToastType.Danger, { hideProgressBar: true });
+      dispatchSNS({ type: ACTIONS.CLOSE_LOADING });
+      return;
+    }
     dispatchSNS({ type: ACTIONS.SHOW_LOADING });
     try {
       const d = { ...localData };
