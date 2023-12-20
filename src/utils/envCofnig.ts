@@ -1,7 +1,7 @@
 import EthereumIcon from 'assets/Imgs/network/ethereum.svg';
 import PolygonIcon from 'assets/Imgs/network/polygon.svg';
 
-const VERSION = '0.3.3';
+const VERSION = '0.3.4';
 
 const LOCAL = {
   REACT_APP_BASE_ENDPOINT: 'https://test-api.seedao.tech',
