@@ -78,7 +78,9 @@
     "StatusSelectHint": "全部状态",
     "HistoryRecord": "历史记录",
     "ChooseType": "请选择提案类型",
-    "CreateBlank": "创建新提案"
+    "CreateBlank": "创建新提案",
+    "ActivityCreate": "创建了提案{{title}}",
+    "ActivityComment": "评论了{{author}}的提案{{title}}"
   },
   "Project": {
     "ProjectOrGuildItem": "还没有填写相关介绍信息～",

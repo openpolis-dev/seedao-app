@@ -10,6 +10,7 @@ import { Button } from 'react-bootstrap';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import ProposalItem from 'components/proposalCom/proposalItem';
 import { Link } from 'react-router-dom';
+import HistoryAction from 'components/proposalCom/historyAction';
 
 export default function ProposalIndexPage() {
   const { t } = useTranslation();
@@ -42,6 +43,7 @@ export default function ProposalIndexPage() {
   const [proposalList, setProposalList] = useState<IBaseProposal[]>([]);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(false);
+  const [showHistory, setShowHistory] = useState(false);
 
   const getProposalList = (init?: boolean) => {
     //   TODO: get proposal list
@@ -51,6 +53,7 @@ export default function ProposalIndexPage() {
 
   useEffect(() => {
     getProposalList(true);
+    setShowHistory(false);
   }, [selectType, selectTime, selectStatus, searchKeyword]);
 
   const onKeyUp = (e: any) => {
@@ -100,22 +103,29 @@ export default function ProposalIndexPage() {
             />
             {inputKeyword && <ClearSVGIcon onClick={() => clearSearch()} className="btn-clear" />}
           </SearchBox>
+          <HistoryButton className={showHistory ? 'selected' : ''} onClick={() => setShowHistory(true)}>
+            {t('Proposal.HistoryRecord')}
+          </HistoryButton>
         </FilterBox>
         <Link to="/proposal-v2/create">
           <Button variant="primary">{t('Proposal.CreateProposal')}</Button>
         </Link>
       </OperateBox>
-      <InfiniteScroll
-        scrollableTarget="scrollableDiv"
-        dataLength={proposalList.length}
-        next={getProposalList}
-        hasMore={hasMore}
-        loader={<></>}
-      >
-        {proposalList.map((p) => (
-          <ProposalItem key={p.id} data={p} />
-        ))}
-      </InfiniteScroll>
+      {showHistory ? (
+        <HistoryAction />
+      ) : (
+        <InfiniteScroll
+          scrollableTarget="scrollableDiv"
+          dataLength={proposalList.length}
+          next={getProposalList}
+          hasMore={hasMore}
+          loader={<></>}
+        >
+          {proposalList.map((p) => (
+            <ProposalItem key={p.id} data={p} />
+          ))}
+        </InfiniteScroll>
+      )}
     </Page>
   );
 }
@@ -127,6 +137,7 @@ const Page = styled.div`
 const OperateBox = styled.div`
   display: flex;
   justify-content: space-between;
+  margin-bottom: 32px;
 `;
 
 const FilterBox = styled.div`
@@ -136,12 +147,15 @@ const FilterBox = styled.div`
 
 const SearchBox = styled.div`
   width: 180px;
-  background: var(--bs-box-background);
+  background: var(--bs-background);
   border-radius: 8px;
   display: flex;
   align-items: center;
   padding: 0 8px;
   border: 1px solid var(--bs-border-color);
+  &:hover {
+    border-color: hsl(0, 0%, 70%);
+  }
   input {
     border: 0;
     background: transparent;
@@ -157,5 +171,23 @@ const SearchBox = styled.div`
   }
   svg.btn-clear {
     cursor: pointer;
+  }
+`;
+
+const HistoryButton = styled.div`
+  height: 40px;
+  padding-inline: 20px;
+  line-height: 40px;
+  background-color: var(--bs-background);
+  border-radius: 8px;
+  border: 1px solid var(--bs-border-color);
+  text-align: center;
+  color: var(--bs-body-color_active);
+  cursor: pointer;
+  &:hover {
+    border-color: hsl(0, 0%, 70%);
+  }
+  &.selected {
+    background-color: var(--bs-body-color);
   }
 `;

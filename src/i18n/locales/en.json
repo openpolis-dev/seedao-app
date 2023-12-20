@@ -78,7 +78,9 @@
     "StatusSelectHint": "All Status",
     "HistoryRecord": "History",
     "ChooseType": "Choose Proposal Type",
-    "CreateBlank": "Create New"
+    "CreateBlank": "Create New",
+    "ActivityCreate": "Started a new topic {{title}}",
+    "ActivityComment": "Replied to {{author}}'s topic {{title}}"
   },
   "Project": {
     "ProjectOrGuildItem": "Nothing left here.",
