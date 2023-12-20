@@ -49,6 +49,7 @@ import Newcomer from 'pages/newcomer';
 // proposal v2
 import ProposalIndexPage from 'pages/proposal-v2';
 import CreateProposalPage from 'pages/proposal-v2/create';
+import ProposalThreadV2 from 'pages/proposal-v2/thread';
 
 import Wiki from './pages/notion/wiki';
 import getConfig from 'utils/envCofnig';
@@ -93,6 +94,7 @@ export default function RouterLink() {
           {/* proposal v2 */}
           <Route path="/proposal-v2" element={<ProposalIndexPage />} />
           <Route path="/proposal-v2/create" element={<CreateProposalPage />} />
+          <Route path="/proposal-v2/thread" element={<ProposalThreadV2 />} />
 
           <Route path="/city-hall/*" element={<CityHall />} />
           <Route path="/city-hall/governance/governance-node-result" element={<GoveranceNodeResult />} />
