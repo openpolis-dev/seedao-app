@@ -12,8 +12,10 @@ export default function useCheckBalance() {
     state: { account, rpc },
   } = useAuthContext();
 
-  return async function checkBalance(checkNative, checkERC20) {
-    console.log('checkBalance', checkNative, checkERC20);
+  return async function checkBalance(checkNative?: boolean, checkERC20?: boolean) {
+    if (!account) {
+      return;
+    }
     if (!checkNative && !checkERC20) {
       return;
     }

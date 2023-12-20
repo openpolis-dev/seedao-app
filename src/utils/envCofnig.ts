@@ -17,6 +17,7 @@ const LOCAL = {
   JOY_ID_URL: 'https://app.joy.id',
   NETWORK: {
     name: 'Polygon',
+    nativeToken: 'Matic',
     chainId: 137,
     // rpcs: [
     //   "https://eth-goerli.g.alchemy.com/v2/MATWeLJN1bEGTjSmtyLedn0i34o1ISLD",
