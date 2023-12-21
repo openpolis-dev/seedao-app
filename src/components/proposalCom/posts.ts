@@ -4,6 +4,13 @@ interface CommentUser {
   username: string;
   is_nft: number;
 }
+
+export type UserTitleType = {
+  name: string;
+  color: string;
+  background: string;
+};
+
 export interface PostDataType {
   id: number;
   created_at: string;
@@ -14,11 +21,7 @@ export interface PostDataType {
   reply_pid: number;
   reply_user: CommentUser | null;
   user: CommentUser;
-  user_title: {
-    name: string;
-    color: string;
-    background: string;
-  };
+  user_title: UserTitleType;
   children: { posts: PostDataType[] };
 }
 

@@ -2,6 +2,8 @@ import styled from 'styled-components';
 import DefaultAvatar from 'assets/Imgs/defaultAvatarT.png';
 import { handleContent } from './parseContent';
 import { useEffect, useState } from 'react';
+import { UserTitleType } from './posts';
+import { PlainButton } from 'components/common/button';
 
 const useParseContent = (data: string) => {
   const [content, setContent] = useState('');
@@ -23,20 +25,47 @@ interface IProps {
   isChild?: boolean;
 }
 
+interface IUserProps {
+  name: string;
+  avatar: string;
+  user_title?: UserTitleType;
+}
+
+const UserBox = ({ name, avatar, user_title }: IUserProps) => {
+  return (
+    <UserBoxStyle>
+      <Avatar src={avatar || DefaultAvatar} alt="" />
+      <span>{name}</span>
+      {user_title && user_title.name && <UserTag bg={user_title.background}>{user_title?.name}</UserTag>}
+    </UserBoxStyle>
+  );
+};
+
 export default function CommentComponent({ data, children, isChild, parentData }: IProps) {
   const content = useParseContent(data?.content);
 
   return (
     <CommentStyle padding={isChild ? '30px' : '0'}>
-      {parentData && <ReplyComment data={parentData} />}
+      {/* {parentData && <ReplyComment data={parentData} />} */}
       <CommentMain>
-        <Avatar src={data.user.photo_url || DefaultAvatar} alt="" />
+        {/* <Avatar src={data.user.photo_url || DefaultAvatar} alt="" /> */}
         <RightBox>
-          <div>
-            <span>{data.user.username}</span>
-            {data.user_title && <UserTag bg={data.user_title.background}>{data.user_title?.name}</UserTag>}
+          <RelationUserLine>
+            <UserBox name={data.user.username} avatar={data.user.photo_url} user_title={data.user_title} />
+            {parentData && (
+              <>
+                <span>{'==>'}</span>
+                <UserBox
+                  name={parentData.user.username}
+                  avatar={parentData.user.photo_url}
+                  user_title={parentData.user_title}
+                />
+              </>
+            )}
             <span>x hour ago</span>
-          </div>
+            <VersionTag>a</VersionTag>
+            <PlainButton>Reply</PlainButton>
+          </RelationUserLine>
           <div className="content" dangerouslySetInnerHTML={{ __html: content }}></div>
         </RightBox>
       </CommentMain>
@@ -47,16 +76,9 @@ export default function CommentComponent({ data, children, isChild, parentData }
 
 const ReplyComment = ({ data }: { data: any }) => {
   const content = useParseContent(data?.content);
-
   return (
     <ReplyCommentStyle>
-      <div>
-        <Avatar src={data.user.photo_url || DefaultAvatar} alt="" />
-        <span>{data.user.username}</span>
-        {data.user_title && <UserTag bg={data.user_title.background}>{data.user_title?.name}</UserTag>}
-        <span>x hour ago</span>
-      </div>
-
+      <UserBox name={data.user.username} avatar={data.user.photo_url} user_title={data.user_title} />
       <div className="content" dangerouslySetInnerHTML={{ __html: content }}></div>
     </ReplyCommentStyle>
   );
@@ -72,7 +94,13 @@ const CommentMain = styled.div`
   gap: 10px;
 `;
 
-const Avatar = styled.img`
+const UserBoxStyle = styled.div`
+  display: flex;
+  gap: 8px;
+  align-items: center;
+`;
+
+export const Avatar = styled.img`
   width: 28px;
   height: 28px;
   border-radius: 50%;
@@ -95,11 +123,27 @@ const UserTag = styled.span<{ bg: string }>`
   color: #000;
   background-color: ${(props) => props.bg};
   border-radius: 6px;
-  margin-left: 8px;
 `;
 
 const ReplyCommentStyle = styled.div`
   padding: 20px;
   border: 1px solid var(--bs-border-color);
   margin-left: 58px;
+`;
+
+const RelationUserLine = styled.div`
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 20px;
+`;
+
+const VersionTag = styled.span`
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1px solid var(--bs-border-color);
+  text-align: center;
+  line-height: 18px;
 `;
