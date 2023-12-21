@@ -73,10 +73,15 @@ export default function ReplyComponent() {
     setOpenReply(true);
   };
 
+  const onEdit = (id: number, content: string) => {
+    setOpenReply(true);
+    setQuillContent(content);
+  };
+
   return (
     <ReplyComponentStyle>
       {POSTS_DATA.map((p) => (
-        <CommetComponent data={p} key={p.id} onReply={onReply}>
+        <CommetComponent data={p} key={p.id} onReply={onReply} onEdit={onEdit}>
           {p.children.posts.map((ip) => (
             <CommetComponent
               data={ip}
@@ -84,6 +89,7 @@ export default function ReplyComponent() {
               key={ip.id}
               parentData={findReplyData(ip.reply_pid)}
               onReply={onReply}
+              onEdit={onEdit}
             />
           ))}
         </CommetComponent>

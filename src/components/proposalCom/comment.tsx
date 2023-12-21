@@ -4,6 +4,7 @@ import { handleContent } from './parseContent';
 import { useEffect, useState } from 'react';
 import { UserTitleType } from './posts';
 import { PlainButton } from 'components/common/button';
+import CommentSelectAction from './commentSelectAction';
 
 const useParseContent = (data: string) => {
   const [content, setContent] = useState('');
@@ -24,6 +25,7 @@ interface IProps {
   children?: React.ReactNode;
   isChild?: boolean;
   onReply: (id: number) => void;
+  onEdit: (id: number, content: string) => void;
 }
 
 interface IUserProps {
@@ -42,11 +44,19 @@ const UserBox = ({ name, avatar, user_title }: IUserProps) => {
   );
 };
 
-export default function CommentComponent({ data, children, isChild, parentData, onReply }: IProps) {
+export default function CommentComponent({ data, children, isChild, parentData, onReply, onEdit }: IProps) {
   const content = useParseContent(data?.content);
 
   const handleReply = () => {
     onReply(data.id);
+  };
+
+  const handleEdit = () => {
+    console.log('edit');
+    onEdit(data.id, data.content);
+  };
+  const handleDelete = () => {
+    console.log('delete');
   };
 
   return (
@@ -70,6 +80,7 @@ export default function CommentComponent({ data, children, isChild, parentData, 
             <span>x hour ago</span>
             <VersionTag>a</VersionTag>
             <PlainButton onClick={handleReply}>Reply</PlainButton>
+            <CommentSelectAction handleEdit={handleEdit} handleDelete={handleDelete} />
           </RelationUserLine>
           <div className="content" dangerouslySetInnerHTML={{ __html: content }}></div>
         </RightBox>
