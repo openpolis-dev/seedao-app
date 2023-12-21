@@ -6,6 +6,7 @@ import { quillModules } from 'utils/quillUtil';
 import { boldIcon, italicIcon, olIcon, ulIcon, underlineIcon } from 'components/svgs/editorSVG';
 import 'react-quill/dist/quill.snow.css';
 import 'assets/styles/quill.css';
+import styled from 'styled-components';
 
 const modules = quillModules();
 modules.toolbar = {
@@ -49,10 +50,9 @@ export default function QuillEditor(props: QuillEditorProps) {
   };
   const CustomToolbar = () => (
     <div className={'mf-ql-toolbar'}>
-      {/* {props.toolbarWidgets} */}
+      {props.toolbarWidgets}
       <div id="see-toolbar">
         <span className={'ql-formats'}>
-          <button className="ql-emoji" style={iconStyle} />
           <button className="ql-bold" style={iconStyle} />
           <button className="ql-italic" style={iconStyle} />
           <button className="ql-underline" style={iconStyle} />
@@ -68,7 +68,7 @@ export default function QuillEditor(props: QuillEditorProps) {
 
   // @ts-ignore
   return (
-    <div className={'mf-ql-editor'}>
+    <EditorStyle className={'mf-ql-editor'}>
       <ReactQuill
         className={'quill-editor'}
         readOnly={props.disabled}
@@ -78,6 +78,13 @@ export default function QuillEditor(props: QuillEditorProps) {
         ref={inputRef}
       />
       {CustomToolbar()}
-    </div>
+    </EditorStyle>
   );
 }
+
+const EditorStyle = styled.div`
+  border: 1px solid var(--bs-primary);
+  .ql-container.ql-snow {
+    border: none;
+  }
+`;

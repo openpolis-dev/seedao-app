@@ -23,6 +23,7 @@ interface IProps {
   parentData?: any;
   children?: React.ReactNode;
   isChild?: boolean;
+  onReply: (id: number) => void;
 }
 
 interface IUserProps {
@@ -41,8 +42,12 @@ const UserBox = ({ name, avatar, user_title }: IUserProps) => {
   );
 };
 
-export default function CommentComponent({ data, children, isChild, parentData }: IProps) {
+export default function CommentComponent({ data, children, isChild, parentData, onReply }: IProps) {
   const content = useParseContent(data?.content);
+
+  const handleReply = () => {
+    onReply(data.id);
+  };
 
   return (
     <CommentStyle padding={isChild ? '30px' : '0'}>
@@ -64,7 +69,7 @@ export default function CommentComponent({ data, children, isChild, parentData }
             )}
             <span>x hour ago</span>
             <VersionTag>a</VersionTag>
-            <PlainButton>Reply</PlainButton>
+            <PlainButton onClick={handleReply}>Reply</PlainButton>
           </RelationUserLine>
           <div className="content" dangerouslySetInnerHTML={{ __html: content }}></div>
         </RightBox>

@@ -11,6 +11,7 @@ import QuillEditor from './quillEditor';
 import { Sources } from 'quill';
 import { UnprivilegedEditor } from 'react-quill';
 import useLoadQuill from 'hooks/useLoadQuill';
+import { Button } from 'react-bootstrap';
 
 export default function ReplyComponent() {
   const {
@@ -21,6 +22,8 @@ export default function ReplyComponent() {
   const [avatar, setAvatar] = useState('');
   const [replyContent, setReplyContent] = useState('');
   const [quillContent, setQuillContent] = useState('');
+  const [openReply, setOpenReply] = useState(false);
+  const [replyId, setReplyId] = useState<number>();
 
   const getAvatar = async () => {
     let avarUrl = await publicJs.getImage(userData?.avatar ?? '');
@@ -59,21 +62,47 @@ export default function ReplyComponent() {
     // @ts-ignore
     setQuillContent(editor.getContents);
   };
+
+  const onFocusToWriteReply = () => {
+    // TODO: check login
+    setOpenReply(true);
+  };
+
+  const onReply = (id: number) => {
+    setReplyId(id);
+    setOpenReply(true);
+  };
+
   return (
     <ReplyComponentStyle>
       {POSTS_DATA.map((p) => (
-        <CommetComponent data={p} key={p.id}>
+        <CommetComponent data={p} key={p.id} onReply={onReply}>
           {p.children.posts.map((ip) => (
-            <CommetComponent data={ip} isChild={true} key={ip.id} parentData={findReplyData(ip.reply_pid)} />
+            <CommetComponent
+              data={ip}
+              isChild={true}
+              key={ip.id}
+              parentData={findReplyData(ip.reply_pid)}
+              onReply={onReply}
+            />
           ))}
         </CommetComponent>
       ))}
-      <ReplyArea>
+      <ReplyArea style={{ position: openReply ? 'sticky' : 'static' }}>
         <Avatar src={avatar || DefaultAvatar} alt="" />
         {enableQuill && (
-          <div>
-            <QuillEditor widgetKey="999" onChange={handleChange} value={quillContent} />
-          </div>
+          <InputReply>
+            {openReply ? (
+              <QuillEditor
+                toolbarWidgets={<SubmitCommentButton>{'Send'}</SubmitCommentButton>}
+                widgetKey="999"
+                onChange={handleChange}
+                value={quillContent}
+              />
+            ) : (
+              <NormalInput placeholder="write a reply" onFocus={onFocusToWriteReply} />
+            )}
+          </InputReply>
         )}
       </ReplyArea>
     </ReplyComponentStyle>
@@ -88,4 +117,23 @@ const ReplyArea = styled.div`
   padding: 10px;
   background-color: #fff;
   box-shadow: 5px 0 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  gap: 16px;
+`;
+
+const InputReply = styled.div`
+  flex: 1;
+`;
+
+const SubmitCommentButton = styled(Button)`
+  height: 30px;
+`;
+
+const NormalInput = styled.input`
+  width: 100%;
+  border: 1px solid var(--bs-border-color);
+  border-radius: 16px;
+  outline: none;
+  height: 30px;
+  padding-inline: 16px;
 `;
