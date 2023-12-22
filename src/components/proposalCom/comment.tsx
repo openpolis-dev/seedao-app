@@ -94,6 +94,7 @@ export default function CommentComponent({
             {!hideReply && (
               <>
                 <PlainButton onClick={handleReply}>Reply</PlainButton>
+                {/* TOOO hide if not current user */}
                 <CommentSelectAction handleEdit={handleEdit} handleDelete={handleDelete} />
               </>
             )}
