@@ -14,6 +14,7 @@ import { Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import NoItem from 'components/noItem';
 import ConfirmModal from 'components/modals/confirmModal';
+import useCheckMetaforoLogin from 'hooks/useCheckMetaforoLogin';
 
 interface IProps {
   hideReply?: boolean;
@@ -25,6 +26,9 @@ export default function ReplyComponent({ hideReply, posts }: IProps) {
   const {
     state: { userData },
   } = useAuthContext();
+
+  const checkMetaforoLogin = useCheckMetaforoLogin();
+
   const enableQuill = useLoadQuill();
 
   const [avatar, setAvatar] = useState('');
@@ -72,12 +76,12 @@ export default function ReplyComponent({ hideReply, posts }: IProps) {
     setQuillContent(editor.getContents);
   };
 
-  const onFocusToWriteReply = () => {
-    // TODO: check login
-    setOpenReply(true);
+  const onFocusToWriteReply = async () => {
+    const canReply = await checkMetaforoLogin();
+    canReply && setOpenReply(true);
   };
 
-  const onReply = (id: number) => {
+  const onReply = async (id: number) => {
     setReplyId(id);
     setOpenReply(true);
   };
@@ -91,13 +95,19 @@ export default function ReplyComponent({ hideReply, posts }: IProps) {
     setTobeDeletedId(id);
   };
 
-  const handleReply = () => {
-    // TODO
+  const handleReply = async () => {
+    const canReply = await checkMetaforoLogin();
+    if (canReply) {
+      // TODO
+    }
   };
 
-  const handleDeletePost = () => {
-    // TODO
-    setTobeDeletedId(undefined);
+  const handleDeletePost = async () => {
+    const canDelete = await checkMetaforoLogin();
+    if (canDelete) {
+      // TODO
+      setTobeDeletedId(undefined);
+    }
   };
 
   return (
@@ -139,7 +149,7 @@ export default function ReplyComponent({ hideReply, posts }: IProps) {
                   value={quillContent}
                 />
               ) : (
-                <NormalInput placeholder="write a reply" onFocus={onFocusToWriteReply} />
+                <NormalInput placeholder="write a reply" onClick={onFocusToWriteReply} />
               )}
             </InputReply>
           )}

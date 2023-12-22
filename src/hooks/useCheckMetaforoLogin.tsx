@@ -54,7 +54,7 @@ export default function useCheckMetaforoLogin() {
     }
 
     if (metaforoToken) {
-      return;
+      return true;
     }
     if (wallet_type === WalletType.AA) {
       showToast(t('Proposal.NotSupportWallet', { wallet: 'UniPass' }), ToastType.Danger);
@@ -78,6 +78,7 @@ export default function useCheckMetaforoLogin() {
       showToast(error?.message || `${error}`, ToastType.Danger);
       return;
     }
+    return true;
   };
 
   return checkMetaforoLogin;
