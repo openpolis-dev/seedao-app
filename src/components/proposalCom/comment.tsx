@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import DefaultAvatar from 'assets/Imgs/defaultAvatarT.png';
 import { handleContent } from './parseContent';
 import { useEffect, useState } from 'react';
-import { UserTitleType } from './posts';
+import { UserTitleType } from 'type/proposal.type';
 import { PlainButton } from 'components/common/button';
 import CommentSelectAction from './commentSelectAction';
 

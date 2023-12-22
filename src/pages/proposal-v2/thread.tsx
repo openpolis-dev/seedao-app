@@ -29,6 +29,8 @@ export default function ThreadPage() {
 
   const [blockType, setBlockType] = useState<BlockContentType>(BlockContentType.Reply);
   const [data, setData] = useState<IBaseProposal>();
+  const [posts, setPosts] = useState<any[]>([]);
+  const [totalPostsCount, setTotalPostsCount] = useState<number>(0);
 
   useEffect(() => {
     if (state) {
@@ -40,6 +42,8 @@ export default function ThreadPage() {
       try {
         const res = await requests.proposal.getProposalDetail(Number(id));
         setData(res.data.thread);
+        setPosts(res.data.thread.posts);
+        setTotalPostsCount(res.data.thread.posts_count);
       } catch (error) {
         console.error('get proposal detail error:', error);
       } finally {
@@ -62,7 +66,7 @@ export default function ThreadPage() {
             className={blockType === BlockContentType.Reply ? 'selected' : ''}
             onClick={() => setBlockType(BlockContentType.Reply)}
           >
-            {`10 `}
+            {`${totalPostsCount} `}
             {t('Proposal.Comment')}
           </li>
           <li
@@ -72,7 +76,7 @@ export default function ThreadPage() {
             {t('Proposal.EditHistory')}
           </li>
         </BlockTab>
-        {blockType === BlockContentType.Reply && <ReplyComponent hideReply={review} />}
+        {blockType === BlockContentType.Reply && <ReplyComponent hideReply={review} posts={posts} />}
         {blockType === BlockContentType.History && <EditActionHistory />}
       </ReplyAndHistoryBlock>
       {review && <ReviewProposalComponent onUpdateStatus={onUpdateStatus} />}

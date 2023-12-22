@@ -12,6 +12,19 @@ export interface ICategory extends IBaseCategory {
   children: IBaseCategory[];
 }
 
+interface CommentUser {
+  id: number;
+  photo_url: string;
+  username: string;
+  is_nft: number;
+}
+
+export type UserTitleType = {
+  name: string;
+  color: string;
+  background: string;
+};
+
 export enum VoteType {
   Open = 'open',
   Closed = 'close',
@@ -56,19 +69,14 @@ export interface IBaseProposal {
   posts_count: number;
   user: {
     photo_url: string;
-    user_title: {
-      name: string;
-      background: string;
-    };
+    user_title: UserTitleType;
     username: string;
   };
   updated_at: string;
   tags: ProposalTag[];
-  user_title?: {
-    name: string;
-    background: string;
-  };
+  user_title?: UserTitleType;
   polls: Poll[];
+  posts: any[];
 }
 
 export enum ProposalStatus {
@@ -117,3 +125,17 @@ export type ProposalTemplateType = {
   id: number;
   name: string;
 };
+
+export interface PostDataType {
+  id: number;
+  created_at: string;
+  updated_at: string;
+  content: string;
+  parent_id: number;
+  deleted: number;
+  reply_pid: number;
+  reply_user: CommentUser | null;
+  user: CommentUser;
+  user_title: UserTitleType;
+  children: { posts: PostDataType[] };
+}

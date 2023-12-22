@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import { useEffect, useState } from 'react';
-import POSTS_DATA from './posts';
 
 import CommetComponent from './comment';
 import { Avatar } from './comment';
@@ -15,9 +14,10 @@ import { Button } from 'react-bootstrap';
 
 interface IProps {
   hideReply?: boolean;
+  posts: any[];
 }
 
-export default function ReplyComponent({ hideReply }: IProps) {
+export default function ReplyComponent({ hideReply, posts }: IProps) {
   const {
     state: { userData },
   } = useAuthContext();
@@ -43,7 +43,7 @@ export default function ReplyComponent({ hideReply }: IProps) {
       return null;
     }
     let d: any;
-    POSTS_DATA.forEach((p: any) => {
+    posts.forEach((p: any) => {
       if (p.id === reply_pid) {
         d = p;
       } else {
@@ -84,9 +84,9 @@ export default function ReplyComponent({ hideReply }: IProps) {
 
   return (
     <ReplyComponentStyle>
-      {POSTS_DATA.map((p) => (
+      {posts.map((p) => (
         <CommetComponent data={p} key={p.id} onReply={onReply} onEdit={onEdit} hideReply>
-          {p.children.posts.map((ip) => (
+          {p.children.posts.map((ip: any) => (
             <CommetComponent
               data={ip}
               isChild={true}
