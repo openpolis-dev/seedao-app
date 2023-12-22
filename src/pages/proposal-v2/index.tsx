@@ -11,9 +11,14 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import ProposalItem from 'components/proposalCom/proposalItem';
 import { Link } from 'react-router-dom';
 import HistoryAction from 'components/proposalCom/historyAction';
+import requests from 'requests';
+import { useAuthContext, AppActionType } from 'providers/authProvider';
+
+const PAGE_SIZE = 10;
 
 export default function ProposalIndexPage() {
   const { t } = useTranslation();
+  const { state, dispatch } = useAuthContext();
   // filter types
   const TYPE_OPTIONS: ISelectItem[] = PROPOSAL_TYPES.map((tp) => ({
     value: tp.id,
@@ -21,8 +26,8 @@ export default function ProposalIndexPage() {
   }));
   // filter time
   const TIME_OPTIONS: ISelectItem[] = [
-    { value: PROPOSAL_TIME.OLDEST, label: t('Proposal.TheNeweset') },
-    { value: PROPOSAL_TIME.LATEST, label: t('Proposal.TheOldest') },
+    { value: 'latest', label: t('Proposal.TheNeweset') },
+    { value: 'old', label: t('Proposal.TheOldest') },
   ];
   // filter status
   const STATUS_OPTIONS: ISelectItem[] = [
@@ -45,10 +50,24 @@ export default function ProposalIndexPage() {
   const [hasMore, setHasMore] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
 
-  const getProposalList = (init?: boolean) => {
+  const getProposalList = async (init?: boolean) => {
     //   TODO: get proposal list
     const _page = init ? 1 : page;
-    setPage(_page + 1);
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    try {
+      const resp = await requests.proposal.getAllProposals({
+        page: _page,
+        per_page: PAGE_SIZE,
+        sort: selectTime.value,
+      });
+      setProposalList([...proposalList, ...resp.data.threads]);
+      setPage(_page + 1);
+      setHasMore(resp.data.threads.length >= PAGE_SIZE);
+    } catch (error) {
+      console.error('getAllProposals failed', error);
+    } finally {
+      dispatch({ type: AppActionType.SET_LOADING, payload: false });
+    }
   };
 
   useEffect(() => {

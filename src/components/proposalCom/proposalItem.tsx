@@ -14,7 +14,7 @@ export default function ProposalItem({ data }: { data: IBaseProposal }) {
   } = useAuthContext();
 
   const openProposal = () => {
-    navigate(`/proposal-v2/thread/${data.id}`);
+    navigate(`/proposal-v2/thread/${data.id}`, { state: data });
   };
 
   const borderStyle = useMemo(() => {
