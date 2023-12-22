@@ -26,6 +26,7 @@ interface IProps {
   isChild?: boolean;
   onReply: (id: number) => void;
   onEdit: (id: number, content: string) => void;
+  hideReply?: boolean;
 }
 
 interface IUserProps {
@@ -44,7 +45,7 @@ const UserBox = ({ name, avatar, user_title }: IUserProps) => {
   );
 };
 
-export default function CommentComponent({ data, children, isChild, parentData, onReply, onEdit }: IProps) {
+export default function CommentComponent({ data, children, isChild, parentData, onReply, onEdit, hideReply }: IProps) {
   const content = useParseContent(data?.content);
 
   const handleReply = () => {
@@ -79,8 +80,12 @@ export default function CommentComponent({ data, children, isChild, parentData, 
             )}
             <span>x hour ago</span>
             <VersionTag>a</VersionTag>
-            <PlainButton onClick={handleReply}>Reply</PlainButton>
-            <CommentSelectAction handleEdit={handleEdit} handleDelete={handleDelete} />
+            {!hideReply && (
+              <>
+                <PlainButton onClick={handleReply}>Reply</PlainButton>
+                <CommentSelectAction handleEdit={handleEdit} handleDelete={handleDelete} />
+              </>
+            )}
           </RelationUserLine>
           <div className="content" dangerouslySetInnerHTML={{ __html: content }}></div>
         </RightBox>

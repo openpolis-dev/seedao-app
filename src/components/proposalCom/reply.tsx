@@ -13,7 +13,11 @@ import { UnprivilegedEditor } from 'react-quill';
 import useLoadQuill from 'hooks/useLoadQuill';
 import { Button } from 'react-bootstrap';
 
-export default function ReplyComponent() {
+interface IProps {
+  hideReply?: boolean;
+}
+
+export default function ReplyComponent({ hideReply }: IProps) {
   const {
     state: { userData },
   } = useAuthContext();
@@ -81,7 +85,7 @@ export default function ReplyComponent() {
   return (
     <ReplyComponentStyle>
       {POSTS_DATA.map((p) => (
-        <CommetComponent data={p} key={p.id} onReply={onReply} onEdit={onEdit}>
+        <CommetComponent data={p} key={p.id} onReply={onReply} onEdit={onEdit} hideReply>
           {p.children.posts.map((ip) => (
             <CommetComponent
               data={ip}
@@ -90,27 +94,30 @@ export default function ReplyComponent() {
               parentData={findReplyData(ip.reply_pid)}
               onReply={onReply}
               onEdit={onEdit}
+              hideReply
             />
           ))}
         </CommetComponent>
       ))}
-      <ReplyArea style={{ position: openReply ? 'sticky' : 'static' }}>
-        <Avatar src={avatar || DefaultAvatar} alt="" />
-        {enableQuill && (
-          <InputReply>
-            {openReply ? (
-              <QuillEditor
-                toolbarWidgets={<SubmitCommentButton>{'Send'}</SubmitCommentButton>}
-                widgetKey="999"
-                onChange={handleChange}
-                value={quillContent}
-              />
-            ) : (
-              <NormalInput placeholder="write a reply" onFocus={onFocusToWriteReply} />
-            )}
-          </InputReply>
-        )}
-      </ReplyArea>
+      {!hideReply && (
+        <ReplyArea style={{ position: openReply ? 'sticky' : 'static' }}>
+          <Avatar src={avatar || DefaultAvatar} alt="" />
+          {enableQuill && (
+            <InputReply>
+              {openReply ? (
+                <QuillEditor
+                  toolbarWidgets={<SubmitCommentButton>{'Send'}</SubmitCommentButton>}
+                  widgetKey="999"
+                  onChange={handleChange}
+                  value={quillContent}
+                />
+              ) : (
+                <NormalInput placeholder="write a reply" onFocus={onFocusToWriteReply} />
+              )}
+            </InputReply>
+          )}
+        </ReplyArea>
+      )}
     </ReplyComponentStyle>
   );
 }

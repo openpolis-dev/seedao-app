@@ -94,7 +94,7 @@ export default function RouterLink() {
           {/* proposal v2 */}
           <Route path="/proposal-v2" element={<ProposalIndexPage />} />
           <Route path="/proposal-v2/create" element={<CreateProposalPage />} />
-          <Route path="/proposal-v2/thread" element={<ProposalThreadV2 />} />
+          <Route path="/proposal-v2/thread/:id" element={<ProposalThreadV2 />} />
 
           <Route path="/city-hall/*" element={<CityHall />} />
           <Route path="/city-hall/governance/governance-node-result" element={<GoveranceNodeResult />} />
