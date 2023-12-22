@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import CommetComponent from './comment';
 import { Avatar } from './comment';
@@ -11,6 +11,8 @@ import { Sources } from 'quill';
 import { UnprivilegedEditor } from 'react-quill';
 import useLoadQuill from 'hooks/useLoadQuill';
 import { Button } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
+import NoItem from 'components/noItem';
 
 interface IProps {
   hideReply?: boolean;
@@ -18,6 +20,7 @@ interface IProps {
 }
 
 export default function ReplyComponent({ hideReply, posts }: IProps) {
+  const { t } = useTranslation();
   const {
     state: { userData },
   } = useAuthContext();
@@ -82,8 +85,13 @@ export default function ReplyComponent({ hideReply, posts }: IProps) {
     setQuillContent(content);
   };
 
+  const handleReply = () => {
+    // TODO
+  };
+
   return (
     <ReplyComponentStyle>
+      {posts.length === 0 && <NoItem text={t('Proposal.EmptyComment')}></NoItem>}
       {posts.map((p) => (
         <CommetComponent data={p} key={p.id} onReply={onReply} onEdit={onEdit} hideReply>
           {p.children.posts.map((ip: any) => (
@@ -106,7 +114,7 @@ export default function ReplyComponent({ hideReply, posts }: IProps) {
             <InputReply>
               {openReply ? (
                 <QuillEditor
-                  toolbarWidgets={<SubmitCommentButton>{'Send'}</SubmitCommentButton>}
+                  toolbarWidgets={<SubmitCommentButton onClick={handleReply}>{t('Proposal.Send')}</SubmitCommentButton>}
                   widgetKey="999"
                   onChange={handleChange}
                   value={quillContent}

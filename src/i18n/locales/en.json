@@ -88,7 +88,9 @@
     "Comment": "Comment",
     "EditHistory": "History",
     "HistoryCreate": "submit the proposal {{title}} at {{time}}",
-    "HistoryEdit": "edit the proposal {{title}} at {{time}}"
+    "HistoryEdit": "edit the proposal {{title}} at {{time}}",
+    "Send": "Send",
+    "EmptyComment": "No comments, send it ⬇️"
   },
   "Project": {
     "ProjectOrGuildItem": "Nothing left here.",
