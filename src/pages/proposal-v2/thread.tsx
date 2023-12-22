@@ -7,7 +7,7 @@ import ProposalVote from 'components/proposalCom/vote';
 import ReplyComponent from 'components/proposalCom/reply';
 import ReviewProposalComponent from 'components/proposalCom/reviewProposalComponent';
 import EditActionHistory from 'components/proposalCom/editActionhistory';
-import { IBaseProposal } from 'type/proposal.type';
+import { IBaseProposal, EditHistoryType } from 'type/proposal.type';
 import { useAuthContext, AppActionType } from 'providers/authProvider';
 import requests from 'requests';
 
@@ -31,6 +31,8 @@ export default function ThreadPage() {
   const [data, setData] = useState<IBaseProposal>();
   const [posts, setPosts] = useState<any[]>([]);
   const [totalPostsCount, setTotalPostsCount] = useState<number>(0);
+  const [totalEditCount, setTotalEditCount] = useState<number>(0);
+  const [editHistoryList, setEditHistoryList] = useState<EditHistoryType[]>([]);
 
   useEffect(() => {
     if (state) {
@@ -44,6 +46,8 @@ export default function ThreadPage() {
         setData(res.data.thread);
         setPosts(res.data.thread.posts);
         setTotalPostsCount(res.data.thread.posts_count);
+        setTotalEditCount(res.data.thread.edit_history?.count ?? 0);
+        setEditHistoryList(res.data.thread.edit_history?.lists ?? []);
       } catch (error) {
         console.error('get proposal detail error:', error);
       } finally {
@@ -73,11 +77,12 @@ export default function ThreadPage() {
             className={blockType === BlockContentType.History ? 'selected' : ''}
             onClick={() => setBlockType(BlockContentType.History)}
           >
+            {`${totalEditCount} `}
             {t('Proposal.EditHistory')}
           </li>
         </BlockTab>
         {blockType === BlockContentType.Reply && <ReplyComponent hideReply={review} posts={posts} />}
-        {blockType === BlockContentType.History && <EditActionHistory />}
+        {blockType === BlockContentType.History && <EditActionHistory data={editHistoryList} />}
       </ReplyAndHistoryBlock>
       {review && <ReviewProposalComponent onUpdateStatus={onUpdateStatus} />}
     </Page>

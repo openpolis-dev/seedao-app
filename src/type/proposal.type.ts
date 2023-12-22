@@ -52,6 +52,13 @@ type ProposalTag = {
   name: string;
 };
 
+export type EditHistoryType = {
+  username: string;
+  created_at: string;
+  arweave: string;
+  post_type: 0 | 1;
+};
+
 export interface IBaseProposal {
   category_name: string;
   category_index_id: number;
@@ -77,6 +84,10 @@ export interface IBaseProposal {
   user_title?: UserTitleType;
   polls: Poll[];
   posts: any[];
+  edit_history: {
+    count: number;
+    lists: EditHistoryType[];
+  };
 }
 
 export enum ProposalStatus {
