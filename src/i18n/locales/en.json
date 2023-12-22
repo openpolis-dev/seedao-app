@@ -80,10 +80,15 @@
     "ChooseType": "Choose Proposal Type",
     "CreateBlank": "Create New",
     "ActivityCreate": "Started a new topic {{title}}",
+    "ActivityEdit": "Edit the topic {{title}}",
     "ActivityComment": "Replied to {{author}}'s topic {{title}}",
     "Approve": "Approve",
     "Reject": "Reject",
-    "FillRejectReason": "Fill reject reason"
+    "FillRejectReason": "Fill reject reason",
+    "Comment": "Comment",
+    "EditHistory": "History",
+    "HistoryCreate": "submit the proposal {{title}} at {{time}}",
+    "HistoryEdit": "edit the proposal {{title}} at {{time}}"
   },
   "Project": {
     "ProjectOrGuildItem": "Nothing left here.",

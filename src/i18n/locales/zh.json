@@ -80,10 +80,15 @@
     "ChooseType": "请选择提案类型",
     "CreateBlank": "创建新提案",
     "ActivityCreate": "创建了提案{{title}}",
+    "ActivityEdit": "编辑了提案{{title}}",
     "ActivityComment": "评论了{{author}}的提案{{title}}",
     "Approve": "通过",
     "Reject": "驳回",
-    "FillRejectReason": "填写驳回理由"
+    "FillRejectReason": "填写驳回理由",
+    "Comment": "评论",
+    "EditHistory": "历史记录",
+    "HistoryCreate": "在 {{time}} 提交了提案 {{title}}",
+    "HistoryEdit": "在 {{time}} 编辑了提案 {{title}}"
   },
   "Project": {
     "ProjectOrGuildItem": "还没有填写相关介绍信息～",
