@@ -86,7 +86,7 @@ export default function ReplyComponent({ hideReply, posts }: IProps) {
     setOpenReply(true);
   };
 
-  const onEdit = (id: number, content: string) => {
+  const onEdit = (id: number, content: any) => {
     setOpenReply(true);
     setQuillContent(content);
   };

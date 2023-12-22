@@ -25,7 +25,7 @@ interface IProps {
   children?: React.ReactNode;
   isChild?: boolean;
   onReply: (id: number) => void;
-  onEdit: (id: number, content: string) => void;
+  onEdit: (id: number, content: any) => void;
   onDelete: (id: number) => void;
   hideReply?: boolean;
 }
@@ -64,7 +64,7 @@ export default function CommentComponent({
 
   const handleEdit = () => {
     console.log('edit');
-    onEdit(data.id, data.content);
+    onEdit(data.id, { ops: JSON.parse(data.content) });
   };
   const handleDelete = () => {
     console.log('delete');
