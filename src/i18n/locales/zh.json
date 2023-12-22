@@ -91,7 +91,8 @@
     "HistoryEdit": "在 {{time}} 编辑了提案 {{title}}",
     "Send": "发送",
     "EmptyComment": "还没有评论哦，去发表⬇️",
-    "ConfirmDeleteComment": "确定要删除该条评论吗？"
+    "ConfirmDeleteComment": "确定要删除该条评论吗？",
+    "NotSupportWallet": "该操作暂不支持使用{{wallet}}, 请切换使用其他钱包"
   },
   "Project": {
     "ProjectOrGuildItem": "还没有填写相关介绍信息～",

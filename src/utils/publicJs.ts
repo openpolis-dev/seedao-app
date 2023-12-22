@@ -126,4 +126,33 @@ const checkRPCavailable = (rpc_list: string[], network: { chainId: number; name:
   });
 };
 
-export default { AddressToShow, getImage, filterTags, checkRPCavailable, getSeedUrl };
+function typedData(address: string, chainId: number) {
+  return {
+    types: {
+      EIP712Domain: [
+        { name: 'name', type: 'string' },
+        { name: 'version', type: 'string' },
+        {
+          name: 'chainId',
+          type: 'uint256',
+        },
+      ],
+      Login: [
+        { name: 'account', type: 'address' },
+        { name: 'message', type: 'string' },
+      ],
+    },
+    primaryType: 'Login',
+    domain: {
+      name: 'Metaqus',
+      version: '1.0',
+      chainId: chainId,
+    },
+    message: {
+      account: address,
+      message: 'Login to Metaqus',
+    },
+  };
+}
+
+export default { AddressToShow, getImage, filterTags, checkRPCavailable, getSeedUrl, typedData };
