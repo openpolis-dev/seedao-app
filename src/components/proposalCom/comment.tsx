@@ -26,6 +26,7 @@ interface IProps {
   isChild?: boolean;
   onReply: (id: number) => void;
   onEdit: (id: number, content: string) => void;
+  onDelete: (id: number) => void;
   hideReply?: boolean;
 }
 
@@ -45,7 +46,16 @@ const UserBox = ({ name, avatar, user_title }: IUserProps) => {
   );
 };
 
-export default function CommentComponent({ data, children, isChild, parentData, onReply, onEdit, hideReply }: IProps) {
+export default function CommentComponent({
+  data,
+  children,
+  isChild,
+  parentData,
+  onReply,
+  onEdit,
+  onDelete,
+  hideReply,
+}: IProps) {
   const content = useParseContent(data?.content);
 
   const handleReply = () => {
@@ -58,6 +68,7 @@ export default function CommentComponent({ data, children, isChild, parentData, 
   };
   const handleDelete = () => {
     console.log('delete');
+    onDelete(data.id);
   };
 
   return (

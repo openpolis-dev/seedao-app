@@ -13,6 +13,7 @@ import useLoadQuill from 'hooks/useLoadQuill';
 import { Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import NoItem from 'components/noItem';
+import ConfirmModal from 'components/modals/confirmModal';
 
 interface IProps {
   hideReply?: boolean;
@@ -31,6 +32,7 @@ export default function ReplyComponent({ hideReply, posts }: IProps) {
   const [quillContent, setQuillContent] = useState('');
   const [openReply, setOpenReply] = useState(false);
   const [replyId, setReplyId] = useState<number>();
+  const [toBeDeleteId, setTobeDeletedId] = useState<number>();
 
   const getAvatar = async () => {
     let avarUrl = await publicJs.getImage(userData?.avatar ?? '');
@@ -85,15 +87,31 @@ export default function ReplyComponent({ hideReply, posts }: IProps) {
     setQuillContent(content);
   };
 
+  const onDelete = (id: number) => {
+    setTobeDeletedId(id);
+  };
+
   const handleReply = () => {
     // TODO
+  };
+
+  const handleDeletePost = () => {
+    // TODO
+    setTobeDeletedId(undefined);
   };
 
   return (
     <ReplyComponentStyle>
       {posts.length === 0 && <NoItem text={t('Proposal.EmptyComment')}></NoItem>}
       {posts.map((p) => (
-        <CommetComponent data={p} key={p.id} onReply={onReply} onEdit={onEdit} hideReply>
+        <CommetComponent
+          data={p}
+          key={p.id}
+          onReply={onReply}
+          onEdit={onEdit}
+          onDelete={onDelete}
+          hideReply={hideReply}
+        >
           {p.children.posts.map((ip: any) => (
             <CommetComponent
               data={ip}
@@ -102,7 +120,8 @@ export default function ReplyComponent({ hideReply, posts }: IProps) {
               parentData={findReplyData(ip.reply_pid)}
               onReply={onReply}
               onEdit={onEdit}
-              hideReply
+              onDelete={onDelete}
+              hideReply={hideReply}
             />
           ))}
         </CommetComponent>
@@ -123,6 +142,13 @@ export default function ReplyComponent({ hideReply, posts }: IProps) {
                 <NormalInput placeholder="write a reply" onFocus={onFocusToWriteReply} />
               )}
             </InputReply>
+          )}
+          {toBeDeleteId && (
+            <ConfirmModal
+              msg={t('Proposal.ConfirmDeleteComment')}
+              onClose={() => setTobeDeletedId(undefined)}
+              onConfirm={handleDeletePost}
+            />
           )}
         </ReplyArea>
       )}
