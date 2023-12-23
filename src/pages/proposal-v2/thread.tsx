@@ -12,6 +12,7 @@ import { useAuthContext, AppActionType } from 'providers/authProvider';
 import requests from 'requests';
 import { formatDate } from 'utils/time';
 import BackerNav from 'components/common/backNav';
+import MoreSelectAction from 'components/proposalCom/moreSelectAction';
 
 enum BlockContentType {
   Reply = 1,
@@ -63,6 +64,30 @@ export default function ThreadPage() {
     // TODO
   };
 
+  const openComment = () => {
+    // TODO
+  };
+
+  const handleEdit = () => {
+    // TODO
+    console.log('edit');
+  };
+  const handlWithdraw = () => {
+    // TODO
+    console.log('withdrawn');
+  };
+
+  const handleClickMoreAction = (action: string) => {
+    switch (action) {
+      case 'edit':
+        handleEdit();
+        break;
+      case 'withdrawn':
+        handlWithdraw();
+        break;
+    }
+  };
+
   const currentStoreHash = editHistoryList[editHistoryList.length - 1]?.arweave;
 
   return (
@@ -82,6 +107,20 @@ export default function ThreadPage() {
           Arweave Hash {currentStoreHash}
         </StoreHash>
       </ThreadHead>
+      <ThreadToolsBar>
+        <li>{t('Proposal.Vote')}</li>
+        <li onClick={openComment}>{t('Proposal.Comment')}</li>
+        <li>{t('Proposal.Share')}</li>
+        <li>
+          <MoreSelectAction
+            options={[
+              { label: t('Proposal.Edit'), value: 'edit' },
+              { label: t('Proposal.Withdrawn'), value: 'withdrawn' },
+            ]}
+            handleClickAction={handleClickMoreAction}
+          />
+        </li>
+      </ThreadToolsBar>
       {data?.polls?.[0] && <ProposalVote poll={data.polls[0]} />}
       <ReplyAndHistoryBlock>
         <BlockTab>
@@ -164,3 +203,16 @@ const UserBox = styled.div`
 const ThreadInfo = styled.div``;
 
 const StoreHash = styled.a``;
+
+const ThreadToolsBar = styled.ul`
+  background-color: var(--bs-box-background);
+  border-radius: 16px;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 20px;
+  li {
+    cursor: pointer;
+  }
+`;

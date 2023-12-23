@@ -93,7 +93,11 @@
     "EmptyComment": "还没有评论哦，去发表⬇️",
     "ConfirmDeleteComment": "确定要删除该条评论吗？",
     "NotSupportWallet": "该操作暂不支持使用{{wallet}}, 请切换使用其他钱包",
-    "Vote": "投票"
+    "Vote": "投票",
+    "Share": "分享",
+    "Edit": "修改",
+    "Withdrawn": "撤回",
+    "Delete": "删除"
   },
   "Project": {
     "ProjectOrGuildItem": "还没有填写相关介绍信息～",
