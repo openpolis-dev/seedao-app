@@ -1,10 +1,13 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
+import { Button, Form } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { Poll, VoteType } from 'type/proposal.type';
+const { Check } = Form;
 
 export default function ProposalVote({ poll }: { poll: Poll }) {
   const { t } = useTranslation();
+  const [selectOption, setSelectOption] = useState<number>();
 
   const voteStatusTag = useMemo(() => {
     console.log('poll.vote_type', poll.status);
@@ -16,6 +19,39 @@ export default function ProposalVote({ poll }: { poll: Poll }) {
       return <></>;
     }
   }, [poll, t]);
+
+  const showVoteContent = () => {
+    if (poll.status === VoteType.Open || poll.status === VoteType.Closed || poll.is_vote) {
+      return poll.options.map((option, index) => (
+        <VoteOption key={index}>
+          <OptionContent>{option.html}</OptionContent>
+          <VoteOptionBottom>
+            <ProgressBar percent={option.percent}>
+              <div className="inner"></div>
+            </ProgressBar>
+            <span>{option.percent}%</span>
+            <span className="voters">({option.voters})</span>
+          </VoteOptionBottom>
+        </VoteOption>
+      ));
+    } else {
+      return (
+        <>
+          {poll.options.map((option, index) => (
+            <VoteOptionSelect key={index}>
+              <Check
+                type="radio"
+                checked={selectOption === option.id}
+                onChange={(e) => setSelectOption(e.target.checked ? option.id : undefined)}
+              />
+              <OptionContent>{option.html}</OptionContent>
+            </VoteOptionSelect>
+          ))}
+          <VoteButton>{t('Proposal.Vote')}</VoteButton>
+        </>
+      );
+    }
+  };
 
   return (
     <CardStyle>
@@ -33,18 +69,7 @@ export default function ProposalVote({ poll }: { poll: Poll }) {
           <span className="dot">·</span>
           {voteStatusTag}
         </TotalVoters>
-        {poll.options.map((option, index) => (
-          <VoteOption key={index}>
-            <OptionContent>{option.html}</OptionContent>
-            <VoteOptionBottom>
-              <ProgressBar percent={option.percent}>
-                <div className="inner"></div>
-              </ProgressBar>
-              <span>{option.percent}%</span>
-              <span className="voters">({option.voters})</span>
-            </VoteOptionBottom>
-          </VoteOption>
-        ))}
+        {showVoteContent()}
       </VoteBody>
       <VoteFooter>
         <VoteNFT>
@@ -121,6 +146,12 @@ const VoteOption = styled.div`
   margin-top: 12px;
 `;
 
+const VoteOptionSelect = styled(VoteOption)`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+`;
+
 const ProgressBar = styled.div<{ percent: number }>`
   width: 400px;
   height: 8px;
@@ -150,4 +181,8 @@ const OptionContent = styled.div`
 
 const Alias = styled.div`
   color: var(--bs-primary);
+`;
+
+const VoteButton = styled(Button)`
+  margin-top: 16px;
 `;

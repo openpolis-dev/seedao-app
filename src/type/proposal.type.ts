@@ -33,6 +33,7 @@ type VoteOption = {
   html: string;
   percent: number;
   voters: number;
+  id: number;
 };
 
 export interface Poll {
@@ -45,6 +46,7 @@ export interface Poll {
   leftTime: string;
   options: VoteOption[];
   totalVotes: number;
+  is_vote: 0 | 1; // 0: not voted, 1: voted
 }
 
 type ProposalTag = {
