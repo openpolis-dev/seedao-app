@@ -4,7 +4,8 @@ import { handleContent } from './parseContent';
 import { useEffect, useState } from 'react';
 import { UserTitleType } from 'type/proposal.type';
 import { PlainButton } from 'components/common/button';
-import CommentSelectAction from './commentSelectAction';
+import MoreSelectAction from './moreSelectAction';
+import { useTranslation } from 'react-i18next';
 
 const useParseContent = (data: string) => {
   const [content, setContent] = useState('');
@@ -56,19 +57,22 @@ export default function CommentComponent({
   onDelete,
   hideReply,
 }: IProps) {
+  const { t } = useTranslation();
   const content = useParseContent(data?.content);
 
   const handleReply = () => {
     onReply(data.id);
   };
 
-  const handleEdit = () => {
-    console.log('edit');
-    onEdit(data.id, { ops: JSON.parse(data.content) });
-  };
-  const handleDelete = () => {
-    console.log('delete');
-    onDelete(data.id);
+  const handleClickMoreAction = (action: string) => {
+    switch (action) {
+      case 'edit':
+        onEdit(data.id, { ops: JSON.parse(data.content) });
+        break;
+      case 'delete':
+        onDelete(data.id);
+        break;
+    }
   };
 
   return (
@@ -93,9 +97,15 @@ export default function CommentComponent({
             <VersionTag>a</VersionTag>
             {!hideReply && (
               <>
-                <PlainButton onClick={handleReply}>Reply</PlainButton>
+                <PlainButton onClick={handleReply}>{t('Proposal.Reply')}</PlainButton>
                 {/* TOOO hide if not current user */}
-                <CommentSelectAction handleEdit={handleEdit} handleDelete={handleDelete} />
+                <MoreSelectAction
+                  options={[
+                    { label: t('Proposal.Edit'), value: 'edit' },
+                    { label: t('Proposal.Delete'), value: 'edit' },
+                  ]}
+                  handleClickAction={handleClickMoreAction}
+                />
               </>
             )}
           </RelationUserLine>

@@ -97,7 +97,8 @@
     "Share": "Share",
     "Edit": "Edit",
     "Withdrawn": "Withdrawn",
-    "Delete": "Delete"
+    "Delete": "Delete",
+    "Reply": "Reply"
   },
   "Project": {
     "ProjectOrGuildItem": "Nothing left here.",
