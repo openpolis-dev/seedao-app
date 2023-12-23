@@ -95,7 +95,7 @@
     "build:preview": "REACT_APP_ENV_VERSION=preview npm run build:online",
     "build:prod": "REACT_APP_ENV_VERSION=prod npm run build:online",
     "eject": "react-scripts eject",
-    "sentry:sourcemaps": "sentry-cli sourcemaps inject --org taoist --project javascript-react ./build && sentry-cli sourcemaps upload --org taoist --project javascript-react ./build"
+    "sentry:sourcemaps": "sentry-cli sourcemaps inject --org seedao --project seedao-web-app ./build && sentry-cli sourcemaps upload --org seedao --project seedao-web-app ./build"
   },
   "eslintConfig": {
     "extends": [
