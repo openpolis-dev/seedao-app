@@ -6,6 +6,7 @@ import { UserTitleType } from 'type/proposal.type';
 import { PlainButton } from 'components/common/button';
 import MoreSelectAction from './moreSelectAction';
 import { useTranslation } from 'react-i18next';
+import { formatMsgTime } from 'utils/time';
 
 const useParseContent = (data: string) => {
   const [content, setContent] = useState('');
@@ -93,7 +94,7 @@ export default function CommentComponent({
                 />
               </>
             )}
-            <span>x hour ago</span>
+            <span>{formatMsgTime(data.created_at, t)}</span>
             <VersionTag>a</VersionTag>
             {!hideReply && (
               <>

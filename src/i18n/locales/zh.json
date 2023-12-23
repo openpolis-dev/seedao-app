@@ -28,7 +28,9 @@
     "ConnectWallet": "连接钱包",
     "apply": "申请",
     "edit": "编辑",
-    "Placeholder": "请输入"
+    "Placeholder": "请输入",
+    "JustNow": "刚刚",
+    "MinutesAgo": "{{time}}分钟前"
   },
   "Home": {
     "Slogan1": "SeeDAO",

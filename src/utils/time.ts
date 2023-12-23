@@ -26,3 +26,48 @@ export const formatLeftTime = (targetTime: number) => {
 export const formatDate = (date: Date, formatter?: '-' | '.') => {
   return dayjs(date).format(['YYYY', 'MM', 'DD'].join(formatter || '-'));
 };
+
+export const formatMsgTime = (time: string | number, t: Function) => {
+  const currentTime = new Date();
+  const currentTimestamp = Math.floor(currentTime.getTime() / 1000);
+
+  const targetTime = new Date(time);
+  const oldTimestamp = Math.floor(targetTime.getTime() / 1000);
+
+  // year
+  const oldY = targetTime.getFullYear();
+  // month
+  const oldM = targetTime.getMonth() + 1;
+  // day
+  const oldD = targetTime.getDate();
+  // hour
+  const oldH = targetTime.getHours();
+  // minute
+  const oldi = targetTime.getMinutes();
+
+  // delta sconds
+  const timestampDiff = currentTimestamp - oldTimestamp;
+  if (timestampDiff < 60) {
+    // in one minute
+    return t('general.JustNow');
+  }
+
+  if (timestampDiff < 60 * 60) {
+    // in an hour
+    return t('general.MinutesAgo', { time: Math.floor(timestampDiff / 60) });
+  }
+
+  // today
+  if (oldY === currentTime.getFullYear() && oldM === currentTime.getMonth() + 1 && oldD === currentTime.getDate()) {
+    // hh:mm
+    return `${zeroize(oldH)}:${zeroize(oldi)}`;
+  }
+
+  // yesterday and older
+  return formatTime(targetTime.getTime());
+
+  // add "0"
+  function zeroize(num: number) {
+    return num < 10 ? '0' + num : num;
+  }
+};

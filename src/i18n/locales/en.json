@@ -28,7 +28,9 @@
     "ConnectWallet": "Connect Wallet",
     "apply": "Apply",
     "edit": "Edit",
-    "Placeholder": "Enter"
+    "Placeholder": "Enter",
+    "JustNow": "just now",
+    "MinutesAgo": "{{time}} minutes ago"
   },
   "Home": {
     "Slogan1": "SeeDAO",
