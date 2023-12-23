@@ -1,0 +1,180 @@
+
+  {
+    "type": "apply",
+    "title": "资产申请",
+    "id": "1be5d95d-a96b-4a56-9064-4cde5491077c",
+    "automation_action": "unknown/budget_apply/create_project",
+
+    "content": [
+      {
+        "type": "select",
+        "dataList": "--budget-resource--",
+        "name": "budget",
+        "properties":[
+          {
+            "name": "title",
+            "value": "预算来源"
+          },
+          {
+            "name": "size",
+            "value": "md"
+          },
+          {
+            "name": "validate",
+            "value": {
+              "maxLength": 20
+            }
+          }
+        ]
+      },
+
+      {
+        "type": "input",
+        "inputType": "text",
+        "value": "",
+        "name": "issue",
+        "properties":[
+          {
+            "name": "title",
+            "value": "事项"
+          },
+          {
+            "name": "size",
+            "value": "lg"
+          },
+          {
+            "name": "validate",
+            "value": {
+              "required": true,
+              "maxLength": 50
+            }
+          }
+        ]
+      },
+
+      {
+        "type": "table",
+        "name": "receiverList",
+        "style": {
+          "width": [30,25,25],
+          "tHeader": ["接收人","资产类型","资产数量","备注"]
+        },
+        "rows": [
+          {
+            "type": "input",
+            "inputType": "text",
+            "value": "",
+            "name": "address",
+            "properties":[
+              {
+                "name": "title",
+                "value": "接收人"
+              },
+              {
+                "name": "size",
+                "value": "md"
+              },
+              {
+                "name": "validate",
+                "value": {
+                }
+              }
+            ]
+          },
+          {
+            "type": "select",
+            "dataList": "--assets-type--",
+            "value":"",
+            "name": "type",
+            "properties":[
+              {
+                "name": "title",
+                "value": "资产类型"
+              },
+              {
+                "name": "size",
+                "value": "md"
+              },
+              {
+                "name": "validate",
+                "value": {
+                  "maxLength": 20
+                }
+              }
+            ]
+          },
+          {
+            "type": "input",
+            "inputType": "number",
+            "value": "",
+            "name": "amount",
+            "properties":[
+              {
+                "name": "title",
+                "value": "资产数量"
+              },
+              {
+                "name": "size",
+                "value": "md"
+              },
+              {
+                "name": "validate",
+                "value": {
+                  "maxLength": 20,
+                  "pattern": "/^[A-Za-z]+$/i"
+                }
+              }
+            ]
+          },
+          {
+            "type": "input",
+            "inputType": "text",
+            "value": "",
+            "name": "memo",
+            "properties":[
+              {
+                "name": "title",
+                "value": "备注"
+              },
+              {
+                "name": "size",
+                "value": "md"
+              },
+              {
+                "name": "validate",
+                "value": {
+                  "maxLength": 20,
+                  "pattern": "/^[A-Za-z]+$/i"
+                }
+              }
+            ]
+          }
+
+        ]
+      },
+      {
+        "type": "input",
+        "inputType": "textarea",
+        "value": "",
+        "name": "description",
+        "properties":[
+          {
+            "name": "title",
+            "value": "说明"
+          },
+          {
+            "name": "size",
+            "value": "lg"
+          },
+          {
+            "name": "validate",
+            "value": {
+              "maxLength": 20,
+              "pattern": "/^[A-Za-z]+$/i"
+            }
+          }
+        ]
+      }
+    ]
+  }
+

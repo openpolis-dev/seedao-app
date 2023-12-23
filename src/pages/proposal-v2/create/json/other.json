@@ -1,0 +1,83 @@
+
+{
+  "type": "others",
+  "title": "测试",
+  "id": "1be5d95d-a96b-4a56-9064-4cde5491077c",
+  "automation_action": "unknown/budget_apply/create_project",
+  "content": [
+    {
+      "type": "table",
+      "name": "receiverList",
+      "style": {
+        "column": 3,
+        "width": [30,25,25],
+        "tHeader": ["LOGO","资产类型","资产数量","备注"]
+      },
+      "rows": [
+        {
+          "type": "file",
+          "uploadType": "image",
+          "value": "",
+          "name": "logo",
+          "properties":[
+            {
+              "name": "title",
+              "value": "项目Logo"
+            },
+            {
+              "name": "validate",
+              "value": {
+
+              }
+            }
+          ]
+        },
+        {
+          "type": "select",
+          "dataList": "--assets-type--",
+          "value":"",
+          "name": "type",
+          "properties":[
+            {
+              "name": "title",
+              "value": "资产类型"
+            },
+            {
+              "name": "size",
+              "value": "md"
+            },
+            {
+              "name": "validate",
+              "value": {
+                "maxLength": 20
+              }
+            }
+          ]
+        },
+        {
+          "type": "checkbox",
+          "value": "",
+          "name": "amount",
+          "properties":[
+            {
+              "name": "title",
+              "value": "资产数量"
+            },
+            {
+              "name": "size",
+              "value": "md"
+            },
+            {
+              "name": "validate",
+              "value": {
+              }
+            }
+          ]
+        }
+
+
+      ]
+    }
+  ]
+}
+

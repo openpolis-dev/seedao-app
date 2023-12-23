@@ -1,0 +1,205 @@
+
+{
+  "type": "create",
+  "title": "创建公共项目申请",
+  "id": "9e0328ee-fb30-42d1-84e6-2fbc3302d1c9",
+  "automation_action": "unknown/budget_apply/create_project",
+  "content": [
+    {
+      "type": "select",
+      "dataList": "--budget-resource--",
+      "name": "budget",
+      "properties":[
+        {
+          "name": "title",
+          "value": "预算来源"
+        },
+        {
+          "name": "size",
+          "value": "md"
+        },
+        {
+          "name": "validate",
+          "value": {
+            "maxLength": 20
+          }
+        }
+      ]
+    },
+    {
+      "type": "input",
+      "inputType": "text",
+      "value": "",
+      "name": "issue",
+      "properties":[
+        {
+          "name": "title",
+          "value": "项目名称"
+        },
+        {
+          "name": "size",
+          "value": "lg"
+        },
+        {
+          "name": "validate",
+          "value": {
+            "required": true,
+            "maxLength": 50
+          }
+        }
+      ]
+    },
+    {
+      "type": "table",
+      "name": "addList",
+      "style": {
+        "width": [10,20],
+        "tHeader": ["logo","项目成员","负责人"]
+      },
+      "rows": [
+        {
+          "type": "file",
+          "uploadType": "image",
+          "value": "",
+          "name": "logo",
+          "properties":[
+            {
+              "name": "title",
+              "value": "项目Logo"
+            },
+            {
+              "name": "validate",
+              "value": {
+
+              }
+            }
+          ]
+        },
+        {
+          "type": "checkbox",
+          "value": "",
+          "name": "food",
+          "properties":[
+            {
+              "name": "title",
+              "value": "资产数量"
+            },
+            {
+              "name": "size",
+              "value": "md"
+            },
+            {
+              "name": "validate",
+              "value": {
+              }
+            }
+          ]
+        },
+        {
+          "type": "input",
+          "inputType": "address",
+          "value": "",
+          "name": "address",
+          "properties":[
+            {
+              "name": "title",
+              "value": "项目成员"
+            },
+            {
+              "name": "size",
+              "value": "md"
+            },
+            {
+              "name": "validate",
+              "value": {
+              }
+            }
+          ]
+        },
+        {
+          "type": "select",
+          "dataList": "--assets-type--",
+          "value":"",
+          "name": "typeTest",
+          "properties":[
+            {
+              "name": "title",
+              "value": "资产类型"
+            },
+            {
+              "name": "size",
+              "value": "md"
+            },
+            {
+              "name": "validate",
+              "value": {
+                "maxLength": 20
+              }
+            }
+          ]
+        }
+
+      ]
+    },
+    {
+      "type": "input",
+      "inputType": "textarea",
+      "value": "",
+      "name": "description",
+      "properties":[
+        {
+          "name": "title",
+          "value": "项目简介"
+        },
+        {
+          "name": "size",
+          "value": "lg"
+        },
+        {
+          "name": "validate",
+          "value": {
+            "maxLength": 200
+          }
+        }
+      ]
+    },
+    {
+      "type": "file",
+      "uploadType": "image",
+      "value": "",
+      "name": "logo",
+      "properties":[
+        {
+          "name": "title",
+          "value": "项目Logo"
+        },
+        {
+          "name": "validate",
+          "value": {
+
+          }
+        }
+      ]
+    },
+    {
+      "type": "file",
+      "uploadType": "file",
+      "value": "",
+      "name": "file",
+      "properties":[
+        {
+          "name": "title",
+          "value": "项目文件"
+        },
+        {
+          "name": "validate",
+          "value": {
+
+          }
+        }
+      ]
+    }
+
+  ]
+}
+
