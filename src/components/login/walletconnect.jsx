@@ -79,7 +79,7 @@ export default function  WalletConnect(){
             setConnectWallet(true);
 
         }catch (e) {
-            logError("connect",e)
+            window.logError("connect",e)
             // dispatch({ type: AppActionType.SET_LOADING, payload: false });
             dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: false });
         }
@@ -108,7 +108,7 @@ export default function  WalletConnect(){
             dispatch({ type: AppActionType.SET_LOADING, payload: false });
             dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: false });
             disconnect();
-            logError("sign error:",e)
+            window.logError("sign error:",e)
         }
 
     }
@@ -158,10 +158,10 @@ export default function  WalletConnect(){
             try {
                 await OneSignal.login(address.toLocaleLowerCase());
             } catch (error) {
-                logError("OneSignal login error",error)
+                window.logError("OneSignal login error",error)
             }
         }catch (e){
-            logError("Login to",e)
+            window.logError("Login to",e)
             dispatch({ type: AppActionType.CLEAR_AUTH, payload: undefined });
             localStorage.removeItem(SEEDAO_USER_DATA);
             clearStorage();

@@ -134,10 +134,10 @@ export default function Joyid(){
             try {
               await OneSignal.login(account.toLocaleLowerCase());
             } catch (error) {
-              logError('OneSignal login error', error);
+              window.logError('OneSignal login error', error);
             }
         }catch (e){
-            logError("LoginTo joyid",e)
+            window.logError('LoginTo joyid', e);
             ReactGA.event("login_failed",{type: "joyid"});
         } finally {
             navigate('/home')

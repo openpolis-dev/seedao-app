@@ -73,7 +73,7 @@ export default function UniPass(){
             const provider = new ethers.providers.Web3Provider(upProvider, "any");
             setProvider(provider)
         }catch (e){
-            logError("get Provider",e)
+            window.logError("get Provider",e)
             dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: false });
         }
     }
@@ -94,7 +94,7 @@ export default function UniPass(){
             await signMessage(address)
             // setAddr(address)
         }catch (e) {
-            logError("connect",e)
+            window.logError("connect",e)
         }
     }
 
@@ -108,7 +108,7 @@ export default function UniPass(){
             console.log("signMessage", account)
             let nonce = await getMyNonce(account);
             const eip55Addr = ethers.utils.getAddress(account);
-            logError(eip55Addr)
+            window.logError(eip55Addr)
 
             const siweMessage = createSiweMessage(eip55Addr, networkConfig.chainId, nonce, 'Welcome to SeeDAO!');
             setMsg(siweMessage)
@@ -117,7 +117,7 @@ export default function UniPass(){
             let res = await signer.signMessage(siweMessage);
             setSignInfo(res)
         }catch (e) {
-            logError("signMessage",e)
+            window.logError("signMessage",e)
             dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: false });
             // setAddr(null)
             await upProvider.disconnect();
@@ -165,10 +165,10 @@ export default function UniPass(){
             try {
               await OneSignal.login(account.toLocaleLowerCase());
             } catch (error) {
-              logError('OneSignal login error', error);
+              window.logError('OneSignal login error', error);
             }
         }catch (e){
-            logError(e)
+            window.logError(e)
             ReactGA.event("login_failed",{type: "unipass"});
         }
 
