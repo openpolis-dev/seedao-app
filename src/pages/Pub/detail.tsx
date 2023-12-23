@@ -224,7 +224,7 @@ export default function PubDetail() {
         setContact([...arr]);
       });
     } catch (e) {
-      console.error(e);
+      logError(e);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }

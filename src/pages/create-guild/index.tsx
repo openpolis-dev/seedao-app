@@ -146,7 +146,7 @@ export default function CreateGuild() {
           return;
         }
       } catch (error) {
-        console.error('resolved failed', error);
+        logError('resolved failed', error);
         return;
       }
     }

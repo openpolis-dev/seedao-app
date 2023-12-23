@@ -176,7 +176,7 @@ export default function Index() {
       setTotal(total);
     } catch (e: any) {
       showToast(e.message, ToastType.Danger);
-      console.error('event list', e);
+      logError('event list', e);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: null });
     }
@@ -200,7 +200,7 @@ export default function Index() {
       setPageSize(size);
       setTotal(total);
     } catch (e: any) {
-      console.error('my event list', e);
+      logError('my event list', e);
       showToast(e.message, ToastType.Danger);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: null });

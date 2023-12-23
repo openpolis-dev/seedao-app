@@ -8,6 +8,6 @@ export default async function runOneSignal() {
     await OneSignal.init({ appId: app_id });
     OneSignal.Slidedown.promptPush();
   } catch (error) {
-    console.error('init onesignal error:', error);
+    logError('init onesignal error:', error);
   }
 }

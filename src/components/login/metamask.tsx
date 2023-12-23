@@ -53,7 +53,7 @@ export default function Metamask() {
       const accounts = await provider.send('eth_requestAccounts', []);
       setAccount(accounts[0]);
     } catch (e) {
-      console.error('connect', e);
+      logError('connect', e);
       // dispatch({ type: AppActionType.SET_LOADING, payload: false });
       dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: false });
     }
@@ -65,7 +65,7 @@ export default function Metamask() {
       const rt = await requests.user.getNonce(wallet);
       return rt.data.nonce;
     } catch (error) {
-      console.error('getMyNonce', error);
+      logError('getMyNonce', error);
       return '';
     }
   };
@@ -76,7 +76,7 @@ export default function Metamask() {
     try {
       const nonce = await getMyNonce(account);
       const eip55Addr = ethers.utils.getAddress(account);
-      console.error(eip55Addr);
+      logError(eip55Addr);
       const siweMessage = createSiweMessage(eip55Addr, network.chainId, nonce, 'Welcome to SeeDAO!');
       setMsg(siweMessage);
       const signer = provider.getSigner();
@@ -85,7 +85,7 @@ export default function Metamask() {
     } catch (e) {
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
       dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: false });
-      console.error('sign error:', e);
+      logError('sign error:', e);
     }
   };
 
@@ -129,10 +129,10 @@ export default function Metamask() {
       try {
         await OneSignal.login(account.toLocaleLowerCase());
       } catch (error) {
-        console.error('OneSignal login error', error);
+        logError('OneSignal login error', error);
       }
     } catch (e) {
-      console.error('Login to', e);
+      logError('Login to', e);
       dispatch({ type: AppActionType.CLEAR_AUTH, payload: undefined });
       localStorage.removeItem(SEEDAO_USER_DATA);
       clearStorage();

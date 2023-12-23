@@ -114,7 +114,7 @@ export default function Members() {
       getUsersInfo(wallets);
       getMultiSNS(wallets);
     } catch (error) {
-      console.error(error);
+      logError(error);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: null });
     }
@@ -134,7 +134,7 @@ export default function Members() {
       });
       setUserMap(userData);
     } catch (error) {
-      console.error('getUsersInfo error:', error);
+      logError('getUsersInfo error:', error);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: null });
     }

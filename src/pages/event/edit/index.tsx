@@ -320,7 +320,7 @@ export default function CreateGuild() {
     } catch (e: any) {
       showToast(e.response?.data?.msg || JSON.stringify(e), ToastType.Danger);
       console.log(e.response?.data?.msg);
-      console.error('create event error:', e);
+      logError('create event error:', e);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: null });
     }

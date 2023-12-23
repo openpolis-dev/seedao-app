@@ -165,7 +165,7 @@ const updateServiceWorkerInBackground = async () => {
       registration.waiting.postMessage({ type: 'SKIP_WAITING' });
     }
   } catch (error) {
-    console.error('Failed to update service worker', error);
+    logError('Failed to update service worker', error);
   }
 };
 

@@ -43,7 +43,7 @@ const RegisterSNSWrapper = () => {
       const hasReached = await controllerContract.maxOwnedNumberReached(account);
       dispatchSNS({ type: ACTIONS.SET_HAS_REACHED, payload: hasReached });
     } catch (error) {
-      console.error('query maxOwnedNumberReached failed', error);
+      logError('query maxOwnedNumberReached failed', error);
     }
   };
 
@@ -57,7 +57,7 @@ const RegisterSNSWrapper = () => {
           dispatchSNS({ type: ACTIONS.SET_USER_PROOF, payload: isInWhitelist.proof });
         }
       } catch (error) {
-        console.error('checkUserInwhitelist failed', error);
+        logError('checkUserInwhitelist failed', error);
       }
     };
     const checkMaxOwnedNumber = () => {
@@ -67,7 +67,7 @@ const RegisterSNSWrapper = () => {
           dispatchSNS({ type: ACTIONS.SET_MAX_OWNED_NUMBER, payload: n.toNumber() });
         })
         .catch((error: any) => {
-          console.error('checkMaxOwnedNumber failed', error);
+          logError('checkMaxOwnedNumber failed', error);
         });
     };
     if (account && controllerContract) {
@@ -86,7 +86,7 @@ const RegisterSNSWrapper = () => {
         })
         .catch((error: any) => {
           dispatchSNS({ type: ACTIONS.SET_WHITELIST_IS_OPEN, payload: true });
-          console.error('checkWhitelistOpen failed', error);
+          logError('checkWhitelistOpen failed', error);
         });
     };
     const checkHadMintByWhitelist = async () => {
@@ -96,7 +96,7 @@ const RegisterSNSWrapper = () => {
           dispatchSNS({ type: ACTIONS.SET_HAD_MINT_BY_WHITELIST, payload: r });
         })
         .catch((error: any) => {
-          console.error('checkWhitelistOpen failed', error);
+          logError('checkWhitelistOpen failed', error);
         });
     };
     if (account && minterContract) {
@@ -127,7 +127,7 @@ const RegisterSNSWrapper = () => {
           ]);
           return;
         } catch (error) {
-          console.error('switch network error', error);
+          logError('switch network error', error);
           dispatchSNS({ type: ACTIONS.SET_CONTROLLER_CONTRACT, payload: undefined });
           dispatchSNS({ type: ACTIONS.SET_MINTER_CONTRACT, payload: undefined });
           showToast(t('SNS.NetworkNotReady'), ToastType.Danger, { hideProgressBar: true });

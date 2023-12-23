@@ -62,7 +62,7 @@ export default function JoyidWeb() {
       const rt = await requests.user.getNonce(wallet);
       return rt.data.nonce;
     } catch (error) {
-      console.error('getMyNonce', error);
+      logError('getMyNonce', error);
       return '';
     }
   };
@@ -75,7 +75,7 @@ export default function JoyidWeb() {
       const res = await signMessage(siweMessage, account);
       setSignInfo(res);
     } catch (e) {
-      console.error('signMessage', e);
+      logError('signMessage', e);
       dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: false });
       disconnect();
     }
@@ -122,10 +122,10 @@ export default function JoyidWeb() {
       try {
         await OneSignal.login(account.toLocaleLowerCase());
       } catch (error) {
-        console.error('OneSignal login error', error);
+        logError('OneSignal login error', error);
       }
     } catch (e) {
-      console.error(e);
+      logError(e);
       ReactGA.event('login_failed', { type: 'joyid' });
     }
   };

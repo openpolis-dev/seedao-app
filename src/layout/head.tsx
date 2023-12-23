@@ -64,7 +64,7 @@ export default function Header() {
     //   try {
     //     requestSetDeviceLanguage({ device: getPushDevice(), language: v });
     //   } catch (error) {
-    //     console.error('Set Device Language Failed', error);
+    //     logError('Set Device Language Failed', error);
     //   }
     // }
   };
@@ -219,7 +219,7 @@ export default function Header() {
     try {
       await OneSignal.logout();
     } catch (error) {
-      console.error('onesignal logout failed', error);
+      logError('onesignal logout failed', error);
     }
     toGo();
     window.location.reload();

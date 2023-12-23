@@ -144,7 +144,7 @@ export default function CreateProject() {
           return;
         }
       } catch (error) {
-        console.error('resolved failed', error);
+        logError('resolved failed', error);
         return;
       }
     }

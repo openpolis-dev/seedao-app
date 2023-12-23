@@ -80,7 +80,7 @@ export default function RegisterSNSStep1() {
       }
       setAvailable(AvailableStatus.OK);
     } catch (error) {
-      console.error('check available error', error);
+      logError('check available error', error);
       setAvailable(AvailableStatus.DEFAULT);
     } finally {
       setPending(false);
@@ -117,7 +117,7 @@ export default function RegisterSNSStep1() {
       provider
         .send('wallet_switchEthereumChain', [{ chainId: ethers.utils.hexValue(networkConfig.chainId) }])
         .catch((error: any) => {
-          console.error('switch network error', error);
+          logError('switch network error', error);
           showToast(t('SNS.NetworkNotReady'), ToastType.Danger, { hideProgressBar: true });
         });
     }
@@ -186,7 +186,7 @@ export default function RegisterSNSStep1() {
       };
       dispatchSNS({ type: ACTIONS.SET_STORAGE, payload: JSON.stringify(data) });
     } catch (error: any) {
-      console.error('mint failed', error);
+      logError('mint failed', error);
       dispatchSNS({ type: ACTIONS.CLOSE_LOADING });
       showToast(error?.reason || error?.data?.message || error, ToastType.Danger);
     }

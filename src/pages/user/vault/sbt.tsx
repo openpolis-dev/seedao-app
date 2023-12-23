@@ -132,7 +132,7 @@ export default function SBTCard() {
             });
         }
       } catch (error) {
-        console.error('[SBT] onboarding balance failed', error);
+        logError('[SBT] onboarding balance failed', error);
       }
     };
     const getMSC = async () => {
@@ -155,7 +155,7 @@ export default function SBTCard() {
           });
         }
       } catch (error) {
-        console.error('[SBT] MSC balance failed', error);
+        logError('[SBT] MSC balance failed', error);
       }
     };
     if (polygonProvider && account) {
@@ -183,7 +183,7 @@ export default function SBTCard() {
           );
         })
         .catch((err) => {
-          console.error('[SBT] gov failed', err);
+          logError('[SBT] gov failed', err);
         });
       // new SBT
       const n_address = '0x2221F5d189c611B09D7f7382Ce557ec66365C8fc';
@@ -203,7 +203,7 @@ export default function SBTCard() {
           );
         })
         .catch((err) => {
-          console.error('[SBT] new failed', err);
+          logError('[SBT] new failed', err);
         });
     };
     if (account && process.env.NODE_ENV !== 'development') getSBTs(account);

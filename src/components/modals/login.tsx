@@ -99,7 +99,7 @@ export default function LoginModal() {
       const res = await requests.user.getNonce(_account);
       newNonce = res.data.nonce;
     } catch (error) {
-      console.error('get nonce failed', error);
+      logError('get nonce failed', error);
       handleFailed();
 
       return;
@@ -118,7 +118,7 @@ export default function LoginModal() {
       signData = await _provider.send('personal_sign', [signMsg, _account]);
       console.log('signData:', signData);
     } catch (error) {
-      console.error('sign failed', error);
+      logError('sign failed', error);
       handleFailed();
     }
     if (!signData) {
@@ -145,9 +145,9 @@ export default function LoginModal() {
       // await registerPush();
       // gtag.event({ action: gtag.EVENTS.LOGIN_SUCCESS, category: chooseWallet.value, value: account });
     } catch (error: any) {
-      console.error(error?.data);
+      logError(error?.data);
       const msg = error?.data?.msg || 'Login failed';
-      console.error('error?.data', msg);
+      logError('error?.data', msg);
       // gtag.event({ action: gtag.EVENTS.LOGIN_FAILED, category: chooseWallet.value, value: account });
       showToast(msg, ToastType.Danger);
       handleFailed();

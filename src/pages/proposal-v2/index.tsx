@@ -64,7 +64,7 @@ export default function ProposalIndexPage() {
       setPage(_page + 1);
       setHasMore(resp.data.threads.length >= PAGE_SIZE);
     } catch (error) {
-      console.error('getAllProposals failed', error);
+      logError('getAllProposals failed', error);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }

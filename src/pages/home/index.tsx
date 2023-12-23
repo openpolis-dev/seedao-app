@@ -281,7 +281,7 @@ export default function Home() {
           setSEEDHolders(Number(r.totalSupply));
         })
         .catch((error: any) => {
-          console.error('[SBT] get sgn owners failed', error);
+          logError('[SBT] get sgn owners failed', error);
         });
     };
     handleSEEDHolders();
@@ -299,7 +299,7 @@ export default function Home() {
           setGovernNodes(Number(r.totalSupply));
         })
         .catch((error: any) => {
-          console.error('[SBT] get gov nodes failed', error);
+          logError('[SBT] get gov nodes failed', error);
         });
     };
     handleGovNodes();
@@ -322,7 +322,7 @@ export default function Home() {
           setOnboardingHolders(Number(r.totalSupply));
         })
         .catch((error: any) => {
-          console.error('[SBT] get onboarding-sbt holders failed', error);
+          logError('[SBT] get onboarding-sbt holders failed', error);
         });
     };
     const getNewHolders = async () => {
@@ -332,7 +332,7 @@ export default function Home() {
           setNewHolders(Number(r.totalSupply));
         })
         .catch((error: any) => {
-          console.error('[SBT] get new-sbt holders failed', error);
+          logError('[SBT] get new-sbt holders failed', error);
         });
     };
     getOnboardingHolders();

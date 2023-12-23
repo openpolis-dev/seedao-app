@@ -133,7 +133,7 @@ export default function GoveranceNodeResult() {
           });
         })
         .catch((err) => {
-          console.error(err);
+          logError(err);
         })
         .finally(() => {
           dispatch({ type: AppActionType.SET_LOADING, payload: false });

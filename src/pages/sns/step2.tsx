@@ -83,7 +83,7 @@ export default function RegisterSNSStep2() {
         await provider.send('wallet_switchEthereumChain', [{ chainId: ethers.utils.hexValue(networkConfig.chainId) }]);
         return;
       } catch (error) {
-        console.error('switch network error', error);
+        logError('switch network error', error);
         showToast(t('SNS.NetworkNotReady'), ToastType.Danger, { hideProgressBar: true });
         return;
       }
@@ -127,7 +127,7 @@ export default function RegisterSNSStep2() {
       // dispatchSNS({ type: ACTIONS.ADD_STEP });
     } catch (error: any) {
       dispatchSNS({ type: ACTIONS.CLOSE_LOADING });
-      console.error('register failed', error);
+      logError('register failed', error);
       showToast(error?.reason || error?.data?.message || 'error', ToastType.Danger);
     } finally {
     }

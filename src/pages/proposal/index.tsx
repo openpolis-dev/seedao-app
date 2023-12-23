@@ -35,7 +35,7 @@ export default function Index() {
         payload: resp.data.group.categories,
       });
     } catch (error) {
-      console.error('getCategories failed', error);
+      logError('getCategories failed', error);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }
@@ -49,7 +49,7 @@ export default function Index() {
       setPage(page + 1);
       setHasMore(resp.data.threads.length >= pageSize);
     } catch (error) {
-      console.error('getAllProposals failed', error);
+      logError('getAllProposals failed', error);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }

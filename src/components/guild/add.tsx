@@ -93,7 +93,7 @@ export default function Add(props: Iprops) {
           throw Error(t('Msg.IncorrectAddress', { content: notOkList.join(', ') }));
         }
       } catch (error) {
-        console.error('resolved failed', error);
+        logError('resolved failed', error);
         dispatch({ type: AppActionType.SET_LOADING, payload: false });
         return;
       }
@@ -141,7 +141,7 @@ export default function Add(props: Iprops) {
       dispatch({ type: AppActionType.SET_LOADING, payload: null });
       closeAdd(true);
     } catch (e) {
-      console.error(e);
+      logError(e);
       showToast(JSON.stringify(e), ToastType.Danger);
       closeAdd();
     } finally {

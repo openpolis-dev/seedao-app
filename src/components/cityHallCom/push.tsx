@@ -62,7 +62,7 @@ const CreatePushContent = () => {
       setHref('');
       showToast(t('Push.Success'), ToastType.Success);
     } catch (error: any) {
-      console.error(error);
+      logError(error);
       showToast(error, ToastType.Danger);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
@@ -164,7 +164,7 @@ const PushHistoryContent = () => {
       });
       handleSNS(Array.from(wallets));
     } catch (error) {
-      console.error(error);
+      logError(error);
     }
   };
 

@@ -37,7 +37,7 @@ export default function Proposal() {
       const res = await requests.proposal.getProposalDetail(id);
       setData(res.data.thread);
     } catch (error) {
-      console.error('get proposal detail error:', error);
+      logError('get proposal detail error:', error);
     } finally {
       // setLoading(false);
       dispatch({ type: AppActionType.SET_LOADING, payload: false });

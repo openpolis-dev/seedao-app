@@ -74,7 +74,7 @@ export default function useCheckMetaforoLogin() {
         handleLogin(sign, JSON.stringify(signData));
       }
     } catch (error: any) {
-      console.error('login failed', error);
+      logError('login failed', error);
       showToast(error?.message || `${error}`, ToastType.Danger);
       return;
     }

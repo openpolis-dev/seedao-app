@@ -42,7 +42,7 @@ export default function InfoPage() {
       const dt = await getProjectById(id as string);
       setDetail(dt.data);
     } catch (error) {
-      console.error(error);
+      logError(error);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: null });
     }

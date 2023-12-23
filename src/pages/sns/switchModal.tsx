@@ -79,7 +79,7 @@ export default function SwitchModal({ select, handleClose }: IProps) {
         dispatch({ type: AppActionType.SET_LOADING, payload: false });
       }
     } catch (error) {
-      console.error(error);
+      logError(error);
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }
   };

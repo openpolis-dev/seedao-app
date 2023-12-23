@@ -36,7 +36,7 @@ export default function useCheckBalance() {
         }
       }
     } catch (error) {
-      console.error('check balance error', error);
+      logError('check balance error', error);
     }
   };
 }

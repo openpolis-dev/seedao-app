@@ -52,7 +52,7 @@ export default function ThreadPage() {
         setTotalEditCount(res.data.thread.edit_history?.count ?? 0);
         setEditHistoryList(res.data.thread.edit_history?.lists ?? []);
       } catch (error) {
-        console.error('get proposal detail error:', error);
+        logError('get proposal detail error:', error);
       } finally {
         dispatch({ type: AppActionType.SET_LOADING, payload: false });
       }

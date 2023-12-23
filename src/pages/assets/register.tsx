@@ -57,7 +57,7 @@ export default function Register() {
             ),
         );
       } catch (error) {
-        console.error('getAvailiableProjectsAndGuilds failed:', error);
+        logError('getAvailiableProjectsAndGuilds failed:', error);
       }
     };
     getAllSources();
@@ -137,7 +137,7 @@ export default function Register() {
         }
       });
     } catch (error) {
-      console.error(error);
+      logError(error);
       return `error`;
     }
     if (err_sns_list.length) {
@@ -187,7 +187,7 @@ export default function Register() {
       Clear();
       showToast(t('Guild.SubmitSuccess'), ToastType.Success);
     } catch (error) {
-      console.error('createBudgetApplications failed:', error);
+      logError('createBudgetApplications failed:', error);
       showToast(t('Guild.SubmitFailed'), ToastType.Danger);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: false });

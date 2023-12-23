@@ -115,7 +115,7 @@ export default function Issued() {
       setTotal(res.data.total);
       setList(_list);
     } catch (error) {
-      console.error('getProjectApplications failed', error);
+      logError('getProjectApplications failed', error);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }
@@ -131,7 +131,7 @@ export default function Issued() {
       setIsProcessing(false);
       showToast(t('city-hall.SendSuccess'), ToastType.Success);
     } catch (error: any) {
-      console.error('compeleteApplications failed', error);
+      logError('compeleteApplications failed', error);
       let msg = error?.data?.msg || t('Msg.ApproveFailed');
       showToast(msg, ToastType.Danger);
     } finally {
@@ -147,7 +147,7 @@ export default function Issued() {
       setIsProcessing(true);
       showToast(t('Msg.ApproveSuccess'), ToastType.Success);
     } catch (error: any) {
-      console.error('processApplications failed', error);
+      logError('processApplications failed', error);
       let msg = error?.data?.msg || t('Msg.ApproveFailed');
       showToast(msg, ToastType.Danger);
     } finally {

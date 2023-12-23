@@ -193,7 +193,7 @@ export default function EditProject({ detail }: { detail: ReTurnProject | undefi
       // reset project status
       // updateProjectStatus(ProjectStatus.Pending);
     } catch (e) {
-      console.error(e);
+      logError(e);
       // showToast(JSON.stringify(e), ToastType.Danger);
       dispatch({ type: AppActionType.SET_LOADING, payload: null });
       closeModal();
