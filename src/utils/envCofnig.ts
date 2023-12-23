@@ -14,7 +14,8 @@ const LOCAL = {
   REACT_APP_APP_VERSION: `A ${VERSION}`,
   REACT_APP_THEME_ENABLE: true,
   DESCHOOL_BASE_API: 'https://deschool.app/goapiDevelopment',
-  JOY_ID_URL: 'https://app.joy.id',
+  SENTRY_DSN: '',
+  JOY_ID_URL: 'https://testnet.joyid.dev/',
   NETWORK: {
     name: 'Polygon',
     nativeToken: 'Matic',
@@ -47,6 +48,7 @@ const DEVELOPMENT = {
   REACT_APP_ENV: 'test',
   REACT_APP_ONESIGNAL_ID: 'd3bf95e4-40e3-455d-95ab-e01ef35d6732',
   REACT_APP_MOBILE_URL: 'https://dev-m.seedao.tech',
+  SENTRY_DSN: 'https://0cd9b429f2dc16961af9bb0d6f2a6cfe@o4506443278909440.ingest.sentry.io/4506443281072128',
 };
 
 const PREVIEW = {
