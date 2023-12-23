@@ -89,11 +89,12 @@
   "scripts": {
     "dev": "react-scripts start",
     "start": "npm run dev",
-    "build:online": "react-scripts build",
+    "build:online": "react-scripts build && npm run sentry:sourcemaps",
     "build": "REACT_APP_ENV_VERSION=dev npm run build:online",
     "build:preview": "REACT_APP_ENV_VERSION=preview npm run build:online",
     "build:prod": "REACT_APP_ENV_VERSION=prod npm run build:online",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "sentry:sourcemaps": "sentry-cli sourcemaps inject --org taoist --project javascript-react ./build && sentry-cli sourcemaps upload --org taoist --project javascript-react ./build"
   },
   "eslintConfig": {
     "extends": [
