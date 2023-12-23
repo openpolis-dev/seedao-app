@@ -6,11 +6,13 @@ const envConfig = getConfig();
 // This is used to identify the user in Sentry.
 const SENTRY_USER_ID_KEY = 'sentry-user-id';
 
+const SENTRY_ENABLE = process.env.NODE_ENV === 'production';
+
 Sentry.init({
   dsn: envConfig.SENTRY_DSN,
   release: process.env.REACT_APP_GIT_COMMIT_HASH,
   environment: process.env.REACT_APP_ENV_VERSION,
-  enabled: process.env.NODE_ENV === 'production',
+  enabled: SENTRY_ENABLE,
   integrations: [
     new Sentry.BrowserTracing({
       startTransactionOnLocationChange: false,
@@ -33,3 +35,11 @@ if (!sentryUserId) {
   localStorage.setItem(SENTRY_USER_ID_KEY, (sentryUserId = uuidv4()));
 }
 Sentry.setUser({ id: sentryUserId! });
+
+window.logError = (message?: any, ...optionalParams: any[]) => {
+  console.error(message, ...optionalParams);
+  if (SENTRY_ENABLE) {
+    const errMsg = `${message} ${optionalParams.join(' ')}`;
+    Sentry.captureMessage(errMsg, 'error');
+  }
+};

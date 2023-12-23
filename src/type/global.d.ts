@@ -17,6 +17,8 @@ interface Window {
   };
 }
 
+declare function logError(message?: any, ...optionalParams: any[]): void;
+
 declare interface IPageParams {
   page: number;
   size: number;

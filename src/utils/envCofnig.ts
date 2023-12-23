@@ -3,6 +3,8 @@ import PolygonIcon from 'assets/Imgs/network/polygon.svg';
 
 const VERSION = '0.3.5';
 
+const SENTRY_DSN = 'https://0cd9b429f2dc16961af9bb0d6f2a6cfe@o4506443278909440.ingest.sentry.io/4506443281072128';
+
 const LOCAL = {
   REACT_APP_BASE_ENDPOINT: 'https://test-api.seedao.tech',
   REACT_APP_PUSH_ENDPOINT: 'https://test-push-api.seedao.tech',
@@ -14,7 +16,6 @@ const LOCAL = {
   REACT_APP_APP_VERSION: `A ${VERSION}`,
   REACT_APP_THEME_ENABLE: true,
   DESCHOOL_BASE_API: 'https://deschool.app/goapiDevelopment',
-  SENTRY_DSN: '',
   JOY_ID_URL: 'https://testnet.joyid.dev/',
   NETWORK: {
     name: 'Polygon',
@@ -42,13 +43,14 @@ const LOCAL = {
     whitelistId: 0,
   },
   INDEXER_ENDPOINT: 'https://test-spp-indexer.seedao.tech',
+  SENTRY_DSN: '',
 };
 const DEVELOPMENT = {
   ...LOCAL,
   REACT_APP_ENV: 'test',
   REACT_APP_ONESIGNAL_ID: 'd3bf95e4-40e3-455d-95ab-e01ef35d6732',
   REACT_APP_MOBILE_URL: 'https://dev-m.seedao.tech',
-  SENTRY_DSN: 'https://0cd9b429f2dc16961af9bb0d6f2a6cfe@o4506443278909440.ingest.sentry.io/4506443281072128',
+  SENTRY_DSN,
 };
 
 const PREVIEW = {
@@ -57,6 +59,7 @@ const PREVIEW = {
   REACT_APP_THEME_ENABLE: true,
   REACT_APP_ONESIGNAL_ID: '673e6ac3-ab64-4935-8df7-25dd37baa7d1',
   REACT_APP_MOBILE_URL: 'https://preview-m.seedao.tech',
+  SENTRY_DSN,
 };
 
 const PRODUCTION = {
@@ -80,6 +83,7 @@ const PRODUCTION = {
   //   // rpc: 'https://mainnet.infura.io/v3/',
   // },
   INDEXER_ENDPOINT: 'https://spp-indexer.seedao.tech',
+  SENTRY_DSN,
 };
 
 export default function getConfig() {

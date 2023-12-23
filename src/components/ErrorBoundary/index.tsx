@@ -77,9 +77,7 @@ const Fallback = ({ error, eventId }: { error: Error; eventId: string | null }) 
   const showErrorId = eventId;
 
   const showMoreButton = (
-    <ShowMoreButton onClick={() => setExpanded((s) => !s)}>
-      {isExpanded ? 'Show less' : 'Show more'}
-    </ShowMoreButton>
+    <ShowMoreButton onClick={() => setExpanded((s) => !s)}>{isExpanded ? 'Show less' : 'Show more'}</ShowMoreButton>
   );
 
   const errorDetails = error.stack || error.message;
