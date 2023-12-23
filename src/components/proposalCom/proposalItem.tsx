@@ -7,14 +7,14 @@ import { useAuthContext } from 'providers/authProvider';
 
 const CardBody = styled.div``;
 
-export default function ProposalItem({ data }: { data: IBaseProposal }) {
+export default function ProposalItem({ data, isReview }: { data: IBaseProposal; isReview?: boolean }) {
   const navigate = useNavigate();
   const {
     state: { theme },
   } = useAuthContext();
 
   const openProposal = () => {
-    navigate(`/proposal-v2/thread/${data.id}`, { state: data });
+    navigate(`/proposal-v2/thread/${data.id}${isReview ? '?review' : ''}`, { state: data });
   };
 
   const borderStyle = useMemo(() => {
