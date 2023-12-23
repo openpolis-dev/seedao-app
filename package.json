@@ -9,6 +9,8 @@
     "@ericz1803/react-google-calendar": "^4.3.1",
     "@joyid/evm": "^0.2.6",
     "@seedao/sns-js": "^0.7.0",
+    "@sentry/cli": "^2.23.1",
+    "@sentry/react": "^7.91.0",
     "@types/xlsx": "^0.0.36",
     "@unipasswallet/popup-types": "^1.1.11",
     "@unipasswallet/web3-react": "^1.1.9",
@@ -57,6 +59,7 @@
     "swiper": "^11.0.5",
     "typescript": "^4.9.5",
     "ua-parser-js": "^1.0.36",
+    "uuid": "^9.0.1",
     "wagmi": "^1.4.3",
     "web-vitals": "^2.1.4",
     "xlsx": "^0.18.5"
