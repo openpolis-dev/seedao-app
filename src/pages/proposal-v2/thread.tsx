@@ -10,6 +10,8 @@ import EditActionHistory from 'components/proposalCom/editActionhistory';
 import { IBaseProposal, EditHistoryType } from 'type/proposal.type';
 import { useAuthContext, AppActionType } from 'providers/authProvider';
 import requests from 'requests';
+import { formatDate } from 'utils/time';
+import BackerNav from 'components/common/backNav';
 
 enum BlockContentType {
   Reply = 1,
@@ -61,8 +63,25 @@ export default function ThreadPage() {
     // TODO
   };
 
+  const currentStoreHash = editHistoryList[editHistoryList.length - 1]?.arweave;
+
   return (
     <Page>
+      <BackerNav title="" to="/proposal-v2" mb="20px" />
+      <ThreadHead>
+        <div className="title">{data?.title}</div>
+        <ThreadCenter>
+          <UserBox>
+            <img src={data?.user.photo_url} alt="" />
+            <span>{data?.user.username}</span>
+            <div className="date">{formatDate(new Date(data?.updated_at || ''))}</div>
+          </UserBox>
+          <ThreadInfo></ThreadInfo>
+        </ThreadCenter>
+        <StoreHash href={`https://arweave.net/tx/${currentStoreHash}/data.html`} target="_blank">
+          Arweave Hash {currentStoreHash}
+        </StoreHash>
+      </ThreadHead>
       {data?.polls?.[0] && <ProposalVote poll={data.polls[0]} />}
       <ReplyAndHistoryBlock>
         <BlockTab>
@@ -93,7 +112,9 @@ const Page = styled.div`
   ${ContainerPadding};
 `;
 
-const ReplyAndHistoryBlock = styled.div``;
+const ReplyAndHistoryBlock = styled.div`
+  margin-top: 20px;
+`;
 
 const BlockTab = styled.ul`
   display: flex;
@@ -107,3 +128,39 @@ const BlockTab = styled.ul`
     color: var(--bs-primary);
   }
 `;
+
+const ThreadCenter = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const ThreadHead = styled.div`
+  background-color: var(--bs-box-background);
+  margin-bottom: 20px;
+  padding: 20px;
+  border-radius: 16px;
+  .title {
+    font-size: 20px;
+  }
+`;
+
+const UserBox = styled.div`
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-block: 16px;
+  img {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    margin-right: 8px;
+  }
+  .date {
+    margin-left: 20px;
+  }
+`;
+
+const ThreadInfo = styled.div``;
+
+const StoreHash = styled.a``;
