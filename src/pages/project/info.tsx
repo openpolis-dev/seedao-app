@@ -100,6 +100,7 @@ export default function InfoPage() {
                   </InnerLft>
                 </LftBox>
                 <ContentBox>
+                  <TitleBox>{t('Project.ProjectIntro')}</TitleBox>
                   <MdPreview theme={theme ? 'dark' : 'light'} modelValue={detail?.intro || ''} />
                 </ContentBox>
               </LastLine>
@@ -201,6 +202,7 @@ const TitleBox = styled.div`
   font-weight: bold;
   color: var(--bs-body-color_active);
   line-height: 36px;
+  font-family: 'Poppins-Bold';
 `;
 
 const TopInfo = styled.div`

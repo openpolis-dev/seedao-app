@@ -75,6 +75,7 @@ export default function Index() {
                   </InnerLft>
                 </LftBox>
                 <ContentBox>
+                  <TitleBox>{t('Guild.GuildIntro')}</TitleBox>
                   {/*<ReactMarkdown>{detail?.intro || ''}</ReactMarkdown>*/}
                   <MdPreview theme={theme ? 'dark' : 'light'} modelValue={detail?.intro || ''} />
                 </ContentBox>
@@ -183,6 +184,7 @@ const TitleBox = styled.div`
   font-weight: bold;
   color: var(--bs-body-color_active);
   line-height: 36px;
+  font-family: 'Poppins-Bold';
 `;
 
 const TopInfo = styled.div`
