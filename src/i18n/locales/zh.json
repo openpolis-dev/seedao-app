@@ -552,9 +552,7 @@
     "SeeU": "SeeU Network",
     "SeeUDesc": "SeeU Network is a decentralized social network that allows users to create and manage their own communities.",
     "SNS": "SNS",
-    "SNSDesc": "SNS is your identity based on blockchain in SeeDAO.",
-    "Newer": "新手村",
-    "NewerDesc": ""
+    "SNSDesc": "SNS is your identity based on blockchain in SeeDAO."
   },
   "SNS": {
     "EntranceTitle": "获取你的 SNS，开始你的 SeeDAO 之旅",
@@ -598,6 +596,18 @@
   },
   "Onboarding": {
     "HomeEntranceButton": "-> Onboarding",
-    "CourseTitle": "SeeDAO 新手入门系列课程"
+    "CourseTitle": "SeeDAO 新手入门系列课程",
+    "UnlockTip": "获取SNS后即可解锁",
+    "AquireSNS": "获取SNS",
+    "ContributeCamp": "SeeDAO共建者营",
+    "ContributeCampIntro": "简介",
+    "QuestionOne": "如何入营",
+    "AnswerOne": "点击“共建者营”按钮，填写申请表单，提交申请。",
+    "QuestionTwo": "共建者营怎么玩",
+    "AnswerTwo": "共建者营是一个为期两周的线上课程，每周一次线下活动。课程内容包括：SeeDAO介绍、SeeDAO治理、SeeDAO生态、SeeDAO应用、SeeDAO项目、SeeDAO公会、SeeDAO节点、SeeDAO资产、SeeDAO社区、SeeDAO未来。",
+    "Enroll": "报名入营",
+    "NewcomerReward": "新手悬赏",
+    "JoinCommunity": "加入社群",
+    "FinalExamination": "毕业考试"
   }
 }
