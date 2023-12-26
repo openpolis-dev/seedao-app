@@ -54,7 +54,7 @@ export default function useTransaction() {
 
   const { sendTransactionAsync } = useSendTransaction();
 
-  const { data } = useContractRead({
+  const { data: allowanceResult } = useContractRead({
     address: PAY_TOKEN.address as Address,
     abi: erc20ABI,
     functionName: 'allowance',
@@ -106,17 +106,16 @@ export default function useTransaction() {
   };
 
   const approveToken = async () => {
-    console.log('========approveToken data', data);
-    // const not_enough = approve_balance.lt(ethers.utils.parseUnits(String(PAY_NUMBER), PAY_TOKEN.decimals));
-    // if (not_enough) {
-    //   await sendTransactionAsync({
-    //     to: PAY_TOKEN.address,
-    //     from: account,
-    //     value: BigInt(0),
-    //     // @ts-ignore
-    //     data: buildApproveData(),
-    //   });
-    // }
+    console.log('=======approveToken data=======', allowanceResult);
+    if (!allowanceResult || allowanceResult < BigInt(PAY_NUMBER)) {
+      await sendTransactionAsync({
+        to: PAY_TOKEN.address,
+        from: account,
+        value: BigInt(0),
+        // @ts-ignore
+        data: buildApproveData(),
+      });
+    }
   };
 
   return { handleTransaction, approveToken };
