@@ -27,11 +27,12 @@ import { Authorizer } from 'casbin.js';
 import ReactGA from 'react-ga4';
 import OneSignal from 'react-onesignal';
 import getConfig from 'utils/envCofnig';
+import useToast, { ToastType } from 'hooks/useToast';
 
 const networkConfig = getConfig().NETWORK;
 
 enum CONNECTOR_ID {
-  METAMASK = 'metaMask',
+  METAMASK = 'injected',
   JOYID = 'joyid',
   UNIPASS = 'unipass',
 }
@@ -69,8 +70,6 @@ const LoginModalContent = () => {
   const { t } = useTranslation();
 
   const { connectors, isLoading: connectLoading, connectAsync } = useConnect();
-  const { disconnect } = useDisconnect();
-
   const { isConnected, address } = useAccount();
   const chainId = useChainId();
   const { signMessageAsync, isLoading: signLoading } = useSignMessage();
@@ -82,6 +81,7 @@ const LoginModalContent = () => {
     state: { theme, loading },
     dispatch,
   } = useAuthContext();
+  const { showToast } = useToast();
 
   const [clickConnectFlag, setClickConnectFlag] = useState(false);
 
@@ -151,6 +151,8 @@ const LoginModalContent = () => {
           // disconnect();
           ReactGA.event('login_failed', { type: 'metamask' });
           setLoginLoading(false);
+        } finally {
+          dispatch({ type: AppActionType.SET_LOADING, payload: false });
         }
       };
       // sign message
@@ -186,13 +188,19 @@ const LoginModalContent = () => {
   };
 
   const handleClickWallet = async (connector: Connector) => {
-    if (!connector.ready && connector.id === CONNECTOR_ID.METAMASK) {
+    if (connector.id === CONNECTOR_ID.METAMASK && connector.name !== 'MetaMask') {
+      showToast(t('Msg.CloseInjected', { wallet: connector.name }), ToastType.Danger);
+      return;
+    }
+    if (connector.id === CONNECTOR_ID.METAMASK && !connector.ready) {
+      showToast(t('Msg.InstallMetaMask'), ToastType.Danger);
       window.open('https://metamask.io/download.html', '_blank');
       return;
     } else if (!connector.ready) {
-      // TODO: alert
+      showToast(t('Msg.WalletNotReady', { wallet: connector.name }), ToastType.Danger);
       return;
     }
+
     localStorage.setItem(SELECT_WALLET, Wallet.METAMASK_INJECTED);
     setSelectConnectorId(connector.id as CONNECTOR_ID);
 
@@ -211,11 +219,11 @@ const LoginModalContent = () => {
   };
 
   const getConnectorButtonText = (connector: Connector) => {
+    if (connector.id === 'injected') {
+      return 'MetaMast';
+    }
     if (connector.ready) {
       return connector.name;
-    }
-    if (connector.id === CONNECTOR_ID.METAMASK) {
-      return 'Install Metamask';
     }
     return 'Unsupport';
   };
@@ -242,6 +250,7 @@ const LoginModalContent = () => {
 };
 
 export default function LoginModal({ showModal }: { showModal?: boolean }) {
+  //   console.log('window.ethereum:', window.ethereum);
   if (showModal) {
     return <LoginModalContent />;
   } else {

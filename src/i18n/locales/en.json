@@ -444,7 +444,10 @@
     "RepeatProposal": "Repeated proposal",
     "SelectRole": "Required role",
     "SnsNotFound": "SNS Not Found: {{sns}}",
-    "InvalidAddress": "Invalid Address: {{address}}"
+    "InvalidAddress": "Invalid Address: {{address}}",
+    "CloseInjected": "Please close the {{wallet}} and use MetaMask",
+    "InstallMetaMask": "Please install MetaMask",
+    "WalletNotReady": "{{wallet}} is not ready"
   },
   "event": {
     "events": "Events",

@@ -1,7 +1,7 @@
 import { configureChains, createConfig, WagmiConfig } from 'wagmi';
 import { mainnet, polygon, Chain } from 'wagmi/chains';
 import { publicProvider } from 'wagmi/providers/public';
-import { MetaMaskConnector } from 'wagmi/connectors/metaMask';
+import { InjectedConnector } from 'wagmi/connectors/injected';
 import { UniPassConnector } from '@unipasswallet/wagmi-connector';
 import { JoyIdConnector } from '@joyid/wagmi';
 
@@ -49,8 +49,11 @@ export default function WagmiProvider(props: React.PropsWithChildren) {
   const config = createConfig({
     autoConnect: true,
     connectors: [
-      new MetaMaskConnector({
+      new InjectedConnector({
         chains,
+        options: {
+          shimDisconnect: false,
+        },
       }),
       joyidConnector,
       unipass,

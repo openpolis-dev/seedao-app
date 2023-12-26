@@ -444,7 +444,10 @@
     "RepeatProposal": "重复的提案链接",
     "SelectRole": "请选择角色",
     "SnsNotFound": "无效的SNS：{{sns}}",
-    "InvalidAddress": "无效的地址：{{address}}"
+    "InvalidAddress": "无效的地址：{{address}}",
+    "CloseInjected": "请关闭浏览器插件{{wallet}}, 使用MetaMask钱包",
+    "InstallMetaMask": "请安装MetaMask钱包",
+    "WalletNotReady": "{{wallet}}钱包未准备好"
   },
   "event": {
     "events": "活动",
