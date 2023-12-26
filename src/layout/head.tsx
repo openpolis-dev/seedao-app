@@ -222,7 +222,6 @@ export default function Header() {
       logError('onesignal logout failed', error);
     }
     toGo();
-    window.location.reload();
   };
 
   useEffect(() => {
