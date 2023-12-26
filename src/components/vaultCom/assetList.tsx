@@ -15,7 +15,6 @@ import { AppActionType, useAuthContext } from 'providers/authProvider';
 import Loading from 'components/loading';
 import { formatDate, formatTime } from 'utils/time';
 import publicJs from 'utils/publicJs';
-// import { useWeb3React } from '@web3-react/core';
 import { useTranslation } from 'react-i18next';
 import { formatApplicationStatus } from 'utils/index';
 import Select from 'components/common/select';

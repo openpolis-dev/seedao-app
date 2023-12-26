@@ -15,6 +15,9 @@ interface Window {
   AppConfig: {
     host: string;
   };
+  ethereum?: {
+    isMetaMask?: true;
+  };
 }
 
 declare function logError(message?: any, ...optionalParams: any[]): void;

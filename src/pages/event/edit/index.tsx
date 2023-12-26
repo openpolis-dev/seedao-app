@@ -11,7 +11,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { MdEditor } from 'md-editor-rt';
 import { createEvent, editEventById, getEventById, uplodaEventImage } from 'requests/event';
-// import { useWeb3React } from '@web3-react/core';
+
 import { useNavigate } from 'react-router-dom';
 import { ChevronLeft, X, Upload } from 'react-bootstrap-icons';
 import { ContainerPadding } from 'assets/styles/global';

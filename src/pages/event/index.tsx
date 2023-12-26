@@ -12,7 +12,7 @@ import usePermission from 'hooks/usePermission';
 import { PermissionObject, PermissionAction } from 'utils/constant';
 import { filter } from 'minimatch';
 import useToast, { ToastType } from 'hooks/useToast';
-// import { useWeb3React } from '@web3-react/core';
+
 import { useNavigate } from 'react-router-dom';
 import { ContainerPadding } from 'assets/styles/global';
 

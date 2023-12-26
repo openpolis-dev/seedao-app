@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as user from 'requests/user';
 
-// import { useWeb3React } from '@web3-react/core';
 import useCheckLogin from 'hooks/useCheckLogin';
 import { useAuthContext } from 'providers/authProvider';
 import { useNavigate } from 'react-router-dom';

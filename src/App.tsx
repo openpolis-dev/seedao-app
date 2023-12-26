@@ -1,4 +1,3 @@
-// import Web3Provider from './providers/web3Provider';
 import AuthProvider from './providers/authProvider';
 import './assets/styles/quill.css';
 import './assets/styles/font.css';

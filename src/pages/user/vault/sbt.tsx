@@ -2,7 +2,6 @@ import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { ethers } from 'ethers';
 import axios from 'axios';
-import { useWeb3React } from '@web3-react/core';
 import { useTranslation } from 'react-i18next';
 import { useAuthContext } from '../../../providers/authProvider';
 

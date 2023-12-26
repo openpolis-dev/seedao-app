@@ -5,7 +5,6 @@ import CopyBox from 'components/copy';
 import DefaultAvatar from 'assets/Imgs/defaultAvatar.png';
 import PublicJs from 'utils/publicJs';
 import styled from 'styled-components';
-// import { useWeb3React } from '@web3-react/core';
 import { Col, Form } from 'react-bootstrap';
 import { useAuthContext } from '../providers/authProvider';
 import CopyIconSVG from 'components/svgs/copy';

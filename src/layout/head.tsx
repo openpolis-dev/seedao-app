@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useAuthContext, AppActionType } from '../providers/authProvider';
-// import { useWeb3React } from '@web3-react/core';
 import useCheckLogin from '../hooks/useCheckLogin';
 import { parseToken, checkTokenValid, clearStorage } from '../utils/auth';
 import { Authorizer } from 'casbin.js';
