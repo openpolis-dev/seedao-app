@@ -7,9 +7,9 @@ const networkConfig = getConfig().NETWORK;
 const PAY_TOKEN = networkConfig.tokens[0];
 const PAY_NUMBER = PAY_TOKEN.price;
 
-export default function useCheckBalance() {
+export default function useCheckBalance(provider: any) {
   const {
-    state: { account, rpc },
+    state: { account },
   } = useAuthContext();
 
   return async function checkBalance(checkNative?: boolean, checkERC20?: boolean) {
@@ -20,7 +20,6 @@ export default function useCheckBalance() {
       return;
     }
     try {
-      const provider = new ethers.providers.StaticJsonRpcProvider(rpc);
       if (checkNative) {
         // FIXME: calculate gas fee
         const nativeBalance = await provider.getBalance(account);

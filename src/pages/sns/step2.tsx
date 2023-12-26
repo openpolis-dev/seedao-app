@@ -11,13 +11,20 @@ import CancelModal from './cancelModal';
 import getConfig from 'utils/envCofnig';
 import { ethers } from 'ethers';
 import useCheckBalance from './useCheckBalance';
+import { useEthersProvider } from 'components/login/ethersNew';
+import { useNetwork, useSwitchNetwork } from 'wagmi';
 
 const networkConfig = getConfig().NETWORK;
 
 export default function RegisterSNSStep2() {
   const { t } = useTranslation();
+
+  const { chain } = useNetwork();
+  const { switchNetworkAsync } = useSwitchNetwork();
+
+  const provider = useEthersProvider({});
   const {
-    state: { account, provider, theme },
+    state: { account, theme },
   } = useAuthContext();
   const {
     state: { localData, sns, user_proof, hadMintByWhitelist, whitelistIsOpen },
@@ -26,7 +33,7 @@ export default function RegisterSNSStep2() {
   const { showToast } = useToast();
 
   const { handleTransaction, approveToken } = useTransaction();
-  const checkBalance = useCheckBalance();
+  const checkBalance = useCheckBalance(provider);
 
   const startTimeRef = useRef<number>(0);
   const [leftTime, setLeftTime] = useState<number>(0);
@@ -67,27 +74,33 @@ export default function RegisterSNSStep2() {
 
   const progress = (leftTime / 60) * 100;
 
+  const handleCheckNetwork = async () => {
+    if (chain && switchNetworkAsync && chain?.id !== networkConfig.chainId) {
+      try {
+        await switchNetworkAsync(networkConfig.chainId);
+      } catch (error) {
+        logError('switch network error', error);
+        showToast(t('SNS.NetworkNotReady'), ToastType.Danger, { hideProgressBar: true });
+        throw new Error('switch network error');
+      }
+      return true;
+    }
+  };
+
   const handleRegister = async () => {
     if (!account) {
       return;
     }
     // check network
-    if (!provider?.getNetwork) {
-      return;
-    }
-    const network = await provider.getNetwork();
-
-    if (network?.chainId !== networkConfig.chainId) {
-      // switch network;
-      try {
-        await provider.send('wallet_switchEthereumChain', [{ chainId: ethers.utils.hexValue(networkConfig.chainId) }]);
-        return;
-      } catch (error) {
-        logError('switch network error', error);
-        showToast(t('SNS.NetworkNotReady'), ToastType.Danger, { hideProgressBar: true });
+    try {
+      const r = await handleCheckNetwork();
+      if (r) {
         return;
       }
+    } catch (error) {
+      return;
     }
+
     // check native balance
     const token = await checkBalance(true);
     if (token) {
@@ -101,7 +114,7 @@ export default function RegisterSNSStep2() {
 
       let txHash: string = '';
       if (user_proof && !hadMintByWhitelist && whitelistIsOpen) {
-        txHash = await handleTransaction(TX_ACTION.WHITE_MINT, { sns, secret, proof: user_proof });
+        txHash = (await handleTransaction(TX_ACTION.WHITE_MINT, { sns, secret, proof: user_proof })) as string;
       } else {
         // approve
         await approveToken();
@@ -113,7 +126,7 @@ export default function RegisterSNSStep2() {
           return;
         }
 
-        txHash = await handleTransaction(TX_ACTION.PAY_MINT, { sns, secret });
+        txHash = (await handleTransaction(TX_ACTION.PAY_MINT, { sns, secret })) as string;
       }
       if (!txHash) {
         throw new Error('txHash is empty');

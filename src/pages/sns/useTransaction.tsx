@@ -1,5 +1,3 @@
-import { sendTransaction } from '@joyid/evm';
-import { useSNSContext } from './snsProvider';
 import { SELECT_WALLET } from 'utils/constant';
 import { Wallet } from 'wallet/wallet';
 import { ethers } from 'ethers';
@@ -7,7 +5,8 @@ import CONTROLLER_ABI from 'assets/abi/SeeDAORegistrarController.json';
 import REGISTER_ABI from 'assets/abi/SeeDAOMinter.json';
 import { builtin } from '@seedao/sns-js';
 import { useAuthContext } from 'providers/authProvider';
-import { erc20ABI } from 'wagmi';
+import { erc20ABI, useSendTransaction, useContractRead, Address } from 'wagmi';
+
 import getConfig from 'utils/envCofnig';
 const networkConfig = getConfig().NETWORK;
 const PAY_TOKEN = networkConfig.tokens[0];
@@ -50,81 +49,49 @@ const buildWhitelistRegisterData = (sns: string, secret: string, proof: string) 
 
 export default function useTransaction() {
   const {
-    state: { account, provider, rpc },
+    state: { account },
   } = useAuthContext();
-  const {
-    state: { minterContract, controllerContract },
-  } = useSNSContext();
+
+  const { sendTransactionAsync } = useSendTransaction();
+
+  const { data } = useContractRead({
+    address: PAY_TOKEN.address as Address,
+    abi: erc20ABI,
+    functionName: 'allowance',
+    args: [account as Address, builtin.SEEDAO_MINTER_ADDR as Address],
+  });
 
   const handleCommit = async (wallet: Wallet, commitment: string) => {
-    if (wallet === Wallet.JOYID_WEB) {
-      return await sendTransaction(
-        {
-          to: builtin.SEEDAO_REGISTRAR_CONTROLLER_ADDR,
-          from: account,
-          value: '0',
-          data: buildCommitData(commitment),
-        },
-        account,
-        {
-          rpcURL: rpc || networkConfig.rpcs[0],
-        },
-      );
-    } else {
-      const tx = await controllerContract.commit(commitment);
-      return tx?.hash;
-    }
+    const tx = await sendTransactionAsync({
+      to: builtin.SEEDAO_REGISTRAR_CONTROLLER_ADDR,
+      from: account,
+      value: BigInt(0),
+      // @ts-ignore
+      data: buildCommitData(commitment),
+    });
+    return tx?.hash;
   };
 
   const handleRegister = async (wallet: Wallet, sns: string, secret: string) => {
-    if (wallet === Wallet.JOYID_WEB) {
-      return await sendTransaction(
-        {
-          to: builtin.SEEDAO_MINTER_ADDR,
-          from: account,
-          value: '0',
-          data: buildRegisterData(sns, ethers.utils.formatBytes32String(secret)),
-        },
-        account,
-        {
-          rpcURL: rpc || networkConfig.rpcs[0],
-        },
-      );
-    } else {
-      const tx = await minterContract.register(
-        sns,
-        builtin.PUBLIC_RESOLVER_ADDR,
-        ethers.utils.formatBytes32String(secret),
-        PAY_TOKEN.address,
-      );
-      return tx?.hash;
-    }
+    const tx = await sendTransactionAsync({
+      to: builtin.SEEDAO_MINTER_ADDR,
+      from: account,
+      value: BigInt(0),
+      // @ts-ignore
+      data: buildRegisterData(sns, ethers.utils.formatBytes32String(secret)),
+    });
+    return tx?.hash;
   };
 
   const handleFreeMint = async (wallet: Wallet, sns: string, secret: string, proof: string) => {
-    if (wallet === Wallet.JOYID_WEB) {
-      return await sendTransaction(
-        {
-          to: builtin.SEEDAO_MINTER_ADDR,
-          from: account,
-          value: '0',
-          data: buildWhitelistRegisterData(sns, ethers.utils.formatBytes32String(secret), proof),
-        },
-        account,
-        {
-          rpcURL: rpc || networkConfig.rpcs[0],
-        },
-      );
-    } else {
-      const tx = await minterContract.registerWithWhitelist(
-        sns,
-        builtin.PUBLIC_RESOLVER_ADDR,
-        ethers.utils.formatBytes32String(secret),
-        networkConfig.whitelistId,
-        proof,
-      );
-      return tx?.hash;
-    }
+    const tx = await sendTransactionAsync({
+      to: builtin.SEEDAO_MINTER_ADDR,
+      from: account,
+      value: BigInt(0),
+      // @ts-ignore
+      data: buildWhitelistRegisterData(sns, ethers.utils.formatBytes32String(secret), proof),
+    });
+    return tx?.hash;
   };
 
   const handleTransaction = (action: TX_ACTION, data: any) => {
@@ -139,36 +106,17 @@ export default function useTransaction() {
   };
 
   const approveToken = async () => {
-    const wallet = localStorage.getItem(SELECT_WALLET);
-    const tokenContract = new ethers.Contract(PAY_TOKEN.address, erc20ABI, provider.getSigner(account));
-    // check approve balance
-    const approve_balance = await tokenContract.allowance(account, builtin.SEEDAO_MINTER_ADDR);
-    const not_enough = approve_balance.lt(ethers.utils.parseUnits(String(PAY_NUMBER), PAY_TOKEN.decimals));
-    if (wallet === Wallet.JOYID_WEB) {
-      if (not_enough) {
-        await sendTransaction(
-          {
-            to: PAY_TOKEN.address,
-            from: account,
-            value: '0',
-            data: buildApproveData(),
-          },
-          account,
-          {
-            rpcURL: rpc || networkConfig.rpcs[0],
-          },
-        );
-      }
-    } else {
-      if (not_enough) {
-        // approve
-        const tx = await tokenContract.approve(
-          builtin.SEEDAO_MINTER_ADDR,
-          ethers.utils.parseUnits(String(PAY_NUMBER), PAY_TOKEN.decimals),
-        );
-        await tx.wait();
-      }
-    }
+    console.log('========approveToken data', data);
+    // const not_enough = approve_balance.lt(ethers.utils.parseUnits(String(PAY_NUMBER), PAY_TOKEN.decimals));
+    // if (not_enough) {
+    //   await sendTransactionAsync({
+    //     to: PAY_TOKEN.address,
+    //     from: account,
+    //     value: BigInt(0),
+    //     // @ts-ignore
+    //     data: buildApproveData(),
+    //   });
+    // }
   };
 
   return { handleTransaction, approveToken };

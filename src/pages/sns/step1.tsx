@@ -14,11 +14,9 @@ import { isAvailable } from '@seedao/sns-safe';
 import { builtin } from '@seedao/sns-js';
 import { getRandomCode } from 'utils';
 import useToast, { ToastType } from 'hooks/useToast';
-import UserSVGIcon from 'components/svgs/user';
-import { Link, useNavigate } from 'react-router-dom';
-import { SELECT_WALLET } from 'utils/constant';
-import { Wallet } from '../../wallet/wallet';
-import { clearStorage } from 'utils/auth';
+import { useNavigate } from 'react-router-dom';
+import { useNetwork, useSwitchNetwork } from 'wagmi';
+import { useEthersProvider } from 'components/login/ethersNew';
 
 import useTransaction, { TX_ACTION } from './useTransaction';
 import getConfig from 'utils/envCofnig';
@@ -41,11 +39,15 @@ export default function RegisterSNSStep1() {
   const [isPending, setPending] = useState(false);
   const [availableStatus, setAvailable] = useState(AvailableStatus.DEFAULT);
   const [randomSecret, setRandomSecret] = useState<string>('');
-  const [whitelistOpen, setWhitelistOpen] = useState(false);
+
+  const { chain } = useNetwork();
+  const { switchNetworkAsync } = useSwitchNetwork();
+
+  const provider = useEthersProvider({});
 
   const {
     dispatch,
-    state: { provider, account, userData },
+    state: { account },
   } = useAuthContext();
 
   const {
@@ -53,10 +55,10 @@ export default function RegisterSNSStep1() {
     state: { controllerContract, localData, hasReached, user_proof, hadMintByWhitelist, whitelistIsOpen },
   } = useSNSContext();
 
-  const { handleTransaction, approveToken } = useTransaction();
+  const { handleTransaction } = useTransaction();
 
   const { showToast } = useToast();
-  const checkBalance = useCheckBalance();
+  const checkBalance = useCheckBalance(provider);
 
   const isLogin = useCheckLogin(account);
 
@@ -99,42 +101,28 @@ export default function RegisterSNSStep1() {
   const onChangeVal = useCallback(debounce(handleSearchAvailable, 1000), [controllerContract]);
   const checkLogin = () => {
     // check login status
-    if (!account || !isLogin || !provider) {
+    if (!account || !isLogin) {
       dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: true });
       return;
     }
-    const wallet = localStorage.getItem(SELECT_WALLET);
-    if (wallet === Wallet.UNIPASS) {
-      if (!provider.provider.isConnected()) {
-        dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: true });
-        // clear login status
-        if (userData) {
-          dispatch({ type: AppActionType.CLEAR_AUTH, payload: undefined });
-          clearStorage();
-        }
-        return;
-      }
-    }
+    // TODO check unipass login
     return true;
   };
   const handleCheckNetwork = async () => {
-    if (!provider?.getNetwork) {
-      return;
-    }
-    const network = await provider.getNetwork();
-    if (network?.chainId !== networkConfig.chainId) {
-      // switch network;
-      provider
-        .send('wallet_switchEthereumChain', [{ chainId: ethers.utils.hexValue(networkConfig.chainId) }])
-        .catch((error: any) => {
-          logError('switch network error', error);
-          showToast(t('SNS.NetworkNotReady'), ToastType.Danger, { hideProgressBar: true });
-        });
+    if (chain && switchNetworkAsync && chain?.id !== networkConfig.chainId) {
+      try {
+        await switchNetworkAsync(networkConfig.chainId);
+      } catch (error) {
+        logError('switch network error', error);
+        showToast(t('SNS.NetworkNotReady'), ToastType.Danger, { hideProgressBar: true });
+        throw new Error('switch network error');
+      }
+      return true;
     }
   };
 
   // check network
-  const checkNetwork = useCallback(debounce(handleCheckNetwork, 1000), [provider]);
+  const checkNetwork = useCallback(debounce(handleCheckNetwork, 1000), [chain, switchNetworkAsync]);
 
   const handleInput = (v: string) => {
     if (v?.length > 15) {
@@ -168,22 +156,15 @@ export default function RegisterSNSStep1() {
     if (!account || !checkLogin()) {
       return;
     }
-    // check network
-    if (!provider?.getNetwork) {
-      return;
-    }
-    const network = await provider.getNetwork();
-
-    if (network?.chainId !== networkConfig.chainId) {
-      // switch network;
-      try {
-        await provider.send('wallet_switchEthereumChain', [{ chainId: ethers.utils.hexValue(networkConfig.chainId) }]);
-        return;
-      } catch (error) {
-        console.error('switch network error', error);
+    try {
+      const r = await handleCheckNetwork();
+      if (r) {
         return;
       }
+    } catch (error) {
+      return;
     }
+
     // check balance
     const token = await checkBalance(true, !(whitelistIsOpen && user_proof && !hadMintByWhitelist));
     if (token) {
@@ -205,7 +186,7 @@ export default function RegisterSNSStep1() {
       // commit
       dispatchSNS({ type: ACTIONS.SHOW_LOADING });
 
-      const txHash = await handleTransaction(TX_ACTION.COMMIT, commitment);
+      const txHash = (await handleTransaction(TX_ACTION.COMMIT, commitment)) as string;
       // record to localstorage
       const data = { ...localData };
       data[account] = {
