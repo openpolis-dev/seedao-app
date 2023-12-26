@@ -9,7 +9,7 @@ import requests from '../requests';
 import { SEEDAO_ACCOUNT, SEEDAO_USER, SEEDAO_USER_DATA, SELECT_WALLET } from '../utils/constant';
 import Avatar from 'components/common/avatar';
 import { Button, Form, Dropdown } from 'react-bootstrap';
-import LoginModal from 'components/modals/loginNew';
+// import LoginModal from 'components/modals/loginNew';
 
 import Select from 'components/common/select';
 
@@ -28,6 +28,8 @@ import MoonImg from '../assets/Imgs/moon.png';
 import LogoImg from '../assets/Imgs/light/logo.svg';
 import LogoImgDark from '../assets/Imgs/dark/logo.svg';
 import getConfig from 'utils/envCofnig';
+
+import LoginModal from 'components/modals/login';
 
 export default function Header() {
   const { i18n } = useTranslation();

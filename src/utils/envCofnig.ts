@@ -16,7 +16,7 @@ const LOCAL = {
   REACT_APP_APP_VERSION: `A ${VERSION}`,
   REACT_APP_THEME_ENABLE: true,
   DESCHOOL_BASE_API: 'https://deschool.app/goapiDevelopment',
-  JOY_ID_URL: 'https://testnet.joyid.dev/',
+  JOY_ID_URL: 'https://app.joy.id',
   NETWORK: {
     name: 'Polygon',
     nativeToken: 'Matic',
