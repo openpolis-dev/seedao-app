@@ -8,11 +8,12 @@ import ClearSVGIcon from 'components/svgs/clear';
 import SearchSVGIcon from 'components/svgs/search';
 import { Button } from 'react-bootstrap';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import ProposalItem from 'components/proposalCom/proposalItem';
+import SimpleProposalItem from 'components/proposalCom/simpleProposalItem';
 import { Link } from 'react-router-dom';
 import HistoryAction from 'components/proposalCom/historyAction';
 import requests from 'requests';
 import { useAuthContext, AppActionType } from 'providers/authProvider';
+import { ISimpleProposal } from 'type/proposalV2.type';
 
 const PAGE_SIZE = 10;
 
@@ -45,24 +46,24 @@ export default function ProposalIndexPage() {
   const [searchKeyword, setSearchKeyword] = useState('');
   const [inputKeyword, setInputKeyword] = useState('');
 
-  const [proposalList, setProposalList] = useState<IBaseProposal[]>([]);
+  const [proposalList, setProposalList] = useState<ISimpleProposal[]>([]);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
 
   const getProposalList = async (init?: boolean) => {
-    //   TODO: get proposal list
     const _page = init ? 1 : page;
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
-      const resp = await requests.proposal.getAllProposals({
+      const resp = await requests.proposalV2.getProposalList({
         page: _page,
-        per_page: PAGE_SIZE,
-        sort: selectTime.value,
+        size: PAGE_SIZE,
+        sort_order: 'desc',
+        sort_field: 'create_ts',
       });
-      setProposalList([...proposalList, ...resp.data.threads]);
+      setProposalList([...proposalList, ...resp.data.rows]);
       setPage(_page + 1);
-      setHasMore(resp.data.threads.length >= PAGE_SIZE);
+      setHasMore(resp.data.rows.length >= PAGE_SIZE);
     } catch (error) {
       logError('getAllProposals failed', error);
     } finally {
@@ -141,7 +142,7 @@ export default function ProposalIndexPage() {
           loader={<></>}
         >
           {proposalList.map((p) => (
-            <ProposalItem key={p.id} data={p} />
+            <SimpleProposalItem key={p.id} data={p} />
           ))}
         </InfiniteScroll>
       )}
