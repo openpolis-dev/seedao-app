@@ -11,7 +11,7 @@ import CancelModal from './cancelModal';
 import getConfig from 'utils/envCofnig';
 import { ethers } from 'ethers';
 import useCheckBalance from './useCheckBalance';
-import { useEthersProvider } from 'components/login/ethersNew';
+import { useEthersProvider } from 'hooks/ethersNew';
 import { useNetwork, useSwitchNetwork } from 'wagmi';
 
 const networkConfig = getConfig().NETWORK;

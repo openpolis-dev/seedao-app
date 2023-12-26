@@ -16,7 +16,7 @@ import { getRandomCode } from 'utils';
 import useToast, { ToastType } from 'hooks/useToast';
 import { useNavigate } from 'react-router-dom';
 import { useNetwork, useSwitchNetwork } from 'wagmi';
-import { useEthersProvider } from 'components/login/ethersNew';
+import { useEthersProvider } from 'hooks/ethersNew';
 
 import useTransaction, { TX_ACTION } from './useTransaction';
 import getConfig from 'utils/envCofnig';

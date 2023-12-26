@@ -18,7 +18,7 @@ import { useTranslation } from 'react-i18next';
 import HelperIcon from 'assets/Imgs/sns/helper.svg';
 import useToast, { ToastType } from 'hooks/useToast';
 import { useNetwork, useSwitchNetwork } from 'wagmi';
-import { useEthersProvider } from 'components/login/ethersNew';
+import { useEthersProvider } from 'hooks/ethersNew';
 
 const whiteList = WhiteListData as {
   rootHash: string;
