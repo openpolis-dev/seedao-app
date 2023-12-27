@@ -234,25 +234,6 @@ export default function Profile() {
     }
   }, [userData]);
 
-  const getBase64 = (imgUrl: string) => {
-    window.URL = window.URL || window.webkitURL;
-    const xhr = new XMLHttpRequest();
-    xhr.open('get', imgUrl, true);
-    xhr.responseType = 'blob';
-    xhr.onload = function () {
-      if (this.status === 200) {
-        const blob = this.response;
-        const oFileReader = new FileReader();
-        oFileReader.onloadend = function (e) {
-          const { result } = e.target as any;
-          setAvatar(result);
-        };
-        oFileReader.readAsDataURL(blob);
-      }
-    };
-    xhr.send();
-  };
-
   const updateLogo = async (e: FormEvent) => {
     const { files } = e.target as any;
     const file = files[0];
