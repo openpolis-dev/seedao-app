@@ -18,6 +18,7 @@ import DescImg from '../../../assets/Imgs/profile/desc.svg';
 import GithubImg from '../../../assets/Imgs/profile/github.svg';
 import { useNavigate } from 'react-router-dom';
 import BackerNav from '../../../components/common/backNav';
+import { compressionFile, fileToDataURL } from 'utils/image';
 
 const OuterBox = styled.div`
   ${ContainerPadding};
@@ -252,10 +253,12 @@ export default function Profile() {
     xhr.send();
   };
 
-  const updateLogo = (e: FormEvent) => {
+  const updateLogo = async (e: FormEvent) => {
     const { files } = e.target as any;
-    const url = window.URL.createObjectURL(files[0]);
-    getBase64(url);
+    const file = files[0];
+    const new_file = await compressionFile(file, file.type);
+    const base64 = await fileToDataURL(new_file);
+    setAvatar(base64);
   };
 
   const removeUrl = () => {
