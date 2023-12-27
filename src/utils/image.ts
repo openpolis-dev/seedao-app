@@ -1,5 +1,3 @@
-import { parse } from 'path';
-
 export const fileToDataURL = (file: Blob): Promise<any> => {
   return new Promise((resolve) => {
     const reader = new FileReader();
@@ -44,7 +42,7 @@ export const compressionFile = async (file: File, type = 'image/jpeg', quality =
   canvas.height = heightAfterResize;
   context.clearRect(0, 0, widthAfterResize, heightAfterResize);
   context.drawImage(img, 0, 0, widthAfterResize, heightAfterResize);
-  const blob = (await canvastoFile(canvas, type, quality)) as Blob; // quality:0.5可根据实际情况计算
+  const blob = (await canvastoFile(canvas, type, quality)) as Blob;
   const newFile = await new File([blob], fileName, {
     type: type,
   });
