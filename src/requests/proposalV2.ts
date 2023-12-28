@@ -42,3 +42,31 @@ export const updateProposal = (id: number, data: CreateProposalParamsType): Prom
     metaforo_access_token: localStorage.getItem(METAFORO_TOKEN),
   });
 };
+
+export const withdrawProposal = (id: number) => {
+  return request.post(`${PATH_PREFIX}withdraw/${id}`);
+};
+
+// =========== comment ===========
+
+// NOTE: reply_id is metaforo_id
+export const addComment = (id: number, content: string, reply_id?: number) => {
+  return request.post(`${PATH_PREFIX}add_comment/${id}`, {
+    content,
+    reply_id,
+    metaforo_access_token: localStorage.getItem(METAFORO_TOKEN),
+  });
+};
+
+// =========== review ===========
+
+export const approveProposal = (id: number) => {
+  return request.post(`${PATH_PREFIX}approve/${id}`);
+};
+
+export const rejectProposal = (id: number, reason: string) => {
+  return request.post(`${PATH_PREFIX}approve/${id}`, {
+    reason,
+    metaforo_access_token: localStorage.getItem(METAFORO_TOKEN),
+  });
+};
