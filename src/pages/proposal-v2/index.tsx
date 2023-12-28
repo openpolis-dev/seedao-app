@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import { ContainerPadding } from 'assets/styles/global';
-import { IBaseProposal, ProposalStatus, PROPOSAL_TYPES, PROPOSAL_TIME } from 'type/proposal.type';
 import SeeSelect from 'components/common/select';
 import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
@@ -13,7 +12,7 @@ import { Link } from 'react-router-dom';
 import HistoryAction from 'components/proposalCom/historyAction';
 import requests from 'requests';
 import { useAuthContext, AppActionType } from 'providers/authProvider';
-import { ISimpleProposal } from 'type/proposalV2.type';
+import { ISimpleProposal, ProposalState } from 'type/proposalV2.type';
 import useProposalCategories from 'hooks/useProposalCategories';
 
 const PAGE_SIZE = 10;
@@ -34,11 +33,12 @@ export default function ProposalIndexPage() {
   ];
   // filter status
   const STATUS_OPTIONS: ISelectItem[] = [
-    { value: ProposalStatus.Voting, label: t('Proposal.Voting') },
-    { value: ProposalStatus.Draft, label: t('Proposal.Draft') },
-    { value: ProposalStatus.Rejected, label: t('Proposal.Rejected') },
-    { value: ProposalStatus.WithDrawn, label: t('Proposal.WithDrawn') },
-    { value: ProposalStatus.End, label: t('Proposal.End') },
+    { value: ProposalState.Voting, label: t('Proposal.Voting') },
+    { value: ProposalState.Draft, label: t('Proposal.Draft') },
+    { value: ProposalState.Rejected, label: t('Proposal.Rejected') },
+    { value: ProposalState.Withdrawn, label: t('Proposal.WithDrawn') },
+    { value: ProposalState.VotingPassed, label: t('Proposal.Passed') },
+    { value: ProposalState.VotingFailed, label: t('Proposal.Failed') },
   ];
 
   const [selectCategory, setSelectCategory] = useState<ISelectItem>();

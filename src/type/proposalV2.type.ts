@@ -1,9 +1,12 @@
 export enum ProposalState {
   PendingSubmit = 'pending_submit',
   Draft = 'draft',
+  Withdrawn = 'withdrawn',
   Approved = 'approved',
   Rejected = 'rejected',
-  End = 'end',
+  Voting = 'voting',
+  VotingPassed = 'voting_passed',
+  VotingFailed = 'voting_failed',
 }
 
 export interface IBaseCategory {

@@ -32,9 +32,13 @@ export default function ProposalStateTag({ state }: { state?: ProposalState }) {
       color = 'yellow';
       text = t('Proposal.PendingCommit');
       break;
-    case ProposalState.End:
+    case ProposalState.VotingPassed:
       color = '#ddd';
-      text = t('Proposal.End');
+      text = t('Proposal.Passed');
+      break;
+    case ProposalState.VotingFailed:
+      color = '#ddd';
+      text = t('Proposal.Failed');
       break;
     default:
       text = '';
