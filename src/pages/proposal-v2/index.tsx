@@ -14,16 +14,18 @@ import HistoryAction from 'components/proposalCom/historyAction';
 import requests from 'requests';
 import { useAuthContext, AppActionType } from 'providers/authProvider';
 import { ISimpleProposal } from 'type/proposalV2.type';
+import useProposalCategories from 'hooks/useProposalCategories';
 
 const PAGE_SIZE = 10;
 
 export default function ProposalIndexPage() {
   const { t } = useTranslation();
   const { state, dispatch } = useAuthContext();
-  // filter types
-  const TYPE_OPTIONS: ISelectItem[] = PROPOSAL_TYPES.map((tp) => ({
-    value: tp.id,
-    label: t(tp.name as any),
+  const proposalCategories = useProposalCategories();
+  // filter category
+  const CATEGORY_OPTIONS: ISelectItem[] = proposalCategories.map((c) => ({
+    value: c.id,
+    label: c.name,
   }));
   // filter time
   const TIME_OPTIONS: ISelectItem[] = [
@@ -40,7 +42,6 @@ export default function ProposalIndexPage() {
   ];
 
   const [selectCategory, setSelectCategory] = useState<ISelectItem>();
-  const [selectType, setSelectType] = useState<ISelectItem>();
   const [selectTime, setSelectTime] = useState<ISelectItem>(TIME_OPTIONS[0]);
   const [selectStatus, setSelectStatus] = useState<ISelectItem>();
 
@@ -64,8 +65,12 @@ export default function ProposalIndexPage() {
         state: selectStatus?.value,
         category_id: selectCategory?.value,
       });
-      setProposalList([...proposalList, ...resp.data.rows]);
       setPage(_page + 1);
+      if (_page === 1) {
+        setProposalList(resp.data.rows);
+      } else {
+        setProposalList([...proposalList, ...resp.data.rows]);
+      }
       setHasMore(resp.data.rows.length >= PAGE_SIZE);
     } catch (error) {
       logError('getAllProposals failed', error);
@@ -77,7 +82,7 @@ export default function ProposalIndexPage() {
   useEffect(() => {
     getProposalList(true);
     setShowHistory(false);
-  }, [selectType, selectTime, selectStatus, searchKeyword]);
+  }, [selectCategory, selectTime, selectStatus, searchKeyword]);
 
   const onKeyUp = (e: any) => {
     if (e.keyCode === 13) {
@@ -95,10 +100,10 @@ export default function ProposalIndexPage() {
         <FilterBox>
           <SeeSelect
             width="180px"
-            options={TYPE_OPTIONS}
+            options={CATEGORY_OPTIONS}
             isSearchable={false}
             placeholder={t('Proposal.TypeSelectHint')}
-            onChange={(v: ISelectItem) => setSelectType(v)}
+            onChange={(v: ISelectItem) => setSelectCategory(v)}
           />
           <SeeSelect
             width="120px"

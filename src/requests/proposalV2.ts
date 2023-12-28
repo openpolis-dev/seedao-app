@@ -10,7 +10,7 @@ interface IProposalPageParams extends IPageParams {
 }
 
 export const getProposalCategoryList = (): Promise<ResponseData<IBaseCategory[]>> => {
-  return request.get(`${PATH_PREFIX}proposal_categories`);
+  return request.get(`/proposal_categories/`);
 };
 
 export const getProposalList = (data: IProposalPageParams): Promise<ResponseData<IPageResponse<ISimpleProposal>>> => {
