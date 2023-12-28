@@ -71,7 +71,7 @@ export default function ThreadPage() {
         const res = await requests.proposalV2.getProposalDetail(Number(id));
         setData(res.data);
         setContentBlocks(res.data.content_blocks);
-        // setPosts(res.data.thread.posts);
+        setPosts(res.data.comments);
         // setTotalPostsCount(res.data.thread.posts_count);
         // setTotalEditCount(res.data.thread.edit_history?.count ?? 0);
         // setEditHistoryList(res.data.thread.edit_history?.lists ?? []);

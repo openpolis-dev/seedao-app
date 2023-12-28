@@ -39,4 +39,5 @@ export interface IProposal extends ISimpleProposal {
   reject_reason: string;
   is_rejected: string;
   arweave: string;
+  comments: any[];
 }
