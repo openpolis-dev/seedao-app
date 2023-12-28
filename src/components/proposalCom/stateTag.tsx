@@ -2,7 +2,16 @@ import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { ProposalState } from 'type/proposalV2.type';
 
-export default function ProposalStateTag({ state }: { state: ProposalState }) {
+export const getRealState = (state?: ProposalState): ProposalState | undefined => {
+  if (state === ProposalState.Approved) {
+    // TODO check vote status
+    return state;
+  } else if (state) {
+    return state;
+  }
+};
+
+export default function ProposalStateTag({ state }: { state?: ProposalState }) {
   const { t } = useTranslation();
   let color: string;
   let text: string;

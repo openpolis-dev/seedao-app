@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { formatDate } from 'utils/time';
 import { useAuthContext } from 'providers/authProvider';
 import { ISimpleProposal } from 'type/proposalV2.type';
+import ProposalStateTag, { getRealState } from './stateTag';
 
 const CardBody = styled.div``;
 
@@ -20,6 +21,7 @@ export default function SimpleProposalItem({ data, isReview }: { data: ISimplePr
   const borderStyle = useMemo(() => {
     return theme ? 'unset' : 'none';
   }, [theme]);
+  const currentState = getRealState(data.state);
   return (
     <CardBox key={data.id} border={borderStyle}>
       <div onClick={openProposal}>
@@ -41,6 +43,7 @@ export default function SimpleProposalItem({ data, isReview }: { data: ISimplePr
         </CardHeaderStyled>
         <CardBody>
           <Title>{data.title}</Title>
+          <ProposalStateTag state={currentState} />
         </CardBody>
       </div>
     </CardBox>
