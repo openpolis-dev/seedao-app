@@ -165,7 +165,7 @@ export default function ThreadPage() {
           <ThreadInfo>{currentState && <ProposalStateTag state={currentState} />}</ThreadInfo>
         </ThreadCenter>
         {data?.arweave && (
-          <StoreHash href={`https://arweave.net/tx/${data?.arveave}/data.html`} target="_blank">
+          <StoreHash href={`https://arweave.net/tx/${data?.arweave}/data.html`} target="_blank">
             Arweave Hash {data?.arweave}
           </StoreHash>
         )}
