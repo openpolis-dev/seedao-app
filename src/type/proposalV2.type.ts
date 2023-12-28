@@ -28,5 +28,5 @@ export interface IContentBlock {
 export interface IProposal extends ISimpleProposal {
   reviewer: string;
   proposal_category_id: number;
-  content_block: IContentBlock[];
+  content_blocks: IContentBlock[];
 }

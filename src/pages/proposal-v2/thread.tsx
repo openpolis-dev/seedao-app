@@ -8,11 +8,13 @@ import ReplyComponent from 'components/proposalCom/reply';
 import ReviewProposalComponent from 'components/proposalCom/reviewProposalComponent';
 import EditActionHistory from 'components/proposalCom/editActionhistory';
 import { IBaseProposal, EditHistoryType } from 'type/proposal.type';
+import { IContentBlock, IProposal } from 'type/proposalV2.type';
 import { useAuthContext, AppActionType } from 'providers/authProvider';
 import requests from 'requests';
 import { formatDate } from 'utils/time';
 import BackerNav from 'components/common/backNav';
 import MoreSelectAction from 'components/proposalCom/moreSelectAction';
+import { MdPreview } from 'md-editor-rt';
 
 enum BlockContentType {
   Reply = 1,
@@ -28,14 +30,18 @@ export default function ThreadPage() {
   const review = search.get('review') === '';
   const { id } = useParams();
   const { t } = useTranslation();
-  const { dispatch } = useAuthContext();
+  const {
+    dispatch,
+    state: { theme },
+  } = useAuthContext();
 
   const [blockType, setBlockType] = useState<BlockContentType>(BlockContentType.Reply);
-  const [data, setData] = useState<IBaseProposal>();
+  const [data, setData] = useState<IProposal>();
   const [posts, setPosts] = useState<any[]>([]);
   const [totalPostsCount, setTotalPostsCount] = useState<number>(0);
   const [totalEditCount, setTotalEditCount] = useState<number>(0);
   const [editHistoryList, setEditHistoryList] = useState<EditHistoryType[]>([]);
+  const [contentBlocks, setContentBlocks] = useState<IContentBlock[]>([]);
 
   useEffect(() => {
     if (state) {
@@ -45,12 +51,13 @@ export default function ThreadPage() {
       // TODO
       dispatch({ type: AppActionType.SET_LOADING, payload: true });
       try {
-        const res = await requests.proposal.getProposalDetail(Number(id));
-        setData(res.data.thread);
-        setPosts(res.data.thread.posts);
-        setTotalPostsCount(res.data.thread.posts_count);
-        setTotalEditCount(res.data.thread.edit_history?.count ?? 0);
-        setEditHistoryList(res.data.thread.edit_history?.lists ?? []);
+        const res = await requests.proposalV2.getProposalDetail(Number(id));
+        setData(res.data);
+        setContentBlocks(res.data.content_blocks);
+        // setPosts(res.data.thread.posts);
+        // setTotalPostsCount(res.data.thread.posts_count);
+        // setTotalEditCount(res.data.thread.edit_history?.count ?? 0);
+        // setEditHistoryList(res.data.thread.edit_history?.lists ?? []);
       } catch (error) {
         logError('get proposal detail error:', error);
       } finally {
@@ -97,9 +104,9 @@ export default function ThreadPage() {
         <div className="title">{data?.title}</div>
         <ThreadCenter>
           <UserBox>
-            <img src={data?.user.photo_url} alt="" />
-            <span>{data?.user.username}</span>
-            <div className="date">{formatDate(new Date(data?.updated_at || ''))}</div>
+            {/* <img src={data?.user.photo_url} alt="" />
+            <span>{data?.user.username}</span> */}
+            {data?.create_ts && <div className="date">{formatDate(new Date(data?.create_ts * 1000 || ''))}</div>}
           </UserBox>
           <ThreadInfo></ThreadInfo>
         </ThreadCenter>
@@ -107,6 +114,14 @@ export default function ThreadPage() {
           Arweave Hash {currentStoreHash}
         </StoreHash>
       </ThreadHead>
+      {contentBlocks.map((block) => (
+        <ProposalContentBlock key={block.title}>
+          <div className="title">{block.title}</div>
+          <div className="content">
+            <MdPreview theme={theme ? 'dark' : 'light'} modelValue={block.content || ''} />
+          </div>
+        </ProposalContentBlock>
+      ))}
       <ThreadToolsBar>
         <li>{t('Proposal.Vote')}</li>
         <li onClick={openComment}>{t('Proposal.Comment')}</li>
@@ -121,7 +136,7 @@ export default function ThreadPage() {
           />
         </li>
       </ThreadToolsBar>
-      {data?.polls?.[0] && <ProposalVote poll={data.polls[0]} />}
+      {/* {data?.polls?.[0] && <ProposalVote poll={data.polls[0]} />} */}
       <ReplyAndHistoryBlock>
         <BlockTab>
           <li
@@ -214,5 +229,17 @@ const ThreadToolsBar = styled.ul`
   margin-bottom: 20px;
   li {
     cursor: pointer;
+  }
+`;
+
+const ProposalContentBlock = styled.div`
+  margin-block: 16px;
+  .title {
+    background-color: var(--bs-primary);
+    line-height: 40px;
+    border-radius: 8px;
+    color: #fff;
+    padding-inline: 16px;
+    font-size: 16px;
   }
 `;
