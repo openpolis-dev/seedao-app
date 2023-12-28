@@ -116,8 +116,6 @@ export default function RegisterSNSStep2() {
       if (user_proof && !hadMintByWhitelist && whitelistIsOpen) {
         txHash = (await handleTransaction(TX_ACTION.WHITE_MINT, { sns, secret, proof: user_proof })) as string;
       } else {
-        // approve
-        await approveToken();
         // check balance
         const token = await checkBalance(true, true);
         if (token) {
@@ -125,6 +123,9 @@ export default function RegisterSNSStep2() {
           dispatchSNS({ type: ACTIONS.CLOSE_LOADING });
           return;
         }
+
+        // approve
+        await approveToken();
 
         txHash = (await handleTransaction(TX_ACTION.PAY_MINT, { sns, secret })) as string;
       }
