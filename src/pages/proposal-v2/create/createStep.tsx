@@ -9,6 +9,8 @@ import { saveOrSubmitProposal } from 'requests/proposalV2';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import useCheckMetaforoLogin from 'hooks/useCheckMetaforoLogin';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { Button } from 'react-bootstrap';
 
 const Box = styled.ul``;
 
@@ -27,9 +29,12 @@ const TitleBox = styled.div`
 
 export default function CreateStep() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const childRef = useRef(null);
   const [title, setTitle] = useState('');
   const [list, setList] = useState<any[]>([]);
+  const [submitType, setSubmitType] = useState<'save' | 'submit'>();
+
   const { dispatch } = useAuthContext();
   const checkMetaforoLogin = useCheckMetaforoLogin();
 
@@ -64,7 +69,7 @@ export default function CreateStep() {
       title,
       proposal_category_id: 41, // TODO hardcode for test
       content_blocks: list,
-      submit_to_metaforo: true,
+      submit_to_metaforo: submitType === 'submit',
     })
       .then((r) => {
         navigate(`/proposal-v2/thread/${r.data.id}`);
@@ -80,8 +85,17 @@ export default function CreateStep() {
     setList([...arr]);
   };
 
-  const AllSubmit = () => {
+  const allSubmit = () => {
     (childRef.current as any).submitForm();
+  };
+
+  const handleSave = () => {
+    setSubmitType('save');
+    setTimeout(allSubmit, 0);
+  };
+  const handleSubmit = () => {
+    setSubmitType('submit');
+    setTimeout(allSubmit, 0);
   };
   return (
     <Box>
@@ -115,7 +129,8 @@ export default function CreateStep() {
         ref={childRef}
         onSubmitData={handleFormSubmit}
       />
-      <button onClick={() => AllSubmit()}>after</button>
+      <Button onClick={handleSave}>{t('Proposal.SaveProposal')}</Button>
+      <Button onClick={handleSubmit}>{t('Proposal.SubmitProposal')}</Button>
     </Box>
   );
 }

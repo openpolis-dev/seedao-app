@@ -4,7 +4,7 @@ import { ContainerPadding } from 'assets/styles/global';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { useEffect, useState, useRef } from 'react';
-import { IContentBlock, IProposal } from 'type/proposalV2.type';
+import { IContentBlock, IProposal, ProposalState } from 'type/proposalV2.type';
 import { useAuthContext, AppActionType } from 'providers/authProvider';
 import { Template } from '@seedao/proposal';
 import { MdEditor } from 'md-editor-rt';
@@ -12,6 +12,7 @@ import DataSource from './create/json/datasource.json';
 import initialItems from './create/json/initialItem';
 import useCheckMetaforoLogin from 'hooks/useCheckMetaforoLogin';
 import { saveOrSubmitProposal, getProposalDetail } from 'requests/proposalV2';
+import { Button } from 'react-bootstrap';
 
 export default function EditProposal() {
   const { t } = useTranslation();
@@ -25,6 +26,7 @@ export default function EditProposal() {
   const [data, setData] = useState<IProposal>();
   const [contentBlocks, setContentBlocks] = useState<IContentBlock[]>([]);
   const [title, setTitle] = useState('');
+  const [submitType, setSubmitType] = useState<'save' | 'submit'>();
 
   const childRef = useRef(null);
 
@@ -79,14 +81,23 @@ export default function EditProposal() {
       title,
       proposal_category_id: data.proposal_category_id,
       content_blocks: contentBlocks,
-      submit_to_metaforo: true,
+      submit_to_metaforo: submitType === 'submit',
     })
       .then((r) => {
-        navigate(`/proposal-v2/thread/${id}`);
+        navigate(`/proposal-v2/thread/${r.data.id}`);
       })
       .finally(() => {
         dispatch({ type: AppActionType.SET_LOADING, payload: false });
       });
+  };
+
+  const handleSave = () => {
+    setSubmitType('save');
+    setTimeout(allSubmit, 0);
+  };
+  const handleSubmit = () => {
+    setSubmitType('submit');
+    setTimeout(allSubmit, 0);
   };
 
   return (
@@ -122,7 +133,10 @@ export default function EditProposal() {
         ref={childRef}
         onSubmitData={handleFormSubmit}
       />
-      <button onClick={() => allSubmit()}>submit</button>
+      {data?.state === ProposalState.PendingSubmit && (
+        <Button onClick={handleSave}>{t('Proposal.SaveProposal')}</Button>
+      )}
+      <Button onClick={handleSubmit}>{t('Proposal.SubmitProposal')}</Button>
     </Page>
   );
 }

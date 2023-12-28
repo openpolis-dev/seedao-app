@@ -103,7 +103,9 @@
     "Withdrawn": "撤回",
     "Delete": "删除",
     "Reply": "回复",
-    "EditProposalNav": "编辑提案"
+    "EditProposalNav": "编辑提案",
+    "SaveProposal": "保存",
+    "SubmitProposal": "提交"
   },
   "Project": {
     "ProjectOrGuildItem": "还没有填写相关介绍信息～",

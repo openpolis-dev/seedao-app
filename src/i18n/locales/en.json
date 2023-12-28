@@ -103,7 +103,9 @@
     "Withdrawn": "Withdrawn",
     "Delete": "Delete",
     "Reply": "Reply",
-    "EditProposalNav": "Edit Proposal"
+    "EditProposalNav": "Edit Proposal",
+    "SaveProposal": "Save",
+    "SubmitProposal": "Submit"
   },
   "Project": {
     "ProjectOrGuildItem": "Nothing left here.",
