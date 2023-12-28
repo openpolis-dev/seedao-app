@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { useState } from 'react';
 import RejectProposalModal from 'components/modals/rejectProposalModal';
+import ConfirmModal from 'components/modals/confirmModal';
 import { ProposalState } from 'type/proposalV2.type';
 import { rejectProposal, approveProposal } from 'requests/proposalV2';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
@@ -14,6 +15,7 @@ interface IProps {
 
 export default function ReviewProposalComponent({ id, onUpdateStatus }: IProps) {
   const { t } = useTranslation();
+  const [showApproveModal, setShowApproveModal] = useState(false);
   const [showRejectModal, setShowRejectModal] = useState(false);
 
   const { dispatch } = useAuthContext();
@@ -47,6 +49,10 @@ export default function ReviewProposalComponent({ id, onUpdateStatus }: IProps) 
         dispatch({ type: AppActionType.SET_LOADING, payload: false });
       });
   };
+  const onConfirmApprove = () => {
+    setShowRejectModal(false);
+    handleApprove();
+  };
   const onConfirmReject = (reason: string) => {
     setShowRejectModal(false);
     handleReject(reason);
@@ -54,10 +60,17 @@ export default function ReviewProposalComponent({ id, onUpdateStatus }: IProps) 
 
   return (
     <OperateBox>
-      <Button onClick={handleApprove}>{t('Proposal.Approve')}</Button>
+      <Button onClick={() => setShowApproveModal(true)}>{t('Proposal.Approve')}</Button>
       <Button variant="outline-primary" onClick={() => setShowRejectModal(true)}>
         {t('Proposal.Reject')}
       </Button>
+      {showApproveModal && (
+        <ConfirmModal
+          msg={t('Proposal.ConfirmApproveProposal')}
+          onClose={() => setShowApproveModal(false)}
+          onConfirm={onConfirmApprove}
+        />
+      )}
       {showRejectModal && (
         <RejectProposalModal closeModal={() => setShowRejectModal(false)} onConfirm={onConfirmReject} />
       )}

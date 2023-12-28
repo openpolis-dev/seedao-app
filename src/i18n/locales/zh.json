@@ -97,6 +97,7 @@
     "Send": "发送",
     "EmptyComment": "还没有评论哦，去发表⬇️",
     "ConfirmDeleteComment": "确定要删除该条评论吗？",
+    "ConfirmApproveProposal": "确定通过该提案的审核吗？",
     "NotSupportWallet": "该操作暂不支持使用{{wallet}}, 请切换使用其他钱包",
     "Vote": "投票",
     "Share": "分享",
