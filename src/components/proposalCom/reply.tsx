@@ -3,7 +3,7 @@ import React, { useEffect, useState, useImperativeHandle } from 'react';
 
 import CommetComponent from './comment';
 import { Avatar } from './comment';
-import { useAuthContext } from 'providers/authProvider';
+import { AppActionType, useAuthContext } from 'providers/authProvider';
 import publicJs from 'utils/publicJs';
 import DefaultAvatar from 'assets/Imgs/defaultAvatarT.png';
 import QuillEditor from './quillEditor';
@@ -15,18 +15,21 @@ import { useTranslation } from 'react-i18next';
 import NoItem from 'components/noItem';
 import ConfirmModal from 'components/modals/confirmModal';
 import useCheckMetaforoLogin from 'hooks/useCheckMetaforoLogin';
+import { deleteCommet, addComment } from 'requests/proposalV2';
 
 interface IProps {
+  id: number;
   hideReply?: boolean;
   posts: any[];
 }
 export interface IReplyOutputProps {
   showReply: () => void;
 }
-const ReplyComponent = React.forwardRef<IReplyOutputProps, IProps>(({ hideReply, posts }, ref) => {
+const ReplyComponent = React.forwardRef<IReplyOutputProps, IProps>(({ id, hideReply, posts }, ref) => {
   const { t } = useTranslation();
   const {
     state: { userData },
+    dispatch,
   } = useAuthContext();
 
   const checkMetaforoLogin = useCheckMetaforoLogin();
@@ -100,15 +103,38 @@ const ReplyComponent = React.forwardRef<IReplyOutputProps, IProps>(({ hideReply,
   const handleReply = async () => {
     const canReply = await checkMetaforoLogin();
     if (canReply) {
-      // TODO
+      dispatch({ type: AppActionType.SET_LOADING, payload: true });
+      addComment(id, replyContent, replyId)
+        .then(() => {
+          setReplyId(undefined);
+          setQuillContent('');
+          setReplyContent('');
+          // TODO update
+        })
+        .catch((error) => {
+          logError(`add proposal-${id} comment-${replyId} failed`, error);
+        })
+        .finally(() => {
+          dispatch({ type: AppActionType.SET_LOADING, payload: false });
+        });
     }
   };
 
   const handleDeletePost = async () => {
     const canDelete = await checkMetaforoLogin();
-    if (canDelete) {
-      // TODO
-      setTobeDeletedId(undefined);
+    if (canDelete && toBeDeleteId) {
+      dispatch({ type: AppActionType.SET_LOADING, payload: true });
+      deleteCommet(id, toBeDeleteId)
+        .then(() => {
+          setTobeDeletedId(undefined);
+          // TODO update
+        })
+        .catch((error) => {
+          logError(`delete proposal-${id} comment-${toBeDeleteId} failed`, error);
+        })
+        .finally(() => {
+          dispatch({ type: AppActionType.SET_LOADING, payload: false });
+        });
     }
   };
 

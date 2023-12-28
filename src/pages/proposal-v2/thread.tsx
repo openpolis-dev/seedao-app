@@ -208,7 +208,9 @@ export default function ThreadPage() {
             {t('Proposal.EditHistory')}
           </li>
         </BlockTab>
-        {blockType === BlockContentType.Reply && <ReplyComponent hideReply={review} posts={posts} ref={replyRef} />}
+        {blockType === BlockContentType.Reply && (
+          <ReplyComponent id={Number(id)} hideReply={review} posts={posts} ref={replyRef} />
+        )}
         {blockType === BlockContentType.History && <EditActionHistory data={editHistoryList} />}
       </ReplyAndHistoryBlock>
       {review && <ReviewProposalComponent id={Number(id)} onUpdateStatus={onUpdateStatus} />}
