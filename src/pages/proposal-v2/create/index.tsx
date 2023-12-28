@@ -6,11 +6,11 @@ import CreateProposalProvider from './store';
 import ChooseTypeStep from './chooseType';
 import ChooseTemplateStep from './chooseTemplate';
 import CreateStep from './createStep';
-import { useProposalContext } from './store';
+import { useCreateProposalContext } from './store';
 
 const CreateProposalSteps = () => {
   const { t } = useTranslation();
-  const { currentStep, proposalType, goBackStepOne } = useProposalContext();
+  const { currentStep, proposalType, goBackStepOne } = useCreateProposalContext();
 
   const showstep = () => {
     switch (currentStep) {

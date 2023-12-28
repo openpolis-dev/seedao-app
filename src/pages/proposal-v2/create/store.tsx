@@ -60,6 +60,6 @@ const CreateProposalProvider: React.FC<{ children: React.ReactNode }> = ({ child
   );
 };
 
-export const useProposalContext = () => ({ ...useContext(context) });
+export const useCreateProposalContext = () => ({ ...useContext(context) });
 
 export default CreateProposalProvider;
