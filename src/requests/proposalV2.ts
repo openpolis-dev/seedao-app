@@ -1,5 +1,5 @@
 import request, { ResponseData } from './http';
-import { IProposal, ISimpleProposal, ProposalState } from 'type/proposalV2.type';
+import { IProposal, ISimpleProposal, ProposalState, IContentBlock } from 'type/proposalV2.type';
 
 const PATH_PREFIX = '/proposals/';
 
@@ -14,4 +14,16 @@ export const getProposalList = (data: IProposalPageParams): Promise<ResponseData
 
 export const getProposalDetail = (id: number): Promise<ResponseData<IProposal>> => {
   return request.get(`${PATH_PREFIX}show/${id}`);
+};
+
+type CreateProposalParamsType = {
+  title: string;
+  proposal_category_id: number;
+  content_blocks: IContentBlock[];
+  metaforo_access_token: string;
+  submit_to_metaforo: boolean;
+};
+
+export const saveOrSubmitProposal = (data: CreateProposalParamsType) => {
+  return request.post(`${PATH_PREFIX}create`, data);
 };
