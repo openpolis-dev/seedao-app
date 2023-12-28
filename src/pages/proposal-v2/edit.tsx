@@ -62,6 +62,20 @@ export default function EditProposal() {
     setContentBlocks([...arr]);
   };
 
+  useEffect(() => {
+    if (!data) {
+      return;
+    }
+    if (data?.state === ProposalState.PendingSubmit) {
+      return;
+    }
+    if ([ProposalState.Draft, ProposalState.Approved, ProposalState.Rejected].includes(data.state)) {
+      return;
+    }
+    // other state can not be edited
+    navigate('/proposal-v2');
+  }, [data]);
+
   const allSubmit = () => {
     (childRef.current as any).submitForm();
   };
