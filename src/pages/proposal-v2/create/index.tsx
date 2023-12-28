@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { ContainerPadding } from 'assets/styles/global';
 import BackerNav from 'components/common/backNav';
 import { useTranslation } from 'react-i18next';
-import ProposalProvider from './store';
+import CreateProposalProvider from './store';
 import ChooseTypeStep from './chooseType';
 import ChooseTemplateStep from './chooseTemplate';
 import CreateStep from './createStep';
@@ -49,9 +49,9 @@ const CreateProposalSteps = () => {
 export default function CreateProposalPage() {
   return (
     <Page>
-      <ProposalProvider>
+      <CreateProposalProvider>
         <CreateProposalSteps />
-      </ProposalProvider>
+      </CreateProposalProvider>
     </Page>
   );
 }

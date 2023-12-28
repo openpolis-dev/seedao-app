@@ -19,7 +19,7 @@ const context = createContext<ProposalContext>({
   goBackStepOne: () => {},
 });
 
-const ProposalProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const CreateProposalProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [currentStep, setCurrentStep] = useState(1);
   const [proposalType, setProposalType] = useState<ProposalType>();
   const [template, setTemplate] = useState<ProposalTemplateType>();
@@ -62,4 +62,4 @@ const ProposalProvider: React.FC<{ children: React.ReactNode }> = ({ children })
 
 export const useProposalContext = () => ({ ...useContext(context) });
 
-export default ProposalProvider;
+export default CreateProposalProvider;
