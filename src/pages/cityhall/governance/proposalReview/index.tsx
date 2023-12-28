@@ -11,6 +11,8 @@ import ProposalItem from 'components/proposalCom/reviewProposalItem';
 import requests from 'requests';
 import { useAuthContext, AppActionType } from 'providers/authProvider';
 import NoItem from 'components/noItem';
+import useQuerySNS from 'hooks/useQuerySNS';
+import publicJs from 'utils/publicJs';
 
 const STATUS = [
   { name: 'Proposal.Draft', value: ProposalState.Draft },
@@ -34,6 +36,20 @@ export default function ProposalReview() {
   const [searchKeyword, setSearchKeyword] = useState('');
   const [inputKeyword, setInputKeyword] = useState('');
 
+  const { getMultiSNS } = useQuerySNS();
+
+  const [snsMap, setSnsMap] = useState<Map<string, string>>(new Map());
+
+  const handleSNS = async (wallets: string[]) => {
+    const sns_map = await getMultiSNS(wallets);
+    setSnsMap(sns_map);
+  };
+
+  const formatSNS = (wallet: string) => {
+    const name = snsMap.get(wallet) || wallet;
+    return name?.endsWith('.seedao') ? name : publicJs.AddressToShow(name, 4);
+  };
+
   const getProposalList = async (init?: boolean) => {
     //   TODO: get proposal list
     const _page = init ? 1 : page;
@@ -48,11 +64,15 @@ export default function ProposalReview() {
         q: searchKeyword,
       });
 
+      let list: ISimpleProposal[];
       if (_page === 1) {
-        setProposalList(resp.data.rows);
+        list = resp.data.rows;
       } else {
-        setProposalList([...proposalList, ...resp.data.rows]);
+        list = [...proposalList, ...resp.data.rows];
       }
+      setProposalList(list);
+      handleSNS(list.filter((d) => !!d.applicant).map((d) => d.applicant));
+
       setPage(_page + 1);
       setHasMore(resp.data.rows.length >= PAGE_SIZE);
     } catch (error) {
@@ -109,7 +129,7 @@ export default function ProposalReview() {
         loader={<></>}
       >
         {proposalList.map((p) => (
-          <ProposalItem key={p.id} data={p} isReview />
+          <ProposalItem key={p.id} data={p} isReview sns={formatSNS(p.applicant?.toLocaleLowerCase())} />
         ))}
         {proposalList.length === 0 && !loading && <NoItem />}
       </InfiniteScroll>

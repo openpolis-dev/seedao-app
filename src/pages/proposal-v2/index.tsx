@@ -15,6 +15,8 @@ import { useAuthContext, AppActionType } from 'providers/authProvider';
 import { ISimpleProposal, ProposalState } from 'type/proposalV2.type';
 import useProposalCategories from 'hooks/useProposalCategories';
 import NoItem from 'components/noItem';
+import useQuerySNS from 'hooks/useQuerySNS';
+import publicJs from 'utils/publicJs';
 
 const PAGE_SIZE = 10;
 
@@ -57,6 +59,20 @@ export default function ProposalIndexPage() {
   const [hasMore, setHasMore] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
 
+  const { getMultiSNS } = useQuerySNS();
+
+  const [snsMap, setSnsMap] = useState<Map<string, string>>(new Map());
+
+  const handleSNS = async (wallets: string[]) => {
+    const sns_map = await getMultiSNS(wallets);
+    setSnsMap(sns_map);
+  };
+
+  const formatSNS = (wallet: string) => {
+    const name = snsMap.get(wallet) || wallet;
+    return name?.endsWith('.seedao') ? name : publicJs.AddressToShow(name, 4);
+  };
+
   const getProposalList = async (init?: boolean) => {
     const _page = init ? 1 : page;
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
@@ -71,11 +87,15 @@ export default function ProposalIndexPage() {
         q: searchKeyword,
       });
       setPage(_page + 1);
+      let list: ISimpleProposal[];
       if (_page === 1) {
-        setProposalList(resp.data.rows);
+        list = resp.data.rows;
       } else {
-        setProposalList([...proposalList, ...resp.data.rows]);
+        list = [...proposalList, ...resp.data.rows];
       }
+      setProposalList(list);
+      handleSNS(list.filter((d) => !!d.applicant).map((d) => d.applicant));
+
       setHasMore(resp.data.rows.length >= PAGE_SIZE);
     } catch (error) {
       logError('getAllProposals failed', error);
@@ -155,7 +175,7 @@ export default function ProposalIndexPage() {
           loader={<></>}
         >
           {proposalList.map((p) => (
-            <SimpleProposalItem key={p.id} data={p} />
+            <SimpleProposalItem key={p.id} data={p} sns={formatSNS(p.applicant?.toLocaleLowerCase())} />
           ))}
           {proposalList.length === 0 && !loading && <NoItem />}
         </InfiniteScroll>

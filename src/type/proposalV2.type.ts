@@ -20,6 +20,7 @@ export interface ISimpleProposal {
   id: number;
   title: string;
   applicant: string;
+  applicant_avatar: string;
   category_name: string;
   state: ProposalState;
   create_ts: number;
