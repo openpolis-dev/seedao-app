@@ -313,7 +313,7 @@ const items: MenuItemType[] = [
         active: GovernImgActive,
       },
     },
-    link: { href: '/proposal' },
+    link: { href: '/proposal-v2' },
   },
   {
     title: 'menus.Pub',
