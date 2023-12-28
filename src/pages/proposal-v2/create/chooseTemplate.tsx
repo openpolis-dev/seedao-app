@@ -2,11 +2,11 @@ import styled from 'styled-components';
 import { useEffect, useState } from 'react';
 import { ProposalTemplateType } from 'type/proposal.type';
 import { useTranslation } from 'react-i18next';
-import { useProposalContext } from './store';
+import { useCreateProposalContext } from './store';
 
 export default function ChooseTemplateStep() {
   const { t } = useTranslation();
-  const { proposalType, chooseTemplate } = useProposalContext();
+  const { proposalType, chooseTemplate } = useCreateProposalContext();
   const [templates, setTemplates] = useState<ProposalTemplateType[]>([]);
 
   useEffect(() => {

@@ -1,11 +1,11 @@
 import styled from 'styled-components';
-import { useProposalContext } from './store';
+import { useCreateProposalContext } from './store';
 import { useTranslation } from 'react-i18next';
 import { PROPOSAL_TYPES, ProposalType } from 'type/proposal.type';
 
 export default function ChooseTypeStep() {
   const { t } = useTranslation();
-  const { chooseProposalType } = useProposalContext();
+  const { chooseProposalType } = useCreateProposalContext();
 
   const onChooseType = (tp: ProposalType) => {
     chooseProposalType(tp);
