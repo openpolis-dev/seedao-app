@@ -1,10 +1,10 @@
 import styled from 'styled-components';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSearchParams, useParams, useLocation, useNavigate } from 'react-router-dom';
 import { ContainerPadding } from 'assets/styles/global';
 import ProposalVote from 'components/proposalCom/vote';
-import ReplyComponent from 'components/proposalCom/reply';
+import ReplyComponent, { IReplyOutputProps } from 'components/proposalCom/reply';
 import ReviewProposalComponent from 'components/proposalCom/reviewProposalComponent';
 import EditActionHistory from 'components/proposalCom/editActionhistory';
 import { IBaseProposal, EditHistoryType } from 'type/proposal.type';
@@ -17,6 +17,7 @@ import MoreSelectAction from 'components/proposalCom/moreSelectAction';
 import { MdPreview } from 'md-editor-rt';
 import ProposalStateTag, { getRealState } from 'components/proposalCom/stateTag';
 import useProposalCategories from 'hooks/useProposalCategories';
+import useCheckMetaforoLogin from 'hooks/useCheckMetaforoLogin';
 
 enum BlockContentType {
   Reply = 1,
@@ -38,6 +39,7 @@ export default function ThreadPage() {
     state: { theme },
   } = useAuthContext();
   const proposalCategories = useProposalCategories();
+  const checkMetaforoLogin = useCheckMetaforoLogin();
 
   const [blockType, setBlockType] = useState<BlockContentType>(BlockContentType.Reply);
   const [data, setData] = useState<IProposal>();
@@ -47,6 +49,8 @@ export default function ThreadPage() {
   const [editHistoryList, setEditHistoryList] = useState<EditHistoryType[]>([]);
   const [contentBlocks, setContentBlocks] = useState<IContentBlock[]>([]);
   const currentState = getRealState(data?.state);
+
+  const replyRef = useRef<IReplyOutputProps>(null);
 
   useEffect(() => {
     if (state) {
@@ -77,7 +81,13 @@ export default function ThreadPage() {
   };
 
   const openComment = () => {
-    // TODO
+    if (blockType !== BlockContentType.Reply) {
+      setBlockType(BlockContentType.Reply);
+    }
+    setTimeout(() => {
+      replyRef.current?.showReply();
+    }, 0);
+    checkMetaforoLogin();
   };
 
   const handleEdit = () => {
@@ -173,7 +183,7 @@ export default function ThreadPage() {
             {t('Proposal.EditHistory')}
           </li>
         </BlockTab>
-        {blockType === BlockContentType.Reply && <ReplyComponent hideReply={review} posts={posts} />}
+        {blockType === BlockContentType.Reply && <ReplyComponent hideReply={review} posts={posts} ref={replyRef} />}
         {blockType === BlockContentType.History && <EditActionHistory data={editHistoryList} />}
       </ReplyAndHistoryBlock>
       {review && <ReviewProposalComponent onUpdateStatus={onUpdateStatus} />}

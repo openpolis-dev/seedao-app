@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useImperativeHandle } from 'react';
 
 import CommetComponent from './comment';
 import { Avatar } from './comment';
@@ -20,8 +20,10 @@ interface IProps {
   hideReply?: boolean;
   posts: any[];
 }
-
-export default function ReplyComponent({ hideReply, posts }: IProps) {
+export interface IReplyOutputProps {
+  showReply: () => void;
+}
+const ReplyComponent = React.forwardRef<IReplyOutputProps, IProps>(({ hideReply, posts }, ref) => {
   const { t } = useTranslation();
   const {
     state: { userData },
@@ -110,6 +112,12 @@ export default function ReplyComponent({ hideReply, posts }: IProps) {
     }
   };
 
+  useImperativeHandle(ref, () => ({
+    showReply: () => {
+      setOpenReply(true);
+    },
+  }));
+
   return (
     <ReplyComponentStyle>
       {posts.length === 0 && <NoItem text={t('Proposal.EmptyComment')}></NoItem>}
@@ -164,7 +172,9 @@ export default function ReplyComponent({ hideReply, posts }: IProps) {
       )}
     </ReplyComponentStyle>
   );
-}
+});
+
+export default ReplyComponent;
 
 const ReplyComponentStyle = styled.div``;
 
