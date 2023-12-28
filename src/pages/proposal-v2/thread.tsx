@@ -81,7 +81,7 @@ export default function ThreadPage() {
   const handleEdit = () => {
     // TODO
     console.log('edit');
-    navigate(`/proposal-v2/edit/${id}`);
+    navigate(`/proposal-v2/edit/${id}`, { state: data });
   };
   const handlWithdraw = () => {
     // TODO

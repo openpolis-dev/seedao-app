@@ -27,8 +27,8 @@ export default function ProposalIndexPage() {
   }));
   // filter time
   const TIME_OPTIONS: ISelectItem[] = [
-    { value: 'latest', label: t('Proposal.TheNeweset') },
-    { value: 'old', label: t('Proposal.TheOldest') },
+    { value: 'desc', label: t('Proposal.TheNeweset') },
+    { value: 'asc', label: t('Proposal.TheOldest') },
   ];
   // filter status
   const STATUS_OPTIONS: ISelectItem[] = [
@@ -39,6 +39,7 @@ export default function ProposalIndexPage() {
     { value: ProposalStatus.End, label: t('Proposal.End') },
   ];
 
+  const [selectCategory, setSelectCategory] = useState<ISelectItem>();
   const [selectType, setSelectType] = useState<ISelectItem>();
   const [selectTime, setSelectTime] = useState<ISelectItem>(TIME_OPTIONS[0]);
   const [selectStatus, setSelectStatus] = useState<ISelectItem>();
@@ -58,8 +59,10 @@ export default function ProposalIndexPage() {
       const resp = await requests.proposalV2.getProposalList({
         page: _page,
         size: PAGE_SIZE,
-        sort_order: 'desc',
+        sort_order: selectTime.value,
         sort_field: 'create_ts',
+        state: selectStatus?.value,
+        category_id: selectCategory?.value,
       });
       setProposalList([...proposalList, ...resp.data.rows]);
       setPage(_page + 1);
