@@ -13,7 +13,7 @@ const networkConfig = getConfig().NETWORK;
 
 export default function useCheckMetaforoLogin() {
   const {
-    state: { metaforoToken, wallet_type, account, provider },
+    state: { metaforoToken, wallet_type, account, provider, userData },
     dispatch,
   } = useAuthContext();
 
@@ -48,8 +48,8 @@ export default function useCheckMetaforoLogin() {
   };
 
   const checkMetaforoLogin = async () => {
-    // TODO: check login
-    if (!account) {
+    if (!account || !userData) {
+      dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: true });
       return;
     }
 
