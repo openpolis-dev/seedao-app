@@ -21,6 +21,7 @@ import useCheckMetaforoLogin from 'hooks/useCheckMetaforoLogin';
 import publicJs from 'utils/publicJs';
 import useQuerySNS from 'hooks/useQuerySNS';
 import DefaultAvatarIcon from 'assets/Imgs/defaultAvatar.png';
+import ConfirmModal from 'components/modals/confirmModal';
 
 enum BlockContentType {
   Reply = 1,
@@ -55,6 +56,8 @@ export default function ThreadPage() {
 
   const [applicantSNS, setApplicantSNS] = useState('');
   const [applicantAvatar, setApplicantAvatar] = useState(DefaultAvatarIcon);
+
+  const [showConfirmWithdraw, setShowConfirmWithdraw] = useState(false);
 
   const { getMultiSNS } = useQuerySNS();
 
@@ -121,8 +124,20 @@ export default function ThreadPage() {
     navigate(`/proposal-v2/edit/${id}`, { state: data });
   };
   const handlWithdraw = () => {
-    // TODO
-    console.log('withdrawn');
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+
+    requests.proposalV2
+      .withdrawProposal(Number(id))
+      .then(() => {
+        setShowConfirmWithdraw(false);
+        setData({ ...data!, state: ProposalState.Withdrawn });
+      })
+      .catch((error: any) => {
+        logError(`withdrawProposal-${id} failed`, error);
+      })
+      .finally(() => {
+        dispatch({ type: AppActionType.SET_LOADING, payload: false });
+      });
   };
 
   const handleClickMoreAction = (action: string) => {
@@ -131,7 +146,7 @@ export default function ThreadPage() {
         handleEdit();
         break;
       case 'withdrawn':
-        handlWithdraw();
+        setShowConfirmWithdraw(true);
         break;
     }
   };
@@ -222,6 +237,13 @@ export default function ThreadPage() {
         {blockType === BlockContentType.History && <EditActionHistory data={editHistoryList} />}
       </ReplyAndHistoryBlock>
       {review && <ReviewProposalComponent id={Number(id)} onUpdateStatus={onUpdateStatus} />}
+      {showConfirmWithdraw && (
+        <ConfirmModal
+          msg={t('Proposal.ConfirmWithdrawProposal')}
+          onClose={() => setShowConfirmWithdraw(false)}
+          onConfirm={handlWithdraw}
+        />
+      )}
     </Page>
   );
 }
