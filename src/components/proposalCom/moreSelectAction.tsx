@@ -24,7 +24,7 @@ export default function MoreSelectAction({ options, handleClickAction }: IAction
       <Dropdown.Toggle as={ActionToggle}>...</Dropdown.Toggle>
       <Dropdown.Menu>
         {options.map((item) => (
-          <Dropdown.Item eventKey={item.value} onClick={() => handleClickAction(item.value)}>
+          <Dropdown.Item eventKey={item.value} onClick={() => handleClickAction(item.value)} key={item.value}>
             {item.label}
           </Dropdown.Item>
         ))}
