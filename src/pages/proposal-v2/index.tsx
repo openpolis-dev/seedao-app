@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import { ContainerPadding } from 'assets/styles/global';
-import { IBaseProposal, ProposalStatus, PROPOSAL_TYPES, PROPOSAL_TIME } from 'type/proposal.type';
 import SeeSelect from 'components/common/select';
 import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
@@ -8,61 +7,96 @@ import ClearSVGIcon from 'components/svgs/clear';
 import SearchSVGIcon from 'components/svgs/search';
 import { Button } from 'react-bootstrap';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import ProposalItem from 'components/proposalCom/proposalItem';
+import SimpleProposalItem from 'components/proposalCom/simpleProposalItem';
 import { Link } from 'react-router-dom';
 import HistoryAction from 'components/proposalCom/historyAction';
 import requests from 'requests';
 import { useAuthContext, AppActionType } from 'providers/authProvider';
+import { ISimpleProposal, ProposalState } from 'type/proposalV2.type';
+import useProposalCategories from 'hooks/useProposalCategories';
+import NoItem from 'components/noItem';
+import useQuerySNS from 'hooks/useQuerySNS';
+import publicJs from 'utils/publicJs';
 
 const PAGE_SIZE = 10;
 
 export default function ProposalIndexPage() {
   const { t } = useTranslation();
-  const { state, dispatch } = useAuthContext();
-  // filter types
-  const TYPE_OPTIONS: ISelectItem[] = PROPOSAL_TYPES.map((tp) => ({
-    value: tp.id,
-    label: t(tp.name as any),
+  const {
+    state: { loading },
+    dispatch,
+  } = useAuthContext();
+  const proposalCategories = useProposalCategories();
+  // filter category
+  const CATEGORY_OPTIONS: ISelectItem[] = proposalCategories.map((c) => ({
+    value: c.id,
+    label: c.name,
   }));
   // filter time
   const TIME_OPTIONS: ISelectItem[] = [
-    { value: 'latest', label: t('Proposal.TheNeweset') },
-    { value: 'old', label: t('Proposal.TheOldest') },
+    { value: 'desc', label: t('Proposal.TheNeweset') },
+    { value: 'asc', label: t('Proposal.TheOldest') },
   ];
   // filter status
   const STATUS_OPTIONS: ISelectItem[] = [
-    { value: ProposalStatus.Voting, label: t('Proposal.Voting') },
-    { value: ProposalStatus.Draft, label: t('Proposal.Draft') },
-    { value: ProposalStatus.Rejected, label: t('Proposal.Rejected') },
-    { value: ProposalStatus.WithDrawn, label: t('Proposal.WithDrawn') },
-    { value: ProposalStatus.End, label: t('Proposal.End') },
+    { value: ProposalState.Voting, label: t('Proposal.Voting') },
+    { value: ProposalState.Draft, label: t('Proposal.Draft') },
+    { value: ProposalState.Rejected, label: t('Proposal.Rejected') },
+    { value: ProposalState.Withdrawn, label: t('Proposal.WithDrawn') },
+    { value: ProposalState.VotingPassed, label: t('Proposal.Passed') },
+    { value: ProposalState.VotingFailed, label: t('Proposal.Failed') },
   ];
 
-  const [selectType, setSelectType] = useState<ISelectItem>();
+  const [selectCategory, setSelectCategory] = useState<ISelectItem>();
   const [selectTime, setSelectTime] = useState<ISelectItem>(TIME_OPTIONS[0]);
   const [selectStatus, setSelectStatus] = useState<ISelectItem>();
 
   const [searchKeyword, setSearchKeyword] = useState('');
   const [inputKeyword, setInputKeyword] = useState('');
 
-  const [proposalList, setProposalList] = useState<IBaseProposal[]>([]);
+  const [proposalList, setProposalList] = useState<ISimpleProposal[]>([]);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
 
+  const { getMultiSNS } = useQuerySNS();
+
+  const [snsMap, setSnsMap] = useState<Map<string, string>>(new Map());
+
+  const handleSNS = async (wallets: string[]) => {
+    const sns_map = await getMultiSNS(wallets);
+    setSnsMap(sns_map);
+  };
+
+  const formatSNS = (wallet: string) => {
+    const name = snsMap.get(wallet) || wallet;
+    return name?.endsWith('.seedao') ? name : publicJs.AddressToShow(name, 4);
+  };
+
   const getProposalList = async (init?: boolean) => {
-    //   TODO: get proposal list
     const _page = init ? 1 : page;
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
-      const resp = await requests.proposal.getAllProposals({
+      const resp = await requests.proposalV2.getProposalList({
         page: _page,
-        per_page: PAGE_SIZE,
-        sort: selectTime.value,
+        size: PAGE_SIZE,
+        sort_order: selectTime.value,
+        sort_field: 'create_ts',
+        state: selectStatus?.value,
+        category_id: selectCategory?.value,
+        q: searchKeyword,
       });
-      setProposalList([...proposalList, ...resp.data.threads]);
       setPage(_page + 1);
-      setHasMore(resp.data.threads.length >= PAGE_SIZE);
+      let list: ISimpleProposal[];
+      if (_page === 1) {
+        list = resp.data.rows;
+      } else {
+        list = [...proposalList, ...resp.data.rows];
+      }
+      setProposalList(list);
+      handleSNS(list.filter((d) => !!d.applicant).map((d) => d.applicant));
+
+      setHasMore(resp.data.rows.length >= PAGE_SIZE);
     } catch (error) {
       logError('getAllProposals failed', error);
     } finally {
@@ -73,7 +107,7 @@ export default function ProposalIndexPage() {
   useEffect(() => {
     getProposalList(true);
     setShowHistory(false);
-  }, [selectType, selectTime, selectStatus, searchKeyword]);
+  }, [selectCategory, selectTime, selectStatus, searchKeyword]);
 
   const onKeyUp = (e: any) => {
     if (e.keyCode === 13) {
@@ -91,10 +125,10 @@ export default function ProposalIndexPage() {
         <FilterBox>
           <SeeSelect
             width="180px"
-            options={TYPE_OPTIONS}
+            options={CATEGORY_OPTIONS}
             isSearchable={false}
             placeholder={t('Proposal.TypeSelectHint')}
-            onChange={(v: ISelectItem) => setSelectType(v)}
+            onChange={(v: ISelectItem) => setSelectCategory(v)}
           />
           <SeeSelect
             width="120px"
@@ -141,8 +175,9 @@ export default function ProposalIndexPage() {
           loader={<></>}
         >
           {proposalList.map((p) => (
-            <ProposalItem key={p.id} data={p} />
+            <SimpleProposalItem key={p.id} data={p} sns={formatSNS(p.applicant?.toLocaleLowerCase())} />
           ))}
+          {proposalList.length === 0 && !loading && <NoItem />}
         </InfiniteScroll>
       )}
     </Page>

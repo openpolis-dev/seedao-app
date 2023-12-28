@@ -2,11 +2,11 @@ import styled from 'styled-components';
 import { useEffect, useState } from 'react';
 import { ProposalTemplateType } from 'type/proposal.type';
 import { useTranslation } from 'react-i18next';
-import { useProposalContext } from './store';
+import { useCreateProposalContext } from './store';
 
 export default function ChooseTemplateStep() {
   const { t } = useTranslation();
-  const { proposalType, chooseTemplate } = useProposalContext();
+  const { proposalType, chooseTemplate, changeStep } = useCreateProposalContext();
   const [templates, setTemplates] = useState<ProposalTemplateType[]>([]);
 
   useEffect(() => {
@@ -25,7 +25,7 @@ export default function ChooseTemplateStep() {
 
   return (
     <ListBox>
-      <CreateBlankOne>+ {t('Proposal.CreateBlank')}</CreateBlankOne>
+      <CreateBlankOne onClick={() => changeStep(3)}>+ {t('Proposal.CreateBlank')}</CreateBlankOne>
       {templates.map((template) => (
         <BaseTemplate key={template.id} onClick={() => chooseTemplate(template)}>
           {template.name}

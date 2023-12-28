@@ -1,13 +1,15 @@
 import styled from 'styled-components';
-import { useProposalContext } from './store';
+import { useCreateProposalContext } from './store';
 import { useTranslation } from 'react-i18next';
-import { PROPOSAL_TYPES, ProposalType } from 'type/proposal.type';
+import useProposalCategories from 'hooks/useProposalCategories';
+import { IBaseCategory } from 'type/proposalV2.type';
 
 export default function ChooseTypeStep() {
   const { t } = useTranslation();
-  const { chooseProposalType } = useProposalContext();
+  const { chooseProposalType } = useCreateProposalContext();
+  const proposaCategories = useProposalCategories();
 
-  const onChooseType = (tp: ProposalType) => {
+  const onChooseType = (tp: IBaseCategory) => {
     chooseProposalType(tp);
   };
 
@@ -16,9 +18,9 @@ export default function ChooseTypeStep() {
       <CenterBox>
         <StepTitle>{t('Proposal.ChooseType')}</StepTitle>
         <TypeBox>
-          {PROPOSAL_TYPES.map((tp, index) => (
+          {proposaCategories.map((tp, index) => (
             <li key={index} onClick={() => onChooseType(tp)}>
-              {t(tp.name as any)}
+              {tp.name}
             </li>
           ))}
         </TypeBox>

@@ -3,46 +3,78 @@ import { useEffect, useState } from 'react';
 import { ContainerPadding } from 'assets/styles/global';
 import BackerNav from 'components/common/backNav';
 import { useTranslation } from 'react-i18next';
-import { IBaseProposal, ProposalStatus } from 'type/proposal.type';
+import { ProposalState, ISimpleProposal } from 'type/proposalV2.type';
 import ClearSVGIcon from 'components/svgs/clear';
 import SearchSVGIcon from 'components/svgs/search';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import ProposalItem from 'components/proposalCom/proposalItem';
+import ProposalItem from 'components/proposalCom/reviewProposalItem';
 import requests from 'requests';
 import { useAuthContext, AppActionType } from 'providers/authProvider';
+import NoItem from 'components/noItem';
+import useQuerySNS from 'hooks/useQuerySNS';
+import publicJs from 'utils/publicJs';
 
 const STATUS = [
-  { name: 'Proposal.Draft', value: ProposalStatus.Draft },
-  { name: 'Proposal.Rejected', value: ProposalStatus.Rejected },
-  { name: 'Proposal.WithDrawn', value: ProposalStatus.WithDrawn },
+  { name: 'Proposal.Draft', value: ProposalState.Draft },
+  { name: 'Proposal.Rejected', value: ProposalState.Rejected },
+  { name: 'Proposal.WithDrawn', value: ProposalState.Withdrawn },
 ];
 
 const PAGE_SIZE = 10;
 
 export default function ProposalReview() {
   const { t } = useTranslation();
-  const { dispatch } = useAuthContext();
+  const {
+    dispatch,
+    state: { loading },
+  } = useAuthContext();
 
-  const [selectStatus, setSelectStatus] = useState<ProposalStatus>(ProposalStatus.Draft);
-  const [proposalList, setProposalList] = useState<IBaseProposal[]>([]);
+  const [selectStatus, setSelectStatus] = useState<ProposalState>(ProposalState.Draft);
+  const [proposalList, setProposalList] = useState<ISimpleProposal[]>([]);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(false);
   const [searchKeyword, setSearchKeyword] = useState('');
   const [inputKeyword, setInputKeyword] = useState('');
+
+  const { getMultiSNS } = useQuerySNS();
+
+  const [snsMap, setSnsMap] = useState<Map<string, string>>(new Map());
+
+  const handleSNS = async (wallets: string[]) => {
+    const sns_map = await getMultiSNS(wallets);
+    setSnsMap(sns_map);
+  };
+
+  const formatSNS = (wallet: string) => {
+    const name = snsMap.get(wallet) || wallet;
+    return name?.endsWith('.seedao') ? name : publicJs.AddressToShow(name, 4);
+  };
 
   const getProposalList = async (init?: boolean) => {
     //   TODO: get proposal list
     const _page = init ? 1 : page;
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
-      const resp = await requests.proposal.getAllProposals({
+      const resp = await requests.proposalV2.getProposalList({
         page: _page,
-        per_page: PAGE_SIZE,
-        sort: 'latest',
+        size: PAGE_SIZE,
+        sort_field: 'create_ts',
+        sort_order: 'desc',
+        state: selectStatus,
+        q: searchKeyword,
       });
-      setProposalList([...proposalList, ...resp.data.threads]);
+
+      let list: ISimpleProposal[];
+      if (_page === 1) {
+        list = resp.data.rows;
+      } else {
+        list = [...proposalList, ...resp.data.rows];
+      }
+      setProposalList(list);
+      handleSNS(list.filter((d) => !!d.applicant).map((d) => d.applicant));
+
       setPage(_page + 1);
-      setHasMore(resp.data.threads.length >= PAGE_SIZE);
+      setHasMore(resp.data.rows.length >= PAGE_SIZE);
     } catch (error) {
       logError('getAllProposals failed', error);
     } finally {
@@ -97,8 +129,9 @@ export default function ProposalReview() {
         loader={<></>}
       >
         {proposalList.map((p) => (
-          <ProposalItem key={p.id} data={p} isReview />
+          <ProposalItem key={p.id} data={p} isReview sns={formatSNS(p.applicant?.toLocaleLowerCase())} />
         ))}
+        {proposalList.length === 0 && !loading && <NoItem />}
       </InfiniteScroll>
     </Page>
   );

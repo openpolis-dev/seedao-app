@@ -1,6 +1,7 @@
 import React, { useReducer, createContext, useContext } from 'react';
 import { IUser, ITokenType } from 'type/user.type';
 import { ICategory } from 'type/proposal.type';
+import { IBaseCategory } from 'type/proposalV2.type';
 import { Authorizer } from 'casbin.js';
 import { SEEDAO_ACCOUNT, SEEDAO_USER, SEEDAO_USER_DATA, SENDING_ME_USER } from '../utils/constant';
 import { WalletType } from '../wallet/wallet';
@@ -13,6 +14,7 @@ interface IState {
   sns?: string;
   tokenData?: ITokenType;
   proposal_categories: ICategory[];
+  proposalCategories: IBaseCategory[];
   language: string;
   loading: boolean | null;
   authorizer?: Authorizer;
@@ -34,6 +36,7 @@ export enum AppActionType {
   SET_LOGIN_DATA = 'set_login_data',
   CLEAR_AUTH = 'clear_auth',
   SET_PROPOSAL_CATEGORIES = 'set_proposal_categories',
+  SET_PROPOSAL_CATEGORIES_V2 = 'set_proposal_categories_v2',
   SET_LAN = 'SET_LAN',
   SET_LOADING = 'SET_LOADING',
   SET_AUTHORIZER = 'SET_AUTHORIZER',
@@ -74,6 +77,7 @@ const INIT_STATE: IState = {
     //   ],
     // },
   ],
+  proposalCategories: [],
   language: '',
   loading: null,
   snsMap: new Map(),
@@ -115,6 +119,8 @@ const reducer = (state: IState, action: IAction): IState => {
       return { ...state, account: undefined, userData: undefined, wallet_type: undefined, authorizer: undefined };
     case AppActionType.SET_PROPOSAL_CATEGORIES:
       return { ...state, proposal_categories: action.payload };
+    case AppActionType.SET_PROPOSAL_CATEGORIES_V2:
+      return { ...state, proposalCategories: action.payload };
     case AppActionType.SET_LOADING:
       return { ...state, loading: action.payload };
     case AppActionType.SET_AUTHORIZER:

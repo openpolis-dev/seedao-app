@@ -26,25 +26,27 @@ export default function LearnDashboard() {
 
   return (
     <LeanDashboardStyle>
-      <DashboardLeft>
-        <div className="title">{t('Onboarding.ContributeCamp')}</div>
-        <div className="desc">{t('Onboarding.ContributeCampIntro')}</div>
-        {QUESTIONS.map((item, index) => (
-          <div className="question" key={index} onClick={() => setShowAnswerContent(t(item.a as any))}>
-            {t(item.q as any)}
-          </div>
-        ))}
-      </DashboardLeft>
-      <DashboardRight>
-        <ModuleLinkButton onClick={go2learn}>{t('Onboarding.Enroll')}</ModuleLinkButton>
-        <LinkButton href="" rel="noreferrer">
-          {t('Onboarding.NewcomerReward')}
-        </LinkButton>
-        <LinkButton href="" rel="noreferrer">
-          {t('Onboarding.JoinCommunity')}
-        </LinkButton>
-        <ModuleLinkButton onClick={go2learn}>{t('Onboarding.FinalExamination')}</ModuleLinkButton>
-      </DashboardRight>
+      <LearnDashboardContet>
+        <DashboardLeft>
+          <div className="title">{t('Onboarding.ContributeCamp')}</div>
+          <div className="desc">{t('Onboarding.ContributeCampIntro')}</div>
+          {QUESTIONS.map((item, index) => (
+            <div className="question" key={index} onClick={() => setShowAnswerContent(t(item.a as any))}>
+              {t(item.q as any)}
+            </div>
+          ))}
+        </DashboardLeft>
+        <DashboardRight>
+          <ModuleLinkButton onClick={go2learn}>{t('Onboarding.Enroll')}</ModuleLinkButton>
+          <LinkButton href="" rel="noreferrer">
+            {t('Onboarding.NewcomerReward')}
+          </LinkButton>
+          <LinkButton href="" rel="noreferrer">
+            {t('Onboarding.JoinCommunity')}
+          </LinkButton>
+          <ModuleLinkButton onClick={go2learn}>{t('Onboarding.FinalExamination')}</ModuleLinkButton>
+        </DashboardRight>
+      </LearnDashboardContet>
       {showAnswerContent && (
         <AnswerBox>
           <div className="content">{showAnswerContent}</div>
@@ -63,15 +65,24 @@ export default function LearnDashboard() {
 
 const LeanDashboardStyle = styled.div`
   display: flex;
-  gap: 50px;
+  flex-direction: column;
   justify-content: center;
-  padding-top: 50px;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+`;
+
+const LearnDashboardContet = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
   align-items: center;
 `;
 
 const DashboardLeft = styled.div`
   .title {
     font-size: 26px;
+    margin-bottom: 16px;
   }
   .question {
     cursor: pointer;
@@ -124,13 +135,14 @@ const ModuleLinkButton = styled.div`
 `;
 
 const CourseBox = styled.div`
-  width: 100%;
+  width: 150%;
   height: 100%;
   position: absolute;
   top: 0;
-  left: 0;
+  left: -25%;
   background-color: var(--bs-box--background);
   padding-top: 30px;
+  border-radius: 16px;
   img {
     cursor: pointer;
     position: absolute;
