@@ -16,6 +16,7 @@ import BackerNav from 'components/common/backNav';
 import MoreSelectAction from 'components/proposalCom/moreSelectAction';
 import { MdPreview } from 'md-editor-rt';
 import ProposalStateTag, { getRealState } from 'components/proposalCom/stateTag';
+import useProposalCategories from 'hooks/useProposalCategories';
 
 enum BlockContentType {
   Reply = 1,
@@ -36,6 +37,7 @@ export default function ThreadPage() {
     dispatch,
     state: { theme },
   } = useAuthContext();
+  const proposalCategories = useProposalCategories();
 
   const [blockType, setBlockType] = useState<BlockContentType>(BlockContentType.Reply);
   const [data, setData] = useState<IProposal>();
@@ -100,10 +102,23 @@ export default function ThreadPage() {
   };
 
   const currentStoreHash = editHistoryList[editHistoryList.length - 1]?.arweave;
+  const currentCategory = () => {
+    if (data?.category_name) {
+      return data.category_name;
+    } else {
+      if (data?.proposal_category_id) {
+        const findOne = proposalCategories.find((c) => c.id === data.proposal_category_id);
+        if (findOne) {
+          return findOne.name;
+        }
+      }
+      return t('Proposal.ProposalDetail');
+    }
+  };
 
   return (
     <Page>
-      <BackerNav title="" to="/proposal-v2" mb="20px" />
+      <BackerNav title={currentCategory()} to="/proposal-v2" mb="20px" />
       <ThreadHead>
         <div className="title">{data?.title}</div>
         <ThreadCenter>

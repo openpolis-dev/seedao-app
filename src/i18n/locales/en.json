@@ -80,6 +80,7 @@
     "TypeSelectHint": "All Types",
     "StatusSelectHint": "All Status",
     "HistoryRecord": "History",
+    "ProposalDetail": "Proposal Detail",
     "ChooseType": "Choose Proposal Type",
     "CreateBlank": "Create New",
     "ActivityCreate": "Started a new topic {{title}}",

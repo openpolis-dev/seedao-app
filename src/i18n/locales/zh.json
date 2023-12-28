@@ -80,6 +80,7 @@
     "TypeSelectHint": "全部类型",
     "StatusSelectHint": "全部状态",
     "HistoryRecord": "历史记录",
+    "ProposalDetail": "提案详情",
     "ChooseType": "请选择提案类型",
     "CreateBlank": "创建新提案",
     "ActivityCreate": "创建了提案{{title}}",
