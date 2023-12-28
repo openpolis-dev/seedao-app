@@ -18,6 +18,9 @@ import { MdPreview } from 'md-editor-rt';
 import ProposalStateTag, { getRealState } from 'components/proposalCom/stateTag';
 import useProposalCategories from 'hooks/useProposalCategories';
 import useCheckMetaforoLogin from 'hooks/useCheckMetaforoLogin';
+import publicJs from 'utils/publicJs';
+import useQuerySNS from 'hooks/useQuerySNS';
+import DefaultAvatarIcon from 'assets/Imgs/defaultAvatar.png';
 
 enum BlockContentType {
   Reply = 1,
@@ -50,6 +53,11 @@ export default function ThreadPage() {
   const [contentBlocks, setContentBlocks] = useState<IContentBlock[]>([]);
   const currentState = getRealState(data?.state);
 
+  const [applicantSNS, setApplicantSNS] = useState('');
+  const [applicantAvatar, setApplicantAvatar] = useState(DefaultAvatarIcon);
+
+  const { getMultiSNS } = useQuerySNS();
+
   const replyRef = useRef<IReplyOutputProps>(null);
 
   useEffect(() => {
@@ -67,6 +75,16 @@ export default function ThreadPage() {
         // setTotalPostsCount(res.data.thread.posts_count);
         // setTotalEditCount(res.data.thread.edit_history?.count ?? 0);
         // setEditHistoryList(res.data.thread.edit_history?.lists ?? []);
+        const applicant = res.data.applicant;
+        setApplicantSNS(publicJs.AddressToShow(applicant));
+        setApplicantAvatar(res.data.applicant_avatar || DefaultAvatarIcon);
+        if (applicant) {
+          try {
+            const snsMap = await getMultiSNS([applicant]);
+            const name = snsMap.get(applicant.toLocaleLowerCase()) || applicant;
+            setApplicantSNS(name?.endsWith('.seedao') ? name : publicJs.AddressToShow(name, 4));
+          } catch (error) {}
+        }
       } catch (error) {
         logError('get proposal detail error:', error);
       } finally {
@@ -133,8 +151,8 @@ export default function ThreadPage() {
         <div className="title">{data?.title}</div>
         <ThreadCenter>
           <UserBox>
-            {/* <img src={data?.user.photo_url} alt="" />
-            <span>{data?.user.username}</span> */}
+            <img src={applicantAvatar} alt="" />
+            <span>{applicantSNS}</span>
             {data?.create_ts && <div className="date">{formatDate(new Date(data?.create_ts * 1000 || ''))}</div>}
           </UserBox>
           <ThreadInfo>{currentState && <ProposalStateTag state={currentState} />}</ThreadInfo>
