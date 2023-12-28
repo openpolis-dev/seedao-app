@@ -8,6 +8,7 @@ import { MdEditor } from 'md-editor-rt';
 import { saveOrSubmitProposal } from 'requests/proposalV2';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import useCheckMetaforoLogin from 'hooks/useCheckMetaforoLogin';
+import { useNavigate } from 'react-router-dom';
 
 const Box = styled.ul``;
 
@@ -25,6 +26,7 @@ const TitleBox = styled.div`
 `;
 
 export default function CreateStep() {
+  const navigate = useNavigate();
   const childRef = useRef(null);
   const [title, setTitle] = useState('');
   const [list, setList] = useState<any[]>([]);
@@ -60,12 +62,16 @@ export default function CreateStep() {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     saveOrSubmitProposal({
       title,
-      proposal_category_id: 1, // TODO hardcode for test
+      proposal_category_id: 41, // TODO hardcode for test
       content_blocks: list,
       submit_to_metaforo: true,
-    }).finally(() => {
-      dispatch({ type: AppActionType.SET_LOADING, payload: false });
-    });
+    })
+      .then((r) => {
+        navigate(`/proposal-v2/thread/${r.data.id}`);
+      })
+      .finally(() => {
+        dispatch({ type: AppActionType.SET_LOADING, payload: false });
+      });
   };
 
   const handleText = (value: any, index: number) => {

@@ -28,6 +28,9 @@ type CreateProposalParamsType = {
   submit_to_metaforo: boolean;
 };
 
-export const saveOrSubmitProposal = (data: CreateProposalParamsType) => {
-  return request.post(`${PATH_PREFIX}create`, { ...data, metaforo_access_token: localStorage.getItem(METAFORO_TOKEN) });
+export const saveOrSubmitProposal = (data: CreateProposalParamsType): Promise<ResponseData<IProposal>> => {
+  return request.post(`${PATH_PREFIX}create`, {
+    ...data,
+    metaforo_access_token: localStorage.getItem(METAFORO_TOKEN),
+  });
 };
