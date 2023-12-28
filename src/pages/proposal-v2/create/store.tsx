@@ -1,12 +1,13 @@
 import React, { createContext, useContext, useState } from 'react';
-import { ProposalType, ProposalTemplateType } from 'type/proposal.type';
+import { ProposalTemplateType } from 'type/proposal.type';
+import { IBaseCategory } from 'type/proposalV2.type';
 
 type ProposalContext = {
   currentStep: number;
-  proposalType?: ProposalType;
+  proposalType?: IBaseCategory;
   template?: ProposalTemplateType;
   changeStep: (step: number) => void;
-  chooseProposalType: (tp: ProposalType) => void;
+  chooseProposalType: (tp: IBaseCategory) => void;
   chooseTemplate: (t: ProposalTemplateType) => void;
   goBackStepOne: () => void;
 };
@@ -21,13 +22,13 @@ const context = createContext<ProposalContext>({
 
 const CreateProposalProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [currentStep, setCurrentStep] = useState(1);
-  const [proposalType, setProposalType] = useState<ProposalType>();
+  const [proposalType, setProposalType] = useState<IBaseCategory>();
   const [template, setTemplate] = useState<ProposalTemplateType>();
 
   const addStep = () => setCurrentStep(currentStep + 1);
   const changeStep = (newStep: number) => setCurrentStep(newStep);
 
-  const chooseProposalType = (tp: ProposalType) => {
+  const chooseProposalType = (tp: IBaseCategory) => {
     setProposalType(tp);
     addStep();
   };
