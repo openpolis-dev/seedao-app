@@ -94,8 +94,15 @@ export default function ThreadPage() {
     getProposalDetail();
   }, [id, state]);
 
-  const onUpdateStatus = (status: string) => {
-    // TODO
+  const onUpdateStatus = (status: ProposalState) => {
+    if (data) {
+      const newData: IProposal = { ...data, state: status };
+      if (status === ProposalState.Rejected) {
+        // TODO
+      }
+      setData(newData);
+      navigate(`/proposal-v2/thread/${id}`);
+    }
   };
 
   const openComment = () => {
@@ -204,7 +211,7 @@ export default function ThreadPage() {
         {blockType === BlockContentType.Reply && <ReplyComponent hideReply={review} posts={posts} ref={replyRef} />}
         {blockType === BlockContentType.History && <EditActionHistory data={editHistoryList} />}
       </ReplyAndHistoryBlock>
-      {review && <ReviewProposalComponent onUpdateStatus={onUpdateStatus} />}
+      {review && <ReviewProposalComponent id={Number(id)} onUpdateStatus={onUpdateStatus} />}
     </Page>
   );
 }

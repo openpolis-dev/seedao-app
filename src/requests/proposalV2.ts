@@ -65,7 +65,7 @@ export const approveProposal = (id: number) => {
 };
 
 export const rejectProposal = (id: number, reason: string) => {
-  return request.post(`${PATH_PREFIX}approve/${id}`, {
+  return request.post(`${PATH_PREFIX}reject/${id}`, {
     reason,
     metaforo_access_token: localStorage.getItem(METAFORO_TOKEN),
   });
