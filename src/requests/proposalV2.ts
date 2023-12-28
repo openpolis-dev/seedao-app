@@ -34,3 +34,10 @@ export const saveOrSubmitProposal = (data: CreateProposalParamsType): Promise<Re
     metaforo_access_token: localStorage.getItem(METAFORO_TOKEN),
   });
 };
+
+export const updateProposal = (id: number, data: CreateProposalParamsType): Promise<ResponseData<IProposal>> => {
+  return request.post(`${PATH_PREFIX}update/${id}`, {
+    ...data,
+    metaforo_access_token: localStorage.getItem(METAFORO_TOKEN),
+  });
+};

@@ -11,7 +11,7 @@ import { MdEditor } from 'md-editor-rt';
 import DataSource from './create/json/datasource.json';
 import initialItems from './create/json/initialItem';
 import useCheckMetaforoLogin from 'hooks/useCheckMetaforoLogin';
-import { saveOrSubmitProposal, getProposalDetail } from 'requests/proposalV2';
+import { updateProposal, getProposalDetail } from 'requests/proposalV2';
 import { Button } from 'react-bootstrap';
 
 export default function EditProposal() {
@@ -77,7 +77,7 @@ export default function EditProposal() {
     });
     await checkMetaforoLogin();
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
-    saveOrSubmitProposal({
+    updateProposal(Number(data.id), {
       title,
       proposal_category_id: data.proposal_category_id,
       content_blocks: contentBlocks,
