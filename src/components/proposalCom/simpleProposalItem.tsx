@@ -43,7 +43,10 @@ export default function SimpleProposalItem({ data, isReview }: { data: ISimplePr
         </CardHeaderStyled>
         <CardBody>
           <Title>{data.title}</Title>
-          <ProposalStateTag state={currentState} />
+          <div>
+            <span>{data.category_name}</span>
+            <ProposalStateTag state={currentState} />
+          </div>
         </CardBody>
       </div>
     </CardBox>
