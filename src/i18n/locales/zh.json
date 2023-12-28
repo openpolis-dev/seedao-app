@@ -107,7 +107,8 @@
     "Reply": "回复",
     "EditProposalNav": "编辑提案",
     "SaveProposal": "保存",
-    "SubmitProposal": "提交"
+    "SubmitProposal": "提交",
+    "CityhallRejected": "市政厅已驳回"
   },
   "Project": {
     "ProjectOrGuildItem": "还没有填写相关介绍信息～",

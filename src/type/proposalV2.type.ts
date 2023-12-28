@@ -33,6 +33,10 @@ export interface IContentBlock {
 
 export interface IProposal extends ISimpleProposal {
   reviewer: string;
+  applicant_avatar: string;
   proposal_category_id: number;
   content_blocks: IContentBlock[];
+  reject_reason: string;
+  is_rejected: string;
+  arveave: string;
 }

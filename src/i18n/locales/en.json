@@ -107,7 +107,8 @@
     "Reply": "Reply",
     "EditProposalNav": "Edit Proposal",
     "SaveProposal": "Save",
-    "SubmitProposal": "Submit"
+    "SubmitProposal": "Submit",
+    "CityhallRejected": "Cityhall rejected"
   },
   "Project": {
     "ProjectOrGuildItem": "Nothing left here.",

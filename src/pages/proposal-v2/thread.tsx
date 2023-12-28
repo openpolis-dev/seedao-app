@@ -164,10 +164,18 @@ export default function ThreadPage() {
           </UserBox>
           <ThreadInfo>{currentState && <ProposalStateTag state={currentState} />}</ThreadInfo>
         </ThreadCenter>
-        <StoreHash href={`https://arweave.net/tx/${currentStoreHash}/data.html`} target="_blank">
-          Arweave Hash {currentStoreHash}
-        </StoreHash>
+        {data?.arweave && (
+          <StoreHash href={`https://arweave.net/tx/${data?.arveave}/data.html`} target="_blank">
+            Arweave Hash {data?.arweave}
+          </StoreHash>
+        )}
       </ThreadHead>
+      {data?.is_rejected && data?.reject_reason && (
+        <RejectBlock>
+          <div>{t('Proposal.CityhallRejected')}</div>
+          <div>{data.reject_reason}</div>
+        </RejectBlock>
+      )}
       {contentBlocks.map((block) => (
         <ProposalContentBlock key={block.title}>
           <div className="title">{block.title}</div>
@@ -298,4 +306,10 @@ const ProposalContentBlock = styled.div`
     padding-inline: 16px;
     font-size: 16px;
   }
+`;
+
+const RejectBlock = styled.div`
+  background-color: var(--bs-box-background);
+  padding: 10px;
+  border-radius: 16px;
 `;
