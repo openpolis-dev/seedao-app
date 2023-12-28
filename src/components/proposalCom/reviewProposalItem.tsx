@@ -1,13 +1,14 @@
 import { useMemo } from 'react';
-import { IBaseProposal } from 'type/proposal.type';
 import styled from 'styled-components';
 import { Link, useNavigate } from 'react-router-dom';
 import { formatDate } from 'utils/time';
 import { useAuthContext } from 'providers/authProvider';
+import { ISimpleProposal } from 'type/proposalV2.type';
+import ProposalStateTag, { getRealState } from './stateTag';
 
 const CardBody = styled.div``;
 
-export default function ProposalItem({ data, isReview }: { data: IBaseProposal; isReview?: boolean }) {
+export default function ReviewProposalItem({ data, isReview }: { data: ISimpleProposal; isReview?: boolean }) {
   const navigate = useNavigate();
   const {
     state: { theme },
@@ -20,29 +21,32 @@ export default function ProposalItem({ data, isReview }: { data: IBaseProposal; 
   const borderStyle = useMemo(() => {
     return theme ? 'unset' : 'none';
   }, [theme]);
+  const currentState = getRealState(data.state);
   return (
     <CardBox key={data.id} border={borderStyle}>
       <div onClick={openProposal}>
         <CardHeaderStyled>
-          <div className="left">
-            <UserAvatar src={data.user.photo_url} alt="" />
-          </div>
+          <div className="left">{/* <UserAvatar src={data.user.photo_url} alt="" /> */}</div>
           <div className="right">
             <div className="name">
-              <span>{data.user.username}</span>
+              {/* <span>{data.user.username}</span>
               {data.user.user_title?.name && (
                 <UserTag bg={data.user.user_title.background}>{data.user.user_title?.name}</UserTag>
-              )}
+              )} */}
             </div>
             <div className="date">
-              <Link to={`/proposal/category/${data.category_index_id}`}>#{data.category_name}</Link>
+              {/* <Link to={`/proposal/category/${data.category_index_id}`}>#{data.category_name}</Link> */}
               <span className="dot-dot"> • </span>
-              <span>{formatDate(new Date(data.updated_at))}</span>
+              <span>{formatDate(new Date(data.create_ts * 1000))}</span>
             </div>
           </div>
         </CardHeaderStyled>
         <CardBody>
           <Title>{data.title}</Title>
+          <div>
+            <span>{data.category_name}</span>
+            <ProposalStateTag state={currentState} />
+          </div>
         </CardBody>
       </div>
     </CardBox>

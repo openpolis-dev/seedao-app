@@ -14,12 +14,16 @@ import requests from 'requests';
 import { useAuthContext, AppActionType } from 'providers/authProvider';
 import { ISimpleProposal, ProposalState } from 'type/proposalV2.type';
 import useProposalCategories from 'hooks/useProposalCategories';
+import NoItem from 'components/noItem';
 
 const PAGE_SIZE = 10;
 
 export default function ProposalIndexPage() {
   const { t } = useTranslation();
-  const { state, dispatch } = useAuthContext();
+  const {
+    state: { loading },
+    dispatch,
+  } = useAuthContext();
   const proposalCategories = useProposalCategories();
   // filter category
   const CATEGORY_OPTIONS: ISelectItem[] = proposalCategories.map((c) => ({
@@ -152,6 +156,7 @@ export default function ProposalIndexPage() {
           {proposalList.map((p) => (
             <SimpleProposalItem key={p.id} data={p} />
           ))}
+          {proposalList.length === 0 && !loading && <NoItem />}
         </InfiniteScroll>
       )}
     </Page>

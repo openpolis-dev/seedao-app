@@ -3,28 +3,32 @@ import { useEffect, useState } from 'react';
 import { ContainerPadding } from 'assets/styles/global';
 import BackerNav from 'components/common/backNav';
 import { useTranslation } from 'react-i18next';
-import { IBaseProposal, ProposalStatus } from 'type/proposal.type';
+import { ProposalState, ISimpleProposal } from 'type/proposalV2.type';
 import ClearSVGIcon from 'components/svgs/clear';
 import SearchSVGIcon from 'components/svgs/search';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import ProposalItem from 'components/proposalCom/proposalItem';
+import ProposalItem from 'components/proposalCom/reviewProposalItem';
 import requests from 'requests';
 import { useAuthContext, AppActionType } from 'providers/authProvider';
+import NoItem from 'components/noItem';
 
 const STATUS = [
-  { name: 'Proposal.Draft', value: ProposalStatus.Draft },
-  { name: 'Proposal.Rejected', value: ProposalStatus.Rejected },
-  { name: 'Proposal.WithDrawn', value: ProposalStatus.WithDrawn },
+  { name: 'Proposal.Draft', value: ProposalState.Draft },
+  { name: 'Proposal.Rejected', value: ProposalState.Rejected },
+  { name: 'Proposal.WithDrawn', value: ProposalState.Withdrawn },
 ];
 
 const PAGE_SIZE = 10;
 
 export default function ProposalReview() {
   const { t } = useTranslation();
-  const { dispatch } = useAuthContext();
+  const {
+    dispatch,
+    state: { loading },
+  } = useAuthContext();
 
-  const [selectStatus, setSelectStatus] = useState<ProposalStatus>(ProposalStatus.Draft);
-  const [proposalList, setProposalList] = useState<IBaseProposal[]>([]);
+  const [selectStatus, setSelectStatus] = useState<ProposalState>(ProposalState.Draft);
+  const [proposalList, setProposalList] = useState<ISimpleProposal[]>([]);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(false);
   const [searchKeyword, setSearchKeyword] = useState('');
@@ -35,14 +39,21 @@ export default function ProposalReview() {
     const _page = init ? 1 : page;
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
-      const resp = await requests.proposal.getAllProposals({
+      const resp = await requests.proposalV2.getProposalList({
         page: _page,
-        per_page: PAGE_SIZE,
-        sort: 'latest',
+        size: PAGE_SIZE,
+        sort_field: 'create_ts',
+        sort_order: 'desc',
+        state: selectStatus,
       });
-      setProposalList([...proposalList, ...resp.data.threads]);
+
+      if (_page === 1) {
+        setProposalList(resp.data.rows);
+      } else {
+        setProposalList([...proposalList, ...resp.data.rows]);
+      }
       setPage(_page + 1);
-      setHasMore(resp.data.threads.length >= PAGE_SIZE);
+      setHasMore(resp.data.rows.length >= PAGE_SIZE);
     } catch (error) {
       logError('getAllProposals failed', error);
     } finally {
@@ -99,6 +110,7 @@ export default function ProposalReview() {
         {proposalList.map((p) => (
           <ProposalItem key={p.id} data={p} isReview />
         ))}
+        {proposalList.length === 0 && !loading && <NoItem />}
       </InfiniteScroll>
     </Page>
   );
