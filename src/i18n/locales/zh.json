@@ -101,7 +101,8 @@
     "Edit": "修改",
     "Withdrawn": "撤回",
     "Delete": "删除",
-    "Reply": "回复"
+    "Reply": "回复",
+    "EditProposalNav": "编辑提案"
   },
   "Project": {
     "ProjectOrGuildItem": "还没有填写相关介绍信息～",

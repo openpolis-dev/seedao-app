@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useSearchParams, useParams, useLocation } from 'react-router-dom';
+import { useSearchParams, useParams, useLocation, useNavigate } from 'react-router-dom';
 import { ContainerPadding } from 'assets/styles/global';
 import ProposalVote from 'components/proposalCom/vote';
 import ReplyComponent from 'components/proposalCom/reply';
@@ -25,6 +25,7 @@ enum BlockContentType {
 interface IProps {}
 
 export default function ThreadPage() {
+  const navigate = useNavigate();
   const { state } = useLocation();
   const [search] = useSearchParams();
   // review: true -> review proposal
@@ -80,6 +81,7 @@ export default function ThreadPage() {
   const handleEdit = () => {
     // TODO
     console.log('edit');
+    navigate(`/proposal-v2/edit/${id}`);
   };
   const handlWithdraw = () => {
     // TODO

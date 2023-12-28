@@ -101,7 +101,8 @@
     "Edit": "Edit",
     "Withdrawn": "Withdrawn",
     "Delete": "Delete",
-    "Reply": "Reply"
+    "Reply": "Reply",
+    "EditProposalNav": "Edit Proposal"
   },
   "Project": {
     "ProjectOrGuildItem": "Nothing left here.",
