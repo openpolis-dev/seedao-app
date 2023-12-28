@@ -45,6 +45,7 @@ export default function ProposalReview() {
         sort_field: 'create_ts',
         sort_order: 'desc',
         state: selectStatus,
+        q: searchKeyword,
       });
 
       if (_page === 1) {

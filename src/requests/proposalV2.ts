@@ -7,6 +7,7 @@ const PATH_PREFIX = '/proposals/';
 interface IProposalPageParams extends IPageParams {
   category_id?: number;
   state?: ProposalState;
+  q?: string;
 }
 
 export const getProposalCategoryList = (): Promise<ResponseData<IBaseCategory[]>> => {

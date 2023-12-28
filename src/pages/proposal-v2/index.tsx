@@ -68,6 +68,7 @@ export default function ProposalIndexPage() {
         sort_field: 'create_ts',
         state: selectStatus?.value,
         category_id: selectCategory?.value,
+        q: searchKeyword,
       });
       setPage(_page + 1);
       if (_page === 1) {
