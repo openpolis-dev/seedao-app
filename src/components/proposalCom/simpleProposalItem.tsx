@@ -35,7 +35,7 @@ export default function SimpleProposalItem({ data, isReview }: { data: ISimplePr
             <div className="date">
               {/* <Link to={`/proposal/category/${data.category_index_id}`}>#{data.category_name}</Link> */}
               <span className="dot-dot"> • </span>
-              <span>{formatDate(new Date(data.create_ts))}</span>
+              <span>{formatDate(new Date(data.create_ts * 1000))}</span>
             </div>
           </div>
         </CardHeaderStyled>
