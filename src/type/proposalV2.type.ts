@@ -2,6 +2,8 @@ export enum ProposalState {
   PendingSubmit = 'pending_submit',
   Draft = 'draft',
   Approved = 'approved',
+  Rejected = 'rejected',
+  End = 'end',
 }
 
 export interface IBaseCategory {

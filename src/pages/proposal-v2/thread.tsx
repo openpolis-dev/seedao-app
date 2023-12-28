@@ -8,13 +8,14 @@ import ReplyComponent from 'components/proposalCom/reply';
 import ReviewProposalComponent from 'components/proposalCom/reviewProposalComponent';
 import EditActionHistory from 'components/proposalCom/editActionhistory';
 import { IBaseProposal, EditHistoryType } from 'type/proposal.type';
-import { IContentBlock, IProposal } from 'type/proposalV2.type';
+import { IContentBlock, IProposal, ProposalState } from 'type/proposalV2.type';
 import { useAuthContext, AppActionType } from 'providers/authProvider';
 import requests from 'requests';
 import { formatDate } from 'utils/time';
 import BackerNav from 'components/common/backNav';
 import MoreSelectAction from 'components/proposalCom/moreSelectAction';
 import { MdPreview } from 'md-editor-rt';
+import ProposalStateTag from 'components/proposalCom/stateTag';
 
 enum BlockContentType {
   Reply = 1,
@@ -42,6 +43,7 @@ export default function ThreadPage() {
   const [totalEditCount, setTotalEditCount] = useState<number>(0);
   const [editHistoryList, setEditHistoryList] = useState<EditHistoryType[]>([]);
   const [contentBlocks, setContentBlocks] = useState<IContentBlock[]>([]);
+  const [currentState, setCurrentState] = useState<ProposalState>();
 
   useEffect(() => {
     if (state) {
@@ -58,6 +60,11 @@ export default function ThreadPage() {
         // setTotalPostsCount(res.data.thread.posts_count);
         // setTotalEditCount(res.data.thread.edit_history?.count ?? 0);
         // setEditHistoryList(res.data.thread.edit_history?.lists ?? []);
+        if (res.data.state === ProposalState.Approved) {
+          // TODO check vote status
+        } else {
+          setCurrentState(res.data.state);
+        }
       } catch (error) {
         logError('get proposal detail error:', error);
       } finally {
@@ -108,7 +115,7 @@ export default function ThreadPage() {
             <span>{data?.user.username}</span> */}
             {data?.create_ts && <div className="date">{formatDate(new Date(data?.create_ts * 1000 || ''))}</div>}
           </UserBox>
-          <ThreadInfo></ThreadInfo>
+          <ThreadInfo>{currentState && <ProposalStateTag state={currentState} />}</ThreadInfo>
         </ThreadCenter>
         <StoreHash href={`https://arweave.net/tx/${currentStoreHash}/data.html`} target="_blank">
           Arweave Hash {currentStoreHash}
