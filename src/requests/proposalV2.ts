@@ -1,5 +1,6 @@
 import request, { ResponseData } from './http';
-import { IProposal, ISimpleProposal, ProposalState, IContentBlock } from 'type/proposalV2.type';
+import { IProposal, ISimpleProposal, ProposalState, IContentBlock, IBaseCategory } from 'type/proposalV2.type';
+import { METAFORO_TOKEN } from 'utils/constant';
 
 const PATH_PREFIX = '/proposals/';
 
@@ -7,6 +8,10 @@ interface IProposalPageParams extends IPageParams {
   category_id?: number;
   state?: ProposalState;
 }
+
+export const getProposalCategoryList = (): Promise<ResponseData<IBaseCategory[]>> => {
+  return request.get(`${PATH_PREFIX}proposal_categories`);
+};
 
 export const getProposalList = (data: IProposalPageParams): Promise<ResponseData<IPageResponse<ISimpleProposal>>> => {
   return request.get(`${PATH_PREFIX}list`, data);
@@ -20,10 +25,9 @@ type CreateProposalParamsType = {
   title: string;
   proposal_category_id: number;
   content_blocks: IContentBlock[];
-  metaforo_access_token: string;
   submit_to_metaforo: boolean;
 };
 
 export const saveOrSubmitProposal = (data: CreateProposalParamsType) => {
-  return request.post(`${PATH_PREFIX}create`, data);
+  return request.post(`${PATH_PREFIX}create`, { ...data, metaforo_access_token: localStorage.getItem(METAFORO_TOKEN) });
 };

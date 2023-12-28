@@ -5,6 +5,9 @@ import initialItems from './json/initialItem';
 import DataSource from './json/datasource.json';
 import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { MdEditor } from 'md-editor-rt';
+import { saveOrSubmitProposal } from 'requests/proposalV2';
+import { AppActionType, useAuthContext } from 'providers/authProvider';
+import useCheckMetaforoLogin from 'hooks/useCheckMetaforoLogin';
 
 const Box = styled.ul``;
 
@@ -25,6 +28,8 @@ export default function CreateStep() {
   const childRef = useRef(null);
   const [title, setTitle] = useState('');
   const [list, setList] = useState<any[]>([]);
+  const { dispatch } = useAuthContext();
+  const checkMetaforoLogin = useCheckMetaforoLogin();
 
   useEffect(() => {
     let arr = [
@@ -45,11 +50,21 @@ export default function CreateStep() {
     setTitle(value);
   };
 
-  const handleFormSubmit = (data: any) => {
+  const handleFormSubmit = async (data: any) => {
     console.log({
       title,
       content_blocks: list,
       components: data,
+    });
+    await checkMetaforoLogin();
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    saveOrSubmitProposal({
+      title,
+      proposal_category_id: 1, // TODO hardcode for test
+      content_blocks: list,
+      submit_to_metaforo: true,
+    }).finally(() => {
+      dispatch({ type: AppActionType.SET_LOADING, payload: false });
     });
   };
 
