@@ -32,7 +32,7 @@ export default function RegisterSNSStep2() {
   } = useSNSContext();
   const { showToast } = useToast();
 
-  const { handleTransaction, approveToken } = useTransaction();
+  const { handleTransaction, approveToken, handleEstimateGas } = useTransaction();
   const checkBalance = useCheckBalance(provider);
 
   const startTimeRef = useRef<number>(0);
@@ -87,6 +87,10 @@ export default function RegisterSNSStep2() {
     }
   };
 
+  const closeLoading = () => {
+    dispatchSNS({ type: ACTIONS.CLOSE_LOADING });
+  };
+
   const handleRegister = async () => {
     if (!account) {
       return;
@@ -114,7 +118,19 @@ export default function RegisterSNSStep2() {
 
       let txHash: string = '';
       if (user_proof && !hadMintByWhitelist && whitelistIsOpen) {
-        txHash = (await handleTransaction(TX_ACTION.WHITE_MINT, { sns, secret, proof: user_proof })) as string;
+        // estimate
+        const params = { sns, secret, proof: user_proof };
+        try {
+          const estimateResult = await handleEstimateGas(TX_ACTION.WHITE_MINT, params);
+          console.log('estimateResult', estimateResult);
+        } catch (error: any) {
+          closeLoading();
+          showToast(error, ToastType.Danger);
+          // TODO parse error
+          logError('[step-2] estimate white-mint failed', error);
+          return;
+        }
+        txHash = (await handleTransaction(TX_ACTION.WHITE_MINT, params)) as string;
       } else {
         // check balance
         const token = await checkBalance(true, true);
@@ -127,7 +143,20 @@ export default function RegisterSNSStep2() {
         // approve
         await approveToken();
 
-        txHash = (await handleTransaction(TX_ACTION.PAY_MINT, { sns, secret })) as string;
+        // estimate
+        const params = { sns, secret };
+        try {
+          const estimateResult = await handleEstimateGas(TX_ACTION.PAY_MINT, params);
+          console.log('estimateResult', estimateResult);
+        } catch (error: any) {
+          closeLoading();
+          showToast(error, ToastType.Danger);
+          // TODO parse error
+          logError('[step-2] estimate pay-mint failed', error);
+          return;
+        }
+
+        txHash = (await handleTransaction(TX_ACTION.PAY_MINT, params)) as string;
       }
       if (!txHash) {
         throw new Error('txHash is empty');
@@ -140,7 +169,7 @@ export default function RegisterSNSStep2() {
       // go to step3
       // dispatchSNS({ type: ACTIONS.ADD_STEP });
     } catch (error: any) {
-      dispatchSNS({ type: ACTIONS.CLOSE_LOADING });
+      closeLoading();
       logError('register failed', error);
       showToast(error?.reason || error?.data?.message || 'error', ToastType.Danger);
     } finally {

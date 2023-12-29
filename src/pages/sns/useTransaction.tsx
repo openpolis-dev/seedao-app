@@ -113,9 +113,29 @@ export default function useTransaction() {
     });
   };
 
+  const handleEstimateRegister = (sns: string, secret: string) => {
+    return prepareSendTransaction({
+      account: account as Address,
+      to: builtin.SEEDAO_MINTER_ADDR,
+      data: buildRegisterData(sns, ethers.utils.formatBytes32String(secret)) as Hex,
+    });
+  };
+
+  const handleEstimateWhitemint = (sns: string, secret: string, proof: string) => {
+    return prepareSendTransaction({
+      account: account as Address,
+      to: builtin.SEEDAO_MINTER_ADDR,
+      data: buildWhitelistRegisterData(sns, ethers.utils.formatBytes32String(secret), proof) as Hex,
+    });
+  };
+
   const handleEstimateGas = async (action: TX_ACTION, data: any) => {
     if (action === TX_ACTION.COMMIT) {
       return handleEstimateCommit(data);
+    } else if (action === TX_ACTION.PAY_MINT) {
+      return handleEstimateRegister(data.sns, data.secret);
+    } else if (account === TX_ACTION.WHITE_MINT) {
+      return handleEstimateWhitemint(data.sns, data.secret, data.proof);
     }
   };
 
@@ -124,10 +144,9 @@ export default function useTransaction() {
     if (!allowanceResult || allowanceResult < BigInt(PAY_NUMBER)) {
       await sendTransactionAsync({
         to: PAY_TOKEN.address,
-        from: account,
+        account: account as Address,
         value: BigInt(0),
-        // @ts-ignore
-        data: buildApproveData(),
+        data: buildApproveData() as Hex,
       });
     }
   };
