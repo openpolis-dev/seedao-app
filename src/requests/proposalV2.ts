@@ -58,6 +58,13 @@ export const addComment = (id: number, content: string, reply_id?: number) => {
   });
 };
 
+export const editCommet = (id: number, cid: number) => {
+  return request.post(`${PATH_PREFIX}delete_comment/${id}`, {
+    post_id: cid,
+    metaforo_access_token: localStorage.getItem(METAFORO_TOKEN),
+  });
+};
+
 export const deleteCommet = (id: number, cid: number) => {
   return request.post(`${PATH_PREFIX}delete_comment/${id}`, {
     metaforo_access_token: localStorage.getItem(METAFORO_TOKEN),

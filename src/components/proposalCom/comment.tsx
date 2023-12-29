@@ -30,6 +30,7 @@ interface IProps {
   onEdit: (id: number, content: any) => void;
   onDelete: (id: number) => void;
   hideReply?: boolean;
+  isCurrentUser?: boolean;
 }
 
 interface IUserProps {
@@ -57,6 +58,7 @@ export default function CommentComponent({
   onEdit,
   onDelete,
   hideReply,
+  isCurrentUser,
 }: IProps) {
   const { t } = useTranslation();
   const content = useParseContent(data?.content);
@@ -99,14 +101,15 @@ export default function CommentComponent({
             {!hideReply && (
               <>
                 <PlainButton onClick={handleReply}>{t('Proposal.Reply')}</PlainButton>
-                {/* TOOO hide if not current user */}
-                <MoreSelectAction
-                  options={[
-                    { label: t('Proposal.Edit'), value: 'edit' },
-                    { label: t('Proposal.Delete'), value: 'edit' },
-                  ]}
-                  handleClickAction={handleClickMoreAction}
-                />
+                {isCurrentUser && (
+                  <MoreSelectAction
+                    options={[
+                      { label: t('Proposal.Edit'), value: 'edit' },
+                      { label: t('Proposal.Delete'), value: 'edit' },
+                    ]}
+                    handleClickAction={handleClickMoreAction}
+                  />
+                )}
               </>
             )}
           </RelationUserLine>

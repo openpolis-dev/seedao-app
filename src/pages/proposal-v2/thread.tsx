@@ -62,37 +62,37 @@ export default function ThreadPage() {
 
   const replyRef = useRef<IReplyOutputProps>(null);
 
+  const getProposalDetail = async () => {
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    try {
+      const res = await requests.proposalV2.getProposalDetail(Number(id));
+      setData(res.data);
+      setContentBlocks(res.data.content_blocks);
+      setPosts(res.data.comments);
+      setTotalPostsCount(res.data.comment_count);
+      setTotalEditCount(res.data.histories.count ?? 0);
+      setEditHistoryList(res.data.histories?.lists ?? []);
+      const applicant = res.data.applicant;
+      setApplicantSNS(publicJs.AddressToShow(applicant));
+      setApplicantAvatar(res.data.applicant_avatar || DefaultAvatarIcon);
+      if (applicant) {
+        try {
+          const snsMap = await getMultiSNS([applicant]);
+          const name = snsMap.get(applicant.toLocaleLowerCase()) || applicant;
+          setApplicantSNS(name?.endsWith('.seedao') ? name : publicJs.AddressToShow(name, 4));
+        } catch (error) {}
+      }
+    } catch (error) {
+      logError('get proposal detail error:', error);
+    } finally {
+      dispatch({ type: AppActionType.SET_LOADING, payload: false });
+    }
+  };
+
   useEffect(() => {
     if (state) {
       setData(state);
     }
-    const getProposalDetail = async () => {
-      // TODO
-      dispatch({ type: AppActionType.SET_LOADING, payload: true });
-      try {
-        const res = await requests.proposalV2.getProposalDetail(Number(id));
-        setData(res.data);
-        setContentBlocks(res.data.content_blocks);
-        setPosts(res.data.comments);
-        setTotalPostsCount(res.data.comment_count);
-        setTotalEditCount(res.data.histories.count ?? 0);
-        setEditHistoryList(res.data.histories?.lists ?? []);
-        const applicant = res.data.applicant;
-        setApplicantSNS(publicJs.AddressToShow(applicant));
-        setApplicantAvatar(res.data.applicant_avatar || DefaultAvatarIcon);
-        if (applicant) {
-          try {
-            const snsMap = await getMultiSNS([applicant]);
-            const name = snsMap.get(applicant.toLocaleLowerCase()) || applicant;
-            setApplicantSNS(name?.endsWith('.seedao') ? name : publicJs.AddressToShow(name, 4));
-          } catch (error) {}
-        }
-      } catch (error) {
-        logError('get proposal detail error:', error);
-      } finally {
-        dispatch({ type: AppActionType.SET_LOADING, payload: false });
-      }
-    };
     getProposalDetail();
   }, [id, state]);
 
@@ -252,7 +252,14 @@ export default function ThreadPage() {
           </li>
         </BlockTab>
         {blockType === BlockContentType.Reply && (
-          <ReplyComponent id={Number(id)} hideReply={review} posts={posts} ref={replyRef} />
+          <ReplyComponent
+            id={Number(id)}
+            hideReply={review}
+            posts={posts}
+            ref={replyRef}
+            onNewComment={getProposalDetail}
+            isCurrentUser={isCurrentApplicant}
+          />
         )}
         {blockType === BlockContentType.History && <EditActionHistory data={editHistoryList} />}
       </ReplyAndHistoryBlock>
