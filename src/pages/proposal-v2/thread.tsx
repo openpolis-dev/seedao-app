@@ -7,8 +7,7 @@ import ProposalVote from 'components/proposalCom/vote';
 import ReplyComponent, { IReplyOutputProps } from 'components/proposalCom/reply';
 import ReviewProposalComponent from 'components/proposalCom/reviewProposalComponent';
 import EditActionHistory from 'components/proposalCom/editActionhistory';
-import { IBaseProposal, EditHistoryType } from 'type/proposal.type';
-import { IContentBlock, IProposal, ProposalState } from 'type/proposalV2.type';
+import { IContentBlock, IProposal, IProposalEditHistoy, ProposalState } from 'type/proposalV2.type';
 import { useAuthContext, AppActionType } from 'providers/authProvider';
 import requests from 'requests';
 import { formatDate } from 'utils/time';
@@ -50,7 +49,7 @@ export default function ThreadPage() {
   const [posts, setPosts] = useState<any[]>([]);
   const [totalPostsCount, setTotalPostsCount] = useState<number>(0);
   const [totalEditCount, setTotalEditCount] = useState<number>(0);
-  const [editHistoryList, setEditHistoryList] = useState<EditHistoryType[]>([]);
+  const [editHistoryList, setEditHistoryList] = useState<IProposalEditHistoy[]>([]);
   const [contentBlocks, setContentBlocks] = useState<IContentBlock[]>([]);
   const currentState = getRealState(data?.state);
 
@@ -75,9 +74,9 @@ export default function ThreadPage() {
         setData(res.data);
         setContentBlocks(res.data.content_blocks);
         setPosts(res.data.comments);
-        // setTotalPostsCount(res.data.thread.posts_count);
-        // setTotalEditCount(res.data.thread.edit_history?.count ?? 0);
-        // setEditHistoryList(res.data.thread.edit_history?.lists ?? []);
+        setTotalPostsCount(res.data.comment_count);
+        setTotalEditCount(res.data.histories.count ?? 0);
+        setEditHistoryList(res.data.histories?.lists ?? []);
         const applicant = res.data.applicant;
         setApplicantSNS(publicJs.AddressToShow(applicant));
         setApplicantAvatar(res.data.applicant_avatar || DefaultAvatarIcon);

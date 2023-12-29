@@ -31,6 +31,15 @@ export interface IContentBlock {
   content: string;
 }
 
+export interface IProposalEditHistoy {
+  username: string;
+  created_at: string;
+  arweave: string;
+  post_type: 0 | 1;
+  post_id: number;
+  id: number;
+}
+
 export interface IProposal extends ISimpleProposal {
   reviewer: string;
   applicant_avatar: string;
@@ -41,4 +50,9 @@ export interface IProposal extends ISimpleProposal {
   reject_ts: number;
   arweave: string;
   comments: any[];
+  comment_count: number;
+  histories: {
+    count: number;
+    lists: IProposalEditHistoy[];
+  };
 }
