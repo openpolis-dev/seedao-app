@@ -54,6 +54,7 @@ type VoteOption = {
 };
 
 export interface Poll {
+  id: number;
   title: string;
   address: string;
   alias?: string;

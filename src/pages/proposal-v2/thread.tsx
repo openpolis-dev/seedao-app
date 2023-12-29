@@ -169,7 +169,7 @@ export default function ThreadPage() {
       return false;
     }
     if (
-      [ProposalState.Rejected, ProposalState.Withdrawn, ProposalState.PendingSubmit, ProposalState.Approved].includes(
+      [ProposalState.Rejected, ProposalState.Withdrawn, ProposalState.PendingSubmit, ProposalState.Draft].includes(
         data?.state,
       )
     ) {
@@ -233,7 +233,7 @@ export default function ThreadPage() {
           </li>
         )}
       </ThreadToolsBar>
-      {showVote() && <ProposalVote poll={data!.votes[0]} />}
+      {showVote() && <ProposalVote poll={data!.votes[0]} id={Number(id)} />}
       <ReplyAndHistoryBlock>
         <BlockTab>
           <li

@@ -1,13 +1,18 @@
 import { useMemo, useState } from 'react';
-import { Button, Form } from 'react-bootstrap';
+import { Button, Form, Toast } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { Poll, VoteType } from 'type/proposalV2.type';
+import { castVote } from 'requests/proposalV2';
+import { AppActionType, useAuthContext } from 'providers/authProvider';
+import useToast, { ToastType } from 'hooks/useToast';
 const { Check } = Form;
 
-export default function ProposalVote({ poll }: { poll: Poll }) {
+export default function ProposalVote({ id, poll }: { id: number; poll: Poll }) {
   const { t } = useTranslation();
   const [selectOption, setSelectOption] = useState<number>();
+  const { dispatch } = useAuthContext();
+  const { showToast } = useToast();
 
   const voteStatusTag = useMemo(() => {
     console.log('poll.vote_type', poll.status);
@@ -19,6 +24,21 @@ export default function ProposalVote({ poll }: { poll: Poll }) {
       return <></>;
     }
   }, [poll, t]);
+
+  const goVote = () => {
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    castVote(id, poll.id, selectOption!)
+      .then(() => {
+        // TODO update status
+      })
+      .catch((error) => {
+        logError('cast error failed', error);
+        showToast(`cast error failed: ${error?.data?.msg}`, ToastType.Danger);
+      })
+      .finally(() => {
+        dispatch({ type: AppActionType.SET_LOADING, payload: false });
+      });
+  };
 
   const showVoteContent = () => {
     if (poll.status === VoteType.Open || poll.status === VoteType.Closed || poll.is_vote) {
@@ -47,7 +67,9 @@ export default function ProposalVote({ poll }: { poll: Poll }) {
               <OptionContent>{option.html}</OptionContent>
             </VoteOptionSelect>
           ))}
-          <VoteButton>{t('Proposal.Vote')}</VoteButton>
+          <VoteButton onClick={goVote} disabled={selectOption === void undefined}>
+            {t('Proposal.Vote')}
+          </VoteButton>
         </>
       );
     }
