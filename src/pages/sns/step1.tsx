@@ -55,7 +55,7 @@ export default function RegisterSNSStep1() {
     state: { controllerContract, localData, hasReached, user_proof, hadMintByWhitelist, whitelistIsOpen },
   } = useSNSContext();
 
-  const { handleTransaction } = useTransaction();
+  const { handleTransaction, handleEstimateGas } = useTransaction();
 
   const { showToast } = useToast();
   const checkBalance = useCheckBalance(provider);
@@ -173,19 +173,41 @@ export default function RegisterSNSStep1() {
       return;
     }
     // mint
+
+    // make commitment
+    let commitment = '';
+    let random_code = '';
     try {
-      const _s = getRandomCode();
-      setRandomSecret(_s);
+      random_code = getRandomCode();
+      setRandomSecret(random_code);
       // get commitment
-      const commitment = await controllerContract.makeCommitment(
+      commitment = await controllerContract.makeCommitment(
         searchVal,
         account,
         builtin.PUBLIC_RESOLVER_ADDR,
-        ethers.utils.formatBytes32String(_s),
+        ethers.utils.formatBytes32String(random_code),
       );
-      // commit
-      dispatchSNS({ type: ACTIONS.SHOW_LOADING });
+    } catch (error: any) {
+      dispatchSNS({ type: ACTIONS.CLOSE_LOADING });
+      logError(`[step-1] commitment failed`, error);
+      showToast(`make commitment failed: ${error}`, ToastType.Danger);
+      return;
+    }
 
+    // estimate commit
+    try {
+      const estimateResult = await handleEstimateGas(TX_ACTION.COMMIT, commitment);
+      console.log('estimateResult', estimateResult);
+    } catch (error: any) {
+      dispatchSNS({ type: ACTIONS.CLOSE_LOADING });
+      showToast(error, ToastType.Danger);
+      // TODO parse error
+      logError('[step-1] estimate commit failed', error);
+      return;
+    }
+
+    try {
+      // commit
       const txHash = (await handleTransaction(TX_ACTION.COMMIT, commitment)) as string;
       // record to localstorage
       const data = { ...localData };
@@ -195,12 +217,12 @@ export default function RegisterSNSStep1() {
         commitHash: txHash,
         stepStatus: 'pending',
         timestamp: 0,
-        secret: _s,
+        secret: random_code,
         registerHash: '',
       };
       dispatchSNS({ type: ACTIONS.SET_STORAGE, payload: JSON.stringify(data) });
     } catch (error: any) {
-      logError('mint failed', error);
+      logError('[step-1] commit failed', error);
       dispatchSNS({ type: ACTIONS.CLOSE_LOADING });
       showToast(error?.reason || error?.data?.message || error, ToastType.Danger);
     }

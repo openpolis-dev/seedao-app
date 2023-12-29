@@ -6,6 +6,7 @@ import REGISTER_ABI from 'assets/abi/SeeDAOMinter.json';
 import { builtin } from '@seedao/sns-js';
 import { useAuthContext } from 'providers/authProvider';
 import { erc20ABI, useSendTransaction, useContractRead, Address } from 'wagmi';
+import { prepareSendTransaction } from 'wagmi/actions';
 import { Hex } from 'viem';
 
 import getConfig from 'utils/envCofnig';
@@ -104,6 +105,20 @@ export default function useTransaction() {
     }
   };
 
+  const handleEstimateCommit = (commitment: string) => {
+    return prepareSendTransaction({
+      account: account as Address,
+      to: builtin.SEEDAO_REGISTRAR_CONTROLLER_ADDR,
+      data: buildCommitData(commitment) as Hex,
+    });
+  };
+
+  const handleEstimateGas = async (action: TX_ACTION, data: any) => {
+    if (action === TX_ACTION.COMMIT) {
+      return handleEstimateCommit(data);
+    }
+  };
+
   const approveToken = async () => {
     console.log('=======approveToken data=======', allowanceResult);
     if (!allowanceResult || allowanceResult < BigInt(PAY_NUMBER)) {
@@ -117,5 +132,5 @@ export default function useTransaction() {
     }
   };
 
-  return { handleTransaction, approveToken };
+  return { handleTransaction, approveToken, handleEstimateGas };
 }
