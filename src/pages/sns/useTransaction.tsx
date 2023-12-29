@@ -6,6 +6,7 @@ import REGISTER_ABI from 'assets/abi/SeeDAOMinter.json';
 import { builtin } from '@seedao/sns-js';
 import { useAuthContext } from 'providers/authProvider';
 import { erc20ABI, useSendTransaction, useContractRead, Address } from 'wagmi';
+import { Hex } from 'viem';
 
 import getConfig from 'utils/envCofnig';
 const networkConfig = getConfig().NETWORK;
@@ -64,10 +65,9 @@ export default function useTransaction() {
   const handleCommit = async (wallet: Wallet, commitment: string) => {
     const tx = await sendTransactionAsync({
       to: builtin.SEEDAO_REGISTRAR_CONTROLLER_ADDR,
-      from: account,
+      account: account as Address,
       value: BigInt(0),
-      // @ts-ignore
-      data: buildCommitData(commitment),
+      data: buildCommitData(commitment) as Hex,
     });
     return tx?.hash;
   };
@@ -75,10 +75,9 @@ export default function useTransaction() {
   const handleRegister = async (wallet: Wallet, sns: string, secret: string) => {
     const tx = await sendTransactionAsync({
       to: builtin.SEEDAO_MINTER_ADDR,
-      from: account,
+      account: account as Address,
       value: BigInt(0),
-      // @ts-ignore
-      data: buildRegisterData(sns, ethers.utils.formatBytes32String(secret)),
+      data: buildRegisterData(sns, ethers.utils.formatBytes32String(secret)) as Hex,
     });
     return tx?.hash;
   };
