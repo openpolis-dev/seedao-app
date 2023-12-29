@@ -38,6 +38,7 @@ export interface IProposal extends ISimpleProposal {
   content_blocks: IContentBlock[];
   reject_reason: string;
   is_rejected: string;
+  reject_ts: number;
   arweave: string;
   comments: any[];
 }

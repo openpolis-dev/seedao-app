@@ -185,9 +185,11 @@ export default function ThreadPage() {
           </StoreHash>
         )}
       </ThreadHead>
-      {data?.is_rejected && data?.reject_reason && (
+      {data?.is_rejected && data?.reject_reason && data?.reject_ts && (
         <RejectBlock>
-          <div>{t('Proposal.CityhallRejected')}</div>
+          <div>
+            {t('Proposal.CityhallRejected')} - {formatDate(new Date(data.reject_ts * 1000))}
+          </div>
           <div>{data.reject_reason}</div>
         </RejectBlock>
       )}
