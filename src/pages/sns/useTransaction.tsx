@@ -134,7 +134,7 @@ export default function useTransaction() {
       return handleEstimateCommit(data);
     } else if (action === TX_ACTION.PAY_MINT) {
       return handleEstimateRegister(data.sns, data.secret);
-    } else if (account === TX_ACTION.WHITE_MINT) {
+    } else if (action === TX_ACTION.WHITE_MINT) {
       return handleEstimateWhitemint(data.sns, data.secret, data.proof);
     }
   };

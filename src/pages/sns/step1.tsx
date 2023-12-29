@@ -21,6 +21,8 @@ import { useEthersProvider } from 'hooks/ethersNew';
 import useTransaction, { TX_ACTION } from './useTransaction';
 import getConfig from 'utils/envCofnig';
 import useCheckBalance from './useCheckBalance';
+import parseError from './parseError';
+
 const networkConfig = getConfig().NETWORK;
 const PAY_NUMBER = networkConfig.tokens[0].price;
 
@@ -200,9 +202,8 @@ export default function RegisterSNSStep1() {
       console.log('estimateResult', estimateResult);
     } catch (error: any) {
       dispatchSNS({ type: ACTIONS.CLOSE_LOADING });
-      showToast(error, ToastType.Danger);
-      // TODO parse error
       logError('[step-1] estimate commit failed', error);
+      showToast(parseError(error), ToastType.Danger);
       return;
     }
 
@@ -224,7 +225,7 @@ export default function RegisterSNSStep1() {
     } catch (error: any) {
       logError('[step-1] commit failed', error);
       dispatchSNS({ type: ACTIONS.CLOSE_LOADING });
-      showToast(error?.reason || error?.data?.message || error, ToastType.Danger);
+      showToast(parseError(error), ToastType.Danger);
     }
   };
 

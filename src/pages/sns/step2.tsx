@@ -9,10 +9,10 @@ import useToast, { ToastType } from 'hooks/useToast';
 import useTransaction, { TX_ACTION } from './useTransaction';
 import CancelModal from './cancelModal';
 import getConfig from 'utils/envCofnig';
-import { ethers } from 'ethers';
 import useCheckBalance from './useCheckBalance';
 import { useEthersProvider } from 'hooks/ethersNew';
 import { useNetwork, useSwitchNetwork } from 'wagmi';
+import parseError from './parseError';
 
 const networkConfig = getConfig().NETWORK;
 
@@ -27,7 +27,7 @@ export default function RegisterSNSStep2() {
     state: { account, theme },
   } = useAuthContext();
   const {
-    state: { localData, sns, user_proof, hadMintByWhitelist, whitelistIsOpen },
+    state: { localData, sns, user_proof, hadMintByWhitelist, whitelistIsOpen, hasReached },
     dispatch: dispatchSNS,
   } = useSNSContext();
   const { showToast } = useToast();
@@ -92,6 +92,10 @@ export default function RegisterSNSStep2() {
   };
 
   const handleRegister = async () => {
+    if (hasReached) {
+      showToast(t('SNS.HadSNS'), ToastType.Danger);
+      return;
+    }
     if (!account) {
       return;
     }
@@ -125,9 +129,8 @@ export default function RegisterSNSStep2() {
           console.log('estimateResult', estimateResult);
         } catch (error: any) {
           closeLoading();
-          showToast(error, ToastType.Danger);
-          // TODO parse error
           logError('[step-2] estimate white-mint failed', error);
+          showToast(parseError(error), ToastType.Danger);
           return;
         }
         txHash = (await handleTransaction(TX_ACTION.WHITE_MINT, params)) as string;
@@ -150,9 +153,8 @@ export default function RegisterSNSStep2() {
           console.log('estimateResult', estimateResult);
         } catch (error: any) {
           closeLoading();
-          showToast(error, ToastType.Danger);
-          // TODO parse error
           logError('[step-2] estimate pay-mint failed', error);
+          showToast(parseError(error), ToastType.Danger);
           return;
         }
 
@@ -171,7 +173,7 @@ export default function RegisterSNSStep2() {
     } catch (error: any) {
       closeLoading();
       logError('register failed', error);
-      showToast(error?.reason || error?.data?.message || 'error', ToastType.Danger);
+      showToast(parseError(error), ToastType.Danger);
     } finally {
     }
   };
