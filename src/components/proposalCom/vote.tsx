@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import { Poll, VoteType } from 'type/proposal.type';
+import { Poll, VoteType } from 'type/proposalV2.type';
 const { Check } = Form;
 
 export default function ProposalVote({ poll }: { poll: Poll }) {

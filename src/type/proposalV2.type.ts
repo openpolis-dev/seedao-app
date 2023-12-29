@@ -40,6 +40,33 @@ export interface IProposalEditHistoy {
   id: number;
 }
 
+export enum VoteType {
+  Open = 'open',
+  Closed = 'close',
+  Waite = 'waite',
+}
+
+type VoteOption = {
+  html: string;
+  percent: number;
+  voters: number;
+  id: number;
+};
+
+export interface Poll {
+  title: string;
+  address: string;
+  alias?: string;
+  arweave?: string;
+  token_id: number;
+  status: VoteType;
+  leftTime: string;
+  options: VoteOption[];
+  poll_start_at: string;
+  totalVotes: number;
+  is_vote: 0 | 1; // 0: not voted, 1: voted
+}
+
 export interface IProposal extends ISimpleProposal {
   reviewer: string;
   applicant_avatar: string;
@@ -51,6 +78,7 @@ export interface IProposal extends ISimpleProposal {
   arweave: string;
   comments: any[];
   comment_count: number;
+  votes: Poll[];
   histories: {
     count: number;
     lists: IProposalEditHistoy[];

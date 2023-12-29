@@ -39,7 +39,7 @@ export default function ThreadPage() {
   const { t } = useTranslation();
   const {
     dispatch,
-    state: { theme },
+    state: { theme, account },
   } = useAuthContext();
   const proposalCategories = useProposalCategories();
   const checkMetaforoLogin = useCheckMetaforoLogin();
@@ -150,7 +150,6 @@ export default function ThreadPage() {
     }
   };
 
-  const currentStoreHash = editHistoryList[editHistoryList.length - 1]?.arweave;
   const currentCategory = () => {
     if (data?.category_name) {
       return data.category_name;
@@ -163,6 +162,30 @@ export default function ThreadPage() {
       }
       return t('Proposal.ProposalDetail');
     }
+  };
+
+  const showVote = () => {
+    if (!data?.votes?.[0]) {
+      return false;
+    }
+    if (
+      [ProposalState.Rejected, ProposalState.Withdrawn, ProposalState.PendingSubmit, ProposalState.Approved].includes(
+        data?.state,
+      )
+    ) {
+      return false;
+    }
+    return true;
+  };
+
+  const isCurrentApplicant = data?.applicant?.toLocaleLowerCase() === account?.toLocaleLowerCase();
+
+  const moreActions = () => {
+    const actions = [{ label: t('Proposal.Edit'), value: 'edit' }];
+    if (data?.state === ProposalState.Draft) {
+      actions.push({ label: t('Proposal.Withdrawn'), value: 'withdrawn' });
+    }
+    return actions;
   };
 
   return (
@@ -201,20 +224,16 @@ export default function ThreadPage() {
         </ProposalContentBlock>
       ))}
       <ThreadToolsBar>
-        <li>{t('Proposal.Vote')}</li>
+        {showVote() && <li>{t('Proposal.Vote')}</li>}
         <li onClick={openComment}>{t('Proposal.Comment')}</li>
         <li>{t('Proposal.Share')}</li>
-        <li>
-          <MoreSelectAction
-            options={[
-              { label: t('Proposal.Edit'), value: 'edit' },
-              { label: t('Proposal.Withdrawn'), value: 'withdrawn' },
-            ]}
-            handleClickAction={handleClickMoreAction}
-          />
-        </li>
+        {isCurrentApplicant && (
+          <li>
+            <MoreSelectAction options={moreActions()} handleClickAction={handleClickMoreAction} />
+          </li>
+        )}
       </ThreadToolsBar>
-      {/* {data?.polls?.[0] && <ProposalVote poll={data.polls[0]} />} */}
+      {showVote() && <ProposalVote poll={data!.votes[0]} />}
       <ReplyAndHistoryBlock>
         <BlockTab>
           <li
