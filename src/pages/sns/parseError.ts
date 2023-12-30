@@ -1,5 +1,5 @@
-import { ethers } from 'ethers';
-import { EstimateGasExecutionError, TransactionExecutionError } from 'viem';
+import { EstimateGasExecutionError, TransactionExecutionError, RpcRequestError } from 'viem';
+import { decodeErrorResult } from 'viem';
 
 const ERROR_ABI = [
   {
@@ -48,28 +48,26 @@ const ERROR_ABI = [
 ];
 
 const parseErrorData = (data: any) => {
-  const iface = new ethers.utils.Interface(ERROR_ABI);
-  const parsed = iface.parseError(data);
+  // @ts-ignore
+  const parsed = decodeErrorResult({
+    abi: ERROR_ABI,
+    data,
+  });
   console.log('parsed', parsed);
   return parsed;
 };
 
 const parseError = (error: Error) => {
   if (error instanceof EstimateGasExecutionError || error instanceof TransactionExecutionError) {
-    console.log('cause', error.cause);
-    console.log('details', error.details);
-    console.log('metaMessages', error.metaMessages);
-    console.log('shortMessage', error.shortMessage);
     if (error.details === 'execution reverted') {
-      const metaMessage = error.metaMessages?.[1].split('\n') || [];
-      console.log('====', metaMessage);
-      const dataItemStr = metaMessage.find((m) => m.trimStart().startsWith('data:'))!.trim();
-      const errData = dataItemStr.replace('data:', '').trim();
-      console.log('>> dataItemStr', dataItemStr);
-      console.log('>> errData', errData);
-      const result = parseErrorData(errData);
-      console.log('>> result', result);
-      return result.name;
+      const rpc_error = error.walk((e) => e instanceof RpcRequestError);
+      if (rpc_error) {
+        // @ts-ignore
+        const result = parseErrorData(rpc_error.cause.data);
+        return result.errorName;
+      } else {
+        return error.shortMessage;
+      }
     } else {
       return error.shortMessage;
     }
