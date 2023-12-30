@@ -16,6 +16,8 @@ import { getRandomCode } from 'utils';
 import useToast, { ToastType } from 'hooks/useToast';
 import { useNavigate } from 'react-router-dom';
 import { Address, useNetwork, useSwitchNetwork } from 'wagmi';
+import { WaitForTransactionResult, waitForTransaction } from 'wagmi/actions';
+import { Hex } from 'viem';
 import { useEthersProvider } from 'hooks/ethersNew';
 
 import useTransaction, { TX_ACTION } from './useTransaction';
@@ -242,40 +244,34 @@ export default function RegisterSNSStep1() {
     if (!hash || localData[account]?.stepStatus === 'failed') {
       return;
     }
-    let timer: any;
     // TODO check network
-    const timerFunc = () => {
+    const checkTxStatus = () => {
       if (!account || !localData) {
         return;
       }
       console.log(localData, account);
-
       if (!hash) {
         return;
       }
-      provider.getTransactionReceipt(hash).then((r: any) => {
+      waitForTransaction({ hash: hash as Hex }).then((r: WaitForTransactionResult) => {
         console.log('r:', r);
         const _d = { ...localData };
-        if (r && r.status === 1) {
-          // means tx success
+        if (r && r.status === 'success') {
           _d[account].stepStatus = 'success';
-          provider.getBlock(r.blockNumber).then((block: any) => {
+          provider.getBlock(Number(r.blockNumber.toString())).then((block: any) => {
             _d[account].timestamp = block.timestamp;
             dispatchSNS({ type: ACTIONS.SET_STORAGE, payload: JSON.stringify(_d) });
             dispatchSNS({ type: ACTIONS.CLOSE_LOADING });
-            clearInterval(timer);
           });
-        } else if (r && (r.status === 2 || r.status === 0)) {
-          // means tx failed
+        } else if (r && r.status === 'reverted') {
+          logError(`tx failed: ${hash}`);
           _d[account].stepStatus = 'failed';
           dispatchSNS({ type: ACTIONS.SET_STORAGE, payload: JSON.stringify(_d) });
           dispatchSNS({ type: ACTIONS.CLOSE_LOADING });
-          clearInterval(timer);
         }
       });
     };
-    timer = setInterval(timerFunc, 1000);
-    return () => timer && clearInterval(timer);
+    checkTxStatus();
   }, [localData, account, provider]);
 
   const showButton = () => {
