@@ -15,12 +15,12 @@ import { builtin } from '@seedao/sns-js';
 import { getRandomCode } from 'utils';
 import useToast, { ToastType } from 'hooks/useToast';
 import { useNavigate } from 'react-router-dom';
-import { useNetwork, useSwitchNetwork } from 'wagmi';
+import { Address, useNetwork, useSwitchNetwork } from 'wagmi';
 import { useEthersProvider } from 'hooks/ethersNew';
 
 import useTransaction, { TX_ACTION } from './useTransaction';
 import getConfig from 'utils/envCofnig';
-import useCheckBalance from './useCheckBalance';
+import { checkEstimateGasFeeEnough, checkTokenBalance } from './checkUserBalance';
 import parseError from './parseError';
 
 const networkConfig = getConfig().NETWORK;
@@ -58,10 +58,7 @@ export default function RegisterSNSStep1() {
   } = useSNSContext();
 
   const { handleTransaction, handleEstimateGas } = useTransaction();
-
   const { showToast } = useToast();
-  const checkBalance = useCheckBalance(provider);
-
   const isLogin = useCheckLogin(account);
 
   const handleSearchAvailable = async (v: string) => {
@@ -167,14 +164,15 @@ export default function RegisterSNSStep1() {
       return;
     }
 
-    // check balance
-    const token = await checkBalance(true, !(whitelistIsOpen && user_proof && !hadMintByWhitelist));
-    if (token) {
-      showToast(t('SNS.NotEnoughBalance', { token }), ToastType.Danger, { hideProgressBar: true });
-      dispatchSNS({ type: ACTIONS.CLOSE_LOADING });
-      return;
+    // check token balance if mint by paying token
+    if (!(whitelistIsOpen && user_proof && !hadMintByWhitelist)) {
+      const token = await checkTokenBalance(account as Address);
+      if (token) {
+        showToast(t('SNS.NotEnoughBalance', { token }), ToastType.Danger, { hideProgressBar: true });
+        dispatchSNS({ type: ACTIONS.CLOSE_LOADING });
+        return;
+      }
     }
-    // mint
 
     // make commitment
     let commitment = '';
@@ -200,6 +198,12 @@ export default function RegisterSNSStep1() {
     try {
       const estimateResult = await handleEstimateGas(TX_ACTION.COMMIT, commitment);
       console.log('estimateResult', estimateResult);
+      const notEnoughToken = await checkEstimateGasFeeEnough(estimateResult, account as Address);
+      if (notEnoughToken) {
+        showToast(t('SNS.NotEnoughBalance', { notEnoughToken }), ToastType.Danger, { hideProgressBar: true });
+        dispatchSNS({ type: ACTIONS.CLOSE_LOADING });
+        return;
+      }
     } catch (error: any) {
       dispatchSNS({ type: ACTIONS.CLOSE_LOADING });
       logError('[step-1] estimate commit failed', error);
@@ -207,8 +211,8 @@ export default function RegisterSNSStep1() {
       return;
     }
 
+    // commit
     try {
-      // commit
       const txHash = (await handleTransaction(TX_ACTION.COMMIT, commitment)) as string;
       // record to localstorage
       const data = { ...localData };

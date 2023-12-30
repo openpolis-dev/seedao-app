@@ -9,9 +9,9 @@ import useToast, { ToastType } from 'hooks/useToast';
 import useTransaction, { TX_ACTION } from './useTransaction';
 import CancelModal from './cancelModal';
 import getConfig from 'utils/envCofnig';
-import useCheckBalance from './useCheckBalance';
+import { checkTokenBalance, checkEstimateGasFeeEnough } from './checkUserBalance';
 import { useEthersProvider } from 'hooks/ethersNew';
-import { useNetwork, useSwitchNetwork } from 'wagmi';
+import { Address, useNetwork, useSwitchNetwork } from 'wagmi';
 import parseError from './parseError';
 
 const networkConfig = getConfig().NETWORK;
@@ -33,7 +33,6 @@ export default function RegisterSNSStep2() {
   const { showToast } = useToast();
 
   const { handleTransaction, approveToken, handleEstimateGas } = useTransaction();
-  const checkBalance = useCheckBalance(provider);
 
   const startTimeRef = useRef<number>(0);
   const [leftTime, setLeftTime] = useState<number>(0);
@@ -108,25 +107,23 @@ export default function RegisterSNSStep2() {
     } catch (error) {
       return;
     }
-
-    // check native balance
-    const token = await checkBalance(true);
-    if (token) {
-      showToast(t('SNS.NotEnoughBalance', { token }), ToastType.Danger, { hideProgressBar: true });
-      dispatchSNS({ type: ACTIONS.CLOSE_LOADING });
-      return;
-    }
     dispatchSNS({ type: ACTIONS.SHOW_LOADING });
     try {
       const d = { ...localData };
 
       let txHash: string = '';
-      if (user_proof && !hadMintByWhitelist && whitelistIsOpen) {
+      if (user_proof && !hadMintByWhitelist && !whitelistIsOpen) {
         // estimate
         const params = { sns, secret, proof: user_proof };
         try {
           const estimateResult = await handleEstimateGas(TX_ACTION.WHITE_MINT, params);
           console.log('estimateResult', estimateResult);
+          const notEnoughToken = await checkEstimateGasFeeEnough(estimateResult, account as Address);
+          if (notEnoughToken) {
+            showToast(t('SNS.NotEnoughBalance', { notEnoughToken }), ToastType.Danger, { hideProgressBar: true });
+            dispatchSNS({ type: ACTIONS.CLOSE_LOADING });
+            return;
+          }
         } catch (error: any) {
           closeLoading();
           logError('[step-2] estimate white-mint failed', error);
@@ -136,7 +133,7 @@ export default function RegisterSNSStep2() {
         txHash = (await handleTransaction(TX_ACTION.WHITE_MINT, params)) as string;
       } else {
         // check balance
-        const token = await checkBalance(true, true);
+        const token = await checkTokenBalance(account as Address);
         if (token) {
           showToast(t('SNS.NotEnoughBalance', { token }), ToastType.Danger, { hideProgressBar: true });
           dispatchSNS({ type: ACTIONS.CLOSE_LOADING });
@@ -151,6 +148,12 @@ export default function RegisterSNSStep2() {
         try {
           const estimateResult = await handleEstimateGas(TX_ACTION.PAY_MINT, params);
           console.log('estimateResult', estimateResult);
+          const notEnoughToken = await checkEstimateGasFeeEnough(estimateResult, account as Address);
+          if (notEnoughToken) {
+            showToast(t('SNS.NotEnoughBalance', { notEnoughToken }), ToastType.Danger, { hideProgressBar: true });
+            dispatchSNS({ type: ACTIONS.CLOSE_LOADING });
+            return;
+          }
         } catch (error: any) {
           closeLoading();
           logError('[step-2] estimate pay-mint failed', error);
