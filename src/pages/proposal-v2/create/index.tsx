@@ -36,11 +36,13 @@ const CreateProposalSteps = () => {
 
   return (
     <>
-      <BackerNav
-        title={backNavTitle}
-        to={currentStep === 1 ? '/proposal-v2' : '/proposal-v2/create'}
-        onClick={backTo}
-      />
+      {currentStep !== 3 && (
+        <BackerNav
+          title={backNavTitle}
+          to={currentStep === 1 ? '/proposal-v2' : '/proposal-v2/create'}
+          onClick={backTo}
+        />
+      )}
       {showstep()}
     </>
   );
