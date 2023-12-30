@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { Template } from '@seedao/proposal';
+import { Template } from '@seedao/components';
 import initialItems from './json/initialItem';
 import DataSource from './json/datasource.json';
 import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
