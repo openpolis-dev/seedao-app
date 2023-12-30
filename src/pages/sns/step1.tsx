@@ -244,7 +244,10 @@ export default function RegisterSNSStep1() {
     if (!hash || localData[account]?.stepStatus === 'failed') {
       return;
     }
-    // TODO check network
+    // check network
+    if (chain?.id !== networkConfig.chainId) {
+      return;
+    }
     const checkTxStatus = () => {
       if (!account || !localData) {
         return;
@@ -272,7 +275,7 @@ export default function RegisterSNSStep1() {
       });
     };
     checkTxStatus();
-  }, [localData, account, provider]);
+  }, [localData, account, provider, chain]);
 
   const showButton = () => {
     if (hasReached) {
