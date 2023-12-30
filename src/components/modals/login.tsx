@@ -229,12 +229,14 @@ const LoginModalContent = () => {
   };
 
   const getConnectionButtons = () => {
-    return connectors.map((connector) => (
-      <WalletOption onClick={() => handleClickWallet(connector)} key={connector.id}>
-        <img src={getConnectorStatic(connector.id as CONNECTOR_ID)?.icon} alt="" />
-        <span>{getConnectorButtonText(connector)}</span>
-      </WalletOption>
-    ));
+    return connectors.map((connector) => {
+       return connector.id === CONNECTOR_ID.UNIPASS ? null : (
+         <WalletOption onClick={() => handleClickWallet(connector)} key={connector.id}>
+           <img src={getConnectorStatic(connector.id as CONNECTOR_ID)?.icon} alt="" />
+           <span>{getConnectorButtonText(connector)}</span>
+         </WalletOption>
+       );
+    });
   };
   return (
     <Mask show={true}>
@@ -278,7 +280,7 @@ const Mask = styled.div<ShowProps>`
 
 const Modal = styled.div`
   width: 427px;
-  min-height: 354px;
+  /* min-height: 354px; */
   opacity: 1;
   border-radius: 16px;
   background: var(--bs-background);
