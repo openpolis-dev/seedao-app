@@ -9,7 +9,9 @@ import ABI from 'assets/abi/SeeDAORegistrarController.json';
 import useToast, { ToastType } from 'hooks/useToast';
 import getConfig from 'utils/envCofnig';
 import { useEthersProvider } from 'hooks/ethersNew';
-import { useSendTransaction } from 'wagmi';
+import { useSendTransaction, Address } from 'wagmi';
+import parseError from './parseError';
+import { Hex } from "viem";
 
 const networkConfig = getConfig().NETWORK;
 
@@ -58,16 +60,16 @@ export default function SwitchModal({ select, handleClose }: IProps) {
     try {
       const tx = await sendTransactionAsync({
         to: builtin.SEEDAO_REGISTRAR_CONTROLLER_ADDR,
-        from: account,
+        account: account as Address,
         value: BigInt(0),
-        // @ts-ignore
-        data: buildSwitchData(select),
+        data: buildSwitchData(select) as Hex,
       });
       const txHash = tx.hash;
       handleCheckTx(txHash);
-    } catch (error) {
+    } catch (error: any) {
       logError(error);
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
+      showToast(parseError(error), ToastType.Danger);
     }
   };
   return (
