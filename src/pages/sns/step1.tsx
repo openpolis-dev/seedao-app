@@ -243,6 +243,7 @@ export default function RegisterSNSStep1() {
       return;
     }
     let timer: any;
+    // TODO check network
     const timerFunc = () => {
       if (!account || !localData) {
         return;

@@ -190,6 +190,7 @@ export default function RegisterSNSStep2() {
     if (!hash || localData[account]?.stepStatus === 'failed') {
       return;
     }
+    // TODO check network
     let timer: any;
     const timerFunc = () => {
       if (!account || !localData) {
