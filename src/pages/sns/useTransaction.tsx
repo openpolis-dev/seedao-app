@@ -5,8 +5,8 @@ import CONTROLLER_ABI from 'assets/abi/SeeDAORegistrarController.json';
 import REGISTER_ABI from 'assets/abi/SeeDAOMinter.json';
 import { builtin } from '@seedao/sns-js';
 import { useAuthContext } from 'providers/authProvider';
-import { erc20ABI, useSendTransaction, useContractRead, Address } from 'wagmi';
-import { prepareSendTransaction } from 'wagmi/actions';
+import { erc20ABI, useSendTransaction, Address } from 'wagmi';
+import { prepareSendTransaction, readContract } from 'wagmi/actions';
 import { Hex } from 'viem';
 
 import getConfig from 'utils/envCofnig';
@@ -55,13 +55,6 @@ export default function useTransaction() {
   } = useAuthContext();
 
   const { sendTransactionAsync } = useSendTransaction();
-
-  const { data: allowanceResult } = useContractRead({
-    address: PAY_TOKEN.address as Address,
-    abi: erc20ABI,
-    functionName: 'allowance',
-    args: [account as Address, builtin.SEEDAO_MINTER_ADDR as Address],
-  });
 
   const handleCommit = async (wallet: Wallet, commitment: string) => {
     const tx = await sendTransactionAsync({
@@ -140,7 +133,13 @@ export default function useTransaction() {
   };
 
   const approveToken = async () => {
-    console.log('=======approveToken data=======', allowanceResult);
+    const allowanceResult = await readContract({
+      address: PAY_TOKEN.address as Address,
+      abi: erc20ABI,
+      functionName: 'allowance',
+      args: [account as Address, builtin.SEEDAO_MINTER_ADDR as Address],
+    });
+    console.log('=======approveToken allowance=======', allowanceResult);
     if (!allowanceResult || allowanceResult < BigInt(PAY_NUMBER)) {
       await sendTransactionAsync({
         to: PAY_TOKEN.address,
