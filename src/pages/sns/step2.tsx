@@ -112,7 +112,7 @@ export default function RegisterSNSStep2() {
       const d = { ...localData };
 
       let txHash: string = '';
-      if (user_proof && !hadMintByWhitelist && !whitelistIsOpen) {
+      if (user_proof && !hadMintByWhitelist && whitelistIsOpen) {
         // estimate
         const params = { sns, secret, proof: user_proof };
         try {
