@@ -58,6 +58,7 @@ export default function ProposalIndexPage() {
   const [page, setPage] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
   const [showHistory, setShowHistory] = useState(false);
+  const [initPage, setInitPage] = useState(true);
 
   const { getMultiSNS } = useQuerySNS();
 
@@ -73,11 +74,11 @@ export default function ProposalIndexPage() {
     return name?.endsWith('.seedao') ? name : publicJs.AddressToShow(name, 4);
   };
 
-  const getProposalList = async () => {
+  const getProposalList = async (_page: number = 1) => {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
       const resp = await requests.proposalV2.getProposalList({
-        page,
+        page: _page,
         size: PAGE_SIZE,
         sort_order: selectTime.value,
         sort_field: 'create_ts',
@@ -96,9 +97,17 @@ export default function ProposalIndexPage() {
   };
 
   useEffect(() => {
-    getProposalList();
-    setShowHistory(false);
-  }, [selectCategory, selectTime, selectStatus, searchKeyword, page]);
+    if (!initPage) {
+      getProposalList();
+      setShowHistory(false);
+      setPage(1);
+    }
+  }, [selectCategory, selectTime, selectStatus, searchKeyword]);
+
+  useEffect(() => {
+    initPage && getProposalList();
+    setInitPage(false);
+  }, [page]);
 
   const onKeyUp = (e: any) => {
     if (e.keyCode === 13) {
@@ -111,7 +120,8 @@ export default function ProposalIndexPage() {
   };
 
   const go2page = (_page: number) => {
-    setPage(_page);
+    setPage(_page + 1);
+    getProposalList(_page + 1);
   };
 
   return (
@@ -166,10 +176,10 @@ export default function ProposalIndexPage() {
           {proposalList.map((p) => (
             <SimpleProposalItem key={p.id} data={p} sns={formatSNS(p.applicant?.toLocaleLowerCase())} />
           ))}
-          {proposalList.length === 0 && !loading && <NoItem />}
+          {totalCount === 0 && !loading && <NoItem />}
           {totalCount > PAGE_SIZE && (
             <div>
-              <Pagination itemsPerPage={PAGE_SIZE} total={totalCount} current={page} handleToPage={go2page} />
+              <Pagination itemsPerPage={PAGE_SIZE} total={totalCount} current={page - 1} handleToPage={go2page} />
             </div>
           )}
         </>
