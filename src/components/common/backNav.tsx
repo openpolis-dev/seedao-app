@@ -35,6 +35,7 @@ const BackIconBox = styled(Link)`
   height: 32px;
   border-radius: 8px;
   border: 1px solid rgba(217, 217, 217, 0.5);
+  background: var(--bs-box-background);
   margin-right: 12px;
   display: flex;
   align-items: center;

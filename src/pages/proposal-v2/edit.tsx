@@ -6,7 +6,7 @@ import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { useEffect, useState, useRef } from 'react';
 import { IContentBlock, IProposal, ProposalState } from 'type/proposalV2.type';
 import { useAuthContext, AppActionType } from 'providers/authProvider';
-import { Template } from '@seedao/proposal';
+import { Template } from '@seedao/components';
 import { MdEditor } from 'md-editor-rt';
 import DataSource from './create/json/datasource.json';
 import initialItems from './create/json/initialItem';

@@ -7,8 +7,7 @@ import ProposalVote from 'components/proposalCom/vote';
 import ReplyComponent, { IReplyOutputProps } from 'components/proposalCom/reply';
 import ReviewProposalComponent from 'components/proposalCom/reviewProposalComponent';
 import EditActionHistory from 'components/proposalCom/editActionhistory';
-import { IBaseProposal, EditHistoryType } from 'type/proposal.type';
-import { IContentBlock, IProposal, ProposalState } from 'type/proposalV2.type';
+import { IContentBlock, IProposal, IProposalEditHistoy, ProposalState } from 'type/proposalV2.type';
 import { useAuthContext, AppActionType } from 'providers/authProvider';
 import requests from 'requests';
 import { formatDate } from 'utils/time';
@@ -40,7 +39,7 @@ export default function ThreadPage() {
   const { t } = useTranslation();
   const {
     dispatch,
-    state: { theme },
+    state: { theme, account },
   } = useAuthContext();
   const proposalCategories = useProposalCategories();
   const checkMetaforoLogin = useCheckMetaforoLogin();
@@ -50,7 +49,7 @@ export default function ThreadPage() {
   const [posts, setPosts] = useState<any[]>([]);
   const [totalPostsCount, setTotalPostsCount] = useState<number>(0);
   const [totalEditCount, setTotalEditCount] = useState<number>(0);
-  const [editHistoryList, setEditHistoryList] = useState<EditHistoryType[]>([]);
+  const [editHistoryList, setEditHistoryList] = useState<IProposalEditHistoy[]>([]);
   const [contentBlocks, setContentBlocks] = useState<IContentBlock[]>([]);
   const currentState = getRealState(data?.state);
 
@@ -63,37 +62,37 @@ export default function ThreadPage() {
 
   const replyRef = useRef<IReplyOutputProps>(null);
 
+  const getProposalDetail = async () => {
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    try {
+      const res = await requests.proposalV2.getProposalDetail(Number(id));
+      setData(res.data);
+      setContentBlocks(res.data.content_blocks);
+      setPosts(res.data.comments);
+      setTotalPostsCount(res.data.comment_count);
+      setTotalEditCount(res.data.histories.count ?? 0);
+      setEditHistoryList(res.data.histories?.lists ?? []);
+      const applicant = res.data.applicant;
+      setApplicantSNS(publicJs.AddressToShow(applicant));
+      setApplicantAvatar(res.data.applicant_avatar || DefaultAvatarIcon);
+      if (applicant) {
+        try {
+          const snsMap = await getMultiSNS([applicant]);
+          const name = snsMap.get(applicant.toLocaleLowerCase()) || applicant;
+          setApplicantSNS(name?.endsWith('.seedao') ? name : publicJs.AddressToShow(name, 4));
+        } catch (error) {}
+      }
+    } catch (error) {
+      logError('get proposal detail error:', error);
+    } finally {
+      dispatch({ type: AppActionType.SET_LOADING, payload: false });
+    }
+  };
+
   useEffect(() => {
     if (state) {
       setData(state);
     }
-    const getProposalDetail = async () => {
-      // TODO
-      dispatch({ type: AppActionType.SET_LOADING, payload: true });
-      try {
-        const res = await requests.proposalV2.getProposalDetail(Number(id));
-        setData(res.data);
-        setContentBlocks(res.data.content_blocks);
-        setPosts(res.data.comments);
-        // setTotalPostsCount(res.data.thread.posts_count);
-        // setTotalEditCount(res.data.thread.edit_history?.count ?? 0);
-        // setEditHistoryList(res.data.thread.edit_history?.lists ?? []);
-        const applicant = res.data.applicant;
-        setApplicantSNS(publicJs.AddressToShow(applicant));
-        setApplicantAvatar(res.data.applicant_avatar || DefaultAvatarIcon);
-        if (applicant) {
-          try {
-            const snsMap = await getMultiSNS([applicant]);
-            const name = snsMap.get(applicant.toLocaleLowerCase()) || applicant;
-            setApplicantSNS(name?.endsWith('.seedao') ? name : publicJs.AddressToShow(name, 4));
-          } catch (error) {}
-        }
-      } catch (error) {
-        logError('get proposal detail error:', error);
-      } finally {
-        dispatch({ type: AppActionType.SET_LOADING, payload: false });
-      }
-    };
     getProposalDetail();
   }, [id, state]);
 
@@ -151,7 +150,6 @@ export default function ThreadPage() {
     }
   };
 
-  const currentStoreHash = editHistoryList[editHistoryList.length - 1]?.arweave;
   const currentCategory = () => {
     if (data?.category_name) {
       return data.category_name;
@@ -164,6 +162,30 @@ export default function ThreadPage() {
       }
       return t('Proposal.ProposalDetail');
     }
+  };
+
+  const showVote = () => {
+    if (!data?.votes?.[0]) {
+      return false;
+    }
+    if (
+      [ProposalState.Rejected, ProposalState.Withdrawn, ProposalState.PendingSubmit, ProposalState.Draft].includes(
+        data?.state,
+      )
+    ) {
+      return false;
+    }
+    return true;
+  };
+
+  const isCurrentApplicant = data?.applicant?.toLocaleLowerCase() === account?.toLocaleLowerCase();
+
+  const moreActions = () => {
+    const actions = [{ label: t('Proposal.Edit'), value: 'edit' }];
+    if (data?.state === ProposalState.Draft) {
+      actions.push({ label: t('Proposal.Withdrawn'), value: 'withdrawn' });
+    }
+    return actions;
   };
 
   return (
@@ -185,9 +207,11 @@ export default function ThreadPage() {
           </StoreHash>
         )}
       </ThreadHead>
-      {data?.is_rejected && data?.reject_reason && (
+      {data?.is_rejected && data?.reject_reason && data?.reject_ts && (
         <RejectBlock>
-          <div>{t('Proposal.CityhallRejected')}</div>
+          <div>
+            {t('Proposal.CityhallRejected')} - {formatDate(new Date(data.reject_ts * 1000))}
+          </div>
           <div>{data.reject_reason}</div>
         </RejectBlock>
       )}
@@ -200,20 +224,16 @@ export default function ThreadPage() {
         </ProposalContentBlock>
       ))}
       <ThreadToolsBar>
-        <li>{t('Proposal.Vote')}</li>
+        {showVote() && <li>{t('Proposal.Vote')}</li>}
         <li onClick={openComment}>{t('Proposal.Comment')}</li>
         <li>{t('Proposal.Share')}</li>
-        <li>
-          <MoreSelectAction
-            options={[
-              { label: t('Proposal.Edit'), value: 'edit' },
-              { label: t('Proposal.Withdrawn'), value: 'withdrawn' },
-            ]}
-            handleClickAction={handleClickMoreAction}
-          />
-        </li>
+        {isCurrentApplicant && (
+          <li>
+            <MoreSelectAction options={moreActions()} handleClickAction={handleClickMoreAction} />
+          </li>
+        )}
       </ThreadToolsBar>
-      {/* {data?.polls?.[0] && <ProposalVote poll={data.polls[0]} />} */}
+      {showVote() && <ProposalVote poll={data!.votes[0]} id={Number(id)} updateStatus={getProposalDetail} />}
       <ReplyAndHistoryBlock>
         <BlockTab>
           <li
@@ -232,7 +252,14 @@ export default function ThreadPage() {
           </li>
         </BlockTab>
         {blockType === BlockContentType.Reply && (
-          <ReplyComponent id={Number(id)} hideReply={review} posts={posts} ref={replyRef} />
+          <ReplyComponent
+            id={Number(id)}
+            hideReply={review}
+            posts={posts}
+            ref={replyRef}
+            onNewComment={getProposalDetail}
+            isCurrentUser={isCurrentApplicant}
+          />
         )}
         {blockType === BlockContentType.History && <EditActionHistory data={editHistoryList} />}
       </ReplyAndHistoryBlock>

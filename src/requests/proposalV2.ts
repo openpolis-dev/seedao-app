@@ -47,6 +47,14 @@ export const withdrawProposal = (id: number) => {
   return request.post(`${PATH_PREFIX}withdraw/${id}`);
 };
 
+export const castVote = (id: number, vote_id: number, option: number) => {
+  return request.post(`${PATH_PREFIX}vote/${id}`, {
+    vote_id,
+    options: [option],
+    metaforo_access_token: localStorage.getItem(METAFORO_TOKEN),
+  });
+};
+
 // =========== comment ===========
 
 // NOTE: reply_id is metaforo_id
@@ -54,6 +62,13 @@ export const addComment = (id: number, content: string, reply_id?: number) => {
   return request.post(`${PATH_PREFIX}add_comment/${id}`, {
     content,
     reply_id,
+    metaforo_access_token: localStorage.getItem(METAFORO_TOKEN),
+  });
+};
+
+export const editCommet = (id: number, cid: number) => {
+  return request.post(`${PATH_PREFIX}delete_comment/${id}`, {
+    post_id: cid,
     metaforo_access_token: localStorage.getItem(METAFORO_TOKEN),
   });
 };
