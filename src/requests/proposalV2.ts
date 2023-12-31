@@ -22,7 +22,7 @@ export const getProposalDetail = (id: number, startPostId?: number): Promise<Res
   return request.get(
     `${PATH_PREFIX}show/${id}`,
     {
-      startPostId,
+      start_post_id: startPostId,
     },
     {
       metaforo_access_token: localStorage.getItem(METAFORO_TOKEN),
