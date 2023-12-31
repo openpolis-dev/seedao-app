@@ -233,7 +233,7 @@ export default function ThreadPage() {
           </li>
         )}
       </ThreadToolsBar>
-      {showVote() && <ProposalVote poll={data!.votes[0]} id={Number(id)} />}
+      {showVote() && <ProposalVote poll={data!.votes[0]} id={Number(id)} updateStatus={getProposalDetail} />}
       <ReplyAndHistoryBlock>
         <BlockTab>
           <li

@@ -8,7 +8,13 @@ import { AppActionType, useAuthContext } from 'providers/authProvider';
 import useToast, { ToastType } from 'hooks/useToast';
 const { Check } = Form;
 
-export default function ProposalVote({ id, poll }: { id: number; poll: Poll }) {
+interface IProps {
+  id: number;
+  poll: Poll;
+  updateStatus: () => void;
+}
+
+export default function ProposalVote({ id, poll, updateStatus }: IProps) {
   const { t } = useTranslation();
   const [selectOption, setSelectOption] = useState<number>();
   const { dispatch } = useAuthContext();
@@ -29,7 +35,7 @@ export default function ProposalVote({ id, poll }: { id: number; poll: Poll }) {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     castVote(id, poll.id, selectOption!)
       .then(() => {
-        // TODO update status
+        updateStatus();
       })
       .catch((error) => {
         logError('cast error failed', error);
