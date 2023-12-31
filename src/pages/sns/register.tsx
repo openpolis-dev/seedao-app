@@ -119,6 +119,7 @@ const RegisterSNSWrapper = () => {
 
   useEffect(() => {
     // check network
+    console.log('====', chain, switchNetwork);
     if (chain && switchNetwork && chain?.id !== networkConfig.chainId) {
       switchNetwork(networkConfig.chainId);
       return;
