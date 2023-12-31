@@ -24,8 +24,8 @@ export default function HistoryAction() {
         <Aciton key={index}>
           <div className="icon"></div>
           <div className="action-content">
-            <div>{item.content}</div>
-            <div>{item.time}</div>
+            <div className="title">{item.content}</div>
+            <div className="time">{item.time}</div>
           </div>
         </Aciton>
       ))}
@@ -42,22 +42,34 @@ const ActionList = styled.ul`
 const Aciton = styled.li`
   padding-inline: 20px;
   display: flex;
-  gap: 16px;
   align-items: center;
   cursor: pointer;
+  border-bottom: 1px solid var(--bs-border-color);
+  margin: 0 24px;
   &:hover {
     background-color: var(--bs-menu-hover);
   }
   .icon {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
     background: #ddd;
+    margin-right: 16px;
+  }
+  .title {
+    font-size: 16px;
+    color: var(--bs-body-color_active);
+    margin-bottom: 4px;
+  }
+  .time {
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 18px;
   }
   .action-content {
     flex: 1;
     padding-top: 20px;
     padding-bottom: 10px;
-    border-bottom: 1px solid var(--bs-border-color);
   }
 `;

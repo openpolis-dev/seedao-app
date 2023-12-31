@@ -17,6 +17,8 @@ import NoItem from 'components/noItem';
 import useQuerySNS from 'hooks/useQuerySNS';
 import publicJs from 'utils/publicJs';
 import Pagination from 'components/pagination';
+import SearchImg from '../../assets/Imgs/proposal/search.svg';
+import AddImg from '../../assets/Imgs/proposal/add-square.svg';
 
 const PAGE_SIZE = 10;
 
@@ -127,47 +129,60 @@ export default function ProposalIndexPage() {
   return (
     <Page>
       <OperateBox>
-        <FilterBox>
-          <SeeSelect
-            width="180px"
-            options={CATEGORY_OPTIONS}
-            isSearchable={false}
-            placeholder={t('Proposal.TypeSelectHint')}
-            onChange={(v: ISelectItem) => setSelectCategory(v)}
-          />
-          <SeeSelect
-            width="120px"
-            options={TIME_OPTIONS}
-            defaultValue={TIME_OPTIONS[0]}
-            isClearable={false}
-            isSearchable={false}
-            onChange={(v: ISelectItem) => setSelectTime(v)}
-          />
-          <SeeSelect
-            width="120px"
-            options={STATUS_OPTIONS}
-            isSearchable={false}
-            placeholder={t('Proposal.StatusSelectHint')}
-            onChange={(v: ISelectItem) => setSelectStatus(v)}
-          />
-          <SearchBox>
-            <SearchSVGIcon />
-            <input
-              type="text"
-              placeholder=""
-              onKeyUp={(e) => onKeyUp(e)}
-              value={inputKeyword}
-              onChange={(e) => setInputKeyword(e.target.value)}
-            />
-            {inputKeyword && <ClearSVGIcon onClick={() => clearSearch()} className="btn-clear" />}
-          </SearchBox>
+        <LineBox>
+          <HistoryButton className={!showHistory ? 'selected' : ''} onClick={() => setShowHistory(false)}>
+            全部
+          </HistoryButton>
           <HistoryButton className={showHistory ? 'selected' : ''} onClick={() => setShowHistory(true)}>
             {t('Proposal.HistoryRecord')}
           </HistoryButton>
-        </FilterBox>
-        <Link to="/proposal-v2/create">
-          <Button variant="primary">{t('Proposal.CreateProposal')}</Button>
-        </Link>
+        </LineBox>
+        <FlexLine>
+          <FilterBox>
+            <SeeSelect
+              width="180px"
+              options={CATEGORY_OPTIONS}
+              isSearchable={false}
+              placeholder={t('Proposal.TypeSelectHint')}
+              onChange={(v: ISelectItem) => setSelectCategory(v)}
+            />
+            <SeeSelect
+              width="120px"
+              options={TIME_OPTIONS}
+              defaultValue={TIME_OPTIONS[0]}
+              isClearable={false}
+              isSearchable={false}
+              onChange={(v: ISelectItem) => setSelectTime(v)}
+            />
+            <SeeSelect
+              width="120px"
+              options={STATUS_OPTIONS}
+              isSearchable={false}
+              placeholder={t('Proposal.StatusSelectHint')}
+              onChange={(v: ISelectItem) => setSelectStatus(v)}
+            />
+            <SearchBox>
+              {/*<SearchSVGIcon />*/}
+              <img src={SearchImg} alt="" className="iconBg" />
+              <input
+                type="text"
+                placeholder=""
+                onKeyUp={(e) => onKeyUp(e)}
+                value={inputKeyword}
+                onChange={(e) => setInputKeyword(e.target.value)}
+              />
+
+              {inputKeyword && <ClearSVGIcon onClick={() => clearSearch()} className="btn-clear" />}
+            </SearchBox>
+          </FilterBox>
+          <Link to="/proposal-v2/create">
+            <Button variant="primary">
+              {' '}
+              <img src={AddImg} alt="" className="mr20" />
+              {t('Proposal.CreateProposal')}
+            </Button>
+          </Link>
+        </FlexLine>
       </OperateBox>
       {showHistory ? (
         <HistoryAction />
@@ -190,12 +205,16 @@ export default function ProposalIndexPage() {
 
 const Page = styled.div`
   ${ContainerPadding};
+  .mr20 {
+    margin-right: 10px;
+  }
 `;
 
 const OperateBox = styled.div`
   display: flex;
   justify-content: space-between;
-  margin-bottom: 32px;
+  flex-direction: column;
+  margin-bottom: 20px;
 `;
 
 const FilterBox = styled.div`
@@ -204,13 +223,13 @@ const FilterBox = styled.div`
 `;
 
 const SearchBox = styled.div`
-  width: 180px;
   background: var(--bs-background);
   border-radius: 8px;
   display: flex;
   align-items: center;
   padding: 0 8px;
   border: 1px solid var(--bs-border-color);
+  position: relative;
   &:hover {
     border-color: hsl(0, 0%, 70%);
   }
@@ -237,15 +256,28 @@ const HistoryButton = styled.div`
   padding-inline: 20px;
   line-height: 40px;
   background-color: var(--bs-background);
-  border-radius: 8px;
-  border: 1px solid var(--bs-border-color);
+  border-radius: 100px;
+  font-size: 14px;
   text-align: center;
   color: var(--bs-body-color_active);
   cursor: pointer;
-  &:hover {
-    border-color: hsl(0, 0%, 70%);
-  }
+  margin-right: 10px;
+
   &.selected {
-    background-color: var(--bs-body-color);
+    background-color: var(--bs-primary);
+    color: #fff;
   }
+`;
+
+const LineBox = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+`;
+
+const FlexLine = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 24px;
 `;
