@@ -72,10 +72,10 @@ export interface ResponseData<T = any> {
  * @method get
  * @param {url, params, loading}
  */
-const get = function (url: string, params: any = {}): Promise<ResponseData> {
+const get = function (url: string, params: any = {}, data = {}): Promise<ResponseData> {
   return new Promise((resolve, reject) => {
     instance
-      .get(url, { params })
+      .get(url, { params, data })
       .then((res) => {
         resolve(res.data);
       })

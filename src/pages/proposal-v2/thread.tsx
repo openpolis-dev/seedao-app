@@ -21,6 +21,7 @@ import publicJs from 'utils/publicJs';
 import useQuerySNS from 'hooks/useQuerySNS';
 import DefaultAvatarIcon from 'assets/Imgs/defaultAvatar.png';
 import ConfirmModal from 'components/modals/confirmModal';
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 enum BlockContentType {
   Reply = 1,
@@ -57,19 +58,24 @@ export default function ThreadPage() {
   const [applicantAvatar, setApplicantAvatar] = useState(DefaultAvatarIcon);
 
   const [showConfirmWithdraw, setShowConfirmWithdraw] = useState(false);
+  const [hasMore, setHasMore] = useState(false);
 
   const { getMultiSNS } = useQuerySNS();
 
   const replyRef = useRef<IReplyOutputProps>(null);
 
-  const getProposalDetail = async () => {
+  const getProposalDetail = async (start_post_id?: number) => {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
-      const res = await requests.proposalV2.getProposalDetail(Number(id));
+      const res = await requests.proposalV2.getProposalDetail(Number(id), start_post_id);
       setData(res.data);
       setContentBlocks(res.data.content_blocks);
-      setPosts(res.data.comments);
+      // comment
+      const newComments = [...posts, ...res.data.comments];
+      setPosts(newComments);
       setTotalPostsCount(res.data.comment_count);
+      setHasMore(newComments.length < res.data.comment_count);
+      // history
       setTotalEditCount(res.data.histories.count ?? 0);
       setEditHistoryList(res.data.histories?.lists ?? []);
       const applicant = res.data.applicant;
@@ -188,6 +194,14 @@ export default function ThreadPage() {
     return actions;
   };
 
+  const getNextCommentList = () => {
+    if (!posts.length) {
+      return;
+    }
+    const lastCommentId = posts[posts.length - 1].id;
+    getProposalDetail(lastCommentId);
+  };
+  
   return (
     <Page>
       <BackerNav title={currentCategory()} to="/proposal-v2" mb="20px" />
@@ -234,6 +248,7 @@ export default function ThreadPage() {
         )}
       </ThreadToolsBar>
       {showVote() && <ProposalVote poll={data!.votes[0]} id={Number(id)} updateStatus={getProposalDetail} />}
+
       <ReplyAndHistoryBlock>
         <BlockTab>
           <li
@@ -251,18 +266,28 @@ export default function ThreadPage() {
             {t('Proposal.EditHistory')}
           </li>
         </BlockTab>
-        {blockType === BlockContentType.Reply && (
-          <ReplyComponent
-            id={Number(id)}
-            hideReply={review}
-            posts={posts}
-            ref={replyRef}
-            onNewComment={getProposalDetail}
-            isCurrentUser={isCurrentApplicant}
-          />
-        )}
+        <InfiniteScroll
+          scrollableTarget="scrollableDiv"
+          dataLength={posts.length}
+          next={getNextCommentList}
+          hasMore={hasMore}
+          loader={<></>}
+        >
+          {blockType === BlockContentType.Reply && (
+            <ReplyComponent
+              id={Number(id)}
+              hideReply={review}
+              posts={posts}
+              ref={replyRef}
+              onNewComment={getProposalDetail}
+              isCurrentUser={isCurrentApplicant}
+            />
+          )}
+        </InfiniteScroll>
+
         {blockType === BlockContentType.History && <EditActionHistory data={editHistoryList} />}
       </ReplyAndHistoryBlock>
+
       {review && <ReviewProposalComponent id={Number(id)} onUpdateStatus={onUpdateStatus} />}
       {showConfirmWithdraw && (
         <ConfirmModal
