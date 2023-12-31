@@ -59,15 +59,16 @@ export default function ThreadPage() {
 
   const [showConfirmWithdraw, setShowConfirmWithdraw] = useState(false);
   const [hasMore, setHasMore] = useState(false);
+  const [startPostId, setStartPostId] = useState<number>();
 
   const { getMultiSNS } = useQuerySNS();
 
   const replyRef = useRef<IReplyOutputProps>(null);
 
-  const getProposalDetail = async (start_post_id?: number) => {
+  const getProposalDetail = async (refreshCurrent?: boolean) => {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
-      const res = await requests.proposalV2.getProposalDetail(Number(id), start_post_id);
+      const res = await requests.proposalV2.getProposalDetail(Number(id), startPostId);
       setData(res.data);
       setContentBlocks(res.data.content_blocks);
       // comment
@@ -187,7 +188,13 @@ export default function ThreadPage() {
   const isCurrentApplicant = data?.applicant?.toLocaleLowerCase() === account?.toLocaleLowerCase();
 
   const moreActions = () => {
-    const actions = [{ label: t('Proposal.Edit'), value: 'edit' }];
+    if (!data) {
+      return [];
+    }
+    const actions: { label: string; value: string }[] = [];
+    if ([ProposalState.Rejected, ProposalState.Withdrawn].includes(data?.state)) {
+      actions.push({ label: t('Proposal.Edit'), value: 'edit' });
+    }
     if (data?.state === ProposalState.Draft) {
       actions.push({ label: t('Proposal.Withdrawn'), value: 'withdrawn' });
     }
@@ -201,7 +208,7 @@ export default function ThreadPage() {
     const lastCommentId = posts[posts.length - 1].id;
     getProposalDetail(lastCommentId);
   };
-  
+
   return (
     <Page>
       <BackerNav title={currentCategory()} to="/proposal-v2" mb="20px" />
@@ -241,7 +248,7 @@ export default function ThreadPage() {
         {showVote() && <li>{t('Proposal.Vote')}</li>}
         <li onClick={openComment}>{t('Proposal.Comment')}</li>
         <li>{t('Proposal.Share')}</li>
-        {isCurrentApplicant && (
+        {isCurrentApplicant && !!moreActions().length && (
           <li>
             <MoreSelectAction options={moreActions()} handleClickAction={handleClickMoreAction} />
           </li>
