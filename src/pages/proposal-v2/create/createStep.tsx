@@ -39,7 +39,7 @@ const FixedBox = styled.div`
   width: calc(100% + 64px);
   top: 0;
   height: 64px;
-  z-index: 99;
+  z-index: 95;
   box-sizing: border-box;
   padding-right: 372px;
   box-shadow: 0px 4px 8px 0px rgba(138, 134, 146, 0.1);
@@ -90,14 +90,14 @@ const BtnGroup = styled.div`
   }
 `;
 
-const BoxBg = styled.div`
+const BoxBg = styled.div<{ showRht: string }>`
   background-color: var(--bs-box-background);
   box-shadow: var(--proposal-box-shadow);
   border: 1px solid var(--proposal-border);
   margin-top: 24px;
   border-radius: 8px;
 
-  width: calc(100% - 410px);
+  width: ${(props) => (props.showRht === 'true' ? 'calc(100% - 410px)' : '100%')};
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -141,11 +141,13 @@ const ComponnentBox = styled(TitleBox)`
 
 export default function CreateStep({ onClick }: any) {
   const navigate = useNavigate();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const childRef = useRef(null);
   const [title, setTitle] = useState('');
   const [list, setList] = useState<any[]>([]);
   const [submitType, setSubmitType] = useState<'save' | 'submit'>();
+
+  const [showRht, setShowRht] = useState(true);
 
   const [showLeaveConfirm, setShowLeaveConfirm] = useState(false);
 
@@ -244,11 +246,14 @@ export default function CreateStep({ onClick }: any) {
         </FlexInner>
       </FixedBox>
 
-      <BoxBg>
+      <BoxBg showRht={showRht.toString()}>
         <Template
           DataSource={DataSource}
           operate="new"
+          language={i18n.language}
+          showRight={showRht}
           initialItems={initialItems}
+          theme={theme}
           BeforeComponent={
             <>
               <ItemBox>
