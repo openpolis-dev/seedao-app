@@ -80,6 +80,7 @@ export const addComment = (id: number, content: string, reply_id?: number) => {
   return request.post(`${PATH_PREFIX}add_comment/${id}`, {
     content,
     reply_id,
+    editor_type: 0,
     metaforo_access_token: localStorage.getItem(METAFORO_TOKEN),
   });
 };
