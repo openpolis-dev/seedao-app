@@ -6,6 +6,7 @@ import { Poll, VoteType } from 'type/proposalV2.type';
 import { castVote } from 'requests/proposalV2';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import useToast, { ToastType } from 'hooks/useToast';
+import useCheckMetaforoLogin from 'hooks/useCheckMetaforoLogin';
 const { Check } = Form;
 
 interface IProps {
@@ -20,6 +21,8 @@ export default function ProposalVote({ id, poll, updateStatus }: IProps) {
   const { dispatch } = useAuthContext();
   const { showToast } = useToast();
 
+  const checkMetofoLogin = useCheckMetaforoLogin();
+
   const voteStatusTag = useMemo(() => {
     console.log('poll.vote_type', poll.status);
     if (poll.status === VoteType.Closed) {
@@ -31,7 +34,11 @@ export default function ProposalVote({ id, poll, updateStatus }: IProps) {
     }
   }, [poll, t]);
 
-  const goVote = () => {
+  const goVote = async () => {
+    const canVote = await checkMetofoLogin();
+    if (!canVote) {
+      return;
+    }
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     castVote(id, poll.id, selectOption!)
       .then(() => {
