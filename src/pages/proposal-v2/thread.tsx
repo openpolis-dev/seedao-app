@@ -285,6 +285,7 @@ export default function ThreadPage() {
         >
           {blockType === BlockContentType.Reply && (
             <ReplyComponent
+              pinId={1964525} // TODO hardcode for test pin comment
               id={Number(id)}
               hideReply={review}
               posts={posts}
