@@ -99,7 +99,7 @@ const InnerBox = styled.div`
 
 const ImgBox = styled.div`
   border-radius: 8px;
-  background: #f8f5ff;
+  background: rgba(82, 0, 255, 0.08);
   display: flex;
   width: 136px;
   height: 149px;

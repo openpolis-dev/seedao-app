@@ -19,7 +19,7 @@ const CreateProposalSteps = () => {
       case 2:
         return <ChooseTemplateStep />;
       case 3:
-        return <CreateStep />;
+        return <CreateStep onClick={backTo} />;
       default:
         return null;
     }

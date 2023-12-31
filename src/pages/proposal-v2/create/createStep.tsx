@@ -11,7 +11,6 @@ import useCheckMetaforoLogin from 'hooks/useCheckMetaforoLogin';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Button } from 'react-bootstrap';
-import BackerNav from '../../../components/common/backNav';
 import BackIcon from '../../../assets/Imgs/back.svg';
 import ConfirmModal from 'components/modals/confirmModal';
 import { useCreateProposalContext } from './store';
@@ -25,8 +24,8 @@ const ItemBox = styled.div`
 `;
 
 const TitleBox = styled.div`
-  background: #f1f1f1;
-  padding: 20px;
+  background: rgba(82, 0, 255, 0.08);
+  padding: 10px 20px;
   font-size: 16px;
   font-weight: bold;
   margin-bottom: 20px;
@@ -34,7 +33,7 @@ const TitleBox = styled.div`
 `;
 
 const FixedBox = styled.div`
-  background: #fff;
+  background-color: var(--bs-box-background);
   position: sticky;
   margin: -24px 0 0 -32px;
   width: calc(100% + 64px);
@@ -86,13 +85,15 @@ const BtnGroup = styled.div`
   }
   .save {
     background: transparent;
-    border: 1px solid #e9ebed;
-    color: #000;
+    border: 1px solid rgba(217, 217, 217, 0.5);
+    color: var(--font-color-title);
   }
 `;
 
 const BoxBg = styled.div`
-  background: #fff;
+  background-color: var(--bs-box-background);
+  box-shadow: var(--proposal-box-shadow);
+  border: 1px solid var(--proposal-border);
   margin-top: 24px;
   border-radius: 8px;
 
@@ -105,7 +106,40 @@ const BoxBg = styled.div`
   box-sizing: border-box;
 `;
 
-export default function CreateStep() {
+const InputBox = styled.div`
+  input {
+    width: 100%;
+    height: 40px;
+    border-radius: 8px;
+    border: 1px solid var(--bs-border-color);
+    background: var(--bs-box--background);
+    padding: 0 12px;
+    box-sizing: border-box;
+    &:hover,
+    &:focus {
+      border: 1px solid rgba(82, 0, 255, 0.5);
+      outline: none;
+    }
+  }
+`;
+
+const TagBox = styled.div`
+  padding: 0 16px;
+  border-radius: 4px;
+  background: var(--bs-box--background);
+  border: 1px solid rgba(217, 217, 217, 0.5);
+  display: inline-block;
+  margin-left: 8px;
+  font-size: 12px;
+  height: 24px;
+  line-height: 24px;
+`;
+
+const ComponnentBox = styled(TitleBox)`
+  margin-bottom: 10px;
+`;
+
+export default function CreateStep({ onClick }: any) {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const childRef = useRef(null);
@@ -115,8 +149,13 @@ export default function CreateStep() {
 
   const [showLeaveConfirm, setShowLeaveConfirm] = useState(false);
 
-  const { dispatch } = useAuthContext();
   const { changeStep } = useCreateProposalContext();
+
+  const {
+    state: { theme },
+    dispatch,
+  } = useAuthContext();
+
   const checkMetaforoLogin = useCheckMetaforoLogin();
 
   useEffect(() => {
@@ -184,7 +223,7 @@ export default function CreateStep() {
     setShowLeaveConfirm(false);
     changeStep(1);
   };
- 
+
   return (
     <Box>
       <FixedBox>
@@ -208,13 +247,23 @@ export default function CreateStep() {
       <BoxBg>
         <Template
           DataSource={DataSource}
-          operate="edit"
+          operate="new"
           initialItems={initialItems}
           BeforeComponent={
-            <ItemBox>
-              <TitleBox>提案标题</TitleBox>
-              <input type="text" value={title} onChange={handleInput} />
-            </ItemBox>
+            <>
+              <ItemBox>
+                <TitleBox>
+                  <span>提案标题</span>
+                  <TagBox>三层提案 - P1</TagBox>
+                </TitleBox>
+                <InputBox>
+                  <input type="text" value={title} onChange={handleInput} />
+                </InputBox>
+              </ItemBox>
+              <ComponnentBox>
+                <span>提案标题</span>
+              </ComponnentBox>
+            </>
           }
           AfterComponent={
             <div>
@@ -226,6 +275,7 @@ export default function CreateStep() {
                     modelValue={item.content}
                     editorId={`block_${index}`}
                     onChange={(val) => handleText(val, index)}
+                    theme={theme ? 'dark' : 'light'}
                   />
 
                   {/*<MarkdownEditor value={item.content} onChange={(val)=>handleText(val,index)} />*/}

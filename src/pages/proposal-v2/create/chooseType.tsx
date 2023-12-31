@@ -4,11 +4,17 @@ import { useTranslation } from 'react-i18next';
 import useProposalCategories from 'hooks/useProposalCategories';
 import { IBaseCategory } from 'type/proposalV2.type';
 import ArrowRht from '../../../assets/Imgs/proposal/chevron-down.svg';
+import ArrowRhtBlack from '../../../assets/Imgs/proposal/chevron-down-black.svg';
+import { useAuthContext } from '../../../providers/authProvider';
 
 export default function ChooseTypeStep() {
   const { t } = useTranslation();
   const { chooseProposalType } = useCreateProposalContext();
   const proposaCategories = useProposalCategories();
+
+  const {
+    state: { theme },
+  } = useAuthContext();
 
   const onChooseType = (tp: IBaseCategory) => {
     chooseProposalType(tp);
@@ -22,7 +28,7 @@ export default function ChooseTypeStep() {
           {proposaCategories.map((tp, index) => (
             <li key={index} onClick={() => onChooseType(tp)}>
               <span>{tp.name}</span>
-              <img src={ArrowRht} alt="" />
+              <img src={theme ? ArrowRhtBlack : ArrowRht} alt="" />
             </li>
           ))}
         </TypeBox>
