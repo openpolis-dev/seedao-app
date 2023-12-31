@@ -107,12 +107,15 @@ export default function ProposalVote({ id, poll, updateStatus }: IProps) {
         {showVoteContent()}
       </VoteBody>
       <VoteFooter>
-        <VoteNFT>
-          <span>
-            {t('Proposal.PollNFT')}: {poll.address}
-          </span>
-          {poll.token_id && <span>Token Id: {poll.token_id}</span>}
-        </VoteNFT>
+        {poll.address && (
+          <VoteNFT>
+            <span>
+              {t('Proposal.PollNFT')}: {poll.address}
+            </span>
+            <span>Token Id: {poll.token_id}</span>
+          </VoteNFT>
+        )}
+
         {poll.alias && <Alias>{poll.alias}</Alias>}
       </VoteFooter>
     </CardStyle>
