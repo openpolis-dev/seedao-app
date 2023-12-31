@@ -110,7 +110,8 @@
     "EditProposalNav": "Edit Proposal",
     "SaveProposal": "Save",
     "SubmitProposal": "Submit",
-    "CityhallRejected": "Cityhall rejected"
+    "CityhallRejected": "Cityhall rejected",
+    "TotalVoteCount": "{{count}} voted"
   },
   "Project": {
     "ProjectOrGuildItem": "Nothing left here.",

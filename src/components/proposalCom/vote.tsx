@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { Button, Form, Toast } from 'react-bootstrap';
+import { Button, Form } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { Poll, VoteType } from 'type/proposalV2.type';
@@ -7,6 +7,7 @@ import { castVote } from 'requests/proposalV2';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import useToast, { ToastType } from 'hooks/useToast';
 import useCheckMetaforoLogin from 'hooks/useCheckMetaforoLogin';
+import VoterListModal from 'components/modals/voterListModal';
 const { Check } = Form;
 
 interface IProps {
@@ -15,9 +16,16 @@ interface IProps {
   updateStatus: () => void;
 }
 
+type VoteOptionItem = {
+  count: number;
+  optionId: number;
+};
+
 export default function ProposalVote({ id, poll, updateStatus }: IProps) {
   const { t } = useTranslation();
   const [selectOption, setSelectOption] = useState<number>();
+  const [openVoteItem, setOpenVoteItem] = useState<VoteOptionItem>();
+
   const { dispatch } = useAuthContext();
   const { showToast } = useToast();
 
@@ -62,8 +70,10 @@ export default function ProposalVote({ id, poll, updateStatus }: IProps) {
             <ProgressBar percent={option.percent}>
               <div className="inner"></div>
             </ProgressBar>
-            <span>{option.percent}%</span>
-            <span className="voters">({option.voters})</span>
+            <div onClick={() => !!option.voters && setOpenVoteItem({ count: option.voters, optionId: option.id })}>
+              <span>{option.percent}%</span>
+              <span className="voters">({option.voters})</span>
+            </div>
           </VoteOptionBottom>
         </VoteOption>
       ));
@@ -118,6 +128,7 @@ export default function ProposalVote({ id, poll, updateStatus }: IProps) {
 
         {poll.alias && <Alias>{poll.alias}</Alias>}
       </VoteFooter>
+      {!!openVoteItem && <VoterListModal {...openVoteItem} onClose={() => setOpenVoteItem(undefined)} />}
     </CardStyle>
   );
 }

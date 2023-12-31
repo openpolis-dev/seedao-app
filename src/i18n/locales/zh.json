@@ -110,7 +110,8 @@
     "EditProposalNav": "编辑提案",
     "SaveProposal": "保存",
     "SubmitProposal": "提交",
-    "CityhallRejected": "市政厅已驳回"
+    "CityhallRejected": "市政厅已驳回",
+    "TotalVoteCount": "共{{count}}票"
   },
   "Project": {
     "ProjectOrGuildItem": "还没有填写相关介绍信息～",
