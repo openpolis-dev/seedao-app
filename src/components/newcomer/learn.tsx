@@ -163,10 +163,17 @@ const CourseBox = styled.div`
   top: 0;
   left: -25%;
   background-color: var(--bs-box--background);
-  padding-top: 30px;
   border-radius: 16px;
-  img {
-   
+
+  .see-section {
+    width: 100%;
+    height: 100%;
+    > div , > div > div {
+      height: 100%;
+    }
+    .overflow-auto {
+      overflow: hidden !important;
+    }
   }
 `;
 const CloseCourseIcon = styled.img`

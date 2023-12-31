@@ -10,11 +10,11 @@ export interface ICourseProps {
 }
 
 export default function LearnCourse({ courseId, sectionId, sectionType }: ICourseProps) {
-  // const [sectionId, setSectionId] = useState('63a46ae99ce6e09dd4811471');
   const onHotUpdateSectionStatus = (sid: string) => {};
   return (
     <Section
-      currentCourseId="62f0adc68b90ee1aa913a966"
+      className='see-section'
+      currentCourseId={courseId}
       sectionFinished={false}
       hotUpdateSectionStatus={onHotUpdateSectionStatus}
       currentSection={{
