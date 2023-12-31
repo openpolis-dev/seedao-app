@@ -1,10 +1,15 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
+import CreateImg from '../../assets/Imgs/proposal/create.png';
+import VoteImg from '../../assets/Imgs/proposal/vote.png';
+import ShareImg from '../../assets/Imgs/proposal/share.png';
+import CommentImg from '../../assets/Imgs/proposal/comment.png';
 
 type ActionDataType = {
   content: string;
   time: string;
+  type: string;
 };
 
 export default function HistoryAction() {
@@ -14,15 +19,44 @@ export default function HistoryAction() {
   useEffect(() => {
     // TODO: get history action list
     setList([
-      { content: t('Proposal.ActivityCreate', { title: 'lalalala' }), time: '2021-09-09' },
-      { content: t('Proposal.ActivityComment', { title: 'lalalala', author: 'apple' }), time: '2021-09-09' },
+      { content: t('Proposal.ActivityCreate', { title: 'lalalala' }), time: '2021-09-09', type: 'create' },
+      {
+        content: t('Proposal.ActivityComment', { title: 'lalalala', author: 'apple' }),
+        time: '2021-09-09',
+        type: 'vote',
+      },
+      {
+        content: t('Proposal.ActivityComment', { title: 'lalalala', author: 'apple' }),
+        time: '2021-09-09',
+        type: 'share',
+      },
+      {
+        content: t('Proposal.ActivityComment', { title: 'lalalala', author: 'apple' }),
+        time: '2021-09-09',
+        type: 'comment',
+      },
     ]);
   }, []);
+
+  const returnImg = (type: string) => {
+    switch (type) {
+      case 'create':
+        return CreateImg;
+      case 'vote':
+        return VoteImg;
+      case 'share':
+        return ShareImg;
+      case 'comment':
+        return CommentImg;
+    }
+  };
   return (
     <ActionList>
       {list.map((item, index) => (
         <Aciton key={index}>
-          <div className="icon"></div>
+          <div className="icon">
+            <img src={returnImg(item.type)} alt="" />
+          </div>
           <div className="action-content">
             <div className="title">{item.content}</div>
             <div className="time">{item.time}</div>
