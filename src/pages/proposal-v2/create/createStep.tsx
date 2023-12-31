@@ -13,6 +13,8 @@ import { useTranslation } from 'react-i18next';
 import { Button } from 'react-bootstrap';
 import BackerNav from '../../../components/common/backNav';
 import BackIcon from '../../../assets/Imgs/back.svg';
+import ConfirmModal from 'components/modals/confirmModal';
+import { useCreateProposalContext } from './store';
 
 const Box = styled.ul`
   position: relative;
@@ -56,12 +58,13 @@ const FlexInner = styled.div`
 const BackBox = styled.div`
   display: inline-flex;
   align-items: center;
+  cursor: pointer;
   .backTitle {
     color: var(--bs-body-color_active);
   }
 `;
 
-const BackIconBox = styled(Link)`
+const BackIconBox = styled.span`
   width: 32px;
   height: 32px;
   border-radius: 8px;
@@ -110,7 +113,10 @@ export default function CreateStep() {
   const [list, setList] = useState<any[]>([]);
   const [submitType, setSubmitType] = useState<'save' | 'submit'>();
 
+  const [showLeaveConfirm, setShowLeaveConfirm] = useState(false);
+
   const { dispatch } = useAuthContext();
+  const { changeStep } = useCreateProposalContext();
   const checkMetaforoLogin = useCheckMetaforoLogin();
 
   useEffect(() => {
@@ -169,15 +175,22 @@ export default function CreateStep() {
     setTimeout(allSubmit, 0);
   };
   const handleSubmit = () => {
+    // TODO: check content
     setSubmitType('submit');
     setTimeout(allSubmit, 0);
   };
+
+  const handleBack = () => {
+    setShowLeaveConfirm(false);
+    changeStep(1);
+  };
+ 
   return (
     <Box>
       <FixedBox>
         <FlexInner>
-          <BackBox>
-            <BackIconBox to="/">
+          <BackBox onClick={() => setShowLeaveConfirm(true)}>
+            <BackIconBox>
               <img src={BackIcon} alt="" />
             </BackIconBox>
             <span className="backTitle">返回</span>
@@ -224,6 +237,14 @@ export default function CreateStep() {
           onSubmitData={handleFormSubmit}
         />
       </BoxBg>
+      {showLeaveConfirm && (
+        <ConfirmModal
+          title=""
+          msg={t('Proposal.ConfirmBackCreate')}
+          onConfirm={handleBack}
+          onClose={() => setShowLeaveConfirm(false)}
+        />
+      )}
     </Box>
   );
 }

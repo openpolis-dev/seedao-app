@@ -46,7 +46,7 @@ export enum VoteType {
   Waite = 'waite',
 }
 
-type VoteOption = {
+export type VoteOption = {
   html: string;
   percent: number;
   voters: number;

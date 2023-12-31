@@ -8,7 +8,7 @@ import MoreSelectAction from './moreSelectAction';
 import { useTranslation } from 'react-i18next';
 import { formatMsgTime } from 'utils/time';
 
-const useParseContent = (data: string) => {
+const useParseContent = (data: string, noNeedParse?: boolean) => {
   const [content, setContent] = useState('');
 
   useEffect(() => {
@@ -16,8 +16,8 @@ const useParseContent = (data: string) => {
       const _content = await handleContent(data);
       setContent(_content);
     };
-    parse();
-  }, [data]);
+    !noNeedParse && parse();
+  }, [data, noNeedParse]);
   return content;
 };
 
@@ -31,6 +31,7 @@ interface IProps {
   onDelete: (id: number) => void;
   hideReply?: boolean;
   isCurrentUser?: boolean;
+  isSpecial?: boolean;
 }
 
 interface IUserProps {
@@ -59,9 +60,10 @@ export default function CommentComponent({
   onDelete,
   hideReply,
   isCurrentUser,
+  isSpecial,
 }: IProps) {
   const { t } = useTranslation();
-  const content = useParseContent(data?.content);
+  const content = useParseContent(data?.content, isSpecial);
 
   const handleReply = () => {
     onReply(data.id);
@@ -85,7 +87,11 @@ export default function CommentComponent({
         {/* <Avatar src={data.user.photo_url || DefaultAvatar} alt="" /> */}
         <RightBox>
           <RelationUserLine>
-            <UserBox name={data.user.username} avatar={data.user.photo_url} user_title={data.user_title} />
+            <UserBox
+              name={isSpecial ? t('city-hall.Cityhall') : data.user.username}
+              avatar={data.user.photo_url}
+              user_title={data.user_title}
+            />
             {parentData && (
               <>
                 <span>{'==>'}</span>
@@ -105,7 +111,7 @@ export default function CommentComponent({
                   <MoreSelectAction
                     options={[
                       { label: t('Proposal.Edit'), value: 'edit' },
-                      { label: t('Proposal.Delete'), value: 'edit' },
+                      { label: t('Proposal.Delete'), value: 'delete' },
                     ]}
                     handleClickAction={handleClickMoreAction}
                   />
@@ -113,7 +119,11 @@ export default function CommentComponent({
               </>
             )}
           </RelationUserLine>
-          <div className="content" dangerouslySetInnerHTML={{ __html: content }}></div>
+          {isSpecial ? (
+            <div>{data.content}</div>
+          ) : (
+            <div className="content" dangerouslySetInnerHTML={{ __html: content }}></div>
+          )}
         </RightBox>
       </CommentMain>
       {children}

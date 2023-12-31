@@ -21,6 +21,8 @@ import publicJs from 'utils/publicJs';
 import useQuerySNS from 'hooks/useQuerySNS';
 import DefaultAvatarIcon from 'assets/Imgs/defaultAvatar.png';
 import ConfirmModal from 'components/modals/confirmModal';
+import InfiniteScroll from 'react-infinite-scroll-component';
+import CopyBox from 'components/copy';
 
 enum BlockContentType {
   Reply = 1,
@@ -57,19 +59,25 @@ export default function ThreadPage() {
   const [applicantAvatar, setApplicantAvatar] = useState(DefaultAvatarIcon);
 
   const [showConfirmWithdraw, setShowConfirmWithdraw] = useState(false);
+  const [hasMore, setHasMore] = useState(false);
+  const [startPostId, setStartPostId] = useState<number>();
 
   const { getMultiSNS } = useQuerySNS();
 
   const replyRef = useRef<IReplyOutputProps>(null);
 
-  const getProposalDetail = async () => {
+  const getProposalDetail = async (refreshCurrent?: boolean) => {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
-      const res = await requests.proposalV2.getProposalDetail(Number(id));
+      const res = await requests.proposalV2.getProposalDetail(Number(id), startPostId);
       setData(res.data);
       setContentBlocks(res.data.content_blocks);
-      setPosts(res.data.comments);
+      // comment
+      const newComments = [...posts, ...res.data.comments];
+      setPosts(newComments);
       setTotalPostsCount(res.data.comment_count);
+      setHasMore(newComments.length < res.data.comment_count);
+      // history
       setTotalEditCount(res.data.histories.count ?? 0);
       setEditHistoryList(res.data.histories?.lists ?? []);
       const applicant = res.data.applicant;
@@ -181,11 +189,25 @@ export default function ThreadPage() {
   const isCurrentApplicant = data?.applicant?.toLocaleLowerCase() === account?.toLocaleLowerCase();
 
   const moreActions = () => {
-    const actions = [{ label: t('Proposal.Edit'), value: 'edit' }];
+    if (!data) {
+      return [];
+    }
+    const actions: { label: string; value: string }[] = [];
+    if ([ProposalState.Rejected, ProposalState.Withdrawn].includes(data?.state)) {
+      actions.push({ label: t('Proposal.Edit'), value: 'edit' });
+    }
     if (data?.state === ProposalState.Draft) {
       actions.push({ label: t('Proposal.Withdrawn'), value: 'withdrawn' });
     }
     return actions;
+  };
+
+  const getNextCommentList = () => {
+    if (!posts.length) {
+      return;
+    }
+    const lastCommentId = posts[posts.length - 1].id;
+    getProposalDetail(lastCommentId);
   };
 
   return (
@@ -226,14 +248,17 @@ export default function ThreadPage() {
       <ThreadToolsBar>
         {showVote() && <li>{t('Proposal.Vote')}</li>}
         <li onClick={openComment}>{t('Proposal.Comment')}</li>
-        <li>{t('Proposal.Share')}</li>
-        {isCurrentApplicant && (
+        <li>
+          <CopyBox text={`${window.location.origin}/proposal-v2/thread/${id}`}>{t('Proposal.Share')}</CopyBox>
+        </li>
+        {isCurrentApplicant && !!moreActions().length && (
           <li>
             <MoreSelectAction options={moreActions()} handleClickAction={handleClickMoreAction} />
           </li>
         )}
       </ThreadToolsBar>
       {showVote() && <ProposalVote poll={data!.votes[0]} id={Number(id)} updateStatus={getProposalDetail} />}
+
       <ReplyAndHistoryBlock>
         <BlockTab>
           <li
@@ -251,18 +276,29 @@ export default function ThreadPage() {
             {t('Proposal.EditHistory')}
           </li>
         </BlockTab>
-        {blockType === BlockContentType.Reply && (
-          <ReplyComponent
-            id={Number(id)}
-            hideReply={review}
-            posts={posts}
-            ref={replyRef}
-            onNewComment={getProposalDetail}
-            isCurrentUser={isCurrentApplicant}
-          />
-        )}
+        <InfiniteScroll
+          scrollableTarget="scrollableDiv"
+          dataLength={posts.length}
+          next={getNextCommentList}
+          hasMore={hasMore}
+          loader={<></>}
+        >
+          {blockType === BlockContentType.Reply && (
+            <ReplyComponent
+              pinId={1964525} // TODO hardcode for test pin comment
+              id={Number(id)}
+              hideReply={review}
+              posts={posts}
+              ref={replyRef}
+              onNewComment={getProposalDetail}
+              isCurrentUser={isCurrentApplicant}
+            />
+          )}
+        </InfiniteScroll>
+
         {blockType === BlockContentType.History && <EditActionHistory data={editHistoryList} />}
       </ReplyAndHistoryBlock>
+
       {review && <ReviewProposalComponent id={Number(id)} onUpdateStatus={onUpdateStatus} />}
       {showConfirmWithdraw && (
         <ConfirmModal

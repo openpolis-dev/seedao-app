@@ -2,7 +2,11 @@ import { useTranslation } from 'react-i18next';
 import styled, { css } from 'styled-components';
 import CloseIcon from 'assets/Imgs/close.svg';
 import { useState } from 'react';
-import LearnCourse from './course';
+import LearnCourse, { ICourseProps } from './course';
+
+const COURSE_ID = '62f0adc68b90ee1aa913a966';
+const VEDIO_SECTION_ID = '63a46ae99ce6e09dd4811471';
+const QUIZE_SECTION_ID = '63a471299ce6e09dd4811474';
 
 const QUESTIONS = [
   {
@@ -18,11 +22,7 @@ const QUESTIONS = [
 export default function LearnDashboard() {
   const { t } = useTranslation();
   const [showAnswerContent, setShowAnswerContent] = useState('');
-  const [showCourse, setShowCourse] = useState(false);
-
-  const go2learn = () => {
-    setShowCourse(true);
-  };
+  const [showCourse, setShowCourse] = useState<ICourseProps>();
 
   return (
     <LeanDashboardStyle>
@@ -37,14 +37,34 @@ export default function LearnDashboard() {
           ))}
         </DashboardLeft>
         <DashboardRight>
-          <ModuleLinkButton onClick={go2learn}>{t('Onboarding.Enroll')}</ModuleLinkButton>
+          <ModuleLinkButton
+            onClick={() =>
+              setShowCourse({
+                courseId: COURSE_ID,
+                sectionId: VEDIO_SECTION_ID,
+                sectionType: 'Video',
+              })
+            }
+          >
+            {t('Onboarding.Enroll')}
+          </ModuleLinkButton>
           <LinkButton href="" rel="noreferrer">
             {t('Onboarding.NewcomerReward')}
           </LinkButton>
           <LinkButton href="" rel="noreferrer">
             {t('Onboarding.JoinCommunity')}
           </LinkButton>
-          <ModuleLinkButton onClick={go2learn}>{t('Onboarding.FinalExamination')}</ModuleLinkButton>
+          <ModuleLinkButton
+            onClick={() =>
+              setShowCourse({
+                courseId: COURSE_ID,
+                sectionId: QUIZE_SECTION_ID,
+                sectionType: 'Quiz',
+              })
+            }
+          >
+            {t('Onboarding.FinalExamination')}
+          </ModuleLinkButton>
         </DashboardRight>
       </LearnDashboardContet>
       {showAnswerContent && (
@@ -55,10 +75,10 @@ export default function LearnDashboard() {
       )}
       {showCourse && (
         <CourseBox>
-          <LearnCourse />
-          <img src={CloseIcon} alt="" onClick={() => setShowCourse(false)} />
+          <LearnCourse {...showCourse} />
         </CourseBox>
       )}
+      {showCourse && <CloseCourseIcon src={CloseIcon} alt="" onClick={() => setShowCourse(undefined)} />}
     </LeanDashboardStyle>
   );
 }
@@ -70,6 +90,7 @@ const LeanDashboardStyle = styled.div`
   align-items: center;
   width: 100%;
   height: 100%;
+  color: var(--bs-body-color_active);
 `;
 
 const LearnDashboardContet = styled.div`
@@ -137,16 +158,28 @@ const ModuleLinkButton = styled.div`
 const CourseBox = styled.div`
   width: 150%;
   height: 100%;
+  overflow-y: auto;
   position: absolute;
   top: 0;
   left: -25%;
   background-color: var(--bs-box--background);
-  padding-top: 30px;
   border-radius: 16px;
-  img {
-    cursor: pointer;
-    position: absolute;
-    right: 10px;
-    top: 10px;
+
+  .see-section {
+    width: 100%;
+    height: 100%;
+    > div , > div > div {
+      height: 100%;
+    }
+    .overflow-auto {
+      overflow: hidden !important;
+    }
   }
+`;
+const CloseCourseIcon = styled.img`
+  cursor: pointer;
+  position: absolute;
+  right: 50%;
+  bottom: -60px;
+  width: 40px;
 `;

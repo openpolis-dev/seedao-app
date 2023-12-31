@@ -18,8 +18,16 @@ export const getProposalList = (data: IProposalPageParams): Promise<ResponseData
   return request.get(`${PATH_PREFIX}list`, data);
 };
 
-export const getProposalDetail = (id: number): Promise<ResponseData<IProposal>> => {
-  return request.get(`${PATH_PREFIX}show/${id}`);
+export const getProposalDetail = (id: number, startPostId?: number): Promise<ResponseData<IProposal>> => {
+  return request.get(
+    `${PATH_PREFIX}show/${id}`,
+    {
+      start_post_id: startPostId,
+    },
+    {
+      metaforo_access_token: localStorage.getItem(METAFORO_TOKEN),
+    },
+  );
 };
 
 type CreateProposalParamsType = {
@@ -27,6 +35,16 @@ type CreateProposalParamsType = {
   proposal_category_id: number;
   content_blocks: IContentBlock[];
   submit_to_metaforo: boolean;
+};
+
+export const getUserActions = () => {
+  return request.get(
+    '/user/metaforo_activities',
+    {},
+    {
+      metaforo_access_token: localStorage.getItem(METAFORO_TOKEN),
+    },
+  );
 };
 
 export const saveOrSubmitProposal = (data: CreateProposalParamsType): Promise<ResponseData<IProposal>> => {
@@ -62,6 +80,7 @@ export const addComment = (id: number, content: string, reply_id?: number) => {
   return request.post(`${PATH_PREFIX}add_comment/${id}`, {
     content,
     reply_id,
+    editor_type: 0,
     metaforo_access_token: localStorage.getItem(METAFORO_TOKEN),
   });
 };

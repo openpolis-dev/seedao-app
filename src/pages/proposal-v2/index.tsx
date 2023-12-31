@@ -6,7 +6,6 @@ import { useEffect, useState } from 'react';
 import ClearSVGIcon from 'components/svgs/clear';
 import SearchSVGIcon from 'components/svgs/search';
 import { Button } from 'react-bootstrap';
-import InfiniteScroll from 'react-infinite-scroll-component';
 import SimpleProposalItem from 'components/proposalCom/simpleProposalItem';
 import { Link } from 'react-router-dom';
 import HistoryAction from 'components/proposalCom/historyAction';
@@ -17,6 +16,7 @@ import useProposalCategories from 'hooks/useProposalCategories';
 import NoItem from 'components/noItem';
 import useQuerySNS from 'hooks/useQuerySNS';
 import publicJs from 'utils/publicJs';
+import Pagination from 'components/pagination';
 
 const PAGE_SIZE = 10;
 
@@ -56,8 +56,9 @@ export default function ProposalIndexPage() {
 
   const [proposalList, setProposalList] = useState<ISimpleProposal[]>([]);
   const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(false);
+  const [totalCount, setTotalCount] = useState(0);
   const [showHistory, setShowHistory] = useState(false);
+  const [initPage, setInitPage] = useState(true);
 
   const { getMultiSNS } = useQuerySNS();
 
@@ -73,8 +74,7 @@ export default function ProposalIndexPage() {
     return name?.endsWith('.seedao') ? name : publicJs.AddressToShow(name, 4);
   };
 
-  const getProposalList = async (init?: boolean) => {
-    const _page = init ? 1 : page;
+  const getProposalList = async (_page: number = 1) => {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
       const resp = await requests.proposalV2.getProposalList({
@@ -86,17 +86,9 @@ export default function ProposalIndexPage() {
         category_id: selectCategory?.value,
         q: searchKeyword,
       });
-      setPage(_page + 1);
-      let list: ISimpleProposal[];
-      if (_page === 1) {
-        list = resp.data.rows;
-      } else {
-        list = [...proposalList, ...resp.data.rows];
-      }
-      setProposalList(list);
-      handleSNS(list.filter((d) => !!d.applicant).map((d) => d.applicant));
-
-      setHasMore(resp.data.rows.length >= PAGE_SIZE);
+      setProposalList(resp.data.rows);
+      handleSNS(resp.data.rows.filter((d) => !!d.applicant).map((d) => d.applicant));
+      setTotalCount(resp.data.total);
     } catch (error) {
       logError('getAllProposals failed', error);
     } finally {
@@ -105,9 +97,17 @@ export default function ProposalIndexPage() {
   };
 
   useEffect(() => {
-    getProposalList(true);
-    setShowHistory(false);
+    if (!initPage) {
+      getProposalList();
+      setShowHistory(false);
+      setPage(1);
+    }
   }, [selectCategory, selectTime, selectStatus, searchKeyword]);
+
+  useEffect(() => {
+    initPage && getProposalList();
+    setInitPage(false);
+  }, [page]);
 
   const onKeyUp = (e: any) => {
     if (e.keyCode === 13) {
@@ -117,6 +117,11 @@ export default function ProposalIndexPage() {
   const clearSearch = () => {
     setInputKeyword('');
     setSearchKeyword('');
+  };
+
+  const go2page = (_page: number) => {
+    setPage(_page + 1);
+    getProposalList(_page + 1);
   };
 
   return (
@@ -167,18 +172,17 @@ export default function ProposalIndexPage() {
       {showHistory ? (
         <HistoryAction />
       ) : (
-        <InfiniteScroll
-          scrollableTarget="scrollableDiv"
-          dataLength={proposalList.length}
-          next={getProposalList}
-          hasMore={hasMore}
-          loader={<></>}
-        >
+        <>
           {proposalList.map((p) => (
             <SimpleProposalItem key={p.id} data={p} sns={formatSNS(p.applicant?.toLocaleLowerCase())} />
           ))}
-          {proposalList.length === 0 && !loading && <NoItem />}
-        </InfiniteScroll>
+          {totalCount === 0 && !loading && <NoItem />}
+          {totalCount > PAGE_SIZE && (
+            <div>
+              <Pagination itemsPerPage={PAGE_SIZE} total={totalCount} current={page - 1} handleToPage={go2page} />
+            </div>
+          )}
+        </>
       )}
     </Page>
   );
