@@ -1,12 +1,14 @@
 import { useMemo, useState } from 'react';
-import { Button, Form, Toast } from 'react-bootstrap';
+import { Button, Form } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import { Poll, VoteType } from 'type/proposalV2.type';
+import { Poll, VoteType, VoteOption } from 'type/proposalV2.type';
 import { castVote } from 'requests/proposalV2';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import useToast, { ToastType } from 'hooks/useToast';
 import useCheckMetaforoLogin from 'hooks/useCheckMetaforoLogin';
+import VoterListModal from 'components/modals/voterListModal';
+import ConfirmModal from 'components/modals/confirmModal';
 const { Check } = Form;
 
 interface IProps {
@@ -15,9 +17,17 @@ interface IProps {
   updateStatus: () => void;
 }
 
+type VoteOptionItem = {
+  count: number;
+  optionId: number;
+};
+
 export default function ProposalVote({ id, poll, updateStatus }: IProps) {
   const { t } = useTranslation();
-  const [selectOption, setSelectOption] = useState<number>();
+  const [selectOption, setSelectOption] = useState<VoteOption>();
+  const [openVoteItem, setOpenVoteItem] = useState<VoteOptionItem>();
+  const [showConfirmVote, setShowConfirmVote] = useState(false);
+
   const { dispatch } = useAuthContext();
   const { showToast } = useToast();
 
@@ -34,14 +44,11 @@ export default function ProposalVote({ id, poll, updateStatus }: IProps) {
     }
   }, [poll, t]);
 
-  const goVote = async () => {
-    const canVote = await checkMetofoLogin();
-    if (!canVote) {
-      return;
-    }
+  const onConfirmVote = () => {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
-    castVote(id, poll.id, selectOption!)
+    castVote(id, poll.id, selectOption?.id!)
       .then(() => {
+        setShowConfirmVote(false);
         updateStatus();
       })
       .catch((error) => {
@@ -53,19 +60,29 @@ export default function ProposalVote({ id, poll, updateStatus }: IProps) {
       });
   };
 
+  const goVote = async (option: VoteOption) => {
+    const canVote = await checkMetofoLogin();
+    if (!canVote) {
+      return;
+    }
+    setShowConfirmVote(true);
+  };
+
   const showVoteContent = () => {
-    if (poll.status === VoteType.Open || poll.status === VoteType.Closed || poll.is_vote) {
+    if ((poll.status === VoteType.Open && !!poll.is_vote) || poll.status === VoteType.Closed) {
       return poll.options.map((option, index) => (
-        <VoteOption key={index}>
+        <VoteOptionBlock key={index}>
           <OptionContent>{option.html}</OptionContent>
           <VoteOptionBottom>
             <ProgressBar percent={option.percent}>
               <div className="inner"></div>
             </ProgressBar>
-            <span>{option.percent}%</span>
-            <span className="voters">({option.voters})</span>
+            <div onClick={() => !!option.voters && setOpenVoteItem({ count: option.voters, optionId: option.id })}>
+              <span>{option.percent}%</span>
+              <span className="voters">({option.voters})</span>
+            </div>
           </VoteOptionBottom>
-        </VoteOption>
+        </VoteOptionBlock>
       ));
     } else {
       return (
@@ -74,8 +91,8 @@ export default function ProposalVote({ id, poll, updateStatus }: IProps) {
             <VoteOptionSelect key={index}>
               <Check
                 type="radio"
-                checked={selectOption === option.id}
-                onChange={(e) => setSelectOption(e.target.checked ? option.id : undefined)}
+                checked={selectOption?.id === option.id}
+                onChange={(e) => setSelectOption(e.target.checked ? option : undefined)}
               />
               <OptionContent>{option.html}</OptionContent>
             </VoteOptionSelect>
@@ -107,14 +124,25 @@ export default function ProposalVote({ id, poll, updateStatus }: IProps) {
         {showVoteContent()}
       </VoteBody>
       <VoteFooter>
-        <VoteNFT>
-          <span>
-            {t('Proposal.PollNFT')}: {poll.address}
-          </span>
-          {poll.token_id && <span>Token Id: {poll.token_id}</span>}
-        </VoteNFT>
+        {poll.address && (
+          <VoteNFT>
+            <span>
+              {t('Proposal.PollNFT')}: {poll.address}
+            </span>
+            <span>Token Id: {poll.token_id}</span>
+          </VoteNFT>
+        )}
+
         {poll.alias && <Alias>{poll.alias}</Alias>}
       </VoteFooter>
+      {!!openVoteItem && <VoterListModal {...openVoteItem} onClose={() => setOpenVoteItem(undefined)} />}
+      {showConfirmVote && (
+        <ConfirmModal
+          msg={t('Proposal.ConfirmVoteOption', { option: selectOption?.html })}
+          onConfirm={onConfirmVote}
+          onClose={() => setShowConfirmVote(false)}
+        />
+      )}
     </CardStyle>
   );
 }
@@ -177,11 +205,11 @@ const OpenTag = styled.span`
   color: var(--bs-body-color);
 `;
 
-const VoteOption = styled.div`
+const VoteOptionBlock = styled.div`
   margin-top: 12px;
 `;
 
-const VoteOptionSelect = styled(VoteOption)`
+const VoteOptionSelect = styled(VoteOptionBlock)`
   display: flex;
   align-items: center;
   gap: 8px;

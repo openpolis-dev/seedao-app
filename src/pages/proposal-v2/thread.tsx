@@ -22,6 +22,7 @@ import useQuerySNS from 'hooks/useQuerySNS';
 import DefaultAvatarIcon from 'assets/Imgs/defaultAvatar.png';
 import ConfirmModal from 'components/modals/confirmModal';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import CopyBox from 'components/copy';
 
 enum BlockContentType {
   Reply = 1,
@@ -59,15 +60,16 @@ export default function ThreadPage() {
 
   const [showConfirmWithdraw, setShowConfirmWithdraw] = useState(false);
   const [hasMore, setHasMore] = useState(false);
+  const [startPostId, setStartPostId] = useState<number>();
 
   const { getMultiSNS } = useQuerySNS();
 
   const replyRef = useRef<IReplyOutputProps>(null);
 
-  const getProposalDetail = async (start_post_id?: number) => {
+  const getProposalDetail = async (refreshCurrent?: boolean) => {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
-      const res = await requests.proposalV2.getProposalDetail(Number(id), start_post_id);
+      const res = await requests.proposalV2.getProposalDetail(Number(id), startPostId);
       setData(res.data);
       setContentBlocks(res.data.content_blocks);
       // comment
@@ -187,7 +189,13 @@ export default function ThreadPage() {
   const isCurrentApplicant = data?.applicant?.toLocaleLowerCase() === account?.toLocaleLowerCase();
 
   const moreActions = () => {
-    const actions = [{ label: t('Proposal.Edit'), value: 'edit' }];
+    if (!data) {
+      return [];
+    }
+    const actions: { label: string; value: string }[] = [];
+    if ([ProposalState.Rejected, ProposalState.Withdrawn].includes(data?.state)) {
+      actions.push({ label: t('Proposal.Edit'), value: 'edit' });
+    }
     if (data?.state === ProposalState.Draft) {
       actions.push({ label: t('Proposal.Withdrawn'), value: 'withdrawn' });
     }
@@ -201,7 +209,7 @@ export default function ThreadPage() {
     const lastCommentId = posts[posts.length - 1].id;
     getProposalDetail(lastCommentId);
   };
-  
+
   return (
     <Page>
       <BackerNav title={currentCategory()} to="/proposal-v2" mb="20px" />
@@ -240,8 +248,10 @@ export default function ThreadPage() {
       <ThreadToolsBar>
         {showVote() && <li>{t('Proposal.Vote')}</li>}
         <li onClick={openComment}>{t('Proposal.Comment')}</li>
-        <li>{t('Proposal.Share')}</li>
-        {isCurrentApplicant && (
+        <li>
+          <CopyBox text={`${window.location.origin}/proposal-v2/thread/${id}`}>{t('Proposal.Share')}</CopyBox>
+        </li>
+        {isCurrentApplicant && !!moreActions().length && (
           <li>
             <MoreSelectAction options={moreActions()} handleClickAction={handleClickMoreAction} />
           </li>
@@ -275,6 +285,7 @@ export default function ThreadPage() {
         >
           {blockType === BlockContentType.Reply && (
             <ReplyComponent
+              pinId={1964525} // TODO hardcode for test pin comment
               id={Number(id)}
               hideReply={review}
               posts={posts}

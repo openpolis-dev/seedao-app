@@ -1,21 +1,21 @@
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import { useEffect } from 'react';
-import { METAFORO_TOKEN, SELECT_WALLET } from 'utils/constant';
-import { WalletType, Wallet } from 'wallet/wallet';
+import { METAFORO_TOKEN } from 'utils/constant';
+import { WalletType } from 'wallet/wallet';
 import publicJs from 'utils/publicJs';
-import getConfig from 'utils/envCofnig';
 import { initApiService, loginByWallet, LoginParam } from 'requests/proposal';
 import useToast, { ToastType } from './useToast';
-import { signTypedData } from '@joyid/evm';
 import { useTranslation } from 'react-i18next';
-
-const networkConfig = getConfig().NETWORK;
+import { useNetwork, useSignTypedData } from 'wagmi';
 
 export default function useCheckMetaforoLogin() {
   const {
-    state: { metaforoToken, wallet_type, account, provider, userData },
+    state: { metaforoToken, wallet_type, account, userData },
     dispatch,
   } = useAuthContext();
+
+  const { signTypedDataAsync } = useSignTypedData();
+  const { chain } = useNetwork();
 
   const { t } = useTranslation();
   const { showToast } = useToast();
@@ -48,7 +48,7 @@ export default function useCheckMetaforoLogin() {
   };
 
   const checkMetaforoLogin = async () => {
-    if (!account || !userData) {
+    if (!account || !userData || !chain) {
       dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: true });
       return;
     }
@@ -61,18 +61,11 @@ export default function useCheckMetaforoLogin() {
       return;
     }
     // sign
-    const walletType = localStorage.getItem(SELECT_WALLET) as Wallet;
     try {
-      if (walletType === Wallet.METAMASK_INJECTED) {
-        const network = await provider.getNetwork();
-        const signMsg = JSON.stringify(publicJs.typedData(account, network.chainId));
-        const sign = await provider.send('eth_signTypedData_v4', [account.toLowerCase(), signMsg]);
-        handleLogin(sign, signMsg);
-      } else if (walletType === Wallet.JOYID_WEB) {
-        const signData = publicJs.typedData(account, networkConfig.chainId);
-        const sign = await signTypedData(signData, account);
-        handleLogin(sign, JSON.stringify(signData));
-      }
+      const signData = publicJs.typedData(account, chain.id);
+      // @ts-ignore
+      const sign = await signTypedDataAsync(signData);
+      handleLogin(sign, JSON.stringify(signData));
     } catch (error: any) {
       logError('login failed', error);
       showToast(error?.message || `${error}`, ToastType.Danger);

@@ -100,6 +100,7 @@
     "ConfirmApproveProposal": "确定通过该提案的审核吗？",
     "ConfirmWithdrawProposal": "确定撤回提案吗？",
     "ConfirmBackCreate": "离开当前页面，修改内容将不会被保存，确定离开吗？",
+    "ConfirmVoteOption": "确定投票\"{{option}}\"吗？",
     "NotSupportWallet": "该操作暂不支持使用{{wallet}}, 请切换使用其他钱包",
     "Vote": "投票",
     "Share": "分享",
@@ -110,7 +111,8 @@
     "EditProposalNav": "编辑提案",
     "SaveProposal": "保存",
     "SubmitProposal": "提交",
-    "CityhallRejected": "市政厅已驳回"
+    "CityhallRejected": "市政厅已驳回",
+    "TotalVoteCount": "共{{count}}票"
   },
   "Project": {
     "ProjectOrGuildItem": "还没有填写相关介绍信息～",
@@ -454,7 +456,10 @@
     "RepeatProposal": "重复的提案链接",
     "SelectRole": "请选择角色",
     "SnsNotFound": "无效的SNS：{{sns}}",
-    "InvalidAddress": "无效的地址：{{address}}"
+    "InvalidAddress": "无效的地址：{{address}}",
+    "CloseInjected": "请关闭浏览器插件{{wallet}}, 使用MetaMask钱包",
+    "InstallMetaMask": "请安装MetaMask钱包",
+    "WalletNotReady": "{{wallet}}钱包未准备好"
   },
   "event": {
     "events": "活动",

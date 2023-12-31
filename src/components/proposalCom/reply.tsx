@@ -18,6 +18,7 @@ import useCheckMetaforoLogin from 'hooks/useCheckMetaforoLogin';
 import { deleteCommet, addComment, editCommet } from 'requests/proposalV2';
 
 interface IProps {
+  pinId?: number;
   id: number;
   hideReply?: boolean;
   posts: any[];
@@ -28,12 +29,14 @@ export interface IReplyOutputProps {
   showReply: () => void;
 }
 const ReplyComponent = React.forwardRef<IReplyOutputProps, IProps>(
-  ({ id, hideReply, posts, onNewComment, isCurrentUser }, ref) => {
+  ({ pinId, id, hideReply, posts, onNewComment, isCurrentUser }, ref) => {
     const { t } = useTranslation();
     const {
       state: { userData },
       dispatch,
     } = useAuthContext();
+    const pinPost = posts.find((p) => p.id === pinId);
+    const filterPosts = posts.filter((p) => p.id !== pinId);
 
     const checkMetaforoLogin = useCheckMetaforoLogin();
 
@@ -154,8 +157,33 @@ const ReplyComponent = React.forwardRef<IReplyOutputProps, IProps>(
 
     return (
       <ReplyComponentStyle>
+        {!!pinPost && (
+          <CommetComponent
+            data={pinPost}
+            onReply={onReply}
+            onEdit={onEdit}
+            onDelete={onDelete}
+            hideReply={hideReply}
+            isCurrentUser={false}
+            isSpecial
+          >
+            {pinPost.children.posts.map((ip: any) => (
+              <CommetComponent
+                data={ip}
+                isChild={true}
+                key={ip.id}
+                parentData={findReplyData(ip.reply_pid)}
+                onReply={onReply}
+                onEdit={onEdit}
+                onDelete={onDelete}
+                hideReply={hideReply}
+                isCurrentUser={isCurrentUser}
+              />
+            ))}
+          </CommetComponent>
+        )}
         {posts.length === 0 && <NoItem text={t('Proposal.EmptyComment')}></NoItem>}
-        {posts.map((p) => (
+        {filterPosts.map((p) => (
           <CommetComponent
             data={p}
             key={p.id}

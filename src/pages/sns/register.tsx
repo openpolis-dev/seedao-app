@@ -17,6 +17,8 @@ import WhiteListData from 'utils/whitelist.json';
 import { useTranslation } from 'react-i18next';
 import HelperIcon from 'assets/Imgs/sns/helper.svg';
 import useToast, { ToastType } from 'hooks/useToast';
+import { useNetwork, useSwitchNetwork } from 'wagmi';
+import { useEthersProvider } from 'hooks/ethersNew';
 
 const whiteList = WhiteListData as {
   rootHash: string;
@@ -28,8 +30,12 @@ const networkConfig = getConfig().NETWORK;
 const RegisterSNSWrapper = () => {
   const { t } = useTranslation();
   const {
-    state: { account, provider },
+    state: { account },
   } = useAuthContext();
+
+  const { chain } = useNetwork();
+  const { switchNetwork } = useSwitchNetwork();
+  const provider = useEthersProvider({});
 
   const {
     state: { step, localData, loading, controllerContract, minterContract },
@@ -112,39 +118,22 @@ const RegisterSNSWrapper = () => {
   }, [account, controllerContract, step]);
 
   useEffect(() => {
-    const initContract = async () => {
-      // check network
-      if (!provider?.getNetwork) {
-        return;
-      }
-      const network = await provider.getNetwork();
-
-      if (network?.chainId !== networkConfig.chainId) {
-        // switch network;
-        try {
-          await provider.send('wallet_switchEthereumChain', [
-            { chainId: ethers.utils.hexValue(networkConfig.chainId) },
-          ]);
-          return;
-        } catch (error) {
-          logError('switch network error', error);
-          dispatchSNS({ type: ACTIONS.SET_CONTROLLER_CONTRACT, payload: undefined });
-          dispatchSNS({ type: ACTIONS.SET_MINTER_CONTRACT, payload: undefined });
-          showToast(t('SNS.NetworkNotReady'), ToastType.Danger, { hideProgressBar: true });
-          return;
-        }
-      }
+    // check network
+    console.log('====', chain, switchNetwork);
+    if (chain && switchNetwork && chain?.id !== networkConfig.chainId) {
+      switchNetwork(networkConfig.chainId);
+      return;
+    } else if (chain?.id === networkConfig.chainId) {
       const _controller_contract = new ethers.Contract(
         builtin.SEEDAO_REGISTRAR_CONTROLLER_ADDR,
         CONTROLLER_ABI,
-        provider.getSigner(account),
+        provider,
       );
       dispatchSNS({ type: ACTIONS.SET_CONTROLLER_CONTRACT, payload: _controller_contract });
-      const _minter_contract = new ethers.Contract(builtin.SEEDAO_MINTER_ADDR, MINTER_ABI, provider.getSigner(account));
+      const _minter_contract = new ethers.Contract(builtin.SEEDAO_MINTER_ADDR, MINTER_ABI, provider);
       dispatchSNS({ type: ACTIONS.SET_MINTER_CONTRACT, payload: _minter_contract });
-    };
-    account && provider && initContract();
-  }, [provider, provider?.getNetwork, account]);
+    }
+  }, [chain, provider?.network.chainId]);
 
   useEffect(() => {
     if (!localData) {

@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import { useWeb3Modal } from "@web3modal/react";
 import { useAccount, useDisconnect, useNetwork } from "wagmi";
-import {useEthersSigner } from './ethersNew';
+import { useEthersSigner } from 'hooks/ethersNew';
 import {ethers} from "ethers";
 import {createSiweMessage} from "../../utils/sign";
 import {useNavigate} from "react-router-dom";

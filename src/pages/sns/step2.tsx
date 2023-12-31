@@ -9,24 +9,32 @@ import useToast, { ToastType } from 'hooks/useToast';
 import useTransaction, { TX_ACTION } from './useTransaction';
 import CancelModal from './cancelModal';
 import getConfig from 'utils/envCofnig';
-import { ethers } from 'ethers';
-import useCheckBalance from './useCheckBalance';
+import { checkTokenBalance, checkEstimateGasFeeEnough } from './checkUserBalance';
+import { WaitForTransactionResult, waitForTransaction } from 'wagmi/actions';
+import { Hex } from 'viem';
+import { useEthersProvider } from 'hooks/ethersNew';
+import { Address, useNetwork, useSwitchNetwork } from 'wagmi';
+import parseError from './parseError';
 
 const networkConfig = getConfig().NETWORK;
 
 export default function RegisterSNSStep2() {
   const { t } = useTranslation();
+
+  const { chain } = useNetwork();
+  const { switchNetworkAsync } = useSwitchNetwork();
+
+  const provider = useEthersProvider({});
   const {
-    state: { account, provider, theme },
+    state: { account, theme },
   } = useAuthContext();
   const {
-    state: { localData, sns, user_proof, hadMintByWhitelist, whitelistIsOpen },
+    state: { localData, sns, user_proof, hadMintByWhitelist, whitelistIsOpen, hasReached },
     dispatch: dispatchSNS,
   } = useSNSContext();
   const { showToast } = useToast();
 
-  const { handleTransaction, approveToken } = useTransaction();
-  const checkBalance = useCheckBalance();
+  const { handleTransaction, approveToken, handleEstimateGas } = useTransaction();
 
   const startTimeRef = useRef<number>(0);
   const [leftTime, setLeftTime] = useState<number>(0);
@@ -61,38 +69,44 @@ export default function RegisterSNSStep2() {
       setLeftTime(60 - delta);
     };
     timerFunc();
-    timer = setInterval(timerFunc, 2000);
+    timer = setInterval(timerFunc, 1000);
     return () => clearInterval(timer);
   }, []);
 
   const progress = (leftTime / 60) * 100;
 
+  const handleCheckNetwork = async () => {
+    if (chain && switchNetworkAsync && chain?.id !== networkConfig.chainId) {
+      try {
+        await switchNetworkAsync(networkConfig.chainId);
+      } catch (error) {
+        logError('switch network error', error);
+        showToast(t('SNS.NetworkNotReady'), ToastType.Danger, { hideProgressBar: true });
+        throw new Error('switch network error');
+      }
+      return true;
+    }
+  };
+
+  const closeLoading = () => {
+    dispatchSNS({ type: ACTIONS.CLOSE_LOADING });
+  };
+
   const handleRegister = async () => {
+    if (hasReached) {
+      showToast(t('SNS.HadSNS'), ToastType.Danger);
+      return;
+    }
     if (!account) {
       return;
     }
     // check network
-    if (!provider?.getNetwork) {
-      return;
-    }
-    const network = await provider.getNetwork();
-
-    if (network?.chainId !== networkConfig.chainId) {
-      // switch network;
-      try {
-        await provider.send('wallet_switchEthereumChain', [{ chainId: ethers.utils.hexValue(networkConfig.chainId) }]);
-        return;
-      } catch (error) {
-        logError('switch network error', error);
-        showToast(t('SNS.NetworkNotReady'), ToastType.Danger, { hideProgressBar: true });
+    try {
+      const r = await handleCheckNetwork();
+      if (r) {
         return;
       }
-    }
-    // check native balance
-    const token = await checkBalance(true);
-    if (token) {
-      showToast(t('SNS.NotEnoughBalance', { token }), ToastType.Danger, { hideProgressBar: true });
-      dispatchSNS({ type: ACTIONS.CLOSE_LOADING });
+    } catch (error) {
       return;
     }
     dispatchSNS({ type: ACTIONS.SHOW_LOADING });
@@ -101,19 +115,55 @@ export default function RegisterSNSStep2() {
 
       let txHash: string = '';
       if (user_proof && !hadMintByWhitelist && whitelistIsOpen) {
-        txHash = await handleTransaction(TX_ACTION.WHITE_MINT, { sns, secret, proof: user_proof });
+        // estimate
+        const params = { sns, secret, proof: user_proof };
+        try {
+          const estimateResult = await handleEstimateGas(TX_ACTION.WHITE_MINT, params);
+          console.log('estimateResult', estimateResult);
+          const notEnoughToken = await checkEstimateGasFeeEnough(estimateResult, account as Address);
+          if (notEnoughToken) {
+            showToast(t('SNS.NotEnoughBalance', { notEnoughToken }), ToastType.Danger, { hideProgressBar: true });
+            dispatchSNS({ type: ACTIONS.CLOSE_LOADING });
+            return;
+          }
+        } catch (error: any) {
+          closeLoading();
+          logError('[step-2] estimate white-mint failed', error);
+          showToast(parseError(error), ToastType.Danger);
+          return;
+        }
+        txHash = (await handleTransaction(TX_ACTION.WHITE_MINT, params)) as string;
       } else {
-        // approve
-        await approveToken();
         // check balance
-        const token = await checkBalance(true, true);
+        const token = await checkTokenBalance(account as Address);
         if (token) {
           showToast(t('SNS.NotEnoughBalance', { token }), ToastType.Danger, { hideProgressBar: true });
           dispatchSNS({ type: ACTIONS.CLOSE_LOADING });
           return;
         }
 
-        txHash = await handleTransaction(TX_ACTION.PAY_MINT, { sns, secret });
+        // approve
+        await approveToken();
+
+        // estimate
+        const params = { sns, secret };
+        try {
+          const estimateResult = await handleEstimateGas(TX_ACTION.PAY_MINT, params);
+          console.log('estimateResult', estimateResult);
+          const notEnoughToken = await checkEstimateGasFeeEnough(estimateResult, account as Address);
+          if (notEnoughToken) {
+            showToast(t('SNS.NotEnoughBalance', { notEnoughToken }), ToastType.Danger, { hideProgressBar: true });
+            dispatchSNS({ type: ACTIONS.CLOSE_LOADING });
+            return;
+          }
+        } catch (error: any) {
+          closeLoading();
+          logError('[step-2] estimate pay-mint failed', error);
+          showToast(parseError(error), ToastType.Danger);
+          return;
+        }
+
+        txHash = (await handleTransaction(TX_ACTION.PAY_MINT, params)) as string;
       }
       if (!txHash) {
         throw new Error('txHash is empty');
@@ -126,9 +176,9 @@ export default function RegisterSNSStep2() {
       // go to step3
       // dispatchSNS({ type: ACTIONS.ADD_STEP });
     } catch (error: any) {
-      dispatchSNS({ type: ACTIONS.CLOSE_LOADING });
+      closeLoading();
       logError('register failed', error);
-      showToast(error?.reason || error?.data?.message || 'error', ToastType.Danger);
+      showToast(parseError(error), ToastType.Danger);
     } finally {
     }
   };
@@ -142,33 +192,32 @@ export default function RegisterSNSStep2() {
     if (!hash || localData[account]?.stepStatus === 'failed') {
       return;
     }
-    let timer: any;
-    const timerFunc = () => {
+    // check network
+    if (chain?.id !== networkConfig.chainId) {
+      return;
+    }
+    const checkTxStatus = () => {
       if (!account || !localData) {
         return;
       }
       console.log(localData, account);
-      provider.getTransactionReceipt(hash).then((r: any) => {
+      waitForTransaction({ hash: hash as Hex }).then((r: WaitForTransactionResult) => {
         console.log('r:', r);
         const _d = { ...localData };
-        if (r && r.status === 1) {
-          // means tx success
+        if (r && r.status === 'success') {
           _d[account].stepStatus = 'success';
           dispatchSNS({ type: ACTIONS.SET_STORAGE, payload: JSON.stringify(_d) });
           dispatchSNS({ type: ACTIONS.CLOSE_LOADING });
-          clearInterval(timer);
-        } else if (r && (r.status === 2 || r.status === 0)) {
-          // means tx failed
+        } else if (r && r.status === 'reverted') {
+          logError(`tx failed: ${hash}`);
           _d[account].stepStatus = 'failed';
           dispatchSNS({ type: ACTIONS.SET_STORAGE, payload: JSON.stringify(_d) });
           dispatchSNS({ type: ACTIONS.CLOSE_LOADING });
-          clearInterval(timer);
         }
       });
     };
-    timer = setInterval(timerFunc, 1000);
-    return () => timer && clearInterval(timer);
-  }, [localData, account, provider]);
+    checkTxStatus();
+  }, [localData, account, provider, chain]);
 
   const handleCancel = () => {
     setShowCancelModal(false);
