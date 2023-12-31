@@ -22,6 +22,7 @@ import useQuerySNS from 'hooks/useQuerySNS';
 import DefaultAvatarIcon from 'assets/Imgs/defaultAvatar.png';
 import ConfirmModal from 'components/modals/confirmModal';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import CopyBox from 'components/copy';
 
 enum BlockContentType {
   Reply = 1,
@@ -247,7 +248,9 @@ export default function ThreadPage() {
       <ThreadToolsBar>
         {showVote() && <li>{t('Proposal.Vote')}</li>}
         <li onClick={openComment}>{t('Proposal.Comment')}</li>
-        <li>{t('Proposal.Share')}</li>
+        <li>
+          <CopyBox text={`${window.location.origin}/proposal-v2/thread/${id}`}>{t('Proposal.Share')}</CopyBox>
+        </li>
         {isCurrentApplicant && !!moreActions().length && (
           <li>
             <MoreSelectAction options={moreActions()} handleClickAction={handleClickMoreAction} />
