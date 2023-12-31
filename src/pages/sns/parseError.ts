@@ -59,6 +59,10 @@ const parseErrorData = (data: any) => {
 
 const parseError = (error: Error) => {
   if (error instanceof EstimateGasExecutionError || error instanceof TransactionExecutionError) {
+    if (error.details === 'User Rejected') {
+      // Joyid will show this error message
+      return error.details;
+    }
     if (error.details === 'execution reverted') {
       const rpc_error = error.walk((e) => e instanceof RpcRequestError);
       if (rpc_error) {
