@@ -175,6 +175,7 @@ export default function CreateStep() {
     setTimeout(allSubmit, 0);
   };
   const handleSubmit = () => {
+    // TODO: check content
     setSubmitType('submit');
     setTimeout(allSubmit, 0);
   };
