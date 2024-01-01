@@ -17,6 +17,7 @@ import ArrowImg from '../../assets/Imgs/arrow.png';
 import LinkImg from '../../assets/Imgs/link.svg';
 import { Link, useNavigate } from 'react-router-dom';
 import getConfig from 'utils/envCofnig';
+import PlayImg from '../../assets/Imgs/podcast.png';
 
 const Box = styled.div`
   background: var(--bs-background);
@@ -244,6 +245,13 @@ const BtmBox = styled.div`
     margin-left: 10px;
   }
 
+  .linkRht {
+    display: block;
+    img {
+      width: 20px;
+      height: 20px;
+    }
+  }
   .link {
     display: none;
   }
@@ -434,8 +442,8 @@ export default function Home() {
                       <img src={Links.podcast.img} alt="" />
                       <div className="tit">{Links.podcast.name}</div>
                     </FlexPod>
-                    <div className="link">
-                      <img src={LinkImg} alt="" />
+                    <div className="linkRht">
+                      <img src={PlayImg} alt="" />
                     </div>
                   </BtmBox>
                 </a>

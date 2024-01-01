@@ -13,7 +13,7 @@ import requests from 'requests';
 import { formatDate } from 'utils/time';
 import BackerNav from 'components/common/backNav';
 import MoreSelectAction from 'components/proposalCom/moreSelectAction';
-import { MdPreview } from 'md-editor-rt';
+import { MdEditor, MdPreview } from 'md-editor-rt';
 import ProposalStateTag, { getRealState } from 'components/proposalCom/stateTag';
 import useProposalCategories from 'hooks/useProposalCategories';
 import useCheckMetaforoLogin from 'hooks/useCheckMetaforoLogin';
@@ -27,6 +27,9 @@ import LinkImg from '../../assets/Imgs/proposal/link.png';
 import LinkIcon from '../../assets/Imgs/proposal/linkIcon.svg';
 import LinkIconDark from '../../assets/Imgs/proposal/linkIcon-black.svg';
 import ProfileComponent from '../../profile-components/profile';
+import { Preview } from '@seedao/components';
+import DataSource from './create/json/datasource.json';
+import initialItems from './create/json/initialItem';
 
 enum BlockContentType {
   Reply = 1,
@@ -266,14 +269,21 @@ export default function ThreadPage() {
           <div className="desc">{data.reject_reason}</div>
         </RejectBlock>
       )}
-      {contentBlocks.map((block) => (
-        <ProposalContentBlock key={block.title}>
-          <div className="title">{block.title}</div>
-          <div className="content">
-            <MdPreview theme={theme ? 'dark' : 'light'} modelValue={block.content || ''} />
-          </div>
-        </ProposalContentBlock>
-      ))}
+
+      <Preview
+        DataSource={DataSource}
+        // language={i18n.language}
+        initialItems={initialItems}
+        theme={theme}
+        BeforeComponent={contentBlocks.map((block) => (
+          <ProposalContentBlock key={block.title}>
+            <div className="title">{block.title}</div>
+            <div className="content">
+              <MdPreview theme={theme ? 'dark' : 'light'} modelValue={block.content || ''} />
+            </div>
+          </ProposalContentBlock>
+        ))}
+      />
 
       {/*<ThreadToolsBar>*/}
       {/*  {showVote() && <li>{t('Proposal.Vote')}</li>}*/}
