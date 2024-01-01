@@ -7,6 +7,7 @@ import { initApiService, loginByWallet, LoginParam } from 'requests/proposal';
 import useToast, { ToastType } from './useToast';
 import { useTranslation } from 'react-i18next';
 import { useNetwork, useSignTypedData } from 'wagmi';
+import { signTypedData } from "wagmi/actions";
 
 export default function useCheckMetaforoLogin() {
   const {
@@ -66,7 +67,9 @@ export default function useCheckMetaforoLogin() {
       const signData = publicJs.typedData(account, chain.id);
       console.log('[signData]', signData);
       // @ts-ignore
-      const sign = await signTypedDataAsync(signData);
+      const sign = await signTypedData(signData);
+      // // @ts-ignore
+      // const sign = await signTypedDataAsync(signData);
       handleLogin(sign, JSON.stringify(signData));
     } catch (error: any) {
       logError('login failed', error);
