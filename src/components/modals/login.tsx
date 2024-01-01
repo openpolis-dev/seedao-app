@@ -220,7 +220,7 @@ const LoginModalContent = () => {
 
   const getConnectorButtonText = (connector: Connector) => {
     if (connector.id === 'injected') {
-      return 'MetaMast';
+      return 'MetaMask';
     }
     if (connector.ready) {
       return connector.name;
