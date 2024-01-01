@@ -210,7 +210,7 @@ const ReplyComponent = React.forwardRef<IReplyOutputProps, IProps>(
         ))}
         {!hideReply && (
           <ReplyArea style={{ position: openReply ? 'sticky' : 'static' }}>
-            <Avatar src={avatar || DefaultAvatar} alt="" />
+            <AvatarBox src={avatar || DefaultAvatar} alt="" />
             {enableQuill && (
               <InputReply>
                 {openReply ? (
@@ -248,11 +248,14 @@ const ReplyComponentStyle = styled.div``;
 const ReplyArea = styled.div`
   position: sticky;
   bottom: 0;
-  padding: 10px;
   background-color: #fff;
-  box-shadow: 5px 0 10px rgba(0, 0, 0, 0.1);
+  //box-shadow: 5px 0 10px rgba(0, 0, 0, 0.1);
   display: flex;
   gap: 16px;
+`;
+
+const AvatarBox = styled(Avatar)`
+  margin-right: 0;
 `;
 
 const InputReply = styled.div`
@@ -266,8 +269,8 @@ const SubmitCommentButton = styled(Button)`
 const NormalInput = styled.input`
   width: 100%;
   border: 1px solid var(--bs-border-color);
-  border-radius: 16px;
+  border-radius: 8px;
   outline: none;
-  height: 30px;
+  height: 50px;
   padding-inline: 16px;
 `;

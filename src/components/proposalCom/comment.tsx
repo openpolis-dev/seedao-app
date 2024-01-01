@@ -1,12 +1,15 @@
 import styled from 'styled-components';
 import DefaultAvatar from 'assets/Imgs/defaultAvatarT.png';
 import { handleContent } from './parseContent';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { UserTitleType } from 'type/proposal.type';
 import { PlainButton } from 'components/common/button';
 import MoreSelectAction from './moreSelectAction';
 import { useTranslation } from 'react-i18next';
 import { formatMsgTime } from 'utils/time';
+import CommentIcon from '../../assets/Imgs/proposal/commentIcon.png';
+import ProfileComponent from '../../profile-components/profile';
+import { useAuthContext } from '../../providers/authProvider';
 
 const useParseContent = (data: string, noNeedParse?: boolean) => {
   const [content, setContent] = useState('');
@@ -37,16 +40,35 @@ interface IProps {
 interface IUserProps {
   name: string;
   avatar: string;
+  data?: any;
   user_title?: UserTitleType;
 }
 
-const UserBox = ({ name, avatar, user_title }: IUserProps) => {
+const UserBox = ({ data, name, avatar, user_title }: IUserProps) => {
+  const [showModal, setShowModal] = useState(false);
+
+  const {
+    state: { theme },
+  } = useAuthContext();
+  const handleClose = () => {
+    setShowModal(false);
+  };
+
+  const handleProfile = () => {
+    setShowModal(true);
+  };
+
   return (
-    <UserBoxStyle>
-      <Avatar src={avatar || DefaultAvatar} alt="" />
-      <span>{name}</span>
-      {user_title && user_title.name && <UserTag bg={user_title.background}>{user_title?.name}</UserTag>}
-    </UserBoxStyle>
+    <>
+      {showModal && (
+        <ProfileComponent address={data?.web3_public_keys[0]?.address} theme={theme} handleClose={handleClose} />
+      )}
+      <UserBoxStyle onClick={() => handleProfile()}>
+        <Avatar src={avatar || DefaultAvatar} alt="" />
+        <NameBox>{name}</NameBox>
+        {user_title && user_title.name && <UserTag bg={user_title.background}>{user_title?.name}</UserTag>}
+      </UserBoxStyle>
+    </>
   );
 };
 
@@ -81,13 +103,14 @@ export default function CommentComponent({
   };
 
   return (
-    <CommentStyle padding={isChild ? '30px' : '0'}>
+    <CommentStyle padding={isChild ? '64px' : '0'}>
       {/* {parentData && <ReplyComment data={parentData} />} */}
       <CommentMain>
         {/* <Avatar src={data.user.photo_url || DefaultAvatar} alt="" /> */}
         <RightBox>
           <RelationUserLine>
             <UserBox
+              data={data.user}
               name={isSpecial ? t('city-hall.Cityhall') : data.user.username}
               avatar={data.user.photo_url}
               user_title={data.user_title}
@@ -96,17 +119,28 @@ export default function CommentComponent({
               <>
                 <span>{'==>'}</span>
                 <UserBox
+                  data={data.user}
                   name={parentData.user.username}
                   avatar={parentData.user.photo_url}
                   user_title={parentData.user_title}
                 />
               </>
             )}
-            <span>{formatMsgTime(data.created_at, t)}</span>
+            <TimeBox>{formatMsgTime(data.created_at, t)}</TimeBox>
             <VersionTag>a</VersionTag>
+          </RelationUserLine>
+          {isSpecial ? (
+            <Content>{data.content}</Content>
+          ) : (
+            <Content className="content" dangerouslySetInnerHTML={{ __html: content }}></Content>
+          )}
+          <OpLine>
             {!hideReply && (
               <>
-                <PlainButton onClick={handleReply}>{t('Proposal.Reply')}</PlainButton>
+                <ReplyBtn onClick={handleReply}>
+                  <img src={CommentIcon} alt="" />
+                  {t('Proposal.Reply')}
+                </ReplyBtn>
                 {isCurrentUser && (
                   <MoreSelectAction
                     options={[
@@ -118,12 +152,7 @@ export default function CommentComponent({
                 )}
               </>
             )}
-          </RelationUserLine>
-          {isSpecial ? (
-            <div>{data.content}</div>
-          ) : (
-            <div className="content" dangerouslySetInnerHTML={{ __html: content }}></div>
-          )}
+          </OpLine>
         </RightBox>
       </CommentMain>
       {children}
@@ -135,7 +164,7 @@ const ReplyComment = ({ data }: { data: any }) => {
   const content = useParseContent(data?.content);
   return (
     <ReplyCommentStyle>
-      <UserBox name={data.user.username} avatar={data.user.photo_url} user_title={data.user_title} />
+      <UserBox name={data.user.username} data={data.user} avatar={data.user.photo_url} user_title={data.user_title} />
       <div className="content" dangerouslySetInnerHTML={{ __html: content }}></div>
     </ReplyCommentStyle>
   );
@@ -143,7 +172,11 @@ const ReplyComment = ({ data }: { data: any }) => {
 
 const CommentStyle = styled.div<{ padding: string }>`
   padding-left: ${(props) => props.padding};
-  margin-bottom: 20px;
+  margin-bottom: 32px;
+  p {
+    padding: 0;
+    margin: 0;
+  }
 `;
 
 const CommentMain = styled.div`
@@ -153,23 +186,19 @@ const CommentMain = styled.div`
 
 const UserBoxStyle = styled.div`
   display: flex;
-  gap: 8px;
   align-items: center;
 `;
 
 export const Avatar = styled.img`
-  width: 28px;
-  height: 28px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   object-fit: cover;
   object-position: center;
+  margin-right: 24px;
 `;
 
-const RightBox = styled.div`
-  background-color: var(--bs-box--background);
-  border-radius: 16px;
-  padding: 16px;
-`;
+const RightBox = styled.div``;
 
 const UserTag = styled.span<{ bg: string }>`
   padding-inline: 8px;
@@ -192,7 +221,6 @@ const RelationUserLine = styled.div`
   display: flex;
   gap: 10px;
   align-items: center;
-  margin-bottom: 20px;
 `;
 
 const VersionTag = styled.span`
@@ -203,4 +231,45 @@ const VersionTag = styled.span`
   border: 1px solid var(--bs-border-color);
   text-align: center;
   line-height: 18px;
+`;
+
+const Content = styled.div`
+  padding-left: 64px;
+
+  color: var(--bs-body-color_active);
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+`;
+const NameBox = styled.div`
+  color: var(--bs-body-color_active);
+  font-size: 16px;
+  font-style: normal;
+  font-weight: bold;
+  line-height: 22px;
+`;
+const TimeBox = styled.div`
+  color: #bbb;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 18px;
+`;
+
+const OpLine = styled.div`
+  padding-left: 64px;
+`;
+const ReplyBtn = styled.div`
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  margin-top: 10px;
+  color: #2f8fff;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  img {
+    margin-right: 8px;
+  }
 `;

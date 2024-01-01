@@ -23,6 +23,9 @@ import DefaultAvatarIcon from 'assets/Imgs/defaultAvatar.png';
 import ConfirmModal from 'components/modals/confirmModal';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import CopyBox from 'components/copy';
+import LinkImg from '../../assets/Imgs/proposal/link.png';
+import LinkIcon from '../../assets/Imgs/proposal/linkIcon.svg';
+import LinkIconDark from '../../assets/Imgs/proposal/linkIcon-black.svg';
 
 enum BlockContentType {
   Reply = 1,
@@ -215,26 +218,39 @@ export default function ThreadPage() {
       <BackerNav title={currentCategory()} to="/proposal-v2" mb="20px" />
       <ThreadHead>
         <div className="title">{data?.title}</div>
+        <FlexLine>
+          <ThreadInfo>{currentState && <ProposalStateTag state={currentState} />}</ThreadInfo>
+          <CatBox>{currentCategory()}</CatBox>
+        </FlexLine>
         <ThreadCenter>
           <UserBox>
             <img src={applicantAvatar} alt="" />
-            <span>{applicantSNS}</span>
+            <span className="name">{applicantSNS}</span>
             {data?.create_ts && <div className="date">{formatDate(new Date(data?.create_ts * 1000 || ''))}</div>}
           </UserBox>
-          <ThreadInfo>{currentState && <ProposalStateTag state={currentState} />}</ThreadInfo>
         </ThreadCenter>
         {data?.arweave && (
-          <StoreHash href={`https://arweave.net/tx/${data?.arweave}/data.html`} target="_blank">
-            Arweave Hash {data?.arweave}
+          <StoreHash>
+            <div className="lft">
+              <img src={LinkImg} alt="" /> <span>Arweave Hash</span>
+            </div>
+            <div className="rht">
+              <a href={`https://arweave.net/tx/${data?.arweave}/data.html`} target="_blank" rel="noreferrer">
+                {data?.arweave}
+              </a>
+              <img src={!theme ? LinkIconDark : LinkIcon} alt="" />
+            </div>
           </StoreHash>
         )}
       </ThreadHead>
+
       {data?.is_rejected && data?.reject_reason && data?.reject_ts && (
         <RejectBlock>
-          <div>
-            {t('Proposal.CityhallRejected')} - {formatDate(new Date(data.reject_ts * 1000))}
-          </div>
-          <div>{data.reject_reason}</div>
+          <RejectLine>
+            <span className="rejectTit">{t('Proposal.CityhallRejected')}</span>
+            <span className="time">{formatDate(new Date(data.reject_ts * 1000))}</span>
+          </RejectLine>
+          <div className="desc">{data.reject_reason}</div>
         </RejectBlock>
       )}
       {contentBlocks.map((block) => (
@@ -245,68 +261,72 @@ export default function ThreadPage() {
           </div>
         </ProposalContentBlock>
       ))}
-      <ThreadToolsBar>
-        {showVote() && <li>{t('Proposal.Vote')}</li>}
-        <li onClick={openComment}>{t('Proposal.Comment')}</li>
-        <li>
-          <CopyBox text={`${window.location.origin}/proposal-v2/thread/${id}`}>{t('Proposal.Share')}</CopyBox>
-        </li>
-        {isCurrentApplicant && !!moreActions().length && (
-          <li>
-            <MoreSelectAction options={moreActions()} handleClickAction={handleClickMoreAction} />
-          </li>
+
+      {/*<ThreadToolsBar>*/}
+      {/*  {showVote() && <li>{t('Proposal.Vote')}</li>}*/}
+      {/*  <li onClick={openComment}>{t('Proposal.Comment')}</li>*/}
+      {/*  <li>*/}
+      {/*    <CopyBox text={`${window.location.origin}/proposal-v2/thread/${id}`}>{t('Proposal.Share')}</CopyBox>*/}
+      {/*  </li>*/}
+      {/*  {isCurrentApplicant && !!moreActions().length && (*/}
+      {/*    <li>*/}
+      {/*      <MoreSelectAction options={moreActions()} handleClickAction={handleClickMoreAction} />*/}
+      {/*    </li>*/}
+      {/*  )}*/}
+      {/*</ThreadToolsBar>*/}
+
+      <CardStyle>
+        {showVote() && <ProposalVote poll={data!.votes[0]} id={Number(id)} updateStatus={getProposalDetail} />}
+
+        <ReplyAndHistoryBlock>
+          <BlockTab>
+            <li
+              className={blockType === BlockContentType.Reply ? 'selected' : ''}
+              onClick={() => setBlockType(BlockContentType.Reply)}
+            >
+              {`${totalPostsCount} `}
+              {t('Proposal.Comment')}
+            </li>
+            <li
+              className={blockType === BlockContentType.History ? 'selected' : ''}
+              onClick={() => setBlockType(BlockContentType.History)}
+            >
+              {`${totalEditCount} `}
+              {t('Proposal.EditHistory')}
+            </li>
+          </BlockTab>
+          <InfiniteScroll
+            scrollableTarget="scrollableDiv"
+            dataLength={posts.length}
+            next={getNextCommentList}
+            hasMore={hasMore}
+            loader={<></>}
+          >
+            {blockType === BlockContentType.Reply && (
+              <ReplyComponent
+                pinId={1964525} // TODO hardcode for test pin comment
+                id={Number(id)}
+                hideReply={review}
+                posts={posts}
+                ref={replyRef}
+                onNewComment={getProposalDetail}
+                isCurrentUser={isCurrentApplicant}
+              />
+            )}
+          </InfiniteScroll>
+
+          {blockType === BlockContentType.History && <EditActionHistory data={editHistoryList} />}
+        </ReplyAndHistoryBlock>
+
+        {review && <ReviewProposalComponent id={Number(id)} onUpdateStatus={onUpdateStatus} />}
+        {showConfirmWithdraw && (
+          <ConfirmModal
+            msg={t('Proposal.ConfirmWithdrawProposal')}
+            onClose={() => setShowConfirmWithdraw(false)}
+            onConfirm={handlWithdraw}
+          />
         )}
-      </ThreadToolsBar>
-      {showVote() && <ProposalVote poll={data!.votes[0]} id={Number(id)} updateStatus={getProposalDetail} />}
-
-      <ReplyAndHistoryBlock>
-        <BlockTab>
-          <li
-            className={blockType === BlockContentType.Reply ? 'selected' : ''}
-            onClick={() => setBlockType(BlockContentType.Reply)}
-          >
-            {`${totalPostsCount} `}
-            {t('Proposal.Comment')}
-          </li>
-          <li
-            className={blockType === BlockContentType.History ? 'selected' : ''}
-            onClick={() => setBlockType(BlockContentType.History)}
-          >
-            {`${totalEditCount} `}
-            {t('Proposal.EditHistory')}
-          </li>
-        </BlockTab>
-        <InfiniteScroll
-          scrollableTarget="scrollableDiv"
-          dataLength={posts.length}
-          next={getNextCommentList}
-          hasMore={hasMore}
-          loader={<></>}
-        >
-          {blockType === BlockContentType.Reply && (
-            <ReplyComponent
-              pinId={1964525} // TODO hardcode for test pin comment
-              id={Number(id)}
-              hideReply={review}
-              posts={posts}
-              ref={replyRef}
-              onNewComment={getProposalDetail}
-              isCurrentUser={isCurrentApplicant}
-            />
-          )}
-        </InfiniteScroll>
-
-        {blockType === BlockContentType.History && <EditActionHistory data={editHistoryList} />}
-      </ReplyAndHistoryBlock>
-
-      {review && <ReviewProposalComponent id={Number(id)} onUpdateStatus={onUpdateStatus} />}
-      {showConfirmWithdraw && (
-        <ConfirmModal
-          msg={t('Proposal.ConfirmWithdrawProposal')}
-          onClose={() => setShowConfirmWithdraw(false)}
-          onConfirm={handlWithdraw}
-        />
-      )}
+      </CardStyle>
     </Page>
   );
 }
@@ -322,10 +342,14 @@ const ReplyAndHistoryBlock = styled.div`
 const BlockTab = styled.ul`
   display: flex;
   font-size: 20px;
-  gap: 40px;
   margin-bottom: 16px;
+  color: var(--bs-body-color_active);
+
   li {
     cursor: pointer;
+    margin-right: 24px;
+    font-size: 16px;
+    font-weight: bold;
   }
   li.selected {
     color: var(--bs-primary);
@@ -335,16 +359,26 @@ const BlockTab = styled.ul`
 const ThreadCenter = styled.div`
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  .name {
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 22px;
+    color: var(--bs-body-color_active);
+  }
 `;
 
 const ThreadHead = styled.div`
   background-color: var(--bs-box-background);
-  margin-bottom: 20px;
-  padding: 20px;
-  border-radius: 16px;
+  box-shadow: var(--proposal-box-shadow);
+  border: 1px solid var(--proposal-border);
+  margin-bottom: 24px;
+  padding: 32px;
+  border-radius: 8px;
   .title {
-    font-size: 20px;
+    font-size: 24px;
+    font-family: 'Poppins-Medium';
+    color: var(--bs-body-color_active);
   }
 `;
 
@@ -360,13 +394,49 @@ const UserBox = styled.div`
     margin-right: 8px;
   }
   .date {
-    margin-left: 20px;
+    margin-left: 16px;
+    font-size: 12px;
   }
+`;
+
+const CardStyle = styled.div`
+  font-size: 14px;
+  background-color: var(--bs-box-background);
+  box-shadow: var(--proposal-box-shadow);
+  border: 1px solid var(--proposal-border);
+  border-radius: 8px !important;
+  padding: 32px;
 `;
 
 const ThreadInfo = styled.div``;
 
-const StoreHash = styled.a``;
+const StoreHash = styled.div`
+  display: flex;
+  align-items: center;
+  a {
+    color: #2f8fff;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+  }
+  .lft {
+    color: var(--bs-body-color_active);
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    margin-right: 8px;
+    img {
+      margin-right: 8px;
+    }
+  }
+  .rht {
+    display: flex;
+    align-content: center;
+    img {
+      margin-left: 8px;
+    }
+  }
+`;
 
 const ThreadToolsBar = styled.ul`
   background-color: var(--bs-box-background);
@@ -394,7 +464,52 @@ const ProposalContentBlock = styled.div`
 `;
 
 const RejectBlock = styled.div`
-  background-color: var(--bs-box-background);
-  padding: 10px;
-  border-radius: 16px;
+  border-radius: 8px;
+  background: rgba(251, 78, 78, 0.1);
+  padding: 16px 32px;
+  .desc {
+    color: var(--bs-body-color_active);
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+  }
+`;
+
+const FlexLine = styled.div`
+  display: flex;
+  align-items: center;
+  margin: 16px 0;
+`;
+const CatBox = styled.div`
+  border-radius: 4px;
+  border: 1px solid var(--bs-border-color_opacity);
+  margin-right: 10px;
+  color: var(--bs-body-color_active);
+  font-size: 12px;
+  padding: 0 16px;
+  height: 32px;
+  line-height: 32px;
+  margin-left: 16px;
+  box-sizing: border-box;
+`;
+const RejectLine = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  .rejectTit {
+    color: #fb4e4e;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 22px;
+  }
+  .time {
+    color: #bbb;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 18px;
+  }
 `;

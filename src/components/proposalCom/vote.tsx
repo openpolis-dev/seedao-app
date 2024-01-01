@@ -108,19 +108,24 @@ export default function ProposalVote({ id, poll, updateStatus }: IProps) {
   return (
     <CardStyle>
       <VoteHead>
-        <VoteHeadLeft>{poll.title}</VoteHeadLeft>
-        {poll.arweave && (
-          <ExportButton href={`https://arweave.net/tx/${poll.arweave}/data.csv`}>{t('Proposal.Export')}</ExportButton>
-        )}
+        <span>
+          {' '}
+          {t('Proposal.TotalVotes')}: {poll.totalVotes}
+        </span>
+
+        {/*<VoteHeadLeft>{poll.title}</VoteHeadLeft>*/}
+        {/*{poll.arweave && (*/}
+        {/*  <ExportButton href={`https://arweave.net/tx/${poll.arweave}/data.csv`}>{t('Proposal.Export')}</ExportButton>*/}
+        {/*)}*/}
       </VoteHead>
       <VoteBody>
-        <TotalVoters>
-          <span>
-            {t('Proposal.TotalVotes')}: {poll.totalVotes}
-          </span>
-          <span className="dot">·</span>
-          {voteStatusTag}
-        </TotalVoters>
+        {/*<TotalVoters>*/}
+        {/*  /!*<span>*!/*/}
+        {/*  /!*  {t('Proposal.TotalVotes')}: {poll.totalVotes}*!/*/}
+        {/*  /!*</span>*!/*/}
+        {/*  <span className="dot">·</span>*/}
+        {/*  {voteStatusTag}*/}
+        {/*</TotalVoters>*/}
         {showVoteContent()}
       </VoteBody>
       <VoteFooter>
@@ -147,20 +152,16 @@ export default function ProposalVote({ id, poll, updateStatus }: IProps) {
   );
 }
 
-const CardStyle = styled.div`
-  font-size: 14px;
-  color: var(--bs-body-color_active);
-  border-radius: 16px;
-  background-color: var(--bs-box--background);
-  border: 1px solid var(--bs-border-color);
-`;
+const CardStyle = styled.div``;
 
 const VoteHead = styled.div`
   display: flex;
   justify-content: space-between;
-  height: 40px;
-  line-height: 40px;
-  padding-inline: 20px;
+  color: var(--bs-body-color_active);
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  margin-bottom: 24px;
 `;
 
 const VoteHeadLeft = styled.div``;
@@ -171,8 +172,6 @@ const ExportButton = styled.a`
 `;
 
 const VoteBody = styled.div`
-  padding-inline: 20px;
-  border-top: 1px solid var(--bs-border-color);
   border-bottom: 1px solid var(--bs-border-color);
   padding-bottom: 14px;
 `;
@@ -239,7 +238,9 @@ const VoteOptionBottom = styled.div`
 `;
 
 const OptionContent = styled.div`
-  font-size: 16px;
+  font-size: 14px;
+  color: var(--bs-body-color_active);
+  margin-top: 0.25em;
 `;
 
 const Alias = styled.div`
@@ -248,4 +249,9 @@ const Alias = styled.div`
 
 const VoteButton = styled(Button)`
   margin-top: 16px;
+  border-radius: 8px;
+  color: var(--bs-body-color_active);
+  border: 1px solid var(--proposal-border);
+  background: var(--profile-bg);
+  min-width: 120px;
 `;
