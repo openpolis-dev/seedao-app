@@ -52,7 +52,8 @@
     "OnlineEvent": "日历",
     "Pub": "酒馆",
     "OfflineEvent": "线下活动",
-    "proposal": "提案"
+    "proposal": "提案",
+    "podcast": "播客"
   },
   "Proposal": {
     "AllCategories": "分类",

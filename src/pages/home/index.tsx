@@ -79,6 +79,12 @@ const TitBox = styled.div`
   }
 `;
 
+const TitBox2 = styled(TitBox)`
+  span {
+    margin-bottom: 10px;
+  }
+`;
+
 const LineBox = styled.div`
   display: flex;
   align-items: center;
@@ -415,13 +421,36 @@ export default function Home() {
         <Col md={4}>
           <CityBox>
             <a href="https://seedao.notion.site/f57031667089473faa7ea3560d05960c" target="_blank" rel="noreferrer">
-              <TitBox>
+              <TitBox2>
+                <span>{t('Home.podcast')}</span>
+              </TitBox2>
+            </a>
+
+            <LinkBox>
+              <Col>
+                <a href={Links.podcast.link} target="_blank" rel="noreferrer">
+                  <BtmBox>
+                    <FlexPod>
+                      <img src={Links.podcast.img} alt="" />
+                      <div className="tit">{Links.podcast.name}</div>
+                    </FlexPod>
+                    <div className="link">
+                      <img src={LinkImg} alt="" />
+                    </div>
+                  </BtmBox>
+                </a>
+              </Col>
+            </LinkBox>
+          </CityBox>
+          <CityBox>
+            <a href="https://seedao.notion.site/f57031667089473faa7ea3560d05960c" target="_blank" rel="noreferrer">
+              <TitBox2>
                 <span>{t('Home.Publicity')}</span>
                 <div className="toGo">
                   {t('Home.viewAll')}
                   <img src={ArrowImg} alt="" />
                 </div>
-              </TitBox>
+              </TitBox2>
             </a>
 
             <LinkBox>
@@ -461,7 +490,7 @@ export default function Home() {
               {/*  </div>*/}
               {/*</Col>*/}
 
-              {Publicitys.map((item: any, index) => {
+              {Publicitys.slice(0, 3).map((item: any, index) => {
                 return item.id.startsWith('module') ? (
                   <Col key={index}>
                     <Link to={item.link}>
@@ -504,4 +533,12 @@ const OnboadingButton = styled(Button)`
   position: absolute;
   right: 20px;
   bottom: 20px;
+`;
+const FlexPod = styled.div`
+  display: flex;
+  align-items: center;
+  img {
+    width: 40px;
+    border-radius: 8px;
+  }
 `;

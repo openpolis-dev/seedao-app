@@ -26,6 +26,7 @@ import CreateImg from '../assets/Imgs/governance/create.png';
 import GuildImg from '../assets/Imgs/governance/guild.png';
 import DistributeImg from '../assets/Imgs/governance/distribute.png';
 import NodeImg from '../assets/Imgs/governance/node.png';
+import PodcastImg from '../assets/Imgs/podcast.jpeg';
 
 /**
  * NOTE:
@@ -358,6 +359,11 @@ const links = {
       link: 'https://mp.weixin.qq.com/s/s8ATHFdKhaMQ5SHkPjPAZQ',
     },
   ],
+  podcast: {
+    name: 'SeeTalk',
+    link: 'https://www.xiaoyuzhoufm.com/podcast/64a27b216d90c5786108abbc',
+    img: PodcastImg,
+  },
 };
 
 export default links;

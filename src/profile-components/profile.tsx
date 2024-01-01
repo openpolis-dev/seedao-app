@@ -330,9 +330,8 @@ export default function ProfileComponent({ userData, theme, sns, handleClose, ad
     } else if (address) {
       const res = await getUsers([address]);
       detail = res.data[0]?.sp;
-      console.log(res.data[0]);
       const sns_map = await getMultiSNS([address]);
-      const sns = sns_map.get(address);
+      const sns = sns_map.get(address.toLowerCase());
       setSnsStr(sns!);
     }
     setDetail(detail);

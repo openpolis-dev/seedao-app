@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSearchParams, useParams, useLocation, useNavigate } from 'react-router-dom';
 import { ContainerPadding } from 'assets/styles/global';
@@ -26,6 +26,7 @@ import CopyBox from 'components/copy';
 import LinkImg from '../../assets/Imgs/proposal/link.png';
 import LinkIcon from '../../assets/Imgs/proposal/linkIcon.svg';
 import LinkIconDark from '../../assets/Imgs/proposal/linkIcon-black.svg';
+import ProfileComponent from '../../profile-components/profile';
 
 enum BlockContentType {
   Reply = 1,
@@ -59,7 +60,9 @@ export default function ThreadPage() {
   const currentState = getRealState(data?.state);
 
   const [applicantSNS, setApplicantSNS] = useState('');
+  const [applicant, setApplicant] = useState('');
   const [applicantAvatar, setApplicantAvatar] = useState(DefaultAvatarIcon);
+  const [showModal, setShowModal] = useState(false);
 
   const [showConfirmWithdraw, setShowConfirmWithdraw] = useState(false);
   const [hasMore, setHasMore] = useState(false);
@@ -85,6 +88,7 @@ export default function ThreadPage() {
       setEditHistoryList(res.data.histories?.lists ?? []);
       const applicant = res.data.applicant;
       setApplicantSNS(publicJs.AddressToShow(applicant));
+      setApplicant(applicant);
       setApplicantAvatar(res.data.applicant_avatar || DefaultAvatarIcon);
       if (applicant) {
         try {
@@ -213,6 +217,14 @@ export default function ThreadPage() {
     getProposalDetail(lastCommentId);
   };
 
+  const handleClose = () => {
+    setShowModal(false);
+  };
+
+  const handleProfile = () => {
+    setShowModal(true);
+  };
+
   return (
     <Page>
       <BackerNav title={currentCategory()} to="/proposal-v2" mb="20px" />
@@ -222,8 +234,9 @@ export default function ThreadPage() {
           <ThreadInfo>{currentState && <ProposalStateTag state={currentState} />}</ThreadInfo>
           <CatBox>{currentCategory()}</CatBox>
         </FlexLine>
+        {showModal && <ProfileComponent address={applicant} theme={theme} handleClose={handleClose} />}
         <ThreadCenter>
-          <UserBox>
+          <UserBox onClick={() => handleProfile()}>
             <img src={applicantAvatar} alt="" />
             <span className="name">{applicantSNS}</span>
             {data?.create_ts && <div className="date">{formatDate(new Date(data?.create_ts * 1000 || ''))}</div>}

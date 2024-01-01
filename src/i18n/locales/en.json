@@ -52,7 +52,8 @@
     "OnlineEvent": "Calendar",
     "Pub": "Hub",
     "OfflineEvent": "Offline Events",
-    "proposal": "Proposal"
+    "proposal": "Proposal",
+    "podcast": "Podcast"
   },
   "Proposal": {
     "AllCategories": "All Categories",
