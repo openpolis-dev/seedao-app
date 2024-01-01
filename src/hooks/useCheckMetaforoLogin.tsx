@@ -62,7 +62,9 @@ export default function useCheckMetaforoLogin() {
     }
     // sign
     try {
+      console.log('[typedData] params', account, chain.id);
       const signData = publicJs.typedData(account, chain.id);
+      console.log('[signData]', signData);
       // @ts-ignore
       const sign = await signTypedDataAsync(signData);
       handleLogin(sign, JSON.stringify(signData));
