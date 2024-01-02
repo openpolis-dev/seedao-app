@@ -383,7 +383,6 @@ export default function ThreadPage() {
                 posts={posts}
                 ref={replyRef}
                 onNewComment={getProposalDetail}
-                isCurrentUser={isCurrentApplicant}
               />
             )}
           </InfiniteScroll>

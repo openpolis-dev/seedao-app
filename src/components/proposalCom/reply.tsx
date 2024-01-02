@@ -23,16 +23,15 @@ interface IProps {
   hideReply?: boolean;
   posts: any[];
   onNewComment: () => void;
-  isCurrentUser?: boolean;
 }
 export interface IReplyOutputProps {
   showReply: () => void;
 }
 const ReplyComponent = React.forwardRef<IReplyOutputProps, IProps>(
-  ({ pinId, id, hideReply, posts, onNewComment, isCurrentUser }, ref) => {
+  ({ pinId, id, hideReply, posts, onNewComment }, ref) => {
     const { t } = useTranslation();
     const {
-      state: { userData },
+      state: { userData, account },
       dispatch,
     } = useAuthContext();
     const pinPost = posts.find((p) => p.id === pinId);
@@ -49,6 +48,10 @@ const ReplyComponent = React.forwardRef<IReplyOutputProps, IProps>(
     const [replyId, setReplyId] = useState<number>();
     const [editId, setEditId] = useState<number>();
     const [toBeDeleteId, setTobeDeletedId] = useState<number>();
+
+    const isCurrentUser = (address?: string) => {
+      return account?.toLocaleLowerCase() === address?.toLocaleLowerCase();
+    };
 
     const getAvatar = async () => {
       // @ts-ignore
@@ -177,7 +180,7 @@ const ReplyComponent = React.forwardRef<IReplyOutputProps, IProps>(
                 onEdit={onEdit}
                 onDelete={onDelete}
                 hideReply={hideReply}
-                isCurrentUser={isCurrentUser}
+                isCurrentUser={isCurrentUser(ip?.web3_public_keys[0]?.address)}
               />
             ))}
           </CommetComponent>
@@ -191,7 +194,7 @@ const ReplyComponent = React.forwardRef<IReplyOutputProps, IProps>(
             onEdit={onEdit}
             onDelete={onDelete}
             hideReply={hideReply}
-            isCurrentUser={isCurrentUser}
+            isCurrentUser={isCurrentUser(p?.user?.web3_public_keys?.[0]?.address)}
           >
             {p.children.posts.map((ip: any) => (
               <CommetComponent
@@ -203,7 +206,7 @@ const ReplyComponent = React.forwardRef<IReplyOutputProps, IProps>(
                 onEdit={onEdit}
                 onDelete={onDelete}
                 hideReply={hideReply}
-                isCurrentUser={isCurrentUser}
+                isCurrentUser={isCurrentUser(ip?.web3_public_keys[0]?.address)}
               />
             ))}
           </CommetComponent>
