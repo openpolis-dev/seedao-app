@@ -19,6 +19,7 @@ import publicJs from 'utils/publicJs';
 import Pagination from 'components/pagination';
 import SearchImg from '../../assets/Imgs/proposal/search.svg';
 import AddImg from '../../assets/Imgs/proposal/add-square.svg';
+import useCheckMetaforoLogin from 'hooks/useCheckMetaforoLogin';
 
 const PAGE_SIZE = 10;
 
@@ -62,6 +63,7 @@ export default function ProposalIndexPage() {
   const [showHistory, setShowHistory] = useState(false);
   const [initPage, setInitPage] = useState(true);
 
+  const checkLogin = useCheckMetaforoLogin();
   const { getMultiSNS } = useQuerySNS();
 
   const [snsMap, setSnsMap] = useState<Map<string, string>>(new Map());
@@ -126,6 +128,13 @@ export default function ProposalIndexPage() {
     getProposalList(_page + 1);
   };
 
+  const handleClickHistory = async () => {
+    const canOpen = await checkLogin();
+    if (canOpen) {
+      setShowHistory(true);
+    }
+  };
+
   return (
     <Page>
       <OperateBox>
@@ -133,7 +142,7 @@ export default function ProposalIndexPage() {
           <HistoryButton className={!showHistory ? 'selected' : ''} onClick={() => setShowHistory(false)}>
             {t('Proposal.all')}
           </HistoryButton>
-          <HistoryButton className={showHistory ? 'selected' : ''} onClick={() => setShowHistory(true)}>
+          <HistoryButton className={showHistory ? 'selected' : ''} onClick={handleClickHistory}>
             {t('Proposal.HistoryRecord')}
           </HistoryButton>
         </LineBox>
