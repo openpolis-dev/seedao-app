@@ -73,6 +73,7 @@ export interface IProposal extends ISimpleProposal {
   applicant_avatar: string;
   proposal_category_id: number;
   content_blocks: IContentBlock[];
+  reject_metaforo_comment_id: number;
   reject_reason: string;
   is_rejected: string;
   reject_ts: number;
