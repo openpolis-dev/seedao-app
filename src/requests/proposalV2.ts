@@ -30,7 +30,7 @@ export const getProposalDetail = (id: number, startPostId?: number): Promise<Res
     `${PATH_PREFIX}show/${id}`,
     {
       start_post_id: startPostId,
-      metaforo_access_token: getMetaforoData()?.token,
+      access_token: getMetaforoData()?.token,
     },
     {},
   );
