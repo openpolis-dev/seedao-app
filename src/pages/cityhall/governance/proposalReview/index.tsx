@@ -146,12 +146,21 @@ const StatusBox = styled.ul`
   display: flex;
   gap: 10px;
   li {
-    border-radius: 8px;
-    padding-inline: 10px;
-    border: 1px solid #e5e5e5;
+    height: 40px;
+    padding-inline: 20px;
+    line-height: 40px;
+    background-color: var(--bs-background);
+    border-radius: 100px;
+    font-size: 14px;
+    text-align: center;
+    color: var(--bs-body-color_active);
     cursor: pointer;
+    margin-right: 10px;
+    min-width: 104px;
+
     &.selected {
-      background-color: #e5e5e5;
+      background-color: var(--bs-primary);
+      color: #fff;
     }
   }
 `;
@@ -164,13 +173,17 @@ const FilterBox = styled.div`
 `;
 
 const SearchBox = styled.div`
-  background: var(--bs-box-background);
+  background: var(--bs-background);
   border-radius: 8px;
   display: flex;
   align-items: center;
-  justify-content: center;
   padding: 0 8px;
   border: 1px solid var(--bs-border-color);
+  position: relative;
+  height: 40px;
+  &:hover {
+    border-color: hsl(0, 0%, 70%);
+  }
   input {
     flex: 1;
     border: 0;

@@ -60,10 +60,11 @@ export default function ReviewProposalComponent({ id, onUpdateStatus }: IProps) 
 
   return (
     <OperateBox>
-      <Button onClick={() => setShowApproveModal(true)}>{t('Proposal.Approve')}</Button>
       <Button variant="outline-primary" onClick={() => setShowRejectModal(true)}>
         {t('Proposal.Reject')}
       </Button>
+      <Button onClick={() => setShowApproveModal(true)}>{t('Proposal.Approve')}</Button>
+
       {showApproveModal && (
         <ConfirmModal
           msg={t('Proposal.ConfirmApproveProposal')}
@@ -83,6 +84,11 @@ const OperateBox = styled.div`
   align-items: center;
   gap: 20px;
   > button {
-    flex: 1;
+    width: 320px;
+    height: 68px;
+    font-size: 24px;
+  }
+  .btn-outline-primary {
+    background: var(--bs-background);
   }
 `;

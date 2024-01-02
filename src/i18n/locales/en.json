@@ -68,6 +68,7 @@
     "VoteEndAt": "Voting ends in {{leftTime}}",
     "TotalVotes": "Total Votes",
     "Draft": "Draft",
+    "Audit": "Audit",
     "Rejected": "Rejected",
     "WithDrawn": "WithDrawn",
     "Voting": "Voting",

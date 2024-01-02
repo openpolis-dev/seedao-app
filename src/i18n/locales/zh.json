@@ -68,6 +68,7 @@
     "VoteEndAt": "投票剩余时间{{leftTime}}",
     "TotalVotes": "总投票数",
     "Draft": "草稿",
+    "Audit": "去审核",
     "Rejected": "被驳回",
     "WithDrawn": "已撤回",
     "Voting": "投票中",

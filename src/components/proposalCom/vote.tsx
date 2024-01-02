@@ -78,8 +78,8 @@ export default function ProposalVote({ id, poll, updateStatus }: IProps) {
               <div className="inner"></div>
             </ProgressBar>
             <div onClick={() => !!option.voters && setOpenVoteItem({ count: option.voters, optionId: option.id })}>
-              <span>{option.percent}%</span>
-              <span className="voters">({option.voters})</span>
+              <span>{option.voters}</span>
+              <span className="voters"> ({option.percent}%)</span>
             </div>
           </VoteOptionBottom>
         </VoteOptionBlock>
@@ -112,23 +112,22 @@ export default function ProposalVote({ id, poll, updateStatus }: IProps) {
           {' '}
           {t('Proposal.TotalVotes')}: {poll.totalVotes}
         </span>
-
-        {/*<VoteHeadLeft>{poll.title}</VoteHeadLeft>*/}
-        {/*{poll.arweave && (*/}
-        {/*  <ExportButton href={`https://arweave.net/tx/${poll.arweave}/data.csv`}>{t('Proposal.Export')}</ExportButton>*/}
-        {/*)}*/}
+        <TotalVoters>
+          {/*<span>*/}
+          {/*  {t('Proposal.TotalVotes')}: {poll.totalVotes}*/}
+          {/*</span>*/}
+          {voteStatusTag}
+        </TotalVoters>
       </VoteHead>
+      <FlexLine>
+        <VoteHeadLeft>{poll.title}</VoteHeadLeft>
+        {poll.arweave && (
+          <ExportButton href={`https://arweave.net/tx/${poll.arweave}/data.csv`}>{t('Proposal.Export')}</ExportButton>
+        )}
+      </FlexLine>
       <VoteBody>
-        {/*<TotalVoters>*/}
-        {/*  /!*<span>*!/*/}
-        {/*  /!*  {t('Proposal.TotalVotes')}: {poll.totalVotes}*!/*/}
-        {/*  /!*</span>*!/*/}
-        {/*  <span className="dot">·</span>*/}
-        {/*  {voteStatusTag}*/}
-        {/*</TotalVoters>*/}
         {showVoteContent()}
-      </VoteBody>
-      <VoteFooter>
+
         {poll.address && (
           <VoteNFT>
             <span>
@@ -137,9 +136,8 @@ export default function ProposalVote({ id, poll, updateStatus }: IProps) {
             <span>Token Id: {poll.token_id}</span>
           </VoteNFT>
         )}
-
-        {poll.alias && <Alias>{poll.alias}</Alias>}
-      </VoteFooter>
+      </VoteBody>
+      <VoteFooter>{poll.alias && <Alias>{poll.alias}</Alias>}</VoteFooter>
       {!!openVoteItem && <VoterListModal {...openVoteItem} onClose={() => setOpenVoteItem(undefined)} />}
       {showConfirmVote && (
         <ConfirmModal
@@ -151,6 +149,7 @@ export default function ProposalVote({ id, poll, updateStatus }: IProps) {
     </CardStyle>
   );
 }
+const FlexLine = styled.div``;
 
 const CardStyle = styled.div``;
 
@@ -184,24 +183,24 @@ const VoteFooter = styled.div`
 
 const VoteNFT = styled.div`
   color: var(--bs-body-color);
+  margin-top: 16px;
   span {
     margin-right: 20px;
   }
 `;
 
 const TotalVoters = styled.div`
-  margin-top: 14px;
-  margin-bottom: 9px;
-  .dot {
-    margin-inline: 4px;
-  }
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 22px;
 `;
 
 const CloseTag = styled.span`
   color: red;
 `;
 const OpenTag = styled.span`
-  color: var(--bs-body-color);
+  color: var(--bs-primary);
 `;
 
 const VoteOptionBlock = styled.div`
@@ -215,11 +214,11 @@ const VoteOptionSelect = styled(VoteOptionBlock)`
 `;
 
 const ProgressBar = styled.div<{ percent: number }>`
-  width: 400px;
+  width: 500px;
   height: 8px;
   border-radius: 16px;
   box-sizing: border-box;
-  background-color: var(--bs-body-color);
+  background: rgba(82, 0, 255, 0.1);
   overflow: hidden;
   .inner {
     width: ${(props) => props.percent}%;
@@ -232,8 +231,10 @@ const VoteOptionBottom = styled.div`
   display: flex;
   align-items: center;
   gap: 10px;
+  color: var(--bs-body-color_active);
   .voters {
     color: var(--bs-primary);
+    cursor: pointer;
   }
 `;
 

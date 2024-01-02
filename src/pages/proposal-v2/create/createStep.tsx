@@ -42,7 +42,7 @@ const FixedBox = styled.div`
   z-index: 95;
   box-sizing: border-box;
   padding-right: 372px;
-  box-shadow: 0px 4px 8px 0px rgba(138, 134, 146, 0.1);
+  box-shadow: var(--proposal-box-shadow);
   border-top: 1px solid var(--bs-border-color);
 `;
 

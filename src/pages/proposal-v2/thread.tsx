@@ -31,6 +31,13 @@ import { Preview } from '@seedao/components';
 import DataSource from './create/json/datasource.json';
 import initialItems from './create/json/initialItem';
 
+import VoteImg from 'assets/Imgs/proposal/vote.svg';
+import VoteWhite from 'assets/Imgs/proposal/vote-white.svg';
+import ShareImg from 'assets/Imgs/proposal/share.svg';
+import ShareWhite from 'assets/Imgs/proposal/share-white.svg';
+import CommentImg from 'assets/Imgs/proposal/comment.svg';
+import CommentWhite from 'assets/Imgs/proposal/comment-white.svg';
+
 enum BlockContentType {
   Reply = 1,
   History,
@@ -202,6 +209,7 @@ export default function ThreadPage() {
     if (!data) {
       return [];
     }
+
     const actions: { label: string; value: string }[] = [];
     if ([ProposalState.Rejected, ProposalState.Withdrawn].includes(data?.state)) {
       actions.push({ label: t('Proposal.Edit'), value: 'edit' });
@@ -230,7 +238,46 @@ export default function ThreadPage() {
 
   return (
     <Page>
-      <BackerNav title={currentCategory()} to="/proposal-v2" mb="20px" />
+      <FixedBox>
+        <FlexInner>
+          <BackerNav title={currentCategory()} to="/proposal-v2" mb="0" />
+          <FlexRht>
+            {isCurrentApplicant && !!moreActions().length && (
+              <EditBox>
+                {moreActions().map((item, index) => (
+                  <li key={index} onClick={() => handleClickMoreAction(item.value)}>
+                    {item.label}
+                  </li>
+                ))}
+              </EditBox>
+            )}
+            <ThreadToolsBar>
+              {showVote() && (
+                <li>
+                  <img src={theme ? VoteWhite : VoteImg} alt="" />
+                  {t('Proposal.Vote')}
+                </li>
+              )}
+              <li onClick={openComment}>
+                <img src={theme ? CommentWhite : CommentImg} alt="" />
+                {t('Proposal.Comment')}
+              </li>
+              <li>
+                <CopyBox text={`${window.location.origin}/proposal-v2/thread/${id}`}>
+                  <img src={theme ? ShareWhite : ShareImg} alt="" />
+                  {t('Proposal.Share')}
+                </CopyBox>
+              </li>
+              {/*{isCurrentApplicant && !!moreActions().length && (*/}
+              {/*  <li>*/}
+              {/*    <MoreSelectAction options={moreActions()} handleClickAction={handleClickMoreAction} />*/}
+              {/*  </li>*/}
+              {/*)}*/}
+            </ThreadToolsBar>
+          </FlexRht>
+        </FlexInner>
+      </FixedBox>
+
       <ThreadHead>
         <div className="title">{data?.title}</div>
         <FlexLine>
@@ -301,19 +348,6 @@ export default function ThreadPage() {
         />
       </ContentOuter>
 
-      {/*<ThreadToolsBar>*/}
-      {/*  {showVote() && <li>{t('Proposal.Vote')}</li>}*/}
-      {/*  <li onClick={openComment}>{t('Proposal.Comment')}</li>*/}
-      {/*  <li>*/}
-      {/*    <CopyBox text={`${window.location.origin}/proposal-v2/thread/${id}`}>{t('Proposal.Share')}</CopyBox>*/}
-      {/*  </li>*/}
-      {/*  {isCurrentApplicant && !!moreActions().length && (*/}
-      {/*    <li>*/}
-      {/*      <MoreSelectAction options={moreActions()} handleClickAction={handleClickMoreAction} />*/}
-      {/*    </li>*/}
-      {/*  )}*/}
-      {/*</ThreadToolsBar>*/}
-
       <CardStyle>
         {showVote() && <ProposalVote poll={data!.votes[0]} id={Number(id)} updateStatus={getProposalDetail} />}
 
@@ -357,7 +391,6 @@ export default function ThreadPage() {
           {blockType === BlockContentType.History && <EditActionHistory data={editHistoryList} />}
         </ReplyAndHistoryBlock>
 
-        {review && <ReviewProposalComponent id={Number(id)} onUpdateStatus={onUpdateStatus} />}
         {showConfirmWithdraw && (
           <ConfirmModal
             msg={t('Proposal.ConfirmWithdrawProposal')}
@@ -366,9 +399,64 @@ export default function ThreadPage() {
           />
         )}
       </CardStyle>
+
+      {review && (
+        <AuditBox>
+          <ReviewProposalComponent id={Number(id)} onUpdateStatus={onUpdateStatus} />
+        </AuditBox>
+      )}
     </Page>
   );
 }
+
+const FlexRht = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+`;
+
+const EditBox = styled.ul`
+  background-color: var(--bs-box-background);
+  border-radius: 8px;
+  border: 1px solid var(--bs-border-color);
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 10px 24px;
+  font-size: 14px;
+  margin-right: 8px;
+  li {
+    color: var(--bs-primary);
+  }
+`;
+
+const FlexInner = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  height: 100%;
+`;
+const FixedBox = styled.div`
+  background-color: var(--bs-box-background);
+  position: sticky;
+  margin: -24px 0 0 -32px;
+  width: calc(100% + 64px);
+  top: 0;
+  height: 64px;
+  z-index: 95;
+  box-sizing: border-box;
+  box-shadow: var(--proposal-box-shadow);
+  border-top: 1px solid var(--bs-border-color);
+  svg {
+  }
+`;
+const AuditBox = styled.div`
+  margin: 40px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
 
 const Page = styled.div`
   ${ContainerPadding};
@@ -414,6 +502,7 @@ const ThreadHead = styled.div`
   margin-bottom: 24px;
   padding: 32px;
   border-radius: 8px;
+  margin-top: 30px;
   .title {
     font-size: 24px;
     font-family: 'Poppins-Medium';
@@ -479,14 +568,20 @@ const StoreHash = styled.div`
 
 const ThreadToolsBar = styled.ul`
   background-color: var(--bs-box-background);
-  border-radius: 16px;
-  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid var(--bs-border-color);
   display: flex;
   align-items: center;
   gap: 20px;
-  margin-bottom: 20px;
+  padding: 10px 24px;
+
   li {
     cursor: pointer;
+    font-size: 14px;
+    color: var(--bs-body-color_active);
+  }
+  img {
+    margin-right: 10px;
   }
 `;
 
