@@ -269,21 +269,37 @@ export default function ThreadPage() {
           <div className="desc">{data.reject_reason}</div>
         </RejectBlock>
       )}
-
-      <Preview
-        DataSource={DataSource}
-        // language={i18n.language}
-        initialItems={initialItems}
-        theme={theme}
-        BeforeComponent={contentBlocks.map((block) => (
-          <ProposalContentBlock key={block.title}>
-            <div className="title">{block.title}</div>
-            <div className="content">
-              <MdPreview theme={theme ? 'dark' : 'light'} modelValue={block.content || ''} />
-            </div>
-          </ProposalContentBlock>
-        ))}
-      />
+      <ContentOuter>
+        <Preview
+          DataSource={DataSource}
+          // language={i18n.language}
+          initialItems={initialItems}
+          theme={theme}
+          BeforeComponent={
+            <>
+              {contentBlocks.map((block) => (
+                <ProposalContentBlock key={block.title}>
+                  <div className="title">{block.title}</div>
+                  <div className="content">
+                    <MdPreview theme={theme ? 'dark' : 'light'} modelValue={block.content || ''} />
+                  </div>
+                </ProposalContentBlock>
+              ))}
+              <ComponnentBox>
+                <div className="title">提案标题</div>
+              </ComponnentBox>
+            </>
+          }
+          AfterComponent={contentBlocks.map((block) => (
+            <ProposalContentBlock key={block.title}>
+              <div className="title">{block.title}</div>
+              <div className="content">
+                <MdPreview theme={theme ? 'dark' : 'light'} modelValue={block.content || ''} />
+              </div>
+            </ProposalContentBlock>
+          ))}
+        />
+      </ContentOuter>
 
       {/*<ThreadToolsBar>*/}
       {/*  {showVote() && <li>{t('Proposal.Vote')}</li>}*/}
@@ -477,13 +493,17 @@ const ThreadToolsBar = styled.ul`
 const ProposalContentBlock = styled.div`
   margin-block: 16px;
   .title {
-    background-color: var(--bs-primary);
+    background: rgba(82, 0, 255, 0.08);
     line-height: 40px;
-    border-radius: 8px;
-    color: #fff;
+    border-radius: 4px;
+    color: var(--bs-body-color_active);
     padding-inline: 16px;
     font-size: 16px;
   }
+`;
+
+const ComponnentBox = styled(ProposalContentBlock)`
+  margin-bottom: 0;
 `;
 
 const RejectBlock = styled.div`
@@ -535,4 +555,12 @@ const RejectLine = styled.div`
     font-weight: 400;
     line-height: 18px;
   }
+`;
+const ContentOuter = styled.div`
+  background-color: var(--bs-box-background);
+  box-shadow: var(--proposal-box-shadow);
+  border: 1px solid var(--proposal-border);
+  margin-bottom: 24px;
+  padding: 32px;
+  border-radius: 8px;
 `;

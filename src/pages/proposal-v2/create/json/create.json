@@ -49,6 +49,69 @@
         }
       ]
     },
+
+    {
+      "type": "input",
+      "inputType": "textarea",
+      "value": "",
+      "name": "description",
+      "properties":[
+        {
+          "name": "title",
+          "value": "项目简介"
+        },
+        {
+          "name": "size",
+          "value": "lg"
+        },
+        {
+          "name": "validate",
+          "value": {
+            "maxLength": 200
+          }
+        }
+      ]
+    },
+    {
+      "type": "file",
+      "uploadType": "image",
+      "value": "",
+      "name": "logo",
+      "properties":[
+        {
+          "name": "title",
+          "value": "项目Logo"
+        },
+        {
+          "name": "size",
+          "value": "md"
+        },
+        {
+          "name": "validate",
+          "value": {
+
+          }
+        }
+      ]
+    },
+    {
+      "type": "file",
+      "uploadType": "file",
+      "value": "",
+      "name": "file",
+      "properties":[
+        {
+          "name": "title",
+          "value": "项目文件"
+        },
+        {
+          "name": "validate",
+          "value": {
+
+          }
+        }
+      ]
+    },
     {
       "type": "table",
       "name": "addList",
@@ -66,6 +129,10 @@
             {
               "name": "title",
               "value": "项目Logo"
+            },
+            {
+              "name": "size",
+              "value": "sm"
             },
             {
               "name": "validate",
@@ -140,66 +207,7 @@
         }
 
       ]
-    },
-    {
-      "type": "input",
-      "inputType": "textarea",
-      "value": "",
-      "name": "description",
-      "properties":[
-        {
-          "name": "title",
-          "value": "项目简介"
-        },
-        {
-          "name": "size",
-          "value": "lg"
-        },
-        {
-          "name": "validate",
-          "value": {
-            "maxLength": 200
-          }
-        }
-      ]
-    },
-    {
-      "type": "file",
-      "uploadType": "image",
-      "value": "",
-      "name": "logo",
-      "properties":[
-        {
-          "name": "title",
-          "value": "项目Logo"
-        },
-        {
-          "name": "validate",
-          "value": {
-
-          }
-        }
-      ]
-    },
-    {
-      "type": "file",
-      "uploadType": "file",
-      "value": "",
-      "name": "file",
-      "properties":[
-        {
-          "name": "title",
-          "value": "项目文件"
-        },
-        {
-          "name": "validate",
-          "value": {
-
-          }
-        }
-      ]
     }
-
   ]
 }
 
