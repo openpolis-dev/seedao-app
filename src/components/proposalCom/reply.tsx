@@ -248,7 +248,7 @@ const ReplyComponentStyle = styled.div``;
 const ReplyArea = styled.div`
   position: sticky;
   bottom: 0;
-  background-color: #fff;
+  background-color: var(--bs-box-background);
   //box-shadow: 5px 0 10px rgba(0, 0, 0, 0.1);
   display: flex;
   gap: 16px;

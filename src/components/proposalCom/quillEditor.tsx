@@ -7,6 +7,7 @@ import { boldIcon, italicIcon, olIcon, ulIcon, underlineIcon } from 'components/
 import 'react-quill/dist/quill.snow.css';
 import 'assets/styles/quill.css';
 import styled from 'styled-components';
+import { useAuthContext } from '../../providers/authProvider';
 
 const modules = quillModules();
 modules.toolbar = {
@@ -33,6 +34,9 @@ interface QuillEditorProps {
 
 export default function QuillEditor(props: QuillEditorProps) {
   const inputRef = useRef(null);
+  const {
+    state: { theme },
+  } = useAuthContext();
   useEffect(() => {
     if (inputRef != null && inputRef.current != null) {
       // @ts-ignore
@@ -68,7 +72,7 @@ export default function QuillEditor(props: QuillEditorProps) {
 
   // @ts-ignore
   return (
-    <EditorStyle className={'mf-ql-editor'}>
+    <EditorStyle className={'mf-ql-editor'} theme={theme.toString()}>
       <ReactQuill
         className={'quill-editor'}
         readOnly={props.disabled}
@@ -82,9 +86,12 @@ export default function QuillEditor(props: QuillEditorProps) {
   );
 }
 
-const EditorStyle = styled.div`
+const EditorStyle = styled.div<{ theme: string }>`
   border: 1px solid var(--bs-primary);
   .ql-container.ql-snow {
     border: none;
+  }
+  svg {
+    fill: ${(props) => (props.theme === 'true' ? '#fff' : '#000')};
   }
 `;
