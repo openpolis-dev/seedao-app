@@ -134,6 +134,19 @@ const TagBox = styled.div`
   height: 24px;
   line-height: 24px;
 `;
+const TemplateTag = styled.div`
+  color: #cc8f00;
+  padding: 0 16px;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+  display: inline-block;
+  border-radius: 4px;
+  border: 1px solid #ffe071;
+  background: #fff5d2;
+  margin-left: 8px;
+`;
 
 const ComponnentBox = styled(TitleBox)`
   margin-bottom: 10px;
@@ -249,7 +262,7 @@ export default function CreateStep({ onClick }: any) {
       <BoxBg showRht={showRht.toString()}>
         <Template
           DataSource={DataSource}
-          operate="new"
+          operate="edit"
           language={i18n.language}
           showRight={showRht}
           initialItems={initialItems}
@@ -260,6 +273,7 @@ export default function CreateStep({ onClick }: any) {
                 <TitleBox>
                   <span>提案标题</span>
                   <TagBox>三层提案 - P1</TagBox>
+                  <TemplateTag>公共项目</TemplateTag>
                 </TitleBox>
                 <InputBox>
                   <input type="text" value={title} onChange={handleInput} />
