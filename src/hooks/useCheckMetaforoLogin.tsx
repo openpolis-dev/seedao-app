@@ -7,7 +7,7 @@ import { initApiService, loginByWallet, LoginParam } from 'requests/proposal';
 import useToast, { ToastType } from './useToast';
 import { useTranslation } from 'react-i18next';
 import { useNetwork, useSignTypedData } from 'wagmi';
-import { signTypedData } from "wagmi/actions";
+import { signTypedData } from 'wagmi/actions';
 
 export default function useCheckMetaforoLogin() {
   const {
@@ -25,14 +25,19 @@ export default function useCheckMetaforoLogin() {
     if (!metaforoToken) {
       const data = localStorage.getItem(METAFORO_TOKEN);
       if (data) {
-        dispatch({ type: AppActionType.SET_METAFORO_TOKEN, payload: data });
-        initApiService(data);
+        try {
+          const user = JSON.parse(data);
+          if (user?.account === account) {
+            dispatch({ type: AppActionType.SET_METAFORO_TOKEN, payload: user?.tokem });
+            initApiService(user?.token);
+          }
+        } catch (error) {}
       }
     }
   }, []);
 
-  const saveToken = (value: string) => {
-    localStorage.setItem(METAFORO_TOKEN, value);
+  const saveToken = (userid: number, value: string) => {
+    localStorage.setItem(METAFORO_TOKEN, JSON.stringify({ id: userid, account, token: value }));
     dispatch({ type: AppActionType.SET_METAFORO_TOKEN, payload: value });
   };
 
@@ -45,7 +50,7 @@ export default function useCheckMetaforoLogin() {
       wallet_type: 5,
     } as LoginParam;
     const data = await loginByWallet(loginParam);
-    saveToken(data.api_token);
+    saveToken(data.user.id, data.api_token);
   };
 
   const checkMetaforoLogin = async () => {
