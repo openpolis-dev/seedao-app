@@ -94,7 +94,7 @@ export default function ThreadPage() {
       setTotalPostsCount(res.data.comment_count);
       setHasMore(newComments.length < res.data.comment_count);
       // history
-      setTotalEditCount(res.data.histories.count ?? 0);
+      setTotalEditCount(res.data.histories.total_count ?? 0);
       setEditHistoryList(res.data.histories?.lists ?? []);
       const applicant = res.data.applicant;
       setApplicantSNS(publicJs.AddressToShow(applicant));

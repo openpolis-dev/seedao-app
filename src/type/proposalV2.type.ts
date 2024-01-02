@@ -81,7 +81,7 @@ export interface IProposal extends ISimpleProposal {
   comment_count: number;
   votes: Poll[];
   histories: {
-    count: number;
+    total_count: number;
     lists: IProposalEditHistoy[];
   };
 }
