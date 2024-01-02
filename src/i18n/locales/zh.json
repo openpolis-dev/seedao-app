@@ -69,6 +69,7 @@
     "TotalVotes": "总投票数",
     "Draft": "草稿",
     "Audit": "去审核",
+    "all": "全部提案",
     "Rejected": "被驳回",
     "WithDrawn": "已撤回",
     "Voting": "投票中",

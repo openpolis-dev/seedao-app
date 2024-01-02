@@ -5,6 +5,7 @@ import useProposalCategories from 'hooks/useProposalCategories';
 import { IBaseCategory } from 'type/proposalV2.type';
 import ArrowRht from '../../../assets/Imgs/proposal/chevron-down.svg';
 import ArrowRhtBlack from '../../../assets/Imgs/proposal/chevron-down-black.svg';
+import ArrowGray from 'assets/Imgs/proposal/chevron-gray.svg';
 import { useAuthContext } from '../../../providers/authProvider';
 
 export default function ChooseTypeStep() {
@@ -31,6 +32,10 @@ export default function ChooseTypeStep() {
               <img src={theme ? ArrowRhtBlack : ArrowRht} alt="" />
             </li>
           ))}
+          <li className="noAuth">
+            <span>没有权限</span>
+            <img src={ArrowGray} alt="" />
+          </li>
         </TypeBox>
       </CenterBox>
     </Container>
@@ -77,5 +82,10 @@ const TypeBox = styled.ul`
     &:hover {
       //border-color: var(--bs-body-color_active);
     }
+  }
+  .noAuth {
+    background: rgba(82, 0, 255, 0.08);
+    color: var(--bs-body-color);
+    cursor: not-allowed;
   }
 `;

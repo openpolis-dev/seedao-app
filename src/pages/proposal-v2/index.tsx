@@ -131,7 +131,7 @@ export default function ProposalIndexPage() {
       <OperateBox>
         <LineBox>
           <HistoryButton className={!showHistory ? 'selected' : ''} onClick={() => setShowHistory(false)}>
-            全部
+            {t('Proposal.all')}
           </HistoryButton>
           <HistoryButton className={showHistory ? 'selected' : ''} onClick={() => setShowHistory(true)}>
             {t('Proposal.HistoryRecord')}

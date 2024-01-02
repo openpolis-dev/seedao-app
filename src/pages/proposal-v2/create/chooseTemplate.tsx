@@ -38,7 +38,14 @@ export default function ChooseTemplateStep() {
 
   return (
     <ListBox>
-      <CreateBlankOne onClick={() => changeStep(3)}>
+      <CreateBlankOne
+        onClick={() =>
+          chooseTemplate({
+            id: 0,
+            name: '测试空白',
+          })
+        }
+      >
         <InnerBox>
           <ImgBox>
             <img src={AddImg} alt="" />
@@ -49,7 +56,9 @@ export default function ChooseTemplateStep() {
       {templates.map((template) => (
         <BaseTemplate key={template.id} onClick={() => chooseTemplate(template)}>
           <InnerBox>
-            <PicBox></PicBox>
+            <PicBox>
+              <img src="https://mms0.baidu.com/it/u=480006263,2457381717&fm=253&app=138&f=JPEG?w=500&h=500" alt="" />
+            </PicBox>
             <TitleBox>{template.name}</TitleBox>
           </InnerBox>
         </BaseTemplate>
@@ -117,6 +126,12 @@ const PicBox = styled.div`
   justify-content: center;
   align-items: center;
   border: 1px solid var(--proposal-border);
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
 `;
 const TitleBox = styled.div`
   width: 100%;

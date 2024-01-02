@@ -32,7 +32,7 @@ const TitleBox = styled.div`
   box-sizing: border-box;
 `;
 
-const FixedBox = styled.div`
+const FixedBox = styled.div<{ showRht: string }>`
   background-color: var(--bs-box-background);
   position: sticky;
   margin: -24px 0 0 -32px;
@@ -41,7 +41,7 @@ const FixedBox = styled.div`
   height: 64px;
   z-index: 95;
   box-sizing: border-box;
-  padding-right: 372px;
+  padding-right: ${(props) => (props.showRht === 'true' ? '372px' : '0')};
   box-shadow: var(--proposal-box-shadow);
   border-top: 1px solid var(--bs-border-color);
 `;
@@ -160,6 +160,8 @@ export default function CreateStep({ onClick }: any) {
   const [list, setList] = useState<any[]>([]);
   const [submitType, setSubmitType] = useState<'save' | 'submit'>();
 
+  const { template } = useCreateProposalContext();
+
   const [showRht, setShowRht] = useState(true);
 
   const [showLeaveConfirm, setShowLeaveConfirm] = useState(false);
@@ -186,6 +188,17 @@ export default function CreateStep({ onClick }: any) {
     ];
     setList([...arr]);
   }, []);
+
+  useEffect(() => {
+    console.log(template);
+    if (!template) return;
+
+    if (template.id) {
+      setShowRht(false);
+    } else {
+      setShowRht(true);
+    }
+  }, [template]);
 
   const handleInput = (e: ChangeEvent) => {
     const { value } = e.target as HTMLInputElement;
@@ -236,12 +249,12 @@ export default function CreateStep({ onClick }: any) {
 
   const handleBack = () => {
     setShowLeaveConfirm(false);
-    changeStep(1);
+    changeStep(2);
   };
 
   return (
     <Box>
-      <FixedBox>
+      <FixedBox showRht={showRht.toString()}>
         <FlexInner>
           <BackBox onClick={() => setShowLeaveConfirm(true)}>
             <BackIconBox>
