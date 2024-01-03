@@ -206,7 +206,7 @@ const ReplyComponent = React.forwardRef<IReplyOutputProps, IProps>(
                 onEdit={onEdit}
                 onDelete={onDelete}
                 hideReply={hideReply}
-                isCurrentUser={isCurrentUser(ip?.web3_public_keys[0]?.address)}
+                isCurrentUser={isCurrentUser(ip?.user?.web3_public_keys[0]?.address)}
               />
             ))}
           </CommetComponent>
