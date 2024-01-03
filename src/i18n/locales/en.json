@@ -115,7 +115,8 @@
     "SaveProposal": "Save",
     "SubmitProposal": "Submit",
     "CityhallRejected": "Cityhall rejected",
-    "TotalVoteCount": "{{count}} voted"
+    "TotalVoteCount": "{{count}} voted",
+    "HasVote": "Voted"
   },
   "Project": {
     "ProjectOrGuildItem": "Nothing left here.",
