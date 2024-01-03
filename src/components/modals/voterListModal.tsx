@@ -70,7 +70,7 @@ export default function VoterListModal({ optionId, count, onClose }: IProps) {
         >
           {list.map((item, index) => (
             <li key={index}>
-              <UserBox name={item.wallet} avatar={item.avatar} />
+              <UserBox name={item.wallet} avatar={item.os_avatar} />
               <span>1</span>
             </li>
           ))}

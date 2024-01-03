@@ -98,12 +98,11 @@ export const castVote = (id: number, vote_id: number, option: number) => {
 
 export type VoterType = {
   wallet: string;
-  avatar: string;
+  os_avatar: string;
 };
 
 export const getVotersOfOption = (option_id: number, page: number): Promise<ResponseData<VoterType[]>> => {
   return request.get(`${PATH_PREFIX}vote_detail/${option_id}`, {
-    vote_option_id: option_id,
     page,
   });
 };
