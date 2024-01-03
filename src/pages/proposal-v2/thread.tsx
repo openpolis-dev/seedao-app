@@ -96,7 +96,9 @@ export default function ThreadPage() {
           : newComments.reduce((a, b) => a.children_count + b.children_count) + newComments.length <
               res.data.comment_count,
       );
-      setStartPostId(res.data.comments[res.data.comments.length - 1].id);
+      if (res.data.comments.length) {
+        setStartPostId(res.data.comments[res.data.comments.length - 1].id);
+      }
       // history
       setTotalEditCount(res.data.histories.total_count ?? 0);
       setEditHistoryList(res.data.histories?.lists ?? []);
