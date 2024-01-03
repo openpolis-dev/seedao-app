@@ -146,57 +146,57 @@ export default function ProposalIndexPage() {
             {t('Proposal.HistoryRecord')}
           </HistoryButton>
         </LineBox>
-        <FlexLine>
-          <FilterBox>
-            <SeeSelect
-              width="180px"
-              options={CATEGORY_OPTIONS}
-              isSearchable={false}
-              placeholder={t('Proposal.TypeSelectHint')}
-              onChange={(v: ISelectItem) => setSelectCategory(v)}
-            />
-            <SeeSelect
-              width="120px"
-              options={TIME_OPTIONS}
-              defaultValue={TIME_OPTIONS[0]}
-              isClearable={false}
-              isSearchable={false}
-              onChange={(v: ISelectItem) => setSelectTime(v)}
-            />
-            <SeeSelect
-              width="120px"
-              options={STATUS_OPTIONS}
-              isSearchable={false}
-              placeholder={t('Proposal.StatusSelectHint')}
-              onChange={(v: ISelectItem) => setSelectStatus(v)}
-            />
-            <SearchBox>
-              {/*<SearchSVGIcon />*/}
-              <img src={SearchImg} alt="" className="iconBg" />
-              <input
-                type="text"
-                placeholder=""
-                onKeyUp={(e) => onKeyUp(e)}
-                value={inputKeyword}
-                onChange={(e) => setInputKeyword(e.target.value)}
-              />
-
-              {inputKeyword && <ClearSVGIcon onClick={() => clearSearch()} className="btn-clear" />}
-            </SearchBox>
-          </FilterBox>
-          <Link to="/proposal-v2/create">
-            <Button variant="primary">
-              {' '}
-              <img src={AddImg} alt="" className="mr20" />
-              {t('Proposal.CreateProposal')}
-            </Button>
-          </Link>
-        </FlexLine>
       </OperateBox>
       {showHistory ? (
         <HistoryAction />
       ) : (
         <>
+          <FlexLine>
+            <FilterBox>
+              <SeeSelect
+                width="180px"
+                options={CATEGORY_OPTIONS}
+                isSearchable={false}
+                placeholder={t('Proposal.TypeSelectHint')}
+                onChange={(v: ISelectItem) => setSelectCategory(v)}
+              />
+              <SeeSelect
+                width="120px"
+                options={TIME_OPTIONS}
+                defaultValue={TIME_OPTIONS[0]}
+                isClearable={false}
+                isSearchable={false}
+                onChange={(v: ISelectItem) => setSelectTime(v)}
+              />
+              <SeeSelect
+                width="120px"
+                options={STATUS_OPTIONS}
+                isSearchable={false}
+                placeholder={t('Proposal.StatusSelectHint')}
+                onChange={(v: ISelectItem) => setSelectStatus(v)}
+              />
+              <SearchBox>
+                {/*<SearchSVGIcon />*/}
+                <img src={SearchImg} alt="" className="iconBg" />
+                <input
+                  type="text"
+                  placeholder=""
+                  onKeyUp={(e) => onKeyUp(e)}
+                  value={inputKeyword}
+                  onChange={(e) => setInputKeyword(e.target.value)}
+                />
+
+                {inputKeyword && <ClearSVGIcon onClick={() => clearSearch()} className="btn-clear" />}
+              </SearchBox>
+            </FilterBox>
+            <Link to="/proposal-v2/create">
+              <Button variant="primary">
+                {' '}
+                <img src={AddImg} alt="" className="mr20" />
+                {t('Proposal.CreateProposal')}
+              </Button>
+            </Link>
+          </FlexLine>
           {proposalList.map((p) => (
             <SimpleProposalItem key={p.id} data={p} sns={formatSNS(p.applicant?.toLocaleLowerCase())} />
           ))}
@@ -289,4 +289,5 @@ const FlexLine = styled.div`
   align-items: center;
   justify-content: space-between;
   margin-top: 24px;
+  margin-bottom: 20px;
 `;

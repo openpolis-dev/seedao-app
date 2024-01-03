@@ -50,7 +50,10 @@ type CreateProposalParamsType = {
   submit_to_metaforo: boolean;
 };
 
-export const getUserActions = (size: number, session?: string): Promise<ResponseData<IActivity[]>> => {
+export const getUserActions = (
+  size: number,
+  session?: string,
+): Promise<ResponseData<{ records: IActivity[]; session: string }>> => {
   const data = getMetaforoData();
   return request.get('/user/metaforo_activities', {
     size,

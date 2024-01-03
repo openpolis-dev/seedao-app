@@ -89,8 +89,9 @@ export interface IProposal extends ISimpleProposal {
 }
 
 export interface IActivity {
-  thread_title: string;
-  thread_poster_name: string;
-  created_at: string;
-  editor_type: 0 | 1;
+  action_ts: number;
+  metaforo_action: string;
+  proposal_id: number;
+  target_title: string;
+  wallet: string;
 }

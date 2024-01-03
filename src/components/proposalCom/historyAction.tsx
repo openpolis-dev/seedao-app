@@ -9,15 +9,17 @@ import { getUserActions } from 'requests/proposalV2';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import { formatDate } from 'utils/time';
 import { Trans } from 'react-i18next';
+import NoItem from 'components/noItem';
 
 enum ActionType {
-  CreateProposal = 1,
-  Reply,
-  Vote,
-  Share,
+  CreateProposal = 'create',
+  Reply = 'comment',
+  Vote = 'vote',
+  Share = 'share',
 }
 
 type ActionDataType = {
+  pid: number;
   time: string;
   type: ActionType;
   user?: string;
@@ -35,12 +37,14 @@ export default function HistoryAction() {
     try {
       dispatch({ type: AppActionType.SET_LOADING, payload: true });
       const res = await getUserActions(10, currentSession);
-      const _list = res.data.map((item) => ({
-        type: item.editor_type === 0 ? ActionType.Reply : ActionType.CreateProposal,
-        time: formatDate(new Date(item.created_at)),
-        user: item.thread_poster_name,
-        title: item.thread_title,
+      const _list = res.data.records.map((item) => ({
+        type: item.metaforo_action as ActionType,
+        time: formatDate(new Date(item.action_ts * 1000)),
+        user: item.wallet,
+        title: item.target_title,
+        pid: item.proposal_id,
       }));
+      setCurrentSession(res.data.session);
       setList(_list);
     } catch (error) {
       logError('[proposal] get user actions failed', error);
@@ -52,6 +56,10 @@ export default function HistoryAction() {
   useEffect(() => {
     getList();
   }, []);
+
+  const openProposal = (id: number) => {
+    window.open(`/proposal-v2/thread/${id}`, '_blank');
+  };
 
   const returnImg = (type: ActionType) => {
     switch (type) {
@@ -95,8 +103,9 @@ export default function HistoryAction() {
 
   return (
     <ActionList>
+      {list.length === 0 && <NoItem />}
       {list.map((item, index) => (
-        <Aciton>
+        <Aciton key={index} onClick={() => openProposal(item.pid)}>
           <div className="icon">
             <img src={returnImg(item.type)} alt="" />
           </div>
