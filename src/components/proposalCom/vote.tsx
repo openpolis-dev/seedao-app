@@ -109,7 +109,7 @@ export default function ProposalVote({ id, poll, updateStatus }: IProps) {
   };
 
   return (
-    <CardStyle>
+    <CardStyle id="vote-block">
       <VoteHead>
         <span>
           {' '}

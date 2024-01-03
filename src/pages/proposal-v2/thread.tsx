@@ -133,12 +133,17 @@ export default function ThreadPage() {
     }
   };
 
+  const go2vote = () => {
+    document.querySelector('#vote-block')?.scrollIntoView();
+  };
+
   const openComment = () => {
     if (blockType !== BlockContentType.Reply) {
       setBlockType(BlockContentType.Reply);
     }
     setTimeout(() => {
       replyRef.current?.showReply();
+      document.querySelector('#reply-history-block')?.scrollIntoView();
     }, 0);
     checkMetaforoLogin();
   };
@@ -254,7 +259,7 @@ export default function ThreadPage() {
             )}
             <ThreadToolsBar>
               {showVote() && (
-                <li>
+                <li onClick={go2vote}>
                   <img src={theme ? VoteWhite : VoteImg} alt="" />
                   {t('Proposal.Vote')}
                 </li>
@@ -353,7 +358,7 @@ export default function ThreadPage() {
         {showVote() && <ProposalVote poll={data!.votes[0]} id={Number(id)} updateStatus={getProposalDetail} />}
 
         <ReplyAndHistoryBlock>
-          <BlockTab>
+          <BlockTab id="reply-history-block">
             <li
               className={blockType === BlockContentType.Reply ? 'selected' : ''}
               onClick={() => setBlockType(BlockContentType.Reply)}
