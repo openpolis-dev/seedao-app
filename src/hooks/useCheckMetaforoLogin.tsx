@@ -8,6 +8,7 @@ import useToast, { ToastType } from './useToast';
 import { useTranslation } from 'react-i18next';
 import { useNetwork, useSignTypedData } from 'wagmi';
 import { signTypedData } from 'wagmi/actions';
+import { prepareMetaforo } from 'requests/proposalV2';
 
 export default function useCheckMetaforoLogin() {
   const {
@@ -28,7 +29,7 @@ export default function useCheckMetaforoLogin() {
         try {
           const user = JSON.parse(data);
           if (user?.account === account) {
-            dispatch({ type: AppActionType.SET_METAFORO_TOKEN, payload: user?.tokem });
+            dispatch({ type: AppActionType.SET_METAFORO_TOKEN, payload: user?.token });
             initApiService(user?.token);
           }
         } catch (error) {}
@@ -51,6 +52,7 @@ export default function useCheckMetaforoLogin() {
     } as LoginParam;
     const data = await loginByWallet(loginParam);
     saveToken(data.user.id, data.api_token);
+    await prepareMetaforo();
   };
 
   const checkMetaforoLogin = async () => {
@@ -62,6 +64,7 @@ export default function useCheckMetaforoLogin() {
     if (metaforoToken) {
       return true;
     }
+
     if (wallet_type === WalletType.AA) {
       showToast(t('Proposal.NotSupportWallet', { wallet: 'UniPass' }), ToastType.Danger);
       return;
