@@ -5,60 +5,103 @@ import CreateImg from '../../assets/Imgs/proposal/create.png';
 import VoteImg from '../../assets/Imgs/proposal/vote.png';
 import ShareImg from '../../assets/Imgs/proposal/share.png';
 import CommentImg from '../../assets/Imgs/proposal/comment.png';
+import { getUserActions } from 'requests/proposalV2';
+import { AppActionType, useAuthContext } from 'providers/authProvider';
+import { formatDate } from 'utils/time';
+import { Trans } from 'react-i18next';
+
+enum ActionType {
+  CreateProposal = 1,
+  Reply,
+  Vote,
+  Share,
+}
 
 type ActionDataType = {
-  content: string;
   time: string;
-  type: string;
+  type: ActionType;
+  user?: string;
+  title: string;
 };
 
 export default function HistoryAction() {
   const { t } = useTranslation();
   const [list, setList] = useState<ActionDataType[]>([]);
+  const [currentSession, setCurrentSession] = useState('');
+
+  const { dispatch } = useAuthContext();
+
+  const getList = async () => {
+    try {
+      dispatch({ type: AppActionType.SET_LOADING, payload: true });
+      const res = await getUserActions(10, currentSession);
+      const _list = res.data.map((item) => ({
+        type: item.editor_type === 0 ? ActionType.Reply : ActionType.CreateProposal,
+        time: formatDate(new Date(item.created_at)),
+        user: item.thread_poster_name,
+        title: item.thread_title,
+      }));
+      setList(_list);
+    } catch (error) {
+      logError('[proposal] get user actions failed', error);
+    } finally {
+      dispatch({ type: AppActionType.SET_LOADING, payload: false });
+    }
+  };
 
   useEffect(() => {
-    // TODO: get history action list
-    setList([
-      { content: t('Proposal.ActivityCreate', { title: 'lalalala' }), time: '2021-09-09', type: 'create' },
-      {
-        content: t('Proposal.ActivityComment', { title: 'lalalala', author: 'apple' }),
-        time: '2021-09-09',
-        type: 'vote',
-      },
-      {
-        content: t('Proposal.ActivityComment', { title: 'lalalala', author: 'apple' }),
-        time: '2021-09-09',
-        type: 'share',
-      },
-      {
-        content: t('Proposal.ActivityComment', { title: 'lalalala', author: 'apple' }),
-        time: '2021-09-09',
-        type: 'comment',
-      },
-    ]);
+    getList();
   }, []);
 
-  const returnImg = (type: string) => {
+  const returnImg = (type: ActionType) => {
     switch (type) {
-      case 'create':
+      case ActionType.CreateProposal:
         return CreateImg;
-      case 'vote':
+      case ActionType.Vote:
         return VoteImg;
-      case 'share':
+      case ActionType.Share:
         return ShareImg;
-      case 'comment':
+      case ActionType.Reply:
         return CommentImg;
     }
   };
+
+  const getKindofContent = (data: ActionDataType) => {
+    switch (data.type) {
+      case ActionType.CreateProposal:
+        return (
+          <Trans
+            i18nKey="Proposal.ActivityCreate"
+            values={{ title: data.title }}
+            components={{
+              strong: <strong />,
+            }}
+          />
+        );
+      case ActionType.Reply:
+        return (
+          <Trans
+            i18nKey="Proposal.ActivityComment"
+            values={{ title: data.title, author: data.user }}
+            components={{
+              strong: <strong />,
+            }}
+          />
+        );
+      default:
+        return null;
+    }
+  };
+
   return (
     <ActionList>
       {list.map((item, index) => (
-        <Aciton key={index}>
+        <Aciton>
           <div className="icon">
             <img src={returnImg(item.type)} alt="" />
           </div>
           <div className="action-content">
-            <div className="title">{item.content}</div>
+            <div className="title">{getKindofContent(item)}</div>
             <div className="time">{item.time}</div>
           </div>
         </Aciton>

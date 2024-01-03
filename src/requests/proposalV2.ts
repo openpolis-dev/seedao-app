@@ -1,5 +1,12 @@
 import request, { ResponseData } from './http';
-import { IProposal, ISimpleProposal, ProposalState, IContentBlock, IBaseCategory } from 'type/proposalV2.type';
+import {
+  IProposal,
+  ISimpleProposal,
+  ProposalState,
+  IContentBlock,
+  IBaseCategory,
+  IActivity,
+} from 'type/proposalV2.type';
 import { METAFORO_TOKEN } from 'utils/constant';
 
 const PATH_PREFIX = '/proposals/';
@@ -43,11 +50,21 @@ type CreateProposalParamsType = {
   submit_to_metaforo: boolean;
 };
 
-export const getUserActions = () => {
+export const getUserActions = (size: number, session?: string): Promise<ResponseData<IActivity[]>> => {
   const data = getMetaforoData();
   return request.get('/user/metaforo_activities', {
+    size,
+    session,
     metaforo_access_token: data?.token,
     userId: data?.id,
+  });
+};
+
+export const prepareMetaforo = () => {
+  const data = getMetaforoData();
+  return request.post('/user/prepare_metaforo', {
+    api_token: data.token,
+    user: { id: data.id },
   });
 };
 

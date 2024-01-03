@@ -86,3 +86,10 @@ export interface IProposal extends ISimpleProposal {
     lists: IProposalEditHistoy[];
   };
 }
+
+export interface IActivity {
+  thread_title: string;
+  thread_poster_name: string;
+  created_at: string;
+  editor_type: 0 | 1;
+}
