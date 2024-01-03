@@ -248,8 +248,8 @@ const BtmBox = styled.div`
   .linkRht {
     display: block;
     img {
-      width: 20px;
-      height: 20px;
+      width: 25px;
+      height: 25px;
     }
   }
   .link {
@@ -546,7 +546,7 @@ const FlexPod = styled.div`
   display: flex;
   align-items: center;
   img {
-    width: 40px;
+    width: 50px;
     border-radius: 8px;
   }
 `;
