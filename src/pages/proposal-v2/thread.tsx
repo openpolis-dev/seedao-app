@@ -91,7 +91,10 @@ export default function ThreadPage() {
       setPosts(newComments);
       setTotalPostsCount(res.data.comment_count);
       setHasMore(
-        newComments.reduce((a, b) => a.children_count + b.children_count) + newComments.length < res.data.comment_count,
+        newComments.length === 0
+          ? false
+          : newComments.reduce((a, b) => a.children_count + b.children_count) + newComments.length <
+              res.data.comment_count,
       );
       setStartPostId(res.data.comments[res.data.comments.length - 1].id);
       // history
