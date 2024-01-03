@@ -78,7 +78,7 @@ export default function useCheckMetaforoLogin() {
       const sign = await signTypedData(signData);
       // // @ts-ignore
       // const sign = await signTypedDataAsync(signData);
-      handleLogin(sign, JSON.stringify(signData));
+      await handleLogin(sign, JSON.stringify(signData));
     } catch (error: any) {
       logError('login failed', error);
       showToast(error?.message || `${error}`, ToastType.Danger);
