@@ -2,7 +2,11 @@ import styled from 'styled-components';
 import BasicModal from './basicModal';
 import DefaultAvatar from 'assets/Imgs/defaultAvatarT.png';
 import { useTranslation } from 'react-i18next';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { getVotersOfOption, VoterType } from 'requests/proposalV2';
+import InfiniteScroll from 'react-infinite-scroll-component';
+import { AppActionType, useAuthContext } from 'providers/authProvider';
+import useToast, { ToastType } from 'hooks/useToast';
 
 interface IUserProps {
   name: string;
@@ -26,21 +30,51 @@ interface IProps {
 
 export default function VoterListModal({ optionId, count, onClose }: IProps) {
   const { t } = useTranslation();
+  const { dispatch } = useAuthContext();
+  const [page, setPage] = useState(1);
+  const [list, setList] = useState<VoterType[]>([]);
+
+  const hasMore = list.length < 20;
+  const { showToast } = useToast();
+
+  const getList = () => {
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    getVotersOfOption(optionId, page)
+      .then((res) => {
+        setList([...list, ...res.data]);
+        setPage((p) => p + 1);
+        // TODO handle sns
+      })
+      .catch((err: any) => {
+        showToast(err, ToastType.Danger);
+      })
+      .finally(() => {
+        dispatch({ type: AppActionType.SET_LOADING, payload: false });
+      });
+  };
 
   useEffect(() => {
-    // TODO: fetch data
+    getList();
   }, [optionId]);
 
   return (
     <VotersModal handleClose={onClose}>
       <TopCount>{t('Proposal.TotalVoteCount', { count })}</TopCount>
-      <List>
-        {[...Array(20)].map((item, index) => (
-          <li key={`user_${index}`}>
-            <UserBox name="1111" avatar="" />
-            <span>1</span>
-          </li>
-        ))}
+      <List id="voter-modal">
+        <InfiniteScroll
+          scrollableTarget="voter-modal"
+          dataLength={list.length}
+          next={getList}
+          hasMore={hasMore}
+          loader={<></>}
+        >
+          {list.map((item, index) => (
+            <li key={index}>
+              <UserBox name={item.wallet} avatar={item.avatar} />
+              <span>1</span>
+            </li>
+          ))}
+        </InfiniteScroll>
       </List>
     </VotersModal>
   );
@@ -48,14 +82,11 @@ export default function VoterListModal({ optionId, count, onClose }: IProps) {
 
 const VotersModal = styled(BasicModal)`
   width: 540px;
-  min-height: 300px;
-  max-height: 80vh;
-  overflow-y: auto;
   color: var(--bs-body-color_active);
 `;
 
 const List = styled.ul`
-  height: 270px;
+  height: 300px;
   overflow-y: auto;
   &::-webkit-scrollbar {
     display: none;

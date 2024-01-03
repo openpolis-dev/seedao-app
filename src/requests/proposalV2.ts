@@ -86,11 +86,25 @@ export const withdrawProposal = (id: number) => {
   return request.post(`${PATH_PREFIX}withdraw/${id}`);
 };
 
+// =========== vote ===========
+
 export const castVote = (id: number, vote_id: number, option: number) => {
   return request.post(`${PATH_PREFIX}vote/${id}`, {
     vote_id,
     options: [option],
     metaforo_access_token: getMetaforoData()?.token,
+  });
+};
+
+export type VoterType = {
+  wallet: string;
+  avatar: string;
+};
+
+export const getVotersOfOption = (option_id: number, page: number): Promise<ResponseData<VoterType[]>> => {
+  return request.get(`${PATH_PREFIX}vote_detail/${option_id}`, {
+    vote_option_id: option_id,
+    page,
   });
 };
 
