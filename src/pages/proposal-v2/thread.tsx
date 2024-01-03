@@ -92,7 +92,10 @@ export default function ThreadPage() {
       const newComments = [...posts, ...res.data.comments];
       setPosts(newComments);
       setTotalPostsCount(res.data.comment_count);
-      setHasMore(newComments.length < res.data.comment_count);
+      setHasMore(
+        newComments.reduce((a, b) => a.children_count + b.children_count) + newComments.length < res.data.comment_count,
+      );
+      setStartPostId(res.data.comments[res.data.comments.length - 1].id);
       // history
       setTotalEditCount(res.data.histories.total_count ?? 0);
       setEditHistoryList(res.data.histories?.lists ?? []);
@@ -368,14 +371,15 @@ export default function ThreadPage() {
               {t('Proposal.EditHistory')}
             </li>
           </BlockTab>
-          <InfiniteScroll
-            scrollableTarget="scrollableDiv"
-            dataLength={posts.length}
-            next={getNextCommentList}
-            hasMore={hasMore}
-            loader={<></>}
-          >
-            {blockType === BlockContentType.Reply && (
+
+          {blockType === BlockContentType.Reply && (
+            <InfiniteScroll
+              scrollableTarget="scrollableDiv"
+              dataLength={posts.length}
+              next={getNextCommentList}
+              hasMore={hasMore}
+              loader={<></>}
+            >
               <ReplyComponent
                 pinId={1964525} // TODO hardcode for test pin comment
                 id={Number(id)}
@@ -384,8 +388,8 @@ export default function ThreadPage() {
                 ref={replyRef}
                 onNewComment={getProposalDetail}
               />
-            )}
-          </InfiniteScroll>
+            </InfiniteScroll>
+          )}
 
           {blockType === BlockContentType.History && <EditActionHistory data={editHistoryList} />}
         </ReplyAndHistoryBlock>
