@@ -16,6 +16,7 @@ import NoItem from 'components/noItem';
 import ConfirmModal from 'components/modals/confirmModal';
 import useCheckMetaforoLogin from 'hooks/useCheckMetaforoLogin';
 import { deleteCommet, addComment, editCommet } from 'requests/proposalV2';
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 interface IProps {
   pinId?: number;
@@ -23,12 +24,14 @@ interface IProps {
   hideReply?: boolean;
   posts: any[];
   onNewComment: () => void;
+  getNextCommentList: () => void;
+  hasMore: boolean;
 }
 export interface IReplyOutputProps {
   showReply: () => void;
 }
 const ReplyComponent = React.forwardRef<IReplyOutputProps, IProps>(
-  ({ pinId, id, hideReply, posts, onNewComment }, ref) => {
+  ({ pinId, id, hideReply, posts, onNewComment, getNextCommentList, hasMore }, ref) => {
     const { t } = useTranslation();
     const {
       state: { userData, account },
@@ -186,31 +189,39 @@ const ReplyComponent = React.forwardRef<IReplyOutputProps, IProps>(
           </CommetComponent>
         )}
         {posts.length === 0 && <NoItem text={t('Proposal.EmptyComment')}></NoItem>}
-        {filterPosts.map((p) => (
-          <CommetComponent
-            data={p}
-            key={p.id}
-            onReply={onReply}
-            onEdit={onEdit}
-            onDelete={onDelete}
-            hideReply={hideReply}
-            isCurrentUser={isCurrentUser(p?.user?.web3_public_keys?.[0]?.address)}
-          >
-            {p.children.posts.map((ip: any) => (
-              <CommetComponent
-                data={ip}
-                isChild={true}
-                key={ip.id}
-                parentData={findReplyData(ip.reply_pid)}
-                onReply={onReply}
-                onEdit={onEdit}
-                onDelete={onDelete}
-                hideReply={hideReply}
-                isCurrentUser={isCurrentUser(ip?.user?.web3_public_keys[0]?.address)}
-              />
-            ))}
-          </CommetComponent>
-        ))}
+        <InfiniteScroll
+          scrollableTarget="scrollableDiv"
+          dataLength={posts.length}
+          next={getNextCommentList}
+          hasMore={hasMore}
+          loader={<></>}
+        >
+          {filterPosts.map((p) => (
+            <CommetComponent
+              data={p}
+              key={p.id}
+              onReply={onReply}
+              onEdit={onEdit}
+              onDelete={onDelete}
+              hideReply={hideReply}
+              isCurrentUser={isCurrentUser(p?.user?.web3_public_keys?.[0]?.address)}
+            >
+              {p.children.posts.map((ip: any) => (
+                <CommetComponent
+                  data={ip}
+                  isChild={true}
+                  key={ip.id}
+                  parentData={findReplyData(ip.reply_pid)}
+                  onReply={onReply}
+                  onEdit={onEdit}
+                  onDelete={onDelete}
+                  hideReply={hideReply}
+                  isCurrentUser={isCurrentUser(ip?.user?.web3_public_keys[0]?.address)}
+                />
+              ))}
+            </CommetComponent>
+          ))}
+        </InfiniteScroll>
         {!hideReply && (
           <ReplyArea style={{ position: openReply ? 'sticky' : 'static' }}>
             <AvatarBox src={avatar || DefaultAvatar} alt="" />

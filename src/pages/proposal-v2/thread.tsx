@@ -12,7 +12,6 @@ import { useAuthContext, AppActionType } from 'providers/authProvider';
 import requests from 'requests';
 import { formatDate } from 'utils/time';
 import BackerNav from 'components/common/backNav';
-import MoreSelectAction from 'components/proposalCom/moreSelectAction';
 import { MdEditor, MdPreview } from 'md-editor-rt';
 import ProposalStateTag, { getRealState } from 'components/proposalCom/stateTag';
 import useProposalCategories from 'hooks/useProposalCategories';
@@ -21,7 +20,6 @@ import publicJs from 'utils/publicJs';
 import useQuerySNS from 'hooks/useQuerySNS';
 import DefaultAvatarIcon from 'assets/Imgs/defaultAvatar.png';
 import ConfirmModal from 'components/modals/confirmModal';
-import InfiniteScroll from 'react-infinite-scroll-component';
 import CopyBox from 'components/copy';
 import LinkImg from '../../assets/Imgs/proposal/link.png';
 import LinkIcon from '../../assets/Imgs/proposal/linkIcon.svg';
@@ -373,22 +371,16 @@ export default function ThreadPage() {
           </BlockTab>
 
           {blockType === BlockContentType.Reply && (
-            <InfiniteScroll
-              scrollableTarget="scrollableDiv"
-              dataLength={posts.length}
-              next={getNextCommentList}
+            <ReplyComponent
+              pinId={1964525} // TODO hardcode for test pin comment
+              id={Number(id)}
+              hideReply={review}
+              posts={posts}
+              ref={replyRef}
+              onNewComment={getProposalDetail}
+              getNextCommentList={getNextCommentList}
               hasMore={hasMore}
-              loader={<></>}
-            >
-              <ReplyComponent
-                pinId={1964525} // TODO hardcode for test pin comment
-                id={Number(id)}
-                hideReply={review}
-                posts={posts}
-                ref={replyRef}
-                onNewComment={getProposalDetail}
-              />
-            </InfiniteScroll>
+            />
           )}
 
           {blockType === BlockContentType.History && <EditActionHistory data={editHistoryList} />}
