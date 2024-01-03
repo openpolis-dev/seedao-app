@@ -72,7 +72,10 @@ export default function ProposalVote({ id, poll, updateStatus }: IProps) {
     if ((poll.status === VoteType.Open && !!poll.is_vote) || poll.status === VoteType.Closed) {
       return poll.options.map((option, index) => (
         <VoteOptionBlock key={index}>
-          <OptionContent>{option.html}</OptionContent>
+          <OptionContent $highlight={option.is_vote}>
+            {option.html}
+            {!!option.is_vote && <HasVote>({t('Proposal.HasVote')})</HasVote>}
+          </OptionContent>
           <VoteOptionBottom>
             <ProgressBar percent={option.percent}>
               <div className="inner"></div>
@@ -121,9 +124,9 @@ export default function ProposalVote({ id, poll, updateStatus }: IProps) {
       </VoteHead>
       <FlexLine>
         <VoteHeadLeft>{poll.title}</VoteHeadLeft>
-        {poll.arweave && (
+        {/* {poll.arweave && (
           <ExportButton href={`https://arweave.net/tx/${poll.arweave}/data.csv`}>{t('Proposal.Export')}</ExportButton>
-        )}
+        )} */}
       </FlexLine>
       <VoteBody>
         {showVoteContent()}
@@ -238,9 +241,9 @@ const VoteOptionBottom = styled.div`
   }
 `;
 
-const OptionContent = styled.div`
+const OptionContent = styled.div<{ $highlight?: number }>`
   font-size: 14px;
-  color: var(--bs-body-color_active);
+  color: ${({ $highlight }) => ($highlight ? 'var(--bs-primary)' : 'var(--bs-body-color_active)')};
   margin-top: 0.25em;
 `;
 
@@ -255,4 +258,8 @@ const VoteButton = styled(Button)`
   border: 1px solid var(--proposal-border);
   background: var(--profile-bg);
   min-width: 120px;
+`;
+
+const HasVote = styled.span`
+  color: var(--bs-primary);
 `;
