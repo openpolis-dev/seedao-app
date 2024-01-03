@@ -266,7 +266,7 @@ export default function ThreadPage() {
                 {t('Proposal.Comment')}
               </li>
               <li>
-                <CopyBox text={`${window.location.origin}/proposal-v2/thread/${id}`}>
+                <CopyBox dir="left" text={`${window.location.origin}/proposal-v2/thread/${id}`}>
                   <img src={theme ? ShareWhite : ShareImg} alt="" />
                   {t('Proposal.Share')}
                 </CopyBox>
