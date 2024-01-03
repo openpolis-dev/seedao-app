@@ -94,4 +94,5 @@ export interface IActivity {
   proposal_id: number;
   target_title: string;
   wallet: string;
+  reply_to_wallet: string;
 }
