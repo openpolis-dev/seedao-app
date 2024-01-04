@@ -55,5 +55,9 @@ const Box = styled.div`
     &:last-child {
       border-bottom: 0 !important;
     }
+    &:active,
+    &:hover {
+      background: none;
+    }
   }
 `;
