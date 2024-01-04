@@ -14,6 +14,7 @@ import { Button } from 'react-bootstrap';
 import BackIcon from '../../../assets/Imgs/back.svg';
 import ConfirmModal from 'components/modals/confirmModal';
 import { useCreateProposalContext } from './store';
+import requests from '../../../requests';
 
 const Box = styled.ul`
   position: relative;
@@ -167,6 +168,7 @@ export default function CreateStep({ onClick }: any) {
   const [showRht, setShowRht] = useState(true);
 
   const [showLeaveConfirm, setShowLeaveConfirm] = useState(false);
+  const [showType, setShowType] = useState('new');
 
   const { changeStep } = useCreateProposalContext();
 
@@ -194,6 +196,7 @@ export default function CreateStep({ onClick }: any) {
   useEffect(() => {
     if (!template) return;
     if (template.id) {
+      setShowType('template');
       setShowRht(false);
       const { schema, components } = template;
       const arr = JSON.parse(schema!);
@@ -206,6 +209,8 @@ export default function CreateStep({ onClick }: any) {
       });
       setComponents(components ? components : []);
     } else {
+      setShowType('new');
+      getComponentList();
       setShowRht(true);
     }
   }, [template]);
@@ -215,12 +220,37 @@ export default function CreateStep({ onClick }: any) {
     setTitle(value);
   };
 
+  const getComponentList = async () => {
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    try {
+      const resp = await requests.proposalV2.getComponents();
+      let components = resp.data;
+
+      components?.map((item: any) => {
+        if (typeof item.schema === 'string') {
+          item.schema = JSON.parse(item.schema);
+        }
+        return item;
+      });
+
+      setComponents(components);
+    } catch (error) {
+      logError('getAllProposals failed', error);
+    } finally {
+      dispatch({ type: AppActionType.SET_LOADING, payload: false });
+    }
+  };
+
   const handleFormSubmit = async (data: any) => {
-    console.log({
-      title,
-      content_blocks: list,
-      components: data,
-    });
+    let dataFormat: any = {};
+
+    for (const dataKey in data) {
+      console.error(dataKey, data[dataKey]);
+      dataFormat[dataKey] = {
+        name: dataKey,
+        data: data[dataKey],
+      };
+    }
 
     await checkMetaforoLogin();
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
@@ -228,7 +258,7 @@ export default function CreateStep({ onClick }: any) {
       title,
       proposal_category_id: 41, // TODO hardcode for test
       content_blocks: list,
-      components: data,
+      components: JSON.stringify(dataFormat),
       submit_to_metaforo: submitType === 'submit',
     })
       .then((r) => {
@@ -287,7 +317,7 @@ export default function CreateStep({ onClick }: any) {
       <BoxBg showRht={showRht.toString()}>
         <Template
           DataSource={DataSource}
-          operate="template"
+          operate={showType}
           language={i18n.language}
           showRight={showRht}
           initialItems={components}

@@ -107,6 +107,7 @@ export default function ThreadPage() {
       console.log('-------', res.data);
       setContentBlocks(res.data.content_blocks);
       // comment
+
       if (refreshIdx !== void 0) {
         const _new_arr = [...commentsArray];
         _new_arr[currentCommentArrayIdx] = res.data.comments.map((c) => ({
