@@ -157,7 +157,8 @@ const ReplyComponent = React.forwardRef<IReplyOutputProps, IProps>(
           .then(() => {
             setTobeDeletedId(undefined);
             setCurrentBindIdx(undefined);
-            onNewComment();
+            // onNewComment();
+            // TODO
           })
           .catch((error) => {
             logError(`delete proposal-${id} comment-${toBeDeleteId} failed`, error);
@@ -196,7 +197,7 @@ const ReplyComponent = React.forwardRef<IReplyOutputProps, IProps>(
                 onEdit={onEdit}
                 onDelete={onDelete}
                 hideReply={hideReply}
-                isCurrentUser={isCurrentUser(ip?.web3_public_keys[0]?.address)}
+                isCurrentUser={isCurrentUser(ip?.wallet)}
               />
             ))}
           </CommentComponent>
@@ -229,7 +230,7 @@ const ReplyComponent = React.forwardRef<IReplyOutputProps, IProps>(
                   onEdit={onEdit}
                   onDelete={onDelete}
                   hideReply={hideReply}
-                  isCurrentUser={isCurrentUser(ip?.user?.web3_public_keys[0]?.address)}
+                  isCurrentUser={isCurrentUser(ip?.wallet)}
                 />
               ))}
             </CommentComponent>
@@ -243,7 +244,9 @@ const ReplyComponent = React.forwardRef<IReplyOutputProps, IProps>(
                 {openReply ? (
                   <QuillEditor
                     toolbarWidgets={
-                      <SubmitCommentButton onClick={handleReply}>{t('Proposal.Send')}</SubmitCommentButton>
+                      <SubmitCommentButton onClick={handleReply}>
+                        {replyId ? t('Proposal.Reply') : t('Proposal.Send')}
+                      </SubmitCommentButton>
                     }
                     widgetKey="999"
                     onChange={handleChange}

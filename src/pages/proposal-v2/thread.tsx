@@ -452,7 +452,7 @@ export default function ThreadPage() {
               hideReply={review}
               posts={posts}
               ref={replyRef}
-              onNewComment={getNextCommentList}
+              onNewComment={() => onEditComment(currentCommentArrayIdx)}
               onEditComment={onEditComment}
               getNextCommentList={getNextCommentList}
               hasMore={hasMore}

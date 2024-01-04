@@ -260,6 +260,7 @@ const TimeBox = styled.div`
 
 const OpLine = styled.div`
   padding-left: 64px;
+  display: flex;
 `;
 const ReplyBtn = styled.div`
   display: flex;
