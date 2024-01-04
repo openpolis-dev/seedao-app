@@ -157,7 +157,6 @@ const ComponnentBox = styled(TitleBox)`
 export default function CreateStep({ onClick }: any) {
   const BASE_URL = getConfig().REACT_APP_BASE_ENDPOINT;
   const API_VERSION = process.env.REACT_APP_API_VERSION;
-
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
   const childRef = useRef(null);
@@ -166,58 +165,49 @@ export default function CreateStep({ onClick }: any) {
   const [submitType, setSubmitType] = useState<'save' | 'submit'>();
 
   const { template } = useCreateProposalContext();
-  const [before, setBefore] = useState<any[]>([]);
+  // const [before, setBefore] = useState<any[]>([]);
   const [components, setComponents] = useState<any[]>([]);
 
   const [showRht, setShowRht] = useState(true);
 
   const [showLeaveConfirm, setShowLeaveConfirm] = useState(false);
   const [showType, setShowType] = useState('new');
+  const [token, setToken] = useState('new');
 
   const { changeStep } = useCreateProposalContext();
 
   const {
-    state: { theme },
+    state: { theme, tokenData },
     dispatch,
   } = useAuthContext();
 
   const checkMetaforoLogin = useCheckMetaforoLogin();
 
   useEffect(() => {
-    let arr = [
-      {
-        title: 'Background',
-        content: 'This is a background block',
-      },
-      {
-        title: 'Detail',
-        content: 'This is a detail block',
-      },
-    ];
-    setList([...arr]);
-  }, []);
+    if (!template || !tokenData) return;
 
-  useEffect(() => {
-    if (!template) return;
+    setToken(tokenData.token);
     if (template.id) {
       setShowType('template');
       setShowRht(false);
       const { schema, components } = template;
       const arr = JSON.parse(schema!);
-      setBefore(arr ?? []);
+      setList(arr ?? []);
+
       components?.map((item) => {
         if (typeof item.schema === 'string') {
           item.schema = JSON.parse(item.schema);
         }
         return item;
       });
+
       setComponents(components ? components : []);
     } else {
       setShowType('new');
       getComponentList();
       setShowRht(true);
     }
-  }, [template]);
+  }, [template, tokenData]);
 
   const handleInput = (e: ChangeEvent) => {
     const { value } = e.target as HTMLInputElement;
@@ -249,20 +239,18 @@ export default function CreateStep({ onClick }: any) {
     let dataFormat: any = {};
 
     for (const dataKey in data) {
-      console.error(dataKey, data[dataKey]);
       dataFormat[dataKey] = {
         name: dataKey,
         data: data[dataKey],
       };
     }
-
     await checkMetaforoLogin();
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     saveOrSubmitProposal({
       title,
       proposal_category_id: 41, // TODO hardcode for test
       content_blocks: list,
-      components: JSON.stringify(dataFormat),
+      components: dataFormat,
       submit_to_metaforo: submitType === 'submit',
     })
       .then((r) => {
@@ -328,6 +316,7 @@ export default function CreateStep({ onClick }: any) {
           theme={theme}
           baseUrl={BASE_URL}
           version={API_VERSION}
+          token={token}
           BeforeComponent={
             <>
               <ItemBox>
@@ -348,7 +337,7 @@ export default function CreateStep({ onClick }: any) {
           }
           AfterComponent={
             <div>
-              {before.map((item, index: number) => (
+              {list.map((item, index: number) => (
                 <ItemBox key={`block_${index}`}>
                   <TitleBox>{item.title}</TitleBox>
 

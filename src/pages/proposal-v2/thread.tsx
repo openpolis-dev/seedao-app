@@ -26,8 +26,6 @@ import LinkIcon from '../../assets/Imgs/proposal/linkIcon.svg';
 import LinkIconDark from '../../assets/Imgs/proposal/linkIcon-black.svg';
 import ProfileComponent from '../../profile-components/profile';
 import { Preview } from '@seedao/components';
-import DataSource from './create/json/datasource.json';
-import initialItems from './create/json/initialItem';
 
 import VoteImg from 'assets/Imgs/proposal/vote.svg';
 import VoteWhite from 'assets/Imgs/proposal/vote-white.svg';
@@ -75,6 +73,7 @@ export default function ThreadPage() {
   const [components, setComponents] = useState<any[]>([]);
   const [commentsArray, setCommentsArray] = useState<ICommentDisplay[][]>([]);
   const [currentCommentArrayIdx, setCurrentCommentArrayIdx] = useState<number>(0);
+  const [dataSource, setDatasource] = useState<any>();
 
   const posts = commentsArray.length ? commentsArray.reduce((a, b) => [...a, ...b], []) : [];
 
@@ -104,8 +103,15 @@ export default function ThreadPage() {
         );
       }
       setData(res.data);
-      console.log('-------', res.data);
       setContentBlocks(res.data.content_blocks);
+      const comStr = res.data.components;
+      comStr.map((item: any) => {
+        item.data = JSON.parse(item.data);
+
+        return item;
+      });
+      console.log(JSON.stringify(comStr));
+      setDatasource(comStr);
       // comment
 
       if (refreshIdx !== void 0) {
@@ -396,7 +402,7 @@ export default function ThreadPage() {
       )}
       <ContentOuter>
         <Preview
-          DataSource={DataSource}
+          DataSource={dataSource}
           language={i18n.language}
           initialItems={components}
           theme={theme}
