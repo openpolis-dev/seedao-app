@@ -144,7 +144,7 @@ export default function CommentComponent({
           )}
           <OpLine>
             {!hideReply && (
-              <>
+              <FlexReply>
                 <ReplyBtn onClick={handleReply}>
                   <img src={CommentIcon} alt="" />
                   {t('Proposal.Reply')}
@@ -158,7 +158,7 @@ export default function CommentComponent({
                     handleClickAction={handleClickMoreAction}
                   />
                 )}
-              </>
+              </FlexReply>
             )}
           </OpLine>
         </RightBox>
@@ -222,13 +222,16 @@ const RelationUserLine = styled.div`
 `;
 
 const VersionTag = styled.a`
-  display: inline-block;
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  border: 1px solid var(--bs-border-color);
+  border: 1px solid #2f8fff;
   text-align: center;
-  line-height: 18px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #2f8fff;
+  background: var(--bs-box-background);
 `;
 
 const Content = styled.div`
@@ -267,7 +270,13 @@ const ReplyBtn = styled.div`
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
+  margin-right: 10px;
   img {
     margin-right: 8px;
   }
+`;
+const FlexReply = styled.div`
+  display: flex;
+  align-items: center;
+  color: #2f8fff;
 `;

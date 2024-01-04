@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 
 import { Template } from '@seedao/components';
-import initialItems from './json/initialItem';
 import DataSource from './json/datasource.json';
 import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { MdEditor } from 'md-editor-rt';
@@ -15,6 +14,7 @@ import BackIcon from '../../../assets/Imgs/back.svg';
 import ConfirmModal from 'components/modals/confirmModal';
 import { useCreateProposalContext } from './store';
 import requests from '../../../requests';
+import getConfig from '../../../utils/envCofnig';
 
 const Box = styled.ul`
   position: relative;
@@ -154,6 +154,9 @@ const ComponnentBox = styled(TitleBox)`
 `;
 
 export default function CreateStep({ onClick }: any) {
+  const BASE_URL = getConfig().REACT_APP_BASE_ENDPOINT;
+  const API_VERSION = process.env.REACT_APP_API_VERSION;
+
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
   const childRef = useRef(null);
@@ -322,6 +325,8 @@ export default function CreateStep({ onClick }: any) {
           showRight={showRht}
           initialItems={components}
           theme={theme}
+          baseUrl={BASE_URL}
+          version={API_VERSION}
           BeforeComponent={
             <>
               <ItemBox>
