@@ -10,6 +10,8 @@ import { AppActionType, useAuthContext } from 'providers/authProvider';
 import { formatDate } from 'utils/time';
 import { Trans } from 'react-i18next';
 import NoItem from 'components/noItem';
+import useQuerySNS from 'hooks/useQuerySNS';
+import publicJs from 'utils/publicJs';
 
 enum ActionType {
   CreateProposal = 'create',
@@ -31,7 +33,16 @@ export default function HistoryAction() {
   const [list, setList] = useState<ActionDataType[]>([]);
   const [currentSession, setCurrentSession] = useState('');
 
-  const { dispatch } = useAuthContext();
+  const {
+    dispatch,
+    state: { snsMap },
+  } = useAuthContext();
+  const { getMultiSNS } = useQuerySNS();
+
+  const formatSNS = (wallet: string) => {
+    const name = snsMap.get(wallet) || wallet;
+    return name?.endsWith('.seedao') ? name : publicJs.AddressToShow(name, 4);
+  };
 
   const getList = async () => {
     try {
@@ -40,12 +51,13 @@ export default function HistoryAction() {
       const _list = res.data.records.map((item) => ({
         type: item.metaforo_action as ActionType,
         time: formatDate(new Date(item.action_ts * 1000)),
-        user: item.wallet,
+        user: item.reply_to_wallet.toLocaleLowerCase(),
         title: item.target_title,
         pid: item.proposal_id,
       }));
       setCurrentSession(res.data.session);
       setList(_list);
+      getMultiSNS(Array.from(new Set(res.data.records.map((item) => item.reply_to_wallet))));
     } catch (error) {
       logError('[proposal] get user actions failed', error);
     } finally {
@@ -90,7 +102,7 @@ export default function HistoryAction() {
         return (
           <Trans
             i18nKey="Proposal.ActivityComment"
-            values={{ title: data.title, author: data.user }}
+            values={{ title: data.title, author: data.user ? formatSNS(data.user) : '' }}
             components={{
               strong: <strong />,
             }}
