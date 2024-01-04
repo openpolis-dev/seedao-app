@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import CreateImg from '../../assets/Imgs/proposal/create.png';
 import VoteImg from '../../assets/Imgs/proposal/vote.png';
@@ -12,6 +11,7 @@ import { Trans } from 'react-i18next';
 import NoItem from 'components/noItem';
 import useQuerySNS from 'hooks/useQuerySNS';
 import publicJs from 'utils/publicJs';
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 enum ActionType {
   CreateProposal = 'create',
@@ -29,9 +29,9 @@ type ActionDataType = {
 };
 
 export default function HistoryAction() {
-  const { t } = useTranslation();
   const [list, setList] = useState<ActionDataType[]>([]);
   const [currentSession, setCurrentSession] = useState('');
+  const [hasMore, setHasMore] = useState(false);
 
   const {
     dispatch,
@@ -56,7 +56,8 @@ export default function HistoryAction() {
         pid: item.proposal_id,
       }));
       setCurrentSession(res.data.session);
-      setList(_list);
+      setList([...list, ..._list]);
+      setHasMore(_list.length <= 10);
       getMultiSNS(Array.from(new Set(res.data.records.map((item) => item.reply_to_wallet))));
     } catch (error) {
       logError('[proposal] get user actions failed', error);
@@ -116,17 +117,25 @@ export default function HistoryAction() {
   return (
     <ActionList>
       {list.length === 0 && <NoItem />}
-      {list.map((item, index) => (
-        <Aciton key={index} onClick={() => openProposal(item.pid)}>
-          <div className="icon">
-            <img src={returnImg(item.type)} alt="" />
-          </div>
-          <div className="action-content">
-            <div className="title">{getKindofContent(item)}</div>
-            <div className="time">{item.time}</div>
-          </div>
-        </Aciton>
-      ))}
+      <InfiniteScroll
+        scrollableTarget="scrollableDiv"
+        dataLength={list.length}
+        next={getList}
+        hasMore={hasMore}
+        loader={<></>}
+      >
+        {list.map((item, index) => (
+          <Aciton key={index} onClick={() => openProposal(item.pid)}>
+            <div className="icon">
+              <img src={returnImg(item.type)} alt="" />
+            </div>
+            <div className="action-content">
+              <div className="title">{getKindofContent(item)}</div>
+              <div className="time">{item.time}</div>
+            </div>
+          </Aciton>
+        ))}
+      </InfiniteScroll>
     </ActionList>
   );
 }
