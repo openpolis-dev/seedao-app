@@ -48,6 +48,7 @@ type CreateProposalParamsType = {
   proposal_category_id: number;
   content_blocks: IContentBlock[];
   submit_to_metaforo: boolean;
+  components: any;
 };
 
 export const getUserActions = (
@@ -146,4 +147,11 @@ export const rejectProposal = (id: number, reason: string) => {
     reason,
     metaforo_access_token: getMetaforoData()?.token,
   });
+};
+
+export const getTemplate = () => {
+  return request.get('/proposal_tmpl/');
+};
+export const getComponents = () => {
+  return request.get('/proposal_components/');
 };

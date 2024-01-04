@@ -136,7 +136,10 @@ export enum PROPOSAL_TIME {
 
 export type ProposalTemplateType = {
   id: number;
-  name: string;
+  name?: string;
+  schema?: string;
+  screenshot_uri?: string;
+  components?: any[];
 };
 
 export interface PostDataType {

@@ -35,6 +35,7 @@ import ShareImg from 'assets/Imgs/proposal/share.svg';
 import ShareWhite from 'assets/Imgs/proposal/share-white.svg';
 import CommentImg from 'assets/Imgs/proposal/comment.svg';
 import CommentWhite from 'assets/Imgs/proposal/comment-white.svg';
+import { getComponents } from '../../requests/proposalV2';
 
 enum BlockContentType {
   Reply = 1,
@@ -50,7 +51,7 @@ export default function ThreadPage() {
   // review: true -> review proposal
   const review = search.get('review') === '';
   const { id } = useParams();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const {
     dispatch,
     state: { theme, account },
@@ -75,6 +76,7 @@ export default function ThreadPage() {
   const [showConfirmWithdraw, setShowConfirmWithdraw] = useState(false);
   const [hasMore, setHasMore] = useState(false);
   const [startPostId, setStartPostId] = useState<number>();
+  const [components, setComponents] = useState<any[]>([]);
 
   const { getMultiSNS } = useQuerySNS();
 
@@ -85,6 +87,7 @@ export default function ThreadPage() {
     try {
       const res = await requests.proposalV2.getProposalDetail(Number(id), startPostId);
       setData(res.data);
+      console.log('-------', res.data);
       setContentBlocks(res.data.content_blocks);
       // comment
       const newComments = [...posts, ...res.data.comments];
@@ -125,7 +128,29 @@ export default function ThreadPage() {
       setData(state);
     }
     getProposalDetail();
+    getComponentsList();
   }, [id, state]);
+
+  const getComponentsList = async () => {
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    try {
+      const resp = await requests.proposalV2.getComponents();
+      let components = resp.data;
+
+      components?.map((item: any) => {
+        if (typeof item.schema === 'string') {
+          item.schema = JSON.parse(item.schema);
+        }
+        return item;
+      });
+
+      setComponents(resp.data);
+    } catch (error) {
+      logError('getAllProposals failed', error);
+    } finally {
+      dispatch({ type: AppActionType.SET_LOADING, payload: false });
+    }
+  };
 
   const onUpdateStatus = (status: ProposalState) => {
     if (data) {
@@ -330,21 +355,13 @@ export default function ThreadPage() {
       <ContentOuter>
         <Preview
           DataSource={DataSource}
-          // language={i18n.language}
-          initialItems={initialItems}
+          language={i18n.language}
+          initialItems={components}
           theme={theme}
           BeforeComponent={
             <>
-              {contentBlocks.map((block) => (
-                <ProposalContentBlock key={block.title}>
-                  <div className="title">{block.title}</div>
-                  <div className="content">
-                    <MdPreview theme={theme ? 'dark' : 'light'} modelValue={block.content || ''} />
-                  </div>
-                </ProposalContentBlock>
-              ))}
               <ComponnentBox>
-                <div className="title">提案标题</div>
+                <div className="title">提案执行组件</div>
               </ComponnentBox>
             </>
           }
@@ -598,7 +615,8 @@ const ProposalContentBlock = styled.div`
     border-radius: 4px;
     color: var(--bs-body-color_active);
     padding-inline: 16px;
-    font-size: 16px;
+    font-size: 14px;
+    font-weight: bold;
   }
 `;
 

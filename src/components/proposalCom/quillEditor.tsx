@@ -72,7 +72,7 @@ export default function QuillEditor(props: QuillEditorProps) {
 
   // @ts-ignore
   return (
-    <EditorStyle className={'mf-ql-editor'} theme={theme.toString()}>
+    <EditorStyle className={'mf-ql-editor'} theme={theme?.toString()}>
       <ReactQuill
         className={'quill-editor'}
         readOnly={props.disabled}

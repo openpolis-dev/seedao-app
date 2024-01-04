@@ -80,6 +80,7 @@ export interface IProposal extends ISimpleProposal {
   reject_ts: number;
   arweave: string;
   comments: any[];
+  components: any;
   comment_count: number;
   votes: Poll[];
   histories: {

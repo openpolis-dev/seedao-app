@@ -161,6 +161,8 @@ export default function CreateStep({ onClick }: any) {
   const [submitType, setSubmitType] = useState<'save' | 'submit'>();
 
   const { template } = useCreateProposalContext();
+  const [before, setBefore] = useState<any[]>([]);
+  const [components, setComponents] = useState<any[]>([]);
 
   const [showRht, setShowRht] = useState(true);
 
@@ -190,11 +192,19 @@ export default function CreateStep({ onClick }: any) {
   }, []);
 
   useEffect(() => {
-    console.log(template);
     if (!template) return;
-
     if (template.id) {
       setShowRht(false);
+      const { schema, components } = template;
+      const arr = JSON.parse(schema!);
+      setBefore(arr ?? []);
+      components?.map((item) => {
+        if (typeof item.schema === 'string') {
+          item.schema = JSON.parse(item.schema);
+        }
+        return item;
+      });
+      setComponents(components ? components : []);
     } else {
       setShowRht(true);
     }
@@ -211,12 +221,14 @@ export default function CreateStep({ onClick }: any) {
       content_blocks: list,
       components: data,
     });
+
     await checkMetaforoLogin();
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     saveOrSubmitProposal({
       title,
       proposal_category_id: 41, // TODO hardcode for test
       content_blocks: list,
+      components: data,
       submit_to_metaforo: submitType === 'submit',
     })
       .then((r) => {
@@ -275,16 +287,16 @@ export default function CreateStep({ onClick }: any) {
       <BoxBg showRht={showRht.toString()}>
         <Template
           DataSource={DataSource}
-          operate="edit"
+          operate="template"
           language={i18n.language}
           showRight={showRht}
-          initialItems={initialItems}
+          initialItems={components}
           theme={theme}
           BeforeComponent={
             <>
               <ItemBox>
                 <TitleBox>
-                  <span>提案标题</span>
+                  <span>标题</span>
                   <TagBox>三层提案 - P1</TagBox>
                   <TemplateTag>公共项目</TemplateTag>
                 </TitleBox>
@@ -292,14 +304,15 @@ export default function CreateStep({ onClick }: any) {
                   <input type="text" value={title} onChange={handleInput} />
                 </InputBox>
               </ItemBox>
+
               <ComponnentBox>
-                <span>提案标题</span>
+                <span>提案执行组件</span>
               </ComponnentBox>
             </>
           }
           AfterComponent={
             <div>
-              {list.map((item, index: number) => (
+              {before.map((item, index: number) => (
                 <ItemBox key={`block_${index}`}>
                   <TitleBox>{item.title}</TitleBox>
 

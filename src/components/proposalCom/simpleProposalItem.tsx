@@ -107,6 +107,8 @@ const AvaBox = styled.div`
 const UserAvatar = styled.img`
   width: 44px;
   height: 44px;
+  object-fit: cover;
+  object-position: center;
   border-radius: 50%;
 `;
 

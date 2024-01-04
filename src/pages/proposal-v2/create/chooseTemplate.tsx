@@ -4,48 +4,40 @@ import { ProposalTemplateType } from 'type/proposal.type';
 import { useTranslation } from 'react-i18next';
 import { useCreateProposalContext } from './store';
 import AddImg from '../../../assets/Imgs/proposal/add-square.png';
+import { AppActionType, useAuthContext } from '../../../providers/authProvider';
+import requests from '../../../requests';
+import { getTemplate } from '../../../requests/proposalV2';
 
 export default function ChooseTemplateStep() {
   const { t } = useTranslation();
   const { proposalType, chooseTemplate, changeStep } = useCreateProposalContext();
   const [templates, setTemplates] = useState<ProposalTemplateType[]>([]);
 
+  const {
+    state: { loading },
+    dispatch,
+  } = useAuthContext();
+
   useEffect(() => {
-    // TODO: filter templates by proposalType
-    setTemplates([
-      {
-        id: 1,
-        name: '公共项目',
-      },
-      {
-        id: 2,
-        name: '项目结项',
-      },
-      {
-        id: 3,
-        name: '项目结项2',
-      },
-      {
-        id: 2,
-        name: '项目结项项目结项项目结项项目结项',
-      },
-      {
-        id: 3,
-        name: '项目结项2',
-      },
-    ]);
+    getList();
   }, [proposalType]);
+
+  const getList = async () => {
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    try {
+      const resp = await requests.proposalV2.getTemplate();
+      console.log(resp.data);
+      setTemplates(resp.data);
+    } catch (error) {
+      logError('getAllProposals failed', error);
+    } finally {
+      dispatch({ type: AppActionType.SET_LOADING, payload: false });
+    }
+  };
 
   return (
     <ListBox>
-      <CreateBlankOne
-        onClick={() =>
-          chooseTemplate({
-            id: 0,
-            name: '测试空白',
-          })
-        }
-      >
+      <CreateBlankOne onClick={() => chooseTemplate({ id: 0 })}>
         <InnerBox>
           <ImgBox>
             <img src={AddImg} alt="" />
@@ -57,7 +49,7 @@ export default function ChooseTemplateStep() {
         <BaseTemplate key={template.id} onClick={() => chooseTemplate(template)}>
           <InnerBox>
             <PicBox>
-              <img src="https://mms0.baidu.com/it/u=480006263,2457381717&fm=253&app=138&f=JPEG?w=500&h=500" alt="" />
+              <img src={template.screenshot_uri} alt="" />
             </PicBox>
             <TitleBox>{template.name}</TitleBox>
           </InnerBox>

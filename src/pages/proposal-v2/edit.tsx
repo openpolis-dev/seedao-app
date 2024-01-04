@@ -95,6 +95,7 @@ export default function EditProposal() {
       title,
       proposal_category_id: data.proposal_category_id,
       content_blocks: contentBlocks,
+      components: [],
       // only pending-submit proposal can be submitted, others can only be updated
       submit_to_metaforo: data.state === ProposalState.PendingSubmit && submitType === 'submit',
     })
