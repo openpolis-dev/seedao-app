@@ -32,12 +32,10 @@ export interface IContentBlock {
 }
 
 export interface IProposalEditHistoy {
-  username: string;
-  created_at: string;
+  create_ts: number;
+  title: string;
+  wallet: string;
   arweave: string;
-  post_type: 0 | 1;
-  post_id: number;
-  id: number;
 }
 
 export enum VoteType {
