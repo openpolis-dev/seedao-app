@@ -124,7 +124,7 @@ export const addComment = (id: number, content: string, reply_id?: number) => {
 };
 
 export const editCommet = (id: number, cid: number) => {
-  return request.post(`${PATH_PREFIX}delete_comment/${id}`, {
+  return request.post(`${PATH_PREFIX}edit_comment/${id}`, {
     post_id: cid,
     metaforo_access_token: getMetaforoData()?.token,
   });

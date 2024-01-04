@@ -10,7 +10,13 @@ import { formatMsgTime } from 'utils/time';
 import CommentIcon from '../../assets/Imgs/proposal/commentIcon.png';
 import ProfileComponent from '../../profile-components/profile';
 import { useAuthContext } from '../../providers/authProvider';
-import { CommentType } from 'type/proposalV2.type';
+import { ICommentDisplay } from 'type/proposalV2.type';
+import publicJs from 'utils/publicJs';
+
+const formatSNS = (snsMap: Map<string, string>, wallet: string) => {
+  const name = snsMap.get(wallet) || wallet;
+  return name?.endsWith('.seedao') ? name : publicJs.AddressToShow(name, 4);
+};
 
 const useParseContent = (data: string, noNeedParse?: boolean) => {
   const [content, setContent] = useState('');
@@ -26,13 +32,13 @@ const useParseContent = (data: string, noNeedParse?: boolean) => {
 };
 
 interface IProps {
-  data: CommentType;
+  data: ICommentDisplay;
   parentData?: any;
   children?: React.ReactNode;
   isChild?: boolean;
-  onReply: (id: number) => void;
-  onEdit: (id: number, content: any) => void;
-  onDelete: (id: number) => void;
+  onReply: (id: number, idx: number) => void;
+  onEdit: (id: number, content: any, idx: number) => void;
+  onDelete: (id: number, idx: number) => void;
   hideReply?: boolean;
   isCurrentUser?: boolean;
   isSpecial?: boolean;
@@ -64,7 +70,7 @@ const UserBox = ({ address, name, avatar, user_title }: IUserProps) => {
       {showModal && <ProfileComponent address={address} theme={theme} handleClose={handleClose} />}
       <UserBoxStyle onClick={() => handleProfile()}>
         <Avatar src={avatar || DefaultAvatar} alt="" />
-        <NameBox>{name || address}</NameBox>
+        <NameBox>{name}</NameBox>
         {user_title && user_title.name && <UserTag bg={user_title.background}>{user_title?.name}</UserTag>}
       </UserBoxStyle>
     </>
@@ -90,16 +96,16 @@ export default function CommentComponent({
   const content = useParseContent(data?.content, isSpecial);
 
   const handleReply = () => {
-    onReply(data.metaforo_post_id);
+    onReply(data.metaforo_post_id, data.bindIdx);
   };
 
   const handleClickMoreAction = (action: string) => {
     switch (action) {
       case 'edit':
-        onEdit(data.metaforo_post_id, { ops: JSON.parse(data.content) });
+        onEdit(data.metaforo_post_id, { ops: JSON.parse(data.content) }, data.bindIdx);
         break;
       case 'delete':
-        onDelete(data.metaforo_post_id);
+        onDelete(data.metaforo_post_id, data.bindIdx);
         break;
     }
   };
@@ -113,13 +119,17 @@ export default function CommentComponent({
           <RelationUserLine>
             <UserBox
               address={data.wallet?.toLocaleLowerCase()}
-              name={isSpecial ? t('city-hall.Cityhall') : ''}
+              name={isSpecial ? t('city-hall.Cityhall') : formatSNS(snsMap, data.wallet?.toLocaleLowerCase())}
               avatar={data.avatar}
             />
             {parentData && (
               <>
                 <span>{'==>'}</span>
-                <UserBox address={data.wallet?.toLocaleLowerCase()} avatar={parentData.avatar} />
+                <UserBox
+                  address={data.wallet?.toLocaleLowerCase()}
+                  avatar={parentData.avatar}
+                  name={formatSNS(snsMap, parentData.wallet?.toLocaleLowerCase())}
+                />
               </>
             )}
             <TimeBox>{formatMsgTime(data.created_ts * 1000, t)}</TimeBox>

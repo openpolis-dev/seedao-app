@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import React, { useEffect, useState, useImperativeHandle } from 'react';
 
-import CommetComponent from './comment';
+import CommentComponent from './comment';
 import { Avatar } from './comment';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import publicJs from 'utils/publicJs';
@@ -17,14 +17,15 @@ import ConfirmModal from 'components/modals/confirmModal';
 import useCheckMetaforoLogin from 'hooks/useCheckMetaforoLogin';
 import { deleteCommet, addComment, editCommet } from 'requests/proposalV2';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { CommentType } from 'type/proposalV2.type';
+import { ICommentDisplay } from 'type/proposalV2.type';
 
 interface IProps {
   pinId?: number;
   id: number;
   hideReply?: boolean;
-  posts: CommentType[];
+  posts: ICommentDisplay[];
   onNewComment: () => void;
+  onEditComment: (idx?: number) => void;
   getNextCommentList: () => void;
   hasMore: boolean;
 }
@@ -32,7 +33,7 @@ export interface IReplyOutputProps {
   showReply: () => void;
 }
 const ReplyComponent = React.forwardRef<IReplyOutputProps, IProps>(
-  ({ pinId, id, hideReply, posts, onNewComment, getNextCommentList, hasMore }, ref) => {
+  ({ pinId, id, hideReply, posts, onEditComment, onNewComment, getNextCommentList, hasMore }, ref) => {
     const { t } = useTranslation();
     const {
       state: { userData, account },
@@ -52,6 +53,7 @@ const ReplyComponent = React.forwardRef<IReplyOutputProps, IProps>(
     const [replyId, setReplyId] = useState<number>();
     const [editId, setEditId] = useState<number>();
     const [toBeDeleteId, setTobeDeletedId] = useState<number>();
+    const [currentBindIdx, setCurrentBindIdx] = useState<number>();
 
     const isCurrentUser = (address?: string) => {
       return account?.toLocaleLowerCase() === address?.toLocaleLowerCase();
@@ -73,10 +75,10 @@ const ReplyComponent = React.forwardRef<IReplyOutputProps, IProps>(
       }
       let d: any;
       posts.forEach((p: any) => {
-        if (p.id === reply_pid) {
+        if (p.metaforo_post_id === reply_pid) {
           d = p;
         } else {
-          const child = p.children?.posts.find((ip: any) => ip.id === reply_pid);
+          const child = p.children?.posts.find((ip: any) => ip.metaforo_post_id === reply_pid);
           if (child) {
             d = child;
           }
@@ -101,19 +103,22 @@ const ReplyComponent = React.forwardRef<IReplyOutputProps, IProps>(
       canReply && setOpenReply(true);
     };
 
-    const onReply = async (id: number) => {
+    const onReply = async (id: number, idx: number) => {
       setReplyId(id);
       setOpenReply(true);
+      setCurrentBindIdx(idx);
     };
 
-    const onEdit = (id: number, content: any) => {
+    const onEdit = (id: number, content: any, idx: number) => {
       setEditId(id);
       setOpenReply(true);
       setQuillContent(content);
+      setCurrentBindIdx(idx);
     };
 
-    const onDelete = (id: number) => {
+    const onDelete = (id: number, idx: number) => {
       setTobeDeletedId(id);
+      setCurrentBindIdx(idx);
     };
 
     const handleReply = async () => {
@@ -127,9 +132,15 @@ const ReplyComponent = React.forwardRef<IReplyOutputProps, IProps>(
             await addComment(id, replyContent, replyId);
           }
           setReplyId(undefined);
+          setEditId(undefined);
           setQuillContent('');
           setReplyContent('');
-          onNewComment();
+          setCurrentBindIdx(undefined);
+          if (editId || replyId) {
+            onEditComment(currentBindIdx);
+          } else {
+            onNewComment();
+          }
         } catch (error) {
           logError(`add proposal-${id} comment-${replyId} failed`, error);
         } finally {
@@ -145,6 +156,7 @@ const ReplyComponent = React.forwardRef<IReplyOutputProps, IProps>(
         deleteCommet(id, toBeDeleteId)
           .then(() => {
             setTobeDeletedId(undefined);
+            setCurrentBindIdx(undefined);
             onNewComment();
           })
           .catch((error) => {
@@ -165,7 +177,7 @@ const ReplyComponent = React.forwardRef<IReplyOutputProps, IProps>(
     return (
       <ReplyComponentStyle>
         {!!pinPost && (
-          <CommetComponent
+          <CommentComponent
             data={pinPost}
             onReply={onReply}
             onEdit={onEdit}
@@ -174,11 +186,11 @@ const ReplyComponent = React.forwardRef<IReplyOutputProps, IProps>(
             isCurrentUser={false}
             isSpecial
           >
-            {pinPost.children.map((ip: any) => (
-              <CommetComponent
+            {pinPost.children?.map((ip: any) => (
+              <CommentComponent
                 data={ip}
                 isChild={true}
-                key={ip.id}
+                key={ip.metaforo_post_id}
                 parentData={findReplyData(ip.reply_pid)}
                 onReply={onReply}
                 onEdit={onEdit}
@@ -187,7 +199,7 @@ const ReplyComponent = React.forwardRef<IReplyOutputProps, IProps>(
                 isCurrentUser={isCurrentUser(ip?.web3_public_keys[0]?.address)}
               />
             ))}
-          </CommetComponent>
+          </CommentComponent>
         )}
         {posts.length === 0 && <NoItem text={t('Proposal.EmptyComment')}></NoItem>}
         <InfiniteScroll
@@ -198,7 +210,7 @@ const ReplyComponent = React.forwardRef<IReplyOutputProps, IProps>(
           loader={<></>}
         >
           {filterPosts.map((p) => (
-            <CommetComponent
+            <CommentComponent
               data={p}
               key={p.metaforo_post_id}
               onReply={onReply}
@@ -208,10 +220,10 @@ const ReplyComponent = React.forwardRef<IReplyOutputProps, IProps>(
               isCurrentUser={isCurrentUser(p.wallet)}
             >
               {p.children?.map((ip: any) => (
-                <CommetComponent
+                <CommentComponent
                   data={ip}
                   isChild={true}
-                  key={ip.id}
+                  key={ip.metaforo_post_id}
                   parentData={findReplyData(ip.reply_pid)}
                   onReply={onReply}
                   onEdit={onEdit}
@@ -220,11 +232,11 @@ const ReplyComponent = React.forwardRef<IReplyOutputProps, IProps>(
                   isCurrentUser={isCurrentUser(ip?.user?.web3_public_keys[0]?.address)}
                 />
               ))}
-            </CommetComponent>
+            </CommentComponent>
           ))}
         </InfiniteScroll>
         {!hideReply && (
-          <ReplyArea style={{ position: openReply ? 'sticky' : 'static' }}>
+          <ReplyArea style={{ position: 'sticky' }}>
             <AvatarBox src={avatar || DefaultAvatar} alt="" />
             {enableQuill && (
               <InputReply>
@@ -245,7 +257,10 @@ const ReplyComponent = React.forwardRef<IReplyOutputProps, IProps>(
             {toBeDeleteId && (
               <ConfirmModal
                 msg={t('Proposal.ConfirmDeleteComment')}
-                onClose={() => setTobeDeletedId(undefined)}
+                onClose={() => {
+                  setTobeDeletedId(undefined);
+                  setCurrentBindIdx(undefined);
+                }}
                 onConfirm={handleDeletePost}
               />
             )}

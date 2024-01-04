@@ -7,7 +7,7 @@ import ProposalVote from 'components/proposalCom/vote';
 import ReplyComponent, { IReplyOutputProps } from 'components/proposalCom/reply';
 import ReviewProposalComponent from 'components/proposalCom/reviewProposalComponent';
 import EditActionHistory from 'components/proposalCom/editActionhistory';
-import { IContentBlock, IProposal, IProposalEditHistoy, ProposalState } from 'type/proposalV2.type';
+import { ICommentDisplay, IContentBlock, IProposal, IProposalEditHistoy, ProposalState } from 'type/proposalV2.type';
 import { useAuthContext, AppActionType } from 'providers/authProvider';
 import requests from 'requests';
 import { formatDate } from 'utils/time';
@@ -35,14 +35,11 @@ import ShareImg from 'assets/Imgs/proposal/share.svg';
 import ShareWhite from 'assets/Imgs/proposal/share-white.svg';
 import CommentImg from 'assets/Imgs/proposal/comment.svg';
 import CommentWhite from 'assets/Imgs/proposal/comment-white.svg';
-import { getComponents } from '../../requests/proposalV2';
 
 enum BlockContentType {
   Reply = 1,
   History,
 }
-
-interface IProps {}
 
 export default function ThreadPage() {
   const navigate = useNavigate();
@@ -61,7 +58,7 @@ export default function ThreadPage() {
 
   const [blockType, setBlockType] = useState<BlockContentType>(BlockContentType.Reply);
   const [data, setData] = useState<IProposal>();
-  const [posts, setPosts] = useState<any[]>([]);
+  // const [posts, setPosts] = useState<any[]>([]);
   const [totalPostsCount, setTotalPostsCount] = useState<number>(0);
   const [totalEditCount, setTotalEditCount] = useState<number>(0);
   const [editHistoryList, setEditHistoryList] = useState<IProposalEditHistoy[]>([]);
@@ -75,33 +72,70 @@ export default function ThreadPage() {
 
   const [showConfirmWithdraw, setShowConfirmWithdraw] = useState(false);
   const [hasMore, setHasMore] = useState(false);
-  const [startPostId, setStartPostId] = useState<number>();
   const [components, setComponents] = useState<any[]>([]);
+  const [commentsArray, setCommentsArray] = useState<ICommentDisplay[][]>([]);
+  const [currentCommentArrayIdx, setCurrentCommentArrayIdx] = useState<number>(0);
+
+  const posts = commentsArray.length ? commentsArray.reduce((a, b) => [...a, ...b], []) : [];
 
   const { getMultiSNS } = useQuerySNS();
 
   const replyRef = useRef<IReplyOutputProps>(null);
 
-  const getProposalDetail = async (refreshCurrent?: boolean) => {
+  const getProposalDetail = async (refreshIdx?: number) => {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
-      const res = await requests.proposalV2.getProposalDetail(Number(id), startPostId);
+      let res: { data: IProposal };
+      if (refreshIdx !== void 0) {
+        // refresh the pointed group array
+        let start_post_id: undefined | number;
+        if (refreshIdx === 0) {
+          start_post_id = undefined;
+        } else {
+          const _arr = commentsArray[refreshIdx - 1];
+          start_post_id = _arr[_arr.length - 1].metaforo_post_id;
+        }
+        res = await requests.proposalV2.getProposalDetail(Number(id), start_post_id);
+      } else {
+        const _arr = commentsArray[currentCommentArrayIdx];
+        res = await requests.proposalV2.getProposalDetail(
+          Number(id),
+          _arr ? _arr[_arr.length - 1]?.metaforo_post_id : undefined,
+        );
+      }
       setData(res.data);
       console.log('-------', res.data);
       setContentBlocks(res.data.content_blocks);
       // comment
-      const newComments = [...posts, ...res.data.comments];
-      setPosts(newComments);
-      setTotalPostsCount(res.data.comment_count);
-      setHasMore(
-        newComments.length === 0
-          ? false
-          : newComments.reduce((a, b) => a.children_count + b.children_count) + newComments.length <
-              res.data.comment_count,
-      );
-      if (res.data.comments.length) {
-        setStartPostId(res.data.comments[res.data.comments.length - 1].metaforo_post_id);
+      if (refreshIdx !== void 0) {
+        const _new_arr = [...commentsArray];
+        _new_arr[currentCommentArrayIdx] = res.data.comments.map((c) => ({
+          ...c,
+          bindIdx: currentCommentArrayIdx,
+          children: c.children?.map((c) => ({ ...c, bindIdx: currentCommentArrayIdx })),
+        }));
+        setCommentsArray(_new_arr);
+      } else if (res.data.comments.length) {
+        const new_idx = commentsArray.length;
+        setCurrentCommentArrayIdx(new_idx);
+
+        const new_arr = [
+          ...commentsArray,
+          res.data.comments.map((c) => ({
+            ...c,
+            bindIdx: new_idx,
+            children: c.children?.map((c) => ({ ...c, bindIdx: currentCommentArrayIdx })),
+          })),
+        ];
+        setCommentsArray(new_arr);
+        // check if has more
+        const all_comments = new_arr.length ? new_arr.reduce((a, b) => [...a, ...b], []) : [];
+        let now_count: number = all_comments.length;
+        all_comments.forEach((item) => (now_count += item.children?.length || 0));
+        setHasMore(all_comments.length === 0 ? false : now_count < res.data.comment_count);
       }
+      setTotalPostsCount(res.data.comment_count);
+
       // history
       setTotalEditCount(res.data.histories.total_count ?? 0);
       setEditHistoryList(res.data.histories?.lists ?? []);
@@ -256,12 +290,19 @@ export default function ThreadPage() {
     return actions;
   };
 
+  const onEditComment = (idx?: number) => {
+    if (idx !== void 0) {
+      getProposalDetail(idx);
+    }
+  };
+
   const getNextCommentList = () => {
     if (!posts.length) {
       return;
     }
-    const lastCommentId = posts[posts.length - 1].id;
-    getProposalDetail(lastCommentId);
+    // TODO
+
+    // getProposalDetail(lastCommentId);
   };
 
   const handleClose = () => {
@@ -404,7 +445,8 @@ export default function ThreadPage() {
               hideReply={review}
               posts={posts}
               ref={replyRef}
-              onNewComment={getProposalDetail}
+              onNewComment={getNextCommentList}
+              onEditComment={onEditComment}
               getNextCommentList={getNextCommentList}
               hasMore={hasMore}
             />
