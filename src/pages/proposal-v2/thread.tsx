@@ -585,6 +585,8 @@ const UserBox = styled.div`
     height: 32px;
     border-radius: 50%;
     margin-right: 8px;
+    object-fit: cover;
+    object-position: center;
   }
   .date {
     margin-left: 16px;
