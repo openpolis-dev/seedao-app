@@ -10,6 +10,7 @@ import { formatMsgTime } from 'utils/time';
 import CommentIcon from '../../assets/Imgs/proposal/commentIcon.png';
 import ProfileComponent from '../../profile-components/profile';
 import { useAuthContext } from '../../providers/authProvider';
+import { CommentType } from 'type/proposalV2.type';
 
 const useParseContent = (data: string, noNeedParse?: boolean) => {
   const [content, setContent] = useState('');
@@ -25,7 +26,7 @@ const useParseContent = (data: string, noNeedParse?: boolean) => {
 };
 
 interface IProps {
-  data: any;
+  data: CommentType;
   parentData?: any;
   children?: React.ReactNode;
   isChild?: boolean;
@@ -38,13 +39,13 @@ interface IProps {
 }
 
 interface IUserProps {
-  name: string;
+  name?: string;
   avatar: string;
-  data?: any;
+  address: string;
   user_title?: UserTitleType;
 }
 
-const UserBox = ({ data, name, avatar, user_title }: IUserProps) => {
+const UserBox = ({ address, name, avatar, user_title }: IUserProps) => {
   const [showModal, setShowModal] = useState(false);
 
   const {
@@ -60,12 +61,10 @@ const UserBox = ({ data, name, avatar, user_title }: IUserProps) => {
 
   return (
     <>
-      {showModal && (
-        <ProfileComponent address={data?.web3_public_keys[0]?.address} theme={theme} handleClose={handleClose} />
-      )}
+      {showModal && <ProfileComponent address={address} theme={theme} handleClose={handleClose} />}
       <UserBoxStyle onClick={() => handleProfile()}>
         <Avatar src={avatar || DefaultAvatar} alt="" />
-        <NameBox>{name}</NameBox>
+        <NameBox>{name || address}</NameBox>
         {user_title && user_title.name && <UserTag bg={user_title.background}>{user_title?.name}</UserTag>}
       </UserBoxStyle>
     </>
@@ -85,19 +84,22 @@ export default function CommentComponent({
   isSpecial,
 }: IProps) {
   const { t } = useTranslation();
+  const {
+    state: { snsMap },
+  } = useAuthContext();
   const content = useParseContent(data?.content, isSpecial);
 
   const handleReply = () => {
-    onReply(data.id);
+    onReply(data.metaforo_post_id);
   };
 
   const handleClickMoreAction = (action: string) => {
     switch (action) {
       case 'edit':
-        onEdit(data.id, { ops: JSON.parse(data.content) });
+        onEdit(data.metaforo_post_id, { ops: JSON.parse(data.content) });
         break;
       case 'delete':
-        onDelete(data.id);
+        onDelete(data.metaforo_post_id);
         break;
     }
   };
@@ -110,24 +112,20 @@ export default function CommentComponent({
         <RightBox>
           <RelationUserLine>
             <UserBox
-              data={data.user}
-              name={isSpecial ? t('city-hall.Cityhall') : data.user.username}
-              avatar={data.user.photo_url}
-              user_title={data.user_title}
+              address={data.wallet?.toLocaleLowerCase()}
+              name={isSpecial ? t('city-hall.Cityhall') : ''}
+              avatar={data.avatar}
             />
             {parentData && (
               <>
                 <span>{'==>'}</span>
-                <UserBox
-                  data={data.user}
-                  name={parentData.user.username}
-                  avatar={parentData.user.photo_url}
-                  user_title={parentData.user_title}
-                />
+                <UserBox address={data.wallet?.toLocaleLowerCase()} avatar={parentData.avatar} />
               </>
             )}
-            <TimeBox>{formatMsgTime(data.created_at, t)}</TimeBox>
-            <VersionTag>a</VersionTag>
+            <TimeBox>{formatMsgTime(data.created_ts * 1000, t)}</TimeBox>
+            <VersionTag href={`https://arweave.net/tx/${data.proposal_arweave_hash}/data.html`} target="__blank">
+              a
+            </VersionTag>
           </RelationUserLine>
           {isSpecial ? (
             <Content>{data.content}</Content>
@@ -159,16 +157,6 @@ export default function CommentComponent({
     </CommentStyle>
   );
 }
-
-const ReplyComment = ({ data }: { data: any }) => {
-  const content = useParseContent(data?.content);
-  return (
-    <ReplyCommentStyle>
-      <UserBox name={data.user.username} data={data.user} avatar={data.user.photo_url} user_title={data.user_title} />
-      <div className="content" dangerouslySetInnerHTML={{ __html: content }}></div>
-    </ReplyCommentStyle>
-  );
-};
 
 const CommentStyle = styled.div<{ padding: string }>`
   padding-left: ${(props) => props.padding};
@@ -223,7 +211,7 @@ const RelationUserLine = styled.div`
   align-items: center;
 `;
 
-const VersionTag = styled.span`
+const VersionTag = styled.a`
   display: inline-block;
   width: 20px;
   height: 20px;

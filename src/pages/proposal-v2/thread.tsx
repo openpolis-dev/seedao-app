@@ -100,7 +100,7 @@ export default function ThreadPage() {
               res.data.comment_count,
       );
       if (res.data.comments.length) {
-        setStartPostId(res.data.comments[res.data.comments.length - 1].id);
+        setStartPostId(res.data.comments[res.data.comments.length - 1].metaforo_post_id);
       }
       // history
       setTotalEditCount(res.data.histories.total_count ?? 0);
@@ -399,7 +399,7 @@ export default function ThreadPage() {
 
           {blockType === BlockContentType.Reply && (
             <ReplyComponent
-              pinId={data?.reject_metaforo_comment_id} 
+              pinId={data?.reject_metaforo_comment_id}
               id={Number(id)}
               hideReply={review}
               posts={posts}

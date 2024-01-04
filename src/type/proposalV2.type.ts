@@ -67,6 +67,18 @@ export interface Poll {
   is_vote: 0 | 1; // 0: not voted, 1: voted
 }
 
+export type CommentType = {
+  children: CommentType[];
+  content: string;
+  metaforo_post_id: number;
+  proposal_arweave_hash: string;
+  proposal_title: string;
+  reply_metaforo_post_id: number;
+  wallet: string;
+  created_ts: number;
+  avatar: string;
+};
+
 export interface IProposal extends ISimpleProposal {
   reviewer: string;
   applicant_avatar: string;
@@ -77,7 +89,7 @@ export interface IProposal extends ISimpleProposal {
   is_rejected: string;
   reject_ts: number;
   arweave: string;
-  comments: any[];
+  comments: CommentType[];
   components: any;
   comment_count: number;
   votes: Poll[];

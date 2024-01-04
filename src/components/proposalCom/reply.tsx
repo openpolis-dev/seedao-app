@@ -17,12 +17,13 @@ import ConfirmModal from 'components/modals/confirmModal';
 import useCheckMetaforoLogin from 'hooks/useCheckMetaforoLogin';
 import { deleteCommet, addComment, editCommet } from 'requests/proposalV2';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import { CommentType } from 'type/proposalV2.type';
 
 interface IProps {
   pinId?: number;
   id: number;
   hideReply?: boolean;
-  posts: any[];
+  posts: CommentType[];
   onNewComment: () => void;
   getNextCommentList: () => void;
   hasMore: boolean;
@@ -37,8 +38,8 @@ const ReplyComponent = React.forwardRef<IReplyOutputProps, IProps>(
       state: { userData, account },
       dispatch,
     } = useAuthContext();
-    const pinPost = posts.find((p) => p.id === pinId);
-    const filterPosts = posts.filter((p) => p.id !== pinId);
+    const pinPost = posts.find((p) => p.metaforo_post_id === pinId);
+    const filterPosts = posts.filter((p) => p.metaforo_post_id !== pinId);
 
     const checkMetaforoLogin = useCheckMetaforoLogin();
 
@@ -173,7 +174,7 @@ const ReplyComponent = React.forwardRef<IReplyOutputProps, IProps>(
             isCurrentUser={false}
             isSpecial
           >
-            {pinPost.children.posts.map((ip: any) => (
+            {pinPost.children.map((ip: any) => (
               <CommetComponent
                 data={ip}
                 isChild={true}
@@ -199,14 +200,14 @@ const ReplyComponent = React.forwardRef<IReplyOutputProps, IProps>(
           {filterPosts.map((p) => (
             <CommetComponent
               data={p}
-              key={p.id}
+              key={p.metaforo_post_id}
               onReply={onReply}
               onEdit={onEdit}
               onDelete={onDelete}
               hideReply={hideReply}
-              isCurrentUser={isCurrentUser(p?.user?.web3_public_keys?.[0]?.address)}
+              isCurrentUser={isCurrentUser(p.wallet)}
             >
-              {p.children.posts.map((ip: any) => (
+              {p.children?.map((ip: any) => (
                 <CommetComponent
                   data={ip}
                   isChild={true}
