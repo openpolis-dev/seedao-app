@@ -116,6 +116,7 @@
     "SubmitProposal": "Submit",
     "CityhallRejected": "Cityhall rejected",
     "TotalVoteCount": "{{count}} voted",
+    "proposalComponents":"Proposal Components",
     "HasVote": "Voted"
   },
   "Project": {

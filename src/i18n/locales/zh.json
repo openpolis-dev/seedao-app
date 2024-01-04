@@ -116,6 +116,7 @@
     "SubmitProposal": "提交",
     "CityhallRejected": "市政厅已驳回",
     "TotalVoteCount": "共{{count}}票",
+    "proposalComponents":"提案执行组件",
     "HasVote": "已投"
   },
   "Project": {

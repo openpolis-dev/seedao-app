@@ -403,7 +403,7 @@ export default function ThreadPage() {
           BeforeComponent={
             <>
               <ComponnentBox>
-                <div className="title">提案执行组件</div>
+                <div className="title">{t('Proposal.proposalComponents')}</div>
               </ComponnentBox>
             </>
           }

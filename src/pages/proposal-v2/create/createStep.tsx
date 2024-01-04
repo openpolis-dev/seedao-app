@@ -59,6 +59,7 @@ const BackBox = styled.div`
   display: inline-flex;
   align-items: center;
   cursor: pointer;
+  font-size: 14px;
   .backTitle {
     color: var(--bs-body-color_active);
   }
@@ -305,7 +306,7 @@ export default function CreateStep({ onClick }: any) {
             <BackIconBox>
               <img src={BackIcon} alt="" />
             </BackIconBox>
-            <span className="backTitle">返回</span>
+            <span className="backTitle">{t('Proposal.CreateProposal')}</span>
           </BackBox>
 
           <BtnGroup>
@@ -341,7 +342,7 @@ export default function CreateStep({ onClick }: any) {
               </ItemBox>
 
               <ComponnentBox>
-                <span>提案执行组件</span>
+                <span>{t('Proposal.proposalComponents')}</span>
               </ComponnentBox>
             </>
           }
