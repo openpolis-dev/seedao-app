@@ -12,7 +12,7 @@ import { parseToken, checkTokenValid, clearStorage } from 'utils/auth';
 
 const PATH_PREFIX = '/proposals/';
 
-const getMetaforoData = () => {
+export const getMetaforoData = () => {
   try {
     const tokenstr = localStorage.getItem(SEEDAO_USER);
     if (tokenstr) {

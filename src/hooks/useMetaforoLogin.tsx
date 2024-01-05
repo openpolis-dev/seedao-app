@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 import { useNetwork } from 'wagmi';
 import { signTypedData } from 'wagmi/actions';
 import MetaforoLoginModal from 'components/modals/metaforoLoginModal';
-import { prepareMetaforo } from 'requests/proposalV2';
+import { prepareMetaforo, getMetaforoData } from 'requests/proposalV2';
 
 export default function useMetaforoLogin() {
   const {
@@ -96,6 +96,13 @@ export default function useMetaforoLogin() {
     if (metaforoToken) {
       return true;
     }
+    // check
+    const data = getMetaforoData();
+    if (data?.token) {
+      dispatch({ type: AppActionType.SET_METAFORO_TOKEN, payload: data.token });
+      return true;
+    }
+
     dispatch({ type: AppActionType.SET_SHOW_METAFORO_LOGIN_MODAL, payload: true });
   };
 
