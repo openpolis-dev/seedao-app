@@ -204,6 +204,12 @@ export default function CreateStep({ onClick }: any) {
       setComponents(components ? components : []);
     } else {
       setShowType('new');
+
+      setList([
+        {
+          content: '',
+        },
+      ]);
       getComponentList();
       setShowRht(true);
     }
@@ -244,6 +250,7 @@ export default function CreateStep({ onClick }: any) {
         data: data[dataKey],
       };
     }
+
     await checkMetaforoLogin();
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     saveOrSubmitProposal({
@@ -339,7 +346,7 @@ export default function CreateStep({ onClick }: any) {
             <div>
               {list.map((item, index: number) => (
                 <ItemBox key={`block_${index}`}>
-                  <TitleBox>{item.title}</TitleBox>
+                  {!!item.title && <TitleBox>{item.title}</TitleBox>}
 
                   <MdEditor
                     modelValue={item.content}
