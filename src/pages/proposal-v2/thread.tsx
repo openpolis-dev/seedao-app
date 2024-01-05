@@ -502,6 +502,9 @@ const EditBox = styled.ul`
   li {
     color: var(--bs-primary);
     cursor: pointer;
+    &:hover {
+      color: var(--bs-body-color_active);
+    }
   }
 `;
 
