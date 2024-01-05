@@ -71,8 +71,8 @@ export default function ProposalVote({ id, poll, updateStatus }: IProps) {
 
   useEffect(() => {
     const getVotePermission = () => {
-      checkCanVote(id).then(() => {
-        setHasPermission(true);
+      checkCanVote(id).then((r) => {
+        setHasPermission(r.data);
       });
     };
     if (poll.status === VoteType.Open && !poll.is_vote) {

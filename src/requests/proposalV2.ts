@@ -115,7 +115,7 @@ export const withdrawProposal = (id: number) => {
 
 // =========== vote ===========
 
-export const checkCanVote = (id: number) => {
+export const checkCanVote = (id: number): Promise<ResponseData<boolean>> => {
   return request.post(`${PATH_PREFIX}can_vote/${id}`);
 };
 
