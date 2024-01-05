@@ -498,6 +498,7 @@ const EditBox = styled.ul`
   margin-right: 8px;
   li {
     color: var(--bs-primary);
+    cursor: pointer;
   }
 `;
 
