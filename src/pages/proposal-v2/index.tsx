@@ -7,7 +7,7 @@ import ClearSVGIcon from 'components/svgs/clear';
 import SearchSVGIcon from 'components/svgs/search';
 import { Button } from 'react-bootstrap';
 import SimpleProposalItem from 'components/proposalCom/simpleProposalItem';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import HistoryAction from 'components/proposalCom/historyAction';
 import requests from 'requests';
 import { useAuthContext, AppActionType } from 'providers/authProvider';
@@ -24,6 +24,7 @@ import useCheckMetaforoLogin from 'hooks/useMetaforoLogin';
 const PAGE_SIZE = 10;
 
 export default function ProposalIndexPage() {
+  const navigate = useNavigate();
   const { t } = useTranslation();
   const {
     state: { loading },
@@ -135,6 +136,13 @@ export default function ProposalIndexPage() {
     }
   };
 
+  const go2create = async () => {
+    const canCreate = await checkMetaforoLogin();
+    if (canCreate) {
+      navigate('/proposal-v2/create');
+    }
+  };
+
   return (
     <Page>
       <OperateBox>
@@ -189,13 +197,10 @@ export default function ProposalIndexPage() {
                 {inputKeyword && <ClearSVGIcon onClick={() => clearSearch()} className="btn-clear" />}
               </SearchBox>
             </FilterBox>
-            <Link to="/proposal-v2/create">
-              <Button variant="primary">
-                {' '}
-                <img src={AddImg} alt="" className="mr20" />
-                {t('Proposal.CreateProposal')}
-              </Button>
-            </Link>
+            <Button variant="primary" onClick={go2create}>
+              <img src={AddImg} alt="" className="mr20" />
+              {t('Proposal.CreateProposal')}
+            </Button>
           </FlexLine>
           {proposalList.map((p) => (
             <SimpleProposalItem key={p.id} data={p} sns={formatSNS(p.applicant?.toLocaleLowerCase())} />
