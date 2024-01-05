@@ -175,7 +175,8 @@ export default function ThreadPage() {
   }, [id, state]);
 
   const getComponentsList = async () => {
-    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    // NOTE: getProposalDetail may use more time, so not show loading here
+    // dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
       const resp = await requests.proposalV2.getComponents();
       let components = resp.data;
@@ -191,7 +192,7 @@ export default function ThreadPage() {
     } catch (error) {
       logError('getAllProposals failed', error);
     } finally {
-      dispatch({ type: AppActionType.SET_LOADING, payload: false });
+      // dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }
   };
 
