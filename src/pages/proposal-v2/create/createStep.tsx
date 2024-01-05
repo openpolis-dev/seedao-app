@@ -261,7 +261,7 @@ export default function CreateStep({ onClick }: any) {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     saveOrSubmitProposal({
       title,
-      proposal_category_id: proposalType?.id, // TODO hardcode for test
+      proposal_category_id: proposalType?.id,
       content_blocks: list,
       components: dataFormat,
       template_id: template?.id,
