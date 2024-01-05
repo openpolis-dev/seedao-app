@@ -333,9 +333,7 @@ export default function ThreadPage() {
     if (!posts.length) {
       return;
     }
-    // TODO
-
-    // getProposalDetail(lastCommentId);
+    getProposalDetail();
   };
 
   const handleClose = () => {
