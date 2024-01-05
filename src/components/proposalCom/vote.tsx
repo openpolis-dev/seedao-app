@@ -54,7 +54,7 @@ export default function ProposalVote({ id, poll, updateStatus }: IProps) {
       })
       .catch((error) => {
         logError('cast error failed', error);
-        showToast(`cast error failed: ${error?.data?.msg}`, ToastType.Danger);
+        showToast(`cast error failed: ${error?.data?.msg || error?.code || error}`, ToastType.Danger);
       })
       .finally(() => {
         dispatch({ type: AppActionType.SET_LOADING, payload: false });

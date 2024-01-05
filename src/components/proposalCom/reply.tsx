@@ -18,6 +18,7 @@ import useCheckMetaforoLogin from 'hooks/useMetaforoLogin';
 import { deleteCommet, addComment, editCommet } from 'requests/proposalV2';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { ICommentDisplay } from 'type/proposalV2.type';
+import useToast, { ToastType } from 'hooks/useToast';
 
 interface IProps {
   pinId?: number;
@@ -46,6 +47,7 @@ const ReplyComponent = React.forwardRef<IReplyOutputProps, IProps>(
     const { checkMetaforoLogin } = useCheckMetaforoLogin();
 
     const enableQuill = useLoadQuill();
+    const { showToast } = useToast();
 
     const [avatar, setAvatar] = useState('');
     const [replyContent, setReplyContent] = useState('');
@@ -142,8 +144,9 @@ const ReplyComponent = React.forwardRef<IReplyOutputProps, IProps>(
           } else {
             onNewComment();
           }
-        } catch (error) {
+        } catch (error: any) {
           logError(`add proposal-${id} comment-${replyId} failed`, error);
+          showToast(error?.data?.msg || error?.code || error, ToastType.Danger);
         } finally {
           dispatch({ type: AppActionType.SET_LOADING, payload: false });
         }
@@ -162,6 +165,7 @@ const ReplyComponent = React.forwardRef<IReplyOutputProps, IProps>(
           })
           .catch((error) => {
             logError(`delete proposal-${id} comment-${toBeDeleteId} failed`, error);
+            showToast(error?.data?.msg || error?.code || error, ToastType.Danger);
           })
           .finally(() => {
             dispatch({ type: AppActionType.SET_LOADING, payload: false });
@@ -263,7 +267,7 @@ const ReplyComponent = React.forwardRef<IReplyOutputProps, IProps>(
                     value={quillContent}
                   />
                 ) : (
-                  <NormalInput placeholder={t("Proposal.WriteReplyHint")} onClick={onFocusToWriteReply} />
+                  <NormalInput placeholder={t('Proposal.WriteReplyHint')} onClick={onFocusToWriteReply} />
                 )}
               </InputReply>
             )}
