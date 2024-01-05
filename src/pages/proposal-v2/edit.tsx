@@ -8,37 +8,47 @@ import { IContentBlock, IProposal, ProposalState } from 'type/proposalV2.type';
 import { useAuthContext, AppActionType } from 'providers/authProvider';
 import { Template } from '@seedao/components';
 import { MdEditor } from 'md-editor-rt';
-import DataSource from './create/json/datasource.json';
-import initialItems from './create/json/initialItem';
 import useCheckMetaforoLogin from 'hooks/useMetaforoLogin';
 import { updateProposal, getProposalDetail } from 'requests/proposalV2';
 import { Button } from 'react-bootstrap';
+import getConfig from '../../utils/envCofnig';
+import requests from '../../requests';
 
 export default function EditProposal() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const BASE_URL = getConfig().REACT_APP_BASE_ENDPOINT;
+  const API_VERSION = process.env.REACT_APP_API_VERSION;
   const navigate = useNavigate();
   const { id } = useParams();
   const { state } = useLocation(); // state is the proposal data if from thread page
+  const [components, setComponents] = useState<any[]>([]);
+  const {
+    state: { theme, tokenData },
+    dispatch,
+  } = useAuthContext();
 
-  const { dispatch } = useAuthContext();
   const { checkMetaforoLogin } = useCheckMetaforoLogin();
 
   const [data, setData] = useState<IProposal>();
   const [contentBlocks, setContentBlocks] = useState<IContentBlock[]>([]);
   const [title, setTitle] = useState('');
   const [submitType, setSubmitType] = useState<'save' | 'submit'>();
+  const [token, setToken] = useState('');
 
+  const [dataSource, setDataSource] = useState();
   const childRef = useRef(null);
 
   useEffect(() => {
     if (state) {
       setData(state);
+      setDataSource(state?.components);
     } else {
       const getDetail = async () => {
         dispatch({ type: AppActionType.SET_LOADING, payload: true });
         try {
           const res = await getProposalDetail(Number(id));
           setData(res.data);
+          setDataSource(res.data?.components);
         } catch (error) {
           logError('get proposal detail error:', error);
         } finally {
@@ -56,10 +66,35 @@ export default function EditProposal() {
     }
   }, [data]);
 
+  useEffect(() => {
+    getComponentList();
+  }, []);
+
   const handleText = (value: any, index: number) => {
     let arr = [...contentBlocks];
     arr[index].content = value;
     setContentBlocks([...arr]);
+  };
+
+  const getComponentList = async () => {
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    try {
+      const resp = await requests.proposalV2.getComponents();
+      let components = resp.data;
+
+      components?.map((item: any) => {
+        if (typeof item.schema === 'string') {
+          item.schema = JSON.parse(item.schema);
+        }
+        return item;
+      });
+
+      setComponents(components);
+    } catch (error) {
+      logError('getAllProposals failed', error);
+    } finally {
+      dispatch({ type: AppActionType.SET_LOADING, payload: false });
+    }
   };
 
   useEffect(() => {
@@ -75,6 +110,11 @@ export default function EditProposal() {
     // other state can not be edited
     navigate('/proposal-v2');
   }, [data]);
+
+  useEffect(() => {
+    if (!tokenData) return;
+    setToken(tokenData.token);
+  }, [tokenData]);
 
   const allSubmit = () => {
     (childRef.current as any).submitForm();
@@ -120,9 +160,15 @@ export default function EditProposal() {
     <Page>
       <BackerNav title={t('Proposal.EditProposalNav')} to={'/proposal-v2'} onClick={() => navigate(-1)} />
       <Template
-        DataSource={DataSource}
+        DataSource={dataSource}
         operate="edit"
-        initialItems={initialItems}
+        initialItems={components}
+        language={i18n.language}
+        showRight={false}
+        theme={theme}
+        baseUrl={BASE_URL}
+        version={API_VERSION}
+        token={token}
         BeforeComponent={
           <ItemBox>
             <TitleBox>提案标题</TitleBox>
