@@ -53,6 +53,14 @@ export const getProposalList = (data: IProposalPageParams): Promise<ResponseData
   return request.get(`${PATH_PREFIX}list`, data);
 };
 
+// my
+export const getMyProposalList = (
+  data: IProposalPageParams,
+  isPendingSubmit?: boolean,
+): Promise<ResponseData<IPageResponse<ISimpleProposal>>> => {
+  return request.get(`${PATH_PREFIX}my`, { ...data, pending_submit: isPendingSubmit ? 1 : undefined });
+};
+
 export const getProposalDetail = (id: number, startPostId?: number): Promise<ResponseData<IProposal>> => {
   return request.get(
     `${PATH_PREFIX}show/${id}`,

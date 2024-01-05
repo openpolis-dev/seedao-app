@@ -20,6 +20,7 @@ import Pagination from 'components/pagination';
 import SearchImg from '../../assets/Imgs/proposal/search.svg';
 import AddImg from '../../assets/Imgs/proposal/add-square.svg';
 import useCheckMetaforoLogin from 'hooks/useMetaforoLogin';
+import MyProposalsTab from 'components/proposalCom/myProposalsTab';
 
 const PAGE_SIZE = 10;
 
@@ -218,8 +219,7 @@ export default function ProposalIndexPage() {
       case TabType.History:
         return <HistoryAction />;
       case TabType.My:
-        return null;
-
+        return <MyProposalsTab />;
       default:
         return null;
     }

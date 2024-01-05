@@ -77,6 +77,7 @@
     "Passed": "Passed",
     "Failed": "Failed",
     "PendingCommit": "Pending Commit",
+    "NotPendingCommit": "Not Pending Commit",
     "ThreeLayerType": "三层提案 - P3",
     "TwoLayerType": "二层提案 - P2",
     "OneLayerType": "一层提案 - P1",
