@@ -164,7 +164,7 @@ export default function ThreadPage() {
       }
     } catch (error: any) {
       logError('get proposal detail error:', error);
-      showToast(error?.code || error, ToastType.Danger, { autoClose: false });
+      showToast(error?.data?.msg || error?.code || error, ToastType.Danger, { autoClose: false });
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }

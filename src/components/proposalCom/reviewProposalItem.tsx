@@ -8,6 +8,7 @@ import ProposalStateTag, { getRealState } from './stateTag';
 import DefaultAvatarIcon from 'assets/Imgs/defaultAvatar.png';
 import RhtArrow from 'assets/Imgs/proposal/rightArrow.svg';
 import { useTranslation } from 'react-i18next';
+import useMetaforoLogin from 'hooks/useMetaforoLogin';
 
 const CardBody = styled.div``;
 
@@ -25,8 +26,12 @@ export default function ReviewProposalItem({
     state: { theme },
   } = useAuthContext();
   const { t } = useTranslation();
-  const openProposal = () => {
-    navigate(`/proposal-v2/thread/${data.id}${isReview ? '?review' : ''}`, { state: data });
+  const { checkMetaforoLogin } = useMetaforoLogin();
+  const openProposal = async () => {
+    const canReview = await checkMetaforoLogin();
+    if (canReview) {
+      navigate(`/proposal-v2/thread/${data.id}${isReview ? '?review' : ''}`, { state: data });
+    }
   };
 
   const borderStyle = useMemo(() => {
