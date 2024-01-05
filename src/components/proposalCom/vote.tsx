@@ -93,7 +93,7 @@ export default function ProposalVote({ id, poll, updateStatus }: IProps) {
               <div className="inner"></div>
             </ProgressBar>
             <div onClick={() => !!option.voters && setOpenVoteItem({ count: option.voters, optionId: option.id })}>
-              <span>{option.voters}</span>
+              <span className={!!option.is_vote ? 'active' : ''}>{option.voters}</span>
               <span className="voters"> ({option.percent}%)</span>
             </div>
           </VoteOptionBottom>
@@ -221,6 +221,8 @@ const OpenTag = styled.span`
 
 const VoteOptionBlock = styled.div`
   margin-top: 12px;
+  display: flex;
+  align-items: center;
 `;
 
 const VoteOptionSelect = styled(VoteOptionBlock)`
@@ -252,12 +254,16 @@ const VoteOptionBottom = styled.div`
     color: var(--bs-primary);
     cursor: pointer;
   }
+  .active {
+    color: var(--bs-primary);
+  }
 `;
 
 const OptionContent = styled.div<{ $highlight?: number }>`
   font-size: 14px;
   color: ${({ $highlight }) => ($highlight ? 'var(--bs-primary)' : 'var(--bs-body-color_active)')};
   margin-top: 0.25em;
+  margin-right: 20px;
 `;
 
 const Alias = styled.div`
