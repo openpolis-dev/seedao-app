@@ -23,6 +23,12 @@ import useCheckMetaforoLogin from 'hooks/useMetaforoLogin';
 
 const PAGE_SIZE = 10;
 
+enum TabType {
+  All = 1,
+  History,
+  My,
+}
+
 export default function ProposalIndexPage() {
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -61,8 +67,9 @@ export default function ProposalIndexPage() {
   const [proposalList, setProposalList] = useState<ISimpleProposal[]>([]);
   const [page, setPage] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
-  const [showHistory, setShowHistory] = useState(false);
   const [initPage, setInitPage] = useState(true);
+
+  const [currentTab, setCurrentTab] = useState(TabType.All);
 
   const { checkMetaforoLogin } = useCheckMetaforoLogin();
   const { getMultiSNS } = useQuerySNS();
@@ -104,7 +111,6 @@ export default function ProposalIndexPage() {
   useEffect(() => {
     if (!initPage) {
       getProposalList();
-      setShowHistory(false);
       setPage(1);
     }
   }, [selectCategory, selectTime, selectStatus, searchKeyword]);
@@ -132,7 +138,14 @@ export default function ProposalIndexPage() {
   const handleClickHistory = async () => {
     const canOpen = await checkMetaforoLogin();
     if (canOpen) {
-      setShowHistory(true);
+      setCurrentTab(TabType.History);
+    }
+  };
+
+  const handleClickMyProposals = async () => {
+    const canOpen = await checkMetaforoLogin();
+    if (canOpen) {
+      setCurrentTab(TabType.My);
     }
   };
 
@@ -143,76 +156,94 @@ export default function ProposalIndexPage() {
     }
   };
 
+  const showContent = () => {
+    switch (currentTab) {
+      case TabType.All:
+        return (
+          <>
+            <FlexLine>
+              <FilterBox>
+                <SeeSelect
+                  width="180px"
+                  options={CATEGORY_OPTIONS}
+                  isSearchable={false}
+                  placeholder={t('Proposal.TypeSelectHint')}
+                  onChange={(v: ISelectItem) => setSelectCategory(v)}
+                />
+                <SeeSelect
+                  width="120px"
+                  options={TIME_OPTIONS}
+                  defaultValue={TIME_OPTIONS[0]}
+                  isClearable={false}
+                  isSearchable={false}
+                  onChange={(v: ISelectItem) => setSelectTime(v)}
+                />
+                <SeeSelect
+                  width="120px"
+                  options={STATUS_OPTIONS}
+                  isSearchable={false}
+                  placeholder={t('Proposal.StatusSelectHint')}
+                  onChange={(v: ISelectItem) => setSelectStatus(v)}
+                />
+                <SearchBox>
+                  {/*<SearchSVGIcon />*/}
+                  <img src={SearchImg} alt="" className="iconBg" />
+                  <input
+                    type="text"
+                    placeholder=""
+                    onKeyUp={(e) => onKeyUp(e)}
+                    value={inputKeyword}
+                    onChange={(e) => setInputKeyword(e.target.value)}
+                  />
+
+                  {inputKeyword && <ClearSVGIcon onClick={() => clearSearch()} className="btn-clear" />}
+                </SearchBox>
+              </FilterBox>
+              <Button variant="primary" onClick={go2create}>
+                <img src={AddImg} alt="" className="mr20" />
+                {t('Proposal.CreateProposal')}
+              </Button>
+            </FlexLine>
+            {proposalList.map((p) => (
+              <SimpleProposalItem key={p.id} data={p} sns={formatSNS(p.applicant?.toLocaleLowerCase())} />
+            ))}
+            {totalCount === 0 && !loading && <NoItem />}
+            {totalCount > PAGE_SIZE && (
+              <div>
+                <Pagination itemsPerPage={PAGE_SIZE} total={totalCount} current={page - 1} handleToPage={go2page} />
+              </div>
+            )}
+          </>
+        );
+      case TabType.History:
+        return <HistoryAction />;
+      case TabType.My:
+        return null;
+
+      default:
+        return null;
+    }
+  };
+
   return (
     <Page>
       <OperateBox>
         <LineBox>
-          <HistoryButton className={!showHistory ? 'selected' : ''} onClick={() => setShowHistory(false)}>
+          <HistoryButton
+            className={currentTab === TabType.All ? 'selected' : ''}
+            onClick={() => setCurrentTab(TabType.All)}
+          >
             {t('Proposal.all')}
           </HistoryButton>
-          <HistoryButton className={showHistory ? 'selected' : ''} onClick={handleClickHistory}>
+          <HistoryButton className={currentTab === TabType.History ? 'selected' : ''} onClick={handleClickHistory}>
             {t('Proposal.HistoryRecord')}
+          </HistoryButton>
+          <HistoryButton className={currentTab === TabType.My ? 'selected' : ''} onClick={handleClickMyProposals}>
+            {t('Proposal.MyProposals')}
           </HistoryButton>
         </LineBox>
       </OperateBox>
-      {showHistory ? (
-        <HistoryAction />
-      ) : (
-        <>
-          <FlexLine>
-            <FilterBox>
-              <SeeSelect
-                width="180px"
-                options={CATEGORY_OPTIONS}
-                isSearchable={false}
-                placeholder={t('Proposal.TypeSelectHint')}
-                onChange={(v: ISelectItem) => setSelectCategory(v)}
-              />
-              <SeeSelect
-                width="120px"
-                options={TIME_OPTIONS}
-                defaultValue={TIME_OPTIONS[0]}
-                isClearable={false}
-                isSearchable={false}
-                onChange={(v: ISelectItem) => setSelectTime(v)}
-              />
-              <SeeSelect
-                width="120px"
-                options={STATUS_OPTIONS}
-                isSearchable={false}
-                placeholder={t('Proposal.StatusSelectHint')}
-                onChange={(v: ISelectItem) => setSelectStatus(v)}
-              />
-              <SearchBox>
-                {/*<SearchSVGIcon />*/}
-                <img src={SearchImg} alt="" className="iconBg" />
-                <input
-                  type="text"
-                  placeholder=""
-                  onKeyUp={(e) => onKeyUp(e)}
-                  value={inputKeyword}
-                  onChange={(e) => setInputKeyword(e.target.value)}
-                />
-
-                {inputKeyword && <ClearSVGIcon onClick={() => clearSearch()} className="btn-clear" />}
-              </SearchBox>
-            </FilterBox>
-            <Button variant="primary" onClick={go2create}>
-              <img src={AddImg} alt="" className="mr20" />
-              {t('Proposal.CreateProposal')}
-            </Button>
-          </FlexLine>
-          {proposalList.map((p) => (
-            <SimpleProposalItem key={p.id} data={p} sns={formatSNS(p.applicant?.toLocaleLowerCase())} />
-          ))}
-          {totalCount === 0 && !loading && <NoItem />}
-          {totalCount > PAGE_SIZE && (
-            <div>
-              <Pagination itemsPerPage={PAGE_SIZE} total={totalCount} current={page - 1} handleToPage={go2page} />
-            </div>
-          )}
-        </>
-      )}
+      {showContent()}
     </Page>
   );
 }
