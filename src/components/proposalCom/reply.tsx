@@ -198,6 +198,7 @@ const ReplyComponent = React.forwardRef<IReplyOutputProps, IProps>(
                 onDelete={onDelete}
                 hideReply={hideReply}
                 isCurrentUser={isCurrentUser(ip?.wallet)}
+                parentUserName={t('city-hall.Cityhall')}
               />
             ))}
           </CommentComponent>
