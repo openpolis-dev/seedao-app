@@ -257,6 +257,7 @@ export default function CreateStep({ onClick }: any) {
       proposal_category_id: 41, // TODO hardcode for test
       content_blocks: list,
       components: dataFormat,
+      template_id: template?.id,
       submit_to_metaforo: submitType === 'submit',
     })
       .then((r) => {

@@ -3,7 +3,7 @@ import BackerNav from 'components/common/backNav';
 import { ContainerPadding } from 'assets/styles/global';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
-import { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { IContentBlock, IProposal, ProposalState } from 'type/proposalV2.type';
 import { useAuthContext, AppActionType } from 'providers/authProvider';
 import { Template } from '@seedao/components';
@@ -13,6 +13,7 @@ import { updateProposal, getProposalDetail } from 'requests/proposalV2';
 import { Button } from 'react-bootstrap';
 import getConfig from '../../utils/envCofnig';
 import requests from '../../requests';
+import BackIcon from '../../assets/Imgs/back.svg';
 
 export default function EditProposal() {
   const { t, i18n } = useTranslation();
@@ -34,6 +35,7 @@ export default function EditProposal() {
   const [title, setTitle] = useState('');
   const [submitType, setSubmitType] = useState<'save' | 'submit'>();
   const [token, setToken] = useState('');
+  const [showRht, setShowRht] = useState(false);
 
   const [dataSource, setDataSource] = useState();
   const childRef = useRef(null);
@@ -41,7 +43,8 @@ export default function EditProposal() {
   useEffect(() => {
     if (state) {
       setData(state);
-      setDataSource(state?.components);
+      setDataSource(state?.components ?? []);
+      setShowRht(!state?.is_based_on_template);
     } else {
       const getDetail = async () => {
         dispatch({ type: AppActionType.SET_LOADING, payload: true });
@@ -105,10 +108,10 @@ export default function EditProposal() {
       return;
     }
     if ([ProposalState.Draft, ProposalState.Approved, ProposalState.Rejected].includes(data.state)) {
-      return;
+      navigate('/proposal-v2');
     }
+
     // other state can not be edited
-    navigate('/proposal-v2');
   }, [data]);
 
   useEffect(() => {
@@ -135,7 +138,7 @@ export default function EditProposal() {
       title,
       proposal_category_id: data.proposal_category_id,
       content_blocks: contentBlocks,
-      components: [],
+      components: submitData,
       // only pending-submit proposal can be submitted, others can only be updated
       submit_to_metaforo: data.state === ProposalState.PendingSubmit && submitType === 'submit',
     })
@@ -158,47 +161,79 @@ export default function EditProposal() {
 
   return (
     <Page>
-      <BackerNav title={t('Proposal.EditProposalNav')} to={'/proposal-v2'} onClick={() => navigate(-1)} />
-      <Template
-        DataSource={dataSource}
-        operate="edit"
-        initialItems={components}
-        language={i18n.language}
-        showRight={false}
-        theme={theme}
-        baseUrl={BASE_URL}
-        version={API_VERSION}
-        token={token}
-        BeforeComponent={
-          <ItemBox>
-            <TitleBox>提案标题</TitleBox>
-            <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} />
-          </ItemBox>
-        }
-        AfterComponent={
-          <div>
-            {contentBlocks.map((item, index: number) => (
-              <ItemBox key={`block_${index}`}>
-                <TitleBox>{item.title}</TitleBox>
+      {/*<BackerNav title={t('Proposal.EditProposalNav')} to={'/proposal-v2'} onClick={() => navigate(-1)} />*/}
 
-                <MdEditor
-                  modelValue={item.content}
-                  editorId={`block_${index}`}
-                  onChange={(val) => handleText(val, index)}
-                />
+      <FixedBox showRht={showRht?.toString()}>
+        <FlexInner>
+          <BackBox onClick={() => navigate(-1)}>
+            <BackIconBox>
+              <img src={BackIcon} alt="" />
+            </BackIconBox>
+            <span className="backTitle">{t('Proposal.CreateProposal')}</span>
+          </BackBox>
 
-                {/*<MarkdownEditor value={item.content} onChange={(val)=>handleText(val,index)} />*/}
+          <BtnGroup>
+            {/*<Button className="save" onClick={handleSave}>*/}
+            {/*  {t('Proposal.SaveProposal')}*/}
+            {/*</Button>*/}
+            {/*<Button onClick={handleSubmit}>{t('Proposal.SubmitProposal')}</Button>*/}
+
+            {data?.state === ProposalState.PendingSubmit && (
+              <Button onClick={handleSave}>{t('Proposal.SaveProposal')}</Button>
+            )}
+            <Button onClick={handleSubmit}>{t('Proposal.SubmitProposal')}</Button>
+          </BtnGroup>
+        </FlexInner>
+      </FixedBox>
+      <BoxBg showRht={showRht?.toString()}>
+        <Template
+          DataSource={dataSource}
+          operate="edit"
+          initialItems={components}
+          language={i18n.language}
+          showRight={showRht}
+          theme={theme}
+          baseUrl={BASE_URL}
+          version={API_VERSION}
+          token={token}
+          BeforeComponent={
+            <>
+              <ItemBox>
+                <TitleBox>
+                  <span> 提案标题</span>
+                  <TagBox>三层提案 - P1</TagBox>
+                  <TemplateTag>公共项目</TemplateTag>
+                </TitleBox>
+                <InputBox>
+                  <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} />
+                </InputBox>
               </ItemBox>
-            ))}
-          </div>
-        }
-        ref={childRef}
-        onSubmitData={handleFormSubmit}
-      />
-      {data?.state === ProposalState.PendingSubmit && (
-        <Button onClick={handleSave}>{t('Proposal.SaveProposal')}</Button>
-      )}
-      <Button onClick={handleSubmit}>{t('Proposal.SubmitProposal')}</Button>
+              <ComponnentBox>
+                <span>{t('Proposal.proposalComponents')}</span>
+              </ComponnentBox>
+            </>
+          }
+          AfterComponent={
+            <div>
+              {contentBlocks.map((item, index: number) => (
+                <ItemBox key={`block_${index}`}>
+                  <TitleBox>{item.title}</TitleBox>
+
+                  <MdEditor
+                    modelValue={item.content}
+                    editorId={`block_${index}`}
+                    onChange={(val) => handleText(val, index)}
+                  />
+
+                  {/*<MarkdownEditor value={item.content} onChange={(val)=>handleText(val,index)} />*/}
+                </ItemBox>
+              ))}
+            </div>
+          }
+          ref={childRef}
+          onSubmitData={handleFormSubmit}
+        />
+      </BoxBg>
     </Page>
   );
 }
@@ -212,11 +247,133 @@ const ItemBox = styled.div`
   margin-bottom: 20px;
 `;
 
+const TemplateTag = styled.div`
+  color: #cc8f00;
+  padding: 0 16px;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+  display: inline-block;
+  border-radius: 4px;
+  border: 1px solid #ffe071;
+  background: #fff5d2;
+  margin-left: 8px;
+`;
+
 const TitleBox = styled.div`
-  background: #f1f1f1;
-  padding: 20px;
+  background: rgba(82, 0, 255, 0.08);
+  padding: 10px 20px;
   font-size: 16px;
   font-weight: bold;
   margin-bottom: 20px;
+  box-sizing: border-box;
+`;
+
+const ComponnentBox = styled(TitleBox)`
+  margin-bottom: 10px;
+`;
+
+const InputBox = styled.div`
+  input {
+    width: 100%;
+    height: 40px;
+    border-radius: 8px;
+    border: 1px solid var(--bs-border-color);
+    background: var(--bs-box--background);
+    padding: 0 12px;
+    box-sizing: border-box;
+    &:hover,
+    &:focus {
+      border: 1px solid rgba(82, 0, 255, 0.5);
+      outline: none;
+    }
+  }
+`;
+
+const TagBox = styled.div`
+  padding: 0 16px;
+  border-radius: 4px;
+  background: var(--bs-box--background);
+  border: 1px solid rgba(217, 217, 217, 0.5);
+  display: inline-block;
+  margin-left: 8px;
+  font-size: 12px;
+  height: 24px;
+  line-height: 24px;
+`;
+
+const FixedBox = styled.div<{ showRht: string }>`
+  background-color: var(--bs-box-background);
+  position: sticky;
+  margin: -24px 0 0 -32px;
+  width: calc(100% + 64px);
+  top: 0;
+  height: 64px;
+  z-index: 95;
+  box-sizing: border-box;
+  padding-right: ${(props) => (props.showRht === 'true' ? '372px' : '0')};
+  box-shadow: var(--proposal-box-shadow);
+  border-top: 1px solid var(--bs-border-color);
+`;
+
+const FlexInner = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  height: 64px;
+`;
+
+const BackBox = styled.div`
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: 14px;
+  .backTitle {
+    color: var(--bs-body-color_active);
+  }
+`;
+
+const BackIconBox = styled.span`
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: 1px solid rgba(217, 217, 217, 0.5);
+  background: var(--bs-box-background);
+  margin-right: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const BtnGroup = styled.div`
+  display: flex;
+  align-items: center;
+  .btn {
+    width: 100px;
+    height: 40px;
+    margin-left: 16px;
+  }
+  .save {
+    background: transparent;
+    border: 1px solid rgba(217, 217, 217, 0.5);
+    color: var(--font-color-title);
+  }
+`;
+
+const BoxBg = styled.div<{ showRht: string }>`
+  background-color: var(--bs-box-background);
+  box-shadow: var(--proposal-box-shadow);
+  border: 1px solid var(--proposal-border);
+  margin-top: 24px;
+  border-radius: 8px;
+
+  width: ${(props) => (props.showRht === 'true' ? 'calc(100% - 410px)' : '100%')};
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  padding: 20px;
   box-sizing: border-box;
 `;
