@@ -202,12 +202,8 @@ export default function ThreadPage() {
 
   const onUpdateStatus = (status: ProposalState) => {
     if (data) {
-      const newData: IProposal = { ...data, state: status };
-      if (status === ProposalState.Rejected) {
-        // TODO
-      }
-      setData(newData);
-      navigate(`/proposal-v2/thread/${id}`);
+      // back to review list
+      navigate('/city-hall/governance/review-proposal');
     }
   };
 
