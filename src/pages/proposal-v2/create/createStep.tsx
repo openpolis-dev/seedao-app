@@ -18,6 +18,9 @@ import getConfig from '../../../utils/envCofnig';
 
 const Box = styled.ul`
   position: relative;
+  .cm-scroller {
+    background: var(--home-right);
+  }
 `;
 
 const ItemBox = styled.div`

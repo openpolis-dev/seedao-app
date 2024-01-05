@@ -220,6 +220,7 @@ export default function EditProposal() {
                   <TitleBox>{item.title}</TitleBox>
 
                   <MdEditor
+                    theme={theme ? 'dark' : 'light'}
                     modelValue={item.content}
                     editorId={`block_${index}`}
                     onChange={(val) => handleText(val, index)}
@@ -241,6 +242,9 @@ export default function EditProposal() {
 const Page = styled.div`
   ${ContainerPadding};
   color: var(--bs-body-color_active);
+  .cm-scroller {
+    background: var(--home-right);
+  }
 `;
 
 const ItemBox = styled.div`
