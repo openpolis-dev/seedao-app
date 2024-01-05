@@ -119,7 +119,7 @@
     "TotalVoteCount": "{{count}} voted",
     "proposalComponents":"Proposal Components",
     "HasVote": "Voted",
-    "LoginTip": "For your better experience, please login to Metaforo first",
+    "LoginTip": "To use the full functionality, please login to Metaforo first",
     "LoginButton": "Login to Metaforo"
   },
   "Project": {

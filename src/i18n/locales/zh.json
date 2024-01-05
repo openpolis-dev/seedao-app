@@ -119,7 +119,7 @@
     "TotalVoteCount": "共{{count}}票",
     "proposalComponents":"提案执行组件",
     "HasVote": "已投",
-    "LoginTip": "为了您更好的体验，请先登录Metaforo",
+    "LoginTip": "使用完整功能，请先登录Metaforo",
     "LoginButton": "登录 Metaforo"
   },
   "Project": {
