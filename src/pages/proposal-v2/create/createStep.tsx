@@ -312,10 +312,12 @@ export default function CreateStep({ onClick }: any) {
           </BackBox>
 
           <BtnGroup>
-            <Button className="save" onClick={handleSave}>
+            <Button className="save" onClick={handleSave} disabled={!title || !title.trim()}>
               {t('Proposal.SaveProposal')}
             </Button>
-            <Button onClick={handleSubmit}>{t('Proposal.SubmitProposal')}</Button>
+            <Button onClick={handleSubmit} disabled={!title || !title.trim()}>
+              {t('Proposal.SubmitProposal')}
+            </Button>
           </BtnGroup>
         </FlexInner>
       </FixedBox>
