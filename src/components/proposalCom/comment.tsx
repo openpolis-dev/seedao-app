@@ -42,7 +42,6 @@ interface IProps {
   hideReply?: boolean;
   isCurrentUser?: boolean;
   isSpecial?: boolean;
-  parentUserName?: string;
 }
 
 interface IUserProps {
@@ -89,7 +88,6 @@ export default function CommentComponent({
   hideReply,
   isCurrentUser,
   isSpecial,
-  parentUserName,
 }: IProps) {
   const { t } = useTranslation();
   const {
@@ -127,7 +125,7 @@ export default function CommentComponent({
             {parentData && (
               <>
                 <span>
-                  {'@'} {parentUserName || formatSNS(snsMap, parentData.wallet?.toLocaleLowerCase())}
+                  {'@'} {parentData?.userName || formatSNS(snsMap, parentData.wallet?.toLocaleLowerCase())}
                 </span>
               </>
             )}

@@ -69,16 +69,16 @@ const ReplyComponent = React.forwardRef<IReplyOutputProps, IProps>(
       userData && getAvatar();
     }, [userData]);
 
-    const findReplyData = (reply_pid?: number) => {
+    const findReplyData = (reply_pid?: number): ICommentDisplay | undefined => {
       if (!reply_pid) {
-        return null;
+        return undefined;
       }
-      let d: any;
-      posts.forEach((p: any) => {
+      let d: ICommentDisplay | undefined = undefined;
+      posts.forEach((p: ICommentDisplay) => {
         if (p.metaforo_post_id === reply_pid) {
           d = p;
         } else {
-          const child = p.children?.posts.find((ip: any) => ip.metaforo_post_id === reply_pid);
+          const child = p.children?.find((ip: ICommentDisplay) => ip.metaforo_post_id === reply_pid);
           if (child) {
             d = child;
           }
@@ -175,6 +175,16 @@ const ReplyComponent = React.forwardRef<IReplyOutputProps, IProps>(
       },
     }));
 
+    const findPinPostChildrenParent = (id: number) => {
+      const data = findReplyData(id);
+      if (data) {
+        if (data.metaforo_post_id === pinId) {
+          return { ...data, userName: t('city-hall.Cityhall') };
+        }
+      }
+      return data;
+    };
+
     return (
       <ReplyComponentStyle>
         {!!pinPost && (
@@ -192,13 +202,12 @@ const ReplyComponent = React.forwardRef<IReplyOutputProps, IProps>(
                 data={ip}
                 isChild={true}
                 key={ip.metaforo_post_id}
-                parentData={pinPost}
+                parentData={findPinPostChildrenParent(ip.reply_metaforo_post_id)}
                 onReply={onReply}
                 onEdit={onEdit}
                 onDelete={onDelete}
                 hideReply={hideReply}
                 isCurrentUser={isCurrentUser(ip?.wallet)}
-                parentUserName={t('city-hall.Cityhall')}
               />
             ))}
           </CommentComponent>
@@ -221,12 +230,12 @@ const ReplyComponent = React.forwardRef<IReplyOutputProps, IProps>(
               hideReply={hideReply}
               isCurrentUser={isCurrentUser(p.wallet)}
             >
-              {p.children?.map((ip: any) => (
+              {p.children?.map((ip: ICommentDisplay) => (
                 <CommentComponent
                   data={ip}
                   isChild={true}
                   key={ip.metaforo_post_id}
-                  parentData={p}
+                  parentData={findReplyData(ip.reply_metaforo_post_id)}
                   onReply={onReply}
                   onEdit={onEdit}
                   onDelete={onDelete}
