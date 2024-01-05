@@ -113,9 +113,11 @@ export default function ProposalVote({ id, poll, updateStatus }: IProps) {
               <OptionContent>{option.html}</OptionContent>
             </VoteOptionSelect>
           ))}
-          <VoteButton onClick={goVote} disabled={selectOption === void 0 || !hasPermission}>
-            {t('Proposal.Vote')}
-          </VoteButton>
+          {hasPermission && (
+            <VoteButton onClick={goVote} disabled={selectOption === void 0}>
+              {t('Proposal.Vote')}
+            </VoteButton>
+          )}
         </>
       );
     }
@@ -229,6 +231,10 @@ const VoteOptionSelect = styled(VoteOptionBlock)`
   display: flex;
   align-items: center;
   gap: 8px;
+  input:disabled {
+    background-color: #d9d9d980;
+    border-color: rgba(217, 217, 217, 0.5);
+  }
 `;
 
 const ProgressBar = styled.div<{ percent: number }>`
