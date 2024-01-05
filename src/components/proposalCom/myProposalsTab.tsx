@@ -9,6 +9,7 @@ import Pagination from 'components/pagination';
 import NoItem from 'components/noItem';
 import { useAuthContext, AppActionType } from 'providers/authProvider';
 import { getMyProposalList } from 'requests/proposalV2';
+import useToast, { ToastType } from 'hooks/useToast';
 
 const PAGE_SIZE = 10;
 
@@ -26,6 +27,7 @@ export default function MyProposalsTab() {
   const [totalCount, setTotalCount] = useState(0);
 
   const { getMultiSNS } = useQuerySNS();
+  const { showToast } = useToast();
 
   const [snsMap, setSnsMap] = useState<Map<string, string>>(new Map());
 
@@ -54,8 +56,9 @@ export default function MyProposalsTab() {
       setProposalList(resp.data.rows);
       handleSNS(resp.data.rows.filter((d) => !!d.applicant).map((d) => d.applicant));
       setTotalCount(resp.data.total);
-    } catch (error) {
+    } catch (error: any) {
       logError('getAllProposals failed', error);
+      showToast(error?.code || error, ToastType.Danger, { autoClose: false });
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }

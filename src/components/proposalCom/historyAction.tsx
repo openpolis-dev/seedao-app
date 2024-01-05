@@ -12,6 +12,7 @@ import NoItem from 'components/noItem';
 import useQuerySNS from 'hooks/useQuerySNS';
 import publicJs from 'utils/publicJs';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import useToast, { ToastType } from 'hooks/useToast';
 
 enum ActionType {
   CreateProposal = 'create',
@@ -38,6 +39,7 @@ export default function HistoryAction() {
     state: { snsMap },
   } = useAuthContext();
   const { getMultiSNS } = useQuerySNS();
+  const { showToast } = useToast();
 
   const formatSNS = (wallet: string) => {
     const name = snsMap.get(wallet) || wallet;
@@ -59,8 +61,9 @@ export default function HistoryAction() {
       setList([...list, ..._list]);
       setHasMore(_list.length <= 10);
       getMultiSNS(Array.from(new Set(res.data.records.map((item) => item.reply_to_wallet))));
-    } catch (error) {
+    } catch (error: any) {
       logError('[proposal] get user actions failed', error);
+      showToast(error?.code || error, ToastType.Danger, { autoClose: false });
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }

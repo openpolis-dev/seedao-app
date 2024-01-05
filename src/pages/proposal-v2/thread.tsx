@@ -34,6 +34,7 @@ import ShareWhite from 'assets/Imgs/proposal/share-white.svg';
 import CommentImg from 'assets/Imgs/proposal/comment.svg';
 import CommentWhite from 'assets/Imgs/proposal/comment-white.svg';
 import { DeletedContent } from 'components/proposalCom/comment';
+import useToast, { ToastType } from 'hooks/useToast';
 
 enum BlockContentType {
   Reply = 1,
@@ -79,6 +80,7 @@ export default function ThreadPage() {
   const posts = commentsArray.length ? commentsArray.reduce((a, b) => [...a, ...b], []) : [];
 
   const { getMultiSNS } = useQuerySNS();
+  const { showToast } = useToast();
 
   const replyRef = useRef<IReplyOutputProps>(null);
 
@@ -160,8 +162,9 @@ export default function ThreadPage() {
           setApplicantSNS(name?.endsWith('.seedao') ? name : publicJs.AddressToShow(name, 4));
         } catch (error) {}
       }
-    } catch (error) {
+    } catch (error: any) {
       logError('get proposal detail error:', error);
+      showToast(error?.code || error, ToastType.Danger, { autoClose: false });
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }
