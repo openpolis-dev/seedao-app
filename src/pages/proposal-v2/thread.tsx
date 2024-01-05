@@ -407,11 +407,13 @@ export default function ThreadPage() {
           initialItems={components}
           theme={theme}
           BeforeComponent={
-            <>
-              <ComponnentBox>
-                <div className="title">{t('Proposal.proposalComponents')}</div>
-              </ComponnentBox>
-            </>
+            !!dataSource?.length && (
+              <>
+                <ComponnentBox>
+                  <div className="title">{t('Proposal.proposalComponents')}</div>
+                </ComponnentBox>
+              </>
+            )
           }
           AfterComponent={contentBlocks.map((block) => (
             <ProposalContentBlock key={block.title}>

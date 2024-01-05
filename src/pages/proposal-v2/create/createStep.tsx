@@ -172,6 +172,7 @@ export default function CreateStep({ onClick }: any) {
   const [showLeaveConfirm, setShowLeaveConfirm] = useState(false);
   const [showType, setShowType] = useState('new');
   const [token, setToken] = useState('');
+  const [templateTitle, setTemplateTitle] = useState('');
 
   const { changeStep } = useCreateProposalContext();
 
@@ -192,7 +193,7 @@ export default function CreateStep({ onClick }: any) {
       const { schema, components } = template;
       const arr = JSON.parse(schema!);
       setList(arr ?? []);
-
+      setTemplateTitle(template?.name ?? '');
       components?.map((item) => {
         if (typeof item.schema === 'string') {
           item.schema = JSON.parse(item.schema);
@@ -330,7 +331,7 @@ export default function CreateStep({ onClick }: any) {
                 <TitleBox>
                   <span>{t('Proposal.title')}</span>
                   <TagBox>三层提案 - P1</TagBox>
-                  <TemplateTag>公共项目</TemplateTag>
+                  {templateTitle && <TemplateTag>{templateTitle}</TemplateTag>}
                 </TitleBox>
                 <InputBox>
                   <input type="text" value={title} onChange={handleInput} />

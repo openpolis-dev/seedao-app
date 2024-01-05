@@ -202,7 +202,7 @@ export default function EditProposal() {
                 <TitleBox>
                   <span>{t('Proposal.title')}</span>
                   <TagBox>三层提案 - P1</TagBox>
-                  <TemplateTag>公共项目</TemplateTag>
+                  {/*<TemplateTag>公共项目</TemplateTag>*/}
                 </TitleBox>
                 <InputBox>
                   <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} />
