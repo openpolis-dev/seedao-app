@@ -52,6 +52,8 @@ export default function EditProposal() {
           const res = await getProposalDetail(Number(id));
           setData(res.data);
           setDataSource(res.data?.components ?? []);
+          setShowRht(!res.data?.is_based_on_template);
+          console.error(res.data);
         } catch (error) {
           logError('get proposal detail error:', error);
         } finally {

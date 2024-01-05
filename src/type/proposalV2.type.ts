@@ -95,6 +95,7 @@ export interface IProposal extends ISimpleProposal {
   reject_metaforo_comment_id: number;
   reject_reason: string;
   is_rejected: string;
+  is_based_on_template: boolean | undefined;
   template_id: number | string;
   reject_ts: number;
   arweave: string;
