@@ -127,7 +127,7 @@ const ReplyComponent = React.forwardRef<IReplyOutputProps, IProps>(
         dispatch({ type: AppActionType.SET_LOADING, payload: true });
         try {
           if (editId) {
-            await editCommet(id, editId);
+            await editCommet(id, replyContent, editId);
           } else {
             await addComment(id, replyContent, replyId);
           }
