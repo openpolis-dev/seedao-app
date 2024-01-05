@@ -7,14 +7,31 @@ import {
   IBaseCategory,
   IActivity,
 } from 'type/proposalV2.type';
-import { METAFORO_TOKEN } from 'utils/constant';
+import { METAFORO_TOKEN, SEEDAO_USER } from 'utils/constant';
+import { parseToken, checkTokenValid, clearStorage } from 'utils/auth';
 
 const PATH_PREFIX = '/proposals/';
 
 const getMetaforoData = () => {
   try {
-    const data = localStorage.getItem(METAFORO_TOKEN);
-    return JSON.parse(data || '');
+    const tokenstr = localStorage.getItem(SEEDAO_USER);
+    if (tokenstr) {
+      const tokenData = parseToken(tokenstr);
+      if (!checkTokenValid(tokenData?.token, tokenData?.token_exp)) {
+        clearStorage();
+        return;
+      }
+      const data = localStorage.getItem(METAFORO_TOKEN);
+      const metaforoData = JSON.parse(data || '');
+      // @ts-ignore FIXME: tokenData is not defined a correct type
+      const local_account = tokenData?.user?.data?.wallet || tokenData?.user?.wallet;
+
+      if (local_account?.toLowerCase() === metaforoData.account?.toLowerCase()) {
+        return metaforoData;
+      }
+
+      return;
+    }
   } catch (error) {}
 };
 
@@ -71,8 +88,9 @@ export const getUserActions = (
 
 export const prepareMetaforo = () => {
   const data = getMetaforoData();
+  console.log('=====getMetaforoData', data);
   return request.post('/user/prepare_metaforo', {
-    api_token: data.token,
+    api_token: data?.token,
     user: { id: data.id },
   });
 };

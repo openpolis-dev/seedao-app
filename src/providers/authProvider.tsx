@@ -3,7 +3,7 @@ import { IUser, ITokenType } from 'type/user.type';
 import { ICategory } from 'type/proposal.type';
 import { IBaseCategory } from 'type/proposalV2.type';
 import { Authorizer } from 'casbin.js';
-import { SEEDAO_ACCOUNT, SEEDAO_USER, SEEDAO_USER_DATA, SENDING_ME_USER } from '../utils/constant';
+import { SEEDAO_ACCOUNT, SEEDAO_USER, SEEDAO_USER_DATA, SENDING_ME_USER, METAFORO_TOKEN } from '../utils/constant';
 import { WalletType } from '../wallet/wallet';
 import getConfig from 'utils/envCofnig';
 
@@ -118,7 +118,15 @@ const reducer = (state: IState, action: IAction): IState => {
     case AppActionType.CLEAR_AUTH:
       localStorage.removeItem(SEEDAO_USER);
       localStorage.removeItem(SENDING_ME_USER);
-      return { ...state, account: undefined, userData: undefined, wallet_type: undefined, authorizer: undefined };
+      localStorage.removeItem(METAFORO_TOKEN);
+      return {
+        ...state,
+        account: undefined,
+        userData: undefined,
+        wallet_type: undefined,
+        authorizer: undefined,
+        metaforoToken: undefined,
+      };
     case AppActionType.SET_PROPOSAL_CATEGORIES:
       return { ...state, proposal_categories: action.payload };
     case AppActionType.SET_PROPOSAL_CATEGORIES_V2:
