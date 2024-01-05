@@ -104,7 +104,7 @@ export default function ThreadPage() {
       }
       setData(res.data);
       setContentBlocks(res.data.content_blocks);
-      const comStr = res.data.components;
+      const comStr = res.data.components || [];
       comStr.map((item: any) => {
         item.data = JSON.parse(item.data);
 
@@ -116,23 +116,23 @@ export default function ThreadPage() {
 
       if (refreshIdx !== void 0) {
         const _new_arr = [...commentsArray];
-        _new_arr[currentCommentArrayIdx] = res.data.comments.map((c) => ({
+        _new_arr[currentCommentArrayIdx] = res.data.comments?.map((c) => ({
           ...c,
           bindIdx: currentCommentArrayIdx,
           children: c.children?.map((c) => ({ ...c, bindIdx: currentCommentArrayIdx })),
         }));
         setCommentsArray(_new_arr);
-      } else if (res.data.comments.length) {
+      } else if (res.data.comments?.length) {
         const new_idx = commentsArray.length;
         setCurrentCommentArrayIdx(new_idx);
 
         const new_arr = [
           ...commentsArray,
-          res.data.comments.map((c) => ({
+          res.data.comments?.map((c) => ({
             ...c,
             bindIdx: new_idx,
             children: c.children?.map((c) => ({ ...c, bindIdx: currentCommentArrayIdx })),
-          })),
+          })) || [],
         ];
         setCommentsArray(new_arr);
         // check if has more
