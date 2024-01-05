@@ -12,6 +12,7 @@ import ProfileComponent from '../../profile-components/profile';
 import { useAuthContext } from '../../providers/authProvider';
 import { ICommentDisplay } from 'type/proposalV2.type';
 import publicJs from 'utils/publicJs';
+import CityHallImg from 'assets/Imgs/proposal/cityhall.png';
 
 export const DeletedContent = `[{"insert":"Post deleted\\n"}]`;
 
@@ -50,10 +51,11 @@ interface IUserProps {
   name?: string;
   avatar: string;
   address: string;
+  isSpecial: boolean | undefined;
   user_title?: UserTitleType;
 }
 
-const UserBox = ({ address, name, avatar, user_title }: IUserProps) => {
+const UserBox = ({ address, name, avatar, user_title, isSpecial }: IUserProps) => {
   const [showModal, setShowModal] = useState(false);
 
   const {
@@ -71,7 +73,7 @@ const UserBox = ({ address, name, avatar, user_title }: IUserProps) => {
     <>
       {showModal && <ProfileComponent address={address} theme={theme} handleClose={handleClose} />}
       <UserBoxStyle onClick={() => handleProfile()}>
-        <Avatar src={avatar || DefaultAvatar} alt="" />
+        <Avatar src={isSpecial ? CityHallImg : avatar || DefaultAvatar} alt="" />
         <NameBox>{name}</NameBox>
         {user_title && user_title.name && <UserTag bg={user_title.background}>{user_title?.name}</UserTag>}
       </UserBoxStyle>
@@ -121,6 +123,7 @@ export default function CommentComponent({
           <RelationUserLine>
             <UserBox
               address={data.wallet?.toLocaleLowerCase()}
+              isSpecial={isSpecial}
               name={isSpecial ? t('city-hall.Cityhall') : formatSNS(snsMap, data.wallet?.toLocaleLowerCase())}
               avatar={data.avatar}
             />

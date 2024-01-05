@@ -126,21 +126,23 @@ export default function EditProposal() {
     if (!data) {
       return;
     }
-    console.log({
-      title,
-      proposal_category_id: data.proposal_category_id,
-      content_blocks: contentBlocks,
-      components: submitData,
-      // only pending-submit proposal can be submitted, others can only be updated
-      submit_to_metaforo: data.state === ProposalState.PendingSubmit && submitType === 'submit',
-    });
+
+    let dataFormat: any = {};
+
+    for (const dataKey in submitData) {
+      dataFormat[dataKey] = {
+        name: dataKey,
+        data: submitData[dataKey],
+      };
+    }
+
     await checkMetaforoLogin();
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     updateProposal(Number(data.id), {
       title,
       proposal_category_id: data.proposal_category_id,
       content_blocks: contentBlocks,
-      components: submitData,
+      components: dataFormat,
       // only pending-submit proposal can be submitted, others can only be updated
       submit_to_metaforo: data.state === ProposalState.PendingSubmit && submitType === 'submit',
     })
