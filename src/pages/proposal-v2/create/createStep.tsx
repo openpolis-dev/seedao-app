@@ -177,7 +177,7 @@ export default function CreateStep({ onClick }: any) {
   const [token, setToken] = useState('');
   const [templateTitle, setTemplateTitle] = useState('');
 
-  const { changeStep } = useCreateProposalContext();
+  const { changeStep, proposalType } = useCreateProposalContext();
 
   const {
     state: { theme, tokenData },
@@ -245,6 +245,9 @@ export default function CreateStep({ onClick }: any) {
   };
 
   const handleFormSubmit = async (data: any) => {
+    if (!proposalType) {
+      return;
+    }
     let dataFormat: any = {};
 
     for (const dataKey in data) {
@@ -258,7 +261,7 @@ export default function CreateStep({ onClick }: any) {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     saveOrSubmitProposal({
       title,
-      proposal_category_id: 41, // TODO hardcode for test
+      proposal_category_id: proposalType?.id, // TODO hardcode for test
       content_blocks: list,
       components: dataFormat,
       template_id: template?.id,
@@ -333,7 +336,7 @@ export default function CreateStep({ onClick }: any) {
               <ItemBox>
                 <TitleBox>
                   <span>{t('Proposal.title')}</span>
-                  <TagBox>三层提案 - P1</TagBox>
+                  <TagBox>{proposalType?.name}</TagBox>
                   {templateTitle && <TemplateTag>{templateTitle}</TemplateTag>}
                 </TitleBox>
                 <InputBox>
