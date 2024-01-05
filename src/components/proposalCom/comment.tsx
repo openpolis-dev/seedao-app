@@ -230,6 +230,9 @@ const VersionTag = styled.a`
   align-items: center;
   color: #2f8fff;
   background: var(--bs-box-background);
+  &:hover {
+    color: #2f8fff;
+  }
 `;
 
 const Content = styled.div`

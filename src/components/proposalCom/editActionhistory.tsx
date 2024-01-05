@@ -50,7 +50,7 @@ export default function EditActionHistory({ data }: IProps) {
       {list.map((item, index) => (
         <Aciton key={index}>
           <div className="action-content" onClick={() => window.open(item.link, '_blank')}>
-            <div>{formatSNS(item.wallet?.toLocaleLowerCase())}</div>
+            <div className="sns">{formatSNS(item.wallet?.toLocaleLowerCase())}</div>
             <div>{item.content}</div>
           </div>
         </Aciton>
@@ -59,11 +59,7 @@ export default function EditActionHistory({ data }: IProps) {
   );
 }
 
-const ActionList = styled.ul`
-  background-color: var(--bs-box--background);
-  padding-block: 30px;
-  border-radius: 16px;
-`;
+const ActionList = styled.ul``;
 
 const Aciton = styled.li`
   padding-inline: 20px;
@@ -71,6 +67,7 @@ const Aciton = styled.li`
   gap: 16px;
   align-items: center;
   cursor: pointer;
+  color: var(--bs-body-color_active);
   &:hover {
     background-color: var(--bs-menu-hover);
   }
@@ -78,9 +75,12 @@ const Aciton = styled.li`
     flex: 1;
     padding-top: 20px;
     padding-bottom: 10px;
-    border-bottom: 1px solid var(--bs-border-color);
+    //border-bottom: 1px solid var(--bs-border-color);
     display: flex;
     align-items: center;
     gap: 4px;
+  }
+  .sns {
+    color: #2f8fff;
   }
 `;
