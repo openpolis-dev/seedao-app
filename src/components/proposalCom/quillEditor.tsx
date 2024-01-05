@@ -90,6 +90,7 @@ const EditorStyle = styled.div<{ theme: string }>`
   border: 1px solid var(--bs-primary);
   .ql-container.ql-snow {
     border: none;
+    color: var(--bs-body-color_active);
   }
   svg {
     fill: ${(props) => (props.theme === 'true' ? '#fff' : '#000')};

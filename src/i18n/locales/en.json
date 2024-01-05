@@ -122,7 +122,8 @@
     "proposalComponents":"Proposal Components",
     "HasVote": "Voted",
     "LoginTip": "To use the full functionality, please login to Metaforo first",
-    "LoginButton": "Login to Metaforo"
+    "LoginButton": "Login to Metaforo",
+    "WriteReplyHint": "write a reply"
   },
   "Project": {
     "ProjectOrGuildItem": "Nothing left here.",

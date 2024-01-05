@@ -122,7 +122,8 @@
     "proposalComponents":"提案执行组件",
     "HasVote": "已投",
     "LoginTip": "使用完整功能，请先登录Metaforo",
-    "LoginButton": "登录 Metaforo"
+    "LoginButton": "登录 Metaforo",
+    "WriteReplyHint": "发表评论"
   },
   "Project": {
     "ProjectOrGuildItem": "还没有填写相关介绍信息～",

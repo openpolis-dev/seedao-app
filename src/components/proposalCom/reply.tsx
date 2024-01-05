@@ -263,7 +263,7 @@ const ReplyComponent = React.forwardRef<IReplyOutputProps, IProps>(
                     value={quillContent}
                   />
                 ) : (
-                  <NormalInput placeholder="write a reply" onClick={onFocusToWriteReply} />
+                  <NormalInput placeholder={t("Proposal.WriteReplyHint")} onClick={onFocusToWriteReply} />
                 )}
               </InputReply>
             )}
