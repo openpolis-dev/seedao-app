@@ -117,7 +117,9 @@
     "CityhallRejected": "Cityhall rejected",
     "TotalVoteCount": "{{count}} voted",
     "proposalComponents":"Proposal Components",
-    "HasVote": "Voted"
+    "HasVote": "Voted",
+    "LoginTip": "For your better experience, please login to Metaforo first",
+    "LoginButton": "Login to Metaforo"
   },
   "Project": {
     "ProjectOrGuildItem": "Nothing left here.",
