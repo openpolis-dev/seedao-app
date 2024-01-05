@@ -6,11 +6,14 @@ import { formatDate } from 'utils/time';
 import { useAuthContext } from 'providers/authProvider';
 import useQuerySNS from 'hooks/useQuerySNS';
 import publicJs from 'utils/publicJs';
+import { Trans } from 'react-i18next';
 
 type ActionDataType = {
-  content: string;
   link: string;
   wallet: string;
+  title: string;
+  time: string;
+  isCreate: boolean;
 };
 
 interface IProps {
@@ -34,10 +37,10 @@ export default function EditActionHistory({ data }: IProps) {
     setList(
       data.map((item, idx) => {
         return {
-          content: t(idx === data.length - 1 ? 'Proposal.HistoryCreate' : 'Proposal.HistoryEdit', {
-            title: item.title,
-            time: formatDate(new Date(item.create_ts * 1000)),
-          }),
+          // content: t(idx === data.length - 1 ? 'Proposal.HistoryCreate' : 'Proposal.HistoryEdit', {}),
+          isCreate: idx === data.length - 1,
+          title: item.title,
+          time: formatDate(new Date(item.create_ts * 1000)),
           wallet: item.wallet,
           link: `https://arweave.net/tx/${item.arweave}/data.html`,
         };
@@ -50,8 +53,16 @@ export default function EditActionHistory({ data }: IProps) {
       {list.map((item, index) => (
         <Aciton key={index}>
           <div className="action-content" onClick={() => item.link && window.open(item.link, '_blank')}>
-            <div className="sns">{formatSNS(item.wallet?.toLocaleLowerCase())}</div>
-            <div>{item.content}</div>
+            <TitleBlock>{formatSNS(item.wallet?.toLocaleLowerCase())}</TitleBlock>
+            <div>
+              <Trans
+                i18nKey={item.isCreate ? 'Proposal.HistoryCreate' : 'Proposal.HistoryEdit'}
+                values={{ title: item.title, time: item.time }}
+                components={{
+                  title: <TitleBlock />,
+                }}
+              />
+            </div>
           </div>
         </Aciton>
       ))}
@@ -80,7 +91,8 @@ const Aciton = styled.li`
     align-items: center;
     gap: 4px;
   }
-  .sns {
-    color: #2f8fff;
-  }
+`;
+
+const TitleBlock = styled.span`
+  color: #2f8fff;
 `;
