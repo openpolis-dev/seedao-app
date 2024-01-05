@@ -177,6 +177,7 @@ const CommentStyle = styled.div<{ padding: string }>`
 const CommentMain = styled.div`
   display: flex;
   gap: 10px;
+  margin-bottom: 20px;
 `;
 
 const UserBoxStyle = styled.div`
