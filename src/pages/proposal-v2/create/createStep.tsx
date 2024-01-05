@@ -15,6 +15,7 @@ import ConfirmModal from 'components/modals/confirmModal';
 import { useCreateProposalContext } from './store';
 import requests from '../../../requests';
 import getConfig from '../../../utils/envCofnig';
+import useToast, { ToastType } from 'hooks/useToast';
 
 const Box = styled.ul`
   position: relative;
@@ -178,6 +179,7 @@ export default function CreateStep({ onClick }: any) {
   const [templateTitle, setTemplateTitle] = useState('');
 
   const { changeStep, proposalType } = useCreateProposalContext();
+  const { showToast } = useToast();
 
   const {
     state: { theme, tokenData },
@@ -262,22 +264,28 @@ export default function CreateStep({ onClick }: any) {
       };
     }
 
-    await checkMetaforoLogin();
-    dispatch({ type: AppActionType.SET_LOADING, payload: true });
-    saveOrSubmitProposal({
-      title,
-      proposal_category_id: proposalType?.id,
-      content_blocks: list,
-      components: dataFormat,
-      template_id: template?.id,
-      submit_to_metaforo: submitType === 'submit',
-    })
-      .then((r) => {
-        navigate(`/proposal-v2/thread/${r.data.id}`);
+    const canSubmit = await checkMetaforoLogin();
+    if (canSubmit) {
+      dispatch({ type: AppActionType.SET_LOADING, payload: true });
+      saveOrSubmitProposal({
+        title,
+        proposal_category_id: proposalType?.id,
+        content_blocks: list,
+        components: dataFormat,
+        template_id: template?.id,
+        submit_to_metaforo: submitType === 'submit',
       })
-      .finally(() => {
-        dispatch({ type: AppActionType.SET_LOADING, payload: false });
-      });
+        .then((r) => {
+          navigate(`/proposal-v2/thread/${r.data.id}`);
+        })
+        .catch((error: any) => {
+          logError('saveOrSubmitProposal failed', error);
+          showToast(error?.data?.msg || error?.code || error, ToastType.Danger);
+        })
+        .finally(() => {
+          dispatch({ type: AppActionType.SET_LOADING, payload: false });
+        });
+    }
   };
 
   const handleText = (value: any, index: number) => {
