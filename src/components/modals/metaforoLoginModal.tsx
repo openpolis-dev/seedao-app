@@ -6,12 +6,13 @@ import { useTranslation } from 'react-i18next';
 interface IProps {
   onConfirm: () => void;
   onClose: () => void;
+  disabledClose?: boolean;
 }
 
-export default function MetaforoLoginModal({ onConfirm, onClose }: IProps) {
+export default function MetaforoLoginModal({ onConfirm, onClose, disabledClose }: IProps) {
   const { t } = useTranslation();
   return (
-    <BasicModal title={''} handleClose={onClose}>
+    <BasicModal title={''} handleClose={onClose} disabledClose={disabledClose}>
       <CardText>
         <div>{t('Proposal.LoginTip')}</div>
       </CardText>
