@@ -58,6 +58,7 @@
   "Proposal": {
     "AllCategories": "分类",
     "TheNeweset": "最新的",
+    "title": "提案标题",
     "CreateProposal": "创建提案",
     "TheOldest": "最早的",
     "LookMore": "查看更多",

@@ -328,7 +328,7 @@ export default function CreateStep({ onClick }: any) {
             <>
               <ItemBox>
                 <TitleBox>
-                  <span>标题</span>
+                  <span>{t('Proposal.title')}</span>
                   <TagBox>三层提案 - P1</TagBox>
                   <TemplateTag>公共项目</TemplateTag>
                 </TitleBox>

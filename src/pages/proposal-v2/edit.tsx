@@ -200,7 +200,7 @@ export default function EditProposal() {
             <>
               <ItemBox>
                 <TitleBox>
-                  <span> 提案标题</span>
+                  <span>{t('Proposal.title')}</span>
                   <TagBox>三层提案 - P1</TagBox>
                   <TemplateTag>公共项目</TemplateTag>
                 </TitleBox>
