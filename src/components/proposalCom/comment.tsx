@@ -135,9 +135,11 @@ export default function CommentComponent({
               </>
             )}
             <TimeBox>{formatMsgTime(data.created_ts * 1000, t)}</TimeBox>
-            <VersionTag href={`https://arweave.net/tx/${data.proposal_arweave_hash}/data.html`} target="__blank">
-              a
-            </VersionTag>
+            {data.proposal_arweave_hash && (
+              <VersionTag href={`https://arweave.net/tx/${data.proposal_arweave_hash}/data.html`} target="__blank">
+                a
+              </VersionTag>
+            )}
           </RelationUserLine>
           {isSpecial ? (
             <Content>{data.content}</Content>

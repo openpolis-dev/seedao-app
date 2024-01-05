@@ -49,7 +49,7 @@ export default function EditActionHistory({ data }: IProps) {
     <ActionList>
       {list.map((item, index) => (
         <Aciton key={index}>
-          <div className="action-content" onClick={() => window.open(item.link, '_blank')}>
+          <div className="action-content" onClick={() => item.link && window.open(item.link, '_blank')}>
             <div className="sns">{formatSNS(item.wallet?.toLocaleLowerCase())}</div>
             <div>{item.content}</div>
           </div>
