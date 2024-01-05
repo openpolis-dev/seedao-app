@@ -7,6 +7,8 @@ import { getVotersOfOption, VoterType } from 'requests/proposalV2';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import useToast, { ToastType } from 'hooks/useToast';
+import publicJs from 'utils/publicJs';
+import useQuerySNS from 'hooks/useQuerySNS';
 
 interface IUserProps {
   name: string;
@@ -30,12 +32,16 @@ interface IProps {
 
 export default function VoterListModal({ optionId, count, onClose }: IProps) {
   const { t } = useTranslation();
-  const { dispatch } = useAuthContext();
+  const {
+    dispatch,
+    state: { snsMap },
+  } = useAuthContext();
   const [page, setPage] = useState(1);
   const [list, setList] = useState<VoterType[]>([]);
 
   const hasMore = list.length < 20;
   const { showToast } = useToast();
+  const { getMultiSNS } = useQuerySNS();
 
   const getList = () => {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
@@ -43,7 +49,7 @@ export default function VoterListModal({ optionId, count, onClose }: IProps) {
       .then((res) => {
         setList([...list, ...res.data]);
         setPage((p) => p + 1);
-        // TODO handle sns
+        getMultiSNS(Array.from(new Set(res.data.map((item) => item.wallet))));
       })
       .catch((err: any) => {
         showToast(err, ToastType.Danger);
@@ -56,6 +62,11 @@ export default function VoterListModal({ optionId, count, onClose }: IProps) {
   useEffect(() => {
     getList();
   }, [optionId]);
+
+  const formatSNS = (wallet: string) => {
+    const name = snsMap.get(wallet) || wallet;
+    return name?.endsWith('.seedao') ? name : publicJs.AddressToShow(name, 4);
+  };
 
   return (
     <VotersModal handleClose={onClose}>
@@ -70,7 +81,7 @@ export default function VoterListModal({ optionId, count, onClose }: IProps) {
         >
           {list.map((item, index) => (
             <li key={index}>
-              <UserBox name={item.wallet} avatar={item.os_avatar} />
+              <UserBox name={formatSNS(item.wallet?.toLocaleLowerCase())} avatar={item.os_avatar} />
               <span>1</span>
             </li>
           ))}
