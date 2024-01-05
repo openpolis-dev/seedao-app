@@ -25,7 +25,11 @@ interface IProposalPageParams extends IPageParams {
 }
 
 export const getProposalCategoryList = (): Promise<ResponseData<IBaseCategory[]>> => {
-  return request.get(`/proposal_categories/`);
+  return request.get(`/proposal_categories/list`);
+};
+
+export const getAuthProposalCategoryList = (): Promise<ResponseData<IBaseCategory[]>> => {
+  return request.get(`/proposal_categories/list_with_perm`);
 };
 
 export const getProposalList = (data: IProposalPageParams): Promise<ResponseData<IPageResponse<ISimpleProposal>>> => {
