@@ -28,12 +28,13 @@ interface IProps {
   onEditComment: (idx?: number) => void;
   getNextCommentList: () => void;
   hasMore: boolean;
+  onDeleteComment: (cid: number, idx: number) => void;
 }
 export interface IReplyOutputProps {
   showReply: () => void;
 }
 const ReplyComponent = React.forwardRef<IReplyOutputProps, IProps>(
-  ({ pinId, id, hideReply, posts, onEditComment, onNewComment, getNextCommentList, hasMore }, ref) => {
+  ({ pinId, id, hideReply, posts, onEditComment, onNewComment, getNextCommentList, onDeleteComment, hasMore }, ref) => {
     const { t } = useTranslation();
     const {
       state: { userData, account },
@@ -157,8 +158,7 @@ const ReplyComponent = React.forwardRef<IReplyOutputProps, IProps>(
           .then(() => {
             setTobeDeletedId(undefined);
             setCurrentBindIdx(undefined);
-            // onNewComment();
-            // TODO
+            onDeleteComment(toBeDeleteId, currentBindIdx!);
           })
           .catch((error) => {
             logError(`delete proposal-${id} comment-${toBeDeleteId} failed`, error);

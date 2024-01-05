@@ -161,6 +161,7 @@ export const editCommet = (id: number, content: string, cid: number) => {
 
 export const deleteCommet = (id: number, cid: number) => {
   return request.post(`${PATH_PREFIX}delete_comment/${id}`, {
+    post_id: cid,
     metaforo_access_token: getMetaforoData()?.token,
   });
 };

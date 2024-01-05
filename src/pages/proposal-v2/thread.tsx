@@ -33,6 +33,7 @@ import ShareImg from 'assets/Imgs/proposal/share.svg';
 import ShareWhite from 'assets/Imgs/proposal/share-white.svg';
 import CommentImg from 'assets/Imgs/proposal/comment.svg';
 import CommentWhite from 'assets/Imgs/proposal/comment-white.svg';
+import { DeletedContent } from 'components/proposalCom/comment';
 
 enum BlockContentType {
   Reply = 1,
@@ -304,6 +305,30 @@ export default function ThreadPage() {
     }
   };
 
+  const onDeleteComment = (cid: number, bindIdx: number) => {
+    const _new_arr = [...commentsArray];
+    for (const item of _new_arr[bindIdx]) {
+      let flag = false;
+      if (item.metaforo_post_id === cid) {
+        item.content = DeletedContent;
+        item.deleted = 1;
+        break;
+      }
+      for (const childItem of item.children || []) {
+        if (childItem.metaforo_post_id === cid) {
+          childItem.content = DeletedContent;
+          childItem.deleted = 1;
+          flag = true;
+          break;
+        }
+      }
+      if (flag) {
+        break;
+      }
+    }
+    setCommentsArray(_new_arr);
+  };
+
   const getNextCommentList = () => {
     if (!posts.length) {
       return;
@@ -458,6 +483,7 @@ export default function ThreadPage() {
               onNewComment={() => onEditComment(currentCommentArrayIdx)}
               onEditComment={onEditComment}
               getNextCommentList={getNextCommentList}
+              onDeleteComment={onDeleteComment}
               hasMore={hasMore}
             />
           )}

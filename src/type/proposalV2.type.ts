@@ -84,6 +84,7 @@ export interface ICommentDisplay extends IComment {
   children: ICommentDisplay[];
   bindIdx: number;
   userName?: string;
+  deleted?: 1 | 0;
 }
 
 export interface IProposal extends ISimpleProposal {

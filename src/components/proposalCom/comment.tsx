@@ -13,6 +13,8 @@ import { useAuthContext } from '../../providers/authProvider';
 import { ICommentDisplay } from 'type/proposalV2.type';
 import publicJs from 'utils/publicJs';
 
+export const DeletedContent = `[{"insert":"Post deleted\\n"}]`;
+
 const formatSNS = (snsMap: Map<string, string>, wallet: string) => {
   const name = snsMap.get(wallet) || wallet;
   return name?.endsWith('.seedao') ? name : publicJs.AddressToShow(name, 4);
@@ -93,7 +95,7 @@ export default function CommentComponent({
   const {
     state: { snsMap },
   } = useAuthContext();
-  const content = useParseContent(data?.content, isSpecial);
+  const content = useParseContent(data?.deleted ? DeletedContent : data?.content, isSpecial);
 
   const handleReply = () => {
     onReply(data.metaforo_post_id, data.bindIdx);
@@ -139,25 +141,27 @@ export default function CommentComponent({
           ) : (
             <Content className="content" dangerouslySetInnerHTML={{ __html: content }}></Content>
           )}
-          <OpLine>
-            {!hideReply && (
-              <FlexReply>
-                <ReplyBtn onClick={handleReply}>
-                  <img src={CommentIcon} alt="" />
-                  {t('Proposal.Reply')}
-                </ReplyBtn>
-                {isCurrentUser && (
-                  <MoreSelectAction
-                    options={[
-                      { label: t('Proposal.Edit'), value: 'edit' },
-                      { label: t('Proposal.Delete'), value: 'delete' },
-                    ]}
-                    handleClickAction={handleClickMoreAction}
-                  />
-                )}
-              </FlexReply>
-            )}
-          </OpLine>
+          {!data.deleted && (
+            <OpLine>
+              {!hideReply && (
+                <FlexReply>
+                  <ReplyBtn onClick={handleReply}>
+                    <img src={CommentIcon} alt="" />
+                    {t('Proposal.Reply')}
+                  </ReplyBtn>
+                  {isCurrentUser && (
+                    <MoreSelectAction
+                      options={[
+                        { label: t('Proposal.Edit'), value: 'edit' },
+                        { label: t('Proposal.Delete'), value: 'delete' },
+                      ]}
+                      handleClickAction={handleClickMoreAction}
+                    />
+                  )}
+                </FlexReply>
+              )}
+            </OpLine>
+          )}
         </RightBox>
       </CommentMain>
       {children}
