@@ -19,7 +19,7 @@ import publicJs from 'utils/publicJs';
 import Pagination from 'components/pagination';
 import SearchImg from '../../assets/Imgs/proposal/search.svg';
 import AddImg from '../../assets/Imgs/proposal/add-square.svg';
-import useCheckMetaforoLogin from 'hooks/useCheckMetaforoLogin';
+import useCheckMetaforoLogin from 'hooks/useMetaforoLogin';
 
 const PAGE_SIZE = 10;
 
@@ -63,7 +63,7 @@ export default function ProposalIndexPage() {
   const [showHistory, setShowHistory] = useState(false);
   const [initPage, setInitPage] = useState(true);
 
-  const checkLogin = useCheckMetaforoLogin();
+  const { checkMetaforoLogin } = useCheckMetaforoLogin();
   const { getMultiSNS } = useQuerySNS();
 
   const [snsMap, setSnsMap] = useState<Map<string, string>>(new Map());
@@ -129,7 +129,7 @@ export default function ProposalIndexPage() {
   };
 
   const handleClickHistory = async () => {
-    const canOpen = await checkLogin();
+    const canOpen = await checkMetaforoLogin();
     if (canOpen) {
       setShowHistory(true);
     }

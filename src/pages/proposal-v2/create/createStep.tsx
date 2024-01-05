@@ -6,7 +6,7 @@ import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { MdEditor } from 'md-editor-rt';
 import { saveOrSubmitProposal } from 'requests/proposalV2';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
-import useCheckMetaforoLogin from 'hooks/useCheckMetaforoLogin';
+import useCheckMetaforoLogin from 'hooks/useMetaforoLogin';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Button } from 'react-bootstrap';
@@ -181,7 +181,7 @@ export default function CreateStep({ onClick }: any) {
     dispatch,
   } = useAuthContext();
 
-  const checkMetaforoLogin = useCheckMetaforoLogin();
+  const { checkMetaforoLogin } = useCheckMetaforoLogin();
 
   useEffect(() => {
     if (!template || !tokenData) return;

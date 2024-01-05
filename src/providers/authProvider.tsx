@@ -27,6 +27,7 @@ interface IState {
   currentSeason: string;
   rpc?: string;
   metaforoToken?: string;
+  show_metaforo_login?: boolean;
 }
 
 export enum AppActionType {
@@ -50,6 +51,7 @@ export enum AppActionType {
   SET_HAD_ONBOARDING = 'set_had_onboarding',
   SET_CURRENT_SEASON = 'set_current_season',
   SET_METAFORO_TOKEN = 'set_metaforo_token',
+  SET_SHOW_METAFORO_LOGIN_MODAL = 'set_show_metaforo_login_modal',
 }
 
 interface IAction {
@@ -147,6 +149,8 @@ const reducer = (state: IState, action: IAction): IState => {
       return { ...state, currentSeason: action.payload };
     case AppActionType.SET_METAFORO_TOKEN:
       return { ...state, metaforoToken: action.payload };
+    case AppActionType.SET_SHOW_METAFORO_LOGIN_MODAL:
+      return { ...state, show_metaforo_login: action.payload };
     default:
       throw new Error(`Unknown type: ${action.type}`);
   }

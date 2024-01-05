@@ -28,6 +28,7 @@ const CardText = styled.div`
   line-height: 24px;
   margin-bottom: 24px;
   text-align: center;
+  margin-top: 40px;
   .danger {
     font-size: 40px;
     margin-block: 20px;
@@ -38,6 +39,6 @@ const CardFooter = styled.div`
   text-align: center;
   margin-top: 40px;
   button {
-    width: 110px;
+    width: 100%;
   }
 `;

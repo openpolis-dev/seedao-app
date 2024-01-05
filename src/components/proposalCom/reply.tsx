@@ -14,7 +14,7 @@ import { Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import NoItem from 'components/noItem';
 import ConfirmModal from 'components/modals/confirmModal';
-import useCheckMetaforoLogin from 'hooks/useCheckMetaforoLogin';
+import useCheckMetaforoLogin from 'hooks/useMetaforoLogin';
 import { deleteCommet, addComment, editCommet } from 'requests/proposalV2';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { ICommentDisplay } from 'type/proposalV2.type';
@@ -42,7 +42,7 @@ const ReplyComponent = React.forwardRef<IReplyOutputProps, IProps>(
     const pinPost = posts.find((p) => p.metaforo_post_id === pinId);
     const filterPosts = posts.filter((p) => p.metaforo_post_id !== pinId);
 
-    const checkMetaforoLogin = useCheckMetaforoLogin();
+    const { checkMetaforoLogin } = useCheckMetaforoLogin();
 
     const enableQuill = useLoadQuill();
 

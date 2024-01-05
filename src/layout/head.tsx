@@ -12,7 +12,7 @@ import { Button, Dropdown } from 'react-bootstrap';
 import Select from 'components/common/select';
 
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import usePushPermission from 'hooks/usePushPermission';
 import { useAccount, useDisconnect } from 'wagmi';
 import { Wallet, WalletType } from 'wallet/wallet';
@@ -25,18 +25,21 @@ import LogoImgDark from '../assets/Imgs/dark/logo.svg';
 import getConfig from 'utils/envCofnig';
 
 import LoginModal from 'components/modals/login';
+import useMetaforoLogin from 'hooks/useMetaforoLogin';
 
 export default function Header() {
   const { i18n } = useTranslation();
 
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { pathname } = useLocation();
   const { hasGranted, handlePermission } = usePushPermission();
   const { disconnect } = useDisconnect();
   const { isConnected, address } = useAccount();
   console.log('[connect status]', `isConnected-${isConnected}, address-${address}`);
 
   const [list, setList] = useState<any[]>([]);
+  const { checkMetaforoLogin, LoginMetafoModal } = useMetaforoLogin();
 
   useEffect(() => {
     setList([
@@ -302,6 +305,7 @@ export default function Header() {
         </RightBox>
       </nav>
       <LoginModal showModal={show_login_modal} />
+      <LoginMetafoModal />
     </HeadeStyle>
   );
 }

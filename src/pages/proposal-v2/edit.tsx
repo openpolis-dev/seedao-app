@@ -10,7 +10,7 @@ import { Template } from '@seedao/components';
 import { MdEditor } from 'md-editor-rt';
 import DataSource from './create/json/datasource.json';
 import initialItems from './create/json/initialItem';
-import useCheckMetaforoLogin from 'hooks/useCheckMetaforoLogin';
+import useCheckMetaforoLogin from 'hooks/useMetaforoLogin';
 import { updateProposal, getProposalDetail } from 'requests/proposalV2';
 import { Button } from 'react-bootstrap';
 
@@ -21,7 +21,7 @@ export default function EditProposal() {
   const { state } = useLocation(); // state is the proposal data if from thread page
 
   const { dispatch } = useAuthContext();
-  const checkMetaforoLogin = useCheckMetaforoLogin();
+  const { checkMetaforoLogin } = useCheckMetaforoLogin();
 
   const [data, setData] = useState<IProposal>();
   const [contentBlocks, setContentBlocks] = useState<IContentBlock[]>([]);

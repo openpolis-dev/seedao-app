@@ -15,7 +15,7 @@ import BackerNav from 'components/common/backNav';
 import { MdEditor, MdPreview } from 'md-editor-rt';
 import ProposalStateTag, { getRealState } from 'components/proposalCom/stateTag';
 import useProposalCategories from 'hooks/useProposalCategories';
-import useCheckMetaforoLogin from 'hooks/useCheckMetaforoLogin';
+import useCheckMetaforoLogin from 'hooks/useMetaforoLogin';
 import publicJs from 'utils/publicJs';
 import useQuerySNS from 'hooks/useQuerySNS';
 import DefaultAvatarIcon from 'assets/Imgs/defaultAvatar.png';
@@ -52,7 +52,7 @@ export default function ThreadPage() {
     state: { theme, account },
   } = useAuthContext();
   const proposalCategories = useProposalCategories();
-  const checkMetaforoLogin = useCheckMetaforoLogin();
+  const { checkMetaforoLogin } = useCheckMetaforoLogin();
 
   const [blockType, setBlockType] = useState<BlockContentType>(BlockContentType.Reply);
   const [data, setData] = useState<IProposal>();
