@@ -165,14 +165,13 @@ export default function CreateStep({ onClick }: any) {
   const [submitType, setSubmitType] = useState<'save' | 'submit'>();
 
   const { template } = useCreateProposalContext();
-  // const [before, setBefore] = useState<any[]>([]);
   const [components, setComponents] = useState<any[]>([]);
 
   const [showRht, setShowRht] = useState(true);
 
   const [showLeaveConfirm, setShowLeaveConfirm] = useState(false);
   const [showType, setShowType] = useState('new');
-  const [token, setToken] = useState('new');
+  const [token, setToken] = useState('');
 
   const { changeStep } = useCreateProposalContext();
 
