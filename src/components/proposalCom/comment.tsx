@@ -124,12 +124,9 @@ export default function CommentComponent({
             />
             {parentData && (
               <>
-                <span>{'==>'}</span>
-                <UserBox
-                  address={data.wallet?.toLocaleLowerCase()}
-                  avatar={parentData.avatar}
-                  name={formatSNS(snsMap, parentData.wallet?.toLocaleLowerCase())}
-                />
+                <span>
+                  {'@'} {formatSNS(snsMap, parentData.wallet?.toLocaleLowerCase())}
+                </span>
               </>
             )}
             <TimeBox>{formatMsgTime(data.created_ts * 1000, t)}</TimeBox>
