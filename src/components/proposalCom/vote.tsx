@@ -1,9 +1,9 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { Poll, VoteType, VoteOption } from 'type/proposalV2.type';
-import { castVote } from 'requests/proposalV2';
+import { castVote, checkCanVote } from 'requests/proposalV2';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import useToast, { ToastType } from 'hooks/useToast';
 import useCheckMetaforoLogin from 'hooks/useCheckMetaforoLogin';
@@ -27,6 +27,7 @@ export default function ProposalVote({ id, poll, updateStatus }: IProps) {
   const [selectOption, setSelectOption] = useState<VoteOption>();
   const [openVoteItem, setOpenVoteItem] = useState<VoteOptionItem>();
   const [showConfirmVote, setShowConfirmVote] = useState(false);
+  const [hasPermission, setHasPermission] = useState(false);
 
   const { dispatch } = useAuthContext();
   const { showToast } = useToast();
@@ -68,6 +69,17 @@ export default function ProposalVote({ id, poll, updateStatus }: IProps) {
     setShowConfirmVote(true);
   };
 
+  useEffect(() => {
+    const getVotePermission = () => {
+      checkCanVote(id).then(() => {
+        setHasPermission(true);
+      });
+    };
+    if (poll.status === VoteType.Open && !poll.is_vote) {
+      getVotePermission();
+    }
+  }, [poll]);
+
   const showVoteContent = () => {
     if ((poll.status === VoteType.Open && !!poll.is_vote) || poll.status === VoteType.Closed) {
       return poll.options.map((option, index) => (
@@ -96,11 +108,12 @@ export default function ProposalVote({ id, poll, updateStatus }: IProps) {
                 type="radio"
                 checked={selectOption?.id === option.id}
                 onChange={(e) => setSelectOption(e.target.checked ? option : undefined)}
+                disabled={!hasPermission}
               />
               <OptionContent>{option.html}</OptionContent>
             </VoteOptionSelect>
           ))}
-          <VoteButton onClick={goVote} disabled={selectOption === void undefined}>
+          <VoteButton onClick={goVote} disabled={selectOption === void 0 || !hasPermission}>
             {t('Proposal.Vote')}
           </VoteButton>
         </>
