@@ -215,7 +215,7 @@ export default function EditProposal() {
           }
           AfterComponent={
             <div>
-              {contentBlocks.map((item, index: number) => (
+              {contentBlocks?.map((item, index: number) => (
                 <ItemBox key={`block_${index}`}>
                   <TitleBox>{item.title}</TitleBox>
 
