@@ -18,6 +18,7 @@ export default function ChooseTypeStep() {
   } = useAuthContext();
 
   const onChooseType = (tp: IBaseCategory) => {
+    if (!tp.has_perm) return;
     chooseProposalType(tp);
   };
 
@@ -27,15 +28,11 @@ export default function ChooseTypeStep() {
         <StepTitle>{t('Proposal.ChooseType')}</StepTitle>
         <TypeBox>
           {proposaCategories.map((tp, index) => (
-            <li key={index} onClick={() => onChooseType(tp)}>
+            <li key={index} onClick={() => onChooseType(tp)} className={tp.has_perm ? '' : 'noAuth'}>
               <span>{tp.name}</span>
               <img src={theme ? ArrowRhtBlack : ArrowRht} alt="" />
             </li>
           ))}
-          <li className="noAuth">
-            <span>没有权限</span>
-            <img src={ArrowGray} alt="" />
-          </li>
         </TypeBox>
       </CenterBox>
     </Container>

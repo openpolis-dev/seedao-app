@@ -14,6 +14,7 @@ export interface IBaseCategory {
   parent_id: number;
   metaforo_id: number;
   name: string;
+  has_perm?: boolean;
 }
 
 export interface ISimpleProposal {

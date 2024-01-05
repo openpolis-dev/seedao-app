@@ -7,10 +7,29 @@ import ChooseTypeStep from './chooseType';
 import ChooseTemplateStep from './chooseTemplate';
 import CreateStep from './createStep';
 import { useCreateProposalContext } from './store';
+import { useEffect } from 'react';
+import { AppActionType, useAuthContext } from 'providers/authProvider';
+import { getAuthProposalCategoryList } from 'requests/proposalV2';
 
 const CreateProposalSteps = () => {
   const { t } = useTranslation();
   const { currentStep, proposalType, goBackStepOne } = useCreateProposalContext();
+
+  const { dispatch } = useAuthContext();
+
+  useEffect(() => {
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    getAuthProposalCategoryList()
+      .then((resp) => {
+        dispatch({ type: AppActionType.SET_PROPOSAL_CATEGORIES_V2, payload: resp.data });
+      })
+      .catch(() => {
+        // no auth
+      })
+      .finally(() => {
+        dispatch({ type: AppActionType.SET_LOADING, payload: false });
+      });
+  }, []);
 
   const showstep = () => {
     switch (currentStep) {
