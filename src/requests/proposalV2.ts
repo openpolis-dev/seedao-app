@@ -97,7 +97,7 @@ export const withdrawProposal = (id: number) => {
 // =========== vote ===========
 
 export const checkCanVote = (id: number) => {
-  return request.post(`${PATH_PREFIX}check_vote/${id}`);
+  return request.post(`${PATH_PREFIX}can_vote/${id}`);
 };
 
 export const castVote = (id: number, vote_id: number, option: number) => {
