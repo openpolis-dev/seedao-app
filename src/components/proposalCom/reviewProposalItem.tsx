@@ -134,7 +134,7 @@ const UserAvatar = styled.img`
 
 const Title = styled.div`
   font-weight: 600;
-  font-size: 24px;
+  font-size: 16px;
   font-family: Poppins-SemiBold;
   color: var(--bs-body-color_active);
   margin-bottom: 10px;

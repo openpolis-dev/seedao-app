@@ -84,9 +84,9 @@ const OperateBox = styled.div`
   align-items: center;
   gap: 20px;
   > button {
-    width: 320px;
-    height: 68px;
-    font-size: 24px;
+    width: 200px;
+    height: 40px;
+    font-size: 16px;
   }
   .btn-outline-primary {
     background: var(--bs-background);
