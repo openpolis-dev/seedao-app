@@ -142,6 +142,7 @@ export default function ThreadPage() {
         let now_count: number = all_comments.length;
         all_comments.forEach((item) => (now_count += item.children?.length || 0));
         setHasMore(all_comments.length === 0 ? false : now_count < res.data.comment_count);
+        getMultiSNS(Array.from(new Set(all_comments.map((item) => item.wallet))));
       }
       setTotalPostsCount(res.data.comment_count);
 
