@@ -683,6 +683,7 @@ const RejectBlock = styled.div`
   border-radius: 8px;
   background: rgba(251, 78, 78, 0.1);
   padding: 16px 32px;
+  margin-bottom: 20px;
   .desc {
     color: var(--bs-body-color_active);
     font-size: 14px;
