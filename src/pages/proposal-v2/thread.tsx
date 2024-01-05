@@ -103,15 +103,16 @@ export default function ThreadPage() {
         );
       }
       setData(res.data);
+
       setContentBlocks(res.data.content_blocks);
       const comStr = res.data.components || [];
       comStr.map((item: any) => {
-        item.data = JSON.parse(item.data);
-
+        if (typeof item.data === 'string') {
+          item.data = JSON.parse(item.data);
+        }
         return item;
       });
-      console.log(JSON.stringify(comStr));
-      setDatasource(comStr);
+      setDatasource(comStr ?? []);
       // comment
 
       if (refreshIdx !== void 0) {

@@ -51,7 +51,7 @@ export default function EditProposal() {
         try {
           const res = await getProposalDetail(Number(id));
           setData(res.data);
-          setDataSource(res.data?.components);
+          setDataSource(res.data?.components ?? []);
         } catch (error) {
           logError('get proposal detail error:', error);
         } finally {
@@ -91,7 +91,6 @@ export default function EditProposal() {
         }
         return item;
       });
-
       setComponents(components);
     } catch (error) {
       logError('getAllProposals failed', error);
@@ -129,8 +128,11 @@ export default function EditProposal() {
     }
     console.log({
       title,
+      proposal_category_id: data.proposal_category_id,
       content_blocks: contentBlocks,
       components: submitData,
+      // only pending-submit proposal can be submitted, others can only be updated
+      submit_to_metaforo: data.state === ProposalState.PendingSubmit && submitType === 'submit',
     });
     await checkMetaforoLogin();
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
