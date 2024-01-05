@@ -210,6 +210,11 @@ export default function CreateStep({ onClick }: any) {
 
       setList([
         {
+          title: '提案背景',
+          content: '',
+        },
+        {
+          title: '提案内容',
           content: '',
         },
       ]);
