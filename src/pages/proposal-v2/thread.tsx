@@ -343,53 +343,52 @@ export default function ThreadPage() {
 
   return (
     <Page>
-      <FixedBox>
-        <FlexInner>
-          <BackerNav
-            title={currentCategory()}
-            to={review ? '/city-hall/governance/review-proposal' : '/proposal-v2'}
-            state={state}
-            mb="0"
-          />
+      {review ? (
+        <BackerNav title={t('Proposal.ProposalDetail')} to={'/city-hall/governance/review-proposal'} mb="0" />
+      ) : (
+        <FixedBox>
+          <FlexInner>
+            <BackerNav title={currentCategory()} to={'/proposal-v2'} state={state} mb="0" />
 
-          <FlexRht>
-            {!review && isCurrentApplicant && !!moreActions().length && (
-              <EditBox>
-                {moreActions().map((item, index) => (
-                  <li key={index} onClick={() => handleClickMoreAction(item.value)}>
-                    {item.label}
+            <FlexRht>
+              {!review && isCurrentApplicant && !!moreActions().length && (
+                <EditBox>
+                  {moreActions().map((item, index) => (
+                    <li key={index} onClick={() => handleClickMoreAction(item.value)}>
+                      {item.label}
+                    </li>
+                  ))}
+                </EditBox>
+              )}
+              {data?.state !== ProposalState.PendingSubmit && (
+                <ThreadToolsBar>
+                  {showVote() && (
+                    <li onClick={go2vote}>
+                      <img src={theme ? VoteWhite : VoteImg} alt="" />
+                      {t('Proposal.Vote')}
+                    </li>
+                  )}
+                  <li onClick={openComment}>
+                    <img src={theme ? CommentWhite : CommentImg} alt="" />
+                    {t('Proposal.Comment')}
                   </li>
-                ))}
-              </EditBox>
-            )}
-            {data?.state !== ProposalState.PendingSubmit && (
-              <ThreadToolsBar>
-                {showVote() && (
-                  <li onClick={go2vote}>
-                    <img src={theme ? VoteWhite : VoteImg} alt="" />
-                    {t('Proposal.Vote')}
+                  <li>
+                    <CopyBox dir="left" text={`${window.location.origin}/proposal-v2/thread/${id}`}>
+                      <img src={theme ? ShareWhite : ShareImg} alt="" />
+                      {t('Proposal.Share')}
+                    </CopyBox>
                   </li>
-                )}
-                <li onClick={openComment}>
-                  <img src={theme ? CommentWhite : CommentImg} alt="" />
-                  {t('Proposal.Comment')}
-                </li>
-                <li>
-                  <CopyBox dir="left" text={`${window.location.origin}/proposal-v2/thread/${id}`}>
-                    <img src={theme ? ShareWhite : ShareImg} alt="" />
-                    {t('Proposal.Share')}
-                  </CopyBox>
-                </li>
-                {/*{isCurrentApplicant && !!moreActions().length && (*/}
-                {/*  <li>*/}
-                {/*    <MoreSelectAction options={moreActions()} handleClickAction={handleClickMoreAction} />*/}
-                {/*  </li>*/}
-                {/*)}*/}
-              </ThreadToolsBar>
-            )}
-          </FlexRht>
-        </FlexInner>
-      </FixedBox>
+                  {/*{isCurrentApplicant && !!moreActions().length && (*/}
+                  {/*  <li>*/}
+                  {/*    <MoreSelectAction options={moreActions()} handleClickAction={handleClickMoreAction} />*/}
+                  {/*  </li>*/}
+                  {/*)}*/}
+                </ThreadToolsBar>
+              )}
+            </FlexRht>
+          </FlexInner>
+        </FixedBox>
+      )}
 
       <ThreadHead>
         <div className="title">{data?.title}</div>
