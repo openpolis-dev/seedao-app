@@ -56,7 +56,7 @@ import { WalletType } from 'wallet/wallet';
 import AppVersion from '../components/version';
 
 const LftLi = styled.div<{ selected?: boolean }>`
-  padding: 15px 0;
+  padding: 10px 0;
   display: flex;
   align-items: center;
 
