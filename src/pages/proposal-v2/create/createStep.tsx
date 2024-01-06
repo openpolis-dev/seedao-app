@@ -317,6 +317,8 @@ export default function CreateStep({ onClick }: any) {
     changeStep(2);
   };
 
+  const submitDisabled = !title || !title.trim() || list.some((item) => !item.content);
+
   return (
     <Box>
       <FixedBox showRht={showRht.toString()}>
@@ -332,7 +334,7 @@ export default function CreateStep({ onClick }: any) {
             <Button className="save" onClick={handleSave} disabled={!title || !title.trim()}>
               {t('Proposal.SaveProposal')}
             </Button>
-            <Button onClick={handleSubmit} disabled={!title || !title.trim()}>
+            <Button onClick={handleSubmit} disabled={submitDisabled}>
               {t('Proposal.SubmitProposal')}
             </Button>
           </BtnGroup>

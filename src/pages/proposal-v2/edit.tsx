@@ -180,6 +180,8 @@ export default function EditProposal() {
   const categoryName = data?.proposal_category_id
     ? proposalCategories.find((item) => item.id === data?.proposal_category_id)?.name
     : '';
+  
+  const submitDisabled = !title || !title.trim() || contentBlocks.some((item) => !item.content);
 
   return (
     <Page>
@@ -205,7 +207,7 @@ export default function EditProposal() {
                 {t('Proposal.SaveProposal')}
               </Button>
             )}
-            <Button onClick={handleSubmit} disabled={!title || !title.trim()}>
+            <Button onClick={handleSubmit} disabled={submitDisabled}>
               {t('Proposal.SubmitProposal')}
             </Button>
           </BtnGroup>
