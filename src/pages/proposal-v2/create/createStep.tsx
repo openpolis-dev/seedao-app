@@ -263,7 +263,8 @@ export default function CreateStep({ onClick }: any) {
         data: data[dataKey],
       };
     }
-
+    console.log(dataFormat);
+    return;
     const canSubmit = await checkMetaforoLogin();
     if (canSubmit) {
       dispatch({ type: AppActionType.SET_LOADING, payload: true });

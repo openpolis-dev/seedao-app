@@ -97,7 +97,7 @@ export type VoteGateType = {
 export interface IProposal extends ISimpleProposal {
   reviewer: string;
   applicant_avatar: string;
-  proposal_category_id: number;
+  proposal_category_id: number | undefined;
   content_blocks: IContentBlock[];
   reject_metaforo_comment_id: number;
   reject_reason: string;

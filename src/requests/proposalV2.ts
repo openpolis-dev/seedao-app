@@ -74,7 +74,7 @@ export const getProposalDetail = (id: number, startPostId?: number): Promise<Res
 
 type CreateProposalParamsType = {
   title: string;
-  proposal_category_id: number;
+  proposal_category_id: number | undefined;
   template_id?: number | string;
   content_blocks: IContentBlock[];
   submit_to_metaforo: boolean;
