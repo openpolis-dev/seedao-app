@@ -52,10 +52,10 @@ export default function SimpleProposalItem({
               <div className="date">{formatTime(data.create_ts * 1000)}</div>
             </div>
           </AvaBox>
-          <div>
+          <TagsBox>
             <CategoryTag>{data.category_name}</CategoryTag>
             <ProposalStateTag state={currentState} />
-          </div>
+          </TagsBox>
         </CardBody>
       </div>
     </CardBox>
@@ -130,4 +130,10 @@ const Title = styled.div`
   line-height: 22px;
   font-family: Poppins-SemiBold, Poppins;
   color: var(--bs-body-color_active);
+`;
+
+const TagsBox = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 12px;
 `;
