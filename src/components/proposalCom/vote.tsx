@@ -9,6 +9,7 @@ import useToast, { ToastType } from 'hooks/useToast';
 import useCheckMetaforoLogin from 'hooks/useMetaforoLogin';
 import VoterListModal from 'components/modals/voterListModal';
 import ConfirmModal from 'components/modals/confirmModal';
+import { formatDeltaDate } from 'utils/time';
 const { Check } = Form;
 
 interface IProps {
@@ -23,6 +24,18 @@ type VoteOptionItem = {
   optionId: number;
 };
 
+const getPollStatus = (start_t: string, close_t: string) => {
+  const start_at = new Date(start_t).getTime();
+  const close_at = new Date(close_t).getTime();
+  if (start_at > Date.now()) {
+    return VoteType.Waite;
+  }
+  if (close_at <= Date.now()) {
+    return VoteType.Closed;
+  }
+  return VoteType.Open;
+};
+
 export default function ProposalVote({ id, poll, voteGate, updateStatus }: IProps) {
   const { t } = useTranslation();
   const [selectOption, setSelectOption] = useState<VoteOption>();
@@ -35,16 +48,29 @@ export default function ProposalVote({ id, poll, voteGate, updateStatus }: IProp
 
   const { checkMetaforoLogin } = useCheckMetaforoLogin();
 
+  const pollStatus = getPollStatus(poll.poll_start_at, poll.close_at);
+
   const voteStatusTag = useMemo(() => {
-    console.log('poll.vote_type', poll.status);
-    if (poll.status === VoteType.Closed) {
+    if (pollStatus === VoteType.Closed) {
       return <CloseTag>{t('Proposal.VoteClose')}</CloseTag>;
-    } else if (poll.status === VoteType.Open) {
-      return <OpenTag>{t('Proposal.VoteEndAt', { leftTime: poll.leftTime })}</OpenTag>;
+    } else if (pollStatus === VoteType.Open) {
+      return (
+        <OpenTag>
+          {t('Proposal.VoteEndAt', {
+            leftTime: t('Proposal.TimeDisplay', { ...formatDeltaDate(new Date(poll.close_at).getTime()) }),
+          })}
+        </OpenTag>
+      );
     } else {
-      return <></>;
+      return (
+        <OpenTag>
+          {t('Proposal.VoteStartAt', {
+            leftTime: t('Proposal.TimeDisplay', { ...formatDeltaDate(new Date(poll.poll_start_at).getTime()) }),
+          })}
+        </OpenTag>
+      );
     }
-  }, [poll, t]);
+  }, [pollStatus, t]);
 
   const onConfirmVote = () => {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
@@ -77,13 +103,13 @@ export default function ProposalVote({ id, poll, voteGate, updateStatus }: IProp
         setHasPermission(r.data);
       });
     };
-    if (poll.status === VoteType.Open && !poll.is_vote) {
+    if (pollStatus === VoteType.Open && !poll.is_vote) {
       getVotePermission();
     }
-  }, [poll]);
+  }, [poll, pollStatus]);
 
   const showVoteContent = () => {
-    if ((poll.status === VoteType.Open && !!poll.is_vote) || poll.status === VoteType.Closed) {
+    if ((pollStatus === VoteType.Open && !!poll.is_vote) || pollStatus === VoteType.Closed) {
       return poll.options.map((option, index) => (
         <VoteOptionBlock key={index}>
           <OptionContent $highlight={option.is_vote}>

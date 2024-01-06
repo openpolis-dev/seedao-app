@@ -64,6 +64,7 @@ export interface Poll {
   leftTime: string;
   options: VoteOption[];
   poll_start_at: string;
+  close_at: string;
   totalVotes: number;
   is_vote: 0 | 1; // 0: not voted, 1: voted
 }

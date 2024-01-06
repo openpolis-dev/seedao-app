@@ -68,6 +68,7 @@
     "PollNFT": "Poll NFT address",
     "VoteClose": "Voting Closed",
     "VoteEndAt": "Voting ends in {{leftTime}}",
+    "VoteStartAt": "Start in {{leftTime}}",
     "TotalVotes": "Total Votes",
     "Draft": "Draft",
     "Audit": "Audit",
@@ -121,11 +122,12 @@
     "SubmitProposal": "Submit",
     "CityhallRejected": "Cityhall rejected",
     "TotalVoteCount": "{{count}} voted",
-    "proposalComponents":"Proposal Components",
+    "proposalComponents": "Proposal Components",
     "HasVote": "Voted",
     "LoginTip": "To use the full functionality, please login to Metaforo first",
     "LoginButton": "Login to Metaforo",
-    "WriteReplyHint": "write a reply"
+    "WriteReplyHint": "write a reply",
+    "TimeDisplay": "{{d}} day(s) {{h}} hour(s) {{m}} minute(s)"
   },
   "Project": {
     "ProjectOrGuildItem": "Nothing left here.",

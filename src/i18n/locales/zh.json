@@ -67,7 +67,8 @@
     "Export": "导出",
     "PollNFT": "投票NFT地址",
     "VoteClose": "投票结束",
-    "VoteEndAt": "投票剩余时间{{leftTime}}",
+    "VoteEndAt": "投票剩余时间 {{leftTime}}",
+    "VoteStartAt": "距离开始还剩 {{leftTime}}",
     "TotalVotes": "总投票数",
     "Draft": "草案",
     "Audit": "去审核",
@@ -76,7 +77,7 @@
     "WithDrawn": "已撤回",
     "Voting": "投票中",
     "Passed": "已通过",
-    "Approved": "Approved",
+    "Approved": "已通过",
     "Failed": "未通过",
     "PendingCommit": "待提交",
     "NotPendingCommit": "已提交",
@@ -125,7 +126,8 @@
     "HasVote": "已投",
     "LoginTip": "使用完整功能，请先登录Metaforo",
     "LoginButton": "登录 Metaforo",
-    "WriteReplyHint": "发表评论"
+    "WriteReplyHint": "发表评论",
+    "TimeDisplay": "{{d}}天{{h}}小时{{m}}分钟"
   },
   "Project": {
     "ProjectOrGuildItem": "还没有填写相关介绍信息～",
