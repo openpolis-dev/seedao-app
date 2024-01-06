@@ -351,7 +351,7 @@ export default function ThreadPage() {
         <FlexInner>
           <BackerNav title={currentCategory()} to="/proposal-v2" mb="0" />
           <FlexRht>
-            {isCurrentApplicant && !!moreActions().length && (
+            {!review && isCurrentApplicant && !!moreActions().length && (
               <EditBox>
                 {moreActions().map((item, index) => (
                   <li key={index} onClick={() => handleClickMoreAction(item.value)}>
