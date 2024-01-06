@@ -121,11 +121,11 @@ const BoxBg = styled.div<{ showRht: string }>`
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  padding: 20px;
   box-sizing: border-box;
 `;
 
 const InputBox = styled.div`
+  padding: 0 32px;
   input {
     width: 100%;
     height: 40px;
@@ -373,13 +373,14 @@ export default function CreateStep({ onClick }: any) {
               {list.map((item, index: number) => (
                 <ItemBox key={`block_${index}`}>
                   {!!item.title && <TitleBox>{item.title}</TitleBox>}
-
-                  <MdEditor
-                    modelValue={item.content}
-                    editorId={`block_${index}`}
-                    onChange={(val) => handleText(val, index)}
-                    theme={theme ? 'dark' : 'light'}
-                  />
+                  <InputBox>
+                    <MdEditor
+                      modelValue={item.content}
+                      editorId={`block_${index}`}
+                      onChange={(val) => handleText(val, index)}
+                      theme={theme ? 'dark' : 'light'}
+                    />
+                  </InputBox>
 
                   {/*<MarkdownEditor value={item.content} onChange={(val)=>handleText(val,index)} />*/}
                 </ItemBox>
