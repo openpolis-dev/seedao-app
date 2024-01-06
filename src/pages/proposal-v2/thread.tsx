@@ -444,8 +444,8 @@ export default function ThreadPage() {
               </>
             )
           }
-          AfterComponent={contentBlocks.map((block) => (
-            <ProposalContentBlock key={block.title}>
+          AfterComponent={contentBlocks.map((block, i) => (
+            <ProposalContentBlock key={block.title} $radius={i === 0 ? '4px 4px 0 0' : '0'}>
               <div className="title">{block.title}</div>
               <div className="content">
                 <MdPreview theme={theme ? 'dark' : 'light'} modelValue={block.content || ''} />
@@ -702,14 +702,14 @@ const ThreadToolsBar = styled.ul`
   }
 `;
 
-const ProposalContentBlock = styled.div`
-  margin-block: 16px;
+const ProposalContentBlock = styled.div<{ $radius?: string }>`
+  margin-bottom: 16px;
   .title {
     background: rgba(82, 0, 255, 0.08);
     line-height: 40px;
-    border-radius: 4px;
+    border-radius: ${(props) => props.$radius || '4px'};
     color: var(--bs-body-color_active);
-    padding-inline: 16px;
+    padding-inline: 32px;
     font-size: 14px;
     font-weight: bold;
   }
@@ -765,6 +765,5 @@ const ContentOuter = styled.div`
   box-shadow: var(--proposal-box-shadow);
   border: 1px solid var(--proposal-border);
   margin-bottom: 24px;
-  padding: 32px;
   border-radius: 8px;
 `;
