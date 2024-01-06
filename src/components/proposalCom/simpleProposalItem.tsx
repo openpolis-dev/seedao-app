@@ -81,13 +81,12 @@ const CardBox = styled.div`
   .name {
     font-size: 16px;
     color: var(--bs-body-color_active);
+    line-height: 1em;
   }
 
   .date {
     font-size: 12px;
     color: var(--bs-body-color);
-    padding-inline: 2px;
-    margin-top: 5px;
   }
 `;
 
@@ -102,10 +101,9 @@ const AvaBox = styled.div`
   .left {
     margin-right: 10px;
   }
+
   .right {
-    height: 44px;
     .name {
-      line-height: 22px;
       font-size: 14px;
     }
     .date {

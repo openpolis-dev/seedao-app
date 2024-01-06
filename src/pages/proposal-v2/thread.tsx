@@ -592,7 +592,7 @@ const ThreadHead = styled.div`
   box-shadow: var(--proposal-box-shadow);
   border: 1px solid var(--proposal-border);
   margin-bottom: 24px;
-  padding: 32px;
+  padding: 16px 32px;
   border-radius: 8px;
   margin-top: 24px;
   .title {
@@ -706,7 +706,7 @@ const RejectBlock = styled.div`
 const FlexLine = styled.div`
   display: flex;
   align-items: center;
-  margin: 16px 0;
+  margin: 10px 0;
   gap: 16px;
 `;
 

@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import CreateImg from '../../assets/Imgs/proposal/create.png';
-import VoteImg from '../../assets/Imgs/proposal/vote.png';
-import ShareImg from '../../assets/Imgs/proposal/share.png';
-import CommentImg from '../../assets/Imgs/proposal/comment.png';
+import CreateImg from '../../assets/Imgs/proposal/creatIcon.svg';
+import VoteImg from '../../assets/Imgs/proposal/voteIcon.svg';
+import ShareImg from '../../assets/Imgs/proposal/shareIcon.svg';
+import CommentImg from '../../assets/Imgs/proposal/commentIcon.svg';
+
 import { getUserActions } from 'requests/proposalV2';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import { formatDate } from 'utils/time';

@@ -48,7 +48,7 @@ const FixedBox = styled.div<{ showRht: string }>`
   height: 64px;
   z-index: 95;
   box-sizing: border-box;
-  padding-right: ${(props) => (props.showRht === 'true' ? '372px' : '0')};
+  padding-right: ${(props) => (props.showRht === 'true' ? '340px' : '0')};
   box-shadow: var(--proposal-box-shadow);
   border-top: 1px solid var(--bs-border-color);
 `;
@@ -116,7 +116,7 @@ const BoxBg = styled.div<{ showRht: string }>`
   margin-top: 24px;
   border-radius: 8px;
 
-  width: ${(props) => (props.showRht === 'true' ? 'calc(100% - 410px)' : '100%')};
+  width: ${(props) => (props.showRht === 'true' ? 'calc(100% - 335px)' : '100%')};
   height: 100%;
   display: flex;
   flex-direction: column;
