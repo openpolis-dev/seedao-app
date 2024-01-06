@@ -69,7 +69,7 @@
     "VoteClose": "投票结束",
     "VoteEndAt": "投票剩余时间{{leftTime}}",
     "TotalVotes": "总投票数",
-    "Draft": "草稿",
+    "Draft": "草案",
     "Audit": "去审核",
     "all": "全部提案",
     "Rejected": "被驳回",

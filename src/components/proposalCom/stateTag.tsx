@@ -1,18 +1,17 @@
+import { useAuthContext } from 'providers/authProvider';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { ProposalState } from 'type/proposalV2.type';
 
 export const getRealState = (state?: ProposalState): ProposalState | undefined => {
-  if (state === ProposalState.Approved) {
-    // TODO check vote status
-    return state;
-  } else if (state) {
-    return state;
-  }
+  return state;
 };
 
 export default function ProposalStateTag({ state }: { state?: ProposalState }) {
   const { t } = useTranslation();
+  const {
+    state: { language },
+  } = useAuthContext();
   let color: string;
   let text: string;
   switch (state) {
@@ -48,16 +47,21 @@ export default function ProposalStateTag({ state }: { state?: ProposalState }) {
       text = '';
       color = '#ddd';
   }
-  return <StatusTag $color={color}>{text}</StatusTag>;
+  return (
+    <StatusTag $color={color} $width={language === 'en' ? '90px' : '70px'}>
+      {text}
+    </StatusTag>
+  );
 }
 
-const StatusTag = styled.div<{ $color: string }>`
+const StatusTag = styled.div<{ $color: string; $width: string }>`
   background-color: ${(props) => props.$color};
-  padding: 2px 10px;
   color: #fff;
   font-size: 12px;
   border-radius: 4px;
-  line-height: 2em;
-  font-weight: 500;
   display: inline-block;
+  height: 24px;
+  line-height: 24px;
+  text-align: center;
+  width: ${(props) => props.$width};
 `;

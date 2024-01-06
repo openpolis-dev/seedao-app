@@ -165,14 +165,7 @@ export default function ProposalIndexPage() {
             <FlexLine>
               <FilterBox>
                 <SeeSelect
-                  width="180px"
-                  options={CATEGORY_OPTIONS}
-                  isSearchable={false}
-                  placeholder={t('Proposal.TypeSelectHint')}
-                  onChange={(v: ISelectItem) => setSelectCategory(v)}
-                />
-                <SeeSelect
-                  width="120px"
+                  width="160px"
                   options={TIME_OPTIONS}
                   defaultValue={TIME_OPTIONS[0]}
                   isClearable={false}
@@ -180,7 +173,14 @@ export default function ProposalIndexPage() {
                   onChange={(v: ISelectItem) => setSelectTime(v)}
                 />
                 <SeeSelect
-                  width="120px"
+                  width="160px"
+                  options={CATEGORY_OPTIONS}
+                  isSearchable={false}
+                  placeholder={t('Proposal.TypeSelectHint')}
+                  onChange={(v: ISelectItem) => setSelectCategory(v)}
+                />
+                <SeeSelect
+                  width="160px"
                   options={STATUS_OPTIONS}
                   isSearchable={false}
                   placeholder={t('Proposal.StatusSelectHint')}
@@ -264,10 +264,11 @@ const OperateBox = styled.div`
 
 const FilterBox = styled.div`
   display: flex;
-  gap: 16px;
+  gap: 24px;
 `;
 
 const SearchBox = styled.div`
+  width: 240px;
   background: var(--bs-background);
   border-radius: 8px;
   display: flex;
@@ -297,8 +298,11 @@ const SearchBox = styled.div`
 `;
 
 const HistoryButton = styled.div`
+  min-width: 104px;
+  box-sizing: border-box;
+  padding-inline: 10px;
   height: 40px;
-  padding-inline: 20px;
+  text-align: center;
   line-height: 40px;
   background-color: var(--bs-background);
   border-radius: 100px;
@@ -306,7 +310,6 @@ const HistoryButton = styled.div`
   text-align: center;
   color: var(--bs-body-color_active);
   cursor: pointer;
-  margin-right: 10px;
 
   &.selected {
     background-color: var(--bs-primary);
@@ -318,6 +321,7 @@ const LineBox = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
+  gap: 16px;
 `;
 
 const FlexLine = styled.div`

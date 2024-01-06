@@ -7,8 +7,6 @@ import { ISimpleProposal } from 'type/proposalV2.type';
 import ProposalStateTag, { getRealState } from './stateTag';
 import DefaultAvatarIcon from 'assets/Imgs/defaultAvatar.png';
 
-const CardBody = styled.div``;
-
 export default function SimpleProposalItem({
   data,
   isReview,
@@ -35,35 +33,28 @@ export default function SimpleProposalItem({
           <Title>{data.title}</Title>
         </CardHeaderStyled>
         <CardBody>
-          <FlexLine>
-            <AvaBox>
-              <div className="left">
-                <UserAvatar src={data.applicant_avatar || DefaultAvatarIcon} alt="" />
-              </div>
-              <div className="right">
-                <div className="name">
-                  <span>{sns}</span>
-                </div>
-                <div className="date">
-                  {/* <Link to={`/proposal/category/${data.category_index_id}`}>#{data.category_name}</Link> */}
-                  <span>{formatDate(new Date(data.create_ts * 1000))}</span>
-                </div>
-              </div>
-            </AvaBox>
-            <div>
-              <CatBox>{data.category_name}</CatBox>
-              <ProposalStateTag state={currentState} />
+          <AvaBox>
+            <div className="left">
+              <UserAvatar src={data.applicant_avatar || DefaultAvatarIcon} alt="" />
             </div>
-          </FlexLine>
+            <div className="right">
+              <div className="sns">{sns}</div>
+              <div className="date">{formatDate(new Date(data.create_ts * 1000))}</div>
+            </div>
+          </AvaBox>
+          <div>
+            <CatBox>{data.category_name}</CatBox>
+            <ProposalStateTag state={currentState} />
+          </div>
         </CardBody>
       </div>
     </CardBox>
   );
 }
 
-const FlexLine = styled.div`
+const CardBody = styled.div`
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: space-between;
   margin-top: 16px;
 `;
@@ -78,7 +69,7 @@ const CardBox = styled.div`
   margin-bottom: 24px;
 
   .name {
-    font-size: 14px;
+    font-size: 16px;
     font-family: Poppins-SemiBold, Poppins;
     color: var(--bs-body-color_active);
   }
@@ -102,6 +93,17 @@ const AvaBox = styled.div`
   .left {
     margin-right: 10px;
   }
+  .right {
+    height: 44px;
+    .sns {
+      line-height: 22px;
+      color: var(--bs-body-color_active);
+    }
+    .date {
+      line-height: 18px;
+      margin-top: 4px;
+    }
+  }
 `;
 
 const UserAvatar = styled.img`
@@ -115,6 +117,7 @@ const UserAvatar = styled.img`
 const Title = styled.div`
   font-weight: 600;
   font-size: 16px;
+  line-height: 22px;
   font-family: Poppins-SemiBold, Poppins;
   color: var(--bs-body-color_active);
 `;
@@ -127,7 +130,7 @@ const CatBox = styled.div`
   color: var(--bs-body-color_active);
   font-size: 12px;
   padding: 0 16px;
-  line-height: 2em;
+  line-height: 24px;
 `;
 
 const UserTag = styled.span<{ bg: string }>`

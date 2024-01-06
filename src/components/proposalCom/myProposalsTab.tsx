@@ -100,11 +100,12 @@ export default function MyProposalsTab() {
 
 const StatusBox = styled.ul`
   display: flex;
-  gap: 10px;
+  gap: 16px;
   margin-bottom: 20px;
   li {
     height: 40px;
-    padding-inline: 20px;
+    text-align: center;
+    padding-inline: 10px;
     line-height: 40px;
     background-color: var(--bs-background);
     border-radius: 100px;
@@ -112,8 +113,8 @@ const StatusBox = styled.ul`
     text-align: center;
     color: var(--bs-body-color_active);
     cursor: pointer;
-    margin-right: 10px;
     min-width: 104px;
+    box-sizing: border-box;
 
     &.selected {
       background-color: var(--bs-primary);
