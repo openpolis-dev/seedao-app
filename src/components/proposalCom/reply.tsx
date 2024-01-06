@@ -316,6 +316,7 @@ const InputReply = styled.div`
 
 const SubmitCommentButton = styled(Button)`
   height: 30px;
+  line-height: 16px;
 `;
 
 const NormalInput = styled.input`
