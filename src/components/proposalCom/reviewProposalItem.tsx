@@ -146,4 +146,7 @@ const Title = styled.div`
 
 const Line = styled.div`
   margin-right: 24px;
+  display: flex;
+  gap: 12px;
+  align-items: self-end;
 `;
