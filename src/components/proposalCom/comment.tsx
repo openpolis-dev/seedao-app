@@ -45,6 +45,7 @@ interface IProps {
   hideReply?: boolean;
   isCurrentUser?: boolean;
   isSpecial?: boolean;
+  hideVersion?: boolean;
 }
 
 interface IUserProps {
@@ -92,6 +93,7 @@ export default function CommentComponent({
   hideReply,
   isCurrentUser,
   isSpecial,
+  hideVersion,
 }: IProps) {
   const { t } = useTranslation();
   const {
@@ -135,7 +137,7 @@ export default function CommentComponent({
               </>
             )}
             <TimeBox>{formatMsgTime(data.created_ts * 1000, t)}</TimeBox>
-            {data.proposal_arweave_hash && (
+            {!hideVersion && data.proposal_arweave_hash && (
               <VersionTag href={`https://arweave.net/tx/${data.proposal_arweave_hash}/data.html`} target="__blank">
                 a
               </VersionTag>

@@ -215,6 +215,7 @@ const ReplyComponent = React.forwardRef<IReplyOutputProps, IProps>(
                 onDelete={onDelete}
                 hideReply={hideReply}
                 isCurrentUser={isCurrentUser(ip?.wallet)}
+                hideVersion
               />
             ))}
           </CommentComponent>
@@ -248,6 +249,7 @@ const ReplyComponent = React.forwardRef<IReplyOutputProps, IProps>(
                   onDelete={onDelete}
                   hideReply={hideReply}
                   isCurrentUser={isCurrentUser(ip?.wallet)}
+                  hideVersion
                 />
               ))}
             </CommentComponent>
