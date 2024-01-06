@@ -136,6 +136,7 @@ const ReplyComponent = React.forwardRef<IReplyOutputProps, IProps>(
             await addComment(id, replyContent, replyId);
             showToast(t('Msg.CommentSuccess'), ToastType.Success);
           }
+          setOpenReply(false);
           setReplyId(undefined);
           setEditId(undefined);
           setQuillContent('');
