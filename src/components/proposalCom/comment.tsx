@@ -210,7 +210,7 @@ export default function CommentComponent({
 const CommentStyle = styled.div<{ padding: string }>`
   width: 100%;
   padding-left: ${(props) => props.padding};
-  margin-bottom: 32px;
+  margin-bottom: 16px;
   p {
     padding: 0;
     margin: 0;
@@ -220,7 +220,7 @@ const CommentStyle = styled.div<{ padding: string }>`
 const CommentMain = styled.div`
   display: flex;
   gap: 10px;
-  margin-bottom: 32px;
+  margin-bottom: 12px;
   width: 100%;
 `;
 

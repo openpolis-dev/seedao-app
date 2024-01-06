@@ -280,6 +280,7 @@ export default function Header() {
             onChange={(event: any) => changeLang(event.value, true)}
             value={getLanguages().find((item) => item.value === lan) || getLanguages()[0]}
             width="100px"
+            className="selectTop"
             NotClear={true}
             isSearchable={false}
           />
@@ -341,6 +342,9 @@ const HeadeStyle = styled.header`
     display: flex;
     align-items: center;
     justify-content: space-between;
+  }
+  .selectTop {
+    text-align: center;
   }
   .dropBox {
     display: flex;
