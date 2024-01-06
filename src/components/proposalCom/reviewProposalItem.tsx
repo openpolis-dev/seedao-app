@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import styled from 'styled-components';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { formatTime } from 'utils/time';
 import { useAuthContext } from 'providers/authProvider';
 import { ISimpleProposal } from 'type/proposalV2.type';
@@ -10,17 +10,7 @@ import RhtArrow from 'assets/Imgs/proposal/rightArrow.svg';
 import { useTranslation } from 'react-i18next';
 import useMetaforoLogin from 'hooks/useMetaforoLogin';
 
-const CardBody = styled.div``;
-
-export default function ReviewProposalItem({
-  data,
-  isReview,
-  sns,
-}: {
-  sns: string;
-  data: ISimpleProposal;
-  isReview?: boolean;
-}) {
+export default function ReviewProposalItem({ data, sns }: { sns: string; data: ISimpleProposal; isReview?: boolean }) {
   const navigate = useNavigate();
   const {
     state: { theme },
@@ -41,33 +31,31 @@ export default function ReviewProposalItem({
   return (
     <CardBox key={data.id} border={borderStyle}>
       <FlexLine onClick={openProposal}>
-        <div>
-          <CardBody>
-            <Title>{data.title}</Title>
-            <Line>
-              <ProposalStateTag state={currentState} />
-              <CatBox>{data.category_name}</CatBox>
-            </Line>
-          </CardBody>
+        <div style={{ flex: 1 }}>
+          <Title>{data.title}</Title>
           <CardHeaderStyled>
-            <div className="left">
-              <UserAvatar src={data.applicant_avatar || DefaultAvatarIcon} alt="" />
-            </div>
-            <div className="right">
-              <div className="name">
-                <span>{sns}</span>
+            <LeftBox>
+              <div className="left">
+                <UserAvatar src={data.applicant_avatar || DefaultAvatarIcon} alt="" />
               </div>
-              <div className="date">
-                {/* <Link to={`/proposal/category/${data.category_index_id}`}>#{data.category_name}</Link> */}
-                <span>{formatTime(data.create_ts * 1000)}</span>
+              <div className="right">
+                <div className="name">
+                  <span>{sns}</span>
+                </div>
+                <div className="date">
+                  <span>{formatTime(data.create_ts * 1000)}</span>
+                </div>
               </div>
-            </div>
+            </LeftBox>
+            <Line>
+              <CatBox>{data.category_name}</CatBox>
+              <ProposalStateTag state={currentState} />
+            </Line>
           </CardHeaderStyled>
         </div>
         {currentState === 'draft' && (
           <AuditBox>
             <span>{t('Proposal.Audit')}</span>
-
             <img src={RhtArrow} alt="" />
           </AuditBox>
         )}
@@ -104,15 +92,15 @@ const CardBox = styled.div<{ border: string }>`
   border: ${(props) => props.border};
   cursor: pointer;
   background: var(--bs-box-background);
-  padding: 24px;
+  padding: 16px 0 16px 24px;
   border-radius: 16px;
-  margin-bottom: 24px;
+  margin-bottom: 16px;
   box-shadow: var(--box-shadow);
 `;
 
 const CardHeaderStyled = styled.div`
   display: flex;
-  gap: 10px;
+  justify-content: space-between;
   .name {
     font-size: 14px;
     font-family: Poppins-SemiBold;
@@ -131,6 +119,11 @@ const CardHeaderStyled = styled.div`
   }
 `;
 
+const LeftBox = styled.div`
+  display: flex;
+  gap: 10px;
+`;
+
 const UserAvatar = styled.img`
   width: 30px;
   height: 30px;
@@ -143,7 +136,6 @@ const Title = styled.div`
   font-family: Poppins-SemiBold;
   color: var(--bs-body-color_active);
   margin-bottom: 10px;
-  margin-right: 20px;
   overflow: hidden;
   text-overflow: ellipsis;
   -webkit-line-clamp: 1;
@@ -151,23 +143,11 @@ const Title = styled.div`
   -webkit-box-orient: vertical;
 `;
 
-const UserTag = styled.span<{ bg: string }>`
-  padding-inline: 8px;
-  height: 20px;
-  line-height: 20px;
-  display: inline-block;
-  font-size: 12px;
-  color: #000;
-  background-color: ${(props) => props.bg};
-  border-radius: 6px;
-  margin-left: 8px;
-`;
-
 const CatBox = styled.div`
   display: inline-block;
   border-radius: 4px;
   border: 1px solid var(--bs-border-color_opacity);
-  margin-left: 10px;
+  margin-right: 13px;
   color: var(--bs-body-color_active);
   font-size: 12px;
   padding: 0 16px;
@@ -175,5 +155,5 @@ const CatBox = styled.div`
 `;
 
 const Line = styled.div`
-  margin-bottom: 26px;
+  margin-right: 24px;
 `;
