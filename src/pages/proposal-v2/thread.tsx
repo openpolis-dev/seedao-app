@@ -452,7 +452,14 @@ export default function ThreadPage() {
       </ContentOuter>
 
       <CardStyle>
-        {showVote() && <ProposalVote voteGate={data?.vote_gate} poll={data!.votes[0]} id={Number(id)} updateStatus={getProposalDetail} />}
+        {showVote() && (
+          <ProposalVote
+            voteGate={data?.vote_gate}
+            poll={data!.votes[0]}
+            id={Number(id)}
+            updateStatus={getProposalDetail}
+          />
+        )}
 
         <ReplyAndHistoryBlock>
           <BlockTab id="reply-history-block">
