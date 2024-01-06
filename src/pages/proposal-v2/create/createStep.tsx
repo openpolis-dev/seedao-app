@@ -279,6 +279,16 @@ export default function CreateStep({ onClick }: any) {
     }
   };
 
+  const handleSaveDraft = (data: any) => {
+    console.log({
+      ...data,
+    });
+  };
+
+  const saveAllDraft = () => {
+    (childRef.current as any).saveForm();
+  };
+
   const handleText = (value: any, index: number) => {
     let arr = [...list];
     arr[index].content = value;
@@ -378,6 +388,7 @@ export default function CreateStep({ onClick }: any) {
           }
           ref={childRef}
           onSubmitData={handleFormSubmit}
+          onSaveData={handleSaveDraft}
         />
       </BoxBg>
       {showLeaveConfirm && (
