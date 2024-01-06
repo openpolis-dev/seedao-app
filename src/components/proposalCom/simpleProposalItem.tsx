@@ -64,9 +64,9 @@ const CardBox = styled.div`
   border: 1px solid var(--proposal-border);
   cursor: pointer;
   background: var(--bs-box-background);
-  padding: 24px;
+  padding: 16px 24px;
   border-radius: 16px;
-  margin-bottom: 24px;
+  margin-bottom: 16px;
 
   .name {
     font-size: 16px;
