@@ -33,7 +33,7 @@ export default function ProposalStateTag({ state }: { state?: ProposalState }) {
       break;
     case ProposalState.Withdrawn:
       color = '#B0B0B0';
-      text = t('Proposal.Withdrawn');
+      text = t('Proposal.WithDrawn');
       break;
     case ProposalState.VotingPassed:
       color = '#1F9E14';
