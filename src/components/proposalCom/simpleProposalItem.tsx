@@ -1,11 +1,10 @@
-import { useMemo } from 'react';
 import styled from 'styled-components';
-import { Link, useNavigate } from 'react-router-dom';
-import { formatDate, formatTime } from 'utils/time';
-import { useAuthContext } from 'providers/authProvider';
+import { useNavigate } from 'react-router-dom';
+import { formatTime } from 'utils/time';
 import { ISimpleProposal } from 'type/proposalV2.type';
 import ProposalStateTag, { getRealState } from './stateTag';
 import DefaultAvatarIcon from 'assets/Imgs/defaultAvatar.png';
+import CategoryTag from './categoryTag';
 
 export enum TabType {
   All = 1,
@@ -54,7 +53,7 @@ export default function SimpleProposalItem({
             </div>
           </AvaBox>
           <div>
-            <CatBox>{data.category_name}</CatBox>
+            <CategoryTag>{data.category_name}</CategoryTag>
             <ProposalStateTag state={currentState} />
           </div>
         </CardBody>
@@ -131,27 +130,4 @@ const Title = styled.div`
   line-height: 22px;
   font-family: Poppins-SemiBold, Poppins;
   color: var(--bs-body-color_active);
-`;
-
-const CatBox = styled.div`
-  display: inline-block;
-  border-radius: 4px;
-  border: 1px solid var(--bs-border-color_opacity);
-  margin-right: 10px;
-  color: var(--bs-body-color_active);
-  font-size: 12px;
-  padding: 0 16px;
-  line-height: 24px;
-`;
-
-const UserTag = styled.span<{ bg: string }>`
-  padding-inline: 8px;
-  height: 20px;
-  line-height: 20px;
-  display: inline-block;
-  font-size: 12px;
-  color: #000;
-  background-color: ${(props) => props.bg};
-  border-radius: 6px;
-  margin-left: 8px;
 `;

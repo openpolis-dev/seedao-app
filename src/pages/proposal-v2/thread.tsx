@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useSearchParams, useParams, useLocation, useNavigate } from 'react-router-dom';
+import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { ContainerPadding } from 'assets/styles/global';
 import ProposalVote from 'components/proposalCom/vote';
 import ReplyComponent, { IReplyOutputProps } from 'components/proposalCom/reply';
@@ -12,7 +12,7 @@ import { useAuthContext, AppActionType } from 'providers/authProvider';
 import requests from 'requests';
 import { formatTime } from 'utils/time';
 import BackerNav from 'components/common/backNav';
-import { MdEditor, MdPreview } from 'md-editor-rt';
+import { MdPreview } from 'md-editor-rt';
 import ProposalStateTag, { getRealState } from 'components/proposalCom/stateTag';
 import useProposalCategories from 'hooks/useProposalCategories';
 import useCheckMetaforoLogin from 'hooks/useMetaforoLogin';
@@ -35,6 +35,7 @@ import CommentImg from 'assets/Imgs/proposal/comment.svg';
 import CommentWhite from 'assets/Imgs/proposal/comment-white.svg';
 import { DeletedContent } from 'components/proposalCom/comment';
 import useToast, { ToastType } from 'hooks/useToast';
+import CategoryTag from 'components/proposalCom/categoryTag';
 
 enum BlockContentType {
   Reply = 1,
@@ -393,8 +394,8 @@ export default function ThreadPage() {
       <ThreadHead>
         <div className="title">{data?.title}</div>
         <FlexLine>
-          <ThreadInfo>{currentState && <ProposalStateTag state={currentState} />}</ThreadInfo>
-          <CatBox>{currentCategory()}</CatBox>
+          {currentState && <ProposalStateTag state={currentState} />}
+          <CategoryTag>{currentCategory()}</CategoryTag>
         </FlexLine>
         {showModal && <ProfileComponent address={applicant} theme={theme} handleClose={handleClose} />}
         <ThreadCenter>
@@ -654,8 +655,6 @@ const CardStyle = styled.div`
   padding: 32px;
 `;
 
-const ThreadInfo = styled.div``;
-
 const StoreHash = styled.div`
   display: flex;
   align-items: center;
@@ -738,19 +737,9 @@ const FlexLine = styled.div`
   display: flex;
   align-items: center;
   margin: 16px 0;
+  gap: 16px;
 `;
-const CatBox = styled.div`
-  border-radius: 4px;
-  border: 1px solid var(--bs-border-color_opacity);
-  margin-right: 10px;
-  color: var(--bs-body-color_active);
-  font-size: 12px;
-  padding: 0 16px;
-  height: 32px;
-  line-height: 32px;
-  margin-left: 16px;
-  box-sizing: border-box;
-`;
+
 const RejectLine = styled.div`
   display: flex;
   align-items: center;

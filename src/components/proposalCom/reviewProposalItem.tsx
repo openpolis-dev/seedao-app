@@ -9,6 +9,7 @@ import DefaultAvatarIcon from 'assets/Imgs/defaultAvatar.png';
 import RhtArrow from 'assets/Imgs/proposal/rightArrow.svg';
 import { useTranslation } from 'react-i18next';
 import useMetaforoLogin from 'hooks/useMetaforoLogin';
+import CategoryTag from './categoryTag';
 
 export default function ReviewProposalItem({ data, sns }: { sns: string; data: ISimpleProposal; isReview?: boolean }) {
   const navigate = useNavigate();
@@ -48,7 +49,7 @@ export default function ReviewProposalItem({ data, sns }: { sns: string; data: I
               </div>
             </LeftBox>
             <Line>
-              <CatBox>{data.category_name}</CatBox>
+              <CategoryTag>{data.category_name}</CategoryTag>
               <ProposalStateTag state={currentState} />
             </Line>
           </CardHeaderStyled>
@@ -141,17 +142,6 @@ const Title = styled.div`
   -webkit-line-clamp: 1;
   display: -webkit-box;
   -webkit-box-orient: vertical;
-`;
-
-const CatBox = styled.div`
-  display: inline-block;
-  border-radius: 4px;
-  border: 1px solid var(--bs-border-color_opacity);
-  margin-right: 13px;
-  color: var(--bs-body-color_active);
-  font-size: 12px;
-  padding: 0 16px;
-  line-height: 2em;
 `;
 
 const Line = styled.div`
