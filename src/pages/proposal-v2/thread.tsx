@@ -291,7 +291,7 @@ export default function ThreadPage() {
     }
 
     const actions: { label: string; value: string }[] = [];
-    if ([ProposalState.Rejected, ProposalState.Withdrawn].includes(data?.state)) {
+    if ([ProposalState.Rejected, ProposalState.Withdrawn, ProposalState.PendingSubmit].includes(data?.state)) {
       actions.push({ label: t('Proposal.Edit'), value: 'edit' });
     }
     if (data?.state === ProposalState.Draft) {
