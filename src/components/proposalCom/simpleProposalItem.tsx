@@ -38,7 +38,7 @@ export default function SimpleProposalItem({
               <UserAvatar src={data.applicant_avatar || DefaultAvatarIcon} alt="" />
             </div>
             <div className="right">
-              <div className="sns">{sns}</div>
+              <div className="name">{sns}</div>
               <div className="date">{formatDate(new Date(data.create_ts * 1000))}</div>
             </div>
           </AvaBox>
@@ -95,9 +95,9 @@ const AvaBox = styled.div`
   }
   .right {
     height: 44px;
-    .sns {
+    .name {
       line-height: 22px;
-      color: var(--bs-body-color_active);
+      font-size: 14px;
     }
     .date {
       line-height: 18px;
