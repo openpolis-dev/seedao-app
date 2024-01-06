@@ -80,7 +80,6 @@ const CardBox = styled.div`
 
   .name {
     font-size: 16px;
-    font-family: Poppins-SemiBold, Poppins;
     color: var(--bs-body-color_active);
   }
 
