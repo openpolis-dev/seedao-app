@@ -145,7 +145,6 @@ export default function HistoryAction() {
 
 const ActionList = styled.ul`
   background-color: var(--bs-box--background);
-  padding-block: 30px;
   border-radius: 16px;
 `;
 
@@ -181,5 +180,8 @@ const Aciton = styled.li`
     flex: 1;
     padding-top: 20px;
     padding-bottom: 10px;
+    strong {
+      padding: 0 10px;
+    }
   }
 `;
