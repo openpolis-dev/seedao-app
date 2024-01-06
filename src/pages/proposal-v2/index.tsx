@@ -6,8 +6,8 @@ import { useEffect, useState } from 'react';
 import ClearSVGIcon from 'components/svgs/clear';
 import SearchSVGIcon from 'components/svgs/search';
 import { Button } from 'react-bootstrap';
-import SimpleProposalItem from 'components/proposalCom/simpleProposalItem';
-import { Link, useNavigate } from 'react-router-dom';
+import SimpleProposalItem, { TabType } from 'components/proposalCom/simpleProposalItem';
+import { useLocation, useNavigate } from 'react-router-dom';
 import HistoryAction from 'components/proposalCom/historyAction';
 import requests from 'requests';
 import { useAuthContext, AppActionType } from 'providers/authProvider';
@@ -24,14 +24,9 @@ import MyProposalsTab from 'components/proposalCom/myProposalsTab';
 
 const PAGE_SIZE = 10;
 
-enum TabType {
-  All = 1,
-  History,
-  My,
-}
-
 export default function ProposalIndexPage() {
   const navigate = useNavigate();
+  const { state } = useLocation();
   const { t } = useTranslation();
   const {
     state: { loading },
@@ -70,7 +65,8 @@ export default function ProposalIndexPage() {
   const [totalCount, setTotalCount] = useState(0);
   const [initPage, setInitPage] = useState(true);
 
-  const [currentTab, setCurrentTab] = useState(TabType.All);
+  const [currentTab, setCurrentTab] = useState(state?.currentTab?.[0] || TabType.All);
+  const secondTab = state?.currentTab?.[1];
 
   const { checkMetaforoLogin } = useCheckMetaforoLogin();
   const { getMultiSNS } = useQuerySNS();
@@ -206,7 +202,12 @@ export default function ProposalIndexPage() {
               </Button>
             </FlexLine>
             {proposalList.map((p) => (
-              <SimpleProposalItem key={p.id} data={p} sns={formatSNS(p.applicant?.toLocaleLowerCase())} />
+              <SimpleProposalItem
+                key={p.id}
+                data={p}
+                sns={formatSNS(p.applicant?.toLocaleLowerCase())}
+                currentTab={[currentTab]}
+              />
             ))}
             {totalCount === 0 && !loading && <NoItem />}
             {totalCount > PAGE_SIZE && (
@@ -219,7 +220,7 @@ export default function ProposalIndexPage() {
       case TabType.History:
         return <HistoryAction />;
       case TabType.My:
-        return <MyProposalsTab />;
+        return <MyProposalsTab tab={secondTab} />;
       default:
         return null;
     }

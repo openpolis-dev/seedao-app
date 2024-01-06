@@ -221,8 +221,6 @@ export default function ThreadPage() {
   };
 
   const handleEdit = () => {
-    // TODO
-    console.log('edit');
     navigate(`/proposal-v2/edit/${id}`, { state: data });
   };
   const handlWithdraw = () => {
@@ -350,6 +348,7 @@ export default function ThreadPage() {
           <BackerNav
             title={currentCategory()}
             to={review ? '/city-hall/governance/review-proposal' : '/proposal-v2'}
+            state={state}
             mb="0"
           />
 

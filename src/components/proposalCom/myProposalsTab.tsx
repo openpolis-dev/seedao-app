@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import SimpleProposalItem from 'components/proposalCom/simpleProposalItem';
+import SimpleProposalItem, { TabType } from 'components/proposalCom/simpleProposalItem';
 import { ISimpleProposal, ProposalState } from 'type/proposalV2.type';
 import useQuerySNS from 'hooks/useQuerySNS';
 import publicJs from 'utils/publicJs';
@@ -13,18 +13,17 @@ import useToast, { ToastType } from 'hooks/useToast';
 
 const PAGE_SIZE = 10;
 
-export default function MyProposalsTab() {
+export default function MyProposalsTab({ tab }: { tab?: TabType }) {
   const { t } = useTranslation();
   const {
     state: { loading },
     dispatch,
   } = useAuthContext();
 
-  const [selectPendingSubmit, setSelectPendingSubmit] = useState(false);
-
   const [proposalList, setProposalList] = useState<ISimpleProposal[]>([]);
   const [page, setPage] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
+  const [currentTab, setCurrentTab] = useState(tab || TabType.Submitted);
 
   const { getMultiSNS } = useQuerySNS();
   const { showToast } = useToast();
@@ -51,7 +50,7 @@ export default function MyProposalsTab() {
           sort_order: 'desc',
           sort_field: 'create_ts',
         },
-        selectPendingSubmit,
+        currentTab === TabType.UnSubmitted,
       );
       setProposalList(resp.data.rows);
       handleSNS(resp.data.rows.filter((d) => !!d.applicant).map((d) => d.applicant));
@@ -71,21 +70,32 @@ export default function MyProposalsTab() {
 
   useEffect(() => {
     getProposalList(1);
-  }, [selectPendingSubmit]);
+  }, [currentTab]);
 
   return (
     <>
       <StatusBox>
-        <li className={selectPendingSubmit ? '' : 'selected'} onClick={() => setSelectPendingSubmit(false)}>
+        <li
+          className={currentTab === TabType.Submitted ? 'selected' : ''}
+          onClick={() => setCurrentTab(TabType.Submitted)}
+        >
           {t('Proposal.NotPendingCommit')}
         </li>
-        <li className={selectPendingSubmit ? 'selected' : ''} onClick={() => setSelectPendingSubmit(true)}>
+        <li
+          className={currentTab === TabType.UnSubmitted ? 'selected' : ''}
+          onClick={() => setCurrentTab(TabType.UnSubmitted)}
+        >
           {t('Proposal.PendingCommit')}
         </li>
       </StatusBox>
       <div>
         {proposalList.map((p) => (
-          <SimpleProposalItem key={p.id} data={p} sns={formatSNS(p.applicant?.toLocaleLowerCase())} />
+          <SimpleProposalItem
+            key={p.id}
+            data={p}
+            sns={formatSNS(p.applicant?.toLocaleLowerCase())}
+            currentTab={[TabType.My, currentTab]}
+          />
         ))}
         {totalCount === 0 && !loading && <NoItem />}
         {totalCount > PAGE_SIZE && (

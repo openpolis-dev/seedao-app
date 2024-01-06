@@ -7,22 +7,33 @@ import { ISimpleProposal } from 'type/proposalV2.type';
 import ProposalStateTag, { getRealState } from './stateTag';
 import DefaultAvatarIcon from 'assets/Imgs/defaultAvatar.png';
 
+export enum TabType {
+  All = 1,
+  History,
+  My,
+  Submitted,
+  UnSubmitted,
+}
+
 export default function SimpleProposalItem({
   data,
   isReview,
   sns,
+  currentTab,
 }: {
   sns: string;
   data: ISimpleProposal;
   isReview?: boolean;
+  currentTab: TabType[];
 }) {
   const navigate = useNavigate();
-  const {
-    state: { theme },
-  } = useAuthContext();
-
   const openProposal = () => {
-    navigate(`/proposal-v2/thread/${data.id}${isReview ? '?review' : ''}`, { state: data });
+    navigate(`/proposal-v2/thread/${data.id}${isReview ? '?review' : ''}`, {
+      state: {
+        currentTab,
+        data,
+      },
+    });
   };
 
   const currentState = getRealState(data.state);

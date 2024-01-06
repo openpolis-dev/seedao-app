@@ -4,15 +4,16 @@ import BackIcon from 'assets/Imgs/back.svg';
 
 interface IProps {
   to: string;
+  state?: any;
   title: string;
   mb?: string; // margin-bottom
   onClick?: () => void;
 }
 
-export default function BackerNav({ to, title, mb, onClick }: IProps) {
+export default function BackerNav({ to, state, title, mb, onClick }: IProps) {
   return (
     <BackBox mb={mb} onClick={() => onClick && onClick()}>
-      <BackIconBox to={to}>
+      <BackIconBox to={to} state={state}>
         <img src={BackIcon} alt="" />
       </BackIconBox>
       <span className="backTitle">{title}</span>
