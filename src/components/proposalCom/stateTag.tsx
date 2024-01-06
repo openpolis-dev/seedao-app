@@ -17,7 +17,7 @@ export default function ProposalStateTag({ state }: { state?: ProposalState }) {
   switch (state) {
     case ProposalState.Approved:
       color = '#1F9E14';
-      text = t('Proposal.Approve');
+      text = t('Proposal.Approved');
       break;
     case ProposalState.Rejected:
       color = '#FB4E4E';

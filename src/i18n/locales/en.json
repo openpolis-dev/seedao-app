@@ -75,6 +75,7 @@
     "Rejected": "Rejected",
     "WithDrawn": "WithDrawn",
     "Voting": "Voting",
+    "Approved": "Approved",
     "Passed": "Passed",
     "Failed": "Failed",
     "PendingCommit": "Unsubmitted",

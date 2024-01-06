@@ -76,6 +76,7 @@
     "WithDrawn": "已撤回",
     "Voting": "投票中",
     "Passed": "已通过",
+    "Approved": "Approved",
     "Failed": "未通过",
     "PendingCommit": "待提交",
     "NotPendingCommit": "已提交",
