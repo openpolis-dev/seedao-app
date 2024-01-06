@@ -5,8 +5,8 @@ export enum ProposalState {
   Approved = 'approved',
   Rejected = 'rejected',
   Voting = 'voting',
-  VotingPassed = 'passed',
-  VotingFailed = 'failed',
+  VotingPassed = 'vote_passed',
+  VotingFailed = 'vote_failed',
 }
 
 export interface IBaseCategory {
