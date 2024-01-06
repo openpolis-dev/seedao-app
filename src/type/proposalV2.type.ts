@@ -87,6 +87,12 @@ export interface ICommentDisplay extends IComment {
   deleted?: 1 | 0;
 }
 
+export type VoteGateType = {
+  name: string;
+  contract_addr: string;
+  token_id: number;
+};
+
 export interface IProposal extends ISimpleProposal {
   reviewer: string;
   applicant_avatar: string;
@@ -103,6 +109,7 @@ export interface IProposal extends ISimpleProposal {
   components: any;
   comment_count: number;
   votes: Poll[];
+  vote_gate: VoteGateType;
   histories: {
     total_count: number;
     lists: IProposalEditHistoy[];

@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import { Poll, VoteType, VoteOption } from 'type/proposalV2.type';
+import { Poll, VoteType, VoteOption, VoteGateType } from 'type/proposalV2.type';
 import { castVote, checkCanVote } from 'requests/proposalV2';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import useToast, { ToastType } from 'hooks/useToast';
@@ -14,6 +14,7 @@ const { Check } = Form;
 interface IProps {
   id: number;
   poll: Poll;
+  voteGate?: VoteGateType;
   updateStatus: () => void;
 }
 
@@ -22,7 +23,7 @@ type VoteOptionItem = {
   optionId: number;
 };
 
-export default function ProposalVote({ id, poll, updateStatus }: IProps) {
+export default function ProposalVote({ id, poll, voteGate, updateStatus }: IProps) {
   const { t } = useTranslation();
   const [selectOption, setSelectOption] = useState<VoteOption>();
   const [openVoteItem, setOpenVoteItem] = useState<VoteOptionItem>();
@@ -146,16 +147,16 @@ export default function ProposalVote({ id, poll, updateStatus }: IProps) {
       <VoteBody>
         {showVoteContent()}
 
-        {poll.address && (
+        {voteGate && (
           <VoteNFT>
             <span>
-              {t('Proposal.PollNFT')}: {poll.address}
+              {t('Proposal.PollNFT')}: {voteGate.contract_addr}
             </span>
-            <span>Token Id: {poll.token_id}</span>
+            <span>Token Id: {voteGate.token_id}</span>
+            {voteGate.name && <span>{voteGate.name}</span>}
           </VoteNFT>
         )}
       </VoteBody>
-      <VoteFooter>{poll.alias && <Alias>{poll.alias}</Alias>}</VoteFooter>
       {!!openVoteItem && <VoterListModal {...openVoteItem} onClose={() => setOpenVoteItem(undefined)} />}
       {showConfirmVote && (
         <ConfirmModal
@@ -182,11 +183,6 @@ const VoteHead = styled.div`
 `;
 
 const VoteHeadLeft = styled.div``;
-
-const ExportButton = styled.a`
-  color: var(--bs-primary);
-  font-family: Poppins-SemiBold, Poppins;
-`;
 
 const VoteBody = styled.div`
   border-bottom: 1px solid var(--bs-border-color);
@@ -270,10 +266,6 @@ const OptionContent = styled.div<{ $highlight?: number }>`
   color: ${({ $highlight }) => ($highlight ? 'var(--bs-primary)' : 'var(--bs-body-color_active)')};
   margin-top: 0.25em;
   margin-right: 20px;
-`;
-
-const Alias = styled.div`
-  color: var(--bs-primary);
 `;
 
 const VoteButton = styled(Button)`
