@@ -1,9 +1,8 @@
 import styled from 'styled-components';
 import DefaultAvatar from 'assets/Imgs/defaultAvatarT.png';
 import { handleContent } from './parseContent';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { UserTitleType } from 'type/proposal.type';
-import { PlainButton } from 'components/common/button';
 import MoreSelectAction from './moreSelectAction';
 import { useTranslation } from 'react-i18next';
 import { formatMsgTime } from 'utils/time';
@@ -13,6 +12,9 @@ import { useAuthContext } from '../../providers/authProvider';
 import { ICommentDisplay } from 'type/proposalV2.type';
 import publicJs from 'utils/publicJs';
 import CityHallImg from 'assets/Imgs/proposal/cityhall.png';
+import LinkIcon from 'assets/Imgs/proposal/linkIcon.svg';
+import LinkIconDark from 'assets/Imgs/proposal/linkIcon-black.svg';
+import Overlay from 'react-bootstrap/Overlay';
 
 export const DeletedContent = `[{"insert":"Post deleted\\n"}]`;
 
@@ -96,8 +98,11 @@ export default function CommentComponent({
   hideVersion,
 }: IProps) {
   const { t } = useTranslation();
+  const [showVersionTip, setShowVersionTip] = useState(true);
+  const versionTargetRef = useRef(null);
+
   const {
-    state: { snsMap },
+    state: { snsMap, theme },
   } = useAuthContext();
   const content = useParseContent(data?.deleted ? DeletedContent : data?.content, isSpecial);
 
@@ -130,16 +135,29 @@ export default function CommentComponent({
               avatar={data.avatar}
             />
             {parentData && (
-              <>
-                <span>
-                  {'@'} {parentData?.userName || formatSNS(snsMap, parentData.wallet?.toLocaleLowerCase())}
-                </span>
-              </>
+              <ReplyTag>
+                <span>{t('Proposal.Reply')} </span>
+                {'@'} {parentData?.userName || formatSNS(snsMap, parentData.wallet?.toLocaleLowerCase())}
+              </ReplyTag>
             )}
             <TimeBox>{formatMsgTime(data.created_ts * 1000, t)}</TimeBox>
             {!hideVersion && data.proposal_arweave_hash && (
-              <VersionTag href={`https://arweave.net/tx/${data.proposal_arweave_hash}/data.html`} target="__blank">
-                a
+              <VersionTag>
+                <span onClick={() => setShowVersionTip(true)}>a</span>
+                <Overlay show={showVersionTip} target={versionTargetRef.current} placement="top">
+                  {(props) => (
+                    <Tip
+                      {...props}
+                      onClick={() => {
+                        window.open(`https://arweave.net/tx/${data.proposal_arweave_hash}/data.html`);
+                        setShowVersionTip(false);
+                      }}
+                    >
+                      {data.proposal_title}
+                      <img src={!theme ? LinkIconDark : LinkIcon} alt="" />
+                    </Tip>
+                  )}
+                </Overlay>
               </VersionTag>
             )}
           </RelationUserLine>
@@ -177,6 +195,7 @@ export default function CommentComponent({
 }
 
 const CommentStyle = styled.div<{ padding: string }>`
+  width: 100%;
   padding-left: ${(props) => props.padding};
   margin-bottom: 32px;
   p {
@@ -188,7 +207,8 @@ const CommentStyle = styled.div<{ padding: string }>`
 const CommentMain = styled.div`
   display: flex;
   gap: 10px;
-  margin-bottom: 20px;
+  margin-bottom: 32px;
+  width: 100%;
 `;
 
 const UserBoxStyle = styled.div`
@@ -218,10 +238,11 @@ const UserTag = styled.span<{ bg: string }>`
   border-radius: 6px;
 `;
 
-const ReplyCommentStyle = styled.div`
-  padding: 20px;
-  border: 1px solid var(--bs-border-color);
-  margin-left: 58px;
+const ReplyTag = styled.div`
+  color: #2f8fff;
+  span {
+    color: var(--bs-body-color_active);
+  }
 `;
 
 const RelationUserLine = styled.div`
@@ -230,19 +251,40 @@ const RelationUserLine = styled.div`
   align-items: center;
 `;
 
-const VersionTag = styled.a`
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  border: 1px solid #2f8fff;
-  text-align: center;
+const VersionTag = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  color: #2f8fff;
-  background: var(--bs-box-background);
-  &:hover {
-    color: #2f8fff;
+  span {
+    cursor: pointer;
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    line-height: 18px;
+    border-radius: 50%;
+    border: 1px solid var(--bs-body-color);
+    text-align: center;
+    box-sizing: border-box;
+  }
+`;
+
+const Tip = styled.div`
+  position: relative;
+  left: -20px;
+  top: -40px;
+  height: 36px;
+  line-height: 34px;
+  border: 1px solid var(--bs-border-color);
+  padding-inline: 16px;
+  box-sizing: border-box;
+  border-radius: 8px;
+  background-color: var(--bs-box-backgroun);
+  color: var(--bs-body-color_active);
+  cursor: default;
+  img {
+    position: relative;
+    top: -1px;
+    margin-left: 12px;
   }
 `;
 

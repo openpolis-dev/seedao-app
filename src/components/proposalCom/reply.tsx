@@ -12,7 +12,6 @@ import { UnprivilegedEditor } from 'react-quill';
 import useLoadQuill from 'hooks/useLoadQuill';
 import { Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
-import NoItem from 'components/noItem';
 import ConfirmModal from 'components/modals/confirmModal';
 import useCheckMetaforoLogin from 'hooks/useMetaforoLogin';
 import { deleteCommet, addComment, editCommet } from 'requests/proposalV2';
@@ -221,7 +220,7 @@ const ReplyComponent = React.forwardRef<IReplyOutputProps, IProps>(
             ))}
           </CommentComponent>
         )}
-        {posts.length === 0 && <NoItem text={t('Proposal.EmptyComment')}></NoItem>}
+        {posts.length === 0 && <NoComments>{t('Proposal.EmptyComment')}</NoComments>}
         <InfiniteScroll
           scrollableTarget="scrollableDiv"
           dataLength={posts.length}
@@ -325,6 +324,15 @@ const NormalInput = styled.input`
   border: 1px solid var(--bs-border-color);
   border-radius: 8px;
   outline: none;
-  height: 50px;
+  height: 40px;
+  line-height: 40px;
   padding-inline: 16px;
+`;
+
+const NoComments = styled.div`
+  text-align: center;
+  height: 58px;
+  line-height: 58px;
+  letter-spacing: 0.07px;
+  margin-bottom: 32px;
 `;

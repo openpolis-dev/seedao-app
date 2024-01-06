@@ -104,7 +104,7 @@
     "HistoryCreate": "submit the proposal <title>{{title}}</title> at {{time}}",
     "HistoryEdit": "edit the proposal <title>{{title}} at {{time}}",
     "Send": "Send",
-    "EmptyComment": "No comments, send it ⬇️",
+    "EmptyComment": "No comments",
     "ConfirmDeleteComment": "Are you sure you want to delete this comment?",
     "ConfirmApproveProposal": "Are you sure to approve the proposal?",
     "ConfirmWithdrawProposal": "Are you sure to withdraw the proposal?",

@@ -104,7 +104,7 @@
     "HistoryCreate": "在 {{time}} 提交了提案 <title>{{title}}</title>",
     "HistoryEdit": "在 {{time}} 编辑了提案 <title>{{title}}</title>",
     "Send": "发送",
-    "EmptyComment": "还没有评论哦，去发表⬇️",
+    "EmptyComment": "当前没有评论",
     "ConfirmDeleteComment": "确定要删除该条评论吗？",
     "ConfirmApproveProposal": "确定通过该提案的审核吗？",
     "ConfirmWithdrawProposal": "确定撤回提案吗？",

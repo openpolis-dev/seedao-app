@@ -21,9 +21,6 @@ import useQuerySNS from 'hooks/useQuerySNS';
 import DefaultAvatarIcon from 'assets/Imgs/defaultAvatar.png';
 import ConfirmModal from 'components/modals/confirmModal';
 import CopyBox from 'components/copy';
-import LinkImg from '../../assets/Imgs/proposal/link.png';
-import LinkIcon from '../../assets/Imgs/proposal/linkIcon.svg';
-import LinkIconDark from '../../assets/Imgs/proposal/linkIcon-black.svg';
 import ProfileComponent from '../../profile-components/profile';
 import { Preview } from '@seedao/components';
 
@@ -574,7 +571,7 @@ const ReplyAndHistoryBlock = styled.div`
 const BlockTab = styled.ul`
   display: flex;
   font-size: 20px;
-  margin-bottom: 16px;
+  margin-bottom: 32px;
   color: var(--bs-body-color_active);
 
   li {
