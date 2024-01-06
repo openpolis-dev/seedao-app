@@ -49,6 +49,10 @@ import WikiImg from '../assets/Imgs/lightMenu/wiki.png';
 import WikiWhite from '../assets/Imgs/darkMenu/wiki.png';
 import WikiImgActive from '../assets/Imgs/darkMenu/wiki_active.png';
 
+import FreshImg from '../assets/Imgs/darkMenu/fresh.png';
+import FreshWhite from '../assets/Imgs/darkMenu/fresh.png';
+import FreshActive from '../assets/Imgs/darkMenu/fresh_active.png';
+
 import React from 'react';
 import useCheckLogin from 'hooks/useCheckLogin';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
@@ -375,12 +379,12 @@ const items: MenuItemType[] = [
     title: 'menus.Newcomer',
     icon: {
       dark: {
-        nor: WikiWhite,
-        active: WikiImgActive,
+        nor: FreshWhite,
+        active: FreshActive,
       },
       light: {
-        nor: WikiImg,
-        active: WikiImgActive,
+        nor: FreshImg,
+        active: FreshActive,
       },
     },
     link: { href: '/newcomer' },
