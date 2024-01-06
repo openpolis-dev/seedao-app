@@ -437,15 +437,13 @@ export default function ThreadPage() {
           theme={theme}
           BeforeComponent={
             !!dataSource?.length && (
-              <>
-                <ComponnentBox>
-                  <div className="title">{t('Proposal.proposalComponents')}</div>
-                </ComponnentBox>
-              </>
+              <ComponnentBox>
+                <div className="title">{t('Proposal.proposalComponents')}</div>
+              </ComponnentBox>
             )
           }
           AfterComponent={contentBlocks.map((block, i) => (
-            <ProposalContentBlock key={block.title} $radius={i === 0 ? '4px 4px 0 0' : '0'}>
+            <ProposalContentBlock key={block.title} $radius={i === 0 && !dataSource?.length ? '4px 4px 0 0' : '0'}>
               <div className="title">{block.title}</div>
               <div className="content">
                 <MdPreview theme={theme ? 'dark' : 'light'} modelValue={block.content || ''} />
@@ -707,11 +705,14 @@ const ProposalContentBlock = styled.div<{ $radius?: string }>`
   .title {
     background: rgba(82, 0, 255, 0.08);
     line-height: 40px;
-    border-radius: ${(props) => props.$radius || '4px'};
+    border-radius: ${(props) => props.$radius || '4px 4px 0 0'};
     color: var(--bs-body-color_active);
     padding-inline: 32px;
-    font-size: 14px;
-    font-weight: bold;
+    font-size: 16px;
+    font-family: 'Poppins-SemiBold';
+  }
+  .content .md-editor-preview-wrapper {
+    padding-inline: 32px;
   }
 `;
 
