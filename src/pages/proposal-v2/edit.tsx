@@ -14,6 +14,7 @@ import { Button } from 'react-bootstrap';
 import getConfig from '../../utils/envCofnig';
 import requests from '../../requests';
 import BackIcon from '../../assets/Imgs/back.svg';
+import useToast, { ToastType } from 'hooks/useToast';
 
 export default function EditProposal() {
   const { t, i18n } = useTranslation();
@@ -39,6 +40,8 @@ export default function EditProposal() {
 
   const [dataSource, setDataSource] = useState();
   const childRef = useRef(null);
+
+  const { showToast } = useToast();
 
   useEffect(() => {
     if (state) {
@@ -148,7 +151,15 @@ export default function EditProposal() {
       submit_to_metaforo: data.state === ProposalState.PendingSubmit && submitType === 'submit',
     })
       .then((r) => {
+        showToast(
+          submitType === 'submit' ? t('Msg.SubmitProposalSuccess') : t('Msg.SaveProposalSuccess'),
+          ToastType.Success,
+        );
         navigate(`/proposal-v2/thread/${r.data.id}`);
+      })
+      .catch((error: any) => {
+        logError('saveOrSubmitProposal failed', error);
+        showToast(error?.data?.msg || error?.code || error, ToastType.Danger);
       })
       .finally(() => {
         dispatch({ type: AppActionType.SET_LOADING, payload: false });

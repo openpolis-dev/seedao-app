@@ -15,7 +15,7 @@ export default function useToast() {
   const showToast = (message: string, type: ToastType, config?: ToastOptions) => {
     switch (type) {
       case ToastType.Success:
-        toast.success(message, { theme: theme ? 'dark' : 'light', ...config });
+        toast.success(message, { theme: theme ? 'dark' : 'light', autoClose: 1300, ...config });
         break;
       case ToastType.Danger:
         toast.error(message, { theme: theme ? 'dark' : 'light', ...config });

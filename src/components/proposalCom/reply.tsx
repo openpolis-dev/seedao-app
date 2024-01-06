@@ -131,8 +131,10 @@ const ReplyComponent = React.forwardRef<IReplyOutputProps, IProps>(
         try {
           if (editId) {
             await editCommet(id, replyContent, editId);
+            showToast(t('Msg.ApproveSuccess'), ToastType.Success);
           } else {
             await addComment(id, replyContent, replyId);
+            showToast(t('Msg.CommentSuccess'), ToastType.Success);
           }
           setReplyId(undefined);
           setEditId(undefined);
@@ -162,6 +164,7 @@ const ReplyComponent = React.forwardRef<IReplyOutputProps, IProps>(
             setTobeDeletedId(undefined);
             setCurrentBindIdx(undefined);
             onDeleteComment(toBeDeleteId, currentBindIdx!);
+            showToast(t('Msg.ApproveSuccess'), ToastType.Success);
           })
           .catch((error) => {
             logError(`delete proposal-${id} comment-${toBeDeleteId} failed`, error);

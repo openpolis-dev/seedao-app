@@ -470,7 +470,11 @@
     "InvalidAddress": "无效的地址：{{address}}",
     "CloseInjected": "请关闭浏览器插件{{wallet}}, 使用MetaMask钱包",
     "InstallMetaMask": "请安装MetaMask钱包",
-    "WalletNotReady": "{{wallet}}钱包未准备好"
+    "WalletNotReady": "{{wallet}}钱包未准备好",
+    "SubmitProposalSuccess": "提交成功",
+    "SaveProposalSuccess": "保存成功",
+    "CastVoteSuccess": "投票成功",
+    "CommentSuccess": "评论成功"
   },
   "event": {
     "events": "活动",

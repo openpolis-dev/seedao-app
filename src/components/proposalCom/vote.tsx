@@ -52,6 +52,7 @@ export default function ProposalVote({ id, poll, voteGate, updateStatus }: IProp
       .then(() => {
         setShowConfirmVote(false);
         updateStatus();
+        showToast(t('Msg.CastVoteSuccess'), ToastType.Success);
       })
       .catch((error) => {
         logError('cast error failed', error);

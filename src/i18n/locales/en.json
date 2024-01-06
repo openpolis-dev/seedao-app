@@ -470,7 +470,11 @@
     "InvalidAddress": "Invalid Address: {{address}}",
     "CloseInjected": "Please close the {{wallet}} and use MetaMask",
     "InstallMetaMask": "Please install MetaMask",
-    "WalletNotReady": "{{wallet}} is not ready"
+    "WalletNotReady": "{{wallet}} is not ready",
+    "SubmitProposalSuccess": "Submit successfully",
+    "SaveProposalSuccess": "Save successfully",
+    "CastVoteSuccess": "Cast vote successfully",
+    "CommentSuccess": "Comment successfully"
   },
   "event": {
     "events": "Events",
