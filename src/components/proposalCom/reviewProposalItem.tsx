@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import styled from 'styled-components';
 import { Link, useNavigate } from 'react-router-dom';
-import { formatDate } from 'utils/time';
+import { formatTime } from 'utils/time';
 import { useAuthContext } from 'providers/authProvider';
 import { ISimpleProposal } from 'type/proposalV2.type';
 import ProposalStateTag, { getRealState } from './stateTag';
@@ -59,7 +59,7 @@ export default function ReviewProposalItem({
               </div>
               <div className="date">
                 {/* <Link to={`/proposal/category/${data.category_index_id}`}>#{data.category_name}</Link> */}
-                <span>{formatDate(new Date(data.create_ts * 1000))}</span>
+                <span>{formatTime(data.create_ts * 1000)}</span>
               </div>
             </div>
           </CardHeaderStyled>

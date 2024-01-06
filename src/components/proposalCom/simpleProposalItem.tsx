@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import styled from 'styled-components';
 import { Link, useNavigate } from 'react-router-dom';
-import { formatDate } from 'utils/time';
+import { formatDate, formatTime } from 'utils/time';
 import { useAuthContext } from 'providers/authProvider';
 import { ISimpleProposal } from 'type/proposalV2.type';
 import ProposalStateTag, { getRealState } from './stateTag';
@@ -50,7 +50,7 @@ export default function SimpleProposalItem({
             </div>
             <div className="right">
               <div className="name">{sns}</div>
-              <div className="date">{formatDate(new Date(data.create_ts * 1000))}</div>
+              <div className="date">{formatTime(data.create_ts * 1000)}</div>
             </div>
           </AvaBox>
           <div>

@@ -10,7 +10,7 @@ import EditActionHistory from 'components/proposalCom/editActionhistory';
 import { ICommentDisplay, IContentBlock, IProposal, IProposalEditHistoy, ProposalState } from 'type/proposalV2.type';
 import { useAuthContext, AppActionType } from 'providers/authProvider';
 import requests from 'requests';
-import { formatDate } from 'utils/time';
+import { formatTime } from 'utils/time';
 import BackerNav from 'components/common/backNav';
 import { MdEditor, MdPreview } from 'md-editor-rt';
 import ProposalStateTag, { getRealState } from 'components/proposalCom/stateTag';
@@ -402,7 +402,7 @@ export default function ThreadPage() {
           <UserBox onClick={() => handleProfile()}>
             <img src={applicantAvatar} alt="" />
             <span className="name">{applicantSNS}</span>
-            {data?.create_ts && <div className="date">{formatDate(new Date(data?.create_ts * 1000 || ''))}</div>}
+            {data?.create_ts && <div className="date">{formatTime(data.create_ts * 1000)}</div>}
           </UserBox>
         </ThreadCenter>
         {data?.arweave && (
@@ -424,7 +424,7 @@ export default function ThreadPage() {
         <RejectBlock>
           <RejectLine>
             <span className="rejectTit">{t('Proposal.CityhallRejected')}</span>
-            <span className="time">{formatDate(new Date(data.reject_ts * 1000))}</span>
+            <span className="time">{formatTime(data.reject_ts * 1000)}</span>
           </RejectLine>
           <div className="desc">{data.reject_reason}</div>
         </RejectBlock>
