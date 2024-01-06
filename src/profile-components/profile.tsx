@@ -52,7 +52,7 @@ const Box = styled.div`
 `;
 const TopBox = styled.div`
   background: var(--bs-background);
-  padding: 27px 24px;
+  padding: 20px 24px;
   border-top-left-radius: 16px;
   border-top-right-radius: 16px;
   display: flex;
@@ -115,7 +115,7 @@ const BioBox = styled.section`
   color: #9a9a9a;
   font-size: 12px;
   font-weight: 400;
-  line-height: 20px;
+  line-height: 12px;
 `;
 
 const TagBox = styled.ul`
@@ -127,7 +127,7 @@ const TagBox = styled.ul`
     border-radius: 5px;
     padding-inline: 10px;
     line-height: 22px;
-    margin: 0 8px 15px 0;
+    margin: 0 8px 6px 0;
     color: #000;
     &:nth-child(13n + 1) {
       background: #ff7193;
