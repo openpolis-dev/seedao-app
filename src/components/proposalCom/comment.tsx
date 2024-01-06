@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import DefaultAvatar from 'assets/Imgs/defaultAvatarT.png';
 import { handleContent } from './parseContent';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { UserTitleType } from 'type/proposal.type';
 import MoreSelectAction from './moreSelectAction';
 import { useTranslation } from 'react-i18next';
@@ -98,7 +98,7 @@ export default function CommentComponent({
   hideVersion,
 }: IProps) {
   const { t } = useTranslation();
-  const [showVersionTip, setShowVersionTip] = useState(true);
+  const [showVersionTip, setShowVersionTip] = useState(false);
   const versionTargetRef = useRef(null);
 
   const {
@@ -119,6 +119,17 @@ export default function CommentComponent({
         onDelete(data.metaforo_post_id, data.bindIdx);
         break;
     }
+  };
+
+  useEffect(() => {
+    document.addEventListener('click', (e) => {
+      setShowVersionTip(false);
+    });
+  }, []);
+
+  const handleShow = (e: any) => {
+    e.nativeEvent.stopImmediatePropagation();
+    setShowVersionTip(true);
   };
 
   return (
@@ -143,7 +154,9 @@ export default function CommentComponent({
             <TimeBox>{formatMsgTime(data.created_ts * 1000, t)}</TimeBox>
             {!hideVersion && data.proposal_arweave_hash && (
               <VersionTag>
-                <span onClick={() => setShowVersionTip(true)}>a</span>
+                <span ref={versionTargetRef} onClick={(e) => handleShow(e)}>
+                  a
+                </span>
                 <Overlay show={showVersionTip} target={versionTargetRef.current} placement="top">
                   {(props) => (
                     <Tip
@@ -255,6 +268,7 @@ const VersionTag = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
   span {
     cursor: pointer;
     display: inline-block;
@@ -278,7 +292,7 @@ const Tip = styled.div`
   padding-inline: 16px;
   box-sizing: border-box;
   border-radius: 8px;
-  background-color: var(--bs-box-backgroun);
+  background-color: var(--bs-box-background);
   color: var(--bs-body-color_active);
   cursor: default;
   img {
