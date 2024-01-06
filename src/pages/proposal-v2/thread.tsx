@@ -352,6 +352,7 @@ export default function ThreadPage() {
             to={review ? '/city-hall/governance/review-proposal' : '/proposal-v2'}
             mb="0"
           />
+
           <FlexRht>
             {!review && isCurrentApplicant && !!moreActions().length && (
               <EditBox>
@@ -362,29 +363,31 @@ export default function ThreadPage() {
                 ))}
               </EditBox>
             )}
-            <ThreadToolsBar>
-              {showVote() && (
-                <li onClick={go2vote}>
-                  <img src={theme ? VoteWhite : VoteImg} alt="" />
-                  {t('Proposal.Vote')}
+            {data?.state !== ProposalState.PendingSubmit && (
+              <ThreadToolsBar>
+                {showVote() && (
+                  <li onClick={go2vote}>
+                    <img src={theme ? VoteWhite : VoteImg} alt="" />
+                    {t('Proposal.Vote')}
+                  </li>
+                )}
+                <li onClick={openComment}>
+                  <img src={theme ? CommentWhite : CommentImg} alt="" />
+                  {t('Proposal.Comment')}
                 </li>
-              )}
-              <li onClick={openComment}>
-                <img src={theme ? CommentWhite : CommentImg} alt="" />
-                {t('Proposal.Comment')}
-              </li>
-              <li>
-                <CopyBox dir="left" text={`${window.location.origin}/proposal-v2/thread/${id}`}>
-                  <img src={theme ? ShareWhite : ShareImg} alt="" />
-                  {t('Proposal.Share')}
-                </CopyBox>
-              </li>
-              {/*{isCurrentApplicant && !!moreActions().length && (*/}
-              {/*  <li>*/}
-              {/*    <MoreSelectAction options={moreActions()} handleClickAction={handleClickMoreAction} />*/}
-              {/*  </li>*/}
-              {/*)}*/}
-            </ThreadToolsBar>
+                <li>
+                  <CopyBox dir="left" text={`${window.location.origin}/proposal-v2/thread/${id}`}>
+                    <img src={theme ? ShareWhite : ShareImg} alt="" />
+                    {t('Proposal.Share')}
+                  </CopyBox>
+                </li>
+                {/*{isCurrentApplicant && !!moreActions().length && (*/}
+                {/*  <li>*/}
+                {/*    <MoreSelectAction options={moreActions()} handleClickAction={handleClickMoreAction} />*/}
+                {/*  </li>*/}
+                {/*)}*/}
+              </ThreadToolsBar>
+            )}
           </FlexRht>
         </FlexInner>
       </FixedBox>
@@ -452,66 +455,69 @@ export default function ThreadPage() {
           ))}
         />
       </ContentOuter>
+      {data?.state !== ProposalState.PendingSubmit && (
+        <>
+          <CardStyle>
+            {showVote() && (
+              <ProposalVote
+                voteGate={data?.vote_gate}
+                poll={data!.votes[0]}
+                id={Number(id)}
+                updateStatus={getProposalDetail}
+              />
+            )}
 
-      <CardStyle>
-        {showVote() && (
-          <ProposalVote
-            voteGate={data?.vote_gate}
-            poll={data!.votes[0]}
-            id={Number(id)}
-            updateStatus={getProposalDetail}
-          />
-        )}
+            <ReplyAndHistoryBlock>
+              <BlockTab id="reply-history-block">
+                <li
+                  className={blockType === BlockContentType.Reply ? 'selected' : ''}
+                  onClick={() => setBlockType(BlockContentType.Reply)}
+                >
+                  {`${totalPostsCount} `}
+                  {t('Proposal.Comment')}
+                </li>
+                <li
+                  className={blockType === BlockContentType.History ? 'selected' : ''}
+                  onClick={() => setBlockType(BlockContentType.History)}
+                >
+                  {`${totalEditCount} `}
+                  {t('Proposal.EditHistory')}
+                </li>
+              </BlockTab>
 
-        <ReplyAndHistoryBlock>
-          <BlockTab id="reply-history-block">
-            <li
-              className={blockType === BlockContentType.Reply ? 'selected' : ''}
-              onClick={() => setBlockType(BlockContentType.Reply)}
-            >
-              {`${totalPostsCount} `}
-              {t('Proposal.Comment')}
-            </li>
-            <li
-              className={blockType === BlockContentType.History ? 'selected' : ''}
-              onClick={() => setBlockType(BlockContentType.History)}
-            >
-              {`${totalEditCount} `}
-              {t('Proposal.EditHistory')}
-            </li>
-          </BlockTab>
+              {blockType === BlockContentType.Reply && (
+                <ReplyComponent
+                  pinId={data?.reject_metaforo_comment_id}
+                  id={Number(id)}
+                  hideReply={review}
+                  posts={posts}
+                  ref={replyRef}
+                  onNewComment={() => onEditComment(currentCommentArrayIdx)}
+                  onEditComment={onEditComment}
+                  getNextCommentList={getNextCommentList}
+                  onDeleteComment={onDeleteComment}
+                  hasMore={hasMore}
+                />
+              )}
 
-          {blockType === BlockContentType.Reply && (
-            <ReplyComponent
-              pinId={data?.reject_metaforo_comment_id}
-              id={Number(id)}
-              hideReply={review}
-              posts={posts}
-              ref={replyRef}
-              onNewComment={() => onEditComment(currentCommentArrayIdx)}
-              onEditComment={onEditComment}
-              getNextCommentList={getNextCommentList}
-              onDeleteComment={onDeleteComment}
-              hasMore={hasMore}
-            />
+              {blockType === BlockContentType.History && <EditActionHistory data={editHistoryList} />}
+            </ReplyAndHistoryBlock>
+
+            {showConfirmWithdraw && (
+              <ConfirmModal
+                msg={t('Proposal.ConfirmWithdrawProposal')}
+                onClose={() => setShowConfirmWithdraw(false)}
+                onConfirm={handlWithdraw}
+              />
+            )}
+          </CardStyle>
+
+          {review && (
+            <AuditBox>
+              <ReviewProposalComponent id={Number(id)} onUpdateStatus={onUpdateStatus} />
+            </AuditBox>
           )}
-
-          {blockType === BlockContentType.History && <EditActionHistory data={editHistoryList} />}
-        </ReplyAndHistoryBlock>
-
-        {showConfirmWithdraw && (
-          <ConfirmModal
-            msg={t('Proposal.ConfirmWithdrawProposal')}
-            onClose={() => setShowConfirmWithdraw(false)}
-            onConfirm={handlWithdraw}
-          />
-        )}
-      </CardStyle>
-
-      {review && (
-        <AuditBox>
-          <ReviewProposalComponent id={Number(id)} onUpdateStatus={onUpdateStatus} />
-        </AuditBox>
+        </>
       )}
     </Page>
   );
