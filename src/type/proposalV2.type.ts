@@ -115,6 +115,7 @@ export interface IProposal extends ISimpleProposal {
     total_count: number;
     lists: IProposalEditHistoy[];
   };
+  template_name?: string;
 }
 
 export interface IActivity {

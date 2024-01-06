@@ -7,10 +7,8 @@ const CategoryTag = styled.div`
   color: var(--bs-body-color_active);
   font-size: 12px;
   padding: 0 16px;
-  line-height: 22px;
-  height: 24px;
+  line-height: 24px;
   text-align: center;
-  box-sizing: border-box;
 `;
 
 export default CategoryTag;

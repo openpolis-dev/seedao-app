@@ -33,6 +33,7 @@ import CommentWhite from 'assets/Imgs/proposal/comment-white.svg';
 import { DeletedContent } from 'components/proposalCom/comment';
 import useToast, { ToastType } from 'hooks/useToast';
 import CategoryTag from 'components/proposalCom/categoryTag';
+import TemplateTag from 'components/proposalCom/templateTag';
 
 enum BlockContentType {
   Reply = 1,
@@ -393,6 +394,7 @@ export default function ThreadPage() {
         <FlexLine>
           {currentState && <ProposalStateTag state={currentState} />}
           <CategoryTag>{currentCategory()}</CategoryTag>
+          {review && data?.template_name && <TemplateTag>{data?.template_name}</TemplateTag>}
           {data?.arweave && (
             <StoreHash href={`https://arweave.net/tx/${data?.arweave}/data.html`} target="_blank" rel="noreferrer">
               a

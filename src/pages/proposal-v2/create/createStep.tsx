@@ -16,6 +16,8 @@ import { useCreateProposalContext } from './store';
 import requests from '../../../requests';
 import getConfig from '../../../utils/envCofnig';
 import useToast, { ToastType } from 'hooks/useToast';
+import TemplateTag from 'components/proposalCom/templateTag';
+import CategoryTag from 'components/proposalCom/categoryTag';
 
 const Box = styled.ul`
   position: relative;
@@ -57,6 +59,17 @@ const FlexInner = styled.div`
   justify-content: space-between;
   padding: 0 16px;
   height: 64px;
+`;
+
+const NavLeft = styled.div`
+  display: flex;
+  gap: 12px;
+`;
+
+const TagsBox = styled.div`
+  display: flex;
+  gap: 12px;
+  align-items: center;
 `;
 
 const BackBox = styled.div`
@@ -127,31 +140,6 @@ const InputBox = styled.div`
       outline: none;
     }
   }
-`;
-
-const TagBox = styled.div`
-  padding: 0 16px;
-  border-radius: 4px;
-  background: var(--bs-box--background);
-  border: 1px solid rgba(217, 217, 217, 0.5);
-  display: inline-block;
-  margin-left: 8px;
-  font-size: 12px;
-  height: 24px;
-  line-height: 24px;
-`;
-const TemplateTag = styled.div`
-  color: #cc8f00;
-  padding: 0 16px;
-  font-size: 12px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 20px;
-  display: inline-block;
-  border-radius: 4px;
-  border: 1px solid #ffe071;
-  background: #fff5d2;
-  margin-left: 8px;
 `;
 
 const ComponnentBox = styled(TitleBox)`
@@ -322,13 +310,18 @@ export default function CreateStep({ onClick }: any) {
     <Box>
       <FixedBox showRht={showRht.toString()}>
         <FlexInner>
-          <BackBox onClick={() => setShowLeaveConfirm(true)}>
-            <BackIconBox>
-              <img src={BackIcon} alt="" />
-            </BackIconBox>
-            <span className="backTitle">{t('Proposal.CreateProposal')}</span>
-          </BackBox>
-
+          <NavLeft>
+            <BackBox onClick={() => setShowLeaveConfirm(true)}>
+              <BackIconBox>
+                <img src={BackIcon} alt="" />
+              </BackIconBox>
+              <span className="backTitle">{t('Proposal.CreateProposal')}</span>
+            </BackBox>
+            <TagsBox>
+              <CategoryTag>{proposalType?.name}</CategoryTag>
+              {templateTitle && <TemplateTag>{templateTitle}</TemplateTag>}
+            </TagsBox>
+          </NavLeft>
           <BtnGroup>
             <Button className="save" onClick={handleSave} disabled={!title || !title.trim()}>
               {t('Proposal.SaveProposal')}
@@ -354,11 +347,7 @@ export default function CreateStep({ onClick }: any) {
           BeforeComponent={
             <>
               <ItemBox>
-                <TitleBox>
-                  <span>{t('Proposal.title')}</span>
-                  <TagBox>{proposalType?.name}</TagBox>
-                  {templateTitle && <TemplateTag>{templateTitle}</TemplateTag>}
-                </TitleBox>
+                <TitleBox>{t('Proposal.title')}</TitleBox>
                 <InputBox>
                   <input type="text" value={title} onChange={handleInput} />
                 </InputBox>
