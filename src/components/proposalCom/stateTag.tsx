@@ -28,7 +28,7 @@ export default function ProposalStateTag({ state }: { state?: ProposalState }) {
       text = t('Proposal.Draft');
       break;
     case ProposalState.PendingSubmit:
-      color = '#F9B617';
+      color = 'rgba(9, 171, 207, 0.90)';
       text = t('Proposal.PendingCommit');
       break;
     case ProposalState.Withdrawn:
@@ -42,6 +42,10 @@ export default function ProposalStateTag({ state }: { state?: ProposalState }) {
     case ProposalState.VotingFailed:
       color = '#FB4E4E';
       text = t('Proposal.Failed');
+      break;
+    case ProposalState.Voting:
+      color = '#F9B617';
+      text = t('Proposal.Voting');
       break;
     default:
       text = '';
