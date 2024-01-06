@@ -30,7 +30,7 @@ export default function ReviewProposalItem({
   const openProposal = async () => {
     const canReview = await checkMetaforoLogin();
     if (canReview) {
-      navigate(`/proposal-v2/thread/${data.id}${isReview ? '?review' : ''}`, { state: data });
+      navigate(`/city-hall/governance/review-proposal/${data.id}`, { state: data });
     }
   };
 

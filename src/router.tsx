@@ -104,6 +104,7 @@ export default function RouterLink() {
           <Route path="/city-hall/governance/audit-project" element={<AuditProject />} />
           <Route path="/city-hall/governance/issue" element={<Issue />} />
           <Route path="/city-hall/governance/review-proposal" element={<ProposalReview />} />
+          <Route path="/city-hall/governance/review-proposal/:id" element={<ProposalThreadV2 />} />
           {getConfig().REACT_APP_ENV === 'test' && <Route path="/chat" element={<Chat />} />}
           <Route path="/ranking" element={<SCRRank />} />
           <Route path="/feedback" element={<Canny />} />

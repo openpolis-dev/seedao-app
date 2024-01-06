@@ -43,10 +43,8 @@ enum BlockContentType {
 
 export default function ThreadPage() {
   const navigate = useNavigate();
-  const { state } = useLocation();
-  const [search] = useSearchParams();
-  // review: true -> review proposal
-  const review = search.get('review') === '';
+  const { pathname, state } = useLocation();
+  const review = pathname.includes('review-proposal');
   const { id } = useParams();
   const { t, i18n } = useTranslation();
   const {
@@ -349,7 +347,11 @@ export default function ThreadPage() {
     <Page>
       <FixedBox>
         <FlexInner>
-          <BackerNav title={currentCategory()} to="/proposal-v2" mb="0" />
+          <BackerNav
+            title={currentCategory()}
+            to={review ? '/city-hall/governance/review-proposal' : '/proposal-v2'}
+            mb="0"
+          />
           <FlexRht>
             {!review && isCurrentApplicant && !!moreActions().length && (
               <EditBox>
