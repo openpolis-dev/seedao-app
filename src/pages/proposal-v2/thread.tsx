@@ -396,28 +396,18 @@ export default function ThreadPage() {
         <FlexLine>
           {currentState && <ProposalStateTag state={currentState} />}
           <CategoryTag>{currentCategory()}</CategoryTag>
+          {data?.arweave && (
+            <StoreHash href={`https://arweave.net/tx/${data?.arweave}/data.html`} target="_blank" rel="noreferrer">
+              a
+            </StoreHash>
+          )}
         </FlexLine>
         {showModal && <ProfileComponent address={applicant} theme={theme} handleClose={handleClose} />}
-        <ThreadCenter>
-          <UserBox onClick={() => handleProfile()}>
-            <img src={applicantAvatar} alt="" />
-            <span className="name">{applicantSNS}</span>
-            {data?.create_ts && <div className="date">{formatTime(data.create_ts * 1000)}</div>}
-          </UserBox>
-        </ThreadCenter>
-        {data?.arweave && (
-          <StoreHash>
-            <div className="lft">
-              <img src={LinkImg} alt="" /> <span>Arweave Hash</span>
-            </div>
-            <div className="rht">
-              <a href={`https://arweave.net/tx/${data?.arweave}/data.html`} target="_blank" rel="noreferrer">
-                {data?.arweave}
-              </a>
-              <img src={!theme ? LinkIconDark : LinkIcon} alt="" />
-            </div>
-          </StoreHash>
-        )}
+        <UserBox onClick={() => handleProfile()}>
+          <img src={applicantAvatar} alt="" />
+          <span className="name">{applicantSNS}</span>
+          {data?.create_ts && <div className="date">{formatTime(data.create_ts * 1000)}</div>}
+        </UserBox>
       </ThreadHead>
 
       {data?.is_rejected && data?.reject_reason && data?.reject_ts && (
@@ -598,18 +588,6 @@ const BlockTab = styled.ul`
   }
 `;
 
-const ThreadCenter = styled.div`
-  display: flex;
-  justify-content: space-between;
-  flex-direction: column;
-  .name {
-    font-size: 14px;
-    font-weight: 600;
-    line-height: 22px;
-    color: var(--bs-body-color_active);
-  }
-`;
-
 const ThreadHead = styled.div`
   background-color: var(--bs-box-background);
   box-shadow: var(--proposal-box-shadow);
@@ -617,30 +595,36 @@ const ThreadHead = styled.div`
   margin-bottom: 24px;
   padding: 32px;
   border-radius: 8px;
-  margin-top: 30px;
+  margin-top: 24px;
   .title {
     font-size: 24px;
-    font-family: 'Poppins-Medium';
+    font-family: 'Poppins-Bold';
     color: var(--bs-body-color_active);
+    line-height: 30px;
+    letter-spacing: 0.12px;
   }
 `;
 
 const UserBox = styled.div`
   display: flex;
-  gap: 10px;
+  gap: 8px;
   align-items: center;
-  margin-block: 16px;
   img {
     width: 32px;
     height: 32px;
     border-radius: 50%;
-    margin-right: 8px;
     object-fit: cover;
     object-position: center;
   }
   .date {
     margin-left: 16px;
     font-size: 12px;
+  }
+  .name {
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 22px;
+    color: var(--bs-body-color_active);
   }
 `;
 
@@ -653,32 +637,18 @@ const CardStyle = styled.div`
   padding: 32px;
 `;
 
-const StoreHash = styled.div`
-  display: flex;
-  align-items: center;
-  a {
-    color: #2f8fff;
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 400;
-  }
-  .lft {
-    color: var(--bs-body-color_active);
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 600;
-    margin-right: 8px;
-    img {
-      margin-right: 8px;
-    }
-  }
-  .rht {
-    display: flex;
-    align-content: center;
-    img {
-      margin-left: 8px;
-    }
-  }
+const StoreHash = styled.a`
+  color: #2f8fff;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  line-height: 16px;
+  text-align: center;
+  border-radius: 50%;
+  border: 1px solid #2f8fff;
 `;
 
 const ThreadToolsBar = styled.ul`
