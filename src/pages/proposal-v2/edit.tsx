@@ -15,6 +15,7 @@ import getConfig from '../../utils/envCofnig';
 import requests from '../../requests';
 import BackIcon from '../../assets/Imgs/back.svg';
 import useToast, { ToastType } from 'hooks/useToast';
+import useProposalCategories from 'hooks/useProposalCategories';
 
 export default function EditProposal() {
   const { t, i18n } = useTranslation();
@@ -30,6 +31,7 @@ export default function EditProposal() {
   } = useAuthContext();
 
   const { checkMetaforoLogin } = useCheckMetaforoLogin();
+  const proposalCategories = useProposalCategories();
 
   const [data, setData] = useState<IProposal>();
   const [contentBlocks, setContentBlocks] = useState<IContentBlock[]>([]);
@@ -175,6 +177,10 @@ export default function EditProposal() {
     setTimeout(allSubmit, 0);
   };
 
+  const categoryName = data?.proposal_category_id
+    ? proposalCategories.find((item) => item.id === data?.proposal_category_id)?.name
+    : '';
+
   return (
     <Page>
       {/*<BackerNav title={t('Proposal.EditProposalNav')} to={'/proposal-v2'} onClick={() => navigate(-1)} />*/}
@@ -185,7 +191,7 @@ export default function EditProposal() {
             <BackIconBox>
               <img src={BackIcon} alt="" />
             </BackIconBox>
-            <span className="backTitle">{t('Proposal.CreateProposal')}</span>
+            <span className="backTitle">{t('Proposal.EditProposal')}</span>
           </BackBox>
 
           <BtnGroup>
@@ -195,9 +201,13 @@ export default function EditProposal() {
             {/*<Button onClick={handleSubmit}>{t('Proposal.SubmitProposal')}</Button>*/}
 
             {data?.state === ProposalState.PendingSubmit && (
-              <Button onClick={handleSave}>{t('Proposal.SaveProposal')}</Button>
+              <Button className="save" onClick={handleSave} disabled={!title || !title.trim()}>
+                {t('Proposal.SaveProposal')}
+              </Button>
             )}
-            <Button onClick={handleSubmit}>{t('Proposal.SubmitProposal')}</Button>
+            <Button onClick={handleSubmit} disabled={!title || !title.trim()}>
+              {t('Proposal.SubmitProposal')}
+            </Button>
           </BtnGroup>
         </FlexInner>
       </FixedBox>
@@ -217,8 +227,7 @@ export default function EditProposal() {
               <ItemBox>
                 <TitleBox>
                   <span>{t('Proposal.title')}</span>
-                  <TagBox>三层提案 - P1</TagBox>
-                  {/*<TemplateTag>公共项目</TemplateTag>*/}
+                  {categoryName && <TagBox>{categoryName}</TagBox>}
                 </TitleBox>
                 <InputBox>
                   <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} />
