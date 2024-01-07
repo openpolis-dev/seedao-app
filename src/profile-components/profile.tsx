@@ -94,28 +94,29 @@ const InfoBox = styled.div`
   flex-direction: column;
   .userName {
     color: var(--bs-body-color_active);
-    font-size: 16px;
+    font-size: 18px;
     font-family: Poppins-SemiBold;
     font-weight: 600;
-    line-height: 23px;
-    margin-bottom: 6px;
   }
   .lineBox {
     display: flex;
     align-items: flex-start;
+    margin-bottom: 6px;
+    line-height: 23px;
   }
   .sns {
     color: var(--bs-body-color);
     font-size: 12px;
+    line-height: 16px;
   }
 `;
 
 const BioBox = styled.section`
-  margin: 6px 0;
+  margin: 6px 0 8px 0;
   color: #9a9a9a;
   font-size: 12px;
   font-weight: 400;
-  line-height: 12px;
+  line-height: 16px;
 `;
 
 const TagBox = styled.ul`
@@ -228,6 +229,8 @@ const LevelBox = styled.div`
   -webkit-text-fill-color: transparent;
   font-style: italic;
   padding-inline: 10px;
+  position: relative;
+  top: 1px;
 `;
 
 const InneBox = styled.div``;
