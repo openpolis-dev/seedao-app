@@ -233,13 +233,18 @@ export default function ThreadPage() {
       })
       .catch((error: any) => {
         logError(`withdrawProposal-${id} failed`, error);
+        showToast(error?.data?.msg || error?.code || error, ToastType.Danger, { autoClose: false });
       })
       .finally(() => {
         dispatch({ type: AppActionType.SET_LOADING, payload: false });
       });
   };
 
-  const handleClickMoreAction = (action: string) => {
+  const handleClickMoreAction = async (action: string) => {
+    const canOperate = await checkMetaforoLogin();
+    if (!canOperate) {
+      return;
+    }
     switch (action) {
       case 'edit':
         handleEdit();
