@@ -33,7 +33,7 @@ const ItemBox = styled.div`
 const TitleBox = styled.div`
   background: rgba(82, 0, 255, 0.08);
   padding: 10px 20px;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: bold;
   margin-bottom: 20px;
   box-sizing: border-box;
@@ -144,6 +144,9 @@ const InputBox = styled.div`
 
 const ComponnentBox = styled(TitleBox)`
   margin-bottom: 10px;
+  span {
+    font-size: 16px;
+  }
 `;
 
 export default function CreateStep({ onClick }: any) {
