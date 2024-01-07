@@ -196,10 +196,6 @@ export default function ProposalIndexPage() {
                   {inputKeyword && <ClearSVGIcon onClick={() => clearSearch()} className="btn-clear" />}
                 </SearchBox>
               </FilterBox>
-              <Button variant="primary" onClick={go2create}>
-                <img src={AddImg} alt="" className="mr20" />
-                {t('Proposal.CreateProposal')}
-              </Button>
             </FlexLine>
             {proposalList.map((p) => (
               <SimpleProposalItem
@@ -243,6 +239,12 @@ export default function ProposalIndexPage() {
             {t('Proposal.MyProposals')}
           </HistoryButton>
         </LineBox>
+        <div>
+          <Button variant="primary" onClick={go2create}>
+            <img src={AddImg} alt="" className="mr20" />
+            {t('Proposal.CreateProposal')}
+          </Button>
+        </div>
       </OperateBox>
       {showContent()}
     </Page>
@@ -259,7 +261,6 @@ const Page = styled.div`
 const OperateBox = styled.div`
   display: flex;
   justify-content: space-between;
-  flex-direction: column;
   margin-bottom: 20px;
 `;
 
