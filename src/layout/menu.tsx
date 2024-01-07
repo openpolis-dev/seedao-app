@@ -46,11 +46,11 @@ import PubImgActive from '../assets/Imgs/darkMenu/pub_active.png';
 import PubImgLight from '../assets/Imgs/lightMenu/pub.svg';
 
 import WikiImg from '../assets/Imgs/lightMenu/wiki.png';
-import WikiWhite from '../assets/Imgs/darkMenu/wiki.png';
+import WikiWhite from '../assets/Imgs/darkMenu/wikiWhite.png';
 import WikiImgActive from '../assets/Imgs/darkMenu/wiki_active.png';
 
 import FreshImg from '../assets/Imgs/darkMenu/fresh.png';
-import FreshWhite from '../assets/Imgs/darkMenu/fresh.png';
+import FreshWhite from '../assets/Imgs/darkMenu/freshWhite.png';
 import FreshActive from '../assets/Imgs/darkMenu/fresh_active.png';
 
 import React from 'react';
