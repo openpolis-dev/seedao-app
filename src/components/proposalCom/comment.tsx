@@ -172,8 +172,10 @@ export default function CommentComponent({
                             setShowVersionTip(false);
                           }}
                         >
-                          {data.proposal_title}
-                          <img src={!theme ? LinkIconDark : LinkIcon} alt="" />
+                          <span className="titleName">{data.proposal_title}</span>
+                          <span className="time">{formatMsgTime(data.created_ts * 1000, t)}</span>
+
+                          {/*<img src={!theme ? LinkIconDark : LinkIcon} alt="" />*/}
                         </Tip>
                       )}
                     </Overlay>
@@ -301,9 +303,17 @@ const Tip = styled.div`
   box-sizing: border-box;
   border-radius: 8px;
   background-color: var(--bs-box-background);
-  color: var(--bs-body-color_active);
+  //color: var(--bs-body-color_active);
+
   cursor: default;
   font-size: 14px;
+  .titleName {
+    color: #2f8fff;
+  }
+  .time {
+    padding-left: 10px;
+    font-size: 12px;
+  }
   img {
     position: relative;
     top: -1px;
