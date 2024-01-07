@@ -77,8 +77,8 @@ const UserBox = ({ address, name, avatar, user_title, isSpecial }: IUserProps) =
       {showModal && <ProfileComponent address={address} theme={theme} handleClose={handleClose} />}
       <UserBoxStyle onClick={() => handleProfile()}>
         <Avatar src={isSpecial ? CityHallImg : avatar || DefaultAvatar} alt="" />
-        <NameBox>{name}</NameBox>
-        {user_title && user_title.name && <UserTag bg={user_title.background}>{user_title?.name}</UserTag>}
+        {/*<NameBox>{name}</NameBox>*/}
+        {/*{user_title && user_title.name && <UserTag bg={user_title.background}>{user_title?.name}</UserTag>}*/}
       </UserBoxStyle>
     </>
   );
@@ -145,61 +145,69 @@ export default function CommentComponent({
               name={isSpecial ? t('city-hall.Cityhall') : formatSNS(snsMap, data.wallet?.toLocaleLowerCase())}
               avatar={data.avatar}
             />
-            {parentData && (
-              <ReplyTag>
-                <span>{t('Proposal.Reply')} </span>
-                {'@'} {parentData?.userName || formatSNS(snsMap, parentData.wallet?.toLocaleLowerCase())}
-              </ReplyTag>
-            )}
-            <TimeBox>{formatMsgTime(data.created_ts * 1000, t)}</TimeBox>
-            {!hideVersion && data.proposal_arweave_hash && (
-              <VersionTag>
-                <span ref={versionTargetRef} onClick={(e) => handleShow(e)}>
-                  a
-                </span>
-                <Overlay show={showVersionTip} target={versionTargetRef.current} placement="top">
-                  {(props) => (
-                    <Tip
-                      {...props}
-                      onClick={() => {
-                        window.open(`https://arweave.net/tx/${data.proposal_arweave_hash}/data.html`);
-                        setShowVersionTip(false);
-                      }}
-                    >
-                      {data.proposal_title}
-                      <img src={!theme ? LinkIconDark : LinkIcon} alt="" />
-                    </Tip>
-                  )}
-                </Overlay>
-              </VersionTag>
-            )}
-          </RelationUserLine>
-          {isSpecial ? (
-            <Content>{data.content}</Content>
-          ) : (
-            <Content className="content" dangerouslySetInnerHTML={{ __html: content }}></Content>
-          )}
-          {!data.deleted && (
-            <OpLine>
-              {!hideReply && (
-                <FlexReply>
-                  <ReplyBtn onClick={handleReply}>
-                    <img src={CommentIcon} alt="" />
-                    {t('Proposal.Reply')}
-                  </ReplyBtn>
-                  {isCurrentUser && (
-                    <MoreSelectAction
-                      options={[
-                        { label: t('Proposal.Edit'), value: 'edit' },
-                        { label: t('Proposal.Delete'), value: 'delete' },
-                      ]}
-                      handleClickAction={handleClickMoreAction}
-                    />
-                  )}
-                </FlexReply>
+
+            <RhtBtm>
+              <Flextop>
+                <NameBox>
+                  {isSpecial ? t('city-hall.Cityhall') : formatSNS(snsMap, data.wallet?.toLocaleLowerCase())}
+                </NameBox>
+                {parentData && (
+                  <ReplyTag>
+                    <span>{t('Proposal.Reply')} </span>
+                    {'@'} {parentData?.userName || formatSNS(snsMap, parentData.wallet?.toLocaleLowerCase())}
+                  </ReplyTag>
+                )}
+                <TimeBox>{formatMsgTime(data.created_ts * 1000, t)}</TimeBox>
+                {!hideVersion && data.proposal_arweave_hash && (
+                  <VersionTag>
+                    <span ref={versionTargetRef} onClick={(e) => handleShow(e)}>
+                      a
+                    </span>
+                    <Overlay show={showVersionTip} target={versionTargetRef.current} placement="right-end">
+                      {(props) => (
+                        <Tip
+                          {...props}
+                          onClick={() => {
+                            window.open(`https://arweave.net/tx/${data.proposal_arweave_hash}/data.html`);
+                            setShowVersionTip(false);
+                          }}
+                        >
+                          {data.proposal_title}
+                          <img src={!theme ? LinkIconDark : LinkIcon} alt="" />
+                        </Tip>
+                      )}
+                    </Overlay>
+                  </VersionTag>
+                )}
+                {!data.deleted && (
+                  <OpLine>
+                    {!hideReply && (
+                      <FlexReply>
+                        <ReplyBtn onClick={handleReply}>
+                          <img src={CommentIcon} alt="" />
+                          {t('Proposal.Reply')}
+                        </ReplyBtn>
+                        {isCurrentUser && (
+                          <MoreSelectAction
+                            options={[
+                              { label: t('Proposal.Edit'), value: 'edit' },
+                              { label: t('Proposal.Delete'), value: 'delete' },
+                            ]}
+                            handleClickAction={handleClickMoreAction}
+                          />
+                        )}
+                      </FlexReply>
+                    )}
+                  </OpLine>
+                )}
+              </Flextop>
+              {isSpecial ? (
+                <Content>{data.content}</Content>
+              ) : (
+                <Content className="content" dangerouslySetInnerHTML={{ __html: content }}></Content>
               )}
-            </OpLine>
-          )}
+            </RhtBtm>
+          </RelationUserLine>
         </RightBox>
       </CommentMain>
       {children}
@@ -220,7 +228,7 @@ const CommentStyle = styled.div<{ padding: string }>`
 const CommentMain = styled.div`
   display: flex;
   gap: 10px;
-  margin-bottom: 12px;
+  margin-bottom: 17px;
   width: 100%;
 `;
 
@@ -272,9 +280,9 @@ const VersionTag = styled.div`
   span {
     cursor: pointer;
     display: inline-block;
-    width: 20px;
-    height: 20px;
-    line-height: 18px;
+    width: 18px;
+    height: 18px;
+    line-height: 15px;
     border-radius: 50%;
     border: 1px solid var(--bs-body-color);
     text-align: center;
@@ -295,6 +303,7 @@ const Tip = styled.div`
   background-color: var(--bs-box-background);
   color: var(--bs-body-color_active);
   cursor: default;
+  font-size: 14px;
   img {
     position: relative;
     top: -1px;
@@ -303,8 +312,6 @@ const Tip = styled.div`
 `;
 
 const Content = styled.div`
-  padding-left: 64px;
-
   color: var(--bs-body-color_active);
   font-size: 14px;
   font-style: normal;
@@ -315,7 +322,7 @@ const NameBox = styled.div`
   color: var(--bs-body-color_active);
   font-size: 16px;
   font-style: normal;
-  font-weight: bold;
+  font-family: 'Poppins-SemiBold';
   line-height: 22px;
 `;
 const TimeBox = styled.div`
@@ -327,14 +334,13 @@ const TimeBox = styled.div`
 `;
 
 const OpLine = styled.div`
-  padding-left: 64px;
   display: flex;
 `;
 const ReplyBtn = styled.div`
   display: flex;
   align-items: center;
   cursor: pointer;
-  margin-top: 10px;
+
   color: #2f8fff;
   font-size: 14px;
   font-style: normal;
@@ -348,4 +354,12 @@ const FlexReply = styled.div`
   display: flex;
   align-items: center;
   color: #2f8fff;
+`;
+const RhtBtm = styled.div`
+  flex-grow: 1;
+`;
+const Flextop = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
 `;

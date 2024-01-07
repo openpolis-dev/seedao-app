@@ -43,6 +43,7 @@ export default function MoreSelectAction({ options, handleClickAction }: IAction
 const ActionButton = styled.div`
   cursor: pointer;
   font-size: 18px;
+  margin-top: -10px;
 `;
 
 const Box = styled.div`
