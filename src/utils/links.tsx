@@ -116,6 +116,15 @@ const links = {
       hideTitle: 0,
       hiddenFields: [],
     },
+    {
+      name: 'resources.brandApply',
+      link: 'https://tally.so/r/w4QxNd',
+      id: 'outer',
+      icon: RImg9,
+      desc: 'resources.brandApplyDesc',
+      hideTitle: 0,
+      hiddenFields: [],
+    },
     // {
     //   name: 'resources.Seed',
     //   link: 'https://seed.seedao.xyz/',

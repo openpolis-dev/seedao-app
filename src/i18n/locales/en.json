@@ -522,8 +522,10 @@
     "GuildDesc": "Request to create a guild in SeeDAO.",
     "Incubator": "Incubator",
     "IncubatorDesc": "Apply to join SeeDAO Incubator.",
-    "externalResources": "对外资源申请",
-    "externalResourcesDesc": "申请加入对外资源"
+    "externalResources": "外联合作申请",
+    "externalResourcesDesc": "申请加入对外资源",
+    "brandApply": "品牌Logo资源申请",
+    "brandApplyDesc": "申请使用品牌Logo"
   },
   "application": {
     "Register": "Register",
