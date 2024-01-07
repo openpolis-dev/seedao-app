@@ -525,7 +525,9 @@
     "externalResources": "外联合作申请",
     "externalResourcesDesc": "申请加入对外资源",
     "brandApply": "申请加入外联网络",
-    "brandApplyDesc": "申请使用品牌Logo"
+    "brandApplyDesc": "申请使用品牌Logo",
+    "podcastTitle": "SeeTalk",
+    "podcastDesc": "SeeTalk是一档由SeeDAO社区成员共创Web3节目，传递着社区成员的共创涌现和SeeDAO当前正在做的重要工作与规划"
   },
   "application": {
     "Register": "Register",

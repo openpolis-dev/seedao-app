@@ -18,6 +18,7 @@ import LinkImg from '../../assets/Imgs/link.svg';
 import { Link, useNavigate } from 'react-router-dom';
 import getConfig from 'utils/envCofnig';
 import PlayImg from '../../assets/Imgs/podcast.png';
+import { types } from 'sass';
 
 const Box = styled.div`
   background: var(--bs-background);
@@ -429,9 +430,9 @@ export default function Home() {
         <Col md={4}>
           <CityBox>
             <a href="https://seedao.notion.site/f57031667089473faa7ea3560d05960c" target="_blank" rel="noreferrer">
-              <TitBox2>
+              <TitBox>
                 <span>{t('Home.podcast')}</span>
-              </TitBox2>
+              </TitBox>
             </a>
 
             <LinkBox>
@@ -440,7 +441,10 @@ export default function Home() {
                   <BtmBox>
                     <FlexPod>
                       <img src={Links.podcast.img} alt="" />
-                      <div className="tit">{Links.podcast.name}</div>
+                      <div>
+                        <div className="tit">{t(Links.podcast.name as any)}</div>
+                        <div className="desc">{t(Links.podcast.desc as any)}</div>
+                      </div>
                     </FlexPod>
                     <div className="linkRht">
                       <img src={PlayImg} alt="" />
@@ -545,8 +549,12 @@ const OnboadingButton = styled(Button)`
 const FlexPod = styled.div`
   display: flex;
   align-items: center;
+  margin-right: 10px;
+  .tit {
+    font-size: 16px;
+  }
   img {
-    width: 50px;
+    width: 88px;
     border-radius: 8px;
   }
 `;

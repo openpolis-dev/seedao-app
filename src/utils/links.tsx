@@ -369,9 +369,10 @@ const links = {
     },
   ],
   podcast: {
-    name: 'SeeTalk',
+    name: 'resources.podcastTitle',
     link: 'https://www.xiaoyuzhoufm.com/podcast/64a27b216d90c5786108abbc',
     img: PodcastImg,
+    desc: 'resources.podcastDesc',
   },
 };
 
