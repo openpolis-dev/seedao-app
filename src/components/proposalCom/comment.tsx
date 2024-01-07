@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import DefaultAvatar from 'assets/Imgs/defaultAvatarT.png';
+import DefaultAvatar from 'assets/Imgs/defaultAvatar.png';
 import { handleContent } from './parseContent';
 import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { UserTitleType } from 'type/proposal.type';
