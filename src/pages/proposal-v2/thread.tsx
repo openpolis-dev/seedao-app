@@ -568,9 +568,7 @@ const Page = styled.div`
   ${ContainerPadding};
 `;
 
-const ReplyAndHistoryBlock = styled.div`
-  margin-top: 20px;
-`;
+const ReplyAndHistoryBlock = styled.div``;
 
 const BlockTab = styled.ul`
   display: flex;
@@ -626,7 +624,7 @@ const UserBox = styled.div`
     object-fit: cover;
     object-position: center;
   }
-  
+
   .name {
     font-size: 14px;
     font-weight: 600;
