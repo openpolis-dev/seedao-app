@@ -402,11 +402,13 @@ export default function ThreadPage() {
           )}
         </FlexLine>
         {showModal && <ProfileComponent address={applicant} theme={theme} handleClose={handleClose} />}
-        <UserBox onClick={() => handleProfile()}>
-          <img src={applicantAvatar} alt="" />
-          <span className="name">{applicantSNS}</span>
+        <InfoBox>
+          <UserBox onClick={() => handleProfile()}>
+            <img src={applicantAvatar} alt="" />
+            <span className="name">{applicantSNS}</span>
+          </UserBox>
           {data?.create_ts && <div className="date">{formatTime(data.create_ts * 1000)}</div>}
-        </UserBox>
+        </InfoBox>
       </ThreadHead>
 
       {data?.is_rejected && data?.reject_reason && data?.reject_ts && (
@@ -604,6 +606,15 @@ const ThreadHead = styled.div`
   }
 `;
 
+const InfoBox = styled.div`
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  .date {
+    font-size: 12px;
+  }
+`;
+
 const UserBox = styled.div`
   display: flex;
   gap: 8px;
@@ -615,15 +626,13 @@ const UserBox = styled.div`
     object-fit: cover;
     object-position: center;
   }
-  .date {
-    margin-left: 16px;
-    font-size: 12px;
-  }
+  
   .name {
     font-size: 14px;
     font-weight: 600;
     line-height: 22px;
     color: var(--bs-body-color_active);
+    cursor: default;
   }
 `;
 
