@@ -637,17 +637,17 @@ const CardStyle = styled.div`
 `;
 
 const StoreHash = styled.a`
-  color: #2f8fff;
+  color: var(--bs-body-color);
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
   display: inline-block;
   width: 18px;
   height: 18px;
-  line-height: 16px;
+  line-height: 15px;
   text-align: center;
   border-radius: 50%;
-  border: 1px solid #2f8fff;
+  border: 1px solid var(--bs-body-color);
 `;
 
 const ThreadToolsBar = styled.ul`
