@@ -109,14 +109,10 @@ export default function EditProposal() {
     if (!data) {
       return;
     }
-    if (data?.state === ProposalState.PendingSubmit) {
+    if ([ProposalState.PendingSubmit, ProposalState.Rejected, ProposalState.Withdrawn].includes(data.state)) {
       return;
     }
-    if ([ProposalState.Draft, ProposalState.Approved, ProposalState.Rejected].includes(data.state)) {
-      navigate('/proposal-v2');
-    }
-
-    // other state can not be edited
+    navigate('/proposal-v2');
   }, [data]);
 
   useEffect(() => {

@@ -136,8 +136,9 @@ const LoginModalContent = () => {
           } catch (error) {
             logError('OneSignal login error', error);
           }
-        } catch (error) {
+        } catch (error: any) {
           setClickConnectFlag(false);
+          showToast(error?.data?.msg || error?.code || error, ToastType.Danger, { autoClose: false });
 
           // TODO: alert login error
           logError('login error', error);
