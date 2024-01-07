@@ -168,9 +168,19 @@ export default function EditProposal() {
       });
   };
 
+  const handleSaveDraft = (data: any) => {
+    console.error({
+      ...data,
+    });
+    handleFormSubmit(data);
+  };
+  const saveAllDraft = () => {
+    (childRef.current as any).saveForm();
+  };
+
   const handleSave = () => {
     setSubmitType('save');
-    setTimeout(allSubmit, 0);
+    setTimeout(saveAllDraft, 0);
   };
   const handleSubmit = () => {
     setSubmitType('submit');
@@ -180,7 +190,7 @@ export default function EditProposal() {
   const categoryName = data?.proposal_category_id
     ? proposalCategories.find((item) => item.id === data?.proposal_category_id)?.name
     : '';
-  
+
   const submitDisabled = !title || !title.trim() || contentBlocks.some((item) => !item.content);
 
   return (
@@ -260,6 +270,7 @@ export default function EditProposal() {
           }
           ref={childRef}
           onSubmitData={handleFormSubmit}
+          onSaveData={handleSaveDraft}
         />
       </BoxBg>
     </Page>

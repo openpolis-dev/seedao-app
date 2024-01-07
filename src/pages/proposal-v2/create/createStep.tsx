@@ -283,6 +283,7 @@ export default function CreateStep({ onClick }: any) {
     console.log({
       ...data,
     });
+    handleFormSubmit(data);
   };
 
   const saveAllDraft = () => {
@@ -301,7 +302,7 @@ export default function CreateStep({ onClick }: any) {
 
   const handleSave = () => {
     setSubmitType('save');
-    setTimeout(allSubmit, 0);
+    setTimeout(saveAllDraft, 0);
   };
   const handleSubmit = () => {
     // TODO: check content
