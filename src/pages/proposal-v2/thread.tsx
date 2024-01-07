@@ -255,7 +255,7 @@ export default function ThreadPage() {
     }
   };
 
-  const currentCategory = () => {
+  const getCurrentCategory = () => {
     if (data?.category_name) {
       return data.category_name;
     } else {
@@ -265,9 +265,10 @@ export default function ThreadPage() {
           return findOne.name;
         }
       }
-      return t('Proposal.ProposalDetail');
+      return '';
     }
   };
+  const currentCategory = getCurrentCategory();
 
   const showVote = () => {
     if (!data?.votes?.[0]) {
@@ -352,7 +353,12 @@ export default function ThreadPage() {
       ) : (
         <FixedBox>
           <FlexInner>
-            <BackerNav title={currentCategory()} to={'/proposal-v2'} state={state} mb="0" />
+            <BackerNav
+              title={currentCategory || t('Proposal.ProposalDetail')}
+              to={'/proposal-v2'}
+              state={state}
+              mb="0"
+            />
 
             <FlexRht>
               {!review && isCurrentApplicant && !!moreActions().length && (
@@ -398,7 +404,7 @@ export default function ThreadPage() {
         <div className="title">{data?.title}</div>
         <FlexLine>
           {currentState && <ProposalStateTag state={currentState} />}
-          <CategoryTag>{currentCategory()}</CategoryTag>
+          {currentCategory && <CategoryTag>{currentCategory}</CategoryTag>}
           {review && data?.template_name && <TemplateTag>{data?.template_name}</TemplateTag>}
           {data?.arweave && (
             <StoreHash href={`https://arweave.net/tx/${data?.arweave}/data.html`} target="_blank" rel="noreferrer">
