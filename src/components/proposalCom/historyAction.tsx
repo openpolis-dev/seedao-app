@@ -7,7 +7,7 @@ import CommentImg from '../../assets/Imgs/proposal/commentIcon.svg';
 
 import { getUserActions } from 'requests/proposalV2';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
-import { formatDate } from 'utils/time';
+import { formatTime } from 'utils/time';
 import { Trans } from 'react-i18next';
 import NoItem from 'components/noItem';
 import useQuerySNS from 'hooks/useQuerySNS';
@@ -53,7 +53,7 @@ export default function HistoryAction() {
       const res = await getUserActions(10, currentSession);
       const _list = res.data.records.map((item) => ({
         type: item.metaforo_action as ActionType,
-        time: formatDate(new Date(item.action_ts * 1000)),
+        time: formatTime(item.action_ts * 1000),
         user: item.reply_to_wallet.toLocaleLowerCase(),
         title: item.target_title,
         pid: item.proposal_id,
