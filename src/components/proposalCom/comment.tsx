@@ -290,6 +290,12 @@ const VersionTag = styled.div`
     text-align: center;
     box-sizing: border-box;
   }
+  &:hover {
+    color: #2f8fff;
+    span {
+      border: 1px solid #2f8fff;
+    }
+  }
 `;
 
 const Tip = styled.div`

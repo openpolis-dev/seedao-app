@@ -353,12 +353,7 @@ export default function ThreadPage() {
       ) : (
         <FixedBox>
           <FlexInner>
-            <BackerNav
-              title={currentCategory || t('Proposal.ProposalDetail')}
-              to={'/proposal'}
-              state={state}
-              mb="0"
-            />
+            <BackerNav title={currentCategory || t('Proposal.ProposalDetail')} to={'/proposal'} state={state} mb="0" />
 
             <FlexRht>
               {!review && isCurrentApplicant && !!moreActions().length && (
@@ -666,6 +661,10 @@ const StoreHash = styled.a`
   text-align: center;
   border-radius: 50%;
   border: 1px solid var(--bs-body-color);
+  &:hover {
+    color: #2f8fff;
+    border: 1px solid #2f8fff;
+  }
 `;
 
 const ThreadToolsBar = styled.ul`
