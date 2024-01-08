@@ -253,7 +253,7 @@ export default function EditProposal() {
                   <TitleBox>{item.title}</TitleBox>
 
                   <MdEditor
-                    toolbarsExclude={['github', 'next', 'revoke', 'save']}
+                    toolbarsExclude={['github', 'save']}
                     theme={theme ? 'dark' : 'light'}
                     modelValue={item.content}
                     editorId={`block_${index}`}

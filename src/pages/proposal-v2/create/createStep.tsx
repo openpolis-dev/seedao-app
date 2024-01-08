@@ -379,7 +379,7 @@ export default function CreateStep({ onClick }: any) {
                   {!!item.title && <TitleBox>{item.title}</TitleBox>}
                   <InputBox>
                     <MdEditor
-                      toolbarsExclude={['github', 'next', 'revoke', 'save']}
+                      toolbarsExclude={['github', 'save']}
                       modelValue={item.content}
                       editorId={`block_${index}`}
                       onChange={(val) => handleText(val, index)}
