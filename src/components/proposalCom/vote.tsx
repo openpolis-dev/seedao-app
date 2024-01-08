@@ -307,6 +307,7 @@ const OptionContent = styled.div<{ $highlight?: number }>`
   color: ${({ $highlight }) => ($highlight ? 'var(--bs-primary)' : 'var(--bs-body-color_active)')};
   margin-right: 20px;
   line-height: 20px;
+  margin-bottom: 16px;
 `;
 
 const VoteButton = styled(Button)`
