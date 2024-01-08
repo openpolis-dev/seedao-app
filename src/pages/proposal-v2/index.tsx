@@ -149,7 +149,7 @@ export default function ProposalIndexPage() {
   const go2create = async () => {
     const canCreate = await checkMetaforoLogin();
     if (canCreate) {
-      navigate('/proposal-v2/create');
+      navigate('/proposal/create');
     }
   };
 
