@@ -58,7 +58,6 @@ import useCheckLogin from 'hooks/useCheckLogin';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import { WalletType } from 'wallet/wallet';
 import AppVersion from '../components/version';
-import getConfig from 'utils/envCofnig';
 
 const LftLi = styled.div<{ selected?: boolean }>`
   padding: 10px 0;
@@ -377,7 +376,7 @@ const items: MenuItemType[] = [
     link: { href: '/resources' },
   },
 ];
-if (getConfig().REACT_APP_ENV === 'test') {
+if (['dev', undefined].includes(process.env.REACT_APP_ENV_VERSION)) {
   items.push({
     title: 'menus.Newcomer',
     icon: {
