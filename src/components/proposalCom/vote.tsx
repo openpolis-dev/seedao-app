@@ -301,7 +301,6 @@ const OptionContent = styled.div<{ $highlight?: number }>`
   font-size: 14px;
   color: ${({ $highlight }) => ($highlight ? 'var(--bs-primary)' : 'var(--bs-body-color_active)')};
   margin-right: 20px;
-  margin-bottom: 16px;
   line-height: 20px;
 `;
 
