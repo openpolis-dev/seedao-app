@@ -6,13 +6,13 @@ import { useTranslation } from 'react-i18next';
 import { ProposalState, ISimpleProposal } from 'type/proposalV2.type';
 import ClearSVGIcon from 'components/svgs/clear';
 import SearchSVGIcon from 'components/svgs/search';
-import InfiniteScroll from 'react-infinite-scroll-component';
 import ProposalItem from 'components/proposalCom/reviewProposalItem';
 import requests from 'requests';
 import { useAuthContext, AppActionType } from 'providers/authProvider';
 import NoItem from 'components/noItem';
 import useQuerySNS from 'hooks/useQuerySNS';
 import publicJs from 'utils/publicJs';
+import Pagination from 'components/pagination';
 
 const STATUS = [
   { name: 'Proposal.Draft', value: ProposalState.Draft },
@@ -32,9 +32,11 @@ export default function ProposalReview() {
   const [selectStatus, setSelectStatus] = useState<ProposalState>(ProposalState.Draft);
   const [proposalList, setProposalList] = useState<ISimpleProposal[]>([]);
   const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(false);
+  const [totalCount, setTotalCount] = useState(0);
+
   const [searchKeyword, setSearchKeyword] = useState('');
   const [inputKeyword, setInputKeyword] = useState('');
+  const [initPage, setInitPage] = useState(true);
 
   const { getMultiSNS } = useQuerySNS();
 
@@ -50,9 +52,7 @@ export default function ProposalReview() {
     return name?.endsWith('.seedao') ? name : publicJs.AddressToShow(name, 4);
   };
 
-  const getProposalList = async (init?: boolean) => {
-    //   TODO: get proposal list
-    const _page = init ? 1 : page;
+  const getProposalList = async (_page: number = 1) => {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
       const resp = await requests.proposalV2.getProposalList({
@@ -63,18 +63,9 @@ export default function ProposalReview() {
         state: selectStatus,
         q: searchKeyword,
       });
-
-      let list: ISimpleProposal[];
-      if (_page === 1) {
-        list = resp.data.rows;
-      } else {
-        list = [...proposalList, ...resp.data.rows];
-      }
-      setProposalList(list);
-      handleSNS(list.filter((d) => !!d.applicant).map((d) => d.applicant));
-
-      setPage(_page + 1);
-      setHasMore(resp.data.rows.length >= PAGE_SIZE);
+      setTotalCount(resp.data.total);
+      setProposalList(resp.data.rows);
+      handleSNS(resp.data.rows.filter((d) => !!d.applicant).map((d) => d.applicant));
     } catch (error) {
       logError('getAllProposals failed', error);
     } finally {
@@ -82,8 +73,16 @@ export default function ProposalReview() {
     }
   };
   useEffect(() => {
-    getProposalList(true);
+    if (!initPage) {
+      getProposalList(1);
+      setPage(1);
+    }
   }, [selectStatus, searchKeyword]);
+
+  useEffect(() => {
+    setInitPage(false);
+    initPage && getProposalList();
+  }, [page]);
 
   const onKeyUp = (e: any) => {
     if (e.keyCode === 13) {
@@ -93,6 +92,11 @@ export default function ProposalReview() {
   const clearSearch = () => {
     setInputKeyword('');
     setSearchKeyword('');
+  };
+
+  const go2page = (_page: number) => {
+    setPage(_page + 1);
+    getProposalList(_page + 1);
   };
   return (
     <Page>
@@ -121,18 +125,15 @@ export default function ProposalReview() {
           {inputKeyword && <ClearSVGIcon onClick={() => clearSearch()} className="btn-clear" />}
         </SearchBox>
       </FilterBox>
-      <InfiniteScroll
-        scrollableTarget="scrollableDiv"
-        dataLength={proposalList.length}
-        next={getProposalList}
-        hasMore={hasMore}
-        loader={<></>}
-      >
-        {proposalList.map((p) => (
-          <ProposalItem key={p.id} data={p} isReview sns={formatSNS(p.applicant?.toLocaleLowerCase())} />
-        ))}
-        {proposalList.length === 0 && !loading && <NoItem />}
-      </InfiniteScroll>
+      {proposalList.map((p) => (
+        <ProposalItem key={p.id} data={p} isReview sns={formatSNS(p.applicant?.toLocaleLowerCase())} />
+      ))}
+      {totalCount === 0 && !loading && <NoItem />}
+      {totalCount > PAGE_SIZE && (
+        <div>
+          <Pagination itemsPerPage={PAGE_SIZE} total={totalCount} current={page - 1} handleToPage={go2page} />
+        </div>
+      )}
     </Page>
   );
 }
@@ -145,12 +146,24 @@ const StatusBox = styled.ul`
   display: flex;
   gap: 10px;
   li {
-    border-radius: 8px;
-    padding-inline: 10px;
-    border: 1px solid #e5e5e5;
+    height: 40px;
+    padding-inline: 20px;
+    line-height: 40px;
+    background-color: var(--bs-background);
+    border-radius: 100px;
+    font-size: 14px;
+    text-align: center;
+    color: var(--bs-body-color_active);
     cursor: pointer;
+    margin-right: 10px;
+    min-width: 104px;
+    border: 1px solid var(--bs-background);
     &.selected {
-      background-color: #e5e5e5;
+      background-color: var(--bs-primary);
+      color: #fff;
+    }
+    &:hover {
+      border: 1px solid var(--bs-border-color);
     }
   }
 `;
@@ -163,13 +176,17 @@ const FilterBox = styled.div`
 `;
 
 const SearchBox = styled.div`
-  background: var(--bs-box-background);
+  background: var(--bs-background);
   border-radius: 8px;
   display: flex;
   align-items: center;
-  justify-content: center;
   padding: 0 8px;
   border: 1px solid var(--bs-border-color);
+  position: relative;
+  height: 40px;
+  &:hover {
+    border-color: hsl(0, 0%, 70%);
+  }
   input {
     flex: 1;
     border: 0;

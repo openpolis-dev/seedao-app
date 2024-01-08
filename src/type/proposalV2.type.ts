@@ -5,8 +5,8 @@ export enum ProposalState {
   Approved = 'approved',
   Rejected = 'rejected',
   Voting = 'voting',
-  VotingPassed = 'voting_passed',
-  VotingFailed = 'voting_failed',
+  VotingPassed = 'vote_passed',
+  VotingFailed = 'vote_failed',
 }
 
 export interface IBaseCategory {
@@ -14,6 +14,7 @@ export interface IBaseCategory {
   parent_id: number;
   metaforo_id: number;
   name: string;
+  has_perm?: boolean;
 }
 
 export interface ISimpleProposal {
@@ -32,12 +33,10 @@ export interface IContentBlock {
 }
 
 export interface IProposalEditHistoy {
-  username: string;
-  created_at: string;
+  create_ts: number;
+  title: string;
+  wallet: string;
   arweave: string;
-  post_type: 0 | 1;
-  post_id: number;
-  id: number;
 }
 
 export enum VoteType {
@@ -46,11 +45,12 @@ export enum VoteType {
   Waite = 'waite',
 }
 
-type VoteOption = {
+export type VoteOption = {
   html: string;
   percent: number;
   voters: number;
   id: number;
+  is_vote: 0 | 1; // 0: not voted, 1: voted
 };
 
 export interface Poll {
@@ -64,24 +64,66 @@ export interface Poll {
   leftTime: string;
   options: VoteOption[];
   poll_start_at: string;
+  close_at: string;
   totalVotes: number;
   is_vote: 0 | 1; // 0: not voted, 1: voted
 }
 
+export interface IComment {
+  children: IComment[];
+  content: string;
+  metaforo_post_id: number;
+  proposal_arweave_hash: string;
+  proposal_title: string;
+  proposal_ts: number;
+  reply_metaforo_post_id: number;
+  wallet: string;
+  created_ts: number;
+  avatar: string;
+}
+
+export interface ICommentDisplay extends IComment {
+  children: ICommentDisplay[];
+  bindIdx: number;
+  userName?: string;
+  deleted?: 1 | 0;
+}
+
+export type VoteGateType = {
+  name: string;
+  contract_addr: string;
+  token_id: number;
+};
+
 export interface IProposal extends ISimpleProposal {
   reviewer: string;
   applicant_avatar: string;
-  proposal_category_id: number;
+  proposal_category_id: number | undefined;
   content_blocks: IContentBlock[];
+  reject_metaforo_comment_id: number;
   reject_reason: string;
   is_rejected: string;
+  is_based_on_template: boolean | undefined;
+  template_id: number | string;
   reject_ts: number;
   arweave: string;
-  comments: any[];
+  comments: ICommentDisplay[];
+  components: any;
   comment_count: number;
   votes: Poll[];
+  vote_gate: VoteGateType;
   histories: {
-    count: number;
+    total_count: number;
     lists: IProposalEditHistoy[];
   };
+  template_name?: string;
+}
+
+export interface IActivity {
+  action_ts: number;
+  metaforo_action: string;
+  proposal_id: number;
+  target_title: string;
+  wallet: string;
+  reply_to_wallet: string;
 }

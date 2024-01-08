@@ -5,14 +5,17 @@ interface Iprops {
   title?: string;
   handleClose?: () => void;
   children?: React.ReactNode;
+  disabledClose?: boolean;
   [key: string]: any;
 }
 
-export default function BasicModal({ title, handleClose, children, ...rest }: Iprops) {
+export default function BasicModal({ title, handleClose, children, disabledClose, ...rest }: Iprops) {
   return (
     <Mask>
       <CardBox {...rest}>
-        <img className="btn-close-modal" src={CloseIcon} alt="" onClick={() => handleClose && handleClose()} />
+        {!disabledClose && (
+          <img className="btn-close-modal" src={CloseIcon} alt="" onClick={() => handleClose && handleClose()} />
+        )}
         {title && (
           <HeaderBox className="modal-header">
             <HeaderTitle>{title}</HeaderTitle>

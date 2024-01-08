@@ -7,6 +7,8 @@ import ConfirmModal from 'components/modals/confirmModal';
 import { ProposalState } from 'type/proposalV2.type';
 import { rejectProposal, approveProposal } from 'requests/proposalV2';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
+import useMetaforoLogin from 'hooks/useMetaforoLogin';
+import useToast, { ToastType } from 'hooks/useToast';
 
 interface IProps {
   id: number;
@@ -19,6 +21,8 @@ export default function ReviewProposalComponent({ id, onUpdateStatus }: IProps) 
   const [showRejectModal, setShowRejectModal] = useState(false);
 
   const { dispatch } = useAuthContext();
+  const { checkMetaforoLogin } = useMetaforoLogin();
+  const { showToast } = useToast();
 
   const handleApprove = () => {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
@@ -28,7 +32,7 @@ export default function ReviewProposalComponent({ id, onUpdateStatus }: IProps) 
       })
       .catch((error: any) => {
         logError(`approve proposal-${id} failed`, error);
-        // TODO toast
+        showToast(error?.data?.msg || error?.code || error, ToastType.Danger, { autoClose: false });
       })
       .finally(() => {
         dispatch({ type: AppActionType.SET_LOADING, payload: false });
@@ -43,27 +47,43 @@ export default function ReviewProposalComponent({ id, onUpdateStatus }: IProps) 
       })
       .catch((error: any) => {
         logError(`reject proposal-${id} failed`, error);
-        // TODO toast
+        showToast(error?.data?.msg || error?.code || error, ToastType.Danger, { autoClose: false });
       })
       .finally(() => {
         dispatch({ type: AppActionType.SET_LOADING, payload: false });
       });
   };
   const onConfirmApprove = () => {
-    setShowRejectModal(false);
+    setShowApproveModal(false);
     handleApprove();
   };
+
   const onConfirmReject = (reason: string) => {
     setShowRejectModal(false);
     handleReject(reason);
   };
 
+  const onClickApprove = async () => {
+    const canApprove = await checkMetaforoLogin();
+    if (canApprove) {
+      setShowApproveModal(true);
+    }
+  };
+
+  const onClickReject = async () => {
+    const canReject = await checkMetaforoLogin();
+    if (canReject) {
+      setShowRejectModal(true);
+    }
+  };
+
   return (
     <OperateBox>
-      <Button onClick={() => setShowApproveModal(true)}>{t('Proposal.Approve')}</Button>
-      <Button variant="outline-primary" onClick={() => setShowRejectModal(true)}>
+      <Button variant="outline-primary" onClick={onClickReject}>
         {t('Proposal.Reject')}
       </Button>
+      <Button onClick={onClickApprove}>{t('Proposal.Approve')}</Button>
+
       {showApproveModal && (
         <ConfirmModal
           msg={t('Proposal.ConfirmApproveProposal')}
@@ -83,6 +103,11 @@ const OperateBox = styled.div`
   align-items: center;
   gap: 20px;
   > button {
-    flex: 1;
+    width: 200px;
+    height: 40px;
+    font-size: 16px;
+  }
+  .btn-outline-primary {
+    background: var(--bs-background);
   }
 `;

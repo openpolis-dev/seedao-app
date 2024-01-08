@@ -20,20 +20,45 @@ interface IActionProps {
 }
 export default function MoreSelectAction({ options, handleClickAction }: IActionProps) {
   return (
-    <Dropdown>
-      <Dropdown.Toggle as={ActionToggle}>...</Dropdown.Toggle>
-      <Dropdown.Menu>
-        {options.map((item) => (
-          <Dropdown.Item eventKey={item.value} onClick={() => handleClickAction(item.value)} key={item.value}>
-            {item.label}
-          </Dropdown.Item>
-        ))}
-      </Dropdown.Menu>
-    </Dropdown>
+    <Box>
+      <Dropdown>
+        <Dropdown.Toggle as={ActionToggle}>...</Dropdown.Toggle>
+        <Dropdown.Menu>
+          {options.map((item) => (
+            <Dropdown.Item
+              className="lineBtm"
+              eventKey={item.value}
+              onClick={() => handleClickAction(item.value)}
+              key={item.value}
+            >
+              {item.label}
+            </Dropdown.Item>
+          ))}
+        </Dropdown.Menu>
+      </Dropdown>
+    </Box>
   );
 }
 
 const ActionButton = styled.div`
   cursor: pointer;
   font-size: 18px;
+  margin-top: -10px;
+`;
+
+const Box = styled.div`
+  .lineBtm {
+    border-bottom: 1px solid var(--proposal-border) !important;
+    color: #2f8fff;
+    font-size: 14px;
+    text-align: center;
+    padding: 5px 0;
+    &:last-child {
+      border-bottom: 0 !important;
+    }
+    &:active,
+    &:hover {
+      background: none;
+    }
+  }
 `;

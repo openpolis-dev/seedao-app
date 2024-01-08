@@ -6,9 +6,8 @@ import { useEffect, useState } from 'react';
 import ClearSVGIcon from 'components/svgs/clear';
 import SearchSVGIcon from 'components/svgs/search';
 import { Button } from 'react-bootstrap';
-import InfiniteScroll from 'react-infinite-scroll-component';
-import SimpleProposalItem from 'components/proposalCom/simpleProposalItem';
-import { Link } from 'react-router-dom';
+import SimpleProposalItem, { TabType } from 'components/proposalCom/simpleProposalItem';
+import { useLocation, useNavigate } from 'react-router-dom';
 import HistoryAction from 'components/proposalCom/historyAction';
 import requests from 'requests';
 import { useAuthContext, AppActionType } from 'providers/authProvider';
@@ -17,10 +16,17 @@ import useProposalCategories from 'hooks/useProposalCategories';
 import NoItem from 'components/noItem';
 import useQuerySNS from 'hooks/useQuerySNS';
 import publicJs from 'utils/publicJs';
+import Pagination from 'components/pagination';
+import SearchImg from '../../assets/Imgs/proposal/search.svg';
+import AddImg from '../../assets/Imgs/proposal/add-square.svg';
+import useCheckMetaforoLogin from 'hooks/useMetaforoLogin';
+import MyProposalsTab from 'components/proposalCom/myProposalsTab';
 
 const PAGE_SIZE = 10;
 
 export default function ProposalIndexPage() {
+  const navigate = useNavigate();
+  const { state } = useLocation();
   const { t } = useTranslation();
   const {
     state: { loading },
@@ -56,9 +62,13 @@ export default function ProposalIndexPage() {
 
   const [proposalList, setProposalList] = useState<ISimpleProposal[]>([]);
   const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(false);
-  const [showHistory, setShowHistory] = useState(false);
+  const [totalCount, setTotalCount] = useState(0);
+  const [initPage, setInitPage] = useState(true);
 
+  const [currentTab, setCurrentTab] = useState(state?.currentTab?.[0] || TabType.All);
+  const secondTab = state?.currentTab?.[1];
+
+  const { checkMetaforoLogin } = useCheckMetaforoLogin();
   const { getMultiSNS } = useQuerySNS();
 
   const [snsMap, setSnsMap] = useState<Map<string, string>>(new Map());
@@ -73,8 +83,7 @@ export default function ProposalIndexPage() {
     return name?.endsWith('.seedao') ? name : publicJs.AddressToShow(name, 4);
   };
 
-  const getProposalList = async (init?: boolean) => {
-    const _page = init ? 1 : page;
+  const getProposalList = async (_page: number = 1) => {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
       const resp = await requests.proposalV2.getProposalList({
@@ -86,17 +95,9 @@ export default function ProposalIndexPage() {
         category_id: selectCategory?.value,
         q: searchKeyword,
       });
-      setPage(_page + 1);
-      let list: ISimpleProposal[];
-      if (_page === 1) {
-        list = resp.data.rows;
-      } else {
-        list = [...proposalList, ...resp.data.rows];
-      }
-      setProposalList(list);
-      handleSNS(list.filter((d) => !!d.applicant).map((d) => d.applicant));
-
-      setHasMore(resp.data.rows.length >= PAGE_SIZE);
+      setProposalList(resp.data.rows);
+      handleSNS(resp.data.rows.filter((d) => !!d.applicant).map((d) => d.applicant));
+      setTotalCount(resp.data.total);
     } catch (error) {
       logError('getAllProposals failed', error);
     } finally {
@@ -105,9 +106,16 @@ export default function ProposalIndexPage() {
   };
 
   useEffect(() => {
-    getProposalList(true);
-    setShowHistory(false);
+    if (!initPage) {
+      getProposalList();
+      setPage(1);
+    }
   }, [selectCategory, selectTime, selectStatus, searchKeyword]);
+
+  useEffect(() => {
+    initPage && getProposalList();
+    setInitPage(false);
+  }, [page]);
 
   const onKeyUp = (e: any) => {
     if (e.keyCode === 13) {
@@ -119,94 +127,157 @@ export default function ProposalIndexPage() {
     setSearchKeyword('');
   };
 
+  const go2page = (_page: number) => {
+    setPage(_page + 1);
+    getProposalList(_page + 1);
+  };
+
+  const handleClickHistory = async () => {
+    const canOpen = await checkMetaforoLogin();
+    if (canOpen) {
+      setCurrentTab(TabType.History);
+    }
+  };
+
+  const handleClickMyProposals = async () => {
+    const canOpen = await checkMetaforoLogin();
+    if (canOpen) {
+      setCurrentTab(TabType.My);
+    }
+  };
+
+  const go2create = async () => {
+    const canCreate = await checkMetaforoLogin();
+    if (canCreate) {
+      navigate('/proposal/create');
+    }
+  };
+
+  const showContent = () => {
+    switch (currentTab) {
+      case TabType.All:
+        return (
+          <>
+            <FlexLine>
+              <FilterBox>
+                <SeeSelect
+                  width="160px"
+                  options={TIME_OPTIONS}
+                  defaultValue={TIME_OPTIONS[0]}
+                  isClearable={false}
+                  isSearchable={false}
+                  onChange={(v: ISelectItem) => setSelectTime(v)}
+                />
+                <SeeSelect
+                  width="160px"
+                  options={CATEGORY_OPTIONS}
+                  isSearchable={false}
+                  placeholder={t('Proposal.TypeSelectHint')}
+                  onChange={(v: ISelectItem) => setSelectCategory(v)}
+                />
+                <SeeSelect
+                  width="160px"
+                  options={STATUS_OPTIONS}
+                  isSearchable={false}
+                  placeholder={t('Proposal.StatusSelectHint')}
+                  onChange={(v: ISelectItem) => setSelectStatus(v)}
+                />
+                <SearchBox>
+                  {/*<SearchSVGIcon />*/}
+                  <img src={SearchImg} alt="" className="iconBg" />
+                  <input
+                    type="text"
+                    placeholder=""
+                    onKeyUp={(e) => onKeyUp(e)}
+                    value={inputKeyword}
+                    onChange={(e) => setInputKeyword(e.target.value)}
+                  />
+
+                  {inputKeyword && <ClearSVGIcon onClick={() => clearSearch()} className="btn-clear" />}
+                </SearchBox>
+              </FilterBox>
+            </FlexLine>
+            {proposalList.map((p) => (
+              <SimpleProposalItem
+                key={p.id}
+                data={p}
+                sns={formatSNS(p.applicant?.toLocaleLowerCase())}
+                currentTab={[currentTab]}
+              />
+            ))}
+            {totalCount === 0 && !loading && <NoItem />}
+            {totalCount > PAGE_SIZE && (
+              <div>
+                <Pagination itemsPerPage={PAGE_SIZE} total={totalCount} current={page - 1} handleToPage={go2page} />
+              </div>
+            )}
+          </>
+        );
+      case TabType.History:
+        return <HistoryAction />;
+      case TabType.My:
+        return <MyProposalsTab tab={secondTab} />;
+      default:
+        return null;
+    }
+  };
+
   return (
     <Page>
       <OperateBox>
-        <FilterBox>
-          <SeeSelect
-            width="180px"
-            options={CATEGORY_OPTIONS}
-            isSearchable={false}
-            placeholder={t('Proposal.TypeSelectHint')}
-            onChange={(v: ISelectItem) => setSelectCategory(v)}
-          />
-          <SeeSelect
-            width="120px"
-            options={TIME_OPTIONS}
-            defaultValue={TIME_OPTIONS[0]}
-            isClearable={false}
-            isSearchable={false}
-            onChange={(v: ISelectItem) => setSelectTime(v)}
-          />
-          <SeeSelect
-            width="120px"
-            options={STATUS_OPTIONS}
-            isSearchable={false}
-            placeholder={t('Proposal.StatusSelectHint')}
-            onChange={(v: ISelectItem) => setSelectStatus(v)}
-          />
-          <SearchBox>
-            <SearchSVGIcon />
-            <input
-              type="text"
-              placeholder=""
-              onKeyUp={(e) => onKeyUp(e)}
-              value={inputKeyword}
-              onChange={(e) => setInputKeyword(e.target.value)}
-            />
-            {inputKeyword && <ClearSVGIcon onClick={() => clearSearch()} className="btn-clear" />}
-          </SearchBox>
-          <HistoryButton className={showHistory ? 'selected' : ''} onClick={() => setShowHistory(true)}>
+        <LineBox>
+          <HistoryButton
+            className={currentTab === TabType.All ? 'selected' : ''}
+            onClick={() => setCurrentTab(TabType.All)}
+          >
+            {t('Proposal.all')}
+          </HistoryButton>
+          <HistoryButton className={currentTab === TabType.History ? 'selected' : ''} onClick={handleClickHistory}>
             {t('Proposal.HistoryRecord')}
           </HistoryButton>
-        </FilterBox>
-        <Link to="/proposal-v2/create">
-          <Button variant="primary">{t('Proposal.CreateProposal')}</Button>
-        </Link>
+          <HistoryButton className={currentTab === TabType.My ? 'selected' : ''} onClick={handleClickMyProposals}>
+            {t('Proposal.MyProposals')}
+          </HistoryButton>
+        </LineBox>
+        <div>
+          <Button variant="primary" onClick={go2create}>
+            <img src={AddImg} alt="" className="mr20" />
+            {t('Proposal.CreateProposal')}
+          </Button>
+        </div>
       </OperateBox>
-      {showHistory ? (
-        <HistoryAction />
-      ) : (
-        <InfiniteScroll
-          scrollableTarget="scrollableDiv"
-          dataLength={proposalList.length}
-          next={getProposalList}
-          hasMore={hasMore}
-          loader={<></>}
-        >
-          {proposalList.map((p) => (
-            <SimpleProposalItem key={p.id} data={p} sns={formatSNS(p.applicant?.toLocaleLowerCase())} />
-          ))}
-          {proposalList.length === 0 && !loading && <NoItem />}
-        </InfiniteScroll>
-      )}
+      {showContent()}
     </Page>
   );
 }
 
 const Page = styled.div`
   ${ContainerPadding};
+  .mr20 {
+    margin-right: 10px;
+  }
 `;
 
 const OperateBox = styled.div`
   display: flex;
   justify-content: space-between;
-  margin-bottom: 32px;
+  margin-bottom: 20px;
 `;
 
 const FilterBox = styled.div`
   display: flex;
-  gap: 16px;
+  gap: 24px;
 `;
 
 const SearchBox = styled.div`
-  width: 180px;
+  width: 240px;
   background: var(--bs-background);
   border-radius: 8px;
   display: flex;
   align-items: center;
   padding: 0 8px;
   border: 1px solid var(--bs-border-color);
+  position: relative;
   &:hover {
     border-color: hsl(0, 0%, 70%);
   }
@@ -229,19 +300,40 @@ const SearchBox = styled.div`
 `;
 
 const HistoryButton = styled.div`
+  min-width: 104px;
+  box-sizing: border-box;
+  padding-inline: 10px;
   height: 40px;
-  padding-inline: 20px;
+  text-align: center;
   line-height: 40px;
   background-color: var(--bs-background);
-  border-radius: 8px;
-  border: 1px solid var(--bs-border-color);
+  border-radius: 100px;
+  font-size: 14px;
   text-align: center;
   color: var(--bs-body-color_active);
   cursor: pointer;
-  &:hover {
-    border-color: hsl(0, 0%, 70%);
-  }
+  border: 1px solid var(--bs-background);
+
   &.selected {
-    background-color: var(--bs-body-color);
+    background-color: var(--bs-primary);
+    color: #fff;
   }
+  &:hover {
+    border: 1px solid var(--bs-border-color);
+  }
+`;
+
+const LineBox = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 16px;
+`;
+
+const FlexLine = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 24px;
+  margin-bottom: 20px;
 `;

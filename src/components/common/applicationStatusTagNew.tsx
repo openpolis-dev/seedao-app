@@ -39,14 +39,14 @@ export default function ApplicationStatusTagNew({ status, isProj }: IProps) {
   );
 }
 
-const Tag = styled.span<{ color: string }>`
+const Tag = styled.div<{ color: string }>`
   background: ${({ color }) => color || '#ccc'};
   padding-inline: 19px;
-  border-radius: 8px;
-  height: 24px;
-  line-height: 24px;
+  border-radius: 16px;
+  display: inline-block;
   .text {
     color: #fff;
     font-size: 12px;
+    line-height: 2em;
   }
 `;

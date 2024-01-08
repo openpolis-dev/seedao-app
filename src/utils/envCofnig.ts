@@ -1,7 +1,7 @@
 import EthereumIcon from 'assets/Imgs/network/ethereum.svg';
 import PolygonIcon from 'assets/Imgs/network/polygon.svg';
 
-const VERSION = '0.3.5';
+const VERSION = '0.4.0';
 
 const SENTRY_DSN = 'https://b36d900b0a63b0466ff4e73d55e359b2@o4505590144106496.ingest.sentry.io/4506445116604416';
 
@@ -16,7 +16,7 @@ const LOCAL = {
   REACT_APP_APP_VERSION: `A ${VERSION}`,
   REACT_APP_THEME_ENABLE: true,
   DESCHOOL_BASE_API: 'https://deschool.app/goapiDevelopment',
-  JOY_ID_URL: 'https://testnet.joyid.dev/',
+  JOY_ID_URL: 'https://app.joy.id',
   NETWORK: {
     name: 'Polygon',
     nativeToken: 'Matic',

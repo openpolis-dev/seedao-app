@@ -1,59 +1,144 @@
-import { useMemo, useState } from 'react';
-import { Button, Form, Toast } from 'react-bootstrap';
+import { useEffect, useMemo, useState } from 'react';
+import { Button, Form } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import { Poll, VoteType } from 'type/proposalV2.type';
-import { castVote } from 'requests/proposalV2';
+import { Poll, VoteType, VoteOption, VoteGateType } from 'type/proposalV2.type';
+import { castVote, checkCanVote } from 'requests/proposalV2';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import useToast, { ToastType } from 'hooks/useToast';
+import useCheckMetaforoLogin from 'hooks/useMetaforoLogin';
+import VoterListModal from 'components/modals/voterListModal';
+import ConfirmModal from 'components/modals/confirmModal';
+import { formatDeltaDate } from 'utils/time';
 const { Check } = Form;
 
-export default function ProposalVote({ id, poll }: { id: number; poll: Poll }) {
+interface IProps {
+  id: number;
+  poll: Poll;
+  voteGate?: VoteGateType;
+  updateStatus: () => void;
+}
+
+type VoteOptionItem = {
+  count: number;
+  optionId: number;
+};
+
+const getPollStatus = (start_t: string, close_t: string) => {
+  const start_at = new Date(start_t).getTime();
+  const close_at = new Date(close_t).getTime();
+  if (start_at > Date.now()) {
+    return VoteType.Waite;
+  }
+  if (close_at <= Date.now()) {
+    return VoteType.Closed;
+  }
+  return VoteType.Open;
+};
+
+export default function ProposalVote({ id, poll, voteGate, updateStatus }: IProps) {
   const { t } = useTranslation();
-  const [selectOption, setSelectOption] = useState<number>();
+  const [selectOption, setSelectOption] = useState<VoteOption>();
+  const [openVoteItem, setOpenVoteItem] = useState<VoteOptionItem>();
+  const [showConfirmVote, setShowConfirmVote] = useState(false);
+  const [hasPermission, setHasPermission] = useState(false);
+
   const { dispatch } = useAuthContext();
   const { showToast } = useToast();
 
-  const voteStatusTag = useMemo(() => {
-    console.log('poll.vote_type', poll.status);
-    if (poll.status === VoteType.Closed) {
-      return <CloseTag>{t('Proposal.VoteClose')}</CloseTag>;
-    } else if (poll.status === VoteType.Open) {
-      return <OpenTag>{t('Proposal.VoteEndAt', { leftTime: poll.leftTime })}</OpenTag>;
-    } else {
-      return <></>;
-    }
-  }, [poll, t]);
+  const { checkMetaforoLogin } = useCheckMetaforoLogin();
 
-  const goVote = () => {
+  const pollStatus = getPollStatus(poll.poll_start_at, poll.close_at);
+
+  const voteStatusTag = useMemo(() => {
+    if (pollStatus === VoteType.Closed) {
+      return <CloseTag>{t('Proposal.VoteClose')}</CloseTag>;
+    } else if (pollStatus === VoteType.Open) {
+      return (
+        <OpenTag>
+          {t('Proposal.VoteEndAt', {
+            leftTime: t('Proposal.TimeDisplay', { ...formatDeltaDate(new Date(poll.close_at).getTime()) }),
+          })}
+        </OpenTag>
+      );
+    } else {
+      return (
+        <OpenTag>
+          {t('Proposal.VoteStartAt', {
+            leftTime: t('Proposal.TimeDisplay', { ...formatDeltaDate(new Date(poll.poll_start_at).getTime()) }),
+          })}
+        </OpenTag>
+      );
+    }
+  }, [pollStatus, t]);
+
+  const onConfirmVote = () => {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
-    castVote(id, poll.id, selectOption!)
+    castVote(id, poll.id, selectOption?.id!)
       .then(() => {
-        // TODO update status
+        setShowConfirmVote(false);
+        updateStatus();
+        showToast(t('Msg.CastVoteSuccess'), ToastType.Success);
       })
       .catch((error) => {
         logError('cast error failed', error);
-        showToast(`cast error failed: ${error?.data?.msg}`, ToastType.Danger);
+        showToast(`cast error failed: ${error?.data?.msg || error?.code || error}`, ToastType.Danger);
       })
       .finally(() => {
         dispatch({ type: AppActionType.SET_LOADING, payload: false });
       });
   };
 
+  const goVote = async (option: VoteOption) => {
+    const canVote = await checkMetaforoLogin();
+    if (!canVote) {
+      return;
+    }
+    setShowConfirmVote(true);
+  };
+
+  useEffect(() => {
+    const getVotePermission = () => {
+      checkCanVote(id).then((r) => {
+        setHasPermission(r.data);
+      });
+    };
+    if (pollStatus === VoteType.Open && !poll.is_vote) {
+      getVotePermission();
+    }
+  }, [poll, pollStatus]);
+
   const showVoteContent = () => {
-    if (poll.status === VoteType.Open || poll.status === VoteType.Closed || poll.is_vote) {
-      return poll.options.map((option, index) => (
-        <VoteOption key={index}>
-          <OptionContent>{option.html}</OptionContent>
-          <VoteOptionBottom>
-            <ProgressBar percent={option.percent}>
-              <div className="inner"></div>
-            </ProgressBar>
-            <span>{option.percent}%</span>
-            <span className="voters">({option.voters})</span>
-          </VoteOptionBottom>
-        </VoteOption>
-      ));
+    if ((pollStatus === VoteType.Open && !!poll.is_vote) || pollStatus === VoteType.Closed) {
+      return (
+        <table>
+          <tbody>
+            {poll.options.map((option, index) => (
+              <tr>
+                <td>
+                  <OptionContent $highlight={option.is_vote}>
+                    {option.html}
+                    {!!option.is_vote && <HasVote>({t('Proposal.HasVote')})</HasVote>}
+                  </OptionContent>
+                </td>
+                <td>
+                  <ProgressBar percent={option.percent}>
+                    <div className="inner"></div>
+                  </ProgressBar>
+                </td>
+                <td>
+                  <VoteNumber
+                    onClick={() => !!option.voters && setOpenVoteItem({ count: option.voters, optionId: option.id })}
+                  >
+                    <span className={!!option.is_vote ? 'active' : ''}>{option.voters}</span>
+                    <span className="voters"> ({option.percent}%)</span>
+                  </VoteNumber>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      );
     } else {
       return (
         <>
@@ -61,150 +146,179 @@ export default function ProposalVote({ id, poll }: { id: number; poll: Poll }) {
             <VoteOptionSelect key={index}>
               <Check
                 type="radio"
-                checked={selectOption === option.id}
-                onChange={(e) => setSelectOption(e.target.checked ? option.id : undefined)}
+                checked={selectOption?.id === option.id}
+                onChange={(e) => setSelectOption(e.target.checked ? option : undefined)}
+                disabled={!hasPermission}
               />
-              <OptionContent>{option.html}</OptionContent>
+              <OptionContentPure>{option.html}</OptionContentPure>
             </VoteOptionSelect>
           ))}
-          <VoteButton onClick={goVote} disabled={selectOption === void undefined}>
-            {t('Proposal.Vote')}
-          </VoteButton>
+          {hasPermission && (
+            <VoteButton onClick={goVote} disabled={selectOption === void 0}>
+              {t('Proposal.Vote')}
+            </VoteButton>
+          )}
         </>
       );
     }
   };
 
   return (
-    <CardStyle>
+    <CardStyle id="vote-block">
       <VoteHead>
-        <VoteHeadLeft>{poll.title}</VoteHeadLeft>
-        {poll.arweave && (
-          <ExportButton href={`https://arweave.net/tx/${poll.arweave}/data.csv`}>{t('Proposal.Export')}</ExportButton>
-        )}
-      </VoteHead>
-      <VoteBody>
+        <span>
+          {' '}
+          {t('Proposal.TotalVotes')}: {poll.totalVotes}
+        </span>
         <TotalVoters>
-          <span>
-            {t('Proposal.TotalVotes')}: {poll.totalVotes}
-          </span>
-          <span className="dot">·</span>
+          {/*<span>*/}
+          {/*  {t('Proposal.TotalVotes')}: {poll.totalVotes}*/}
+          {/*</span>*/}
           {voteStatusTag}
         </TotalVoters>
+      </VoteHead>
+      <FlexLine>
+        <VoteHeadLeft>{poll.title}</VoteHeadLeft>
+        {/* {poll.arweave && (
+          <ExportButton href={`https://arweave.net/tx/${poll.arweave}/data.csv`}>{t('Proposal.Export')}</ExportButton>
+        )} */}
+      </FlexLine>
+      <VoteBody>
         {showVoteContent()}
+
+        {voteGate && (
+          <VoteNFT>
+            <span>
+              {t('Proposal.PollNFT')}: {voteGate.contract_addr}
+            </span>
+            <span>Token Id: {voteGate.token_id}</span>
+            {voteGate.name && <span>{voteGate.name}</span>}
+          </VoteNFT>
+        )}
       </VoteBody>
-      <VoteFooter>
-        <VoteNFT>
-          <span>
-            {t('Proposal.PollNFT')}: {poll.address}
-          </span>
-          {poll.token_id && <span>Token Id: {poll.token_id}</span>}
-        </VoteNFT>
-        {poll.alias && <Alias>{poll.alias}</Alias>}
-      </VoteFooter>
+      {!!openVoteItem && <VoterListModal {...openVoteItem} onClose={() => setOpenVoteItem(undefined)} />}
+      {showConfirmVote && (
+        <ConfirmModal
+          msg={t('Proposal.ConfirmVoteOption', { option: selectOption?.html })}
+          onConfirm={onConfirmVote}
+          onClose={() => setShowConfirmVote(false)}
+        />
+      )}
     </CardStyle>
   );
 }
+const FlexLine = styled.div``;
 
 const CardStyle = styled.div`
-  font-size: 14px;
-  color: var(--bs-body-color_active);
-  border-radius: 16px;
-  background-color: var(--bs-box--background);
-  border: 1px solid var(--bs-border-color);
+  margin-bottom: 32px;
 `;
 
 const VoteHead = styled.div`
   display: flex;
   justify-content: space-between;
-  height: 40px;
-  line-height: 40px;
-  padding-inline: 20px;
+  color: var(--bs-body-color_active);
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  margin-bottom: 24px;
 `;
 
 const VoteHeadLeft = styled.div``;
 
-const ExportButton = styled.a`
-  color: var(--bs-primary);
-  font-family: Poppins-SemiBold, Poppins;
-`;
-
 const VoteBody = styled.div`
-  padding-inline: 20px;
-  border-top: 1px solid var(--bs-border-color);
   border-bottom: 1px solid var(--bs-border-color);
-  padding-bottom: 14px;
-`;
-const VoteFooter = styled.div`
-  padding-inline: 20px;
-  display: flex;
-  justify-content: space-between;
-  line-height: 36px;
+  padding-bottom: 16px;
 `;
 
 const VoteNFT = styled.div`
   color: var(--bs-body-color);
+  margin-top: 16px;
+  margin-bottom: 14px;
   span {
     margin-right: 20px;
   }
 `;
 
 const TotalVoters = styled.div`
-  margin-top: 14px;
-  margin-bottom: 9px;
-  .dot {
-    margin-inline: 4px;
-  }
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 22px;
 `;
 
 const CloseTag = styled.span`
   color: red;
 `;
 const OpenTag = styled.span`
-  color: var(--bs-body-color);
+  color: var(--bs-primary);
 `;
 
-const VoteOption = styled.div`
+const VoteOptionBlock = styled.div`
   margin-top: 12px;
+  display: flex;
+  align-items: center;
 `;
 
-const VoteOptionSelect = styled(VoteOption)`
+const VoteOptionSelect = styled(VoteOptionBlock)`
   display: flex;
   align-items: center;
   gap: 8px;
-`;
-
-const ProgressBar = styled.div<{ percent: number }>`
-  width: 400px;
-  height: 8px;
-  border-radius: 16px;
-  box-sizing: border-box;
-  background-color: var(--bs-body-color);
-  overflow: hidden;
-  .inner {
-    width: ${(props) => props.percent}%;
-    background-color: var(--bs-primary);
-    height: 8px;
+  input:disabled {
+    background-color: #d9d9d980;
+    border-color: rgba(217, 217, 217, 0.5);
   }
 `;
 
-const VoteOptionBottom = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 10px;
+const ProgressBar = styled.div<{ percent: number }>`
+  width: 500px;
+  height: 10px;
+  border-radius: 16px;
+  box-sizing: border-box;
+  background: rgba(82, 0, 255, 0.1);
+  overflow: hidden;
+  margin-right: 16px;
+  margin-bottom: 16px;
+  .inner {
+    width: ${(props) => props.percent}%;
+    background-color: var(--bs-primary);
+    height: 10px;
+  }
+`;
+
+const VoteNumber = styled.div`
+  margin-bottom: 16px;
+  color: var(--bs-body-color_active);
   .voters {
+    color: var(--bs-primary);
+    cursor: pointer;
+  }
+  .active {
     color: var(--bs-primary);
   }
 `;
 
-const OptionContent = styled.div`
-  font-size: 16px;
+const OptionContentPure = styled.div`
+  font-size: 14px;
+  color: var(--bs-body-color_active);
 `;
 
-const Alias = styled.div`
-  color: var(--bs-primary);
+const OptionContent = styled.div<{ $highlight?: number }>`
+  font-size: 14px;
+  color: ${({ $highlight }) => ($highlight ? 'var(--bs-primary)' : 'var(--bs-body-color_active)')};
+  margin-right: 20px;
+  line-height: 20px;
+  margin-bottom: 16px;
 `;
 
 const VoteButton = styled(Button)`
   margin-top: 16px;
+  border-radius: 8px;
+  color: var(--bs-body-color_active);
+  border: 1px solid var(--proposal-border);
+  background: var(--profile-bg);
+  min-width: 120px;
+`;
+
+const HasVote = styled.span`
+  color: var(--bs-primary);
 `;

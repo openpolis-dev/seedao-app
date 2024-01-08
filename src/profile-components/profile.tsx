@@ -17,6 +17,9 @@ import SeedList from './seed';
 import Sbt from './Sbt';
 import BasicModal from '../components/modals/basicModal';
 import CloseIcon from '../assets/Imgs/close.svg';
+import { getUsers } from '../requests/user';
+import useQuerySNS from '../hooks/useQuerySNS';
+import LoadingImg from '../assets/Imgs/loading.png';
 
 const Mask = styled.div`
   background: rgba(13, 12, 15, 0.8);
@@ -49,7 +52,7 @@ const Box = styled.div`
 `;
 const TopBox = styled.div`
   background: var(--bs-background);
-  padding: 27px 24px;
+  padding: 20px 24px;
   border-top-left-radius: 16px;
   border-top-right-radius: 16px;
   display: flex;
@@ -91,28 +94,29 @@ const InfoBox = styled.div`
   flex-direction: column;
   .userName {
     color: var(--bs-body-color_active);
-    font-size: 16px;
+    font-size: 18px;
     font-family: Poppins-SemiBold;
     font-weight: 600;
-    line-height: 23px;
-    margin-bottom: 6px;
   }
   .lineBox {
     display: flex;
     align-items: flex-start;
+    margin-bottom: 6px;
+    line-height: 23px;
   }
   .sns {
     color: var(--bs-body-color);
     font-size: 12px;
+    line-height: 16px;
   }
 `;
 
 const BioBox = styled.section`
-  margin: 6px 0;
+  margin: 6px 0 8px 0;
   color: #9a9a9a;
   font-size: 12px;
   font-weight: 400;
-  line-height: 20px;
+  line-height: 16px;
 `;
 
 const TagBox = styled.ul`
@@ -124,7 +128,7 @@ const TagBox = styled.ul`
     border-radius: 5px;
     padding-inline: 10px;
     line-height: 22px;
-    margin: 0 8px 15px 0;
+    margin: 0 8px 6px 0;
     color: #000;
     &:nth-child(13n + 1) {
       background: #ff7193;
@@ -225,11 +229,36 @@ const LevelBox = styled.div`
   -webkit-text-fill-color: transparent;
   font-style: italic;
   padding-inline: 10px;
+  position: relative;
+  top: 1px;
 `;
 
 const InneBox = styled.div``;
 
-export default function ProfileComponent({ userData, theme, sns, handleClose }: any) {
+const Inner = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  position: relative;
+
+  img {
+    user-select: none;
+    width: 40px;
+    height: 40px;
+    animation: rotate 1s infinite linear;
+  }
+  @keyframes rotate {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+`;
+
+export default function ProfileComponent({ userData, theme, sns, handleClose, address }: any) {
   const { t } = useTranslation();
   const [userName, setUserName] = useState<string | undefined>('');
 
@@ -243,6 +272,11 @@ export default function ProfileComponent({ userData, theme, sns, handleClose }: 
   const [detail, setDetail] = useState<any>();
   const [sbtList, setSbtList] = useState<any[]>([]);
   const [sbtArr, setSbtArr] = useState<any[]>([]);
+  const [snsStr, setSnsStr] = useState('');
+
+  const [loading, setLoading] = useState(false);
+
+  const { getMultiSNS } = useQuerySNS();
 
   useEffect(() => {
     if (!seed?.length) return;
@@ -291,28 +325,38 @@ export default function ProfileComponent({ userData, theme, sns, handleClose }: 
   }, [sbtList]);
 
   const getDetail = async () => {
+    let detail;
+    setLoading(true);
     if (userData) {
-      let detail = (userData as any)?.sp;
-      setDetail(detail);
-      setUserName(detail?.nickname);
-      let avarUrl = await PublicJs.getImage(detail?.avatar);
-      setAvatar(avarUrl!);
-      setWallet(detail?.wallet);
-      setBio(detail?.bio);
-      setRoles(detail?.roles!);
-
-      let sbtArr = detail?.sbt ?? [];
-
-      const sbtFor = sbtArr?.filter((item: any) => item.name && item.image_uri);
-      setSbt(sbtFor);
-      setSeed(detail?.seed ?? []);
+      detail = (userData as any)?.sp;
+      setSnsStr(sns);
+    } else if (address) {
+      const res = await getUsers([address]);
+      detail = res.data[0]?.sp;
+      const sns_map = await getMultiSNS([address]);
+      const sns = sns_map.get(address.toLowerCase());
+      setSnsStr(sns!);
     }
+    setDetail(detail);
+    setUserName(detail?.nickname);
+    let avarUrl = await PublicJs.getImage(detail?.avatar);
+    setAvatar(avarUrl!);
+    setWallet(detail?.wallet);
+    setBio(detail?.bio);
+    setRoles(detail?.roles!);
+
+    let sbtArr = detail?.sbt ?? [];
+
+    const sbtFor = sbtArr?.filter((item: any) => item.name && item.image_uri);
+    setSbt(sbtFor);
+    setSeed(detail?.seed ?? []);
+    setLoading(false);
   };
 
   useEffect(() => {
-    if (!userData) return;
+    if (!userData && !address) return;
     getDetail();
-  }, [userData]);
+  }, [userData, address]);
 
   const switchRoles = (role: string) => {
     let str: string = '';
@@ -434,60 +478,69 @@ export default function ProfileComponent({ userData, theme, sns, handleClose }: 
     <Mask>
       <Box>
         <img className="btn-close-modal" src={CloseIcon} alt="" onClick={() => handleClose && handleClose()} />
-        <TopBox>
-          <LftBox>
-            <AvatarBox>
-              <ImgBox>
-                <img src={avatar ? avatar : defaultImg} alt="" />
-              </ImgBox>
-            </AvatarBox>
-          </LftBox>
-          <InfoBox>
-            <div className="lineBox">
-              <div className="userName">{userName}</div>
-              <LevelBox>LV{detail?.level?.current_lv}</LevelBox>
-            </div>
-            <div className="sns">{sns}</div>
-            <BioBox>
-              <div>{bio || '-'}</div>
-            </BioBox>
-            <TagBox>
-              {roles?.map((item, index) => (
-                <li key={`tag_${index}`}>{switchRoles(item)}</li>
-              ))}
-            </TagBox>
-            <LinkBox>
-              {detail?.social_accounts?.map((item: any, index: number) =>
-                returnSocial(item.network, item.identity) ? (
-                  <li key={`sbtInner_${index}`}>
-                    <span className="iconLft">{returnSocial(item.network, item.identity)}</span>
-                  </li>
-                ) : null,
-              )}
-              {detail?.email && (
-                <li>
-                  <span className="iconLft">{returnSocial('email', detail?.email)}</span>
-                </li>
-              )}
-            </LinkBox>
-          </InfoBox>
-        </TopBox>
-        <BgBox>
-          <InneBox>
-            <TitTop>SEED({list.length})</TitTop>
-            <RhtBoxB>
-              <SeedList list={list} />
-            </RhtBoxB>
-          </InneBox>
-        </BgBox>
-        <BgBox2>
-          <InneBox>
-            <TitTop>SBT({sbtList.length})</TitTop>
-            <RhtBoxB>
-              <Sbt list={sbtArr} />
-            </RhtBoxB>
-          </InneBox>
-        </BgBox2>
+        {!loading && (
+          <>
+            <TopBox>
+              <LftBox>
+                <AvatarBox>
+                  <ImgBox>
+                    <img src={avatar ? avatar : defaultImg} alt="" />
+                  </ImgBox>
+                </AvatarBox>
+              </LftBox>
+              <InfoBox>
+                <div className="lineBox">
+                  <div className="userName">{userName}</div>
+                  <LevelBox>LV{detail?.level?.current_lv}</LevelBox>
+                </div>
+                <div className="sns">{snsStr}</div>
+                <BioBox>
+                  <div>{bio || '-'}</div>
+                </BioBox>
+                <TagBox>
+                  {roles?.map((item, index) => (
+                    <li key={`tag_${index}`}>{switchRoles(item)}</li>
+                  ))}
+                </TagBox>
+                <LinkBox>
+                  {detail?.social_accounts?.map((item: any, index: number) =>
+                    returnSocial(item.network, item.identity) ? (
+                      <li key={`sbtInner_${index}`}>
+                        <span className="iconLft">{returnSocial(item.network, item.identity)}</span>
+                      </li>
+                    ) : null,
+                  )}
+                  {detail?.email && (
+                    <li>
+                      <span className="iconLft">{returnSocial('email', detail?.email)}</span>
+                    </li>
+                  )}
+                </LinkBox>
+              </InfoBox>
+            </TopBox>
+            <BgBox>
+              <InneBox>
+                <TitTop>SEED({list.length})</TitTop>
+                <RhtBoxB>
+                  <SeedList list={list} />
+                </RhtBoxB>
+              </InneBox>
+            </BgBox>
+            <BgBox2>
+              <InneBox>
+                <TitTop>SBT({sbtList.length})</TitTop>
+                <RhtBoxB>
+                  <Sbt list={sbtArr} />
+                </RhtBoxB>
+              </InneBox>
+            </BgBox2>
+          </>
+        )}
+        {loading && (
+          <Inner>
+            <img src={LoadingImg} alt="" />
+          </Inner>
+        )}
       </Box>
     </Mask>
   );

@@ -46,17 +46,22 @@ import PubImgActive from '../assets/Imgs/darkMenu/pub_active.png';
 import PubImgLight from '../assets/Imgs/lightMenu/pub.svg';
 
 import WikiImg from '../assets/Imgs/lightMenu/wiki.png';
-import WikiWhite from '../assets/Imgs/darkMenu/wiki.png';
+import WikiWhite from '../assets/Imgs/darkMenu/wikiWhite.png';
 import WikiImgActive from '../assets/Imgs/darkMenu/wiki_active.png';
+
+import FreshImg from '../assets/Imgs/darkMenu/fresh.png';
+import FreshWhite from '../assets/Imgs/darkMenu/freshWhite.png';
+import FreshActive from '../assets/Imgs/darkMenu/fresh_active.png';
 
 import React from 'react';
 import useCheckLogin from 'hooks/useCheckLogin';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import { WalletType } from 'wallet/wallet';
 import AppVersion from '../components/version';
+import getConfig from 'utils/envCofnig';
 
 const LftLi = styled.div<{ selected?: boolean }>`
-  padding: 15px 0;
+  padding: 10px 0;
   display: flex;
   align-items: center;
 
@@ -313,7 +318,7 @@ const items: MenuItemType[] = [
         active: GovernImgActive,
       },
     },
-    link: { href: '/proposal-v2' },
+    link: { href: '/proposal' },
   },
   {
     title: 'menus.Pub',
@@ -371,35 +376,37 @@ const items: MenuItemType[] = [
     },
     link: { href: '/resources' },
   },
-  {
+];
+if (getConfig().REACT_APP_ENV === 'test') {
+  items.push({
     title: 'menus.Newcomer',
     icon: {
       dark: {
-        nor: WikiWhite,
-        active: WikiImgActive,
+        nor: FreshWhite,
+        active: FreshActive,
       },
       light: {
-        nor: WikiImg,
-        active: WikiImgActive,
+        nor: FreshImg,
+        active: FreshActive,
       },
     },
     link: { href: '/newcomer' },
-  },
-  {
-    title: 'Wiki',
-    icon: {
-      dark: {
-        nor: WikiWhite,
-        active: WikiImgActive,
-      },
-      light: {
-        nor: WikiImg,
-        active: WikiImgActive,
-      },
+  });
+}
+items.push({
+  title: 'Wiki',
+  icon: {
+    dark: {
+      nor: WikiWhite,
+      active: WikiImgActive,
     },
-    link: { href: '/wiki' },
+    light: {
+      nor: WikiImg,
+      active: WikiImgActive,
+    },
   },
-];
+  link: { href: '/wiki' },
+});
 
 interface IMenuItem {
   data: MenuItemType;

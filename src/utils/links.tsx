@@ -26,6 +26,7 @@ import CreateImg from '../assets/Imgs/governance/create.png';
 import GuildImg from '../assets/Imgs/governance/guild.png';
 import DistributeImg from '../assets/Imgs/governance/distribute.png';
 import NodeImg from '../assets/Imgs/governance/node.png';
+import PodcastImg from '../assets/Imgs/podcast.jpeg';
 
 /**
  * NOTE:
@@ -112,6 +113,15 @@ const links = {
       id: 'outer',
       icon: RImg10,
       desc: 'resources.externalResourcesDesc',
+      hideTitle: 0,
+      hiddenFields: [],
+    },
+    {
+      name: 'resources.brandApply',
+      link: 'https://tally.so/r/w4QxNd',
+      id: 'outer',
+      icon: RImg9,
+      desc: 'resources.brandApplyDesc',
       hideTitle: 0,
       hiddenFields: [],
     },
@@ -358,6 +368,12 @@ const links = {
       link: 'https://mp.weixin.qq.com/s/s8ATHFdKhaMQ5SHkPjPAZQ',
     },
   ],
+  podcast: {
+    name: 'resources.podcastTitle',
+    link: 'https://www.xiaoyuzhoufm.com/podcast/64a27b216d90c5786108abbc',
+    img: PodcastImg,
+    desc: 'resources.podcastDesc',
+  },
 };
 
 export default links;

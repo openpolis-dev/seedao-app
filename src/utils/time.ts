@@ -71,3 +71,19 @@ export const formatMsgTime = (time: string | number, t: Function) => {
     return num < 10 ? '0' + num : num;
   }
 };
+
+export const formatDeltaDate = (endTime: number) => {
+  const now = Date.now();
+  const until = endTime;
+  const days = Math.abs(until - now) / 1000 / 3600 / 24;
+  const day = Math.floor(days);
+  const hours = (days - day) * 24;
+  const hour = Math.floor(hours);
+  const minutes = (hours - hour) * 60;
+  let minute = Math.floor(minutes);
+  const seconds = (minutes - minute) * 60;
+  if (seconds) {
+    minute += 1;
+  }
+  return { d: day, h: hour, m: minute };
+};

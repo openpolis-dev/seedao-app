@@ -7,10 +7,41 @@ import ChooseTypeStep from './chooseType';
 import ChooseTemplateStep from './chooseTemplate';
 import CreateStep from './createStep';
 import { useCreateProposalContext } from './store';
+import { useEffect } from 'react';
+import { AppActionType, useAuthContext } from 'providers/authProvider';
+import { getAuthProposalCategoryList } from 'requests/proposalV2';
+import useCheckMetaforoLogin from 'hooks/useMetaforoLogin';
 
 const CreateProposalSteps = () => {
   const { t } = useTranslation();
   const { currentStep, proposalType, goBackStepOne } = useCreateProposalContext();
+
+  const {
+    dispatch,
+    state: { userData },
+  } = useAuthContext();
+  const { checkMetaforoLogin } = useCheckMetaforoLogin();
+
+  useEffect(() => {
+    if (!userData) {
+      return;
+    }
+    checkMetaforoLogin().then(() => {
+      dispatch({ type: AppActionType.SET_LOADING, payload: true });
+
+      getAuthProposalCategoryList()
+        .then((resp) => {
+          dispatch({ type: AppActionType.SET_PROPOSAL_CATEGORIES_V2, payload: resp.data });
+        })
+        .catch(() => {
+          // no auth
+          checkMetaforoLogin();
+        })
+        .finally(() => {
+          dispatch({ type: AppActionType.SET_LOADING, payload: false });
+        });
+    });
+  }, [userData]);
 
   const showstep = () => {
     switch (currentStep) {
@@ -19,7 +50,7 @@ const CreateProposalSteps = () => {
       case 2:
         return <ChooseTemplateStep />;
       case 3:
-        return <CreateStep />;
+        return <CreateStep onClick={backTo} />;
       default:
         return null;
     }
@@ -36,11 +67,13 @@ const CreateProposalSteps = () => {
 
   return (
     <>
-      <BackerNav
-        title={backNavTitle}
-        to={currentStep === 1 ? '/proposal-v2' : '/proposal-v2/create'}
-        onClick={backTo}
-      />
+      {currentStep !== 3 && (
+        <BackerNav
+          title={backNavTitle}
+          to={currentStep === 1 ? '/proposal' : '/proposal/create'}
+          onClick={backTo}
+        />
+      )}
       {showstep()}
     </>
   );

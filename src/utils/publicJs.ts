@@ -144,13 +144,13 @@ function typedData(address: string, chainId: number) {
     },
     primaryType: 'Login',
     domain: {
-      name: 'Metaqus',
+      name: 'Metaforo',
       version: '1.0',
       chainId: chainId,
     },
     message: {
       account: address,
-      message: 'Login to Metaqus',
+      message: 'Login to Metaforo',
     },
   };
 }
