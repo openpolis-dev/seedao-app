@@ -106,7 +106,7 @@ export default function RouterLink() {
           <Route path="/sns" element={<SNSEntrancePage />} />
           <Route path="/sns/register" element={<RegisterSNS />} />
           {/* <Route path="/sns/user" element={<UserSNS />} /> */}
-          <Route path="/newcomer" element={<Newcomer />} />
+          {getConfig().REACT_APP_ENV === 'test' && <Route path="/newcomer" element={<Newcomer />} />}
 
           <Route path="/notion/:id" element={<Wiki />} />
           <Route path="/wiki" element={<Wiki />} />

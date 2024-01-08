@@ -58,6 +58,7 @@ import useCheckLogin from 'hooks/useCheckLogin';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import { WalletType } from 'wallet/wallet';
 import AppVersion from '../components/version';
+import getConfig from 'utils/envCofnig';
 
 const LftLi = styled.div<{ selected?: boolean }>`
   padding: 10px 0;
@@ -375,7 +376,9 @@ const items: MenuItemType[] = [
     },
     link: { href: '/resources' },
   },
-  {
+];
+if (getConfig().REACT_APP_ENV === 'test') {
+  items.push({
     title: 'menus.Newcomer',
     icon: {
       dark: {
@@ -388,22 +391,22 @@ const items: MenuItemType[] = [
       },
     },
     link: { href: '/newcomer' },
-  },
-  {
-    title: 'Wiki',
-    icon: {
-      dark: {
-        nor: WikiWhite,
-        active: WikiImgActive,
-      },
-      light: {
-        nor: WikiImg,
-        active: WikiImgActive,
-      },
+  });
+}
+items.push({
+  title: 'Wiki',
+  icon: {
+    dark: {
+      nor: WikiWhite,
+      active: WikiImgActive,
     },
-    link: { href: '/wiki' },
+    light: {
+      nor: WikiImg,
+      active: WikiImgActive,
+    },
   },
-];
+  link: { href: '/wiki' },
+});
 
 interface IMenuItem {
   data: MenuItemType;
