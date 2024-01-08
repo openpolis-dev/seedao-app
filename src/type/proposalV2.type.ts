@@ -75,6 +75,7 @@ export interface IComment {
   metaforo_post_id: number;
   proposal_arweave_hash: string;
   proposal_title: string;
+  proposal_ts: number;
   reply_metaforo_post_id: number;
   wallet: string;
   created_ts: number;

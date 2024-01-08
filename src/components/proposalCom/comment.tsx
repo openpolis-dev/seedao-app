@@ -5,7 +5,7 @@ import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { UserTitleType } from 'type/proposal.type';
 import MoreSelectAction from './moreSelectAction';
 import { useTranslation } from 'react-i18next';
-import { formatMsgTime } from 'utils/time';
+import { formatMsgTime, formatTime } from 'utils/time';
 import CommentIcon from '../../assets/Imgs/proposal/commentIcon.png';
 import ProfileComponent from '../../profile-components/profile';
 import { useAuthContext } from '../../providers/authProvider';
@@ -173,7 +173,7 @@ export default function CommentComponent({
                           }}
                         >
                           <span className="titleName">{data.proposal_title}</span>
-                          <span className="time">{formatMsgTime(data.created_ts * 1000, t)}</span>
+                          <span className="time">{formatTime(data.proposal_ts * 1000)}</span>
 
                           {/*<img src={!theme ? LinkIconDark : LinkIcon} alt="" />*/}
                         </Tip>
