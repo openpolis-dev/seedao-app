@@ -110,23 +110,35 @@ export default function ProposalVote({ id, poll, voteGate, updateStatus }: IProp
 
   const showVoteContent = () => {
     if ((pollStatus === VoteType.Open && !!poll.is_vote) || pollStatus === VoteType.Closed) {
-      return poll.options.map((option, index) => (
-        <VoteOptionBlock key={index}>
-          <OptionContent $highlight={option.is_vote}>
-            {option.html}
-            {!!option.is_vote && <HasVote>({t('Proposal.HasVote')})</HasVote>}
-          </OptionContent>
-          <VoteOptionBottom>
-            <ProgressBar percent={option.percent}>
-              <div className="inner"></div>
-            </ProgressBar>
-            <div onClick={() => !!option.voters && setOpenVoteItem({ count: option.voters, optionId: option.id })}>
-              <span className={!!option.is_vote ? 'active' : ''}>{option.voters}</span>
-              <span className="voters"> ({option.percent}%)</span>
-            </div>
-          </VoteOptionBottom>
-        </VoteOptionBlock>
-      ));
+      return (
+        <table>
+          <tbody>
+            {poll.options.map((option, index) => (
+              <tr>
+                <td>
+                  <OptionContent $highlight={option.is_vote}>
+                    {option.html}
+                    {!!option.is_vote && <HasVote>({t('Proposal.HasVote')})</HasVote>}
+                  </OptionContent>
+                </td>
+                <td>
+                  <ProgressBar percent={option.percent}>
+                    <div className="inner"></div>
+                  </ProgressBar>
+                </td>
+                <td>
+                  <VoteNumber
+                    onClick={() => !!option.voters && setOpenVoteItem({ count: option.voters, optionId: option.id })}
+                  >
+                    <span className={!!option.is_vote ? 'active' : ''}>{option.voters}</span>
+                    <span className="voters"> ({option.percent}%)</span>
+                  </VoteNumber>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      );
     } else {
       return (
         <>
@@ -215,18 +227,13 @@ const VoteHeadLeft = styled.div``;
 
 const VoteBody = styled.div`
   border-bottom: 1px solid var(--bs-border-color);
-  padding-bottom: 30px;
-`;
-const VoteFooter = styled.div`
-  padding-inline: 20px;
-  display: flex;
-  justify-content: space-between;
-  line-height: 36px;
+  padding-bottom: 16px;
 `;
 
 const VoteNFT = styled.div`
   color: var(--bs-body-color);
   margin-top: 16px;
+  margin-bottom: 14px;
   span {
     margin-right: 20px;
   }
@@ -264,22 +271,22 @@ const VoteOptionSelect = styled(VoteOptionBlock)`
 
 const ProgressBar = styled.div<{ percent: number }>`
   width: 500px;
-  height: 8px;
+  height: 10px;
   border-radius: 16px;
   box-sizing: border-box;
   background: rgba(82, 0, 255, 0.1);
   overflow: hidden;
+  margin-right: 16px;
+  margin-bottom: 16px;
   .inner {
     width: ${(props) => props.percent}%;
     background-color: var(--bs-primary);
-    height: 8px;
+    height: 10px;
   }
 `;
 
-const VoteOptionBottom = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 10px;
+const VoteNumber = styled.div`
+  margin-bottom: 16px;
   color: var(--bs-body-color_active);
   .voters {
     color: var(--bs-primary);
@@ -293,8 +300,9 @@ const VoteOptionBottom = styled.div`
 const OptionContent = styled.div<{ $highlight?: number }>`
   font-size: 14px;
   color: ${({ $highlight }) => ($highlight ? 'var(--bs-primary)' : 'var(--bs-body-color_active)')};
-  margin-top: 0.25em;
   margin-right: 20px;
+  margin-bottom: 16px;
+  line-height: 20px;
 `;
 
 const VoteButton = styled(Button)`
