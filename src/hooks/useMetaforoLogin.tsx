@@ -75,11 +75,11 @@ export default function useMetaforoLogin() {
       const sign = await signTypedData(signData);
       // // @ts-ignore
       // const sign = await signTypedDataAsync(signData);
-      handleLogin(sign, JSON.stringify(signData));
+      await handleLogin(sign, JSON.stringify(signData));
       dispatch({ type: AppActionType.SET_SHOW_METAFORO_LOGIN_MODAL, payload: false });
     } catch (error: any) {
       logError('login failed', error);
-      showToast(error?.message || `${error}`, ToastType.Danger);
+      showToast(error?.data?.msg || error?.message || `${error}`, ToastType.Danger);
       return;
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
