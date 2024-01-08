@@ -150,7 +150,7 @@ export default function ProposalVote({ id, poll, voteGate, updateStatus }: IProp
                 onChange={(e) => setSelectOption(e.target.checked ? option : undefined)}
                 disabled={!hasPermission}
               />
-              <OptionContent>{option.html}</OptionContent>
+              <OptionContentPure>{option.html}</OptionContentPure>
             </VoteOptionSelect>
           ))}
           {hasPermission && (
@@ -295,6 +295,11 @@ const VoteNumber = styled.div`
   .active {
     color: var(--bs-primary);
   }
+`;
+
+const OptionContentPure = styled.div`
+  font-size: 14px;
+  color: var(--bs-body-color_active);
 `;
 
 const OptionContent = styled.div<{ $highlight?: number }>`
