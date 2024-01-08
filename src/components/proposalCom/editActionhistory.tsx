@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { IProposalEditHistoy } from 'type/proposalV2.type';
-import { formatDate } from 'utils/time';
+import { formatTime } from 'utils/time';
 import { useAuthContext } from 'providers/authProvider';
 import useQuerySNS from 'hooks/useQuerySNS';
 import publicJs from 'utils/publicJs';
@@ -40,7 +40,7 @@ export default function EditActionHistory({ data }: IProps) {
           // content: t(idx === data.length - 1 ? 'Proposal.HistoryCreate' : 'Proposal.HistoryEdit', {}),
           isCreate: idx === data.length - 1,
           title: item.title,
-          time: formatDate(new Date(item.create_ts * 1000)),
+          time: formatTime(item.create_ts * 1000),
           wallet: item.wallet,
           link: `https://arweave.net/tx/${item.arweave}/data.html`,
         };
