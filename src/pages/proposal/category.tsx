@@ -39,7 +39,7 @@ export default function ProposalCategory() {
       setHasMore(res.data.threads.length >= pageSize);
       setPage(page + 1);
     } catch (error) {
-      console.error(error);
+      logError(error);
     } finally {
       // setLoading(false);
       dispatch({ type: AppActionType.SET_LOADING, payload: false });

@@ -112,7 +112,7 @@ export default function Vault() {
         total_amount: (Number(_credit.dealt_amount) || 0) + (Number(_credit.processing_amount) || 0),
       });
     } catch (error) {
-      console.error('get user assets error', error);
+      logError('get user assets error', error);
     }
   };
 

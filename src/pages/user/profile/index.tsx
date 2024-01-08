@@ -130,7 +130,6 @@ export default function Profile() {
       setRoles(detail.roles!);
 
       let sbtArr = detail.sbt;
-
       const sbtFor = sbtArr?.filter((item: any) => item.name && item.image_uri);
       setSbt(sbtFor);
       setSeed(detail.seed);
@@ -353,6 +352,7 @@ export default function Profile() {
           <img src={SbtImg} alt="" />
           <span>SBT</span>
         </TitleLft>
+
         <RhtBoxB>
           <Sbt list={sbtArr} />
         </RhtBoxB>
@@ -461,7 +461,7 @@ const InfoBox = styled.div`
   }
 `;
 const BioBox = styled.section`
-  margin: 7px 0;
+  margin-top: 7px;
   color: var(--bs-body-color_active);
 
   width: 582px;
@@ -498,6 +498,7 @@ const ProgressOuter = styled.div`
 `;
 
 const TagBox = styled.ul`
+  margin-top: 7px;
   font-size: 12px;
   flex-wrap: wrap;
   display: flex;

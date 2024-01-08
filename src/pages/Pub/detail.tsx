@@ -145,18 +145,15 @@ const PreBox = styled.div`
 
 export default function PubDetail() {
   const { dispatch } = useAuthContext();
-  const navigate = useNavigate();
   const { t } = useTranslation();
 
   const [title, setTitle] = useState('');
   const [status, setStatus] = useState('');
   const [imgUrl, setImgUrl] = useState('');
-  const [tag, setTag] = useState([]);
-  const [desc, setDesc] = useState('');
-  const [reward, setReward] = useState('');
-  const [jd, setJd] = useState('');
-  const [time, setTime] = useState('');
   const [contact, setContact] = useState<any[]>([]);
+
+  const [props, setProps] = useState();
+
   const { id } = useParams();
 
   useEffect(() => {
@@ -198,38 +195,21 @@ export default function PubDetail() {
     return colorStr;
   };
 
-  // const flattenArray = (arr: any[]) => {
-  //   let flattened: any[] = [];
-  //
-  //   arr.forEach((item) => {
-  //     if (Array.isArray(item)) {
-  //       flattened = flattened.concat(flattenArray(item));
-  //     } else {
-  //       flattened.push(item);
-  //     }
-  //   });
-  //
-  //   return flattened;
-  // };
-
   const getDetail = async (id: string) => {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
       // let detailInfo = await getInfo(id);
       let detailInfo = await pubDetail(id);
       let detail = detailInfo.data.properties;
+
+      setProps(detail);
       const titleStr = detail?.['悬赏名称'].title[0].text.content ?? '';
       setTitle(titleStr);
       let url = detailInfo?.data?.cover?.file?.url || detailInfo?.data?.cover?.external.url;
       setImgUrl(url);
 
       setStatus(detail?.['悬赏状态']?.select?.name ?? '');
-      setTag(detail?.['悬赏类型']?.multi_select ?? []);
 
-      setDesc(detail?.['任务说明'].rich_text[0].text.content ?? '');
-      setReward(detail?.['贡献报酬']?.rich_text[0]?.plain_text);
-      setJd(detail?.['技能要求'].rich_text[0].text.content ?? '');
-      setTime(detail?.['招募截止时间']?.rich_text[0]?.plain_text ?? '');
       let contactArr = detail?.['👫 对接人']?.rich_text;
 
       let arr: any[] = [];
@@ -244,10 +224,53 @@ export default function PubDetail() {
         setContact([...arr]);
       });
     } catch (e) {
-      console.error(e);
+      logError(e);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }
+  };
+
+  const renderElement = (detail: any) => {
+    const elements: any[] = [];
+    let str: any;
+    for (const key in detail) {
+      if (detail.hasOwnProperty(key)) {
+        switch (detail[key].type) {
+          case 'multi_select':
+            let arr: any[] = [];
+            detail[key]?.multi_select.map((item: any, index: number) => {
+              arr.push(
+                <TypeBox key={index} className={returnColor(item.name)}>
+                  {item.name}
+                </TypeBox>,
+              );
+            });
+            str = arr;
+            break;
+          case 'rich_text':
+            str = detail[key].rich_text[0]?.text?.content || detail[key].rich_text[0]?.plain_text;
+            break;
+
+          default:
+            str = '';
+            break;
+        }
+      }
+
+      str &&
+        !key.includes('对接人') &&
+        elements.push(
+          <Row>
+            <Col md={2} key={key}>
+              {key}
+            </Col>
+            <Col md={10}>
+              <PreBox>{str}</PreBox>
+            </Col>
+          </Row>,
+        );
+    }
+    return elements;
   };
 
   const returnStatus = (str: string) => {
@@ -287,36 +310,7 @@ export default function PubDetail() {
           </TopRht>
           <Title>{title}</Title>
           <ContentBox>
-            <Row>
-              <Col md={2}>悬赏类型</Col>
-              <Col md={10}>
-                {tag.map((item: any, index) => (
-                  <TypeBox key={index} className={returnColor(item.name)}>
-                    {item.name}
-                  </TypeBox>
-                ))}
-              </Col>
-            </Row>
-            <Row>
-              <Col md={2}>任务说明</Col>
-              <Col md={10}>
-                <PreBox>{desc}</PreBox>
-              </Col>
-            </Row>
-            <Row>
-              <Col md={2}>贡献报酬</Col>
-              <Col md={10}>{reward}</Col>
-            </Row>
-            <Row>
-              <Col md={2}>技能要求</Col>
-              <Col md={10}>
-                <PreBox>{jd}</PreBox>
-              </Col>
-            </Row>
-            <Row>
-              <Col md={2}>招募截止时间</Col>
-              <Col md={10}>{time}</Col>
-            </Row>
+            <>{renderElement(props)}</>
             <Row>
               <Col md={2}>👫 对接人</Col>
               <Col md={10}>

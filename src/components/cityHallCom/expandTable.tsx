@@ -58,7 +58,7 @@ export default function ExpandTable({
       const sns_map = await getMultiSNS(wallets);
       setSnsMap(sns_map);
     } catch (error) {
-      console.error('get sns failed', error);
+      logError('get sns failed', error);
     }
   };
 
@@ -79,7 +79,7 @@ export default function ExpandTable({
       updateStatus(ApplicationStatus.Approved);
       showToast(t('Msg.ApproveSuccess'), ToastType.Success);
     } catch (error) {
-      console.error('handle approve failed', error);
+      logError('handle approve failed', error);
       showToast(t('Msg.ApproveFailed'), ToastType.Danger);
     } finally {
       showLoading(false);
@@ -93,7 +93,7 @@ export default function ExpandTable({
       updateStatus(ApplicationStatus.Rejected);
       showToast(t('Msg.ApproveSuccess'), ToastType.Success);
     } catch (error) {
-      console.error('handle reject failed', error);
+      logError('handle reject failed', error);
       showToast(t('Msg.ApproveFailed'), ToastType.Danger);
     } finally {
       showLoading(false);

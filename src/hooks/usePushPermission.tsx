@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 
 const checkNotificationSupport = () => {
   if (!window.Notification) {
-    console.error('not support navigator');
+    logError('not support navigator');
     return;
   }
   return true;
@@ -38,7 +38,7 @@ export default function usePushPermission() {
 
     Notification.requestPermission()
       .then(handlePermission)
-      .catch((err) => console.error('permission failed', err));
+      .catch((err) => logError('permission failed', err));
   }, []);
 
   const handlePermission = () => {
@@ -51,7 +51,7 @@ export default function usePushPermission() {
         setPermission('granted');
       })
       .catch((err) => {
-        console.error('you denied permission');
+        logError('you denied permission');
       });
   };
 

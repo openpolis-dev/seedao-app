@@ -42,7 +42,7 @@ export default function InfoPage() {
       const dt = await getProjectById(id as string);
       setDetail(dt.data);
     } catch (error) {
-      console.error(error);
+      logError(error);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: null });
     }
@@ -100,6 +100,7 @@ export default function InfoPage() {
                   </InnerLft>
                 </LftBox>
                 <ContentBox>
+                  <TitleBox>{t('Project.ProjectIntro')}</TitleBox>
                   <MdPreview theme={theme ? 'dark' : 'light'} modelValue={detail?.intro || ''} />
                 </ContentBox>
               </LastLine>
@@ -161,9 +162,10 @@ const LastLine = styled.div`
 `;
 
 const LftBox = styled.div`
-  width: 246px;
+  width: 290px;
   background: var(--bs-box--background);
   border-radius: 16px;
+  flex-shrink: 0;
 `;
 
 const InnerLft = styled.div`
@@ -200,6 +202,7 @@ const TitleBox = styled.div`
   font-weight: bold;
   color: var(--bs-body-color_active);
   line-height: 36px;
+  font-family: 'Poppins-Bold';
 `;
 
 const TopInfo = styled.div`

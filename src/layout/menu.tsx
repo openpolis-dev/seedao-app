@@ -46,17 +46,22 @@ import PubImgActive from '../assets/Imgs/darkMenu/pub_active.png';
 import PubImgLight from '../assets/Imgs/lightMenu/pub.svg';
 
 import WikiImg from '../assets/Imgs/lightMenu/wiki.png';
-import WikiWhite from '../assets/Imgs/darkMenu/wiki.png';
+import WikiWhite from '../assets/Imgs/darkMenu/wikiWhite.png';
 import WikiImgActive from '../assets/Imgs/darkMenu/wiki_active.png';
+
+import FreshImg from '../assets/Imgs/darkMenu/fresh.png';
+import FreshWhite from '../assets/Imgs/darkMenu/freshWhite.png';
+import FreshActive from '../assets/Imgs/darkMenu/fresh_active.png';
 
 import React from 'react';
 import useCheckLogin from 'hooks/useCheckLogin';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import { WalletType } from 'wallet/wallet';
 import AppVersion from '../components/version';
+import getConfig from 'utils/envCofnig';
 
 const LftLi = styled.div<{ selected?: boolean }>`
-  padding: 15px 0;
+  padding: 10px 0;
   display: flex;
   align-items: center;
 
@@ -104,7 +109,7 @@ const LftLi = styled.div<{ selected?: boolean }>`
     padding: 5px 12px;
     border-radius: 8px;
     transition: opacity 0.3s ease, visibility 0.3s ease;
-    left: 60px;
+    left: 45px;
     top: 15px;
     white-space: nowrap;
     background: var(--bs-menu-hover);
@@ -127,8 +132,7 @@ const Box = styled.div`
   background: var(--bs-background);
   border-right: 1px solid var(--bs-border-color);
   box-sizing: border-box;
-  padding: 20px;
-  width: 173px;
+  padding: 20px 20px 15px;
   flex-shrink: 0;
   position: relative;
   display: flex;
@@ -149,6 +153,7 @@ const Box = styled.div`
   &.unexpand {
     animation: 'unexpand' 0.1s ease;
     animation-fill-mode: forwards;
+    padding-inline: 10px;
     .liLine {
       justify-content: center;
     }
@@ -156,7 +161,7 @@ const Box = styled.div`
       justify-content: center;
     }
     .lftDecor {
-      left: -35px;
+      left: -22px;
     }
   }
   @keyframes expand {
@@ -170,21 +175,21 @@ const Box = styled.div`
       width: 130px;
     }
     100% {
-      width: 173px;
+      width: unset;
     }
   }
   @keyframes unexpand {
     0% {
-      width: 173px;
+      width: 100px;
     }
-    50% {
-      width: 130px;
+    25% {
+      width: 90px;
     }
     75% {
-      width: 110px;
+      width: 70px;
     }
     100% {
-      width: 94px;
+      width: unset;
     }
   }
 `;
@@ -371,21 +376,37 @@ const items: MenuItemType[] = [
     },
     link: { href: '/resources' },
   },
-  {
-    title: 'Wiki',
+];
+if (getConfig().REACT_APP_ENV === 'test') {
+  items.push({
+    title: 'menus.Newcomer',
     icon: {
       dark: {
-        nor: WikiWhite,
-        active: WikiImgActive,
+        nor: FreshWhite,
+        active: FreshActive,
       },
       light: {
-        nor: WikiImg,
-        active: WikiImgActive,
+        nor: FreshImg,
+        active: FreshActive,
       },
     },
-    link: { href: '/wiki' },
+    link: { href: '/newcomer' },
+  });
+}
+items.push({
+  title: 'Wiki',
+  icon: {
+    dark: {
+      nor: WikiWhite,
+      active: WikiImgActive,
+    },
+    light: {
+      nor: WikiImg,
+      active: WikiImgActive,
+    },
   },
-];
+  link: { href: '/wiki' },
+});
 
 interface IMenuItem {
   data: MenuItemType;
@@ -410,8 +431,8 @@ const MenuItem = ({ data, onSelectMenu, selected, open, theme }: IMenuItem) => {
         {/*<span className="icon">{data.icon.name}</span>*/}
         <img src={data.icon[theme ? 'dark' : 'light'][selected ? 'active' : 'nor']} alt="" />
         {open && <span className="name">{data.title}</span>}
-        {!open && hover && <span className="tooltip-content">{data.title}</span>}
       </div>
+      {!open && hover && <span className="tooltip-content">{data.title}</span>}
     </LftLi>
   );
 };

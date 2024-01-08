@@ -99,7 +99,7 @@ export default function Del(props: Iprops) {
       await batchUpdateMembers(reqArr);
       showToast(t('Guild.RemoveMemSuccess'), ToastType.Success);
     } catch (e) {
-      console.error(e);
+      logError(e);
       showToast(JSON.stringify(e), ToastType.Danger);
     } finally {
       closeRemove(true);

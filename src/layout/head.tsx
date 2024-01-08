@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useAuthContext, AppActionType } from '../providers/authProvider';
-// import { useWeb3React } from '@web3-react/core';
 import useCheckLogin from '../hooks/useCheckLogin';
 import { parseToken, checkTokenValid, clearStorage } from '../utils/auth';
 import { Authorizer } from 'casbin.js';
@@ -9,18 +8,13 @@ import { readPermissionUrl } from '../requests/user';
 import requests from '../requests';
 import { SEEDAO_ACCOUNT, SEEDAO_USER, SEEDAO_USER_DATA, SELECT_WALLET } from '../utils/constant';
 import Avatar from 'components/common/avatar';
-import { Button, Form, Dropdown } from 'react-bootstrap';
-import LoginModal from 'components/modals/loginNew';
-
+import { Button, Dropdown } from 'react-bootstrap';
 import Select from 'components/common/select';
 
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
-import { List as ListIcon } from 'react-bootstrap-icons';
+import { useLocation, useNavigate } from 'react-router-dom';
 import usePushPermission from 'hooks/usePushPermission';
-import { requestSetDeviceLanguage, getPushDevice } from 'requests/push';
-import { useDisconnect } from 'wagmi';
-import { mainnet } from 'wagmi/chains';
+import { useAccount, useDisconnect } from 'wagmi';
 import { Wallet, WalletType } from 'wallet/wallet';
 import OneSignal from 'react-onesignal';
 import LightImg from '../assets/Imgs/light.png';
@@ -30,15 +24,22 @@ import LogoImg from '../assets/Imgs/light/logo.svg';
 import LogoImgDark from '../assets/Imgs/dark/logo.svg';
 import getConfig from 'utils/envCofnig';
 
+import LoginModal from 'components/modals/login';
+import useMetaforoLogin from 'hooks/useMetaforoLogin';
+
 export default function Header() {
   const { i18n } = useTranslation();
 
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { pathname } = useLocation();
   const { hasGranted, handlePermission } = usePushPermission();
   const { disconnect } = useDisconnect();
+  const { isConnected, address } = useAccount();
+  console.log('[connect status]', `isConnected-${isConnected}, address-${address}`);
 
   const [list, setList] = useState<any[]>([]);
+  const { checkMetaforoLogin, LoginMetafoModal } = useMetaforoLogin();
 
   useEffect(() => {
     setList([
@@ -64,7 +65,7 @@ export default function Header() {
     //   try {
     //     requestSetDeviceLanguage({ device: getPushDevice(), language: v });
     //   } catch (error) {
-    //     console.error('Set Device Language Failed', error);
+    //     logError('Set Device Language Failed', error);
     //   }
     // }
   };
@@ -94,9 +95,17 @@ export default function Header() {
     await authorizer.setUser(account.toLowerCase());
     dispatch({ type: AppActionType.SET_AUTHORIZER, payload: authorizer });
   };
-
   useEffect(() => {
+    if (!address || !isConnected) {
+      return;
+    }
     const acc = localStorage.getItem(SEEDAO_ACCOUNT);
+    if (acc?.toLocaleLowerCase() !== address.toLocaleLowerCase()) {
+      if (!show_login_modal) {
+        onClickLogout();
+      }
+      return;
+    }
     if (acc) {
       dispatch({ type: AppActionType.SET_ACCOUNT, payload: acc });
     }
@@ -115,18 +124,12 @@ export default function Header() {
       }
       wallet_type && dispatch({ type: AppActionType.SET_WALLET_TYPE, payload: wallet_type });
     }
-  }, []);
+  }, [address, isConnected, show_login_modal]);
 
   const getUser = async () => {
     const res = await requests.user.getUser();
     dispatch({ type: AppActionType.SET_USER_DATA, payload: res });
     initAuth();
-  };
-
-  const handleChainChanged = (chainId: any) => {
-    if (parseInt(chainId, 16) !== mainnet.id) {
-      onClickLogout();
-    }
   };
 
   const handleAccountChanged = (data: any) => {
@@ -219,10 +222,9 @@ export default function Header() {
     try {
       await OneSignal.logout();
     } catch (error) {
-      console.error('onesignal logout failed', error);
+      logError('onesignal logout failed', error);
     }
     toGo();
-    window.location.reload();
   };
 
   useEffect(() => {
@@ -278,6 +280,7 @@ export default function Header() {
             onChange={(event: any) => changeLang(event.value, true)}
             value={getLanguages().find((item) => item.value === lan) || getLanguages()[0]}
             width="100px"
+            className="selectTop"
             NotClear={true}
             isSearchable={false}
           />
@@ -303,6 +306,7 @@ export default function Header() {
         </RightBox>
       </nav>
       <LoginModal showModal={show_login_modal} />
+      <LoginMetafoModal />
     </HeadeStyle>
   );
 }
@@ -338,6 +342,9 @@ const HeadeStyle = styled.header`
     display: flex;
     align-items: center;
     justify-content: space-between;
+  }
+  .selectTop {
+    text-align: center;
   }
   .dropBox {
     display: flex;

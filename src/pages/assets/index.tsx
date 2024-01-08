@@ -18,7 +18,6 @@ import getConfig from 'utils/envCofnig';
 import useCurrentSeason from 'hooks/useCurrentSeason';
 import { getVaultBalance, IVaultBalance } from 'requests/publicData';
 
-
 const BoxOuter = styled.div`
   ${ContainerPadding};
   color: var(--bs-body-color_active);
@@ -101,19 +100,65 @@ const getChainIcon = (chainId: number) => {
   }
 };
 
+const VaultAddress = {
+  CommunityVault: '0x7FdA3253c94F09fE6950710E5273165283f8b283',
+  CommunityVaultPolygon: '0x4876eaD85CE358133fb80276EB3631D192196e24',
+  CityHallVault: '0x70F97Ad9dd7E1bFf40c3374A497a7583B0fAdd25',
+  IncubatorVault: '0x444C1Cf57b65C011abA9BaBEd05C6b13C11b03b5',
+};
+
 const getVaultName = (address: string) => {
   switch (address) {
-    case '0x7FdA3253c94F09fE6950710E5273165283f8b283':
+    case VaultAddress.CommunityVault:
       return 'Assets.CommunityVault';
-    case '0x4876eaD85CE358133fb80276EB3631D192196e24':
+    case VaultAddress.CommunityVaultPolygon:
       return 'Assets.CommunityVault';
-    case '0x70F97Ad9dd7E1bFf40c3374A497a7583B0fAdd25':
+    case VaultAddress.CityHallVault:
       return 'Assets.CityHallVault';
-    case '0x444C1Cf57b65C011abA9BaBEd05C6b13C11b03b5':
+    case VaultAddress.IncubatorVault:
       return 'Assets.IncubatorVault';
     default:
       return '';
   }
+};
+
+const SeeVault = ({ v, t }: { v: IVaultBalance; t: Function }) => {
+  if (!v) {
+    return null;
+  }
+  return (
+    <VaultItem key={v.wallet}>
+      <div className="info-left">
+        <span className="name">
+          <span>{t(getVaultName(v.wallet) as any)}</span>
+        </span>
+        <div className="balance">
+          <span> ${Number(v.fiatTotal).format()}</span>
+        </div>
+        <div className="info">
+          <div className="address">
+            <CopyBox text={v.wallet}>
+              <span>{publicJs.AddressToShow(v.wallet)}</span>
+            </CopyBox>
+          </div>
+          <a
+            href={`https://app.safe.global/balances?safe=${SAFE_CHAIN[String(v.chainId)].short}:${v.wallet}`}
+            target="_blank"
+            rel="noreferrer"
+          >
+            <div className="tag">
+              <Tag>
+                {getChainIcon(v.chainId)}
+                <span>
+                  {v.threshold}/{v.owners}
+                </span>
+              </Tag>
+            </div>
+          </a>
+        </div>
+      </div>
+    </VaultItem>
+  );
 };
 
 export default function Index() {
@@ -140,7 +185,7 @@ export default function Index() {
     floorPrice: '0',
     totalSupply: '0',
   });
-  const [wallets, setWallets] = useState<IVaultBalance[]>([]);
+  const [wallets, setWallets] = useState<{ [address: string]: IVaultBalance }>({});
 
   const getAssets = async () => {
     try {
@@ -152,7 +197,7 @@ export default function Index() {
         credit_total_amount: Number(res.data.credit_total_amount),
       });
     } catch (error) {
-      console.error('getTreasury error', error);
+      logError('getTreasury error', error);
     }
   };
   useEffect(() => {
@@ -174,7 +219,7 @@ export default function Index() {
       showToast('success', ToastType.Success);
       setshowModifyModal(undefined);
     } catch (error: any) {
-      console.error('updateBudget error', error);
+      logError('updateBudget error', error);
       showToast(error?.data?.msg || 'failed', ToastType.Danger);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
@@ -192,7 +237,7 @@ export default function Index() {
           });
         });
     } catch (error) {
-      console.error('getFloorPrice error', error);
+      logError('getFloorPrice error', error);
     }
   };
 
@@ -223,19 +268,23 @@ export default function Index() {
       const supply = await contract.totalSupply();
       setTotalSCR(Number(ethers.utils.formatEther(supply)).format());
     } catch (error) {
-      console.error('getSCR error', error);
+      logError('getSCR error', error);
     }
   };
 
   const getVaultData = async () => {
     try {
       const res = await getVaultBalance();
-      setWallets(res.data.wallets);
+      const _w: { [a: string]: IVaultBalance } = {};
+      res.data.wallets.forEach((r) => {
+        _w[r.wallet.toLocaleLowerCase()] = r;
+      });
+      setWallets(_w);
       let v: number = 0;
       res.data.wallets.forEach((w) => (v += Number(w.fiatTotal)));
       setTotalBalance(v.format());
     } catch (error) {
-      console.error(error);
+      logError(error);
     }
   };
 
@@ -271,41 +320,10 @@ export default function Index() {
               {/*<div className="right">*/}
 
               <VaultInfo>
-                {wallets.map((v) => (
-                  <VaultItem key={v.wallet}>
-                    <div className="info-left">
-                      <span className="name">
-                        <span>{t(getVaultName(v.wallet) as any)}</span>
-                      </span>
-                      <div className="balance">
-                        <span> ${Number(v.fiatTotal).format()}</span>
-                      </div>
-                      <div className="info">
-                        <div className="address">
-                          <CopyBox text={v.wallet}>
-                            <span>{publicJs.AddressToShow(v.wallet)}</span>
-                          </CopyBox>
-                        </div>
-                        <a
-                          href={`https://app.safe.global/balances?safe=${SAFE_CHAIN[String(v.chainId)].short}:${
-                            v.wallet
-                          }`}
-                          target="_blank"
-                          rel="noreferrer"
-                        >
-                          <div className="tag">
-                            <Tag>
-                              {getChainIcon(v.chainId)}
-                              <span>
-                                {v.threshold}/{v.owners}
-                              </span>
-                            </Tag>
-                          </div>
-                        </a>
-                      </div>
-                    </div>
-                  </VaultItem>
-                ))}
+                <SeeVault v={wallets[VaultAddress.CommunityVaultPolygon.toLocaleLowerCase()]} t={t} />
+                <SeeVault v={wallets[VaultAddress.CommunityVault.toLocaleLowerCase()]} t={t} />
+                <SeeVault v={wallets[VaultAddress.CityHallVault.toLocaleLowerCase()]} t={t} />
+                <SeeVault v={wallets[VaultAddress.IncubatorVault.toLocaleLowerCase()]} t={t} />
               </VaultInfo>
             </div>
           </VaultOverview>
@@ -445,8 +463,10 @@ const InfoItem = styled.li`
     color: #ffa842;
   }
   .title {
-    font-size: 12px;
+    font-size: 14px;
     color: #fff;
+    font-family: Poppins-SemiBold, Poppins;
+    font-weight: 600;
   }
   .num {
     font-size: 22px;
@@ -499,7 +519,7 @@ const VaultItem = styled.li`
   .info-left {
     .name {
       width: 160px;
-      font-size: 12px;
+      font-size: 14px;
       font-family: Poppins-SemiBold, Poppins;
       font-weight: 600;
     }

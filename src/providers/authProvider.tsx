@@ -1,8 +1,9 @@
 import React, { useReducer, createContext, useContext } from 'react';
 import { IUser, ITokenType } from 'type/user.type';
 import { ICategory } from 'type/proposal.type';
+import { IBaseCategory } from 'type/proposalV2.type';
 import { Authorizer } from 'casbin.js';
-import { SEEDAO_ACCOUNT, SEEDAO_USER, SEEDAO_USER_DATA, SENDING_ME_USER } from '../utils/constant';
+import { SEEDAO_ACCOUNT, SEEDAO_USER, SEEDAO_USER_DATA, SENDING_ME_USER, METAFORO_TOKEN } from '../utils/constant';
 import { WalletType } from '../wallet/wallet';
 import getConfig from 'utils/envCofnig';
 
@@ -13,6 +14,7 @@ interface IState {
   sns?: string;
   tokenData?: ITokenType;
   proposal_categories: ICategory[];
+  proposalCategories: IBaseCategory[];
   language: string;
   loading: boolean | null;
   authorizer?: Authorizer;
@@ -24,6 +26,8 @@ interface IState {
   hadOnboarding?: boolean;
   currentSeason: string;
   rpc?: string;
+  metaforoToken?: string;
+  show_metaforo_login?: boolean;
 }
 
 export enum AppActionType {
@@ -33,6 +37,7 @@ export enum AppActionType {
   SET_LOGIN_DATA = 'set_login_data',
   CLEAR_AUTH = 'clear_auth',
   SET_PROPOSAL_CATEGORIES = 'set_proposal_categories',
+  SET_PROPOSAL_CATEGORIES_V2 = 'set_proposal_categories_v2',
   SET_LAN = 'SET_LAN',
   SET_LOADING = 'SET_LOADING',
   SET_AUTHORIZER = 'SET_AUTHORIZER',
@@ -45,6 +50,8 @@ export enum AppActionType {
   SET_SNS = 'set_sns',
   SET_HAD_ONBOARDING = 'set_had_onboarding',
   SET_CURRENT_SEASON = 'set_current_season',
+  SET_METAFORO_TOKEN = 'set_metaforo_token',
+  SET_SHOW_METAFORO_LOGIN_MODAL = 'set_show_metaforo_login_modal',
 }
 
 interface IAction {
@@ -72,6 +79,7 @@ const INIT_STATE: IState = {
     //   ],
     // },
   ],
+  proposalCategories: [],
   language: '',
   loading: null,
   snsMap: new Map(),
@@ -110,9 +118,19 @@ const reducer = (state: IState, action: IAction): IState => {
     case AppActionType.CLEAR_AUTH:
       localStorage.removeItem(SEEDAO_USER);
       localStorage.removeItem(SENDING_ME_USER);
-      return { ...state, account: undefined, userData: undefined, wallet_type: undefined, authorizer: undefined };
+      localStorage.removeItem(METAFORO_TOKEN);
+      return {
+        ...state,
+        account: undefined,
+        userData: undefined,
+        wallet_type: undefined,
+        authorizer: undefined,
+        metaforoToken: undefined,
+      };
     case AppActionType.SET_PROPOSAL_CATEGORIES:
       return { ...state, proposal_categories: action.payload };
+    case AppActionType.SET_PROPOSAL_CATEGORIES_V2:
+      return { ...state, proposalCategories: action.payload };
     case AppActionType.SET_LOADING:
       return { ...state, loading: action.payload };
     case AppActionType.SET_AUTHORIZER:
@@ -137,6 +155,10 @@ const reducer = (state: IState, action: IAction): IState => {
       return { ...state, hadOnboarding: action.payload };
     case AppActionType.SET_CURRENT_SEASON:
       return { ...state, currentSeason: action.payload };
+    case AppActionType.SET_METAFORO_TOKEN:
+      return { ...state, metaforoToken: action.payload };
+    case AppActionType.SET_SHOW_METAFORO_LOGIN_MODAL:
+      return { ...state, show_metaforo_login: action.payload };
     default:
       throw new Error(`Unknown type: ${action.type}`);
   }

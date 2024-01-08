@@ -1,7 +1,9 @@
 import EthereumIcon from 'assets/Imgs/network/ethereum.svg';
 import PolygonIcon from 'assets/Imgs/network/polygon.svg';
 
-const VERSION = '0.3.0';
+const VERSION = '0.4.0';
+
+const SENTRY_DSN = 'https://b36d900b0a63b0466ff4e73d55e359b2@o4505590144106496.ingest.sentry.io/4506445116604416';
 
 const LOCAL = {
   REACT_APP_BASE_ENDPOINT: 'https://test-api.seedao.tech',
@@ -17,6 +19,7 @@ const LOCAL = {
   JOY_ID_URL: 'https://app.joy.id',
   NETWORK: {
     name: 'Polygon',
+    nativeToken: 'Matic',
     chainId: 137,
     // rpcs: [
     //   "https://eth-goerli.g.alchemy.com/v2/MATWeLJN1bEGTjSmtyLedn0i34o1ISLD",
@@ -40,12 +43,14 @@ const LOCAL = {
     whitelistId: 0,
   },
   INDEXER_ENDPOINT: 'https://test-spp-indexer.seedao.tech',
+  SENTRY_DSN: '',
 };
 const DEVELOPMENT = {
   ...LOCAL,
   REACT_APP_ENV: 'test',
   REACT_APP_ONESIGNAL_ID: 'd3bf95e4-40e3-455d-95ab-e01ef35d6732',
   REACT_APP_MOBILE_URL: 'https://dev-m.seedao.tech',
+  SENTRY_DSN,
 };
 
 const PREVIEW = {
@@ -54,6 +59,7 @@ const PREVIEW = {
   REACT_APP_THEME_ENABLE: true,
   REACT_APP_ONESIGNAL_ID: '673e6ac3-ab64-4935-8df7-25dd37baa7d1',
   REACT_APP_MOBILE_URL: 'https://preview-m.seedao.tech',
+  SENTRY_DSN,
 };
 
 const PRODUCTION = {
@@ -77,6 +83,7 @@ const PRODUCTION = {
   //   // rpc: 'https://mainnet.infura.io/v3/',
   // },
   INDEXER_ENDPOINT: 'https://spp-indexer.seedao.tech',
+  SENTRY_DSN,
 };
 
 export default function getConfig() {

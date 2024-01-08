@@ -38,6 +38,9 @@
   --button-hover-bg: #2D2736;
   --sns-font-color: #534e59;
   --profile-bg:#F5F5F5;
+  --proposal-box-shadow:2px 2px 5px 0px rgba(97, 94, 105, 0.05);
+  --proposal-border:rgba(217, 217, 217, 0.50);
+  --proposal-tag-border: #9CA4AB;
 }
 
 :root[data-bs-theme="dark"] {
@@ -75,4 +78,7 @@
   --button-hover-bg: #C9C9C9;
   --sns-font-color: #B0B0B0;
   --profile-bg:#0D0C0F;
+  --proposal-box-shadow:none;
+  --proposal-border:#29282F;
+  --proposal-tag-border: #29282F;
 }

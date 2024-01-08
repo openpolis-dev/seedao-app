@@ -1,228 +1,292 @@
-import { useAuthContext, AppActionType } from 'providers/authProvider';
-import React, { useEffect, useState } from 'react';
-import styled, { css } from 'styled-components';
-import { injected, uniPassWallet, uniPassHooks } from 'wallet/connector';
-import requests from 'requests';
-// import { useWeb3React } from '@web3-react/core';
-import { createSiweMessage } from 'utils/sign';
-import { Authorizer } from 'casbin.js';
-import { readPermissionUrl } from 'requests/user';
-import { Wallet, WalletType } from 'wallet/wallet';
-import { SELECT_WALLET } from 'utils/constant';
-import { MetaMask } from '@web3-react/metamask';
-import { UniPass } from '@unipasswallet/web3-react';
-import useToast, { ToastType } from 'hooks/useToast';
-import * as gtag from 'utils/gtag';
 import { useTranslation } from 'react-i18next';
-import { Web3Provider } from '@ethersproject/providers';
-import { X } from 'react-bootstrap-icons';
-import MetamaskIcon from 'assets/images/wallet/metamask.png';
-import UnipassIcon from 'assets/images/wallet/unipass.svg';
+import styled from 'styled-components';
+import CloseImg from '../../assets/Imgs/dark/close-circle.svg';
+import CloseImgLight from '../../assets/Imgs/light/close-circle.svg';
+import { useAuthContext, AppActionType } from 'providers/authProvider';
 
-const { useProvider, useAccount } = uniPassHooks;
+import {
+  useConnect,
+  useAccount,
+  useSignMessage,
+  useChainId,
+  useDisconnect,
+  ConnectorAlreadyConnectedError,
+} from 'wagmi';
+import { Connector } from 'wagmi/connectors';
 
-enum LoginStatus {
-  Default = 0,
-  Pending,
+import MetamaskIcon from 'assets/Imgs/home/METAmask.svg';
+import JoyIdImg from 'assets/Imgs/home/JOYID.png';
+import UnipassIcon from 'assets/Imgs/home/UniPass.svg';
+import { useEffect, useState } from 'react';
+import { getNonce, login, readPermissionUrl } from 'requests/user';
+import { WalletType, Wallet } from 'wallet/wallet';
+import { createSiweMessage } from 'utils/sign';
+import { SELECT_WALLET, SEEDAO_USER_DATA } from 'utils/constant';
+import { clearStorage } from 'utils/auth';
+import { Authorizer } from 'casbin.js';
+import ReactGA from 'react-ga4';
+import OneSignal from 'react-onesignal';
+import getConfig from 'utils/envCofnig';
+import useToast, { ToastType } from 'hooks/useToast';
+
+const networkConfig = getConfig().NETWORK;
+
+enum CONNECTOR_ID {
+  METAMASK = 'injected',
+  JOYID = 'joyid',
+  UNIPASS = 'unipass',
 }
 
-type Connector = MetaMask | UniPass;
-
-type LoginWallet = {
-  name: string;
-  value: Wallet;
-  connector: Connector;
-  iconURL: string;
-  type: WalletType;
+type ConnectorStatic = {
+  icon: string;
+  walletType: WalletType;
+  wallet: Wallet; // just for compatibility old code
 };
 
-const LOGIN_WALLETS: LoginWallet[] = [
-  {
-    name: 'MetaMask',
-    value: Wallet.METAMASK,
-    connector: injected,
-    iconURL: MetamaskIcon,
-    type: WalletType.EOA,
-  },
-  {
-    name: 'UniPass',
-    value: Wallet.UNIPASS,
-    connector: uniPassWallet,
-    iconURL: UnipassIcon,
-    type: WalletType.AA,
-  },
-];
+const getConnectorStatic = (id: CONNECTOR_ID): ConnectorStatic => {
+  switch (id) {
+    case CONNECTOR_ID.METAMASK:
+      return {
+        icon: MetamaskIcon,
+        walletType: WalletType.EOA,
+        wallet: Wallet.METAMASK_INJECTED,
+      };
+    case CONNECTOR_ID.JOYID:
+      return {
+        icon: JoyIdImg,
+        walletType: WalletType.EOA,
+        wallet: Wallet.JOYID_WEB,
+      };
+    case CONNECTOR_ID.UNIPASS:
+      return {
+        icon: UnipassIcon,
+        walletType: WalletType.AA,
+        wallet: Wallet.UNIPASS,
+      };
+  }
+};
 
-export default function LoginModal() {
+const LoginModalContent = () => {
   const { t } = useTranslation();
-  const { dispatch } = useAuthContext();
-  const { Toast, showToast } = useToast();
-  // const { account, provider } = useWeb3React();
+
+  const { connectors, isLoading: connectLoading, connectAsync } = useConnect();
+  const { isConnected, address } = useAccount();
+  const chainId = useChainId();
+  const { signMessageAsync, isLoading: signLoading } = useSignMessage();
+
+  const [selectConnectorId, setSelectConnectorId] = useState<CONNECTOR_ID>();
+  const [loginLoading, setLoginLoading] = useState(false);
 
   const {
-    state: { account, provider },
+    state: { theme, loading },
+    dispatch,
   } = useAuthContext();
-  const [loginStatus, setLoginStatus] = useState<LoginStatus>(LoginStatus.Default);
-  const [chooseWallet, setChooseWallet] = useState<LoginWallet>();
+  const { showToast } = useToast();
 
-  const _uprovider = useProvider();
-  const _account = useAccount();
-
-  const handleFailed = () => {
-    setLoginStatus(LoginStatus.Default);
-    setChooseWallet(undefined);
-    localStorage.removeItem(SELECT_WALLET);
-  };
-
-  const connect = async (w: LoginWallet) => {
-    if (w.value === Wallet.METAMASK && !window.ethereum) {
-      window.open('https://metamask.io/download.html', '_blank');
-      return;
-    }
-    setChooseWallet(w);
-    const connector = w.connector;
-    setLoginStatus(LoginStatus.Pending);
-    try {
-      await connector.activate();
-      localStorage.setItem(SELECT_WALLET, w.value);
-    } catch (error) {
-      handleFailed();
-    }
-  };
-
-  const handleLoginSys = async (_account: string, _provider: Web3Provider) => {
-    if (!_account || !_provider || !chooseWallet) {
-      return;
-    }
-    let newNonce: string;
-    try {
-      const res = await requests.user.getNonce(_account);
-      newNonce = res.data.nonce;
-    } catch (error) {
-      console.error('get nonce failed', error);
-      handleFailed();
-
-      return;
-    }
-    if (!newNonce) {
-      return;
-    }
-    // sign
-    let signData = '';
-    const now = Date.now();
-    const siweMessage = createSiweMessage(_account, 1, newNonce, 'Welcome to SeeDAO!');
-    console.log('siweMessage:', siweMessage);
-    const signMsg = siweMessage.prepareMessage();
-
-    try {
-      signData = await _provider.send('personal_sign', [signMsg, _account]);
-      console.log('signData:', signData);
-    } catch (error) {
-      console.error('sign failed', error);
-      handleFailed();
-    }
-    if (!signData) {
-      return;
-    }
-    try {
-      const res = await requests.user.login({
-        signature: signData,
-        message: signMsg,
-        domain: siweMessage.domain,
-        wallet: _account,
-        wallet_type: chooseWallet.type,
-        is_eip191_prefix: true,
-      });
-      res.data.token_exp = now + res.data.token_exp * 1000;
-      dispatch({ type: AppActionType.SET_LOGIN_DATA, payload: res.data });
-
-      // config permission authorizer
-      const authorizer = new Authorizer('auto', { endpoint: readPermissionUrl });
-      await authorizer.setUser(_account.toLowerCase());
-      dispatch({ type: AppActionType.SET_AUTHORIZER, payload: authorizer });
-      dispatch({ type: AppActionType.SET_WALLET_TYPE, payload: chooseWallet.type });
-
-      // await registerPush();
-      // gtag.event({ action: gtag.EVENTS.LOGIN_SUCCESS, category: chooseWallet.value, value: account });
-    } catch (error: any) {
-      console.error(error?.data);
-      const msg = error?.data?.msg || 'Login failed';
-      console.error('error?.data', msg);
-      // gtag.event({ action: gtag.EVENTS.LOGIN_FAILED, category: chooseWallet.value, value: account });
-      showToast(msg, ToastType.Danger);
-      handleFailed();
-    } finally {
-      dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: false });
-    }
-  };
+  const [clickConnectFlag, setClickConnectFlag] = useState(false);
 
   useEffect(() => {
-    if (chooseWallet?.value !== Wallet.METAMASK || provider?.connection?.url !== 'metamask') {
-      return;
+    if (connectLoading || signLoading || loginLoading) {
+      if (!loading) {
+        dispatch({ type: AppActionType.SET_LOADING, payload: true });
+      }
+    } else if (loading) {
+      dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }
-    if (account && loginStatus && provider) {
-      handleLoginSys(account, provider);
-    }
-  }, [account, loginStatus, chooseWallet, provider]);
+  }, [connectLoading, signLoading, loginLoading, loading]);
 
   useEffect(() => {
-    if (chooseWallet?.value !== Wallet.UNIPASS || _uprovider?.connection?.url === 'metamask') {
-      return;
+    if (isConnected && address && clickConnectFlag) {
+      const handleLogin = async (siweMessage: string, signResult: string) => {
+        if (!selectConnectorId) {
+          return;
+        }
+        setLoginLoading(true);
+        try {
+          const res = await login({
+            wallet: address,
+            message: siweMessage,
+            signature: signResult,
+            domain: window.location.host,
+            wallet_type: getConnectorStatic(selectConnectorId)?.walletType,
+            is_eip191_prefix: true,
+          });
+          // set context data
+          const now = Date.now();
+          res.data.token_exp = now + res.data.token_exp * 1000;
+          dispatch({ type: AppActionType.SET_LOGIN_DATA, payload: res.data });
+
+          dispatch({ type: AppActionType.SET_ACCOUNT, payload: address });
+          setLoginLoading(false);
+          // TODO: no more need to set provider???
+          // dispatch({ type: AppActionType.SET_PROVIDER, payload: provider });
+          // set authorizer
+          const authorizer = new Authorizer('auto', { endpoint: readPermissionUrl });
+          await authorizer.setUser(address);
+          dispatch({ type: AppActionType.SET_AUTHORIZER, payload: authorizer });
+          dispatch({ type: AppActionType.SET_WALLET_TYPE, payload: WalletType.EOA });
+          dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: false });
+          ReactGA.event('login_success', {
+            type: 'metamask',
+            account: 'account:' + address,
+          });
+          try {
+            // toLocaleLowerCase for compatibility old data
+            await OneSignal.login(address.toLocaleLowerCase());
+          } catch (error) {
+            logError('OneSignal login error', error);
+          }
+        } catch (error: any) {
+          setClickConnectFlag(false);
+          showToast(error?.data?.msg || error?.code || error, ToastType.Danger, { autoClose: false });
+
+          // TODO: alert login error
+          logError('login error', error);
+          // handle login failed
+          dispatch({ type: AppActionType.CLEAR_AUTH, payload: undefined });
+          localStorage.removeItem(SEEDAO_USER_DATA);
+          clearStorage();
+          dispatch({ type: AppActionType.SET_LOGIN_DATA, payload: null });
+          dispatch({ type: AppActionType.SET_AUTHORIZER, payload: null });
+          dispatch({ type: AppActionType.SET_WALLET_TYPE, payload: null });
+          // disconnect();
+          ReactGA.event('login_failed', { type: 'metamask' });
+          setLoginLoading(false);
+        } finally {
+          dispatch({ type: AppActionType.SET_LOADING, payload: false });
+        }
+      };
+      // sign message
+      const handleSignAndLogin = async () => {
+        // get nonce
+        let nonce = '';
+        try {
+          const res = await getNonce(address);
+          nonce = res.data.nonce;
+        } catch (error) {
+          // TODO: alert
+          logError(error);
+          setClickConnectFlag(false);
+
+          return;
+        }
+        try {
+          const msg = createSiweMessage(address, chainId, nonce, 'Welcome to SeeDAO!');
+          const signResult = await signMessageAsync({ message: msg });
+          handleLogin(msg, signResult);
+        } catch (error) {
+          // TODO: alert
+          logError(error);
+          setClickConnectFlag(false);
+        }
+      };
+      handleSignAndLogin();
     }
-    if (_account && loginStatus && _uprovider) {
-      handleLoginSys(_account, _uprovider);
-    }
-  }, [_account, _uprovider, loginStatus, chooseWallet]);
+  }, [isConnected, address, clickConnectFlag]);
 
   const closeModal = () => {
     dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: false });
   };
 
-  return (
-    <Mask>
-      {Toast}
-      <Modal>
-        <span className="icon-close" onClick={closeModal}>
-          {/*<EvaIcon name="close-outline" />*/}
-          <X />
-        </span>
+  const handleClickWallet = async (connector: Connector) => {
+    if (connector.id === CONNECTOR_ID.METAMASK && connector.name !== 'MetaMask') {
+      showToast(t('Msg.CloseInjected', { wallet: connector.name }), ToastType.Danger);
+      return;
+    }
+    if (connector.id === CONNECTOR_ID.METAMASK && !connector.ready) {
+      showToast(t('Msg.InstallMetaMask'), ToastType.Danger);
+      window.open('https://metamask.io/download.html', '_blank');
+      return;
+    } else if (!connector.ready) {
+      showToast(t('Msg.WalletNotReady', { wallet: connector.name }), ToastType.Danger);
+      return;
+    }
 
+    localStorage.setItem(SELECT_WALLET, Wallet.METAMASK_INJECTED);
+    setSelectConnectorId(connector.id as CONNECTOR_ID);
+
+    // handle connect
+    try {
+      await connectAsync({ connector, chainId: networkConfig.chainId });
+      setClickConnectFlag(true);
+    } catch (error: any) {
+      if (error instanceof ConnectorAlreadyConnectedError) {
+        if (isConnected && address) {
+          setClickConnectFlag(true);
+        }
+      }
+      logError('=======', error, error.mesaage);
+    }
+  };
+
+  const getConnectorButtonText = (connector: Connector) => {
+    if (connector.id === 'injected') {
+      return 'MetaMask';
+    }
+    if (connector.ready) {
+      return connector.name;
+    }
+    return 'Unsupport';
+  };
+
+  const getConnectionButtons = () => {
+    return connectors.map((connector) => {
+       return connector.id === CONNECTOR_ID.UNIPASS ? null : (
+         <WalletOption onClick={() => handleClickWallet(connector)} key={connector.id}>
+           <img src={getConnectorStatic(connector.id as CONNECTOR_ID)?.icon} alt="" />
+           <span>{getConnectorButtonText(connector)}</span>
+         </WalletOption>
+       );
+    });
+  };
+  return (
+    <Mask show={true}>
+      <Modal>
+        <span className="icon-close" onClick={() => closeModal()}>
+          <img src={theme ? CloseImg : CloseImgLight} alt="" />
+        </span>
         <Title>{t('general.ConnectWallet')}</Title>
-        <Content>
-          {LOGIN_WALLETS.map((w) => (
-            <WalletOption key={w.value} onClick={() => connect(w)}>
-              <span>{w.name}</span>
-              <span>
-                <img src={w.iconURL} alt="" width="28px" height="28px" />
-              </span>
-            </WalletOption>
-          ))}
-        </Content>
+        {getConnectionButtons()}
       </Modal>
     </Mask>
   );
+};
+
+export default function LoginModal({ showModal }: { showModal?: boolean }) {
+  //   console.log('window.ethereum:', window.ethereum);
+  if (showModal) {
+    return <LoginModalContent />;
+  } else {
+    return null;
+  }
 }
 
-const Mask = styled.div`
+interface ShowProps {
+  show: boolean;
+}
+
+const Mask = styled.div<ShowProps>`
   position: fixed;
   left: 0;
   top: 0;
-  z-index: 9999;
+  z-index: 99;
   width: 100vw;
   height: 100vh;
-  background: rgba(45, 51, 46, 0.6);
-  display: flex;
+  background: var(--mask-bg);
+  //display: flex;
+  display: ${(props) => (props.show ? 'flex' : 'none')};
   justify-content: center;
   align-items: center;
 `;
 
 const Modal = styled.div`
-  width: 400px;
-  height: 300px;
+  width: 427px;
+  /* min-height: 354px; */
   opacity: 1;
-  border-radius: 8px;
-  background: #fff linear-gradient(90deg, rgba(235, 255, 255, 0.6) 0%, rgba(230, 255, 255, 0) 100%);
-  padding: 40px 20px;
+  border-radius: 16px;
+  background: var(--bs-background);
+  border: 1px solid var(--bs-border-color);
+  padding: 40px 65px;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -230,48 +294,39 @@ const Modal = styled.div`
   .icon-close {
     position: absolute;
     right: 10px;
-    top: 10px;
+    top: 5px;
     cursor: pointer;
+    font-size: 24px;
   }
 `;
 
 const Title = styled.div`
-  font-size: 18px;
-  font-weight: 600;
+  font-size: 24px;
+  font-weight: bold;
   text-align: center;
-  margin-bottom: 16px;
+  margin-bottom: 38px;
+  font-family: 'Poppins-Bold';
+  color: var(--bs-body-color_active);
 `;
 
 const WalletOption = styled.li`
-  ${({ theme }) => css`
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    justify-content: space-between;
-    padding: 10px 28px;
-    border-radius: 8px;
-    margin-block: 10px;
-    cursor: pointer;
-    //background: ${theme.colorPrimary500};
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-    border: 1px solid #f1f1f1;
-    background: #fff;
-    color: #000;
-    font-weight: 600;
-    font-size: 16px;
-    &:hover {
-      //background-color: ${theme.colorPrimary400};
-      background-color: #f5f5f5;
-    }
-    img {
-      width: 28px;
-      height: 28px;
-    }
-  `}
-`;
-
-const Content = styled.ul`
   display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
+  align-items: center;
+  padding: 14px 28px;
+  border-radius: 16px;
+  margin-bottom: 16px;
+  cursor: pointer;
+  background: var(--home-right);
+  color: var(--bs-body-color_active);
+  font-family: 'Poppins-SemiBold';
+  font-weight: 600;
+  font-size: 16px;
+  &:hover {
+    background-color: var(--home-right_hover);
+  }
+  img {
+    width: 32px;
+    height: 32px;
+    margin-right: 20px;
+  }
 `;

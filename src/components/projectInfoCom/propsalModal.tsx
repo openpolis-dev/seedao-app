@@ -133,7 +133,7 @@ export default function PropsalModal(props: Iprops) {
       setLoading(true);
       await requests.project.addRelatedProposal(id as string, ids);
     } catch (error) {
-      console.error('handle related proposals failed: ', error);
+      logError('handle related proposals failed: ', error);
       showToast(`${t('Msg.RequestFailed')}: ${error}`, ToastType.Danger);
     } finally {
       setLoading(false);

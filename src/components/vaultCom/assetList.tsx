@@ -15,7 +15,6 @@ import { AppActionType, useAuthContext } from 'providers/authProvider';
 import Loading from 'components/loading';
 import { formatDate, formatTime } from 'utils/time';
 import publicJs from 'utils/publicJs';
-// import { useWeb3React } from '@web3-react/core';
 import { useTranslation } from 'react-i18next';
 import { formatApplicationStatus } from 'utils/index';
 import Select from 'components/common/select';
@@ -166,7 +165,7 @@ export default function AssetList() {
         data: 'project',
       }));
     } catch (error) {
-      console.error('getProjects in city-hall failed: ', error);
+      logError('getProjects in city-hall failed: ', error);
       return [];
     }
   };
@@ -184,7 +183,7 @@ export default function AssetList() {
         data: 'guild',
       }));
     } catch (error) {
-      console.error('getGuilds in city-hall failed: ', error);
+      logError('getGuilds in city-hall failed: ', error);
       return [];
     }
   };
@@ -204,7 +203,7 @@ export default function AssetList() {
       }));
       setApplicants(options);
     } catch (error) {
-      console.error('getApplicants error', error);
+      logError('getApplicants error', error);
     }
   };
 
@@ -250,7 +249,7 @@ export default function AssetList() {
       }));
       setList(_list);
     } catch (error) {
-      console.error('getRecords error', error);
+      logError('getRecords error', error);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }

@@ -14,14 +14,17 @@ import { isAvailable } from '@seedao/sns-safe';
 import { builtin } from '@seedao/sns-js';
 import { getRandomCode } from 'utils';
 import useToast, { ToastType } from 'hooks/useToast';
-import UserSVGIcon from 'components/svgs/user';
-import { Link, useNavigate } from 'react-router-dom';
-import { SELECT_WALLET } from 'utils/constant';
-import { Wallet } from '../../wallet/wallet';
-import { clearStorage } from 'utils/auth';
+import { useNavigate } from 'react-router-dom';
+import { Address, useNetwork, useSwitchNetwork } from 'wagmi';
+import { WaitForTransactionResult, waitForTransaction } from 'wagmi/actions';
+import { Hex } from 'viem';
+import { useEthersProvider } from 'hooks/ethersNew';
 
 import useTransaction, { TX_ACTION } from './useTransaction';
 import getConfig from 'utils/envCofnig';
+import { checkEstimateGasFeeEnough, checkTokenBalance } from './checkUserBalance';
+import parseError from './parseError';
+
 const networkConfig = getConfig().NETWORK;
 const PAY_NUMBER = networkConfig.tokens[0].price;
 
@@ -40,11 +43,15 @@ export default function RegisterSNSStep1() {
   const [isPending, setPending] = useState(false);
   const [availableStatus, setAvailable] = useState(AvailableStatus.DEFAULT);
   const [randomSecret, setRandomSecret] = useState<string>('');
-  const [whitelistOpen, setWhitelistOpen] = useState(false);
+
+  const { chain } = useNetwork();
+  const { switchNetworkAsync } = useSwitchNetwork();
+
+  const provider = useEthersProvider({});
 
   const {
     dispatch,
-    state: { provider, account, userData },
+    state: { account },
   } = useAuthContext();
 
   const {
@@ -52,10 +59,8 @@ export default function RegisterSNSStep1() {
     state: { controllerContract, localData, hasReached, user_proof, hadMintByWhitelist, whitelistIsOpen },
   } = useSNSContext();
 
-  const { handleTransaction, approveToken } = useTransaction();
-
+  const { handleTransaction, handleEstimateGas } = useTransaction();
   const { showToast } = useToast();
-
   const isLogin = useCheckLogin(account);
 
   const handleSearchAvailable = async (v: string) => {
@@ -70,6 +75,14 @@ export default function RegisterSNSStep1() {
         return;
       }
       // onchain check
+      if (!controllerContract) {
+        showToast(t('SNS.ContractNotReady'), ToastType.Danger, {
+          hideProgressBar: true,
+        });
+        setPending(false);
+        setAvailable(AvailableStatus.DEFAULT);
+        return;
+      }
       const res1 = await controllerContract.available(v);
       console.log('online check', v, res1);
 
@@ -80,7 +93,7 @@ export default function RegisterSNSStep1() {
       }
       setAvailable(AvailableStatus.OK);
     } catch (error) {
-      console.error('check available error', error);
+      logError('check available error', error);
       setAvailable(AvailableStatus.DEFAULT);
     } finally {
       setPending(false);
@@ -89,24 +102,28 @@ export default function RegisterSNSStep1() {
   const onChangeVal = useCallback(debounce(handleSearchAvailable, 1000), [controllerContract]);
   const checkLogin = () => {
     // check login status
-    if (!account || !isLogin || !provider) {
+    if (!account || !isLogin) {
       dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: true });
       return;
     }
-    const wallet = localStorage.getItem(SELECT_WALLET);
-    if (wallet === Wallet.UNIPASS) {
-      if (!provider.provider.isConnected()) {
-        dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: true });
-        // clear login status
-        if (userData) {
-          dispatch({ type: AppActionType.CLEAR_AUTH, payload: undefined });
-          clearStorage();
-        }
-        return;
-      }
-    }
+    // TODO check unipass login
     return true;
   };
+  const handleCheckNetwork = async () => {
+    if (chain && switchNetworkAsync && chain?.id !== networkConfig.chainId) {
+      try {
+        await switchNetworkAsync(networkConfig.chainId);
+      } catch (error) {
+        logError('switch network error', error);
+        showToast(t('SNS.NetworkNotReady'), ToastType.Danger, { hideProgressBar: true });
+        throw new Error('switch network error');
+      }
+      return true;
+    }
+  };
+
+  // check network
+  const checkNetwork = useCallback(debounce(handleCheckNetwork, 1000), [chain, switchNetworkAsync]);
 
   const handleInput = (v: string) => {
     if (v?.length > 15) {
@@ -128,6 +145,7 @@ export default function RegisterSNSStep1() {
       setPending(true);
       onChangeVal(v_normalized);
     }
+    checkNetwork();
   };
 
   const handleClearInput = () => {
@@ -139,21 +157,65 @@ export default function RegisterSNSStep1() {
     if (!account || !checkLogin()) {
       return;
     }
-    // mint
     try {
-      const _s = getRandomCode();
-      setRandomSecret(_s);
+      const r = await handleCheckNetwork();
+      if (r) {
+        return;
+      }
+    } catch (error) {
+      return;
+    }
+
+    // check token balance if mint by paying token
+    if (!(whitelistIsOpen && user_proof && !hadMintByWhitelist)) {
+      const token = await checkTokenBalance(account as Address);
+      if (token) {
+        showToast(t('SNS.NotEnoughBalance', { token }), ToastType.Danger, { hideProgressBar: true });
+        dispatchSNS({ type: ACTIONS.CLOSE_LOADING });
+        return;
+      }
+    }
+
+    // make commitment
+    let commitment = '';
+    let random_code = '';
+    try {
+      random_code = getRandomCode();
+      setRandomSecret(random_code);
       // get commitment
-      const commitment = await controllerContract.makeCommitment(
+      commitment = await controllerContract.makeCommitment(
         searchVal,
         account,
         builtin.PUBLIC_RESOLVER_ADDR,
-        ethers.utils.formatBytes32String(_s),
+        ethers.utils.formatBytes32String(random_code),
       );
-      // commit
-      dispatchSNS({ type: ACTIONS.SHOW_LOADING });
+    } catch (error: any) {
+      dispatchSNS({ type: ACTIONS.CLOSE_LOADING });
+      logError(`[step-1] commitment failed`, error);
+      showToast(`make commitment failed: ${error}`, ToastType.Danger);
+      return;
+    }
 
-      const txHash = await handleTransaction(TX_ACTION.COMMIT, commitment);
+    // estimate commit
+    try {
+      const estimateResult = await handleEstimateGas(TX_ACTION.COMMIT, commitment);
+      console.log('estimateResult', estimateResult);
+      const notEnoughToken = await checkEstimateGasFeeEnough(estimateResult, account as Address);
+      if (notEnoughToken) {
+        showToast(t('SNS.NotEnoughBalance', { notEnoughToken }), ToastType.Danger, { hideProgressBar: true });
+        dispatchSNS({ type: ACTIONS.CLOSE_LOADING });
+        return;
+      }
+    } catch (error: any) {
+      dispatchSNS({ type: ACTIONS.CLOSE_LOADING });
+      logError('[step-1] estimate commit failed', error);
+      showToast(parseError(error), ToastType.Danger);
+      return;
+    }
+
+    // commit
+    try {
+      const txHash = (await handleTransaction(TX_ACTION.COMMIT, commitment)) as string;
       // record to localstorage
       const data = { ...localData };
       data[account] = {
@@ -162,14 +224,14 @@ export default function RegisterSNSStep1() {
         commitHash: txHash,
         stepStatus: 'pending',
         timestamp: 0,
-        secret: _s,
+        secret: random_code,
         registerHash: '',
       };
       dispatchSNS({ type: ACTIONS.SET_STORAGE, payload: JSON.stringify(data) });
     } catch (error: any) {
-      console.error('mint failed', error);
+      logError('[step-1] commit failed', error);
       dispatchSNS({ type: ACTIONS.CLOSE_LOADING });
-      showToast(error?.reason || error?.data?.message || error, ToastType.Danger);
+      showToast(parseError(error), ToastType.Danger);
     }
   };
 
@@ -182,65 +244,67 @@ export default function RegisterSNSStep1() {
     if (!hash || localData[account]?.stepStatus === 'failed') {
       return;
     }
-    let timer: any;
-    const timerFunc = () => {
+    // check network
+    if (chain?.id !== networkConfig.chainId) {
+      return;
+    }
+    const checkTxStatus = () => {
       if (!account || !localData) {
         return;
       }
       console.log(localData, account);
-
       if (!hash) {
         return;
       }
-      provider.getTransactionReceipt(hash).then((r: any) => {
+      waitForTransaction({ hash: hash as Hex }).then((r: WaitForTransactionResult) => {
         console.log('r:', r);
         const _d = { ...localData };
-        if (r && r.status === 1) {
-          // means tx success
+        if (r && r.status === 'success') {
           _d[account].stepStatus = 'success';
-          provider.getBlock(r.blockNumber).then((block: any) => {
+          provider.getBlock(Number(r.blockNumber.toString())).then((block: any) => {
             _d[account].timestamp = block.timestamp;
             dispatchSNS({ type: ACTIONS.SET_STORAGE, payload: JSON.stringify(_d) });
             dispatchSNS({ type: ACTIONS.CLOSE_LOADING });
-            clearInterval(timer);
           });
-        } else if (r && (r.status === 2 || r.status === 0)) {
-          // means tx failed
+        } else if (r && r.status === 'reverted') {
+          logError(`tx failed: ${hash}`);
           _d[account].stepStatus = 'failed';
           dispatchSNS({ type: ACTIONS.SET_STORAGE, payload: JSON.stringify(_d) });
           dispatchSNS({ type: ACTIONS.CLOSE_LOADING });
-          clearInterval(timer);
         }
       });
     };
-    timer = setInterval(timerFunc, 1000);
-    return () => timer && clearInterval(timer);
-  }, [localData, account, provider]);
+    checkTxStatus();
+  }, [localData, account, provider, chain]);
 
   const showButton = () => {
     if (hasReached) {
+      // reach max mint
       return (
         <MintButton variant="primary" disabled={true}>
           {t('SNS.HadSNS')}
         </MintButton>
       );
-    } else {
-      if (user_proof && !hadMintByWhitelist) {
-        if (!whitelistIsOpen) {
-          return (
-            <MintButton variant="primary" disabled={true}>
-              {t('SNS.FreeMintNotOpen')}
-            </MintButton>
-          );
-        }
-      }
+    } else if (whitelistIsOpen && user_proof && !hadMintByWhitelist) {
+      // whitelist mint
       return (
         <MintButton
           variant="primary"
           disabled={isPending || availableStatus !== AvailableStatus.OK}
           onClick={handleMint}
         >
-          {user_proof && !hadMintByWhitelist ? t('SNS.FreeMint') : t('SNS.SpentMint', { money: `${PAY_NUMBER} USDT` })}
+          {t('SNS.FreeMint')}
+        </MintButton>
+      );
+    } else {
+      // pay mint
+      return (
+        <MintButton
+          variant="primary"
+          disabled={isPending || availableStatus !== AvailableStatus.OK}
+          onClick={handleMint}
+        >
+          {t('SNS.SpentMint', { money: `${PAY_NUMBER} USDT(${networkConfig.name})` })}
         </MintButton>
       );
     }
@@ -339,8 +403,7 @@ const InputBox = styled.div`
 `;
 
 const InputStyled = styled.input`
-  width: unset;
-  min-width: 117px;
+  width: 142px;
   height: 100%;
   border: none;
   padding: 0;

@@ -23,7 +23,8 @@ instance.interceptors.request.use(
       !config.url.includes('my') &&
       !config.url.includes('user') &&
       !config.url.includes('push') &&
-      !config.url.includes('app_bundles')
+      !config.url.includes('app_bundles') &&
+      !config.url.includes('list_with_perm')
     ) {
       return config;
     }
@@ -72,10 +73,10 @@ export interface ResponseData<T = any> {
  * @method get
  * @param {url, params, loading}
  */
-const get = function (url: string, params: any = {}): Promise<ResponseData> {
+const get = function (url: string, params: any = {}, data = {}): Promise<ResponseData> {
   return new Promise((resolve, reject) => {
     instance
-      .get(url, { params })
+      .get(url, { params, data })
       .then((res) => {
         resolve(res.data);
       })

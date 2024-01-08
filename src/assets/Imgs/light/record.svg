@@ -1,10 +1,1 @@
-<svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g id="Group 39774">
-<g id="Group 39772">
-<path id="Vector" d="M20.1 7.85547V16.8555C20.1 19.5555 18.75 21.3555 15.6 21.3555H8.39999C5.24999 21.3555 3.89999 19.5555 3.89999 16.8555V7.85547C3.89999 5.15547 5.24999 3.35547 8.39999 3.35547H15.6C18.75 3.35547 20.1 5.15547 20.1 7.85547Z" stroke="#1A1323" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-<path id="Vector_2" d="M14.25 5.60547V7.40547C14.25 8.39547 15.06 9.20547 16.05 9.20547H17.85" stroke="#1A1323" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-<path id="Vector_3" d="M8.39999 13.2539H12" stroke="#1A1323" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-<path id="Vector_4" d="M8.39999 16.8555H15.6" stroke="#1A1323" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-</g>
-</g>
-</svg>
+<svg fill="none" height="25" viewBox="0 0 24 25" width="24" xmlns="http://www.w3.org/2000/svg"><g stroke="#1a1323" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="1.5"><path d="m20.1 7.85547v9.00003c0 2.7-1.35 4.5-4.5 4.5h-7.20001c-3.15 0-4.5-1.8-4.5-4.5v-9.00003c0-2.7 1.35-4.5 4.5-4.5h7.20001c3.15 0 4.5 1.8 4.5 4.5z"/><path d="m14.25 5.60547v1.8c0 .99.81 1.8 1.8 1.8h1.8"/><path d="m8.39999 13.2539h3.60001"/><path d="m8.39999 16.8555h7.20001"/></g></svg>
