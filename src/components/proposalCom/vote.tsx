@@ -165,45 +165,47 @@ export default function ProposalVote({ id, poll, voteGate, updateStatus }: IProp
 
   return (
     <CardStyle id="vote-block">
-      <VoteHead>
-        <span>
-          {' '}
-          {t('Proposal.TotalVotes')}: {poll.totalVotes}
-        </span>
-        <TotalVoters>
-          {/*<span>*/}
-          {/*  {t('Proposal.TotalVotes')}: {poll.totalVotes}*/}
-          {/*</span>*/}
-          {voteStatusTag}
-        </TotalVoters>
-      </VoteHead>
-      <FlexLine>
-        <VoteHeadLeft>{poll.title}</VoteHeadLeft>
-        {/* {poll.arweave && (
+      <div className="innerBox">
+        <VoteHead>
+          <span>
+            {' '}
+            {t('Proposal.TotalVotes')}: {poll.totalVotes}
+          </span>
+          <TotalVoters>
+            {/*<span>*/}
+            {/*  {t('Proposal.TotalVotes')}: {poll.totalVotes}*/}
+            {/*</span>*/}
+            {voteStatusTag}
+          </TotalVoters>
+        </VoteHead>
+        <FlexLine>
+          <VoteHeadLeft>{poll.title}</VoteHeadLeft>
+          {/* {poll.arweave && (
           <ExportButton href={`https://arweave.net/tx/${poll.arweave}/data.csv`}>{t('Proposal.Export')}</ExportButton>
         )} */}
-      </FlexLine>
-      <VoteBody>
-        {showVoteContent()}
+        </FlexLine>
+        <VoteBody>
+          {showVoteContent()}
 
-        {voteGate && (
-          <VoteNFT>
-            <span>
-              {t('Proposal.PollNFT')}: {voteGate.contract_addr}
-            </span>
-            <span>Token Id: {voteGate.token_id}</span>
-            {voteGate.name && <span>{voteGate.name}</span>}
-          </VoteNFT>
+          {voteGate && (
+            <VoteNFT>
+              <span>
+                {t('Proposal.PollNFT')}: {voteGate.contract_addr}
+              </span>
+              <span>Token Id: {voteGate.token_id}</span>
+              {voteGate.name && <span>{voteGate.name}</span>}
+            </VoteNFT>
+          )}
+        </VoteBody>
+        {!!openVoteItem && <VoterListModal {...openVoteItem} onClose={() => setOpenVoteItem(undefined)} />}
+        {showConfirmVote && (
+          <ConfirmModal
+            msg={t('Proposal.ConfirmVoteOption', { option: selectOption?.html })}
+            onConfirm={onConfirmVote}
+            onClose={() => setShowConfirmVote(false)}
+          />
         )}
-      </VoteBody>
-      {!!openVoteItem && <VoterListModal {...openVoteItem} onClose={() => setOpenVoteItem(undefined)} />}
-      {showConfirmVote && (
-        <ConfirmModal
-          msg={t('Proposal.ConfirmVoteOption', { option: selectOption?.html })}
-          onConfirm={onConfirmVote}
-          onClose={() => setShowConfirmVote(false)}
-        />
-      )}
+      </div>
     </CardStyle>
   );
 }
@@ -211,6 +213,9 @@ const FlexLine = styled.div``;
 
 const CardStyle = styled.div`
   margin-bottom: 32px;
+  display: flex;
+  .innerBox {
+  }
 `;
 
 const VoteHead = styled.div`
