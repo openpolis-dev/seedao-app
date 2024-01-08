@@ -446,9 +446,7 @@ export default function Home() {
                         <div className="desc">{t(Links.podcast.desc as any)}</div>
                       </div>
                     </FlexPod>
-                    <div className="linkRht">
-                      <img src={PlayImg} alt="" />
-                    </div>
+                    <div className="linkRht">{/*<img src={PlayImg} alt="" />*/}</div>
                   </BtmBox>
                 </a>
               </Col>
