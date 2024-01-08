@@ -312,10 +312,14 @@ const HistoryButton = styled.div`
   text-align: center;
   color: var(--bs-body-color_active);
   cursor: pointer;
+  border: 1px solid var(--bs-background);
 
   &.selected {
     background-color: var(--bs-primary);
     color: #fff;
+  }
+  &:hover {
+    border: 1px solid var(--bs-border-color);
   }
 `;
 

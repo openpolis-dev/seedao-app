@@ -125,10 +125,14 @@ const StatusBox = styled.ul`
     cursor: pointer;
     min-width: 104px;
     box-sizing: border-box;
+    border: 1px solid var(--bs-background);
 
     &.selected {
       background-color: var(--bs-primary);
       color: #fff;
+    }
+    &:hover {
+      border: 1px solid var(--bs-border-color);
     }
   }
 `;
