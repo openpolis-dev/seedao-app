@@ -220,7 +220,7 @@ export default function ThreadPage() {
   };
 
   const handleEdit = () => {
-    navigate(`/proposal-v2/edit/${id}`, { state: data });
+    navigate(`/proposal/edit/${id}`, { state: data });
   };
   const handlWithdraw = () => {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
@@ -355,7 +355,7 @@ export default function ThreadPage() {
           <FlexInner>
             <BackerNav
               title={currentCategory || t('Proposal.ProposalDetail')}
-              to={'/proposal-v2'}
+              to={'/proposal'}
               state={state}
               mb="0"
             />
@@ -383,7 +383,7 @@ export default function ThreadPage() {
                     {t('Proposal.Comment')}
                   </li>
                   <li>
-                    <CopyBox dir="left" text={`${window.location.origin}/proposal-v2/thread/${id}`}>
+                    <CopyBox dir="left" text={`${window.location.origin}/proposal/thread/${id}`}>
                       <img src={theme ? ShareWhite : ShareImg} alt="" />
                       {t('Proposal.Share')}
                     </CopyBox>

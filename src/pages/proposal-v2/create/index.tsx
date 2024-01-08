@@ -70,7 +70,7 @@ const CreateProposalSteps = () => {
       {currentStep !== 3 && (
         <BackerNav
           title={backNavTitle}
-          to={currentStep === 1 ? '/proposal-v2' : '/proposal-v2/create'}
+          to={currentStep === 1 ? '/proposal' : '/proposal/create'}
           onClick={backTo}
         />
       )}

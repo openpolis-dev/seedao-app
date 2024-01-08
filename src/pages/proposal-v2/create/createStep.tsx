@@ -270,7 +270,7 @@ export default function CreateStep({ onClick }: any) {
             submitType === 'submit' ? t('Msg.SubmitProposalSuccess') : t('Msg.SaveProposalSuccess'),
             ToastType.Success,
           );
-          navigate(`/proposal-v2/thread/${r.data.id}`);
+          navigate(`/proposal/thread/${r.data.id}`);
         })
         .catch((error: any) => {
           logError('saveOrSubmitProposal failed', error);

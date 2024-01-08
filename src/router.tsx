@@ -8,9 +8,6 @@ import Home from './pages/home';
 import Event from './pages/seeu-network';
 import Assets from './pages/assets';
 import RegisterAssets from './pages/assets/register';
-import Proposal from './pages/proposal';
-import ProposalCategory from './pages/proposal/category';
-import ProposalThread from './pages/proposal/thread';
 import CityHall from './pages/cityhall';
 import Chat from './pages/chat';
 // import EventView from './pages/event/view';
@@ -89,14 +86,11 @@ export default function RouterLink() {
           <Route path="/guild/edit/:id" element={<GuildEdit />} />
           <Route path="/create-guild" element={<CreateGuild />} />
 
-          <Route path="/proposal" element={<Proposal />} />
-          <Route path="/proposal/category/:id" element={<ProposalCategory />} />
-          <Route path="/proposal/thread/:id" element={<ProposalThread />} />
           {/* proposal v2 */}
-          <Route path="/proposal-v2" element={<ProposalIndexPage />} />
-          <Route path="/proposal-v2/create" element={<CreateProposalPage />} />
-          <Route path="/proposal-v2/edit/:id" element={<EditProposalPage />} />
-          <Route path="/proposal-v2/thread/:id" element={<ProposalThreadV2 />} />
+          <Route path="/proposal" element={<ProposalIndexPage />} />
+          <Route path="/proposal/create" element={<CreateProposalPage />} />
+          <Route path="/proposal/edit/:id" element={<EditProposalPage />} />
+          <Route path="/proposal/thread/:id" element={<ProposalThreadV2 />} />
 
           <Route path="/city-hall/*" element={<CityHall />} />
           <Route path="/city-hall/governance/governance-node-result" element={<GoveranceNodeResult />} />

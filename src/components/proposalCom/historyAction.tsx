@@ -75,7 +75,7 @@ export default function HistoryAction() {
   }, []);
 
   const openProposal = (id: number) => {
-    window.open(`/proposal-v2/thread/${id}`, '_blank');
+    window.open(`/proposal/thread/${id}`, '_blank');
   };
 
   const returnImg = (type: ActionType) => {

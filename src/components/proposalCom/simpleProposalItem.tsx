@@ -27,7 +27,7 @@ export default function SimpleProposalItem({
 }) {
   const navigate = useNavigate();
   const openProposal = () => {
-    navigate(`/proposal-v2/thread/${data.id}${isReview ? '?review' : ''}`, {
+    navigate(`/proposal/thread/${data.id}${isReview ? '?review' : ''}`, {
       state: {
         currentTab,
         data,

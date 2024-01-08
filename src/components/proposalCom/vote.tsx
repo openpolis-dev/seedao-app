@@ -197,7 +197,9 @@ export default function ProposalVote({ id, poll, voteGate, updateStatus }: IProp
 }
 const FlexLine = styled.div``;
 
-const CardStyle = styled.div``;
+const CardStyle = styled.div`
+  margin-bottom: 32px;
+`;
 
 const VoteHead = styled.div`
   display: flex;
@@ -213,7 +215,7 @@ const VoteHeadLeft = styled.div``;
 
 const VoteBody = styled.div`
   border-bottom: 1px solid var(--bs-border-color);
-  padding-bottom: 14px;
+  padding-bottom: 30px;
 `;
 const VoteFooter = styled.div`
   padding-inline: 20px;

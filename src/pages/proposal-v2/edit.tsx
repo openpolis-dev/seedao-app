@@ -112,7 +112,7 @@ export default function EditProposal() {
     if ([ProposalState.PendingSubmit, ProposalState.Rejected, ProposalState.Withdrawn].includes(data.state)) {
       return;
     }
-    navigate('/proposal-v2');
+    navigate('/proposal');
   }, [data]);
 
   useEffect(() => {
@@ -153,7 +153,7 @@ export default function EditProposal() {
           submitType === 'submit' ? t('Msg.SubmitProposalSuccess') : t('Msg.SaveProposalSuccess'),
           ToastType.Success,
         );
-        navigate(`/proposal-v2/thread/${r.data.id}`);
+        navigate(`/proposal/thread/${r.data.id}`);
       })
       .catch((error: any) => {
         logError('saveOrSubmitProposal failed', error);
