@@ -9,7 +9,7 @@
     "@ericz1803/react-google-calendar": "^4.3.1",
     "@joyid/evm": "^0.2.6",
     "@joyid/wagmi": "^0.1.0",
-    "@seedao/components": "^0.0.19",
+    "@seedao/components": "^0.0.20",
     "@seedao/sns-js": "^0.7.0",
     "@sentry/cli": "^2.23.1",
     "@sentry/react": "^7.91.0",
