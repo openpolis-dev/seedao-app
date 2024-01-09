@@ -41,6 +41,7 @@ const SubTabbarStyle = styled.ul`
   font-size: 14px;
   gap: 40px;
   color: var(--bs-body-color);
+  padding-left: 23px;
   li {
     height: 30px;
     line-height: 30px;
