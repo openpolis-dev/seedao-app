@@ -112,7 +112,7 @@ const StatusBox = styled.ul`
   display: flex;
   gap: 40px;
   margin-bottom: 20px;
-  //padding-left: 23px;
+  padding-left: 23px;
   li {
     //height: 40px;
     //padding-inline: 10px;
