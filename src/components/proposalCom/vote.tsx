@@ -109,8 +109,7 @@ export default function ProposalVote({ id, poll, voteGate, updateStatus }: IProp
   }, [poll, pollStatus]);
 
   const showVoteContent = () => {
-    // if ((pollStatus === VoteType.Open && !!poll.is_vote) || pollStatus === VoteType.Closed) {
-    if (false) {
+    if ((pollStatus === VoteType.Open && !!poll.is_vote) || pollStatus === VoteType.Closed) {
       return (
         <table>
           <tbody>
