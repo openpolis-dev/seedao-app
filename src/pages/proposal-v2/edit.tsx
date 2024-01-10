@@ -145,8 +145,7 @@ export default function EditProposal() {
       proposal_category_id: data.proposal_category_id,
       content_blocks: contentBlocks,
       components: dataFormat,
-      // only pending-submit proposal can be submitted, others can only be updated
-      submit_to_metaforo: data.state === ProposalState.PendingSubmit && submitType === 'submit',
+      submit_to_metaforo: submitType === 'submit',
     })
       .then((r) => {
         showToast(
@@ -203,11 +202,6 @@ export default function EditProposal() {
           </BackBox>
 
           <BtnGroup>
-            {/*<Button className="save" onClick={handleSave}>*/}
-            {/*  {t('Proposal.SaveProposal')}*/}
-            {/*</Button>*/}
-            {/*<Button onClick={handleSubmit}>{t('Proposal.SubmitProposal')}</Button>*/}
-
             {data?.state === ProposalState.PendingSubmit && (
               <Button className="save" onClick={handleSave} disabled={!title || !title.trim()}>
                 {t('Proposal.SaveProposal')}
