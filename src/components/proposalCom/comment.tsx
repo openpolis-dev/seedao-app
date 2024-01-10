@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import DefaultAvatar from 'assets/Imgs/defaultAvatar.png';
-import { handleContent } from './parseContent';
+import useContentDisplay from 'hooks/useContentDisplay';
 import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { UserTitleType } from 'type/proposal.type';
 import MoreSelectAction from './moreSelectAction';
@@ -23,18 +23,6 @@ const formatSNS = (snsMap: Map<string, string>, wallet: string) => {
   return name?.endsWith('.seedao') ? name : publicJs.AddressToShow(name, 4);
 };
 
-const useParseContent = (data: string, noNeedParse?: boolean) => {
-  const [content, setContent] = useState('');
-
-  useEffect(() => {
-    const parse = async () => {
-      const _content = await handleContent(data);
-      setContent(_content);
-    };
-    !noNeedParse && parse();
-  }, [data, noNeedParse]);
-  return content;
-};
 
 interface IProps {
   data: ICommentDisplay;
@@ -104,7 +92,7 @@ export default function CommentComponent({
   const {
     state: { snsMap, theme },
   } = useAuthContext();
-  const content = useParseContent(data?.deleted ? DeletedContent : data?.content, isSpecial);
+  const content = useContentDisplay(data?.deleted ? DeletedContent : data?.content, !!isSpecial, theme);
 
   const handleReply = () => {
     onReply(data.metaforo_post_id, data.bindIdx);
@@ -206,7 +194,8 @@ export default function CommentComponent({
               {isSpecial ? (
                 <Content>{data.content}</Content>
               ) : (
-                <Content className="content" dangerouslySetInnerHTML={{ __html: content }}></Content>
+                content
+                // <Content className="content" dangerouslySetInnerHTML={{ __html: content }}></Content>
               )}
             </RhtBtm>
           </RelationUserLine>

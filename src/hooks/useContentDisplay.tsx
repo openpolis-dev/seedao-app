@@ -1,4 +1,8 @@
-export const handleContent = async (content: string) => {
+import { MdPreview } from 'md-editor-rt';
+import { useEffect, useState } from 'react';
+import styled from 'styled-components';
+
+export const parseContent = async (content: string) => {
   let delta: any[] = [];
   try {
     delta = JSON.parse(content);
@@ -44,6 +48,43 @@ export const handleContent = async (content: string) => {
   if (textContent === '<p><br/></p>') {
     textContent = '';
   }
+  console.log('=======1', content);
+  console.log('=======2', textContent);
 
   return textContent;
 };
+
+export default function useContentDisplay(content: string, noNeedParse: boolean, theme: boolean) {
+  const [contentValue, setContentValue] = useState<string>('');
+
+  useEffect(() => {
+    if (content?.includes('insert')) {
+      const _parse = async () => {
+        try {
+          setContentValue(await parseContent(content));
+        } catch (error) {}
+      };
+      _parse();
+    }
+  }, [content]);
+  if (content?.includes('insert')) {
+    return <Content className="content" dangerouslySetInnerHTML={{ __html: contentValue }}></Content>;
+  } else {
+    return (
+      <Content>
+        <MdPreview theme={theme ? 'dark' : 'light'} modelValue={content || ''} />
+      </Content>
+    );
+  }
+}
+
+const Content = styled.div`
+  color: var(--bs-body-color_active);
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+  .md-editor-preview-wrapper {
+    padding: 0 !important;
+  }
+`;
