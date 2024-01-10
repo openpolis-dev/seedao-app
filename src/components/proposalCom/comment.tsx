@@ -6,7 +6,7 @@ import { UserTitleType } from 'type/proposal.type';
 import MoreSelectAction from './moreSelectAction';
 import { useTranslation } from 'react-i18next';
 import { formatMsgTime, formatTime } from 'utils/time';
-import CommentIcon from '../../assets/Imgs/proposal/commentIcon.png';
+import CommentIcon from '../../assets/Imgs/proposal/commentReply.svg';
 import ProfileComponent from '../../profile-components/profile';
 import { useAuthContext } from '../../providers/authProvider';
 import { ICommentDisplay } from 'type/proposalV2.type';
@@ -22,7 +22,6 @@ const formatSNS = (snsMap: Map<string, string>, wallet: string) => {
   const name = snsMap.get(wallet) || wallet;
   return name?.endsWith('.seedao') ? name : publicJs.AddressToShow(name, 4);
 };
-
 
 interface IProps {
   data: ICommentDisplay;
