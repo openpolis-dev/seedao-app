@@ -109,7 +109,8 @@ export default function ProposalVote({ id, poll, voteGate, updateStatus }: IProp
   }, [poll, pollStatus]);
 
   const showVoteContent = () => {
-    if ((pollStatus === VoteType.Open && !!poll.is_vote) || pollStatus === VoteType.Closed) {
+    // if ((pollStatus === VoteType.Open && !!poll.is_vote) || pollStatus === VoteType.Closed) {
+    if (false) {
       return (
         <table>
           <tbody>
@@ -215,6 +216,7 @@ const CardStyle = styled.div`
   margin-bottom: 32px;
   display: flex;
   .innerBox {
+    min-width: 500px;
   }
 `;
 
