@@ -99,14 +99,18 @@ export default function RouterLink() {
           <Route path="/city-hall/governance/issue" element={<Issue />} />
           <Route path="/city-hall/governance/review-proposal" element={<ProposalReview />} />
           <Route path="/city-hall/governance/review-proposal/:id" element={<ProposalThreadV2 />} />
-          {getConfig().REACT_APP_ENV === 'test' && <Route path="/chat" element={<Chat />} />}
+          {['dev', undefined].includes(process.env.REACT_APP_ENV_VERSION || '') && (
+            <Route path="/chat" element={<Chat />} />
+          )}
           <Route path="/ranking" element={<SCRRank />} />
           <Route path="/feedback" element={<Canny />} />
           {/* SNS */}
           <Route path="/sns" element={<SNSEntrancePage />} />
           <Route path="/sns/register" element={<RegisterSNS />} />
           {/* <Route path="/sns/user" element={<UserSNS />} /> */}
-          {getConfig().REACT_APP_ENV === 'test' && <Route path="/newcomer" element={<Newcomer />} />}
+          {['dev', undefined].includes(process.env.REACT_APP_ENV_VERSION || '') && (
+            <Route path="/newcomer" element={<Newcomer />} />
+          )}
 
           <Route path="/notion/:id" element={<Wiki />} />
           <Route path="/wiki" element={<Wiki />} />
