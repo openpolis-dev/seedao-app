@@ -13,6 +13,7 @@ import CloseSuccess from './closeSuccess';
 import { createCloseProjectApplication } from 'requests/applications';
 import { useNavigate } from 'react-router-dom';
 import MarkdownEditor from 'components/common/markdownEditor';
+import { compressionFile, fileToDataURL } from 'utils/image';
 
 export default function EditProject({ detail }: { detail: ReTurnProject | undefined }) {
   const { t } = useTranslation();
@@ -154,29 +155,12 @@ export default function EditProject({ detail }: { detail: ReTurnProject | undefi
     }
   };
 
-  const getBase64 = (imgUrl: string) => {
-    window.URL = window.URL || window.webkitURL;
-    const xhr = new XMLHttpRequest();
-    xhr.open('get', imgUrl, true);
-    xhr.responseType = 'blob';
-    xhr.onload = function () {
-      if (this.status == 200) {
-        const blob = this.response;
-        const oFileReader = new FileReader();
-        oFileReader.onloadend = function (e) {
-          const { result } = e.target as any;
-          setUrl(result);
-        };
-        oFileReader.readAsDataURL(blob);
-      }
-    };
-    xhr.send();
-  };
-
-  const updateLogo = (e: FormEvent) => {
+  const updateLogo = async (e: FormEvent) => {
     const { files } = e.target as any;
-    const url = window.URL.createObjectURL(files[0]);
-    getBase64(url);
+    const file = files[0];
+    const new_file = await compressionFile(file, file.type);
+    const base64 = await fileToDataURL(new_file);
+    setUrl(base64);
   };
 
   const closeModal = () => {
