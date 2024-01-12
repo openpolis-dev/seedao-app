@@ -178,7 +178,7 @@ export default function CommentComponent({
                           <img src={CommentIcon} alt="" />
                           {t('Proposal.Reply')}
                         </ReplyBtn>
-                        {isCurrentUser && (
+                        {isCurrentUser && !isSpecial && (
                           <MoreSelectAction
                             options={[
                               { label: t('Proposal.Edit'), value: 'edit' },
