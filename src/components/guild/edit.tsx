@@ -83,7 +83,12 @@ export default function EditGuild({ detail }: { detail?: ReTurnProject }) {
     for (const l of proList) {
       if (l) {
         const _l = l.trim().toLocaleLowerCase();
+        if (_l.startsWith('https://forum.seedao.xyz/') && !_l.startsWith('https://forum.seedao.xyz/thread/sip-')) {
+          showToast(t('Msg.ProposalLinkMsg'), ToastType.Danger);
+          return;
+        }
         if (_l.startsWith('https://forum.seedao.xyz/thread/sip-')) {
+          // sip
           const items = _l.split('/').reverse();
           slugs.push(items[0]);
           for (const it of items) {
@@ -97,17 +102,21 @@ export default function EditGuild({ detail }: { detail?: ReTurnProject }) {
               break;
             }
           }
-        }
-        // else if (l.indexOf('/proposal/thread/') > -1) {
-        //   const items = l.split('/').reverse();
-        //   for (const it of items) {
-        //     if (it) {
-        //       ids.push(it);
-        //       break;
-        //     }
-        //   }
-        // }
-        else {
+        } else if (l.indexOf('/proposal/thread/') > -1) {
+          // os
+          const items = l.split('/').reverse();
+          slugs.push(`os-${items[0]}`);
+          for (const it of items) {
+            if (it) {
+              if (ids.includes(it)) {
+                showToast(t('Msg.RepeatProposal'), ToastType.Danger);
+                return;
+              }
+              ids.push(it);
+              break;
+            }
+          }
+        } else {
           showToast(t('Msg.ProposalLinkMsg'), ToastType.Danger);
           return;
         }
@@ -163,7 +172,7 @@ export default function EditGuild({ detail }: { detail?: ReTurnProject }) {
         <TopBox>
           <BtnBox htmlFor="fileUpload" onChange={(e) => updateLogo(e)}>
             <ImgBox>
-              <img src={url} alt="" />
+              {url && <img src={url} alt="" />}
               <UpladBox
                 className="upload"
                 bg={
@@ -206,7 +215,7 @@ export default function EditGuild({ detail }: { detail?: ReTurnProject }) {
                   <InputBox>
                     <Form.Control
                       type="text"
-                      placeholder={`https://forum.seedao.xyz/thread...`}
+                      placeholder={`https://forum.seedao.xyz/thread/sip-...`}
                       value={item}
                       onChange={(e) => handleInput(e, index, 'proposal')}
                     />
@@ -245,7 +254,7 @@ export default function EditGuild({ detail }: { detail?: ReTurnProject }) {
       <BtmBox>
         <Button
           onClick={() => handleSubmit()}
-          disabled={proName?.length === 0 || url?.length === 0 || (proList?.length === 1 && proList[0]?.length === 0)}
+          disabled={proName?.length === 0 || (proList?.length === 1 && proList[0]?.length === 0)}
         >
           {t('general.confirm')}
         </Button>

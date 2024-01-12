@@ -457,7 +457,7 @@
     "SEEDAO_ONBOARDING": "SeeDAO Onboarding"
   },
   "Msg": {
-    "ProposalLinkMsg": "请填写正确SIP链接",
+    "ProposalLinkMsg": "请填写正确提案链接",
     "ApproveSuccess": "操作成功",
     "ApproveFailed": "操作失败",
     "IncorrectAddress": "无效的SNS/地址：{{content}}",
