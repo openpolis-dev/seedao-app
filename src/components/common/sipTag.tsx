@@ -18,7 +18,11 @@ export default function SipTag({ slug }: { slug: string }) {
 
   return (
     <SipTagStyle
-      href={isOS ? `${window.location.origin}/proposal/thread/${slug}` : `https://forum.seedao.xyz/thread/${slug}`}
+      href={
+        isOS
+          ? `${window.location.origin}/proposal/thread/${slug.replace('os-', '')}`
+          : `https://forum.seedao.xyz/thread/${slug}`
+      }
       target="_blank"
       rel="noopener noreferrer"
     >
