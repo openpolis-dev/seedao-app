@@ -165,7 +165,12 @@ export default function CreateGuild() {
     for (const l of proList) {
       if (l) {
         const _l = l.trim().toLocaleLowerCase();
+        if (_l.startsWith('https://forum.seedao.xyz/') && !_l.startsWith('https://forum.seedao.xyz/thread/sip-')) {
+          showToast(t('Msg.ProposalLinkMsg'), ToastType.Danger);
+          return;
+        }
         if (_l.startsWith('https://forum.seedao.xyz/thread/sip-')) {
+          // sip
           const items = _l.split('/').reverse();
           slugs.push(items[0]);
           for (const it of items) {
@@ -179,17 +184,21 @@ export default function CreateGuild() {
               break;
             }
           }
-        }
-        // else if (l.indexOf('/proposal/thread/') > -1) {
-        //   const items = l.split('/').reverse();
-        //   for (const it of items) {
-        //     if (it) {
-        //       ids.push(it);
-        //       break;
-        //     }
-        //   }
-        // }
-        else {
+        } else if (l.indexOf('/proposal/thread/') > -1) {
+          // os
+          const items = l.split('/').reverse();
+          slugs.push(`os-${items[0]}`);
+          for (const it of items) {
+            if (it) {
+              if (ids.includes(it)) {
+                showToast(t('Msg.RepeatProposal'), ToastType.Danger);
+                return;
+              }
+              ids.push(it);
+              break;
+            }
+          }
+        } else {
           showToast(t('Msg.ProposalLinkMsg'), ToastType.Danger);
           return;
         }
