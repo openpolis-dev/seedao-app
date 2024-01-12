@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import React, { useEffect, useState, useImperativeHandle } from 'react';
+import React, { useEffect, useState, useImperativeHandle, useRef, MouseEventHandler } from 'react';
 
 import CommentComponent from './comment';
 import { Avatar } from './comment';
@@ -44,6 +44,7 @@ const ReplyComponent = React.forwardRef<IReplyOutputProps, IProps>(
     const filterPosts = posts.filter((p) => p.metaforo_post_id !== pinId);
 
     const { checkMetaforoLogin } = useCheckMetaforoLogin();
+    const replyRef = useRef<HTMLDivElement>(null);
 
     const enableQuill = useLoadQuill();
     const { showToast } = useToast();
@@ -100,7 +101,9 @@ const ReplyComponent = React.forwardRef<IReplyOutputProps, IProps>(
       setQuillContent(editor.getContents);
     };
 
-    const onFocusToWriteReply = async () => {
+    const onFocusToWriteReply = async (e: any) => {
+      e.stopPropagation();
+      e.preventDefault();
       const canReply = await checkMetaforoLogin();
       canReply && setOpenReply(true);
     };
@@ -192,6 +195,23 @@ const ReplyComponent = React.forwardRef<IReplyOutputProps, IProps>(
       return data;
     };
 
+    useEffect(() => {
+      const checkFocus = (e: MouseEvent) => {
+        console.log(openReply, !(replyRef.current && replyRef.current.contains(e.target as Node)));
+        if (openReply && !(replyRef.current && replyRef.current.contains(e.target as Node))) {
+          setOpenReply(false);
+          setQuillContent("");
+          setReplyContent("");
+          setReplyId(undefined);
+          setEditId(undefined);
+        }
+      };
+      document.addEventListener('click', checkFocus);
+      return () => {
+        document.removeEventListener('click', checkFocus);
+      };
+    });
+
     return (
       <ReplyComponentStyle>
         {!!pinPost && (
@@ -257,7 +277,7 @@ const ReplyComponent = React.forwardRef<IReplyOutputProps, IProps>(
           ))}
         </InfiniteScroll>
         {!hideReply && (
-          <ReplyArea style={{ position: 'sticky' }}>
+          <ReplyArea style={{ position: 'sticky' }} ref={replyRef}>
             <AvatarBox src={avatar || DefaultAvatar} alt="" />
             {enableQuill && (
               <InputReply>
