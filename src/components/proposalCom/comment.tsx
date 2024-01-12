@@ -93,7 +93,9 @@ export default function CommentComponent({
   } = useAuthContext();
   const content = useContentDisplay(data?.deleted ? DeletedContent : data?.content, !!isSpecial, theme);
 
-  const handleReply = () => {
+  const handleReply = (e: any) => {
+    e.stopPropagation();
+    e.preventDefault();
     onReply(data.metaforo_post_id, data.bindIdx);
   };
 

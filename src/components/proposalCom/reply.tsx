@@ -198,12 +198,14 @@ const ReplyComponent = React.forwardRef<IReplyOutputProps, IProps>(
     useEffect(() => {
       const checkFocus = (e: MouseEvent) => {
         console.log(openReply, !(replyRef.current && replyRef.current.contains(e.target as Node)));
-        if (openReply && !(replyRef.current && replyRef.current.contains(e.target as Node))) {
+        if (!replyContent && openReply && !(replyRef.current && replyRef.current.contains(e.target as Node))) {
           setOpenReply(false);
-          setQuillContent("");
-          setReplyContent("");
-          setReplyId(undefined);
-          setEditId(undefined);
+          if (editId) {
+            setEditId(undefined);
+          }
+          if (replyId) {
+            setReplyId(undefined);
+          }
         }
       };
       document.addEventListener('click', checkFocus);
