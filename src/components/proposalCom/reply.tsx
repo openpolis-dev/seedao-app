@@ -237,6 +237,7 @@ const ReplyComponent = React.forwardRef<IReplyOutputProps, IProps>(
               onDelete={onDelete}
               hideReply={hideReply}
               isCurrentUser={isCurrentUser(p.wallet)}
+              isSpecial={p.is_rejected}
             >
               {p.children?.map((ip: ICommentDisplay) => (
                 <CommentComponent
