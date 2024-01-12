@@ -5,7 +5,7 @@ export default function SipTag({ slug }: { slug: string }) {
   const [SIP, setSIP] = useState('');
   useEffect(() => {
     const getSIP = async () => {
-      if (slug && slug.startsWith('sip-')) {
+      if (slug && (slug.startsWith('sip-') || slug.startsWith('os-'))) {
         setSIP(slug.split('-')[1]);
       }
     };
@@ -14,9 +14,15 @@ export default function SipTag({ slug }: { slug: string }) {
   if (!SIP) {
     return <></>;
   }
+  const isOS = slug.startsWith('os');
+
   return (
-    <SipTagStyle href={`https://forum.seedao.xyz/thread/${slug}`} target="_blank" rel="noopener noreferrer">
-      {`SIP-${SIP}`}
+    <SipTagStyle
+      href={isOS ? `${window.location.origin}/proposal/thread/${slug}` : `https://forum.seedao.xyz/thread/${slug}`}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      {isOS ? slug.toLocaleUpperCase() : `SIP-${SIP}`}
     </SipTagStyle>
   );
 }
