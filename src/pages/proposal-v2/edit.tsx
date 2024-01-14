@@ -6,7 +6,7 @@ import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import React, { useEffect, useState, useRef } from 'react';
 import { IContentBlock, IProposal, ProposalState } from 'type/proposalV2.type';
 import { useAuthContext, AppActionType } from 'providers/authProvider';
-import { Template } from '@seedao/components';
+import { Template } from '@taoist-labs/components';
 import { MdEditor } from 'md-editor-rt';
 import useCheckMetaforoLogin from 'hooks/useMetaforoLogin';
 import { updateProposal, getProposalDetail } from 'requests/proposalV2';
