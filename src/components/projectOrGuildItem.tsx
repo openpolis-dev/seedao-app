@@ -24,12 +24,12 @@ const Item = styled.div`
     font-weight: 600;
     color: var(--font-color-title);
     overflow: hidden;
+    word-break: break-all;
     text-overflow: ellipsis;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     margin-bottom: 8px;
-    min-height: 33px;
   }
 `;
 const CardBox = styled.div`
@@ -39,7 +39,7 @@ const CardBox = styled.div`
   background: var(--bs-box--background);
   box-shadow: var(--box-shadow) !important;
   padding: 14px;
-  height: 100%;
+  height: 220px;
   &:hover {
     background: var(--home-right_hover);
   }
