@@ -521,13 +521,13 @@
     "Guild": "Guilds",
     "GuildDesc": "Request to create a guild in SeeDAO.",
     "Incubator": "Incubator",
-    "IncubatorDesc": "Apply to join SeeDAO Incubator.",
-    "externalResources": "外联合作申请",
-    "externalResourcesDesc": "申请加入外联网络",
-    "brandApply": "品牌Logo使用申请",
-    "brandApplyDesc": "申请使用品牌Logo",
+    "IncubatorDesc": "Apply to join SeeDAO incubator.",
+    "externalResources": "Partnership Application",
+    "externalResourcesDesc": "Apply to join partnership network",
+    "brandApply": "Brand Logo Usage Application",
+    "brandApplyDesc": "Apply to use brand logo",
     "podcastTitle": "SeeTalk",
-    "podcastDesc": "SeeTalk是一档由SeeDAO社区成员共创Web3节目，传递着社区成员的共创涌现和SeeDAO当前正在做的重要工作与规划"
+    "podcastDesc": "SeeTalk is a Web3 podcast collaboratively created by members of the SeeDAO community, showcasing the emerging collaborations within the community and highlighting SeeDAO's ongoing important work and plans."
   },
   "application": {
     "Register": "Register",
