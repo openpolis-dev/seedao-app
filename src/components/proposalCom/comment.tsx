@@ -1,12 +1,12 @@
 import styled from 'styled-components';
 import DefaultAvatar from 'assets/Imgs/defaultAvatar.png';
-import { handleContent } from './parseContent';
+import useContentDisplay from 'hooks/useContentDisplay';
 import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { UserTitleType } from 'type/proposal.type';
 import MoreSelectAction from './moreSelectAction';
 import { useTranslation } from 'react-i18next';
 import { formatMsgTime, formatTime } from 'utils/time';
-import CommentIcon from '../../assets/Imgs/proposal/commentIcon.png';
+import CommentIcon from '../../assets/Imgs/proposal/commentReply.svg';
 import ProfileComponent from '../../profile-components/profile';
 import { useAuthContext } from '../../providers/authProvider';
 import { ICommentDisplay } from 'type/proposalV2.type';
@@ -21,19 +21,6 @@ export const DeletedContent = `[{"insert":"Post deleted\\n"}]`;
 const formatSNS = (snsMap: Map<string, string>, wallet: string) => {
   const name = snsMap.get(wallet) || wallet;
   return name?.endsWith('.seedao') ? name : publicJs.AddressToShow(name, 4);
-};
-
-const useParseContent = (data: string, noNeedParse?: boolean) => {
-  const [content, setContent] = useState('');
-
-  useEffect(() => {
-    const parse = async () => {
-      const _content = await handleContent(data);
-      setContent(_content);
-    };
-    !noNeedParse && parse();
-  }, [data, noNeedParse]);
-  return content;
 };
 
 interface IProps {
@@ -104,9 +91,11 @@ export default function CommentComponent({
   const {
     state: { snsMap, theme },
   } = useAuthContext();
-  const content = useParseContent(data?.deleted ? DeletedContent : data?.content, isSpecial);
+  const content = useContentDisplay(data?.deleted ? DeletedContent : data?.content, !!isSpecial, theme);
 
-  const handleReply = () => {
+  const handleReply = (e: any) => {
+    e.stopPropagation();
+    e.preventDefault();
     onReply(data.metaforo_post_id, data.bindIdx);
   };
 
@@ -189,7 +178,7 @@ export default function CommentComponent({
                           <img src={CommentIcon} alt="" />
                           {t('Proposal.Reply')}
                         </ReplyBtn>
-                        {isCurrentUser && (
+                        {isCurrentUser && !isSpecial && (
                           <MoreSelectAction
                             options={[
                               { label: t('Proposal.Edit'), value: 'edit' },
@@ -206,7 +195,8 @@ export default function CommentComponent({
               {isSpecial ? (
                 <Content>{data.content}</Content>
               ) : (
-                <Content className="content" dangerouslySetInnerHTML={{ __html: content }}></Content>
+                content
+                // <Content className="content" dangerouslySetInnerHTML={{ __html: content }}></Content>
               )}
             </RhtBtm>
           </RelationUserLine>

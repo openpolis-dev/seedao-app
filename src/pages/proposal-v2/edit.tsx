@@ -6,7 +6,7 @@ import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import React, { useEffect, useState, useRef } from 'react';
 import { IContentBlock, IProposal, ProposalState } from 'type/proposalV2.type';
 import { useAuthContext, AppActionType } from 'providers/authProvider';
-import { Template } from '@seedao/components';
+import { Template } from '@taoist-labs/components';
 import { MdEditor } from 'md-editor-rt';
 import useCheckMetaforoLogin from 'hooks/useMetaforoLogin';
 import { updateProposal, getProposalDetail } from 'requests/proposalV2';
@@ -145,8 +145,7 @@ export default function EditProposal() {
       proposal_category_id: data.proposal_category_id,
       content_blocks: contentBlocks,
       components: dataFormat,
-      // only pending-submit proposal can be submitted, others can only be updated
-      submit_to_metaforo: data.state === ProposalState.PendingSubmit && submitType === 'submit',
+      submit_to_metaforo: submitType === 'submit',
     })
       .then((r) => {
         showToast(
@@ -203,11 +202,6 @@ export default function EditProposal() {
           </BackBox>
 
           <BtnGroup>
-            {/*<Button className="save" onClick={handleSave}>*/}
-            {/*  {t('Proposal.SaveProposal')}*/}
-            {/*</Button>*/}
-            {/*<Button onClick={handleSubmit}>{t('Proposal.SubmitProposal')}</Button>*/}
-
             {data?.state === ProposalState.PendingSubmit && (
               <Button className="save" onClick={handleSave} disabled={!title || !title.trim()}>
                 {t('Proposal.SaveProposal')}

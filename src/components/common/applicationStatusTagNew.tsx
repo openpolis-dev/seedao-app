@@ -44,9 +44,9 @@ const Tag = styled.div<{ color: string }>`
   padding-inline: 19px;
   border-radius: 16px;
   display: inline-block;
+  line-height: 24px;
   .text {
     color: #fff;
     font-size: 12px;
-    line-height: 2em;
   }
 `;

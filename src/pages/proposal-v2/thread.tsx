@@ -22,7 +22,7 @@ import DefaultAvatarIcon from 'assets/Imgs/defaultAvatar.png';
 import ConfirmModal from 'components/modals/confirmModal';
 import CopyBox from 'components/copy';
 import ProfileComponent from '../../profile-components/profile';
-import { Preview } from '@seedao/components';
+import { Preview } from '@taoist-labs/components';
 
 import VoteImg from 'assets/Imgs/proposal/vote.svg';
 import VoteWhite from 'assets/Imgs/proposal/vote-white.svg';

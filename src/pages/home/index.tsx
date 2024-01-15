@@ -553,6 +553,9 @@ const FlexPod = styled.div`
   }
   img {
     width: 88px;
-    border-radius: 8px;
+    height: 88px;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 16px;
   }
 `;

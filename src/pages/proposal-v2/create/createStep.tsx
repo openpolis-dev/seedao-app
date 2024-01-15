@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { Template } from '@seedao/components';
+import { Template } from '@taoist-labs/components';
 import DataSource from './json/datasource.json';
 import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { MdEditor } from 'md-editor-rt';

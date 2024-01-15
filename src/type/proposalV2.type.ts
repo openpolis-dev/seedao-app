@@ -80,6 +80,7 @@ export interface IComment {
   wallet: string;
   created_ts: number;
   avatar: string;
+  is_rejected?: boolean;
 }
 
 export interface ICommentDisplay extends IComment {

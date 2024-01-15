@@ -110,29 +110,28 @@ export default function MyProposalsTab({ tab }: { tab?: TabType }) {
 
 const StatusBox = styled.ul`
   display: flex;
-  gap: 16px;
+  gap: 40px;
   margin-bottom: 20px;
+  padding-left: 23px;
   li {
-    height: 40px;
-    text-align: center;
-    padding-inline: 10px;
-    line-height: 40px;
-    background-color: var(--bs-background);
-    border-radius: 100px;
+    //height: 40px;
+    //padding-inline: 10px;
+    //line-height: 40px;
+    //background-color: var(--bs-background);
+    //border-radius: 100px;
     font-size: 14px;
-    text-align: center;
-    color: var(--bs-body-color_active);
-    cursor: pointer;
-    min-width: 104px;
-    box-sizing: border-box;
-    border: 1px solid var(--bs-background);
 
-    &.selected {
-      background-color: var(--bs-primary);
-      color: #fff;
-    }
+    cursor: pointer;
+    color: var(--bs-body-color);
+    //min-width: 104px;
+    box-sizing: border-box;
+    //border: 1px solid var(--bs-background);
+
+    &.selected,
     &:hover {
-      border: 1px solid var(--bs-border-color);
+      color: var(--bs-body-color_active);
+      //background-color: var(--bs-primary);
+      //color: #fff;
     }
   }
 `;
