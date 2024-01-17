@@ -86,5 +86,9 @@ const Content = styled.div`
   line-height: 20px;
   .md-editor-preview-wrapper {
     padding: 0 !important;
+    * {
+      font-size: 14px;
+      color: var(--bs-body-color_active);
+    }
   }
 `;
