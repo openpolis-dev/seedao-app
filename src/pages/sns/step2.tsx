@@ -95,7 +95,7 @@ export default function RegisterSNSStep2() {
   const handleError = (error: string) => {
     let msg = error;
     if (error === 'CommitmentTooOld') {
-      msg = t('SNS.CommitmentTooOld');
+      msg = t('SNS.CommitmentTooOld', { sns });
     }
     showToast(msg, ToastType.Danger, { autoClose: false });
   };
