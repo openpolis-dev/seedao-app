@@ -3,7 +3,7 @@ import BackerNav from 'components/common/backNav';
 import { ContainerPadding } from 'assets/styles/global';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, ChangeEvent } from 'react';
 import { IContentBlock, IProposal, ProposalState } from 'type/proposalV2.type';
 import { useAuthContext, AppActionType } from 'providers/authProvider';
 import { Template } from '@taoist-labs/components';
@@ -16,6 +16,8 @@ import requests from '../../requests';
 import BackIcon from '../../assets/Imgs/back.svg';
 import useToast, { ToastType } from 'hooks/useToast';
 import useProposalCategories from 'hooks/useProposalCategories';
+import PlusImg from '../../assets/Imgs/light/plus.svg';
+import MinusImg from '../../assets/Imgs/light/minus.svg';
 
 export default function EditProposal() {
   const { t, i18n } = useTranslation();
@@ -44,6 +46,25 @@ export default function EditProposal() {
   const childRef = useRef(null);
 
   const { showToast } = useToast();
+
+  const [voteList, setVoteList] = useState([
+    {
+      id: 1,
+      value: 'test001',
+    },
+    {
+      id: 2,
+      value: 'test002',
+    },
+    {
+      id: 3,
+      value: 'test003',
+    },
+    {
+      id: 4,
+      value: 'test004',
+    },
+  ]);
 
   useEffect(() => {
     if (state) {
@@ -182,6 +203,27 @@ export default function EditProposal() {
     setTimeout(allSubmit, 0);
   };
 
+  const removeVote = (index: number) => {
+    const arr = [...voteList];
+    arr.splice(index, 1);
+    setVoteList(arr);
+  };
+
+  const handleAdd = () => {
+    const arr = [...voteList];
+    arr.push({
+      id: 10,
+      value: '',
+    });
+    setVoteList(arr);
+  };
+
+  const handleVoteInput = (e: ChangeEvent, index: number) => {
+    const arr = [...voteList];
+    arr[index].value = (e.target as HTMLInputElement).value;
+    setVoteList(arr);
+  };
+
   const categoryName = data?.proposal_category_id
     ? proposalCategories.find((item) => item.id === data?.proposal_category_id)?.name
     : '';
@@ -257,6 +299,28 @@ export default function EditProposal() {
                   {/*<MarkdownEditor value={item.content} onChange={(val)=>handleText(val,index)} />*/}
                 </ItemBox>
               ))}
+
+              <ItemBox>
+                <TitleBox>投票选项</TitleBox>
+                <VoteBox>
+                  {voteList.map((item, index) => (
+                    <li>
+                      <input type="text" value={item.value} onChange={(e) => handleVoteInput(e, index)} />
+                      {voteList.length - 1 === index && (
+                        <span onClick={() => handleAdd()}>
+                          <img src={PlusImg} alt="" />
+                        </span>
+                      )}
+
+                      {!!(voteList.length - 1) && (
+                        <span onClick={() => removeVote(index)}>
+                          <img src={MinusImg} alt="" />
+                        </span>
+                      )}
+                    </li>
+                  ))}
+                </VoteBox>
+              </ItemBox>
             </div>
           }
           ref={childRef}
@@ -409,4 +473,35 @@ const BoxBg = styled.div<{ showRht: string }>`
   align-items: stretch;
   padding: 20px;
   box-sizing: border-box;
+`;
+
+const VoteBox = styled.ul`
+  padding: 0 32px;
+  li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 16px;
+    input {
+      flex-grow: 1;
+      border: 1px solid var(--proposal-border);
+      background: transparent;
+      height: 40px;
+      border-radius: 8px;
+      box-sizing: border-box;
+      padding: 0 16px;
+    }
+    span {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      border-radius: 8px;
+      border: 1px solid var(--proposal-border);
+      cursor: pointer;
+    }
+  }
 `;

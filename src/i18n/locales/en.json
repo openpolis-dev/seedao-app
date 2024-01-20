@@ -112,6 +112,7 @@
     "ConfirmVoteOption": "Confirm to vote '{{option}}' ?",
     "NotSupportWallet": "This operation is not supported by {{wallet}}, please change to others",
     "Vote": "Vote",
+    "voteOptions": "Voting Options",
     "Share": "Share",
     "Edit": "Edit",
     "Withdrawn": "Withdrawn",
