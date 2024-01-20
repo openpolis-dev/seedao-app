@@ -622,7 +622,8 @@
     "CancelTip": "Cancel means you'll start to register from step one",
     "ContractNotReady": "Contract is not ready, switch metamask network to Polygon please.",
     "NetworkNotReady": "switch metamask network to Polygon please",
-    "NotEnoughBalance": "{{token}} not enough"
+    "NotEnoughBalance": "{{token}} not enough",
+    "CommitmentTooOld": "Your {{sns}} submission has expired, please click \"Cancel registration\" to restart your registration."
   },
   "Governance": {
     "GovernanceRule": "Governance Rules",

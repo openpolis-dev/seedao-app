@@ -622,7 +622,8 @@
     "CancelTip": "取消后，注册流程将从第一步开始",
     "ContractNotReady": "合约未初始化完成, 请切换您的钱包网络到Polygon",
     "NetworkNotReady": "请切换您的钱包网络到Polygon",
-    "NotEnoughBalance": "{{token}}余额不足"
+    "NotEnoughBalance": "{{token}}余额不足",
+    "CommitmentTooOld": "您的提交的{{sns}}已过有效期，请点击“取消注册”后重新开始注册"
 
   },
   "Governance": {

@@ -92,6 +92,14 @@ export default function RegisterSNSStep2() {
     dispatchSNS({ type: ACTIONS.CLOSE_LOADING });
   };
 
+  const handleError = (error: string) => {
+    let msg = error;
+    if (error === 'CommitmentTooOld') {
+      msg = t('SNS.CommitmentTooOld');
+    }
+    showToast(msg, ToastType.Danger, { autoClose: false });
+  };
+
   const handleRegister = async () => {
     if (hasReached) {
       showToast(t('SNS.HadSNS'), ToastType.Danger);
@@ -129,7 +137,7 @@ export default function RegisterSNSStep2() {
         } catch (error: any) {
           closeLoading();
           logError('[step-2] estimate white-mint failed', error);
-          showToast(parseError(error), ToastType.Danger);
+          handleError(parseError(error));
           return;
         }
         txHash = (await handleTransaction(TX_ACTION.WHITE_MINT, params)) as string;
@@ -159,7 +167,7 @@ export default function RegisterSNSStep2() {
         } catch (error: any) {
           closeLoading();
           logError('[step-2] estimate pay-mint failed', error);
-          showToast(parseError(error), ToastType.Danger);
+          handleError(parseError(error));
           return;
         }
 
@@ -178,7 +186,7 @@ export default function RegisterSNSStep2() {
     } catch (error: any) {
       closeLoading();
       logError('register failed', error);
-      showToast(parseError(error), ToastType.Danger);
+      handleError(parseError(error));
     } finally {
     }
   };
