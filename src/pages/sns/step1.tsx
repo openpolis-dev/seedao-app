@@ -165,14 +165,15 @@ export default function RegisterSNSStep1() {
     } catch (error) {
       return;
     }
-
     // check token balance if mint by paying token
-    if (!(whitelistIsOpen && user_proof && !hadMintByWhitelist)) {
-      const token = await checkTokenBalance(account as Address);
-      if (token) {
-        showToast(t('SNS.NotEnoughBalance', { token }), ToastType.Danger, { hideProgressBar: true });
-        dispatchSNS({ type: ACTIONS.CLOSE_LOADING });
-        return;
+    if (process.env.REACT_APP_ENV_VERSION && process.env.REACT_APP_ENV_VERSION !== 'dev') {
+      if (!(whitelistIsOpen && user_proof && !hadMintByWhitelist)) {
+        const token = await checkTokenBalance(account as Address);
+        if (token) {
+          showToast(t('SNS.NotEnoughBalance', { token }), ToastType.Danger, { hideProgressBar: true });
+          dispatchSNS({ type: ACTIONS.CLOSE_LOADING });
+          return;
+        }
       }
     }
 
