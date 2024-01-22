@@ -138,6 +138,7 @@ export type ProposalTemplateType = {
   id: number;
   name?: string;
   schema?: string;
+  vote_type?: number;
   screenshot_uri?: string;
   components?: any[];
 };

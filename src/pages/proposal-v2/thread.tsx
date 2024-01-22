@@ -469,17 +469,17 @@ export default function ThreadPage() {
                   <MdPreview theme={theme ? 'dark' : 'light'} modelValue={block.content || ''} />
                 </div>
               </ProposalContentBlock>
-              <ItemBox>
-                <TitleBox>投票选项</TitleBox>
-                <VoteBox>
-                  {voteList.map((item, index) => (
-                    <li>
-                      <input type="checkbox" id={`vote_${index}`} />
-                      <label htmlFor={`vote_${index}`}>{item.value}</label>
-                    </li>
-                  ))}
-                </VoteBox>
-              </ItemBox>
+              {/*<ItemBox>*/}
+              {/*  <TitleBox>投票选项</TitleBox>*/}
+              {/*  <VoteBox>*/}
+              {/*    {voteList.map((item, index) => (*/}
+              {/*      <li>*/}
+              {/*        <input type="checkbox" id={`vote_${index}`} />*/}
+              {/*        <label htmlFor={`vote_${index}`}>{item.value}</label>*/}
+              {/*      </li>*/}
+              {/*    ))}*/}
+              {/*  </VoteBox>*/}
+              {/*</ItemBox>*/}
             </>
           ))}
         />

@@ -41,6 +41,7 @@ export default function EditProposal() {
   const [submitType, setSubmitType] = useState<'save' | 'submit'>();
   const [token, setToken] = useState('');
   const [showRht, setShowRht] = useState(false);
+  const [voteType, setVoteType] = useState<number | undefined>(0);
 
   const [dataSource, setDataSource] = useState();
   const childRef = useRef(null);
@@ -77,6 +78,7 @@ export default function EditProposal() {
         try {
           const res = await getProposalDetail(Number(id));
           setData(res.data);
+          setVoteType(res.data?.vote_type);
           setDataSource(res.data?.components ?? []);
           setShowRht(!res.data?.is_based_on_template);
         } catch (error) {
@@ -165,6 +167,7 @@ export default function EditProposal() {
       title,
       proposal_category_id: data.proposal_category_id,
       content_blocks: contentBlocks,
+      vote_type: voteType,
       components: dataFormat,
       submit_to_metaforo: submitType === 'submit',
     })
@@ -300,27 +303,27 @@ export default function EditProposal() {
                 </ItemBox>
               ))}
 
-              <ItemBox>
-                <TitleBox>投票选项</TitleBox>
-                <VoteBox>
-                  {voteList.map((item, index) => (
-                    <li>
-                      <input type="text" value={item.value} onChange={(e) => handleVoteInput(e, index)} />
-                      {voteList.length - 1 === index && (
-                        <span onClick={() => handleAdd()}>
-                          <img src={PlusImg} alt="" />
-                        </span>
-                      )}
+              {/*<ItemBox>*/}
+              {/*  <TitleBox>投票选项</TitleBox>*/}
+              {/*  <VoteBox>*/}
+              {/*    {voteList.map((item, index) => (*/}
+              {/*      <li>*/}
+              {/*        <input type="text" value={item.value} onChange={(e) => handleVoteInput(e, index)} />*/}
+              {/*        {voteList.length - 1 === index && (*/}
+              {/*          <span onClick={() => handleAdd()}>*/}
+              {/*            <img src={PlusImg} alt="" />*/}
+              {/*          </span>*/}
+              {/*        )}*/}
 
-                      {!!(voteList.length - 1) && (
-                        <span onClick={() => removeVote(index)}>
-                          <img src={MinusImg} alt="" />
-                        </span>
-                      )}
-                    </li>
-                  ))}
-                </VoteBox>
-              </ItemBox>
+              {/*        {!!(voteList.length - 1) && (*/}
+              {/*          <span onClick={() => removeVote(index)}>*/}
+              {/*            <img src={MinusImg} alt="" />*/}
+              {/*          </span>*/}
+              {/*        )}*/}
+              {/*      </li>*/}
+              {/*    ))}*/}
+              {/*  </VoteBox>*/}
+              {/*</ItemBox>*/}
             </div>
           }
           ref={childRef}

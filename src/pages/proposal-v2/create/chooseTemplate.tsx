@@ -42,14 +42,24 @@ export default function ChooseTemplateStep() {
   return (
     <ListBox>
       {canUseCityhall && (
-        <CreateBlankOne onClick={() => chooseTemplate({ id: 0 })}>
-          <InnerBox>
-            <ImgBox>
-              <img src={AddImg} alt="" />
-            </ImgBox>
-            <TitleBox>{t('Proposal.CreateBlank')}</TitleBox>
-          </InnerBox>
-        </CreateBlankOne>
+        <>
+          <CreateBlankOne onClick={() => chooseTemplate({ id: 0 })}>
+            <InnerBox>
+              <ImgBox>
+                <img src={AddImg} alt="" />
+              </ImgBox>
+              <TitleBox>{t('Proposal.CreateBlank')}</TitleBox>
+            </InnerBox>
+          </CreateBlankOne>
+          <CreateBlankOne onClick={() => chooseTemplate({ id: 0, vote_type: 1 })}>
+            <InnerBox>
+              <ImgBox>
+                <img src={AddImg} alt="" />
+              </ImgBox>
+              <TitleBox>{t('Proposal.CreateBlank_Multi')}</TitleBox>
+            </InnerBox>
+          </CreateBlankOne>
+        </>
       )}
 
       {templates.map((template) => (

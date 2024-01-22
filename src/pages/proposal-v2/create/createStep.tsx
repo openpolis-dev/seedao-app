@@ -160,6 +160,7 @@ export default function CreateStep({ onClick }: any) {
   const [title, setTitle] = useState('');
   const [list, setList] = useState<any[]>([]);
   const [submitType, setSubmitType] = useState<'save' | 'submit'>();
+  const [voteType, setVoteType] = useState<number | undefined>(0);
 
   const { template } = useCreateProposalContext();
   const [components, setComponents] = useState<any[]>([]);
@@ -221,6 +222,9 @@ export default function CreateStep({ onClick }: any) {
       setComponents(components ? components : []);
     } else {
       setShowType('new');
+      let { vote_type } = template;
+      setVoteType(vote_type);
+      console.error(template);
 
       setList([
         {
@@ -281,6 +285,7 @@ export default function CreateStep({ onClick }: any) {
       saveOrSubmitProposal({
         title,
         proposal_category_id: proposalType?.id,
+        vote_type: voteType,
         content_blocks: list,
         components: dataFormat,
         template_id: template?.id,
@@ -432,27 +437,27 @@ export default function CreateStep({ onClick }: any) {
                   {/*<MarkdownEditor value={item.content} onChange={(val)=>handleText(val,index)} />*/}
                 </ItemBox>
               ))}
-              <ItemBox>
-                <TitleBox>投票选项</TitleBox>
-                <VoteBox>
-                  {voteList.map((item, index) => (
-                    <li>
-                      <input type="text" value={item.value} onChange={(e) => handleVoteInput(e, index)} />
-                      {voteList.length - 1 === index && (
-                        <span onClick={() => handleAdd()}>
-                          <img src={PlusImg} alt="" />
-                        </span>
-                      )}
+              {/*<ItemBox>*/}
+              {/*  <TitleBox>投票选项</TitleBox>*/}
+              {/*  <VoteBox>*/}
+              {/*    {voteList.map((item, index) => (*/}
+              {/*      <li>*/}
+              {/*        <input type="text" value={item.value} onChange={(e) => handleVoteInput(e, index)} />*/}
+              {/*        {voteList.length - 1 === index && (*/}
+              {/*          <span onClick={() => handleAdd()}>*/}
+              {/*            <img src={PlusImg} alt="" />*/}
+              {/*          </span>*/}
+              {/*        )}*/}
 
-                      {!!(voteList.length - 1) && (
-                        <span onClick={() => removeVote(index)}>
-                          <img src={MinusImg} alt="" />
-                        </span>
-                      )}
-                    </li>
-                  ))}
-                </VoteBox>
-              </ItemBox>
+              {/*        {!!(voteList.length - 1) && (*/}
+              {/*          <span onClick={() => removeVote(index)}>*/}
+              {/*            <img src={MinusImg} alt="" />*/}
+              {/*          </span>*/}
+              {/*        )}*/}
+              {/*      </li>*/}
+              {/*    ))}*/}
+              {/*  </VoteBox>*/}
+              {/*</ItemBox>*/}
             </div>
           }
           ref={childRef}

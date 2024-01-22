@@ -75,6 +75,7 @@ export const getProposalDetail = (id: number, startPostId?: number): Promise<Res
 type CreateProposalParamsType = {
   title: string;
   proposal_category_id: number | undefined;
+  vote_type: number | undefined;
   template_id?: number | string;
   content_blocks: IContentBlock[];
   submit_to_metaforo: boolean;
@@ -96,7 +97,6 @@ export const getUserActions = (
 
 export const prepareMetaforo = () => {
   const data = getMetaforoData();
-  console.log('=====getMetaforoData', data);
   return request.post('/user/prepare_metaforo', {
     api_token: data?.token,
     user: { id: data.id },
