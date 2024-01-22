@@ -72,6 +72,7 @@ export default function EditProposal() {
       setData(state);
       setDataSource(state?.components ?? []);
       setShowRht(!state?.is_based_on_template);
+      setVoteType(state?.vote_type);
     } else {
       const getDetail = async () => {
         dispatch({ type: AppActionType.SET_LOADING, payload: true });
