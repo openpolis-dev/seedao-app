@@ -6,6 +6,7 @@ import REGISTER_ABI from 'assets/abi/SeeDAOMinter.json';
 import { builtin } from '@seedao/sns-js';
 import { useAuthContext } from 'providers/authProvider';
 import { erc20ABI, useSendTransaction, Address } from 'wagmi';
+import { waitForTransaction } from 'wagmi/actions';
 import { prepareSendTransaction, readContract } from 'wagmi/actions';
 import { Hex } from 'viem';
 
@@ -141,12 +142,13 @@ export default function useTransaction() {
     });
     console.log('=======approveToken allowance=======', allowanceResult);
     if (!allowanceResult || allowanceResult < BigInt(PAY_NUMBER)) {
-      await sendTransactionAsync({
+      const tx = await sendTransactionAsync({
         to: PAY_TOKEN.address,
         account: account as Address,
         value: BigInt(0),
         data: buildApproveData() as Hex,
       });
+      return await waitForTransaction({ hash: tx.hash });
     }
   };
 
