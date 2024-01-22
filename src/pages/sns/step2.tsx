@@ -26,7 +26,7 @@ export default function RegisterSNSStep2() {
 
   const provider = useEthersProvider({});
   const {
-    state: { account, theme },
+    state: { account, theme, sns: userSNS },
   } = useAuthContext();
   const {
     state: { localData, sns, user_proof, hadMintByWhitelist, whitelistIsOpen, hasReached },
@@ -233,6 +233,12 @@ export default function RegisterSNSStep2() {
     dispatchSNS({ type: ACTIONS.SET_STEP, payload: 1 });
     dispatchSNS({ type: ACTIONS.SET_LOCAL_DATA, payload: undefined });
   };
+
+  useEffect(() => {
+    if (sns && userSNS && `${sns}.seedao` === userSNS) {
+      handleCancel();
+    }
+  }, [sns, userSNS]);
 
   return (
     <Container>
