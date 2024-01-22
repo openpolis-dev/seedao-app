@@ -92,7 +92,8 @@
     "MyProposals": "My Proposals",
     "ProposalDetail": "Proposal Detail",
     "ChooseType": "Choose Proposal Type",
-    "CreateBlank": "Create New",
+    "CreateBlank": "Create New(Regular)",
+    "CreateBlank_Multi": "Create New(Multiple Options)",
     "ActivityCreate": "Created a new topic <strong>{{title}}</strong>",
     "ActivityEdit": "Edit the topic <strong>{{title}}</strong>",
     "ActivityComment": "Replied to <strong>{{author}}</strong>'s topic <strong>{{title}}</strong>",
@@ -112,6 +113,7 @@
     "ConfirmVoteOption": "Confirm to vote '{{option}}' ?",
     "NotSupportWallet": "This operation is not supported by {{wallet}}, please change to others",
     "Vote": "Vote",
+    "voteOptions": "Voting Options",
     "Share": "Share",
     "Edit": "Edit",
     "Withdrawn": "Withdrawn",
@@ -622,7 +624,8 @@
     "CancelTip": "Cancel means you'll start to register from step one",
     "ContractNotReady": "Contract is not ready, switch metamask network to Polygon please.",
     "NetworkNotReady": "switch metamask network to Polygon please",
-    "NotEnoughBalance": "{{token}} not enough"
+    "NotEnoughBalance": "{{token}} not enough",
+    "CommitmentTooOld": "Your {{sns}} submission has expired, please click \"Cancel registration\" to restart your registration."
   },
   "Governance": {
     "GovernanceRule": "Governance Rules",

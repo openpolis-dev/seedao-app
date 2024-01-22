@@ -92,7 +92,8 @@
     "MyProposals": "我的提案",
     "ProposalDetail": "提案详情",
     "ChooseType": "请选择提案类型",
-    "CreateBlank": "创建新提案",
+    "CreateBlank": "创建新提案(常规)",
+    "CreateBlank_Multi": "创建新提案(多选项)",
     "ActivityCreate": "创建了提案<strong>{{title}}</strong>",
     "ActivityEdit": "编辑了提案<strong>{{title}}</strong>",
     "ActivityComment": "评论了<strong>{{author}}</strong>的提案<strong>{{title}}</strong>",
@@ -112,6 +113,7 @@
     "ConfirmVoteOption": "确定投票\"{{option}}\"吗？",
     "NotSupportWallet": "该操作暂不支持使用{{wallet}}, 请切换使用其他钱包",
     "Vote": "投票",
+    "voteOptions": "投票选项",
     "Share": "分享",
     "Edit": "修改",
     "Withdrawn": "撤回",
@@ -622,7 +624,8 @@
     "CancelTip": "取消后，注册流程将从第一步开始",
     "ContractNotReady": "合约未初始化完成, 请切换您的钱包网络到Polygon",
     "NetworkNotReady": "请切换您的钱包网络到Polygon",
-    "NotEnoughBalance": "{{token}}余额不足"
+    "NotEnoughBalance": "{{token}}余额不足",
+    "CommitmentTooOld": "您的提交的{{sns}}已过有效期，请点击“取消注册”后重新开始注册"
 
   },
   "Governance": {

@@ -18,6 +18,8 @@ import getConfig from '../../../utils/envCofnig';
 import useToast, { ToastType } from 'hooks/useToast';
 import TemplateTag from 'components/proposalCom/templateTag';
 import CategoryTag from 'components/proposalCom/categoryTag';
+import PlusImg from 'assets/Imgs/light/plus.svg';
+import MinusImg from 'assets/Imgs/light/minus.svg';
 
 const Box = styled.ul`
   position: relative;
@@ -158,6 +160,7 @@ export default function CreateStep({ onClick }: any) {
   const [title, setTitle] = useState('');
   const [list, setList] = useState<any[]>([]);
   const [submitType, setSubmitType] = useState<'save' | 'submit'>();
+  const [voteType, setVoteType] = useState<number | undefined>(0);
 
   const { template } = useCreateProposalContext();
   const [components, setComponents] = useState<any[]>([]);
@@ -168,6 +171,25 @@ export default function CreateStep({ onClick }: any) {
   const [showType, setShowType] = useState('new');
   const [token, setToken] = useState('');
   const [templateTitle, setTemplateTitle] = useState('');
+
+  const [voteList, setVoteList] = useState([
+    {
+      id: 1,
+      value: 'test001',
+    },
+    {
+      id: 2,
+      value: 'test002',
+    },
+    {
+      id: 3,
+      value: 'test003',
+    },
+    {
+      id: 4,
+      value: 'test004',
+    },
+  ]);
 
   const { changeStep, proposalType } = useCreateProposalContext();
   const { showToast } = useToast();
@@ -200,6 +222,9 @@ export default function CreateStep({ onClick }: any) {
       setComponents(components ? components : []);
     } else {
       setShowType('new');
+      let { vote_type } = template;
+      setVoteType(vote_type);
+      console.error(template);
 
       setList([
         {
@@ -260,6 +285,7 @@ export default function CreateStep({ onClick }: any) {
       saveOrSubmitProposal({
         title,
         proposal_category_id: proposalType?.id,
+        vote_type: voteType,
         content_blocks: list,
         components: dataFormat,
         template_id: template?.id,
@@ -316,6 +342,27 @@ export default function CreateStep({ onClick }: any) {
   const handleBack = () => {
     setShowLeaveConfirm(false);
     changeStep(2);
+  };
+
+  const removeVote = (index: number) => {
+    const arr = [...voteList];
+    arr.splice(index, 1);
+    setVoteList(arr);
+  };
+
+  const handleAdd = () => {
+    const arr = [...voteList];
+    arr.push({
+      id: 10,
+      value: '',
+    });
+    setVoteList(arr);
+  };
+
+  const handleVoteInput = (e: ChangeEvent, index: number) => {
+    const arr = [...voteList];
+    arr[index].value = (e.target as HTMLInputElement).value;
+    setVoteList(arr);
   };
 
   const submitDisabled = !title || !title.trim() || list.some((item) => !item.content);
@@ -390,6 +437,27 @@ export default function CreateStep({ onClick }: any) {
                   {/*<MarkdownEditor value={item.content} onChange={(val)=>handleText(val,index)} />*/}
                 </ItemBox>
               ))}
+              {/*<ItemBox>*/}
+              {/*  <TitleBox>投票选项</TitleBox>*/}
+              {/*  <VoteBox>*/}
+              {/*    {voteList.map((item, index) => (*/}
+              {/*      <li>*/}
+              {/*        <input type="text" value={item.value} onChange={(e) => handleVoteInput(e, index)} />*/}
+              {/*        {voteList.length - 1 === index && (*/}
+              {/*          <span onClick={() => handleAdd()}>*/}
+              {/*            <img src={PlusImg} alt="" />*/}
+              {/*          </span>*/}
+              {/*        )}*/}
+
+              {/*        {!!(voteList.length - 1) && (*/}
+              {/*          <span onClick={() => removeVote(index)}>*/}
+              {/*            <img src={MinusImg} alt="" />*/}
+              {/*          </span>*/}
+              {/*        )}*/}
+              {/*      </li>*/}
+              {/*    ))}*/}
+              {/*  </VoteBox>*/}
+              {/*</ItemBox>*/}
             </div>
           }
           ref={childRef}
@@ -408,3 +476,34 @@ export default function CreateStep({ onClick }: any) {
     </Box>
   );
 }
+
+const VoteBox = styled.ul`
+  padding: 0 32px;
+  li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 16px;
+    input {
+      flex-grow: 1;
+      border: 1px solid var(--proposal-border);
+      background: transparent;
+      height: 40px;
+      border-radius: 8px;
+      box-sizing: border-box;
+      padding: 0 16px;
+    }
+    span {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      border-radius: 8px;
+      border: 1px solid var(--proposal-border);
+      cursor: pointer;
+    }
+  }
+`;

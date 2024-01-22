@@ -45,6 +45,11 @@ const ERROR_ABI = [
     name: 'InsufficientPayment',
     type: 'error',
   },
+  {
+    inputs: [],
+    name: 'InsufficientAllowance',
+    type: 'error',
+  },
 ];
 
 const parseErrorData = (data: any) => {

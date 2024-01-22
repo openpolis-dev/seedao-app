@@ -34,6 +34,8 @@ import { DeletedContent } from 'components/proposalCom/comment';
 import useToast, { ToastType } from 'hooks/useToast';
 import CategoryTag from 'components/proposalCom/categoryTag';
 import TemplateTag from 'components/proposalCom/templateTag';
+import PlusImg from '../../assets/Imgs/light/plus.svg';
+import MinusImg from '../../assets/Imgs/light/minus.svg';
 
 enum BlockContentType {
   Reply = 1,
@@ -72,6 +74,26 @@ export default function ThreadPage() {
   const [components, setComponents] = useState<any[]>([]);
   const [commentsArray, setCommentsArray] = useState<ICommentDisplay[][]>([]);
   const [currentCommentArrayIdx, setCurrentCommentArrayIdx] = useState<number>(0);
+
+  const [voteList, setVoteList] = useState([
+    {
+      id: 1,
+      value: 'test001',
+    },
+    {
+      id: 2,
+      value: 'test002',
+    },
+    {
+      id: 3,
+      value: 'test003',
+    },
+    {
+      id: 4,
+      value: 'test004',
+    },
+  ]);
+
   const [dataSource, setDatasource] = useState<any>();
 
   const posts = commentsArray.length ? commentsArray.reduce((a, b) => [...a, ...b], []) : [];
@@ -440,12 +462,25 @@ export default function ThreadPage() {
             )
           }
           AfterComponent={contentBlocks.map((block, i) => (
-            <ProposalContentBlock key={block.title} $radius={i === 0 && !dataSource?.length ? '4px 4px 0 0' : '0'}>
-              <div className="title">{block.title}</div>
-              <div className="content">
-                <MdPreview theme={theme ? 'dark' : 'light'} modelValue={block.content || ''} />
-              </div>
-            </ProposalContentBlock>
+            <>
+              <ProposalContentBlock key={block.title} $radius={i === 0 && !dataSource?.length ? '4px 4px 0 0' : '0'}>
+                <div className="title">{block.title}</div>
+                <div className="content">
+                  <MdPreview theme={theme ? 'dark' : 'light'} modelValue={block.content || ''} />
+                </div>
+              </ProposalContentBlock>
+              {/*<ItemBox>*/}
+              {/*  <TitleBox>投票选项</TitleBox>*/}
+              {/*  <VoteBox>*/}
+              {/*    {voteList.map((item, index) => (*/}
+              {/*      <li>*/}
+              {/*        <input type="checkbox" id={`vote_${index}`} />*/}
+              {/*        <label htmlFor={`vote_${index}`}>{item.value}</label>*/}
+              {/*      </li>*/}
+              {/*    ))}*/}
+              {/*  </VoteBox>*/}
+              {/*</ItemBox>*/}
+            </>
           ))}
         />
       </ContentOuter>
@@ -753,4 +788,34 @@ const ContentOuter = styled.div`
   border: 1px solid var(--proposal-border);
   margin-bottom: 24px;
   border-radius: 8px;
+`;
+
+const VoteBox = styled.ul`
+  padding: 0 32px;
+  li {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 16px;
+    border: 1px solid var(--proposal-border);
+    height: 40px;
+    border-radius: 8px;
+    padding: 0 16px;
+    label {
+      cursor: pointer;
+    }
+  }
+`;
+
+const ItemBox = styled.div`
+  margin-bottom: 20px;
+`;
+
+const TitleBox = styled.div`
+  background: rgba(82, 0, 255, 0.08);
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  box-sizing: border-box;
 `;

@@ -7,6 +7,8 @@ import AddImg from '../../../assets/Imgs/proposal/add-square.png';
 import { AppActionType, useAuthContext } from '../../../providers/authProvider';
 import requests from '../../../requests';
 import { getTemplate } from '../../../requests/proposalV2';
+import usePermission from 'hooks/usePermission';
+import { PermissionAction, PermissionObject } from 'utils/constant';
 
 export default function ChooseTemplateStep() {
   const { t } = useTranslation();
@@ -21,6 +23,8 @@ export default function ChooseTemplateStep() {
   useEffect(() => {
     getList();
   }, [proposalType]);
+
+  const canUseCityhall = usePermission(PermissionAction.AuditApplication, PermissionObject.ProjectAndGuild);
 
   const getList = async () => {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
@@ -37,14 +41,27 @@ export default function ChooseTemplateStep() {
 
   return (
     <ListBox>
-      <CreateBlankOne onClick={() => chooseTemplate({ id: 0 })}>
-        <InnerBox>
-          <ImgBox>
-            <img src={AddImg} alt="" />
-          </ImgBox>
-          <TitleBox>{t('Proposal.CreateBlank')}</TitleBox>
-        </InnerBox>
-      </CreateBlankOne>
+      {canUseCityhall && (
+        <>
+          <CreateBlankOne onClick={() => chooseTemplate({ id: 0 })}>
+            <InnerBox>
+              <ImgBox>
+                <img src={AddImg} alt="" />
+              </ImgBox>
+              <TitleBox>{t('Proposal.CreateBlank')}</TitleBox>
+            </InnerBox>
+          </CreateBlankOne>
+          <CreateBlankOne onClick={() => chooseTemplate({ id: 0, vote_type: 1 })}>
+            <InnerBox>
+              <ImgBox>
+                <img src={AddImg} alt="" />
+              </ImgBox>
+              <TitleBox>{t('Proposal.CreateBlank_Multi')}</TitleBox>
+            </InnerBox>
+          </CreateBlankOne>
+        </>
+      )}
+
       {templates.map((template) => (
         <BaseTemplate key={template.id} onClick={() => chooseTemplate(template)}>
           <InnerBox>
