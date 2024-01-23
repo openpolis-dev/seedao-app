@@ -28,10 +28,20 @@ export default function ChooseTypeStep() {
         <StepTitle>{t('Proposal.ChooseType')}</StepTitle>
         <TypeBox>
           {proposaCategories.map((tp, index) => (
-            <li key={index} onClick={() => onChooseType(tp)} className={tp.has_perm ? '' : 'noAuth'}>
+            <TypeLi key={index} className={tp.has_perm ? '' : 'noAuth'}>
               <span>{tp.name}</span>
               <img src={theme ? ArrowRhtBlack : ArrowRht} alt="" />
-            </li>
+              <TemplateBox>
+                <li onClick={() => onChooseType(tp)}>
+                  <span>新建提案（常规）</span>
+                  <img src={theme ? ArrowRhtBlack : ArrowRht} alt="" />
+                </li>
+                <li className="noAuth">
+                  <span>新建提案（常规）</span>
+                  <img src={theme ? ArrowRhtBlack : ArrowRht} alt="" />
+                </li>
+              </TemplateBox>
+            </TypeLi>
           ))}
         </TypeBox>
       </CenterBox>
@@ -63,26 +73,46 @@ const StepTitle = styled.div`
 `;
 
 const TypeBox = styled.ul`
-  li {
-    border: 1px solid var(--proposal-border);
-    font-size: 14px;
-    margin: 10px auto 24px;
-    border-radius: 8px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 10px 12px;
-    &:first-child {
-      margin-top: 24px;
-    }
-    &:hover {
-      //border-color: var(--bs-body-color_active);
-    }
-  }
   .noAuth {
     background: rgba(82, 0, 255, 0.08);
     color: var(--bs-body-color);
     cursor: not-allowed;
+  }
+`;
+const TypeLi = styled.li`
+  border: 1px solid var(--proposal-border);
+  font-size: 14px;
+  margin: 10px auto 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  position: relative;
+  &:first-child {
+    margin-top: 24px;
+  }
+  &:hover ul {
+    display: block;
+  }
+`;
+
+const TemplateBox = styled.ul`
+  display: none;
+  position: absolute;
+  left: 100%;
+  width: 200px;
+  top: 0;
+  border-radius: 8px;
+  padding-block: 4px;
+  background-color: var(--bs-box-background);
+  border: 1px solid var(--proposal-border);
+  overflow: hidden;
+
+  li {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 16px;
   }
 `;
