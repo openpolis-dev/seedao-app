@@ -6,6 +6,7 @@ import {
   IContentBlock,
   IBaseCategory,
   IActivity,
+  ITemplate,
 } from 'type/proposalV2.type';
 import { METAFORO_TOKEN, SEEDAO_USER } from 'utils/constant';
 import { parseToken, checkTokenValid, clearStorage } from 'utils/auth';
@@ -192,4 +193,16 @@ export const getTemplate = () => {
 };
 export const getComponents = () => {
   return request.get('/proposal_components/');
+};
+
+
+
+interface ICatetoryTemplate {
+  category_id: number;
+  name: string;
+  templates: ITemplate[];
+}
+
+export const getTemplates = (): Promise<ResponseData<ICatetoryTemplate[]>> => {
+  return request.get('/proposal_tmpls/');
 };

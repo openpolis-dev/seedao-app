@@ -129,3 +129,13 @@ export interface IActivity {
   wallet: string;
   reply_to_wallet: string;
 }
+
+export interface ITemplate {
+  id: 0;
+  vote_type?: 1;
+  name?: string;
+  schema?: string;
+  rule_desc?: string;
+  screenshot_uri?: string;
+  components?: any[];
+}

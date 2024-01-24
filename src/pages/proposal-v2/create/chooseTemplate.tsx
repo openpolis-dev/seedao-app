@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { useEffect, useState } from 'react';
-import { ProposalTemplateType } from 'type/proposal.type';
+import { ITemplate } from 'type/proposalV2.type';
 import { useTranslation } from 'react-i18next';
 import { useCreateProposalContext } from './store';
 import AddImg from '../../../assets/Imgs/proposal/add-square.png';
@@ -13,7 +13,7 @@ import { PermissionAction, PermissionObject } from 'utils/constant';
 export default function ChooseTemplateStep() {
   const { t } = useTranslation();
   const { proposalType, chooseTemplate, changeStep } = useCreateProposalContext();
-  const [templates, setTemplates] = useState<ProposalTemplateType[]>([]);
+  const [templates, setTemplates] = useState<ITemplate[]>([]);
 
   const {
     state: { loading },
