@@ -7,12 +7,14 @@ import { AppActionType, useAuthContext } from 'providers/authProvider';
 import sns from '@seedao/sns-js';
 import { Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import { DeSchoolProvider, CourseContextProvider } from '@deschool-protocol/react';
+import '@deschool-protocol/react/dist/styles/index.css';
 
 export default function Newcomer() {
   const { t } = useTranslation();
 
   const {
-    state: { sns: userSNS, account, userData },
+    state: { sns: userSNS, account, userData, deschoolToken },
     dispatch,
   } = useAuthContext();
 
@@ -38,20 +40,29 @@ export default function Newcomer() {
   }, [userSNS, account]);
 
   return (
-    <Page>
-      {userSNS ? (
-        <Container>
-          <LearnDashboard />
-        </Container>
-      ) : (
-        <Container>
-          <Tip>{t('Onboarding.UnlockTip')}</Tip>
-          <Link to="/sns/register">
-            <Button>{t('Onboarding.AquireSNS')}</Button>
-          </Link>
-        </Container>
-      )}
-    </Page>
+    <DeSchoolProvider
+      config={{
+        baseUrl: 'https://deschool.app/api',
+        token: deschoolToken,
+      }}
+    >
+      <CourseContextProvider>
+        <Page>
+          {userSNS ? (
+            <Container>
+              <LearnDashboard />
+            </Container>
+          ) : (
+            <Container>
+              <Tip>{t('Onboarding.UnlockTip')}</Tip>
+              <Link to="/sns/register">
+                <Button>{t('Onboarding.AquireSNS')}</Button>
+              </Link>
+            </Container>
+          )}
+        </Page>
+      </CourseContextProvider>
+    </DeSchoolProvider>
   );
 }
 

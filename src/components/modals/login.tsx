@@ -18,7 +18,7 @@ import MetamaskIcon from 'assets/Imgs/home/METAmask.svg';
 import JoyIdImg from 'assets/Imgs/home/JOYID.png';
 import UnipassIcon from 'assets/Imgs/home/UniPass.svg';
 import { useEffect, useState } from 'react';
-import { getNonce, login, readPermissionUrl } from 'requests/user';
+import { getNonce, loginWithSeeAuth, readPermissionUrl, loginToMetafo, loginToDeschool } from 'requests/user';
 import { WalletType, Wallet } from 'wallet/wallet';
 import { createSiweMessage } from 'utils/sign';
 import { SELECT_WALLET, SEEDAO_USER_DATA } from 'utils/constant';
@@ -28,6 +28,7 @@ import ReactGA from 'react-ga4';
 import OneSignal from 'react-onesignal';
 import getConfig from 'utils/envCofnig';
 import useToast, { ToastType } from 'hooks/useToast';
+import { WalletName } from '@seedao/see-auth';
 
 const networkConfig = getConfig().NETWORK;
 
@@ -41,6 +42,17 @@ type ConnectorStatic = {
   icon: string;
   walletType: WalletType;
   wallet: Wallet; // just for compatibility old code
+};
+
+export const getSeeAuthWalletName = (connector_id: CONNECTOR_ID) => {
+  switch (connector_id) {
+    case CONNECTOR_ID.METAMASK:
+      return WalletName.Metamask;
+    case CONNECTOR_ID.JOYID:
+      return WalletName.Joyid;
+    default:
+      return '';
+  }
 };
 
 const getConnectorStatic = (id: CONNECTOR_ID): ConnectorStatic => {
@@ -103,14 +115,23 @@ const LoginModalContent = () => {
         }
         setLoginLoading(true);
         try {
-          const res = await login({
+          const res = await loginWithSeeAuth({
             wallet: address,
             message: siweMessage,
             signature: signResult,
             domain: window.location.host,
-            wallet_type: getConnectorStatic(selectConnectorId)?.walletType,
-            is_eip191_prefix: true,
+            walletName: getSeeAuthWalletName(selectConnectorId),
           });
+          // login to third party
+          const loginResp = await Promise.all([loginToMetafo(res.data.see_auth), loginToDeschool(res.data.see_auth)]);
+          dispatch({
+            type: AppActionType.SET_THIRD_PARTY_TOKEN,
+            payload: {
+              metaforo: loginResp[0].data.token,
+              deschool: loginResp[1].data.jwtToken,
+            },
+          });
+
           // set context data
           const now = Date.now();
           res.data.token_exp = now + res.data.token_exp * 1000;
@@ -231,12 +252,12 @@ const LoginModalContent = () => {
 
   const getConnectionButtons = () => {
     return connectors.map((connector) => {
-       return connector.id === CONNECTOR_ID.UNIPASS ? null : (
-         <WalletOption onClick={() => handleClickWallet(connector)} key={connector.id}>
-           <img src={getConnectorStatic(connector.id as CONNECTOR_ID)?.icon} alt="" />
-           <span>{getConnectorButtonText(connector)}</span>
-         </WalletOption>
-       );
+      return connector.id === CONNECTOR_ID.UNIPASS ? null : (
+        <WalletOption onClick={() => handleClickWallet(connector)} key={connector.id}>
+          <img src={getConnectorStatic(connector.id as CONNECTOR_ID)?.icon} alt="" />
+          <span>{getConnectorButtonText(connector)}</span>
+        </WalletOption>
+      );
     });
   };
   return (
