@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { useState } from 'react';
 import { useCreateProposalContext } from './store';
 import { useTranslation } from 'react-i18next';
 import useProposalCategories from 'hooks/useProposalCategories';
@@ -7,11 +8,20 @@ import ArrowRht from '../../../assets/Imgs/proposal/chevron-down.svg';
 import ArrowRhtBlack from '../../../assets/Imgs/proposal/chevron-down-black.svg';
 import ArrowGray from 'assets/Imgs/proposal/chevron-gray.svg';
 import { useAuthContext } from '../../../providers/authProvider';
+import BasicModal from 'components/modals/basicModal';
+import SeeSelect from 'components/common/select';
+import { PlainButton } from 'components/common/button';
+import { Button } from 'react-bootstrap';
 
 export default function ChooseTypeStep() {
   const { t } = useTranslation();
   const { chooseTemplate } = useCreateProposalContext();
   const proposaCategories = useProposalCategories();
+  const [templateRulesVisible, setTemplateRulesVisible] = useState(false);
+  const [closeoutVisible, setCloseoutVisible] = useState(false);
+  const [selected, setSelected] = useState<{ tp: IBaseCategory; template: ITemplate }>();
+  // TODO
+  const [proposalList, setProposalList] = useState<any[]>([]);
 
   const {
     state: { theme },
@@ -19,7 +29,13 @@ export default function ChooseTypeStep() {
 
   const onChooseTemplate = (tp: IBaseCategory, template: ITemplate) => {
     if (!tp.has_perm) return;
-    chooseTemplate(tp, template);
+    if (template.id === 11111) {
+      setSelected({ tp, template });
+      setCloseoutVisible(true);
+      return;
+    }
+    setTemplateRulesVisible(true);
+    setSelected({ tp, template });
   };
 
   return (
@@ -40,6 +56,10 @@ export default function ChooseTypeStep() {
                   <span>新建提案（多选项）</span>
                   <img src={theme ? ArrowRhtBlack : ArrowRht} alt="" />
                 </li>
+                <li onClick={() => onChooseTemplate(tp, { id: 11111 })}>
+                  <span>提案结项</span>
+                  <img src={theme ? ArrowRhtBlack : ArrowRht} alt="" />
+                </li>
                 <li className="noAuth">
                   <span>新建提案（常规）</span>
                   <img src={theme ? ArrowRhtBlack : ArrowRht} alt="" />
@@ -49,6 +69,32 @@ export default function ChooseTypeStep() {
           ))}
         </TypeBox>
       </CenterBox>
+      {templateRulesVisible && (
+        <TemplateRulesModal
+          handleClose={() => setTemplateRulesVisible(false)}
+          title={t('Proposal.ProposalRulesIntro', { name: selected?.template?.name })}
+        >
+          {selected?.template?.name}
+        </TemplateRulesModal>
+      )}
+      {closeoutVisible && (
+        <CloseoutModal handleClose={() => setCloseoutVisible(false)} title={t('Proposal.ChooseCloseoutProposal')}>
+          {proposalList.length > 0 ? (
+            <>
+              <div className="label">{t('Proposal.AssociatedProposalComponent')}</div>
+              <SeeSelect />
+              <CloseoutModalFooter>
+                <PlainButton onClick={() => setCloseoutVisible(false)}>{t('general.cancel')}</PlainButton>
+                <Button variant="primary" onClick={() => selected && chooseTemplate(selected?.tp, selected?.template)}>
+                  {t('general.confirm')}
+                </Button>
+              </CloseoutModalFooter>
+            </>
+          ) : (
+            <div className="empty">{t('Proposal.EmptyAssociatedProposal')}</div>
+          )}
+        </CloseoutModal>
+      )}
     </Container>
   );
 }
@@ -118,5 +164,36 @@ const TemplateBox = styled.ul`
     display: flex;
     justify-content: space-between;
     padding: 5px 16px;
+  }
+`;
+
+const TemplateRulesModal = styled(BasicModal)``;
+
+const CloseoutModal = styled(BasicModal)`
+  width: 500px;
+  padding: 40px 60px 60px;
+  min-height: 280px;
+  .label {
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+  .empty {
+    font-size: 14px;
+    text-align: center;
+  }
+`;
+
+const CloseoutModalFooter = styled.div`
+  width: 100%;
+  display: flex;
+  gap: 16px;
+  margin-top: 24px;
+  justify-content: center;
+  align-items: center;
+  button {
+    width: 120px;
+    &.btn {
+      margin-right: 0;
+    }
   }
 `;

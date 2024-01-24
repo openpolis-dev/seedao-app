@@ -129,7 +129,11 @@
     "LoginTip": "使用完整功能，请先登录Metaforo",
     "LoginButton": "登录 Metaforo",
     "WriteReplyHint": "发表评论",
-    "TimeDisplay": "{{d}}天{{h}}小时{{m}}分钟"
+    "TimeDisplay": "{{d}}天{{h}}小时{{m}}分钟",
+    "ChooseCloseoutProposal": "请选择需要结项的提案",
+    "ProposalRulesIntro": "{{name}}规则说明",
+    "AssociatedProposalComponent": "关联提案组件",
+    "EmptyAssociatedProposal": "暂无没可结项的提案"
   },
   "Project": {
     "ProjectOrGuildItem": "还没有填写相关介绍信息～",

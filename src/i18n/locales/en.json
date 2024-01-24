@@ -129,7 +129,11 @@
     "LoginTip": "Login to Metaforo to use the full functionality.",
     "LoginButton": "Login to Metaforo",
     "WriteReplyHint": "write a reply",
-    "TimeDisplay": "{{d}} day(s) {{h}} hour(s) {{m}} minute(s)"
+    "TimeDisplay": "{{d}} day(s) {{h}} hour(s) {{m}} minute(s)",
+    "ChooseCloseoutProposal": "Please select the proposal to be closed",
+    "ProposalRulesIntro": "Explanation of the rules for {{name}}",
+    "AssociatedProposalComponent": "Associated Proposal Component",
+    "EmptyAssociatedProposal": "No proposals ready for closure"
   },
   "Project": {
     "ProjectOrGuildItem": "Nothing left here.",

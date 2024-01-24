@@ -131,7 +131,7 @@ export interface IActivity {
 }
 
 export interface ITemplate {
-  id: 0;
+  id: number;
   vote_type?: 1;
   name?: string;
   schema?: string;
