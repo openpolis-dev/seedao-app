@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { useCreateProposalContext } from './store';
 import { useTranslation } from 'react-i18next';
 import useProposalCategories from 'hooks/useProposalCategories';
-import { IBaseCategory } from 'type/proposalV2.type';
+import { IBaseCategory, ITemplate } from 'type/proposalV2.type';
 import ArrowRht from '../../../assets/Imgs/proposal/chevron-down.svg';
 import ArrowRhtBlack from '../../../assets/Imgs/proposal/chevron-down-black.svg';
 import ArrowGray from 'assets/Imgs/proposal/chevron-gray.svg';
@@ -10,16 +10,16 @@ import { useAuthContext } from '../../../providers/authProvider';
 
 export default function ChooseTypeStep() {
   const { t } = useTranslation();
-  const { chooseProposalType } = useCreateProposalContext();
+  const { chooseTemplate } = useCreateProposalContext();
   const proposaCategories = useProposalCategories();
 
   const {
     state: { theme },
   } = useAuthContext();
 
-  const onChooseType = (tp: IBaseCategory) => {
+  const onChooseTemplate = (tp: IBaseCategory, template: ITemplate) => {
     if (!tp.has_perm) return;
-    chooseProposalType(tp);
+    chooseTemplate(tp, template);
   };
 
   return (
@@ -32,8 +32,12 @@ export default function ChooseTypeStep() {
               <span>{tp.name}</span>
               <img src={theme ? ArrowRhtBlack : ArrowRht} alt="" />
               <TemplateBox>
-                <li onClick={() => onChooseType(tp)}>
+                <li onClick={() => onChooseTemplate(tp, { id: 0 })}>
                   <span>新建提案（常规）</span>
+                  <img src={theme ? ArrowRhtBlack : ArrowRht} alt="" />
+                </li>
+                <li onClick={() => onChooseTemplate(tp, { id: 0, vote_type: 1 })}>
+                  <span>新建提案（多选项）</span>
                   <img src={theme ? ArrowRhtBlack : ArrowRht} alt="" />
                 </li>
                 <li className="noAuth">

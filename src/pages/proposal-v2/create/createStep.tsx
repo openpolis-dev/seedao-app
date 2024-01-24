@@ -341,7 +341,7 @@ export default function CreateStep({ onClick }: any) {
 
   const handleBack = () => {
     setShowLeaveConfirm(false);
-    changeStep(2);
+    changeStep(1);
   };
 
   const removeVote = (index: number) => {

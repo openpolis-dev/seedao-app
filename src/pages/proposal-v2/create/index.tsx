@@ -47,9 +47,9 @@ const CreateProposalSteps = () => {
     switch (currentStep) {
       case 1:
         return <ChooseTypeStep />;
+      // case 2:
+      //   return <ChooseTemplateStep />;
       case 2:
-        return <ChooseTemplateStep />;
-      case 3:
         return <CreateStep onClick={backTo} />;
       default:
         return null;
@@ -67,7 +67,7 @@ const CreateProposalSteps = () => {
 
   return (
     <>
-      {currentStep !== 3 && (
+      {currentStep !== 2 && (
         <BackerNav
           title={backNavTitle}
           to={currentStep === 1 ? '/proposal' : '/proposal/create'}

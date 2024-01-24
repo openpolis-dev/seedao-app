@@ -7,7 +7,7 @@ type ProposalContext = {
   template?: ITemplate;
   changeStep: (step: number) => void;
   chooseProposalType: (tp: IBaseCategory) => void;
-  chooseTemplate: (t: ITemplate) => void;
+  chooseTemplate: (tp: IBaseCategory | undefined, t: ITemplate) => void;
   goBackStepOne: () => void;
 };
 
@@ -32,7 +32,8 @@ const CreateProposalProvider: React.FC<{ children: React.ReactNode }> = ({ child
     addStep();
   };
 
-  const chooseTemplate = (t: ITemplate) => {
+  const chooseTemplate = (tp: IBaseCategory | undefined, t: ITemplate) => {
+    setProposalType(tp);
     setTemplate(t);
     addStep();
   };
