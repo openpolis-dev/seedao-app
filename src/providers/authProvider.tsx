@@ -1,7 +1,7 @@
 import React, { useReducer, createContext, useContext } from 'react';
 import { IUser, ITokenType } from 'type/user.type';
 import { ICategory } from 'type/proposal.type';
-import { IBaseCategory } from 'type/proposalV2.type';
+import { IBaseCategory, ICategoryWithTemplates } from 'type/proposalV2.type';
 import { Authorizer } from 'casbin.js';
 import {
   SEEDAO_ACCOUNT,
@@ -22,6 +22,7 @@ interface IState {
   tokenData?: ITokenType;
   proposal_categories: ICategory[];
   proposalCategories: IBaseCategory[];
+  categoryTemplates: ICategoryWithTemplates[];
   language: string;
   loading: boolean | null;
   authorizer?: Authorizer;
@@ -46,6 +47,7 @@ export enum AppActionType {
   CLEAR_AUTH = 'clear_auth',
   SET_PROPOSAL_CATEGORIES = 'set_proposal_categories',
   SET_PROPOSAL_CATEGORIES_V2 = 'set_proposal_categories_v2',
+  SET_CATEGORIES_TEMPLATES = 'set_categories_templates',
   SET_LAN = 'SET_LAN',
   SET_LOADING = 'SET_LOADING',
   SET_AUTHORIZER = 'SET_AUTHORIZER',
@@ -89,6 +91,7 @@ const INIT_STATE: IState = {
     // },
   ],
   proposalCategories: [],
+  categoryTemplates: [],
   language: '',
   loading: null,
   snsMap: new Map(),
@@ -140,6 +143,8 @@ const reducer = (state: IState, action: IAction): IState => {
       return { ...state, proposal_categories: action.payload };
     case AppActionType.SET_PROPOSAL_CATEGORIES_V2:
       return { ...state, proposalCategories: action.payload };
+    case AppActionType.SET_CATEGORIES_TEMPLATES:
+      return { ...state, categoryTemplates: action.payload };
     case AppActionType.SET_LOADING:
       return { ...state, loading: action.payload };
     case AppActionType.SET_AUTHORIZER:

@@ -2,8 +2,7 @@ import styled from 'styled-components';
 import { useState } from 'react';
 import { useCreateProposalContext } from './store';
 import { useTranslation } from 'react-i18next';
-import useProposalCategories from 'hooks/useProposalCategories';
-import { IBaseCategory, ITemplate } from 'type/proposalV2.type';
+import { ICategory, ITemplate } from 'type/proposalV2.type';
 import ArrowRht from '../../../assets/Imgs/proposal/chevron-down.svg';
 import ArrowRhtBlack from '../../../assets/Imgs/proposal/chevron-down-black.svg';
 import ArrowGray from 'assets/Imgs/proposal/chevron-gray.svg';
@@ -14,12 +13,14 @@ import { PlainButton } from 'components/common/button';
 import { Button } from 'react-bootstrap';
 
 export default function ChooseTypeStep() {
+  const {
+    state: { categoryTemplates },
+  } = useAuthContext();
   const { t } = useTranslation();
   const { chooseTemplate } = useCreateProposalContext();
-  const proposaCategories = useProposalCategories();
   const [templateRulesVisible, setTemplateRulesVisible] = useState(false);
   const [closeoutVisible, setCloseoutVisible] = useState(false);
-  const [selected, setSelected] = useState<{ tp: IBaseCategory; template: ITemplate }>();
+  const [selected, setSelected] = useState<{ tp: ICategory; template: ITemplate }>();
   // TODO
   const [proposalList, setProposalList] = useState<any[]>([]);
 
@@ -27,7 +28,7 @@ export default function ChooseTypeStep() {
     state: { theme },
   } = useAuthContext();
 
-  const onChooseTemplate = (tp: IBaseCategory, template: ITemplate) => {
+  const onChooseTemplate = (tp: ICategory, template: ITemplate) => {
     if (template.id === 11111) {
       setSelected({ tp, template });
       setCloseoutVisible(true);
@@ -49,19 +50,25 @@ export default function ChooseTypeStep() {
       <CenterBox>
         <StepTitle>{t('Proposal.ChooseType')}</StepTitle>
         <TypeBox>
-          {proposaCategories.map((tp, index) => (
-            <TypeLi key={index} className={tp.has_perm ? '' : 'noAuth'}>
-              <span>{tp.name}</span>
+          {categoryTemplates.map((tp, index) => (
+            <TypeLi key={tp.category_id}>
+              <span>{tp.category_name}</span>
               <img src={theme ? ArrowRhtBlack : ArrowRht} alt="" />
               <TemplateBox>
                 <li onClick={() => onChooseTemplate(tp, { id: 0, has_perm_to_use: true })}>
-                  <span>新建提案（常规）</span>
+                  <span>{t('Proposal.CreateBlank')}</span>
                   <img src={theme ? ArrowRhtBlack : ArrowRht} alt="" />
                 </li>
                 <li onClick={() => onChooseTemplate(tp, { id: 0, vote_type: 1, has_perm_to_use: true })}>
-                  <span>新建提案（多选项）</span>
+                  <span>{t('Proposal.CreateBlank_Multi')}</span>
                   <img src={theme ? ArrowRhtBlack : ArrowRht} alt="" />
                 </li>
+                {tp.templates.map((template) => (
+                  <li onClick={() => onChooseTemplate(tp, template)} key={template.id}>
+                    <span>{template.name}</span>
+                    <img src={theme ? ArrowRhtBlack : ArrowRht} alt="" />
+                  </li>
+                ))}
                 <li onClick={() => onChooseTemplate(tp, { id: 11111, has_perm_to_use: true })}>
                   <span>提案结项</span>
                   <img src={theme ? ArrowRhtBlack : ArrowRht} alt="" />
@@ -162,7 +169,7 @@ const TemplateBox = styled.ul`
   display: none;
   position: absolute;
   left: 100%;
-  width: 200px;
+  min-width: 200px;
   top: 0;
   border-radius: 8px;
   padding-block: 4px;

@@ -17,6 +17,15 @@ export interface IBaseCategory {
   has_perm?: boolean;
 }
 
+export interface ICategory {
+  category_id: number;
+  category_name: string;
+}
+
+export interface ICategoryWithTemplates extends ICategory {
+  templates: ITemplate[];
+}
+
 export interface ISimpleProposal {
   id: number;
   title: string;

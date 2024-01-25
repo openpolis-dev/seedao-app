@@ -284,7 +284,7 @@ export default function CreateStep({ onClick }: any) {
       dispatch({ type: AppActionType.SET_LOADING, payload: true });
       saveOrSubmitProposal({
         title,
-        proposal_category_id: proposalType?.id,
+        proposal_category_id: proposalType?.category_id,
         vote_type: voteType,
         content_blocks: list,
         components: dataFormat,
@@ -379,7 +379,7 @@ export default function CreateStep({ onClick }: any) {
               <span className="backTitle">{t('Proposal.CreateProposal')}</span>
             </BackBox>
             <TagsBox>
-              <CategoryTag>{proposalType?.name}</CategoryTag>
+              <CategoryTag>{proposalType?.category_name}</CategoryTag>
               {templateTitle && <TemplateTag>{templateTitle}</TemplateTag>}
             </TagsBox>
           </NavLeft>

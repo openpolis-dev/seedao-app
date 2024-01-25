@@ -1,13 +1,13 @@
 import React, { createContext, useContext, useState } from 'react';
-import { IBaseCategory, ITemplate } from 'type/proposalV2.type';
+import { ICategory, ITemplate } from 'type/proposalV2.type';
 
 type ProposalContext = {
   currentStep: number;
-  proposalType?: IBaseCategory;
+  proposalType?: ICategory;
   template?: ITemplate;
   changeStep: (step: number) => void;
-  chooseProposalType: (tp: IBaseCategory) => void;
-  chooseTemplate: (tp: IBaseCategory | undefined, t: ITemplate) => void;
+  chooseProposalType: (tp: ICategory) => void;
+  chooseTemplate: (tp: ICategory | undefined, t: ITemplate) => void;
   goBackStepOne: () => void;
 };
 
@@ -21,18 +21,18 @@ const context = createContext<ProposalContext>({
 
 const CreateProposalProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [currentStep, setCurrentStep] = useState(1);
-  const [proposalType, setProposalType] = useState<IBaseCategory>();
+  const [proposalType, setProposalType] = useState<ICategory>();
   const [template, setTemplate] = useState<ITemplate>();
 
   const addStep = () => setCurrentStep(currentStep + 1);
   const changeStep = (newStep: number) => setCurrentStep(newStep);
 
-  const chooseProposalType = (tp: IBaseCategory) => {
+  const chooseProposalType = (tp: ICategory) => {
     setProposalType(tp);
     addStep();
   };
 
-  const chooseTemplate = (tp: IBaseCategory | undefined, t: ITemplate) => {
+  const chooseTemplate = (tp: ICategory | undefined, t: ITemplate) => {
     setProposalType(tp);
     setTemplate(t);
     addStep();
