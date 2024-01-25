@@ -127,7 +127,7 @@ export default function RegisterSNSStep2() {
     } catch (error: any) {
       dispatchSNS({ type: ACTIONS.CLOSE_LOADING });
       console.error('register failed', error);
-      showToast(error?.reason || error?.data?.message || 'error', ToastType.Danger);
+      showToast(`register failed: ${error}`, ToastType.Danger);
     } finally {
     }
   };
