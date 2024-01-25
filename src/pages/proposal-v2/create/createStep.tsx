@@ -1,7 +1,6 @@
 import styled from 'styled-components';
-
 import { Template } from '@taoist-labs/components';
-import DataSource from './json/datasource.json';
+
 import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { MdEditor } from 'md-editor-rt';
 import { saveOrSubmitProposal } from 'requests/proposalV2';
@@ -218,7 +217,6 @@ export default function CreateStep({ onClick }: any) {
         }
         return item;
       });
-
       setComponents(components ? components : []);
     } else {
       setShowType('new');
@@ -396,7 +394,7 @@ export default function CreateStep({ onClick }: any) {
 
       <BoxBg showRht={showRht.toString()}>
         <Template
-          DataSource={DataSource}
+          DataSource={null}
           operate={showType}
           language={i18n.language}
           showRight={showRht}
