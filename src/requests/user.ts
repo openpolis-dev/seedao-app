@@ -67,6 +67,7 @@ export const readPermissionUrl = `${BASE_URL}/${API_VERSION}${PATH_PREFIX}/casbi
 interface IMetaforoResponse {
   token: string;
   wallet: string;
+  user_id: number;
 }
 
 export const loginToMetafo = (data: SeeAuth): Promise<{ data: IMetaforoResponse }> => {

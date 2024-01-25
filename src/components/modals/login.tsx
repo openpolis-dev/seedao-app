@@ -21,7 +21,7 @@ import { useEffect, useState } from 'react';
 import { getNonce, loginWithSeeAuth, readPermissionUrl, loginToMetafo, loginToDeschool } from 'requests/user';
 import { WalletType, Wallet } from 'wallet/wallet';
 import { createSiweMessage } from 'utils/sign';
-import { SELECT_WALLET, SEEDAO_USER_DATA } from 'utils/constant';
+import { SELECT_WALLET, SEEDAO_USER_DATA, METAFORO_TOKEN } from 'utils/constant';
 import { clearStorage } from 'utils/auth';
 import { Authorizer } from 'casbin.js';
 import ReactGA from 'react-ga4';
@@ -29,6 +29,7 @@ import OneSignal from 'react-onesignal';
 import getConfig from 'utils/envCofnig';
 import useToast, { ToastType } from 'hooks/useToast';
 import { WalletName } from '@seedao/see-auth';
+import { prepareMetaforo } from 'requests/proposalV2';
 
 const networkConfig = getConfig().NETWORK;
 
@@ -132,6 +133,12 @@ const LoginModalContent = () => {
             },
           });
 
+          // prepare metaforo
+          localStorage.setItem(
+            METAFORO_TOKEN,
+            JSON.stringify({ id: loginResp[0].data.user_id, account: address, token: loginResp[0].data.token }),
+          );
+
           // set context data
           const now = Date.now();
           res.data.token_exp = now + res.data.token_exp * 1000;
@@ -157,6 +164,8 @@ const LoginModalContent = () => {
           } catch (error) {
             logError('OneSignal login error', error);
           }
+
+          prepareMetaforo();
         } catch (error: any) {
           setClickConnectFlag(false);
           showToast(error?.data?.msg || error?.code || error, ToastType.Danger, { autoClose: false });
