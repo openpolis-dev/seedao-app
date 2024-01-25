@@ -138,4 +138,6 @@ export interface ITemplate {
   rule_desc?: string;
   screenshot_uri?: string;
   components?: any[];
+  has_perm_to_use?: boolean;
+  is_instant_vote?: boolean;
 }

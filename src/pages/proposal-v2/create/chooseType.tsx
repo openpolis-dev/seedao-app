@@ -28,7 +28,6 @@ export default function ChooseTypeStep() {
   } = useAuthContext();
 
   const onChooseTemplate = (tp: IBaseCategory, template: ITemplate) => {
-    if (!tp.has_perm) return;
     if (template.id === 11111) {
       setSelected({ tp, template });
       setCloseoutVisible(true);
@@ -36,6 +35,13 @@ export default function ChooseTypeStep() {
     }
     setTemplateRulesVisible(true);
     setSelected({ tp, template });
+  };
+
+  const handleCloseTemplateRulesModal = () => {
+    if (selected?.template?.has_perm_to_use) {
+      chooseTemplate(selected?.tp, selected?.template);
+    }
+    setTemplateRulesVisible(false);
   };
 
   return (
@@ -48,19 +54,19 @@ export default function ChooseTypeStep() {
               <span>{tp.name}</span>
               <img src={theme ? ArrowRhtBlack : ArrowRht} alt="" />
               <TemplateBox>
-                <li onClick={() => onChooseTemplate(tp, { id: 0 })}>
+                <li onClick={() => onChooseTemplate(tp, { id: 0, has_perm_to_use: true })}>
                   <span>新建提案（常规）</span>
                   <img src={theme ? ArrowRhtBlack : ArrowRht} alt="" />
                 </li>
-                <li onClick={() => onChooseTemplate(tp, { id: 0, vote_type: 1 })}>
+                <li onClick={() => onChooseTemplate(tp, { id: 0, vote_type: 1, has_perm_to_use: true })}>
                   <span>新建提案（多选项）</span>
                   <img src={theme ? ArrowRhtBlack : ArrowRht} alt="" />
                 </li>
-                <li onClick={() => onChooseTemplate(tp, { id: 11111 })}>
+                <li onClick={() => onChooseTemplate(tp, { id: 11111, has_perm_to_use: true })}>
                   <span>提案结项</span>
                   <img src={theme ? ArrowRhtBlack : ArrowRht} alt="" />
                 </li>
-                <li className="noAuth">
+                <li className="noAuth" onClick={() => onChooseTemplate(tp, { id: 12, has_perm_to_use: false })}>
                   <span>新建提案（常规）</span>
                   <img src={theme ? ArrowRhtBlack : ArrowRht} alt="" />
                 </li>
@@ -71,10 +77,14 @@ export default function ChooseTypeStep() {
       </CenterBox>
       {templateRulesVisible && (
         <TemplateRulesModal
-          handleClose={() => setTemplateRulesVisible(false)}
-          title={t('Proposal.ProposalRulesIntro', { name: selected?.template?.name })}
+          handleClose={handleCloseTemplateRulesModal}
+          title={
+            selected?.template?.has_perm_to_use
+              ? t('Proposal.ProposalRulesIntro', { name: selected?.template?.name })
+              : t('Proposal.NoPermisstionToPropose')
+          }
         >
-          {selected?.template?.name}
+          {selected?.template?.rule_desc}
         </TemplateRulesModal>
       )}
       {closeoutVisible && (

@@ -132,6 +132,7 @@
     "TimeDisplay": "{{d}}天{{h}}小时{{m}}分钟",
     "ChooseCloseoutProposal": "请选择需要结项的提案",
     "ProposalRulesIntro": "{{name}}规则说明",
+    "NoPermisstionToPropose": "您暂无法发起此提案",
     "AssociatedProposalComponent": "关联提案组件",
     "EmptyAssociatedProposal": "暂无没可结项的提案"
   },

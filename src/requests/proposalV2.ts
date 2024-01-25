@@ -204,5 +204,5 @@ interface ICatetoryTemplate {
 }
 
 export const getTemplates = (): Promise<ResponseData<ICatetoryTemplate[]>> => {
-  return request.get('/proposal_tmpls/');
+  return request.get('/proposal_tmpl/list_with_perm');
 };
