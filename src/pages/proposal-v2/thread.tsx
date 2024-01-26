@@ -422,7 +422,7 @@ export default function ThreadPage() {
         <FlexLine>
           {currentState && <ProposalStateTag state={currentState} />}
           {currentCategory && <CategoryTag>{currentCategory}</CategoryTag>}
-          {review && data?.template_name && <TemplateTag>{data?.template_name}</TemplateTag>}
+          {data?.template_name && <TemplateTag>{data?.template_name}</TemplateTag>}
           {data?.arweave && (
             <StoreHash href={`https://arweave.net/tx/${data?.arweave}/data.html`} target="_blank" rel="noreferrer">
               a
