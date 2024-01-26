@@ -507,7 +507,7 @@ export default function CreateStep({ onClick }: any) {
                 </InputBox>
               </ItemBox>
 
-              {!!preview && (
+              {!!preview.length && (
                 <>
                   <ItemBox>
                     <TitleBox>{previewTitle}</TitleBox>
