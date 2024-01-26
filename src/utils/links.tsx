@@ -335,6 +335,13 @@ const links = {
       icon: SNSImg,
       desc: 'apps.SNSDesc',
     },
+    {
+      id: 'module-see',
+      name: 'See Swap',
+      link: '/see-swap',
+      icon: 'https://avatars.githubusercontent.com/u/36115574?s=200&v=4',
+      desc: '',
+    },
   ],
   publicity: [
     {

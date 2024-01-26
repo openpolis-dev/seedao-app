@@ -51,6 +51,7 @@ import ProposalThreadV2 from 'pages/proposal-v2/thread';
 
 import Wiki from './pages/notion/wiki';
 import getConfig from 'utils/envCofnig';
+import SeeSwap from 'pages/seeswap/swap';
 
 export default function RouterLink() {
   return (
@@ -111,6 +112,8 @@ export default function RouterLink() {
           {['dev', undefined].includes(process.env.REACT_APP_ENV_VERSION || '') && (
             <Route path="/newcomer" element={<Newcomer />} />
           )}
+          {/* See Swap */}
+          <Route path="/see-swap" element={<SeeSwap />} />
 
           <Route path="/notion/:id" element={<Wiki />} />
           <Route path="/wiki" element={<Wiki />} />
