@@ -149,4 +149,5 @@ export interface ITemplate {
   components?: any[];
   has_perm_to_use?: boolean;
   is_instant_vote?: boolean;
+  is_closing_project?: boolean;
 }

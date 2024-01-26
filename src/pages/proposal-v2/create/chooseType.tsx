@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useCreateProposalContext } from './store';
 import { useTranslation } from 'react-i18next';
 import { ICategory, ITemplate } from 'type/proposalV2.type';
@@ -7,12 +7,54 @@ import ArrowRht from '../../../assets/Imgs/proposal/chevron-down.svg';
 import ArrowRhtBlack from '../../../assets/Imgs/proposal/chevron-down-black.svg';
 import ArrowGray from 'assets/Imgs/proposal/chevron-gray.svg';
 import { useAuthContext } from '../../../providers/authProvider';
-import BasicModal from 'components/modals/basicModal';
+import BasicModal, { Iprops as IBasicModalProps } from 'components/modals/basicModal';
 import SeeSelect from 'components/common/select';
 import { PlainButton } from 'components/common/button';
 import { Button } from 'react-bootstrap';
 import usePermission from 'hooks/usePermission';
 import { PermissionAction, PermissionObject } from 'utils/constant';
+
+type ExtraType =  { id: number; name: string }
+
+interface ICloseOutSelectModalProps extends IBasicModalProps {
+  id: number;
+  handleConfirm: (extra:ExtraType) => void;
+}
+
+const CloseOutSelectModal = ({ id, handleConfirm, ...props }: ICloseOutSelectModalProps) => {
+  const { t } = useTranslation();
+  const [proposalList, setProposalList] = useState<any[]>([]);
+  const [selectExtra, setSelectExtra] = useState<ExtraType>();
+
+  useEffect(() => {
+    // TODO: get proposal list
+  }, [id]);
+
+  const onConfirm = () => {
+    if (selectExtra) {
+      handleConfirm(selectExtra)
+    }
+  }
+
+  return (
+    <CloseoutModal {...props}>
+      {proposalList.length > 0 ? (
+        <>
+          <div className="label">{t('Proposal.AssociatedProposalComponent')}</div>
+          <SeeSelect value={selectExtra} />
+          <CloseoutModalFooter>
+            <PlainButton onClick={props.h}>{t('general.cancel')}</PlainButton>
+            <Button variant="primary" onClick={onConfirm}>
+              {t('general.confirm')}
+            </Button>
+          </CloseoutModalFooter>
+        </>
+      ) : (
+        <div className="empty">{t('Proposal.EmptyAssociatedProposal')}</div>
+      )}
+    </CloseoutModal>
+  );
+};
 
 export default function ChooseTypeStep() {
   const {
@@ -21,10 +63,8 @@ export default function ChooseTypeStep() {
   const { t } = useTranslation();
   const { chooseTemplate } = useCreateProposalContext();
   const [templateRulesVisible, setTemplateRulesVisible] = useState(false);
-  const [closeoutVisible, setCloseoutVisible] = useState(false);
+  const [closeoutVisibleId, setCloseoutVisibleId] = useState<number>();
   const [selected, setSelected] = useState<{ tp: ICategory; template: ITemplate }>();
-  // TODO
-  const [proposalList, setProposalList] = useState<any[]>([]);
 
   const canUseCityhall = usePermission(PermissionAction.AuditApplication, PermissionObject.ProjectAndGuild);
 
@@ -37,9 +77,9 @@ export default function ChooseTypeStep() {
       chooseTemplate(tp, template);
       return;
     }
-    if (template.id === 11111) {
+    if (template.is_closing_project) {
       setSelected({ tp, template });
-      setCloseoutVisible(true);
+      setCloseoutVisibleId(undefined);
       return;
     }
     setTemplateRulesVisible(true);
@@ -107,23 +147,15 @@ export default function ChooseTypeStep() {
           {selected?.template?.rule_desc}
         </TemplateRulesModal>
       )}
-      {closeoutVisible && (
-        <CloseoutModal handleClose={() => setCloseoutVisible(false)} title={t('Proposal.ChooseCloseoutProposal')}>
-          {proposalList.length > 0 ? (
-            <>
-              <div className="label">{t('Proposal.AssociatedProposalComponent')}</div>
-              <SeeSelect />
-              <CloseoutModalFooter>
-                <PlainButton onClick={() => setCloseoutVisible(false)}>{t('general.cancel')}</PlainButton>
-                <Button variant="primary" onClick={() => selected && chooseTemplate(selected?.tp, selected?.template)}>
-                  {t('general.confirm')}
-                </Button>
-              </CloseoutModalFooter>
-            </>
-          ) : (
-            <div className="empty">{t('Proposal.EmptyAssociatedProposal')}</div>
-          )}
-        </CloseoutModal>
+      {!!closeoutVisibleId && (
+        <CloseOutSelectModal
+          id={closeoutVisibleId}
+          handleClose={() => setCloseoutVisibleId(undefined)}
+          title={t('Proposal.ChooseCloseoutProposal')}
+          handleConfirm={(extra: ExtraType) =>
+            selected && chooseTemplate(selected?.tp, selected?.template, extra)
+          }
+        />
       )}
     </Container>
   );

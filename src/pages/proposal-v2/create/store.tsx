@@ -5,9 +5,10 @@ type ProposalContext = {
   currentStep: number;
   proposalType?: ICategory;
   template?: ITemplate;
+  extraData?: { id: number; name: string };
   changeStep: (step: number) => void;
   chooseProposalType: (tp: ICategory) => void;
-  chooseTemplate: (tp: ICategory | undefined, t: ITemplate) => void;
+  chooseTemplate: (tp: ICategory | undefined, t: ITemplate, extra?: { id: number; name: string }) => void;
   goBackStepOne: () => void;
 };
 
@@ -23,6 +24,7 @@ const CreateProposalProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const [currentStep, setCurrentStep] = useState(1);
   const [proposalType, setProposalType] = useState<ICategory>();
   const [template, setTemplate] = useState<ITemplate>();
+  const [extraData, setExtraData] = useState<{ id: number; name: string }>();
 
   const addStep = () => setCurrentStep(currentStep + 1);
   const changeStep = (newStep: number) => setCurrentStep(newStep);
@@ -32,9 +34,10 @@ const CreateProposalProvider: React.FC<{ children: React.ReactNode }> = ({ child
     addStep();
   };
 
-  const chooseTemplate = (tp: ICategory | undefined, t: ITemplate) => {
+  const chooseTemplate = (tp: ICategory | undefined, t: ITemplate, extra?: { id: number; name: string }) => {
     setProposalType(tp);
     setTemplate(t);
+    setExtraData(extra);
     addStep();
   };
 
@@ -47,6 +50,7 @@ const CreateProposalProvider: React.FC<{ children: React.ReactNode }> = ({ child
   return (
     <context.Provider
       value={{
+        extraData,
         currentStep,
         proposalType,
         template,
