@@ -74,6 +74,8 @@ export default function ThreadPage() {
   const [components, setComponents] = useState<any[]>([]);
   const [commentsArray, setCommentsArray] = useState<ICommentDisplay[][]>([]);
   const [currentCommentArrayIdx, setCurrentCommentArrayIdx] = useState<number>(0);
+  const [componentName, setComponentName] = useState('');
+  const [beforeList, setBeforeList] = useState<IContentBlock[]>([]);
 
   const [voteList, setVoteList] = useState([
     {
@@ -126,7 +128,21 @@ export default function ThreadPage() {
       }
       setData(res.data);
 
-      setContentBlocks(res.data.content_blocks);
+      const arr = res.data.content_blocks;
+      const componentsIndex = arr.findIndex((i: any) => i.type === 'components');
+
+      const beforeComponents = arr.filter(
+        (item: any) => item.type !== 'components' && arr.indexOf(item) < componentsIndex,
+      );
+      let componentsList = arr.filter((item: any) => item.type === 'components') || [];
+      const afterComponents = arr.filter(
+        (item: any) => item.type !== 'components' && arr.indexOf(item) > componentsIndex,
+      );
+      setComponentName(componentsList[0]?.title);
+      setBeforeList(beforeComponents ?? []);
+
+      setContentBlocks(afterComponents);
+
       const comStr = res.data.components || [];
       comStr.map((item: any) => {
         if (typeof item.data === 'string') {
@@ -455,33 +471,63 @@ export default function ThreadPage() {
           initialItems={components}
           theme={theme}
           BeforeComponent={
-            !!dataSource?.length && (
-              <ComponnentBox>
-                <div className="title">{t('Proposal.proposalComponents')}</div>
-              </ComponnentBox>
-            )
-          }
-          AfterComponent={contentBlocks.map((block, i) => (
             <>
-              <ProposalContentBlock key={block.title} $radius={i === 0 && !dataSource?.length ? '4px 4px 0 0' : '0'}>
-                <div className="title">{block.title}</div>
-                <div className="content">
-                  <MdPreview theme={theme ? 'dark' : 'light'} modelValue={block.content || ''} />
-                </div>
-              </ProposalContentBlock>
-              {/*<ItemBox>*/}
-              {/*  <TitleBox>投票选项</TitleBox>*/}
-              {/*  <VoteBox>*/}
-              {/*    {voteList.map((item, index) => (*/}
-              {/*      <li>*/}
-              {/*        <input type="checkbox" id={`vote_${index}`} />*/}
-              {/*        <label htmlFor={`vote_${index}`}>{item.value}</label>*/}
-              {/*      </li>*/}
-              {/*    ))}*/}
-              {/*  </VoteBox>*/}
-              {/*</ItemBox>*/}
+              {!!beforeList?.length &&
+                beforeList.map((block, i) => (
+                  <>
+                    <ProposalContentBlock
+                      key={block.title}
+                      $radius={i === 0 && !dataSource?.length ? '4px 4px 0 0' : '0'}
+                    >
+                      <div className="title">{block.title}</div>
+                      <div className="content">
+                        <MdPreview theme={theme ? 'dark' : 'light'} modelValue={block.content || ''} />
+                      </div>
+                    </ProposalContentBlock>
+                    {/*<ItemBox>*/}
+                    {/*  <TitleBox>投票选项</TitleBox>*/}
+                    {/*  <VoteBox>*/}
+                    {/*    {voteList.map((item, index) => (*/}
+                    {/*      <li>*/}
+                    {/*        <input type="checkbox" id={`vote_${index}`} />*/}
+                    {/*        <label htmlFor={`vote_${index}`}>{item.value}</label>*/}
+                    {/*      </li>*/}
+                    {/*    ))}*/}
+                    {/*  </VoteBox>*/}
+                    {/*</ItemBox>*/}
+                  </>
+                ))}
+              {!!dataSource?.length && (
+                <ComponnentBox>
+                  <div className="title">{componentName || t('Proposal.proposalComponents')}</div>
+                </ComponnentBox>
+              )}
             </>
-          ))}
+          }
+          AfterComponent={
+            !!contentBlocks?.length &&
+            contentBlocks?.map((block, i) => (
+              <>
+                <ProposalContentBlock key={block.title} $radius={i === 0 && !dataSource?.length ? '4px 4px 0 0' : '0'}>
+                  <div className="title">{block.title}</div>
+                  <div className="content">
+                    <MdPreview theme={theme ? 'dark' : 'light'} modelValue={block.content || ''} />
+                  </div>
+                </ProposalContentBlock>
+                {/*<ItemBox>*/}
+                {/*  <TitleBox>投票选项</TitleBox>*/}
+                {/*  <VoteBox>*/}
+                {/*    {voteList.map((item, index) => (*/}
+                {/*      <li>*/}
+                {/*        <input type="checkbox" id={`vote_${index}`} />*/}
+                {/*        <label htmlFor={`vote_${index}`}>{item.value}</label>*/}
+                {/*      </li>*/}
+                {/*    ))}*/}
+                {/*  </VoteBox>*/}
+                {/*</ItemBox>*/}
+              </>
+            ))
+          }
         />
       </ContentOuter>
       {data?.state !== ProposalState.PendingSubmit && (

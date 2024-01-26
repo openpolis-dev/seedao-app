@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Template } from '@taoist-labs/components';
+import { Template, Preview } from '@taoist-labs/components';
 
 import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { MdEditor } from 'md-editor-rt';
@@ -158,6 +158,7 @@ export default function CreateStep({ onClick }: any) {
   const childRef = useRef(null);
   const [title, setTitle] = useState('');
   const [list, setList] = useState<any[]>([]);
+  const [beforeList, setBeforeList] = useState<any[]>([]);
   const [submitType, setSubmitType] = useState<'save' | 'submit'>();
   const [voteType, setVoteType] = useState<number | undefined>(0);
 
@@ -170,6 +171,11 @@ export default function CreateStep({ onClick }: any) {
   const [showType, setShowType] = useState('new');
   const [token, setToken] = useState('');
   const [templateTitle, setTemplateTitle] = useState('');
+  const [componentName, setComponentName] = useState('');
+  const [holder, setHolder] = useState<any[]>([]);
+  const [preview, setPreview] = useState<any[]>([]);
+  const [previewTitle, setPreviewTitle] = useState('');
+  const [initList, setInitList] = useState<any[]>([]);
 
   const [voteList, setVoteList] = useState([
     {
@@ -210,7 +216,32 @@ export default function CreateStep({ onClick }: any) {
       setShowRht(false);
       const { schema, components } = template;
       const arr = JSON.parse(schema!);
-      setList(arr ?? []);
+      console.error(arr);
+
+      const previewArr = arr.filter((i: any) => i.type === 'preview');
+      if (previewArr?.length) {
+        setPreviewTitle(previewArr[0]?.title);
+        getPreview();
+        getComponentsList();
+      }
+
+      const componentsIndex = arr.findIndex((i: any) => i.type === 'components');
+
+      const beforeComponents = arr.filter(
+        (item: any) => item.type !== 'components' && arr.indexOf(item) < componentsIndex && item.type !== 'preview',
+      );
+      let componentsList = arr.filter((item: any) => item.type === 'components') || [];
+      const afterComponents = arr.filter(
+        (item: any) => item.type !== 'components' && arr.indexOf(item) > componentsIndex && item.type !== 'preview',
+      );
+
+      setBeforeList(beforeComponents ?? []);
+      setList(afterComponents ?? []);
+      setHolder(componentsList);
+
+      setComponentName(componentsList[0]?.title);
+
+      // setList(arr ?? []);
       setTemplateTitle(template?.name ?? '');
       components?.map((item) => {
         if (typeof item.schema === 'string') {
@@ -239,6 +270,42 @@ export default function CreateStep({ onClick }: any) {
       setShowRht(true);
     }
   }, [template, tokenData]);
+
+  const getPreview = async () => {
+    const res = await requests.proposalV2.getProposalDetail(330, 0);
+    console.error('getPreview', res.data.components);
+
+    const comStr = res.data.components || [];
+    comStr.map((item: any) => {
+      if (typeof item.data === 'string') {
+        item.data = JSON.parse(item.data);
+      }
+      return item;
+    });
+    setPreview(comStr ?? []);
+  };
+
+  const getComponentsList = async () => {
+    // NOTE: getProposalDetail may use more time, so not show loading here
+    // dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    try {
+      const resp = await requests.proposalV2.getComponents();
+      let components = resp.data;
+
+      components?.map((item: any) => {
+        if (typeof item.schema === 'string') {
+          item.schema = JSON.parse(item.schema);
+        }
+        return item;
+      });
+
+      setInitList(resp.data);
+    } catch (error) {
+      logError('getAllProposals failed', error);
+    } finally {
+      // dispatch({ type: AppActionType.SET_LOADING, payload: false });
+    }
+  };
 
   const handleInput = (e: ChangeEvent) => {
     const { value } = e.target as HTMLInputElement;
@@ -280,12 +347,20 @@ export default function CreateStep({ onClick }: any) {
     }
     const canSubmit = await checkMetaforoLogin();
     if (canSubmit) {
+      let holderNew: any[] = [];
+      if (holder.length) {
+        holderNew = [...holder];
+        holderNew[0].name = JSON.stringify(holder[0]?.name);
+      }
+
+      let arr = [...beforeList, ...holderNew, ...list];
       dispatch({ type: AppActionType.SET_LOADING, payload: true });
+
       saveOrSubmitProposal({
         title,
         proposal_category_id: proposalType?.category_id,
         vote_type: voteType,
-        content_blocks: list,
+        content_blocks: arr,
         components: dataFormat,
         template_id: template?.id,
         submit_to_metaforo: submitType === 'submit',
@@ -318,10 +393,16 @@ export default function CreateStep({ onClick }: any) {
     (childRef.current as any).saveForm();
   };
 
-  const handleText = (value: any, index: number) => {
-    let arr = [...list];
-    arr[index].content = value;
-    setList([...arr]);
+  const handleText = (value: any, index: number, type: string) => {
+    if (type === 'before') {
+      let arr = [...beforeList];
+      arr[index].content = value;
+      setBeforeList([...arr]);
+    } else {
+      let arr = [...list];
+      arr[index].content = value;
+      setList([...arr]);
+    }
   };
 
   const allSubmit = () => {
@@ -426,29 +507,58 @@ export default function CreateStep({ onClick }: any) {
                 </InputBox>
               </ItemBox>
 
-              <ComponnentBox>
-                <span>{t('Proposal.proposalComponents')}</span>
-              </ComponnentBox>
+              {!!preview && (
+                <>
+                  <ItemBox>
+                    <TitleBox>{previewTitle}</TitleBox>
+                  </ItemBox>
+                  <Preview DataSource={preview} language={i18n.language} initialItems={initList} theme={theme} />
+                </>
+              )}
+
+              {!!beforeList?.length &&
+                beforeList.map((item, index: number) => (
+                  <ItemBox key={`before_${index}`}>
+                    {!!item.title && <TitleBox>{item.title}</TitleBox>}
+                    <InputBox>
+                      <MdEditor
+                        toolbarsExclude={['github', 'save']}
+                        modelValue={item.content}
+                        editorId={`before_${index}`}
+                        onChange={(val) => handleText(val, index, 'before')}
+                        theme={theme ? 'dark' : 'light'}
+                      />
+                    </InputBox>
+
+                    {/*<MarkdownEditor value={item.content} onChange={(val)=>handleText(val,index)} />*/}
+                  </ItemBox>
+                ))}
+              {!!components.length && (
+                <ComponnentBox>
+                  <span>{componentName || t('Proposal.proposalComponents')}</span>
+                </ComponnentBox>
+              )}
             </>
           }
           AfterComponent={
             <div>
-              {list.map((item, index: number) => (
-                <ItemBox key={`block_${index}`}>
-                  {!!item.title && <TitleBox>{item.title}</TitleBox>}
-                  <InputBox>
-                    <MdEditor
-                      toolbarsExclude={['github', 'save']}
-                      modelValue={item.content}
-                      editorId={`block_${index}`}
-                      onChange={(val) => handleText(val, index)}
-                      theme={theme ? 'dark' : 'light'}
-                    />
-                  </InputBox>
+              {!!list?.length &&
+                list.map((item, index: number) => (
+                  <ItemBox key={`block_${index}`}>
+                    {!!item.title && <TitleBox>{item.title}</TitleBox>}
+                    <InputBox>
+                      <MdEditor
+                        toolbarsExclude={['github', 'save']}
+                        modelValue={item.content}
+                        editorId={`block_${index}`}
+                        onChange={(val) => handleText(val, index, 'after')}
+                        theme={theme ? 'dark' : 'light'}
+                      />
+                    </InputBox>
 
-                  {/*<MarkdownEditor value={item.content} onChange={(val)=>handleText(val,index)} />*/}
-                </ItemBox>
-              ))}
+                    {/*<MarkdownEditor value={item.content} onChange={(val)=>handleText(val,index)} />*/}
+                  </ItemBox>
+                ))}
               {/*<ItemBox>*/}
               {/*  <TitleBox>投票选项</TitleBox>*/}
               {/*  <VoteBox>*/}

@@ -7,7 +7,7 @@ import React, { useEffect, useState, useRef, ChangeEvent } from 'react';
 import { IContentBlock, IProposal, ProposalState } from 'type/proposalV2.type';
 import { useAuthContext, AppActionType } from 'providers/authProvider';
 import { Template } from '@taoist-labs/components';
-import { MdEditor } from 'md-editor-rt';
+import { MdEditor, MdPreview } from 'md-editor-rt';
 import useCheckMetaforoLogin from 'hooks/useMetaforoLogin';
 import { updateProposal, getProposalDetail } from 'requests/proposalV2';
 import { Button } from 'react-bootstrap';
@@ -42,6 +42,9 @@ export default function EditProposal() {
   const [token, setToken] = useState('');
   const [showRht, setShowRht] = useState(false);
   const [voteType, setVoteType] = useState<number | undefined>(0);
+  const [beforeList, setBeforeList] = useState<any[]>([]);
+  const [componentName, setComponentName] = useState('');
+  const [holder, setHolder] = useState<any[]>([]);
 
   const [dataSource, setDataSource] = useState();
   const childRef = useRef(null);
@@ -95,7 +98,23 @@ export default function EditProposal() {
   useEffect(() => {
     if (data) {
       setTitle(data.title);
-      setContentBlocks(data.content_blocks);
+
+      const arr = data.content_blocks;
+      const componentsIndex = arr.findIndex((i: any) => i.type === 'components');
+
+      const beforeComponents = arr.filter(
+        (item: any) => item.type !== 'components' && arr.indexOf(item) < componentsIndex,
+      );
+      let componentsList = arr.filter((item: any) => item.type === 'components') || [];
+      const afterComponents = arr.filter(
+        (item: any) => item.type !== 'components' && arr.indexOf(item) > componentsIndex,
+      );
+      setComponentName(componentsList[0]?.title);
+      setBeforeList(beforeComponents ?? []);
+      setHolder(componentsList);
+      setContentBlocks(afterComponents);
+
+      // setContentBlocks(data.content_blocks);
     }
   }, [data]);
 
@@ -163,11 +182,17 @@ export default function EditProposal() {
     }
 
     await checkMetaforoLogin();
+
+    let holderNew = [...holder];
+    holderNew[0].name = JSON.stringify(holder[0]?.name);
+
+    let arr = [...beforeList, ...holderNew, ...contentBlocks];
+
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     updateProposal(Number(data.id), {
       title,
       proposal_category_id: data.proposal_category_id,
-      content_blocks: contentBlocks,
+      content_blocks: arr,
       vote_type: voteType,
       components: dataFormat,
       submit_to_metaforo: submitType === 'submit',
@@ -281,28 +306,47 @@ export default function EditProposal() {
                   <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} />
                 </InputBox>
               </ItemBox>
+
+              {!!beforeList?.length &&
+                beforeList?.map((item, index: number) => (
+                  <ItemBox key={`block_${index}`}>
+                    <TitleBox>{item.title}</TitleBox>
+
+                    <MdEditor
+                      toolbarsExclude={['github', 'save']}
+                      theme={theme ? 'dark' : 'light'}
+                      modelValue={item.content}
+                      editorId={`block_${index}`}
+                      onChange={(val) => handleText(val, index)}
+                    />
+
+                    {/*<MarkdownEditor value={item.content} onChange={(val)=>handleText(val,index)} />*/}
+                  </ItemBox>
+                ))}
+
               <ComponnentBox>
-                <span>{t('Proposal.proposalComponents')}</span>
+                <span>{componentName || t('Proposal.proposalComponents')}</span>
               </ComponnentBox>
             </>
           }
           AfterComponent={
             <div>
-              {contentBlocks?.map((item, index: number) => (
-                <ItemBox key={`block_${index}`}>
-                  <TitleBox>{item.title}</TitleBox>
+              {!!contentBlocks?.length &&
+                contentBlocks?.map((item, index: number) => (
+                  <ItemBox key={`block_${index}`}>
+                    <TitleBox>{item.title}</TitleBox>
 
-                  <MdEditor
-                    toolbarsExclude={['github', 'save']}
-                    theme={theme ? 'dark' : 'light'}
-                    modelValue={item.content}
-                    editorId={`block_${index}`}
-                    onChange={(val) => handleText(val, index)}
-                  />
+                    <MdEditor
+                      toolbarsExclude={['github', 'save']}
+                      theme={theme ? 'dark' : 'light'}
+                      modelValue={item.content}
+                      editorId={`block_${index}`}
+                      onChange={(val) => handleText(val, index)}
+                    />
 
-                  {/*<MarkdownEditor value={item.content} onChange={(val)=>handleText(val,index)} />*/}
-                </ItemBox>
-              ))}
+                    {/*<MarkdownEditor value={item.content} onChange={(val)=>handleText(val,index)} />*/}
+                  </ItemBox>
+                ))}
 
               {/*<ItemBox>*/}
               {/*  <TitleBox>投票选项</TitleBox>*/}
