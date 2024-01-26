@@ -28,7 +28,7 @@ instance.interceptors.request.use(
     ) {
       return config;
     }
-    if (['/user/login', '/user/refresh_nonce'].includes(config.url)) {
+    if (['/user/login', '/user/refresh_nonce', '/seeauth/login'].includes(config.url)) {
       return config;
     }
 
