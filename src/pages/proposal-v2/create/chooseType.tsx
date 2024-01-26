@@ -11,6 +11,8 @@ import BasicModal from 'components/modals/basicModal';
 import SeeSelect from 'components/common/select';
 import { PlainButton } from 'components/common/button';
 import { Button } from 'react-bootstrap';
+import usePermission from 'hooks/usePermission';
+import { PermissionAction, PermissionObject } from 'utils/constant';
 
 export default function ChooseTypeStep() {
   const {
@@ -24,11 +26,17 @@ export default function ChooseTypeStep() {
   // TODO
   const [proposalList, setProposalList] = useState<any[]>([]);
 
+  const canUseCityhall = usePermission(PermissionAction.AuditApplication, PermissionObject.ProjectAndGuild);
+
   const {
     state: { theme },
   } = useAuthContext();
 
   const onChooseTemplate = (tp: ICategory, template: ITemplate) => {
+    if (template.id === 0) {
+      chooseTemplate(tp, template);
+      return;
+    }
     if (template.id === 11111) {
       setSelected({ tp, template });
       setCloseoutVisible(true);
@@ -55,28 +63,33 @@ export default function ChooseTypeStep() {
               <span>{tp.category_name}</span>
               <img src={theme ? ArrowRhtBlack : ArrowRht} alt="" />
               <TemplateBox>
-                <li onClick={() => onChooseTemplate(tp, { id: 0, has_perm_to_use: true })}>
-                  <span>{t('Proposal.CreateBlank')}</span>
-                  <img src={theme ? ArrowRhtBlack : ArrowRht} alt="" />
-                </li>
-                <li onClick={() => onChooseTemplate(tp, { id: 0, vote_type: 1, has_perm_to_use: true })}>
-                  <span>{t('Proposal.CreateBlank_Multi')}</span>
-                  <img src={theme ? ArrowRhtBlack : ArrowRht} alt="" />
-                </li>
+                {canUseCityhall && (
+                  <>
+                    <li onClick={() => onChooseTemplate(tp, { id: 0, has_perm_to_use: canUseCityhall })}>
+                      <span>{t('Proposal.CreateBlank')}</span>
+                      <img src={theme ? ArrowRhtBlack : ArrowRht} alt="" />
+                    </li>
+                    <li onClick={() => onChooseTemplate(tp, { id: 0, vote_type: 1, has_perm_to_use: canUseCityhall })}>
+                      <span>{t('Proposal.CreateBlank_Multi')}</span>
+                      <img src={theme ? ArrowRhtBlack : ArrowRht} alt="" />
+                    </li>
+                  </>
+                )}
+
                 {tp.templates.map((template) => (
                   <li onClick={() => onChooseTemplate(tp, template)} key={template.id}>
                     <span>{template.name}</span>
                     <img src={theme ? ArrowRhtBlack : ArrowRht} alt="" />
                   </li>
                 ))}
-                <li onClick={() => onChooseTemplate(tp, { id: 11111, has_perm_to_use: true })}>
+                {/* <li onClick={() => onChooseTemplate(tp, { id: 11111, has_perm_to_use: true })}>
                   <span>提案结项</span>
                   <img src={theme ? ArrowRhtBlack : ArrowRht} alt="" />
                 </li>
                 <li className="noAuth" onClick={() => onChooseTemplate(tp, { id: 12, has_perm_to_use: false })}>
                   <span>新建提案（常规）</span>
                   <img src={theme ? ArrowRhtBlack : ArrowRht} alt="" />
-                </li>
+                </li> */}
               </TemplateBox>
             </TypeLi>
           ))}
@@ -184,7 +197,9 @@ const TemplateBox = styled.ul`
   }
 `;
 
-const TemplateRulesModal = styled(BasicModal)``;
+const TemplateRulesModal = styled(BasicModal)`
+  width: 500px;
+`;
 
 const CloseoutModal = styled(BasicModal)`
   width: 500px;
