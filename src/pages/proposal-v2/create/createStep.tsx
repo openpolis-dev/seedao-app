@@ -199,6 +199,7 @@ export default function CreateStep({ onClick }: any) {
   } = useAuthContext();
 
   const { checkMetaforoLogin } = useCheckMetaforoLogin();
+  const [isInstantVoteAlertVisible, setIsInstantVoteAlertVisible] = useState(false);
 
   useEffect(() => {
     if (!template || !tokenData) return;
@@ -331,10 +332,23 @@ export default function CreateStep({ onClick }: any) {
     setSubmitType('save');
     setTimeout(saveAllDraft, 0);
   };
-  const handleSubmit = () => {
-    // TODO: check content
+
+  const handleConfirmSubmit = () => {
     setSubmitType('submit');
     setTimeout(allSubmit, 0);
+  };
+
+  const handleSubmit = () => {
+    if (template?.is_instant_vote) {
+      setIsInstantVoteAlertVisible(true);
+    } else {
+      handleConfirmSubmit();
+    }
+  };
+
+  const closeIsInstantVoteAlert = () => {
+    setIsInstantVoteAlertVisible(false);
+    setSubmitType(undefined);
   };
 
   const handleBack = () => {
@@ -469,6 +483,14 @@ export default function CreateStep({ onClick }: any) {
           msg={t('Proposal.ConfirmBackCreate')}
           onConfirm={handleBack}
           onClose={() => setShowLeaveConfirm(false)}
+        />
+      )}
+      {isInstantVoteAlertVisible && (
+        <ConfirmModal
+          title=""
+          msg={t('Proposal.SubmitConfirmTip')}
+          onConfirm={handleConfirmSubmit}
+          onClose={closeIsInstantVoteAlert}
         />
       )}
     </Box>

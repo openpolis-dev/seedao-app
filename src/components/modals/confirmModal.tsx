@@ -13,7 +13,7 @@ interface IProps {
 export default function ConfirmModal({ title, msg, onConfirm, onClose }: IProps) {
   const { t } = useTranslation();
   return (
-    <BasicModal title={title} handleClose={onClose}>
+    <BasicModal title={title} handleClose={onClose} style={{ width: '400px' }}>
       <CardText>
         <div className="danger">⚠️</div>
         <div>{msg}</div>
