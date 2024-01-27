@@ -150,6 +150,8 @@ const ComponnentBox = styled(TitleBox)`
   }
 `;
 
+const AfterBox = styled.div``;
+
 export default function CreateStep({ onClick }: any) {
   const BASE_URL = getConfig().REACT_APP_BASE_ENDPOINT;
   const API_VERSION = process.env.REACT_APP_API_VERSION;
@@ -509,7 +511,7 @@ export default function CreateStep({ onClick }: any) {
 
               {!!preview.length && (
                 <>
-                  <ItemBox>
+                  <ItemBox className="preview">
                     <TitleBox>{previewTitle}</TitleBox>
                   </ItemBox>
                   <Preview DataSource={preview} language={i18n.language} initialItems={initList} theme={theme} />
@@ -541,7 +543,7 @@ export default function CreateStep({ onClick }: any) {
             </>
           }
           AfterComponent={
-            <div>
+            <AfterBox>
               {!!list?.length &&
                 list.map((item, index: number) => (
                   <ItemBox key={`block_${index}`}>
@@ -580,7 +582,7 @@ export default function CreateStep({ onClick }: any) {
               {/*    ))}*/}
               {/*  </VoteBox>*/}
               {/*</ItemBox>*/}
-            </div>
+            </AfterBox>
           }
           ref={childRef}
           onSubmitData={handleFormSubmit}
