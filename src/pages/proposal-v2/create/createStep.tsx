@@ -162,7 +162,7 @@ export default function CreateStep({ onClick }: any) {
   const [list, setList] = useState<any[]>([]);
   const [beforeList, setBeforeList] = useState<any[]>([]);
   const [submitType, setSubmitType] = useState<'save' | 'submit'>();
-  const [voteType, setVoteType] = useState<number | undefined>(0);
+  const [voteType, setVoteType] = useState<number>(0);
 
   const { template } = useCreateProposalContext();
   const [components, setComponents] = useState<any[]>([]);
@@ -197,19 +197,21 @@ export default function CreateStep({ onClick }: any) {
 
     setToken(tokenData.token);
 
-    console.log(template);
+    let { vote_type } = template;
+    setVoteType(vote_type || 0);
 
     if (template.id) {
       setShowType('template');
       setShowRht(false);
       const { schema, components } = template;
       const arr = JSON.parse(schema!);
-      console.error(arr);
 
       const previewArr = arr.filter((i: any) => i.type === 'preview');
       if (previewArr?.length) {
         setPreviewTitle(previewArr[0]?.title);
         getPreview();
+
+        console.log();
         getComponentsList();
       }
 
@@ -240,8 +242,7 @@ export default function CreateStep({ onClick }: any) {
       setComponents(components ? components : []);
     } else {
       setShowType('new');
-      let { vote_type } = template;
-      setVoteType(vote_type);
+
       console.error(template);
 
       setList([
@@ -476,6 +477,7 @@ export default function CreateStep({ onClick }: any) {
             <Button onClick={handleSubmit} disabled={submitDisabled}>
               {t('Proposal.SubmitProposal')}
             </Button>
+            {voteType}
           </BtnGroup>
         </FlexInner>
       </FixedBox>
@@ -552,7 +554,7 @@ export default function CreateStep({ onClick }: any) {
                     {/*<MarkdownEditor value={item.content} onChange={(val)=>handleText(val,index)} />*/}
                   </ItemBox>
                 ))}
-              {!!voteType && (
+              {voteType > 2 && (
                 <ItemBox>
                   <TitleBox>投票选项</TitleBox>
                   <VoteBox>

@@ -73,6 +73,16 @@ export const getProposalDetail = (id: number, startPostId?: number): Promise<Res
   );
 };
 
+export const getCloseProposal = (id: number) => {
+  return request.get(
+    `${PATH_PREFIX}creating_project_proposals`,
+    {
+      category_id: id,
+    },
+    {},
+  );
+};
+
 type CreateProposalParamsType = {
   title: string;
   proposal_category_id: number | undefined;

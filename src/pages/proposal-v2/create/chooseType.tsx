@@ -13,6 +13,8 @@ import { PlainButton } from 'components/common/button';
 import { Button } from 'react-bootstrap';
 import usePermission from 'hooks/usePermission';
 import { PermissionAction, PermissionObject } from 'utils/constant';
+import requests from '../../../requests';
+import { getCloseProposal } from '../../../requests/proposalV2';
 
 type ExtraType = { id: number; name: string };
 
@@ -27,8 +29,16 @@ const CloseOutSelectModal = ({ id, handleConfirm, ...props }: ICloseOutSelectMod
   const [selectExtra, setSelectExtra] = useState<ExtraType>();
 
   useEffect(() => {
+    if (!id) return;
+    console.error(id);
+    getSelectDetail(id);
     // TODO: get proposal list
   }, [id]);
+
+  const getSelectDetail = async (id: any) => {
+    const res = await requests.proposalV2.getCloseProposal(Number(id));
+    console.error(res);
+  };
 
   const onConfirm = () => {
     if (selectExtra) {
@@ -77,9 +87,12 @@ export default function ChooseTypeStep() {
       chooseTemplate(tp, template);
       return;
     }
+
     if (template.is_closing_project) {
       setSelected({ tp, template });
-      setCloseoutVisibleId(undefined);
+      // setCloseoutVisibleId(undefined);
+      setCloseoutVisibleId(tp.category_id);
+
       return;
     }
     setTemplateRulesVisible(true);

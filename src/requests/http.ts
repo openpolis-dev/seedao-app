@@ -24,7 +24,8 @@ instance.interceptors.request.use(
       !config.url.includes('user') &&
       !config.url.includes('push') &&
       !config.url.includes('app_bundles') &&
-      !config.url.includes('list_with_perm')
+      !config.url.includes('list_with_perm') &&
+      !config.url.includes('creating_project_proposals')
     ) {
       return config;
     }
