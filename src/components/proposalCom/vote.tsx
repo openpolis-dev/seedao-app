@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import { Poll, VoteType, VoteOption, VoteGateType } from 'type/proposalV2.type';
+import { Poll, VoteType, VoteOption, VoteGateType, ProposalState } from 'type/proposalV2.type';
 import { castVote, checkCanVote } from 'requests/proposalV2';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import useToast, { ToastType } from 'hooks/useToast';
@@ -13,6 +13,7 @@ import { formatDeltaDate } from 'utils/time';
 const { Check } = Form;
 
 interface IProps {
+  proposalState: ProposalState;
   id: number;
   poll: Poll;
   voteGate?: VoteGateType;
@@ -36,7 +37,7 @@ const getPollStatus = (start_t: string, close_t: string) => {
   return VoteType.Open;
 };
 
-export default function ProposalVote({ id, poll, voteGate, updateStatus }: IProps) {
+export default function ProposalVote({ proposalState, id, poll, voteGate, updateStatus }: IProps) {
   const { t } = useTranslation();
   const [selectOption, setSelectOption] = useState<VoteOption>();
   const [openVoteItem, setOpenVoteItem] = useState<VoteOptionItem>();
@@ -51,7 +52,15 @@ export default function ProposalVote({ id, poll, voteGate, updateStatus }: IProp
   const pollStatus = getPollStatus(poll.poll_start_at, poll.close_at);
 
   const voteStatusTag = useMemo(() => {
-    if (pollStatus === VoteType.Closed) {
+    if (proposalState === ProposalState.Executed) {
+      return <CloseTag>{t('Proposal.VoteClose')}</CloseTag>;
+    } else if (proposalState === ProposalState.PendingExecution) {
+      return (
+        <OpenTag>
+          {t('Proposal.AutoExecuteLeftTime', { ...formatDeltaDate(new Date(poll.close_at).getTime() + 86400000) })}
+        </OpenTag>
+      );
+    } else if (pollStatus === VoteType.Closed) {
       return <CloseTag>{t('Proposal.VoteClose')}</CloseTag>;
     } else if (pollStatus === VoteType.Open) {
       return (

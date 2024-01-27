@@ -7,6 +7,10 @@ export enum ProposalState {
   Voting = 'voting',
   VotingPassed = 'vote_passed',
   VotingFailed = 'vote_failed',
+  PendingExecution = 'pending_execution',
+  Executed = 'executed',
+  ExecutionFailed = 'execution_failed',
+  Vetoed = 'vetoed',
 }
 
 export interface IBaseCategory {

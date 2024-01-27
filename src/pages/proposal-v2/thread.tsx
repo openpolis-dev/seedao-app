@@ -535,6 +535,7 @@ export default function ThreadPage() {
           <CardStyle>
             {showVote() && (
               <ProposalVote
+                proposalState={data!.state}
                 voteGate={data?.vote_gate}
                 poll={data!.votes[0]}
                 id={Number(id)}
