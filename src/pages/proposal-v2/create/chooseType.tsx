@@ -109,10 +109,14 @@ export default function ChooseTypeStep() {
                       <span>{t('Proposal.CreateBlank')}</span>
                       <img src={theme ? ArrowRhtBlack : ArrowRht} alt="" />
                     </li>
-                    <li onClick={() => onChooseTemplate(tp, { id: 0, vote_type: 1, has_perm_to_use: canUseCityhall })}>
-                      <span>{t('Proposal.CreateBlank_Multi')}</span>
-                      <img src={theme ? ArrowRhtBlack : ArrowRht} alt="" />
-                    </li>
+                    {tp.category_id !== 50 && (
+                      <li
+                        onClick={() => onChooseTemplate(tp, { id: 0, vote_type: 1, has_perm_to_use: canUseCityhall })}
+                      >
+                        <span>{t('Proposal.CreateBlank_Multi')}</span>
+                        <img src={theme ? ArrowRhtBlack : ArrowRht} alt="" />
+                      </li>
+                    )}
                   </>
                 )}
 
@@ -152,9 +156,7 @@ export default function ChooseTypeStep() {
           id={closeoutVisibleId}
           handleClose={() => setCloseoutVisibleId(undefined)}
           title={t('Proposal.ChooseCloseoutProposal')}
-          handleConfirm={(extra: ExtraType) =>
-            selected && chooseTemplate(selected?.tp, selected?.template, extra)
-          }
+          handleConfirm={(extra: ExtraType) => selected && chooseTemplate(selected?.tp, selected?.template, extra)}
         />
       )}
     </Container>
