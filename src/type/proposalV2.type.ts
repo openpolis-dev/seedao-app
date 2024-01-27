@@ -145,7 +145,7 @@ export interface IActivity {
 
 export interface ITemplate {
   id: number;
-  vote_type?: 1;
+  vote_type?: number;
   name?: string;
   schema?: string;
   rule_desc?: string;

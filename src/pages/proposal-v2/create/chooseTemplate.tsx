@@ -51,7 +51,7 @@ export default function ChooseTemplateStep() {
               <TitleBox>{t('Proposal.CreateBlank')}</TitleBox>
             </InnerBox>
           </CreateBlankOne>
-          <CreateBlankOne onClick={() => chooseTemplate(undefined, { id: 0, vote_type: 1 })}>
+          <CreateBlankOne onClick={() => chooseTemplate(undefined, { id: 0, vote_type: 99 })}>
             <InnerBox>
               <ImgBox>
                 <img src={AddImg} alt="" />

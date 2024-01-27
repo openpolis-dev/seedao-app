@@ -179,24 +179,7 @@ export default function CreateStep({ onClick }: any) {
   const [previewTitle, setPreviewTitle] = useState('');
   const [initList, setInitList] = useState<any[]>([]);
 
-  const [voteList, setVoteList] = useState([
-    {
-      id: 1,
-      value: 'test001',
-    },
-    {
-      id: 2,
-      value: 'test002',
-    },
-    {
-      id: 3,
-      value: 'test003',
-    },
-    {
-      id: 4,
-      value: 'test004',
-    },
-  ]);
+  const [voteList, setVoteList] = useState(['']);
 
   const { changeStep, proposalType } = useCreateProposalContext();
   const { showToast } = useToast();
@@ -213,6 +196,9 @@ export default function CreateStep({ onClick }: any) {
     if (!template || !tokenData) return;
 
     setToken(tokenData.token);
+
+    console.log(template);
+
     if (template.id) {
       setShowType('template');
       setShowRht(false);
@@ -260,11 +246,15 @@ export default function CreateStep({ onClick }: any) {
 
       setList([
         {
-          title: '提案背景',
+          title: '背景',
           content: '',
         },
         {
-          title: '提案内容',
+          title: '内容',
+          content: '',
+        },
+        {
+          title: '备注',
           content: '',
         },
       ]);
@@ -362,6 +352,7 @@ export default function CreateStep({ onClick }: any) {
         title,
         proposal_category_id: proposalType?.category_id,
         vote_type: voteType,
+        vote_options: voteType === 99 ? voteList : null,
         content_blocks: arr,
         components: dataFormat,
         template_id: template?.id,
@@ -447,20 +438,20 @@ export default function CreateStep({ onClick }: any) {
 
   const handleAdd = () => {
     const arr = [...voteList];
-    arr.push({
-      id: 10,
-      value: '',
-    });
+    arr.push('');
     setVoteList(arr);
   };
 
   const handleVoteInput = (e: ChangeEvent, index: number) => {
     const arr = [...voteList];
-    arr[index].value = (e.target as HTMLInputElement).value;
+    arr[index] = (e.target as HTMLInputElement).value;
     setVoteList(arr);
   };
 
-  const submitDisabled = !title || !title.trim() || list.some((item) => !item.content);
+  const EmptyArray = voteList.filter((item) => item === '');
+
+  const submitDisabled =
+    !title || !title.trim() || list.some((item) => !item.content || (voteType && EmptyArray?.length));
 
   return (
     <Box>
@@ -561,27 +552,29 @@ export default function CreateStep({ onClick }: any) {
                     {/*<MarkdownEditor value={item.content} onChange={(val)=>handleText(val,index)} />*/}
                   </ItemBox>
                 ))}
-              {/*<ItemBox>*/}
-              {/*  <TitleBox>投票选项</TitleBox>*/}
-              {/*  <VoteBox>*/}
-              {/*    {voteList.map((item, index) => (*/}
-              {/*      <li>*/}
-              {/*        <input type="text" value={item.value} onChange={(e) => handleVoteInput(e, index)} />*/}
-              {/*        {voteList.length - 1 === index && (*/}
-              {/*          <span onClick={() => handleAdd()}>*/}
-              {/*            <img src={PlusImg} alt="" />*/}
-              {/*          </span>*/}
-              {/*        )}*/}
+              {!!voteType && (
+                <ItemBox>
+                  <TitleBox>投票选项</TitleBox>
+                  <VoteBox>
+                    {voteList.map((item, index) => (
+                      <li key={`vote_${index}`}>
+                        <input type="text" value={item} onChange={(e) => handleVoteInput(e, index)} />
+                        {voteList.length - 1 === index && (
+                          <span onClick={() => handleAdd()}>
+                            <img src={PlusImg} alt="" />
+                          </span>
+                        )}
 
-              {/*        {!!(voteList.length - 1) && (*/}
-              {/*          <span onClick={() => removeVote(index)}>*/}
-              {/*            <img src={MinusImg} alt="" />*/}
-              {/*          </span>*/}
-              {/*        )}*/}
-              {/*      </li>*/}
-              {/*    ))}*/}
-              {/*  </VoteBox>*/}
-              {/*</ItemBox>*/}
+                        {!!(voteList.length - 1) && (
+                          <span onClick={() => removeVote(index)}>
+                            <img src={MinusImg} alt="" />
+                          </span>
+                        )}
+                      </li>
+                    ))}
+                  </VoteBox>
+                </ItemBox>
+              )}
             </AfterBox>
           }
           ref={childRef}

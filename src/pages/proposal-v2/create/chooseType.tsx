@@ -14,11 +14,11 @@ import { Button } from 'react-bootstrap';
 import usePermission from 'hooks/usePermission';
 import { PermissionAction, PermissionObject } from 'utils/constant';
 
-type ExtraType =  { id: number; name: string }
+type ExtraType = { id: number; name: string };
 
 interface ICloseOutSelectModalProps extends IBasicModalProps {
   id: number;
-  handleConfirm: (extra:ExtraType) => void;
+  handleConfirm: (extra: ExtraType) => void;
 }
 
 const CloseOutSelectModal = ({ id, handleConfirm, ...props }: ICloseOutSelectModalProps) => {
@@ -32,9 +32,9 @@ const CloseOutSelectModal = ({ id, handleConfirm, ...props }: ICloseOutSelectMod
 
   const onConfirm = () => {
     if (selectExtra) {
-      handleConfirm(selectExtra)
+      handleConfirm(selectExtra);
     }
-  }
+  };
 
   return (
     <CloseoutModal {...props}>
@@ -111,7 +111,7 @@ export default function ChooseTypeStep() {
                     </li>
                     {tp.category_id !== 50 && (
                       <li
-                        onClick={() => onChooseTemplate(tp, { id: 0, vote_type: 1, has_perm_to_use: canUseCityhall })}
+                        onClick={() => onChooseTemplate(tp, { id: 0, vote_type: 99, has_perm_to_use: canUseCityhall })}
                       >
                         <span>{t('Proposal.CreateBlank_Multi')}</span>
                         <img src={theme ? ArrowRhtBlack : ArrowRht} alt="" />
@@ -216,7 +216,7 @@ const TemplateBox = styled.ul`
   display: none;
   position: absolute;
   left: 100%;
-  min-width: 200px;
+  min-width: 240px;
   top: 0;
   border-radius: 8px;
   padding-block: 4px;
@@ -228,6 +228,7 @@ const TemplateBox = styled.ul`
     display: flex;
     justify-content: space-between;
     padding: 5px 16px;
+    white-space: nowrap;
   }
 `;
 

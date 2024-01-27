@@ -76,8 +76,9 @@ export const getProposalDetail = (id: number, startPostId?: number): Promise<Res
 type CreateProposalParamsType = {
   title: string;
   proposal_category_id: number | undefined;
-  vote_type: number | undefined;
+  vote_type?: number | undefined;
   template_id?: number | string;
+  vote_options?: string[] | null;
   content_blocks: IContentBlock[];
   submit_to_metaforo: boolean;
   components: any;
@@ -194,8 +195,6 @@ export const getTemplate = () => {
 export const getComponents = () => {
   return request.get('/proposal_components/');
 };
-
-
 
 interface ICatetoryTemplate {
   category_id: number;
