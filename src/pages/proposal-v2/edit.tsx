@@ -6,7 +6,7 @@ import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import React, { useEffect, useState, useRef, ChangeEvent } from 'react';
 import { IContentBlock, IProposal, ProposalState } from 'type/proposalV2.type';
 import { useAuthContext, AppActionType } from 'providers/authProvider';
-import { Template } from '@taoist-labs/components';
+import { Preview, Template } from '@taoist-labs/components';
 import { MdEditor, MdPreview } from 'md-editor-rt';
 import useCheckMetaforoLogin from 'hooks/useMetaforoLogin';
 import { updateProposal, getProposalDetail } from 'requests/proposalV2';
@@ -48,6 +48,9 @@ export default function EditProposal() {
 
   const [dataSource, setDataSource] = useState();
   const childRef = useRef(null);
+  const [preview, setPreview] = useState<any[]>([]);
+  const [previewTitle, setPreviewTitle] = useState('');
+  const [previewOrg, setPreviewOrg] = useState<any[]>([]);
 
   const { showToast } = useToast();
 
@@ -103,12 +106,21 @@ export default function EditProposal() {
       const componentsIndex = arr.findIndex((i: any) => i.type === 'components');
 
       const beforeComponents = arr.filter(
-        (item: any) => item.type !== 'components' && arr.indexOf(item) < componentsIndex,
+        (item: any) => item.type !== 'components' && item.type !== 'preview' && arr.indexOf(item) < componentsIndex,
       );
       let componentsList = arr.filter((item: any) => item.type === 'components') || [];
       const afterComponents = arr.filter(
         (item: any) => item.type !== 'components' && arr.indexOf(item) > componentsIndex,
       );
+
+      const preview = arr.filter((i: any) => i.type === 'preview');
+      setPreviewOrg(preview);
+      const preArr = JSON.parse(preview[0].content);
+
+      console.error('=============preview==', preArr);
+      setPreview(preArr);
+      setPreviewTitle(preview[0].title);
+
       setComponentName(componentsList[0]?.title);
       setBeforeList(beforeComponents ?? []);
       setHolder(componentsList);
@@ -186,7 +198,7 @@ export default function EditProposal() {
     let holderNew = [...holder];
     holderNew[0].name = JSON.stringify(holder[0]?.name);
 
-    let arr = [...beforeList, ...holderNew, ...contentBlocks];
+    let arr = [...previewOrg, ...beforeList, ...holderNew, ...contentBlocks];
 
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     updateProposal(Number(data.id), {
@@ -306,6 +318,17 @@ export default function EditProposal() {
                   <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} />
                 </InputBox>
               </ItemBox>
+
+              {!!preview?.length && (
+                <>
+                  <ItemBox>
+                    <TitleBox>{previewTitle}</TitleBox>
+                    <div>
+                      <Preview DataSource={preview} language={i18n.language} initialItems={components} theme={theme} />
+                    </div>
+                  </ItemBox>
+                </>
+              )}
 
               {!!beforeList?.length &&
                 beforeList?.map((item, index: number) => (

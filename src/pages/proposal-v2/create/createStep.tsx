@@ -273,8 +273,6 @@ export default function CreateStep({ onClick }: any) {
         relate: extraData?.name,
       },
     };
-
-    console.log(res.data.components, extraData);
     const comStr = res.data.components || [];
     comStr.map((item: any) => {
       if (typeof item.data === 'string') {

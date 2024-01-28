@@ -129,7 +129,6 @@ export default function ThreadPage() {
         );
       }
       setData(res.data);
-
       const arr = res.data.content_blocks;
       const componentsIndex = arr.findIndex((i: any) => i.type === 'components');
 
@@ -143,10 +142,11 @@ export default function ThreadPage() {
 
       const preview = arr.filter((i: any) => i.type === 'preview');
 
-      const preArr = JSON.parse(preview[0].content);
-
-      setPreview(preArr);
-      setPreviewTitle(preview[0].title);
+      if (preview.length) {
+        const preArr = JSON.parse(preview[0].content);
+        setPreview(preArr);
+        setPreviewTitle(preview[0].title);
+      }
 
       setComponentName(componentsList[0]?.title);
       setBeforeList(beforeComponents ?? []);
@@ -160,6 +160,7 @@ export default function ThreadPage() {
         }
         return item;
       });
+
       setDatasource(comStr ?? []);
       // comment
 
@@ -474,12 +475,14 @@ export default function ThreadPage() {
           <div className="desc">{data.reject_reason}</div>
         </RejectBlock>
       )}
+
       <ContentOuter>
         <Preview
-          DataSource={dataSource}
+          DataSource={JSON.parse(JSON.stringify(dataSource || []))}
           language={i18n.language}
           initialItems={components}
           theme={theme}
+          key="preview_main"
           BeforeComponent={
             <>
               {!!preview?.length && (
@@ -487,35 +490,28 @@ export default function ThreadPage() {
                   <ProposalContentBlock>
                     <div className="title">{previewTitle}</div>
                     <div className="constentPreview">
-                      <Preview DataSource={preview} language={i18n.language} initialItems={components} theme={theme} />
+                      <Preview
+                        DataSource={JSON.parse(JSON.stringify(preview || []))}
+                        key="preview_inner"
+                        language={i18n.language}
+                        initialItems={components}
+                        theme={theme}
+                      />
                     </div>
                   </ProposalContentBlock>
                 </>
               )}
               {!!beforeList?.length &&
                 beforeList.map((block, i) => (
-                  <>
-                    <ProposalContentBlock
-                      key={block.title}
-                      $radius={i === 0 && !dataSource?.length ? '4px 4px 0 0' : '0'}
-                    >
-                      <div className="title">{block.title}</div>
-                      <div className="content">
-                        <MdPreview theme={theme ? 'dark' : 'light'} modelValue={block.content || ''} />
-                      </div>
-                    </ProposalContentBlock>
-                    {/*<ItemBox>*/}
-                    {/*  <TitleBox>投票选项</TitleBox>*/}
-                    {/*  <VoteBox>*/}
-                    {/*    {voteList.map((item, index) => (*/}
-                    {/*      <li>*/}
-                    {/*        <input type="checkbox" id={`vote_${index}`} />*/}
-                    {/*        <label htmlFor={`vote_${index}`}>{item.value}</label>*/}
-                    {/*      </li>*/}
-                    {/*    ))}*/}
-                    {/*  </VoteBox>*/}
-                    {/*</ItemBox>*/}
-                  </>
+                  <ProposalContentBlock
+                    key={block.title}
+                    $radius={i === 0 && !dataSource?.length ? '4px 4px 0 0' : '0'}
+                  >
+                    <div className="title">{block.title}</div>
+                    <div className="content">
+                      <MdPreview theme={theme ? 'dark' : 'light'} modelValue={block.content || ''} />
+                    </div>
+                  </ProposalContentBlock>
                 ))}
               {!!dataSource?.length && (
                 <ComponnentBox>
@@ -525,28 +521,31 @@ export default function ThreadPage() {
             </>
           }
           AfterComponent={
-            !!contentBlocks?.length &&
-            contentBlocks?.map((block, i) => (
-              <>
-                <ProposalContentBlock key={block.title} $radius={i === 0 && !dataSource?.length ? '4px 4px 0 0' : '0'}>
-                  <div className="title">{block.title}</div>
-                  <div className="content">
-                    <MdPreview theme={theme ? 'dark' : 'light'} modelValue={block.content || ''} />
-                  </div>
-                </ProposalContentBlock>
-                {/*<ItemBox>*/}
-                {/*  <TitleBox>投票选项</TitleBox>*/}
-                {/*  <VoteBox>*/}
-                {/*    {voteList.map((item, index) => (*/}
-                {/*      <li>*/}
-                {/*        <input type="checkbox" id={`vote_${index}`} />*/}
-                {/*        <label htmlFor={`vote_${index}`}>{item.value}</label>*/}
-                {/*      </li>*/}
-                {/*    ))}*/}
-                {/*  </VoteBox>*/}
-                {/*</ItemBox>*/}
-              </>
-            ))
+            <>
+              {!!contentBlocks?.length &&
+                contentBlocks?.map((block, i) => (
+                  <ProposalContentBlock
+                    key={`ProposalContentBlock_${block.title}_${i}`}
+                    $radius={i === 0 && !dataSource?.length ? '4px 4px 0 0' : '0'}
+                  >
+                    <div className="title">{block.title}</div>
+                    <div className="content">
+                      <MdPreview theme={theme ? 'dark' : 'light'} modelValue={block.content || ''} />
+                    </div>
+                  </ProposalContentBlock>
+                ))}
+              {/*<ItemBox>*/}
+              {/*  <TitleBox>投票选项</TitleBox>*/}
+              {/*  <VoteBox>*/}
+              {/*    {voteList.map((item, index) => (*/}
+              {/*      <li>*/}
+              {/*        <input type="checkbox" id={`vote_${index}`} />*/}
+              {/*        <label htmlFor={`vote_${index}`}>{item.value}</label>*/}
+              {/*      </li>*/}
+              {/*    ))}*/}
+              {/*  </VoteBox>*/}
+              {/*</ItemBox>*/}
+            </>
           }
         />
       </ContentOuter>
