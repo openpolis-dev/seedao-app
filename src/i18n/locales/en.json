@@ -138,7 +138,8 @@
     "SubmitConfirmTip": "Once a proposal is submitted, it goes to a vote and cannot be withdrawn for modification, is the submission confirmed?",
     "AutoExecuteLeftTime": "Auto-execute wait time left {{h}} hour(s) {{m}} minute(s)",
     "CloseVote": "Early closure of polls",
-    "ConfirmToCloseVote": "Confirmation of the early closing of the polls?"
+    "ConfirmToCloseVote": "Confirmation of the early closing of the polls?",
+    "ExecutionTip": "The current ballot has closed and there is a 24-hour waiting period during which the City Council may veto the results of the proposal, or if the City Council does not veto the proposal, the proposal closes in accordance with the results of the ballot."
   },
   "Project": {
     "ProjectOrGuildItem": "Nothing left here.",

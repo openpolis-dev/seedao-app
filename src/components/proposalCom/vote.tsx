@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Button, Form } from 'react-bootstrap';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Tooltip from 'react-bootstrap/Tooltip';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { Poll, VoteType, VoteOption, VoteGateType, ProposalState } from 'type/proposalV2.type';
@@ -12,6 +14,7 @@ import ConfirmModal from 'components/modals/confirmModal';
 import { formatDeltaDate } from 'utils/time';
 import usePermission from 'hooks/usePermission';
 import { PermissionAction, PermissionObject } from 'utils/constant';
+
 const { Check } = Form;
 
 interface IProps {
@@ -55,15 +58,43 @@ export default function ProposalVote({ proposalState, id, poll, voteGate, isOver
   const canUseCityhall = usePermission(PermissionAction.AuditApplication, PermissionObject.ProjectAndGuild);
 
   const pollStatus = getPollStatus(poll.poll_start_at, poll.close_at);
+  const renderExecutionTip = (props: any) => (
+    <Tooltip {...props}>
+      <Tip>{t('Proposal.ExecutionTip')}</Tip>
+    </Tooltip>
+  );
 
   const voteStatusTag = useMemo(() => {
     if (proposalState === ProposalState.Executed || pollStatus === VoteType.Closed) {
       return <CloseTag>{t('Proposal.VoteClose')}</CloseTag>;
     } else if (proposalState === ProposalState.PendingExecution) {
       return (
-        <OpenTag>
-          {t('Proposal.AutoExecuteLeftTime', { ...formatDeltaDate(new Date(poll.close_at).getTime() + 86400000) })}
-        </OpenTag>
+        <>
+          <OpenTag>
+            {t('Proposal.AutoExecuteLeftTime', {
+              ...formatDeltaDate(new Date(poll.close_at).getTime() + 86400000),
+            })}
+          </OpenTag>
+          <OverlayTrigger overlay={renderExecutionTip} placement="right">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width={18}
+              height={18}
+              fill="none"
+              viewBox="0 0 24 24"
+              style={{ marginLeft: '4px' }}
+            >
+              <path
+                stroke="var(--bs-border-color)"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M9 10a3 3 0 1 1 3 3v1m9-2a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"
+              />
+              <circle cx={12} cy={17} r={1} fill="var(--bs-border-color)" />
+            </svg>
+          </OverlayTrigger>
+        </>
       );
     } else if (pollStatus === VoteType.Open) {
       return (
@@ -361,4 +392,15 @@ const HasVote = styled.span`
 const CloseButton = styled(Button)`
   height: 32px;
   margin-left: 10px;
+`;
+
+const Tip = styled.div`
+  width: 300px;
+  font-size: 14px;
+  background-color: var(--bs-box--background);
+  border-radius: 8px;
+  box-shadow: var(--box-shadow);
+  color: var(--bs-body-color_active);
+  padding: 8px;
+  border: 1px solid var(--bs-border-color);
 `;
