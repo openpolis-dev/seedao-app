@@ -53,25 +53,7 @@ export default function EditProposal() {
   const [previewOrg, setPreviewOrg] = useState<any[]>([]);
 
   const { showToast } = useToast();
-
-  const [voteList, setVoteList] = useState([
-    {
-      id: 1,
-      value: 'test001',
-    },
-    {
-      id: 2,
-      value: 'test002',
-    },
-    {
-      id: 3,
-      value: 'test003',
-    },
-    {
-      id: 4,
-      value: 'test004',
-    },
-  ]);
+  const [voteList, setVoteList] = useState(['']);
 
   useEffect(() => {
     if (state) {
@@ -110,14 +92,13 @@ export default function EditProposal() {
       );
       let componentsList = arr.filter((item: any) => item.type === 'components') || [];
       const afterComponents = arr.filter(
-        (item: any) => item.type !== 'components' && arr.indexOf(item) > componentsIndex,
+        (item: any) => item.type !== 'components' && item.type !== 'preview' && arr.indexOf(item) > componentsIndex,
       );
 
       const preview = arr.filter((i: any) => i.type === 'preview');
       setPreviewOrg(preview);
       const preArr = JSON.parse(preview[0].content);
 
-      console.error('=============preview==', preArr);
       setPreview(preArr);
       setPreviewTitle(preview[0].title);
 
@@ -252,16 +233,13 @@ export default function EditProposal() {
 
   const handleAdd = () => {
     const arr = [...voteList];
-    arr.push({
-      id: 10,
-      value: '',
-    });
+    arr.push('');
     setVoteList(arr);
   };
 
   const handleVoteInput = (e: ChangeEvent, index: number) => {
     const arr = [...voteList];
-    arr[index].value = (e.target as HTMLInputElement).value;
+    arr[index] = (e.target as HTMLInputElement).value;
     setVoteList(arr);
   };
 
@@ -370,28 +348,29 @@ export default function EditProposal() {
                     {/*<MarkdownEditor value={item.content} onChange={(val)=>handleText(val,index)} />*/}
                   </ItemBox>
                 ))}
-
-              {/*<ItemBox>*/}
-              {/*  <TitleBox>投票选项</TitleBox>*/}
-              {/*  <VoteBox>*/}
-              {/*    {voteList.map((item, index) => (*/}
-              {/*      <li>*/}
-              {/*        <input type="text" value={item.value} onChange={(e) => handleVoteInput(e, index)} />*/}
-              {/*        {voteList.length - 1 === index && (*/}
-              {/*          <span onClick={() => handleAdd()}>*/}
+              {/*{*/}
+              {/*  voteType === 99 &&<ItemBox>*/}
+              {/*    <TitleBox>投票选项</TitleBox>*/}
+              {/*    <VoteBox>*/}
+              {/*      {voteList.map((item, index) => (*/}
+              {/*        <li>*/}
+              {/*          <input type="text" value={item} onChange={(e) => handleVoteInput(e, index)} />*/}
+              {/*          {voteList.length - 1 === index && (*/}
+              {/*            <span onClick={() => handleAdd()}>*/}
               {/*            <img src={PlusImg} alt="" />*/}
               {/*          </span>*/}
-              {/*        )}*/}
+              {/*          )}*/}
 
-              {/*        {!!(voteList.length - 1) && (*/}
-              {/*          <span onClick={() => removeVote(index)}>*/}
+              {/*          {!!(voteList.length - 1) && (*/}
+              {/*            <span onClick={() => removeVote(index)}>*/}
               {/*            <img src={MinusImg} alt="" />*/}
               {/*          </span>*/}
-              {/*        )}*/}
-              {/*      </li>*/}
-              {/*    ))}*/}
-              {/*  </VoteBox>*/}
-              {/*</ItemBox>*/}
+              {/*          )}*/}
+              {/*        </li>*/}
+              {/*      ))}*/}
+              {/*    </VoteBox>*/}
+              {/*  </ItemBox>*/}
+              {/*}*/}
             </div>
           }
           ref={childRef}

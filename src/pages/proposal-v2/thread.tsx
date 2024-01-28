@@ -54,6 +54,7 @@ export default function ThreadPage() {
   } = useAuthContext();
   const proposalCategories = useProposalCategories();
   const { checkMetaforoLogin } = useCheckMetaforoLogin();
+  const [voteType, setVoteType] = useState<number>(0);
 
   const [blockType, setBlockType] = useState<BlockContentType>(BlockContentType.Reply);
   const [data, setData] = useState<IProposal>();
@@ -79,24 +80,7 @@ export default function ThreadPage() {
   const [preview, setPreview] = useState<any[]>([]);
   const [previewTitle, setPreviewTitle] = useState('');
 
-  const [voteList, setVoteList] = useState([
-    {
-      id: 1,
-      value: 'test001',
-    },
-    {
-      id: 2,
-      value: 'test002',
-    },
-    {
-      id: 3,
-      value: 'test003',
-    },
-    {
-      id: 4,
-      value: 'test004',
-    },
-  ]);
+  const [voteList, setVoteList] = useState(['']);
 
   const [dataSource, setDatasource] = useState<any>();
 
@@ -137,8 +121,14 @@ export default function ThreadPage() {
       );
       let componentsList = arr.filter((item: any) => item.type === 'components') || [];
       const afterComponents = arr.filter(
-        (item: any) => item.type !== 'components' && arr.indexOf(item) > componentsIndex,
+        (item: any) => item.type !== 'components' && item.type !== 'preview' && arr.indexOf(item) > componentsIndex,
       );
+
+      setVoteType(res.data.vote_type || 0);
+
+      let { votes } = res.data;
+      console.error(res.data.votes ?? ['']);
+      // setVoteList(votes ?? [''])
 
       const preview = arr.filter((i: any) => i.type === 'preview');
 
@@ -534,17 +524,19 @@ export default function ThreadPage() {
                     </div>
                   </ProposalContentBlock>
                 ))}
-              {/*<ItemBox>*/}
-              {/*  <TitleBox>投票选项</TitleBox>*/}
-              {/*  <VoteBox>*/}
-              {/*    {voteList.map((item, index) => (*/}
-              {/*      <li>*/}
-              {/*        <input type="checkbox" id={`vote_${index}`} />*/}
-              {/*        <label htmlFor={`vote_${index}`}>{item.value}</label>*/}
-              {/*      </li>*/}
-              {/*    ))}*/}
-              {/*  </VoteBox>*/}
-              {/*</ItemBox>*/}
+              {/*{*/}
+              {/*  voteType === 99 &&  <ItemBox>*/}
+              {/*    <TitleBox>投票选项</TitleBox>*/}
+              {/*    <VoteBox>*/}
+              {/*      {voteList.map((item:string, index) => (*/}
+              {/*        <li>*/}
+              {/*          <input type="checkbox" id={`vote_${index}`} />*/}
+              {/*          <label htmlFor={`vote_${index}`}>{item}</label>*/}
+              {/*        </li>*/}
+              {/*      ))}*/}
+              {/*    </VoteBox>*/}
+              {/*  </ItemBox>*/}
+              {/*}*/}
             </>
           }
         />
