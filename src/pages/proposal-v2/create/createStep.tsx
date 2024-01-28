@@ -150,6 +150,12 @@ const ComponnentBox = styled(TitleBox)`
   }
 `;
 
+const TipsBox = styled.div`
+  padding: 10px 32px;
+  font-size: 12px;
+  opacity: 0.6;
+`;
+
 const AfterBox = styled.div``;
 
 export default function CreateStep({ onClick }: any) {
@@ -178,6 +184,7 @@ export default function CreateStep({ onClick }: any) {
   const [preview, setPreview] = useState<any[]>([]);
   const [previewTitle, setPreviewTitle] = useState('');
   const [initList, setInitList] = useState<any[]>([]);
+  const [tips, setTips] = useState('');
 
   const [voteList, setVoteList] = useState(['']);
 
@@ -227,8 +234,10 @@ export default function CreateStep({ onClick }: any) {
       setBeforeList(beforeComponents ?? []);
       setList(afterComponents ?? []);
       setHolder(componentsList);
+      console.log(componentsList);
 
       setComponentName(componentsList[0]?.title);
+      setTips(componentsList[0]?.content);
 
       // setList(arr ?? []);
       setTemplateTitle(template?.name ?? '');
@@ -543,9 +552,12 @@ export default function CreateStep({ onClick }: any) {
                   </ItemBox>
                 ))}
               {!!components.length && (
-                <ComponnentBox>
-                  <span>{componentName || t('Proposal.proposalComponents')}</span>
-                </ComponnentBox>
+                <>
+                  <ComponnentBox>
+                    <span>{componentName || t('Proposal.proposalComponents')}</span>
+                  </ComponnentBox>
+                  {!!tips && <TipsBox>{tips}</TipsBox>}
+                </>
               )}
             </>
           }
