@@ -97,6 +97,7 @@ export default function ChooseTypeStep() {
   };
 
   const goToCreateNext = () => {
+    handleCloseTemplateRulesModal();
     if (selected?.template?.has_perm_to_use) {
       if (selected?.template.is_closing_project) {
         setCloseoutVisibleId(selected.tp.category_id);
@@ -104,7 +105,6 @@ export default function ChooseTypeStep() {
       }
       chooseTemplate(selected?.tp, selected?.template);
     }
-    handleCloseTemplateRulesModal();
   }
 
   return (
