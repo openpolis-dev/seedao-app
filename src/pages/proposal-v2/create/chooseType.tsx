@@ -29,15 +29,14 @@ const CloseOutSelectModal = ({ id, handleConfirm, ...props }: ICloseOutSelectMod
   const [selectExtra, setSelectExtra] = useState<ExtraType>();
 
   useEffect(() => {
+    console.log(id);
     if (!id) return;
-    console.error(id);
     getSelectDetail(id);
-    // TODO: get proposal list
   }, [id]);
 
   const getSelectDetail = async (id: any) => {
     const res = await requests.proposalV2.getCloseProposal(Number(id));
-    console.error(res);
+    setProposalList(res.data);
   };
 
   const onConfirm = () => {
