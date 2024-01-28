@@ -177,7 +177,8 @@ export default function EditProposal() {
     await checkMetaforoLogin();
 
     let holderNew = [...holder];
-    holderNew[0].name = JSON.stringify(holder[0]?.name);
+
+    holderNew[0].name = !!holder?.length && JSON.stringify(holder[0]?.name);
 
     let arr = [...previewOrg, ...beforeList, ...holderNew, ...contentBlocks];
 
