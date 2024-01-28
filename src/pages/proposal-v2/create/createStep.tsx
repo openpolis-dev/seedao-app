@@ -535,6 +535,7 @@ export default function CreateStep({ onClick }: any) {
                         editorId={`before_${index}`}
                         onChange={(val) => handleText(val, index, 'before')}
                         theme={theme ? 'dark' : 'light'}
+                        placeholder={item.hint}
                       />
                     </InputBox>
 
@@ -561,6 +562,7 @@ export default function CreateStep({ onClick }: any) {
                         editorId={`block_${index}`}
                         onChange={(val) => handleText(val, index, 'after')}
                         theme={theme ? 'dark' : 'light'}
+                        placeholder={item.hint}
                       />
                     </InputBox>
 
