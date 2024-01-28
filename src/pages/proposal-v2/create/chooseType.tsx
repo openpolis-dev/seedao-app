@@ -134,7 +134,11 @@ export default function ChooseTypeStep() {
                 )}
 
                 {tp.templates.map((template) => (
-                  <li onClick={() => onChooseTemplate(tp, template)} key={template.id}>
+                  <li
+                    onClick={() => onChooseTemplate(tp, template)}
+                    key={template.id}
+                    className={template.has_perm_to_use ? '' : 'noAuth'}
+                  >
                     <span>{template.name}</span>
                     <img src={theme ? ArrowRhtBlack : ArrowRht} alt="" />
                   </li>
@@ -161,7 +165,7 @@ export default function ChooseTypeStep() {
               : t('Proposal.NoPermisstionToPropose')
           }
         >
-          {selected?.template?.rule_desc}
+          {selected?.template?.rule_description}
         </TemplateRulesModal>
       )}
       {!!closeoutVisibleId && (

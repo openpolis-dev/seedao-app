@@ -148,7 +148,7 @@ export interface ITemplate {
   vote_type?: number;
   name?: string;
   schema?: string;
-  rule_desc?: string;
+  rule_description?: string;
   screenshot_uri?: string;
   components?: any[];
   has_perm_to_use?: boolean;
