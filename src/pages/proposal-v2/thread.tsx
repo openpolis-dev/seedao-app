@@ -127,7 +127,6 @@ export default function ThreadPage() {
       setVoteType(res.data.vote_type || 0);
 
       let { votes } = res.data;
-      console.error(res.data.votes ?? ['']);
       // setVoteList(votes ?? [''])
 
       const preview = arr.filter((i: any) => i.type === 'preview');
@@ -438,6 +437,8 @@ export default function ThreadPage() {
         <div className="title">{data?.title}</div>
         <FlexLine>
           {currentState && <ProposalStateTag state={currentState} />}
+          {!!data?.vetoed && <StatusTag>{t('Proposal.veto')}</StatusTag>}
+
           {currentCategory && <CategoryTag>{currentCategory}</CategoryTag>}
           {data?.template_name && <TemplateTag>{data?.template_name}</TemplateTag>}
           {data?.arweave && (
@@ -880,4 +881,15 @@ const TitleBox = styled.div`
   font-weight: bold;
   margin-bottom: 20px;
   box-sizing: border-box;
+`;
+const StatusTag = styled.div`
+  background-color: #fb4e4e;
+  color: #fff;
+  font-size: 12px;
+  border-radius: 4px;
+  display: inline-block;
+  height: 24px;
+  line-height: 24px;
+  text-align: center;
+  padding: 0 20px;
 `;

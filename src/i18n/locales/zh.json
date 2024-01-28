@@ -123,6 +123,7 @@
     "SaveProposal": "保存",
     "SubmitProposal": "提交",
     "CityhallRejected": "市政厅已驳回",
+    "veto": "市政厅一票否决",
     "TotalVoteCount": "共{{count}}票",
     "proposalComponents":"提案执行组件",
     "HasVote": "已投",

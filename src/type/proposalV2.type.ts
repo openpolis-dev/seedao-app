@@ -121,6 +121,7 @@ export interface IProposal extends ISimpleProposal {
   is_based_on_template: boolean | undefined;
   template_id: number | string;
   reject_ts: number;
+  vetoed?: any;
   arweave: string;
   comments: ICommentDisplay[];
   components: any;

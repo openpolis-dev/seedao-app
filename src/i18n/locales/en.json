@@ -123,6 +123,7 @@
     "SaveProposal": "Save",
     "SubmitProposal": "Submit",
     "CityhallRejected": "Cityhall rejected",
+    "veto": "City Hall veto",
     "TotalVoteCount": "{{count}} voted",
     "proposalComponents": "Proposal Components",
     "HasVote": "Voted",
