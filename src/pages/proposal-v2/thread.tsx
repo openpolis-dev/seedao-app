@@ -76,6 +76,7 @@ export default function ThreadPage() {
   const [currentCommentArrayIdx, setCurrentCommentArrayIdx] = useState<number>(0);
   const [componentName, setComponentName] = useState('');
   const [beforeList, setBeforeList] = useState<IContentBlock[]>([]);
+  const [preview, setPreview] = useState<any[]>([]);
 
   const [voteList, setVoteList] = useState([
     {
@@ -138,6 +139,11 @@ export default function ThreadPage() {
       const afterComponents = arr.filter(
         (item: any) => item.type !== 'components' && arr.indexOf(item) > componentsIndex,
       );
+
+      const preview = arr.filter((i: any) => i.type === 'preview');
+      setPreview(preview);
+      console.error(arr);
+
       setComponentName(componentsList[0]?.title);
       setBeforeList(beforeComponents ?? []);
 
@@ -472,6 +478,13 @@ export default function ThreadPage() {
           theme={theme}
           BeforeComponent={
             <>
+              {/*{ !!preview?.length && <Preview*/}
+              {/*  DataSource={preview.data}*/}
+              {/*  language={i18n.language}*/}
+              {/*  initialItems={components}*/}
+              {/*  theme={theme}*/}
+              {/*/>*/}
+              {/*}*/}
               {!!beforeList?.length &&
                 beforeList.map((block, i) => (
                   <>

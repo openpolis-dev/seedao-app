@@ -164,7 +164,7 @@ export default function CreateStep({ onClick }: any) {
   const [submitType, setSubmitType] = useState<'save' | 'submit'>();
   const [voteType, setVoteType] = useState<number>(0);
 
-  const { template } = useCreateProposalContext();
+  const { template, extraData } = useCreateProposalContext();
   const [components, setComponents] = useState<any[]>([]);
 
   const [showRht, setShowRht] = useState(true);
@@ -207,11 +207,10 @@ export default function CreateStep({ onClick }: any) {
       const arr = JSON.parse(schema!);
 
       const previewArr = arr.filter((i: any) => i.type === 'preview');
-      if (previewArr?.length) {
+      if (previewArr?.length && extraData?.id) {
         setPreviewTitle(previewArr[0]?.title);
         getPreview();
 
-        console.log();
         getComponentsList();
       }
 
@@ -243,8 +242,6 @@ export default function CreateStep({ onClick }: any) {
     } else {
       setShowType('new');
 
-      console.error(template);
-
       setList([
         {
           title: '背景',
@@ -265,8 +262,17 @@ export default function CreateStep({ onClick }: any) {
   }, [template, tokenData]);
 
   const getPreview = async () => {
-    const res = await requests.proposalV2.getProposalDetail(330, 0);
-    console.error('getPreview', res.data.components);
+    if (!extraData) return;
+    const res = await requests.proposalV2.getProposalDetail(extraData?.id, 0);
+
+    let titleComponents = {
+      component_id: 16,
+      name: 'relate',
+      schema: '',
+      data: {
+        relate: extraData?.name,
+      },
+    };
 
     const comStr = res.data.components || [];
     comStr.map((item: any) => {
@@ -275,6 +281,8 @@ export default function CreateStep({ onClick }: any) {
       }
       return item;
     });
+    comStr.unshift(titleComponents);
+
     setPreview(comStr ?? []);
   };
 
@@ -345,8 +353,15 @@ export default function CreateStep({ onClick }: any) {
         holderNew = [...holder];
         holderNew[0].name = JSON.stringify(holder[0]?.name);
       }
+      let previewArr = [
+        {
+          title: previewTitle,
+          type: 'preview',
+          data: preview,
+        },
+      ];
+      let arr = [...previewArr, ...beforeList, ...holderNew, ...list];
 
-      let arr = [...beforeList, ...holderNew, ...list];
       dispatch({ type: AppActionType.SET_LOADING, payload: true });
 
       saveOrSubmitProposal({
@@ -452,7 +467,7 @@ export default function CreateStep({ onClick }: any) {
   const EmptyArray = voteList.filter((item) => item === '');
 
   const submitDisabled =
-    !title || !title.trim() || list.some((item) => !item.content || (voteType && EmptyArray?.length));
+    !title || !title.trim() || list.some((item) => !item.content || (voteType === 99 && EmptyArray?.length));
 
   return (
     <Box>
@@ -477,7 +492,6 @@ export default function CreateStep({ onClick }: any) {
             <Button onClick={handleSubmit} disabled={submitDisabled}>
               {t('Proposal.SubmitProposal')}
             </Button>
-            {voteType}
           </BtnGroup>
         </FlexInner>
       </FixedBox>
@@ -554,7 +568,7 @@ export default function CreateStep({ onClick }: any) {
                     {/*<MarkdownEditor value={item.content} onChange={(val)=>handleText(val,index)} />*/}
                   </ItemBox>
                 ))}
-              {voteType > 2 && (
+              {voteType === 99 && (
                 <ItemBox>
                   <TitleBox>投票选项</TitleBox>
                   <VoteBox>
