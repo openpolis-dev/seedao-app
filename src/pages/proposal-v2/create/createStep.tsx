@@ -274,6 +274,7 @@ export default function CreateStep({ onClick }: any) {
       },
     };
 
+    console.log(res.data.components, extraData);
     const comStr = res.data.components || [];
     comStr.map((item: any) => {
       if (typeof item.data === 'string') {
@@ -357,7 +358,7 @@ export default function CreateStep({ onClick }: any) {
         {
           title: previewTitle,
           type: 'preview',
-          data: preview,
+          content: JSON.stringify(preview),
         },
       ];
       let arr = [...previewArr, ...beforeList, ...holderNew, ...list];

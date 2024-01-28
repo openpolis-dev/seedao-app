@@ -77,6 +77,7 @@ export default function ThreadPage() {
   const [componentName, setComponentName] = useState('');
   const [beforeList, setBeforeList] = useState<IContentBlock[]>([]);
   const [preview, setPreview] = useState<any[]>([]);
+  const [previewTitle, setPreviewTitle] = useState('');
 
   const [voteList, setVoteList] = useState([
     {
@@ -133,7 +134,7 @@ export default function ThreadPage() {
       const componentsIndex = arr.findIndex((i: any) => i.type === 'components');
 
       const beforeComponents = arr.filter(
-        (item: any) => item.type !== 'components' && arr.indexOf(item) < componentsIndex,
+        (item: any) => item.type !== 'components' && item.type !== 'preview' && arr.indexOf(item) < componentsIndex,
       );
       let componentsList = arr.filter((item: any) => item.type === 'components') || [];
       const afterComponents = arr.filter(
@@ -141,8 +142,11 @@ export default function ThreadPage() {
       );
 
       const preview = arr.filter((i: any) => i.type === 'preview');
-      setPreview(preview);
-      console.error(arr);
+
+      const preArr = JSON.parse(preview[0].content);
+
+      setPreview(preArr);
+      setPreviewTitle(preview[0].title);
 
       setComponentName(componentsList[0]?.title);
       setBeforeList(beforeComponents ?? []);
@@ -478,13 +482,16 @@ export default function ThreadPage() {
           theme={theme}
           BeforeComponent={
             <>
-              {/*{ !!preview?.length && <Preview*/}
-              {/*  DataSource={preview.data}*/}
-              {/*  language={i18n.language}*/}
-              {/*  initialItems={components}*/}
-              {/*  theme={theme}*/}
-              {/*/>*/}
-              {/*}*/}
+              {!!preview?.length && (
+                <>
+                  <ProposalContentBlock>
+                    <div className="title">{previewTitle}</div>
+                    <div className="constentPreview">
+                      <Preview DataSource={preview} language={i18n.language} initialItems={components} theme={theme} />
+                    </div>
+                  </ProposalContentBlock>
+                </>
+              )}
               {!!beforeList?.length &&
                 beforeList.map((block, i) => (
                   <>
@@ -795,6 +802,9 @@ const ProposalContentBlock = styled.div<{ $radius?: string }>`
   }
   .content .md-editor-preview-wrapper {
     padding-inline: 32px;
+  }
+  .constentPreview {
+    margin-top: 20px;
   }
 `;
 
