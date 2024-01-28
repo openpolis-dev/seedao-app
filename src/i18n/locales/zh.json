@@ -136,7 +136,9 @@
     "AssociatedProposalComponent": "关联提案组件",
     "EmptyAssociatedProposal": "暂无没可结项的提案",
     "SubmitConfirmTip": "提案提交后即进入投票状态，无法撤回修改，是否确认提交？",
-    "AutoExecuteLeftTime": "自动执行等待时间还剩{{h}}小时{{m}}分钟"
+    "AutoExecuteLeftTime": "自动执行等待时间还剩{{h}}小时{{m}}分钟",
+    "CloseVote": "提前结束投票",
+    "ConfirmToCloseVote": "确认提前结束投票吗"
   },
   "Project": {
     "ProjectOrGuildItem": "还没有填写相关介绍信息～",

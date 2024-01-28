@@ -540,6 +540,7 @@ export default function ThreadPage() {
                 poll={data!.votes[0]}
                 id={Number(id)}
                 updateStatus={getProposalDetail}
+                isOverrideProposal={data!.template_name === '否决提案'}
               />
             )}
 

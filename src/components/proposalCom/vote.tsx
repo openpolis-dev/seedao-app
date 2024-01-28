@@ -10,6 +10,8 @@ import useCheckMetaforoLogin from 'hooks/useMetaforoLogin';
 import VoterListModal from 'components/modals/voterListModal';
 import ConfirmModal from 'components/modals/confirmModal';
 import { formatDeltaDate } from 'utils/time';
+import usePermission from 'hooks/usePermission';
+import { PermissionAction, PermissionObject } from 'utils/constant';
 const { Check } = Form;
 
 interface IProps {
@@ -17,6 +19,7 @@ interface IProps {
   id: number;
   poll: Poll;
   voteGate?: VoteGateType;
+  isOverrideProposal?: boolean;
   updateStatus: () => void;
 }
 
@@ -37,22 +40,24 @@ const getPollStatus = (start_t: string, close_t: string) => {
   return VoteType.Open;
 };
 
-export default function ProposalVote({ proposalState, id, poll, voteGate, updateStatus }: IProps) {
+export default function ProposalVote({ proposalState, id, poll, voteGate, isOverrideProposal, updateStatus }: IProps) {
   const { t } = useTranslation();
   const [selectOption, setSelectOption] = useState<VoteOption>();
   const [openVoteItem, setOpenVoteItem] = useState<VoteOptionItem>();
   const [showConfirmVote, setShowConfirmVote] = useState(false);
+  const [showConfirmClose, setShowConfirmClose] = useState(false);
   const [hasPermission, setHasPermission] = useState(false);
 
   const { dispatch } = useAuthContext();
   const { showToast } = useToast();
 
   const { checkMetaforoLogin } = useCheckMetaforoLogin();
+  const canUseCityhall = usePermission(PermissionAction.AuditApplication, PermissionObject.ProjectAndGuild);
 
   const pollStatus = getPollStatus(poll.poll_start_at, poll.close_at);
 
   const voteStatusTag = useMemo(() => {
-    if (proposalState === ProposalState.Executed) {
+    if (proposalState === ProposalState.Executed || pollStatus === VoteType.Closed) {
       return <CloseTag>{t('Proposal.VoteClose')}</CloseTag>;
     } else if (proposalState === ProposalState.PendingExecution) {
       return (
@@ -60,15 +65,18 @@ export default function ProposalVote({ proposalState, id, poll, voteGate, update
           {t('Proposal.AutoExecuteLeftTime', { ...formatDeltaDate(new Date(poll.close_at).getTime() + 86400000) })}
         </OpenTag>
       );
-    } else if (pollStatus === VoteType.Closed) {
-      return <CloseTag>{t('Proposal.VoteClose')}</CloseTag>;
     } else if (pollStatus === VoteType.Open) {
       return (
-        <OpenTag>
-          {t('Proposal.VoteEndAt', {
-            leftTime: t('Proposal.TimeDisplay', { ...formatDeltaDate(new Date(poll.close_at).getTime()) }),
-          })}
-        </OpenTag>
+        <>
+          <OpenTag>
+            {t('Proposal.VoteEndAt', {
+              leftTime: t('Proposal.TimeDisplay', { ...formatDeltaDate(new Date(poll.close_at).getTime()) }),
+            })}
+          </OpenTag>
+          {isOverrideProposal && canUseCityhall && (
+            <CloseButton onClick={() => setShowConfirmClose(true)}>{t('Proposal.CloseVote')}</CloseButton>
+          )}
+        </>
       );
     } else {
       return (
@@ -96,6 +104,11 @@ export default function ProposalVote({ proposalState, id, poll, voteGate, update
       .finally(() => {
         dispatch({ type: AppActionType.SET_LOADING, payload: false });
       });
+  };
+
+  const onConfirmClose = () => {
+    // TODO: close vote
+    console.log('close vote');
   };
 
   const goVote = async (option: VoteOption) => {
@@ -212,6 +225,13 @@ export default function ProposalVote({ proposalState, id, poll, voteGate, update
             msg={t('Proposal.ConfirmVoteOption', { option: selectOption?.html })}
             onConfirm={onConfirmVote}
             onClose={() => setShowConfirmVote(false)}
+          />
+        )}
+        {showConfirmClose && (
+          <ConfirmModal
+            msg={t('Proposal.ConfirmToCloseVote')}
+            onConfirm={onConfirmClose}
+            onClose={() => setShowConfirmClose(false)}
           />
         )}
       </div>
@@ -336,4 +356,9 @@ const VoteButton = styled(Button)`
 
 const HasVote = styled.span`
   color: var(--bs-primary);
+`;
+
+const CloseButton = styled(Button)`
+  height: 32px;
+  margin-left: 10px;
 `;
