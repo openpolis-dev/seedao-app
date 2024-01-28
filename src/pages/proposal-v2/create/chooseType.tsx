@@ -87,11 +87,6 @@ export default function ChooseTypeStep() {
       return;
     }
 
-    if (template.is_closing_project) {
-      setSelected({ tp, template });
-      setCloseoutVisibleId(tp.category_id);
-      return;
-    }
     setTemplateRulesVisible(true);
     setSelected({ tp, template });
   };
@@ -103,6 +98,10 @@ export default function ChooseTypeStep() {
 
   const goToCreateNext = () => {
     if (selected?.template?.has_perm_to_use) {
+      if (selected?.template.is_closing_project) {
+        setCloseoutVisibleId(selected.tp.category_id);
+        return;
+      }
       chooseTemplate(selected?.tp, selected?.template);
     }
     handleCloseTemplateRulesModal();
