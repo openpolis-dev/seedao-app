@@ -178,7 +178,9 @@ export default function EditProposal() {
 
     let holderNew = [...holder];
 
-    holderNew[0].name = !!holder?.length && JSON.stringify(holder[0]?.name);
+    if (holder?.length) {
+      holderNew[0].name = JSON.stringify(holder[0]?.name);
+    }
 
     let arr = [...previewOrg, ...beforeList, ...holderNew, ...contentBlocks];
 
