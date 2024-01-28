@@ -140,7 +140,8 @@
     "AutoExecuteLeftTime": "自动执行等待时间还剩{{h}}小时{{m}}分钟",
     "CloseVote": "提前结束投票",
     "ConfirmToCloseVote": "确认提前结束投票吗",
-    "ExecutionTip": "当前投票已结束，进入 24 小时等待期，在此期间市政厅可对提案结果进行否决，如市政厅未否决，则提案按照投票结果结束。"
+    "ExecutionTip": "当前投票已结束，进入 24 小时等待期，在此期间市政厅可对提案结果进行否决，如市政厅未否决，则提案按照投票结果结束。",
+    "Create": "创建"
   },
   "Project": {
     "ProjectOrGuildItem": "还没有填写相关介绍信息～",

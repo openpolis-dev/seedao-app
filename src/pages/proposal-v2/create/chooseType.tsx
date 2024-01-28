@@ -10,7 +10,7 @@ import { useAuthContext } from '../../../providers/authProvider';
 import BasicModal, { Iprops as IBasicModalProps } from 'components/modals/basicModal';
 import SeeSelect from 'components/common/select';
 import { PlainButton } from 'components/common/button';
-import { Button } from 'react-bootstrap';
+import { Button, ModalFooter } from 'react-bootstrap';
 import usePermission from 'hooks/usePermission';
 import { PermissionAction, PermissionObject } from 'utils/constant';
 import requests from '../../../requests';
@@ -89,9 +89,7 @@ export default function ChooseTypeStep() {
 
     if (template.is_closing_project) {
       setSelected({ tp, template });
-      // setCloseoutVisibleId(undefined);
       setCloseoutVisibleId(tp.category_id);
-
       return;
     }
     setTemplateRulesVisible(true);
@@ -99,11 +97,16 @@ export default function ChooseTypeStep() {
   };
 
   const handleCloseTemplateRulesModal = () => {
+    setTemplateRulesVisible(false);
+    
+  };
+
+  const goToCreateNext = () => {
     if (selected?.template?.has_perm_to_use) {
       chooseTemplate(selected?.tp, selected?.template);
     }
-    setTemplateRulesVisible(false);
-  };
+    handleCloseTemplateRulesModal();
+  }
 
   return (
     <Container>
@@ -142,14 +145,6 @@ export default function ChooseTypeStep() {
                     <img src={theme ? ArrowRhtBlack : ArrowRht} alt="" />
                   </li>
                 ))}
-                {/* <li onClick={() => onChooseTemplate(tp, { id: 11111, has_perm_to_use: true })}>
-                  <span>提案结项</span>
-                  <img src={theme ? ArrowRhtBlack : ArrowRht} alt="" />
-                </li>
-                <li className="noAuth" onClick={() => onChooseTemplate(tp, { id: 12, has_perm_to_use: false })}>
-                  <span>新建提案（常规）</span>
-                  <img src={theme ? ArrowRhtBlack : ArrowRht} alt="" />
-                </li> */}
               </TemplateBox>
             </TypeLi>
           ))}
@@ -165,6 +160,14 @@ export default function ChooseTypeStep() {
           }
         >
           {selected?.template?.rule_description}
+          {selected?.template?.has_perm_to_use && (
+            <CardFooter>
+              <Button variant="outline-primary" className="btnBtm" onClick={handleCloseTemplateRulesModal}>
+                {t('general.cancel')}
+              </Button>
+              <Button onClick={goToCreateNext}> {t('Proposal.Create')}</Button>
+            </CardFooter>
+          )}
         </TemplateRulesModal>
       )}
       {!!closeoutVisibleId && (
@@ -278,5 +281,13 @@ const CloseoutModalFooter = styled.div`
     &.btn {
       margin-right: 0;
     }
+  }
+`;
+
+const CardFooter = styled.div`
+  text-align: center;
+  margin-top: 40px;
+  button {
+    width: 110px;
   }
 `;
