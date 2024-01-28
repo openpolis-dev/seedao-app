@@ -231,6 +231,14 @@ export default function CreateStep({ onClick }: any) {
         (item: any) => item.type !== 'components' && arr.indexOf(item) > componentsIndex && item.type !== 'preview',
       );
 
+      beforeComponents.forEach((item: any) => {
+        item.content = item.hint;
+      });
+
+      afterComponents.forEach((item: any) => {
+        item.content = item.hint;
+      });
+
       setBeforeList(beforeComponents ?? []);
       setList(afterComponents ?? []);
       setHolder(componentsList);
