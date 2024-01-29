@@ -203,7 +203,7 @@ export default function Pub() {
       setTotal(total);
       setPageCur(page);
     } catch (e: any) {
-      console.error(e);
+      logError(e);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }

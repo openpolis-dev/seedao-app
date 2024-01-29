@@ -10,7 +10,7 @@ import { AppActionType, useAuthContext } from 'providers/authProvider';
 import { MdPreview } from 'md-editor-rt';
 import { getEventById, uplodaEventImage } from 'requests/event';
 import { formatTime } from 'utils/time';
-// import { useWeb3React } from '@web3-react/core';
+
 import { useNavigate } from 'react-router-dom';
 import { ChevronLeft, Clock } from 'react-bootstrap-icons';
 import { ContainerPadding } from 'assets/styles/global';

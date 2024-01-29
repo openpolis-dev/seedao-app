@@ -1,0 +1,68 @@
+[
+  {
+    "id": "89ef7160-71c1-481c-9bbb-78bbacad8985",
+    "auto_action": "unknown/budget_apply/create_project",
+    "name": "create",
+    "data": {
+      "budget":  {
+        "value": "chocolate",
+        "label": "Chocolate"
+      },
+      "logo": "https://img0.baidu.com/it/u=1119404505,3019956218&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500",
+      "file": "bitbug_favicon (1).ico",
+      "addList": [
+        {
+          "logo": "https://img0.baidu.com/it/u=3979949991,2513156939&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500",
+          "food": [{"value":"chocolate","label":"Chocolate"},{"value":"strawberry","label":"Strawberry"},{"value":"vanilla","label":"Vanilla"}],
+          "address": "0x07Da0c2CA57Cc384b39242A81323ba8417248153",
+          "typeTest": {
+            "value": "strawberry",
+            "label": "Strawberry"
+          }
+        },
+        {
+          "logo": "https://img0.baidu.com/it/u=1119404505,3019956218&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500",
+          "address": "0xD85c413dA833CeBD8338138CcEFA04979DF70E8e",
+          "food": [{"value":"vanilla","label":"Vanilla"}],
+          "typeTest": {
+            "value": "chocolate",
+            "label": "Chocolate"
+          }
+        }
+      ],
+      "issue": "项目名称",
+      "description": "项目简介"
+    }
+  },
+  {
+    "id": "a3dc09a3-d8cb-4b79-b47f-bf8196fdcad9",
+    "auto_action": "unknown/budget_apply/create_project",
+    "name": "delete",
+    "data": {
+      "delMemeberList": [{"value":"strawberry","label":"Strawberry"}]
+    }
+  },
+  {
+    "id": "e5c6c385-03f4-4061-93b9-48c94df53fb5",
+    "auto_action": "unknown/budget_apply/create_project",
+    "name": "add",
+    "data": {
+      "memberList": [
+        {
+          "members": "0x07Da0c2CA57Cc384b39242A81323ba8417248153",
+          "category": {
+            "value": "chocolate",
+            "label": "Chocolate"
+          }
+        },
+        {
+          "members": "0xD85c413dA833CeBD8338138CcEFA04979DF70E8e",
+          "category": {
+            "value": "strawberry",
+            "label": "Strawberry"
+          }
+        }
+      ]
+    }
+  }
+]

@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import { useWeb3Modal } from "@web3modal/react";
 import { useAccount, useDisconnect, useNetwork } from "wagmi";
-import {useEthersSigner } from './ethersNew';
+import { useEthersSigner } from 'hooks/ethersNew';
 import {ethers} from "ethers";
 import {createSiweMessage} from "../../utils/sign";
 import {useNavigate} from "react-router-dom";
@@ -79,7 +79,7 @@ export default function  WalletConnect(){
             setConnectWallet(true);
 
         }catch (e) {
-            console.error("connect",e)
+            window.logError("connect",e)
             // dispatch({ type: AppActionType.SET_LOADING, payload: false });
             dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: false });
         }
@@ -108,7 +108,7 @@ export default function  WalletConnect(){
             dispatch({ type: AppActionType.SET_LOADING, payload: false });
             dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: false });
             disconnect();
-            console.error("sign error:",e)
+            window.logError("sign error:",e)
         }
 
     }
@@ -158,10 +158,10 @@ export default function  WalletConnect(){
             try {
                 await OneSignal.login(address.toLocaleLowerCase());
             } catch (error) {
-                console.error("OneSignal login error",error)
+                window.logError("OneSignal login error",error)
             }
         }catch (e){
-            console.error("Login to",e)
+            window.logError("Login to",e)
             dispatch({ type: AppActionType.CLEAR_AUTH, payload: undefined });
             localStorage.removeItem(SEEDAO_USER_DATA);
             clearStorage();

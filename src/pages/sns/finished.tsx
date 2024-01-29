@@ -31,7 +31,10 @@ export default function FinishedComponent() {
         <HomeLink to="/home">
           <LinkBox>{t('SNS.Polis')}</LinkBox>
         </HomeLink>
-        <ContributeLink href="https://discord.com/channels/841189467128594442/1183811608967921795" target="_blank">
+        <ContributeLink
+          href="https://seedao.notion.site/SeeDAO-2024-9d22f5f6222e448d8dc161d3dfa92c2d?pvs=4"
+          target="_blank"
+        >
           <LinkBox>{t('SNS.PolisContribute')}</LinkBox>
         </ContributeLink>
       </ContainerBottom>

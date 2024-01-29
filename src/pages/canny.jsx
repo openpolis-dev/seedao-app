@@ -59,7 +59,7 @@ const Feedback = () => {
   }, []);
 
   return (
-    <OuterBox theme={theme.toString()}>
+    <OuterBox theme={theme?.toString()}>
       <InnerBox >
         <div data-canny id="seedao" />
       </InnerBox>

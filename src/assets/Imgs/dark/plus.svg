@@ -1,6 +1,1 @@
-<svg width="12" height="11" viewBox="0 0 12 11" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g id="Group 39728">
-<path id="Line 35" d="M1.54877 5.55859H10.2988" stroke="#BBBBBB" stroke-width="1.5" stroke-linecap="round"/>
-<path id="Line 36" d="M5.92377 1.18359L5.92377 9.93359" stroke="#BBBBBB" stroke-width="1.5" stroke-linecap="round"/>
-</g>
-</svg>
+<svg fill="none" height="11" viewBox="0 0 12 11" width="12" xmlns="http://www.w3.org/2000/svg"><g stroke="#bbb" stroke-linecap="round" stroke-width="1.5"><path d="m1.54877 5.55859h8.75003"/><path d="m5.92377 1.18359v8.75"/></g></svg>

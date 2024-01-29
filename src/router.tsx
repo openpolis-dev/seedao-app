@@ -8,9 +8,6 @@ import Home from './pages/home';
 import Event from './pages/seeu-network';
 import Assets from './pages/assets';
 import RegisterAssets from './pages/assets/register';
-import Proposal from './pages/proposal';
-import ProposalCategory from './pages/proposal/category';
-import ProposalThread from './pages/proposal/thread';
 import CityHall from './pages/cityhall';
 import Chat from './pages/chat';
 // import EventView from './pages/event/view';
@@ -36,6 +33,7 @@ import PubDetail from './pages/Pub/detail';
 
 import GoveranceNodeResult from 'pages/cityhall/governance/governanceNodeResult';
 // import ResourcesDetail from './pages/resouces/resources-detail';
+import ProposalReview from 'pages/cityhall/governance/proposalReview';
 import Audit from 'pages/cityhall/governance/audit';
 import AuditProject from 'pages/cityhall/governance/projectAudit';
 import Issue from 'pages/cityhall/governance/issue';
@@ -43,8 +41,13 @@ import SCRRank from 'pages/scrRank';
 import SNSEntrancePage from 'pages/sns/entrance';
 import RegisterSNS from 'pages/sns/register';
 import UserSNS from 'pages/sns/userSNS';
-import LearnCourse from 'pages/deschool/learn';
-import Onboarding from 'pages/deschool/onboarding';
+import Newcomer from 'pages/newcomer';
+
+// proposal v2
+import ProposalIndexPage from 'pages/proposal-v2';
+import CreateProposalPage from 'pages/proposal-v2/create';
+import EditProposalPage from 'pages/proposal-v2/edit';
+import ProposalThreadV2 from 'pages/proposal-v2/thread';
 
 import Wiki from './pages/notion/wiki';
 import getConfig from 'utils/envCofnig';
@@ -83,24 +86,31 @@ export default function RouterLink() {
           <Route path="/guild/edit/:id" element={<GuildEdit />} />
           <Route path="/create-guild" element={<CreateGuild />} />
 
-          <Route path="/proposal" element={<Proposal />} />
-          <Route path="/proposal/category/:id" element={<ProposalCategory />} />
-          <Route path="/proposal/thread/:id" element={<ProposalThread />} />
+          {/* proposal v2 */}
+          <Route path="/proposal" element={<ProposalIndexPage />} />
+          <Route path="/proposal/create" element={<CreateProposalPage />} />
+          <Route path="/proposal/edit/:id" element={<EditProposalPage />} />
+          <Route path="/proposal/thread/:id" element={<ProposalThreadV2 />} />
+
           <Route path="/city-hall/*" element={<CityHall />} />
           <Route path="/city-hall/governance/governance-node-result" element={<GoveranceNodeResult />} />
           <Route path="/city-hall/governance/audit" element={<Audit />} />
           <Route path="/city-hall/governance/audit-project" element={<AuditProject />} />
           <Route path="/city-hall/governance/issue" element={<Issue />} />
-          {getConfig().REACT_APP_ENV === 'test' && <Route path="/chat" element={<Chat />} />}
+          <Route path="/city-hall/governance/review-proposal" element={<ProposalReview />} />
+          <Route path="/city-hall/governance/review-proposal/:id" element={<ProposalThreadV2 />} />
+          {['dev', undefined].includes(process.env.REACT_APP_ENV_VERSION || '') && (
+            <Route path="/chat" element={<Chat />} />
+          )}
           <Route path="/ranking" element={<SCRRank />} />
           <Route path="/feedback" element={<Canny />} />
           {/* SNS */}
           <Route path="/sns" element={<SNSEntrancePage />} />
           <Route path="/sns/register" element={<RegisterSNS />} />
           {/* <Route path="/sns/user" element={<UserSNS />} /> */}
-          {/* deschool */}
-          {/* <Route path="/onboarding/learn" element={<LearnCourse />} />
-          <Route path="/onboarding/done" element={<Onboarding />} /> */}
+          {['dev', undefined].includes(process.env.REACT_APP_ENV_VERSION || '') && (
+            <Route path="/newcomer" element={<Newcomer />} />
+          )}
 
           <Route path="/notion/:id" element={<Wiki />} />
           <Route path="/wiki" element={<Wiki />} />

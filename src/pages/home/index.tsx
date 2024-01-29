@@ -17,6 +17,8 @@ import ArrowImg from '../../assets/Imgs/arrow.png';
 import LinkImg from '../../assets/Imgs/link.svg';
 import { Link, useNavigate } from 'react-router-dom';
 import getConfig from 'utils/envCofnig';
+import PlayImg from '../../assets/Imgs/podcast.png';
+import { types } from 'sass';
 
 const Box = styled.div`
   background: var(--bs-background);
@@ -76,6 +78,12 @@ const TitBox = styled.div`
     img {
       margin-left: 5px;
     }
+  }
+`;
+
+const TitBox2 = styled(TitBox)`
+  span {
+    margin-bottom: 10px;
   }
 `;
 
@@ -238,6 +246,13 @@ const BtmBox = styled.div`
     margin-left: 10px;
   }
 
+  .linkRht {
+    display: block;
+    img {
+      width: 25px;
+      height: 25px;
+    }
+  }
   .link {
     display: none;
   }
@@ -281,7 +296,7 @@ export default function Home() {
           setSEEDHolders(Number(r.totalSupply));
         })
         .catch((error: any) => {
-          console.error('[SBT] get sgn owners failed', error);
+          logError('[SBT] get sgn owners failed', error);
         });
     };
     handleSEEDHolders();
@@ -299,7 +314,7 @@ export default function Home() {
           setGovernNodes(Number(r.totalSupply));
         })
         .catch((error: any) => {
-          console.error('[SBT] get gov nodes failed', error);
+          logError('[SBT] get gov nodes failed', error);
         });
     };
     handleGovNodes();
@@ -322,7 +337,7 @@ export default function Home() {
           setOnboardingHolders(Number(r.totalSupply));
         })
         .catch((error: any) => {
-          console.error('[SBT] get onboarding-sbt holders failed', error);
+          logError('[SBT] get onboarding-sbt holders failed', error);
         });
     };
     const getNewHolders = async () => {
@@ -332,7 +347,7 @@ export default function Home() {
           setNewHolders(Number(r.totalSupply));
         })
         .catch((error: any) => {
-          console.error('[SBT] get new-sbt holders failed', error);
+          logError('[SBT] get new-sbt holders failed', error);
         });
     };
     getOnboardingHolders();
@@ -416,12 +431,36 @@ export default function Home() {
           <CityBox>
             <a href="https://seedao.notion.site/f57031667089473faa7ea3560d05960c" target="_blank" rel="noreferrer">
               <TitBox>
+                <span>{t('Home.podcast')}</span>
+              </TitBox>
+            </a>
+
+            <LinkBox>
+              <Col>
+                <a href={Links.podcast.link} target="_blank" rel="noreferrer">
+                  <BtmBox>
+                    <FlexPod>
+                      <img src={Links.podcast.img} alt="" />
+                      <div>
+                        <div className="tit">{t(Links.podcast.name as any)}</div>
+                        <div className="desc">{t(Links.podcast.desc as any)}</div>
+                      </div>
+                    </FlexPod>
+                    <div className="linkRht">{/*<img src={PlayImg} alt="" />*/}</div>
+                  </BtmBox>
+                </a>
+              </Col>
+            </LinkBox>
+          </CityBox>
+          <CityBox>
+            <a href="https://seedao.notion.site/f57031667089473faa7ea3560d05960c" target="_blank" rel="noreferrer">
+              <TitBox2>
                 <span>{t('Home.Publicity')}</span>
                 <div className="toGo">
                   {t('Home.viewAll')}
                   <img src={ArrowImg} alt="" />
                 </div>
-              </TitBox>
+              </TitBox2>
             </a>
 
             <LinkBox>
@@ -461,7 +500,7 @@ export default function Home() {
               {/*  </div>*/}
               {/*</Col>*/}
 
-              {Publicitys.map((item: any, index) => {
+              {Publicitys.slice(0, 3).map((item: any, index) => {
                 return item.id.startsWith('module') ? (
                   <Col key={index}>
                     <Link to={item.link}>
@@ -504,4 +543,19 @@ const OnboadingButton = styled(Button)`
   position: absolute;
   right: 20px;
   bottom: 20px;
+`;
+const FlexPod = styled.div`
+  display: flex;
+  align-items: center;
+  margin-right: 10px;
+  .tit {
+    font-size: 16px;
+  }
+  img {
+    width: 88px;
+    height: 88px;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 16px;
+  }
 `;

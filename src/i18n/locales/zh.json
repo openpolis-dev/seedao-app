@@ -12,7 +12,8 @@
     "connectWallet": "连接钱包",
     "Resources": "资源申请",
     "Explore": "项目/公会",
-    "Pub": "酒馆"
+    "Pub": "酒馆",
+    "Newcomer": "新手村"
   },
   "general": {
     "back": "返回",
@@ -27,7 +28,9 @@
     "ConnectWallet": "连接钱包",
     "apply": "申请",
     "edit": "编辑",
-    "Placeholder": "请输入"
+    "Placeholder": "请输入",
+    "JustNow": "刚刚",
+    "MinutesAgo": "{{time}}分钟前"
   },
   "Home": {
     "Slogan1": "SeeDAO",
@@ -49,20 +52,84 @@
     "OnlineEvent": "日历",
     "Pub": "酒馆",
     "OfflineEvent": "线下活动",
-    "proposal": "提案"
+    "proposal": "提案",
+    "podcast": "播客"
   },
   "Proposal": {
     "AllCategories": "分类",
     "TheNeweset": "最新的",
+    "title": "提案标题",
     "CreateProposal": "创建提案",
+    "EditProposal": "编辑提案",
     "TheOldest": "最早的",
     "LookMore": "查看更多",
     "Topics": "话题",
     "Export": "导出",
     "PollNFT": "投票NFT地址",
     "VoteClose": "投票结束",
-    "VoteEndAt": "投票剩余时间{{leftTime}}",
-    "TotalVotes": "总投票数"
+    "VoteEndAt": "投票剩余时间 {{leftTime}}",
+    "VoteStartAt": "距离开始还剩 {{leftTime}}",
+    "TotalVotes": "总投票数",
+    "Draft": "草案",
+    "Audit": "去审核",
+    "all": "全部提案",
+    "Rejected": "被驳回",
+    "WithDrawn": "已撤回",
+    "Voting": "投票中",
+    "Passed": "已通过",
+    "Approved": "已通过",
+    "Failed": "未通过",
+    "PendingCommit": "待提交",
+    "NotPendingCommit": "已提交",
+    "ThreeLayerType": "三层提案 - P3",
+    "TwoLayerType": "二层提案 - P2",
+    "OneLayerType": "一层提案 - P1",
+    "CityhallType": "市政厅联席会议提案",
+    "NodesType": "节点共识大会提案",
+    "TypeSelectHint": "全部类型",
+    "StatusSelectHint": "全部状态",
+    "HistoryRecord": "历史记录",
+    "MyProposals": "我的提案",
+    "ProposalDetail": "提案详情",
+    "ChooseType": "请选择提案类型",
+    "CreateBlank": "创建新提案(常规)",
+    "CreateBlank_Multi": "创建新提案(多选项)",
+    "ActivityCreate": "创建了提案<strong>{{title}}</strong>",
+    "ActivityEdit": "编辑了提案<strong>{{title}}</strong>",
+    "ActivityComment": "评论了<strong>{{author}}</strong>的提案<strong>{{title}}</strong>",
+    "Approve": "通过",
+    "Reject": "驳回",
+    "FillRejectReason": "填写驳回理由",
+    "Comment": "评论",
+    "EditHistory": "历史记录",
+    "HistoryCreate": "在 {{time}} 提交了提案 <title>{{title}}</title>",
+    "HistoryEdit": "在 {{time}} 编辑了提案 <title>{{title}}</title>",
+    "Send": "发送",
+    "EmptyComment": "当前没有评论",
+    "ConfirmDeleteComment": "确定要删除该条评论吗？",
+    "ConfirmApproveProposal": "确定通过该提案的审核吗？",
+    "ConfirmWithdrawProposal": "确定撤回提案吗？",
+    "ConfirmBackCreate": "离开当前页面，修改内容将不会被保存，确定离开吗？",
+    "ConfirmVoteOption": "确定投票\"{{option}}\"吗？",
+    "NotSupportWallet": "该操作暂不支持使用{{wallet}}, 请切换使用其他钱包",
+    "Vote": "投票",
+    "voteOptions": "投票选项",
+    "Share": "分享",
+    "Edit": "修改",
+    "Withdrawn": "撤回",
+    "Delete": "删除",
+    "Reply": "回复",
+    "EditProposalNav": "编辑提案",
+    "SaveProposal": "保存",
+    "SubmitProposal": "提交",
+    "CityhallRejected": "市政厅已驳回",
+    "TotalVoteCount": "共{{count}}票",
+    "proposalComponents":"提案执行组件",
+    "HasVote": "已投",
+    "LoginTip": "使用完整功能，请先登录Metaforo",
+    "LoginButton": "登录 Metaforo",
+    "WriteReplyHint": "发表评论",
+    "TimeDisplay": "{{d}}天{{h}}小时{{m}}分钟"
   },
   "Project": {
     "ProjectOrGuildItem": "还没有填写相关介绍信息～",
@@ -80,6 +147,7 @@
     "Points": "积分",
     "Members": "成员",
     "Desc": "描述",
+    "ProjectIntro": "项目介绍",
     "Intro": "介绍",
     "upload": "上传LOGO",
     "ProjectInformation": "项目信息",
@@ -160,6 +228,7 @@
     "Points": "积分",
     "Members": "成员",
     "Desc": "描述",
+    "GuildIntro": "公会介绍",
     "Intro": "介绍",
     "upload": "上传LOGO",
     "ProjectInformation": "公会信息",
@@ -259,7 +328,9 @@
     "MemberGroup": "成员分组",
     "GovernanceGroup": "治理小组",
     "BrandGroup": "品牌小组",
-    "TechGroup": "技术小组"
+    "TechGroup": "技术小组",
+    "ReviewProposal": "提案审核",
+    "ReviewProposalDesc": "审核提案的申请"
   },
   "GovernanceNodeResult": {
     "SearchTip": "SNS",
@@ -388,7 +459,7 @@
     "SEEDAO_ONBOARDING": "SeeDAO Onboarding"
   },
   "Msg": {
-    "ProposalLinkMsg": "请填写正确SIP链接",
+    "ProposalLinkMsg": "请填写正确提案链接",
     "ApproveSuccess": "操作成功",
     "ApproveFailed": "操作失败",
     "IncorrectAddress": "无效的SNS/地址：{{content}}",
@@ -402,7 +473,14 @@
     "RepeatProposal": "重复的提案链接",
     "SelectRole": "请选择角色",
     "SnsNotFound": "无效的SNS：{{sns}}",
-    "InvalidAddress": "无效的地址：{{address}}"
+    "InvalidAddress": "无效的地址：{{address}}",
+    "CloseInjected": "请关闭浏览器插件{{wallet}}, 使用MetaMask钱包",
+    "InstallMetaMask": "请安装MetaMask钱包",
+    "WalletNotReady": "{{wallet}}钱包未准备好",
+    "SubmitProposalSuccess": "提交成功",
+    "SaveProposalSuccess": "保存成功",
+    "CastVoteSuccess": "投票成功",
+    "CommentSuccess": "评论成功"
   },
   "event": {
     "events": "活动",
@@ -445,7 +523,13 @@
     "Guild": "公会创建申请",
     "GuildDesc": "申请创建新的公会",
     "Incubator": "SeeDAO孵化器申请",
-    "IncubatorDesc": "申请加入SeeDAO孵化器"
+    "IncubatorDesc": "申请加入SeeDAO孵化器",
+    "externalResources": "外联合作申请",
+    "externalResourcesDesc": "申请加入外联网络",
+    "brandApply": "品牌Logo使用申请",
+    "brandApplyDesc": "申请使用品牌Logo",
+    "podcastTitle": "SeeTalk",
+    "podcastDesc": "SeeTalk是一档由SeeDAO社区成员共创Web3节目，传递着社区成员的共创涌现和SeeDAO当前正在做的重要工作与规划"
   },
   "application": {
     "Register": "登记",
@@ -508,9 +592,7 @@
     "SeeU": "SeeU Network",
     "SeeUDesc": "SeeU Network is a decentralized social network that allows users to create and manage their own communities.",
     "SNS": "SNS",
-    "SNSDesc": "SNS is your identity based on blockchain in SeeDAO.",
-    "Newer": "新手村",
-    "NewerDesc": ""
+    "SNSDesc": "SNS is your identity based on blockchain in SeeDAO."
   },
   "SNS": {
     "EntranceTitle": "获取你的 SNS，开始你的 SeeDAO 之旅",
@@ -542,7 +624,9 @@
     "CancelTip": "取消后，注册流程将从第一步开始",
     "ContractNotReady": "合约未初始化完成, 请切换您的钱包网络到Polygon",
     "NetworkNotReady": "请切换您的钱包网络到Polygon",
-    "NotEnoughBalance": "{{token}}余额不足"
+    "NotEnoughBalance": "{{token}}余额不足",
+    "CommitmentTooOld": "您的提交的{{sns}}已过有效期，请点击“取消注册”后重新开始注册"
+
   },
   "Governance": {
     "GovernanceRule": "治理规则",
@@ -553,7 +637,18 @@
   },
   "Onboarding": {
     "HomeEntranceButton": "-> Onboarding",
-    "WatchButton": "观看视频，领取SBT",
-    "Congrats": "Onboarding 成功！🎉 恭喜你获得一枚 SBT 和 50 SCR。现在你已经是SeeDAO成员啦，加入新手村成为SeeDAO贡献者，领取 5,000 SCR 奖励"
+    "CourseTitle": "SeeDAO 新手入门系列课程",
+    "UnlockTip": "获取SNS后即可解锁",
+    "AquireSNS": "获取SNS",
+    "ContributeCamp": "SeeDAO共建者营",
+    "ContributeCampIntro": "简介",
+    "QuestionOne": "如何入营",
+    "AnswerOne": "点击“共建者营”按钮，填写申请表单，提交申请。",
+    "QuestionTwo": "共建者营怎么玩",
+    "AnswerTwo": "共建者营是一个为期两周的线上课程，每周一次线下活动。课程内容包括：SeeDAO介绍、SeeDAO治理、SeeDAO生态、SeeDAO应用、SeeDAO项目、SeeDAO公会、SeeDAO节点、SeeDAO资产、SeeDAO社区、SeeDAO未来。",
+    "Enroll": "报名入营",
+    "NewcomerReward": "新手悬赏",
+    "JoinCommunity": "加入社群",
+    "FinalExamination": "毕业考试"
   }
 }

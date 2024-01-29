@@ -1,8 +1,1 @@
-<svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g id="Group 39775">
-<g id="Group 39773">
-<path id="Line 42" d="M3 12.3555H21" stroke="#b0b0b0" stroke-width="2" stroke-linecap="round"/>
-<path id="Line 43" d="M12 3.35547L12 21.3555" stroke="#b0b0b0" stroke-width="2" stroke-linecap="round"/>
-</g>
-</g>
-</svg>
+<svg fill="none" height="25" viewBox="0 0 24 25" width="24" xmlns="http://www.w3.org/2000/svg"><g stroke="#b0b0b0" stroke-linecap="round" stroke-width="2"><path d="m3 12.3555h18"/><path d="m12 3.35547v18.00003"/></g></svg>

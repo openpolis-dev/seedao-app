@@ -39,5 +39,18 @@ export default function Wiki() {
     if (!articleId) return;
     getData();
   }, [articleId]);
+
+  useEffect(() => {
+    if (!list) return;
+    let domStr = document.querySelector('.breadcrumb');
+    let spacer = document.querySelector('.spacer');
+    if (domStr) {
+      (domStr as any).style.display = 'none';
+    }
+    if (spacer) {
+      (spacer as any).style.display = 'none';
+    }
+  }, [list]);
+
   return <OuterBox>{list && <Notion recordMap={list} />}</OuterBox>;
 }

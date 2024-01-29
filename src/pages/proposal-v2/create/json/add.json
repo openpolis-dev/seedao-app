@@ -1,0 +1,64 @@
+
+{
+  "type": "add",
+  "title": "添加市政厅成员",
+  "id": "52c449f6-4dc9-4bd6-913e-24fe5e32f26d",
+  "automation_action": "unknown/budget_apply/create_project",
+  "content": [
+    {
+      "type": "table",
+      "style": {
+        "width": [30,30],
+        "tHeader": ["成员","分类"]
+      },
+      "name": "memberList",
+      "rows": [
+        {
+          "type": "input",
+          "inputType": "address",
+          "value": "",
+          "name": "members",
+          "properties":[
+            {
+              "name": "title",
+              "value": "项目成员"
+            },
+            {
+              "name": "size",
+              "value": "md"
+            },
+            {
+              "name": "validate",
+              "value": {
+              }
+            }
+          ]
+        },
+        {
+          "type": "select",
+          "dataList": "--assets-type--",
+          "value":"",
+          "name": "category",
+          "properties":[
+            {
+              "name": "title",
+              "value": "分类"
+            },
+            {
+              "name": "size",
+              "value": "md"
+            },
+            {
+              "name": "validate",
+              "value": {
+                "maxLength": 20
+              }
+            }
+          ]
+        }
+
+      ]
+    }
+  ]
+}
+

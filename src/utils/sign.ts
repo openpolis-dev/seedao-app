@@ -10,7 +10,7 @@ export const signMessage = (account: string, timestamp: number) => {
     const sign_3 = `0x${Buffer.from(sign_2, 'utf8').toString('hex')}`;
     return sign_3;
   } catch (err) {
-    console.error(err);
+    logError(err);
   }
 };
 

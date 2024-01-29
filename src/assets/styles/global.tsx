@@ -22,6 +22,10 @@ const GlobalStyle = createGlobalStyle`
   
   body{
     background: var(--bs-background);
+    color: var(--bs-body-color) !important; 
+    font-size: var(--bs-body-font-size);
+    font-family: 'Poppins-Regular',-apple-system,BlinkMacSystemFont,
+    "Segoe UI",Roboto,"Helvetica Neue";
   }
    
   ul, li, dl, dt, dd,p{

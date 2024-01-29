@@ -92,7 +92,7 @@ export default function ProjectAudit() {
       }));
       setList(_list);
     } catch (error) {
-      console.error('getCloseProjectApplications failed:', error);
+      logError('getCloseProjectApplications failed:', error);
     } finally {
       showLoading(false);
     }
@@ -109,7 +109,7 @@ export default function ProjectAudit() {
       showToast(t('Msg.ApproveSuccess'), ToastType.Success);
       getRecords();
     } catch (error) {
-      console.error('handle approve failed', error);
+      logError('handle approve failed', error);
       showToast(t('Msg.ApproveFailed'), ToastType.Danger);
     } finally {
       showLoading(false);
@@ -123,7 +123,7 @@ export default function ProjectAudit() {
       showToast(t('Msg.ApproveSuccess'), ToastType.Success);
       getRecords();
     } catch (error) {
-      console.error('handle reject failed', error);
+      logError('handle reject failed', error);
       showToast(t('Msg.ApproveFailed'), ToastType.Danger);
     } finally {
       showLoading(false);

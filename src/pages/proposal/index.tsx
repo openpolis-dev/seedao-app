@@ -12,6 +12,7 @@ import { ContainerPadding } from 'assets/styles/global';
 import { Link } from 'react-router-dom';
 import Tabbar from 'components/common/tabbar';
 import ArrowIconSVG from 'components/svgs/rightArrow';
+import useToast, { ToastType } from 'hooks/useToast';
 
 export default function Index() {
   const {
@@ -26,6 +27,8 @@ export default function Index() {
   const [activeTab, setActiveTab] = useState(0);
   const [hasMore, setHasMore] = useState(false);
 
+  const { showToast } = useToast();
+
   const getCategories = async () => {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
@@ -35,7 +38,7 @@ export default function Index() {
         payload: resp.data.group.categories,
       });
     } catch (error) {
-      console.error('getCategories failed', error);
+      logError('getCategories failed', error);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }
@@ -48,8 +51,9 @@ export default function Index() {
       setProposals([...proposals, ...resp.data.threads]);
       setPage(page + 1);
       setHasMore(resp.data.threads.length >= pageSize);
-    } catch (error) {
-      console.error('getAllProposals failed', error);
+    } catch (error: any) {
+      logError('getAllProposals failed', error);
+      showToast(error?.code || error, ToastType.Danger, { autoClose: false });
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }

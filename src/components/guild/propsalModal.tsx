@@ -136,7 +136,7 @@ export default function PropsalModal(props: Iprops) {
       setLoading(true);
       await requests.guild.addRelatedProposal(id as any, ids);
     } catch (error) {
-      console.error('handle related proposals failed: ', error);
+      logError('handle related proposals failed: ', error);
     } finally {
       setLoading(false);
       closeModal(true);

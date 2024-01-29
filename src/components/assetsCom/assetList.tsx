@@ -361,7 +361,7 @@ export default function AssetList() {
       }));
       setList(_list);
     } catch (error) {
-      console.error('getRecords error', error);
+      logError('getRecords error', error);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }

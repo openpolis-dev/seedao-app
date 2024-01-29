@@ -1,5 +1,4 @@
 import { AppActionType, useAuthContext } from 'providers/authProvider';
-// import { useWeb3React } from '@web3-react/core';
 
 const useCheckLogin = (account?: string) => {
   const {

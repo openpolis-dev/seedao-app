@@ -1,17 +1,17 @@
 import styled from 'styled-components';
 import BasicModal from 'components/modals/basicModal';
 import { Button } from 'react-bootstrap';
-import { PrimaryOutlinedButton } from 'components/common/button';
 import { useTranslation } from 'react-i18next';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import { ethers } from 'ethers';
 import { builtin } from '@seedao/sns-js';
 import ABI from 'assets/abi/SeeDAORegistrarController.json';
-import { SELECT_WALLET } from 'utils/constant';
-import { Wallet } from '../../wallet/wallet';
-import { sendTransaction } from '@joyid/evm';
 import useToast, { ToastType } from 'hooks/useToast';
 import getConfig from 'utils/envCofnig';
+import { useEthersProvider } from 'hooks/ethersNew';
+import { useSendTransaction, Address } from 'wagmi';
+import parseError from './parseError';
+import { Hex } from "viem";
 
 const networkConfig = getConfig().NETWORK;
 
@@ -28,9 +28,12 @@ interface IProps {
 export default function SwitchModal({ select, handleClose }: IProps) {
   const { t } = useTranslation();
   const {
-    state: { account, provider },
+    state: { account },
     dispatch,
   } = useAuthContext();
+
+  const provider = useEthersProvider({});
+  const { sendTransactionAsync } = useSendTransaction();
 
   const { showToast } = useToast();
 
@@ -55,32 +58,18 @@ export default function SwitchModal({ select, handleClose }: IProps) {
   const handleSwitch = async () => {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
-      const wallet = localStorage.getItem(SELECT_WALLET);
-      if (wallet && wallet === Wallet.JOYID_WEB) {
-        const txHash = await sendTransaction({
-          to: builtin.SEEDAO_REGISTRAR_CONTROLLER_ADDR,
-          from: account,
-          value: '0',
-          data: buildSwitchData(select),
-        });
-        console.log('joyid txHash:', txHash);
-        handleCheckTx(txHash);
-      } else {
-        const contract = new ethers.Contract(
-          builtin.SEEDAO_REGISTRAR_CONTROLLER_ADDR,
-          ABI,
-          provider.getSigner(account),
-        );
-        const tx = await contract.setDefaultName(select.replace('.seedao', ''), builtin.PUBLIC_RESOLVER_ADDR);
-        console.log('tx:', tx);
-        await tx.wait();
-        handleClose(select);
-        dispatch({ type: AppActionType.SET_SNS, payload: select });
-        dispatch({ type: AppActionType.SET_LOADING, payload: false });
-      }
-    } catch (error) {
-      console.error(error);
+      const tx = await sendTransactionAsync({
+        to: builtin.SEEDAO_REGISTRAR_CONTROLLER_ADDR,
+        account: account as Address,
+        value: BigInt(0),
+        data: buildSwitchData(select) as Hex,
+      });
+      const txHash = tx.hash;
+      handleCheckTx(txHash);
+    } catch (error: any) {
+      logError(error);
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
+      showToast(parseError(error), ToastType.Danger);
     }
   };
   return (

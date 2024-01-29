@@ -208,7 +208,7 @@ export default function Register() {
         })),
       );
     } catch (error) {
-      console.error('getProjectApplications failed', error);
+      logError('getProjectApplications failed', error);
     } finally {
       showLoading(false);
     }

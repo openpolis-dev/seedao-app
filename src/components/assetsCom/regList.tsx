@@ -72,7 +72,7 @@ export default function RegList({ list, setList }: IProps) {
 
         console.log('Upload file successful!');
       } catch (e) {
-        console.error('Unsupported file type!');
+        logError('Unsupported file type!');
       }
     };
   };
