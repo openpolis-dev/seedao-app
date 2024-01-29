@@ -7,6 +7,10 @@ export enum ProposalState {
   Voting = 'voting',
   VotingPassed = 'vote_passed',
   VotingFailed = 'vote_failed',
+  PendingExecution = 'pending_execution',
+  Executed = 'executed',
+  ExecutionFailed = 'execution_failed',
+  Vetoed = 'vetoed',
 }
 
 export interface IBaseCategory {
@@ -15,6 +19,15 @@ export interface IBaseCategory {
   metaforo_id: number;
   name: string;
   has_perm?: boolean;
+}
+
+export interface ICategory {
+  category_id: number;
+  category_name: string;
+}
+
+export interface ICategoryWithTemplates extends ICategory {
+  templates: ITemplate[];
 }
 
 export interface ISimpleProposal {
@@ -108,6 +121,7 @@ export interface IProposal extends ISimpleProposal {
   is_based_on_template: boolean | undefined;
   template_id: number | string;
   reject_ts: number;
+  vetoed?: any;
   arweave: string;
   comments: ICommentDisplay[];
   components: any;
@@ -119,6 +133,7 @@ export interface IProposal extends ISimpleProposal {
     lists: IProposalEditHistoy[];
   };
   template_name?: string;
+  execution_ts?: number;
 }
 
 export interface IActivity {
@@ -128,4 +143,17 @@ export interface IActivity {
   target_title: string;
   wallet: string;
   reply_to_wallet: string;
+}
+
+export interface ITemplate {
+  id: number;
+  vote_type?: number;
+  name?: string;
+  schema?: string;
+  rule_description?: string;
+  screenshot_uri?: string;
+  components?: any[];
+  has_perm_to_use?: boolean;
+  is_instant_vote?: boolean;
+  is_closing_project?: boolean;
 }

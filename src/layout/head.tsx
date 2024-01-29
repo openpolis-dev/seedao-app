@@ -6,7 +6,7 @@ import { parseToken, checkTokenValid, clearStorage } from '../utils/auth';
 import { Authorizer } from 'casbin.js';
 import { readPermissionUrl } from '../requests/user';
 import requests from '../requests';
-import { SEEDAO_ACCOUNT, SEEDAO_USER, SEEDAO_USER_DATA, SELECT_WALLET } from '../utils/constant';
+import { SEEDAO_ACCOUNT, SEEDAO_USER, SEEDAO_USER_DATA, SEE_AUTH, SELECT_WALLET } from '../utils/constant';
 import Avatar from 'components/common/avatar';
 import { Button, Dropdown } from 'react-bootstrap';
 import Select from 'components/common/select';
@@ -104,6 +104,13 @@ export default function Header() {
       if (!show_login_modal) {
         onClickLogout();
       }
+      return;
+    }
+    const seeAuthData = localStorage.getItem(SEE_AUTH) || '';
+    try {
+      const data = JSON.parse(seeAuthData);
+      dispatch({ type: AppActionType.SET_THIRD_PARTY_TOKEN, payload: data });
+    } catch (error) {
       return;
     }
     if (acc) {

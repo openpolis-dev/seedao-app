@@ -1,7 +1,6 @@
 import styled from 'styled-components';
+import { Template, Preview } from '@taoist-labs/components';
 
-import { Template } from '@taoist-labs/components';
-import DataSource from './json/datasource.json';
 import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { MdEditor } from 'md-editor-rt';
 import { saveOrSubmitProposal } from 'requests/proposalV2';
@@ -151,6 +150,14 @@ const ComponnentBox = styled(TitleBox)`
   }
 `;
 
+const TipsBox = styled.div`
+  padding: 10px 32px;
+  font-size: 12px;
+  opacity: 0.6;
+`;
+
+const AfterBox = styled.div``;
+
 export default function CreateStep({ onClick }: any) {
   const BASE_URL = getConfig().REACT_APP_BASE_ENDPOINT;
   const API_VERSION = process.env.REACT_APP_API_VERSION;
@@ -159,10 +166,11 @@ export default function CreateStep({ onClick }: any) {
   const childRef = useRef(null);
   const [title, setTitle] = useState('');
   const [list, setList] = useState<any[]>([]);
+  const [beforeList, setBeforeList] = useState<any[]>([]);
   const [submitType, setSubmitType] = useState<'save' | 'submit'>();
-  const [voteType, setVoteType] = useState<number | undefined>(0);
+  const [voteType, setVoteType] = useState<number>(0);
 
-  const { template } = useCreateProposalContext();
+  const { template, extraData } = useCreateProposalContext();
   const [components, setComponents] = useState<any[]>([]);
 
   const [showRht, setShowRht] = useState(true);
@@ -171,25 +179,14 @@ export default function CreateStep({ onClick }: any) {
   const [showType, setShowType] = useState('new');
   const [token, setToken] = useState('');
   const [templateTitle, setTemplateTitle] = useState('');
+  const [componentName, setComponentName] = useState('');
+  const [holder, setHolder] = useState<any[]>([]);
+  const [preview, setPreview] = useState<any[]>([]);
+  const [previewTitle, setPreviewTitle] = useState('');
+  const [initList, setInitList] = useState<any[]>([]);
+  const [tips, setTips] = useState('');
 
-  const [voteList, setVoteList] = useState([
-    {
-      id: 1,
-      value: 'test001',
-    },
-    {
-      id: 2,
-      value: 'test002',
-    },
-    {
-      id: 3,
-      value: 'test003',
-    },
-    {
-      id: 4,
-      value: 'test004',
-    },
-  ]);
+  const [voteList, setVoteList] = useState(['']);
 
   const { changeStep, proposalType } = useCreateProposalContext();
   const { showToast } = useToast();
@@ -200,17 +197,63 @@ export default function CreateStep({ onClick }: any) {
   } = useAuthContext();
 
   const { checkMetaforoLogin } = useCheckMetaforoLogin();
+  const [isInstantVoteAlertVisible, setIsInstantVoteAlertVisible] = useState(false);
 
   useEffect(() => {
     if (!template || !tokenData) return;
 
     setToken(tokenData.token);
+
+    let { vote_type } = template;
+    setVoteType(vote_type || 0);
+
     if (template.id) {
       setShowType('template');
       setShowRht(false);
       const { schema, components } = template;
       const arr = JSON.parse(schema!);
-      setList(arr ?? []);
+
+      const previewArr = arr.filter((i: any) => i.type === 'preview');
+      if (previewArr?.length && extraData?.id) {
+        setPreviewTitle(previewArr[0]?.title);
+        getPreview();
+
+        getComponentsList();
+      }
+
+      const componentsIndex = arr.findIndex((i: any) => i.type === 'components');
+
+      const beforeComponents = arr.filter(
+        (item: any) => item.type !== 'components' && arr.indexOf(item) < componentsIndex && item.type !== 'preview',
+      );
+      let componentsList = arr.filter((item: any) => item.type === 'components') || [];
+      const afterComponents = arr.filter(
+        (item: any) => item.type !== 'components' && arr.indexOf(item) > componentsIndex && item.type !== 'preview',
+      );
+
+      beforeComponents.forEach((item: any) => {
+        item.content = item.hint;
+      });
+
+      afterComponents.forEach((item: any) => {
+        item.content = item.hint;
+      });
+
+      if (!arr[componentsIndex]?.name && arr[componentsIndex]?.title && !components?.length) {
+        setShowType('new');
+        setShowRht(true);
+        setComponentName(arr[componentsIndex]?.title);
+        getComponentList();
+      }
+
+      setBeforeList(beforeComponents ?? []);
+      setList(afterComponents ?? []);
+      setHolder(componentsList);
+
+      setComponentName(componentsList[0]?.title);
+      setTips(componentsList[0]?.content);
+
+      // setList(arr ?? []);
       setTemplateTitle(template?.name ?? '');
       components?.map((item) => {
         if (typeof item.schema === 'string') {
@@ -218,21 +261,21 @@ export default function CreateStep({ onClick }: any) {
         }
         return item;
       });
-
       setComponents(components ? components : []);
     } else {
       setShowType('new');
-      let { vote_type } = template;
-      setVoteType(vote_type);
-      console.error(template);
 
       setList([
         {
-          title: '提案背景',
+          title: '背景',
           content: '',
         },
         {
-          title: '提案内容',
+          title: '内容',
+          content: '',
+        },
+        {
+          title: '备注',
           content: '',
         },
       ]);
@@ -240,6 +283,53 @@ export default function CreateStep({ onClick }: any) {
       setShowRht(true);
     }
   }, [template, tokenData]);
+
+  const getPreview = async () => {
+    if (!extraData) return;
+    const res = await requests.proposalV2.getProposalDetail(extraData?.id, 0);
+
+    let titleComponents = {
+      component_id: 16,
+      name: 'relate',
+      schema: '',
+      data: {
+        relate: extraData?.name,
+        proposal_id: extraData?.id,
+      },
+    };
+    const comStr = res.data.components || [];
+    comStr.map((item: any) => {
+      if (typeof item.data === 'string') {
+        item.data = JSON.parse(item.data);
+      }
+      return item;
+    });
+    comStr.unshift(titleComponents);
+
+    setPreview(comStr ?? []);
+  };
+
+  const getComponentsList = async () => {
+    // NOTE: getProposalDetail may use more time, so not show loading here
+    // dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    try {
+      const resp = await requests.proposalV2.getComponents();
+      let components = resp.data;
+
+      components?.map((item: any) => {
+        if (typeof item.schema === 'string') {
+          item.schema = JSON.parse(item.schema);
+        }
+        return item;
+      });
+
+      setInitList(resp.data);
+    } catch (error) {
+      logError('getAllProposals failed', error);
+    } finally {
+      // dispatch({ type: AppActionType.SET_LOADING, payload: false });
+    }
+  };
 
   const handleInput = (e: ChangeEvent) => {
     const { value } = e.target as HTMLInputElement;
@@ -281,12 +371,28 @@ export default function CreateStep({ onClick }: any) {
     }
     const canSubmit = await checkMetaforoLogin();
     if (canSubmit) {
+      let holderNew: any[] = [];
+      if (holder.length) {
+        holderNew = [...holder];
+        holderNew[0].name = JSON.stringify(holder[0]?.name);
+      }
+      let previewArr = [
+        {
+          title: previewTitle,
+          type: 'preview',
+          content: JSON.stringify(preview),
+        },
+      ];
+      let arr = [...previewArr, ...beforeList, ...holderNew, ...list];
+
       dispatch({ type: AppActionType.SET_LOADING, payload: true });
+
       saveOrSubmitProposal({
         title,
-        proposal_category_id: proposalType?.id,
+        proposal_category_id: proposalType?.category_id,
         vote_type: voteType,
-        content_blocks: list,
+        vote_options: voteType === 99 ? voteList : null,
+        content_blocks: arr,
         components: dataFormat,
         template_id: template?.id,
         submit_to_metaforo: submitType === 'submit',
@@ -319,10 +425,16 @@ export default function CreateStep({ onClick }: any) {
     (childRef.current as any).saveForm();
   };
 
-  const handleText = (value: any, index: number) => {
-    let arr = [...list];
-    arr[index].content = value;
-    setList([...arr]);
+  const handleText = (value: any, index: number, type: string) => {
+    if (type === 'before') {
+      let arr = [...beforeList];
+      arr[index].content = value;
+      setBeforeList([...arr]);
+    } else {
+      let arr = [...list];
+      arr[index].content = value;
+      setList([...arr]);
+    }
   };
 
   const allSubmit = () => {
@@ -333,15 +445,28 @@ export default function CreateStep({ onClick }: any) {
     setSubmitType('save');
     setTimeout(saveAllDraft, 0);
   };
-  const handleSubmit = () => {
-    // TODO: check content
+
+  const handleConfirmSubmit = () => {
     setSubmitType('submit');
     setTimeout(allSubmit, 0);
   };
 
+  const handleSubmit = () => {
+    if (template?.is_instant_vote) {
+      setIsInstantVoteAlertVisible(true);
+    } else {
+      handleConfirmSubmit();
+    }
+  };
+
+  const closeIsInstantVoteAlert = () => {
+    setIsInstantVoteAlertVisible(false);
+    setSubmitType(undefined);
+  };
+
   const handleBack = () => {
     setShowLeaveConfirm(false);
-    changeStep(2);
+    changeStep(1);
   };
 
   const removeVote = (index: number) => {
@@ -352,20 +477,20 @@ export default function CreateStep({ onClick }: any) {
 
   const handleAdd = () => {
     const arr = [...voteList];
-    arr.push({
-      id: 10,
-      value: '',
-    });
+    arr.push('');
     setVoteList(arr);
   };
 
   const handleVoteInput = (e: ChangeEvent, index: number) => {
     const arr = [...voteList];
-    arr[index].value = (e.target as HTMLInputElement).value;
+    arr[index] = (e.target as HTMLInputElement).value;
     setVoteList(arr);
   };
 
-  const submitDisabled = !title || !title.trim() || list.some((item) => !item.content);
+  const EmptyArray = voteList.filter((item) => item === '');
+
+  const submitDisabled =
+    !title || !title.trim() || list.some((item) => !item.content || (voteType === 99 && EmptyArray?.length));
 
   return (
     <Box>
@@ -379,8 +504,8 @@ export default function CreateStep({ onClick }: any) {
               <span className="backTitle">{t('Proposal.CreateProposal')}</span>
             </BackBox>
             <TagsBox>
-              <CategoryTag>{proposalType?.name}</CategoryTag>
-              {templateTitle && <TemplateTag>{templateTitle}</TemplateTag>}
+              <CategoryTag>{proposalType?.category_name}</CategoryTag>
+              {templateTitle && showType !== 'new' && <TemplateTag>{templateTitle}</TemplateTag>}
             </TagsBox>
           </NavLeft>
           <BtnGroup>
@@ -396,7 +521,7 @@ export default function CreateStep({ onClick }: any) {
 
       <BoxBg showRht={showRht.toString()}>
         <Template
-          DataSource={DataSource}
+          DataSource={null}
           operate={showType}
           language={i18n.language}
           showRight={showRht}
@@ -414,51 +539,87 @@ export default function CreateStep({ onClick }: any) {
                 </InputBox>
               </ItemBox>
 
-              <ComponnentBox>
-                <span>{t('Proposal.proposalComponents')}</span>
-              </ComponnentBox>
+              {!!preview.length && (
+                <>
+                  <ItemBox className="preview">
+                    <TitleBox>{previewTitle}</TitleBox>
+                  </ItemBox>
+                  <Preview DataSource={preview} language={i18n.language} initialItems={initList} theme={theme} />
+                </>
+              )}
+
+              {!!beforeList?.length &&
+                beforeList.map((item, index: number) => (
+                  <ItemBox key={`before_${index}`}>
+                    {!!item.title && <TitleBox>{item.title}</TitleBox>}
+                    <InputBox>
+                      <MdEditor
+                        toolbarsExclude={['github', 'save']}
+                        modelValue={item.content}
+                        editorId={`before_${index}`}
+                        onChange={(val) => handleText(val, index, 'before')}
+                        theme={theme ? 'dark' : 'light'}
+                        placeholder={item.hint}
+                      />
+                    </InputBox>
+
+                    {/*<MarkdownEditor value={item.content} onChange={(val)=>handleText(val,index)} />*/}
+                  </ItemBox>
+                ))}
+              {!!componentName?.length && (
+                <>
+                  <ComponnentBox>
+                    <span>{componentName || t('Proposal.proposalComponents')}</span>
+                  </ComponnentBox>
+                  {!!tips && <TipsBox>{tips}</TipsBox>}
+                </>
+              )}
             </>
           }
           AfterComponent={
-            <div>
-              {list.map((item, index: number) => (
-                <ItemBox key={`block_${index}`}>
-                  {!!item.title && <TitleBox>{item.title}</TitleBox>}
-                  <InputBox>
-                    <MdEditor
-                      toolbarsExclude={['github', 'save']}
-                      modelValue={item.content}
-                      editorId={`block_${index}`}
-                      onChange={(val) => handleText(val, index)}
-                      theme={theme ? 'dark' : 'light'}
-                    />
-                  </InputBox>
+            <AfterBox>
+              {!!list?.length &&
+                list.map((item, index: number) => (
+                  <ItemBox key={`block_${index}`}>
+                    {!!item.title && <TitleBox>{item.title}</TitleBox>}
+                    <InputBox>
+                      <MdEditor
+                        toolbarsExclude={['github', 'save']}
+                        modelValue={item.content}
+                        editorId={`block_${index}`}
+                        onChange={(val) => handleText(val, index, 'after')}
+                        theme={theme ? 'dark' : 'light'}
+                        placeholder={item.hint}
+                      />
+                    </InputBox>
 
-                  {/*<MarkdownEditor value={item.content} onChange={(val)=>handleText(val,index)} />*/}
+                    {/*<MarkdownEditor value={item.content} onChange={(val)=>handleText(val,index)} />*/}
+                  </ItemBox>
+                ))}
+              {voteType === 99 && (
+                <ItemBox>
+                  <TitleBox>投票选项</TitleBox>
+                  <VoteBox>
+                    {voteList.map((item, index) => (
+                      <li key={`vote_${index}`}>
+                        <input type="text" value={item} onChange={(e) => handleVoteInput(e, index)} />
+                        {voteList.length - 1 === index && (
+                          <span onClick={() => handleAdd()}>
+                            <img src={PlusImg} alt="" />
+                          </span>
+                        )}
+
+                        {!!(voteList.length - 1) && (
+                          <span onClick={() => removeVote(index)}>
+                            <img src={MinusImg} alt="" />
+                          </span>
+                        )}
+                      </li>
+                    ))}
+                  </VoteBox>
                 </ItemBox>
-              ))}
-              {/*<ItemBox>*/}
-              {/*  <TitleBox>投票选项</TitleBox>*/}
-              {/*  <VoteBox>*/}
-              {/*    {voteList.map((item, index) => (*/}
-              {/*      <li>*/}
-              {/*        <input type="text" value={item.value} onChange={(e) => handleVoteInput(e, index)} />*/}
-              {/*        {voteList.length - 1 === index && (*/}
-              {/*          <span onClick={() => handleAdd()}>*/}
-              {/*            <img src={PlusImg} alt="" />*/}
-              {/*          </span>*/}
-              {/*        )}*/}
-
-              {/*        {!!(voteList.length - 1) && (*/}
-              {/*          <span onClick={() => removeVote(index)}>*/}
-              {/*            <img src={MinusImg} alt="" />*/}
-              {/*          </span>*/}
-              {/*        )}*/}
-              {/*      </li>*/}
-              {/*    ))}*/}
-              {/*  </VoteBox>*/}
-              {/*</ItemBox>*/}
-            </div>
+              )}
+            </AfterBox>
           }
           ref={childRef}
           onSubmitData={handleFormSubmit}
@@ -471,6 +632,14 @@ export default function CreateStep({ onClick }: any) {
           msg={t('Proposal.ConfirmBackCreate')}
           onConfirm={handleBack}
           onClose={() => setShowLeaveConfirm(false)}
+        />
+      )}
+      {isInstantVoteAlertVisible && (
+        <ConfirmModal
+          title=""
+          msg={t('Proposal.SubmitConfirmTip')}
+          onConfirm={handleConfirmSubmit}
+          onClose={closeIsInstantVoteAlert}
         />
       )}
     </Box>

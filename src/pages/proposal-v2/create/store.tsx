@@ -1,14 +1,14 @@
 import React, { createContext, useContext, useState } from 'react';
-import { ProposalTemplateType } from 'type/proposal.type';
-import { IBaseCategory } from 'type/proposalV2.type';
+import { ICategory, ITemplate } from 'type/proposalV2.type';
 
 type ProposalContext = {
   currentStep: number;
-  proposalType?: IBaseCategory;
-  template?: ProposalTemplateType;
+  proposalType?: ICategory;
+  template?: ITemplate;
+  extraData?: { id: number; name: string };
   changeStep: (step: number) => void;
-  chooseProposalType: (tp: IBaseCategory) => void;
-  chooseTemplate: (t: ProposalTemplateType) => void;
+  chooseProposalType: (tp: ICategory) => void;
+  chooseTemplate: (tp: ICategory | undefined, t: ITemplate, extra?: { id: number; name: string }) => void;
   goBackStepOne: () => void;
 };
 
@@ -22,19 +22,22 @@ const context = createContext<ProposalContext>({
 
 const CreateProposalProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [currentStep, setCurrentStep] = useState(1);
-  const [proposalType, setProposalType] = useState<IBaseCategory>();
-  const [template, setTemplate] = useState<ProposalTemplateType>();
+  const [proposalType, setProposalType] = useState<ICategory>();
+  const [template, setTemplate] = useState<ITemplate>();
+  const [extraData, setExtraData] = useState<{ id: number; name: string }>();
 
   const addStep = () => setCurrentStep(currentStep + 1);
   const changeStep = (newStep: number) => setCurrentStep(newStep);
 
-  const chooseProposalType = (tp: IBaseCategory) => {
+  const chooseProposalType = (tp: ICategory) => {
     setProposalType(tp);
     addStep();
   };
 
-  const chooseTemplate = (t: ProposalTemplateType) => {
+  const chooseTemplate = (tp: ICategory | undefined, t: ITemplate, extra?: { id: number; name: string }) => {
+    setProposalType(tp);
     setTemplate(t);
+    setExtraData(extra);
     addStep();
   };
 
@@ -47,6 +50,7 @@ const CreateProposalProvider: React.FC<{ children: React.ReactNode }> = ({ child
   return (
     <context.Provider
       value={{
+        extraData,
         currentStep,
         proposalType,
         template,

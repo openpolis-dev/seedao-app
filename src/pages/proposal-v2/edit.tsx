@@ -6,8 +6,8 @@ import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import React, { useEffect, useState, useRef, ChangeEvent } from 'react';
 import { IContentBlock, IProposal, ProposalState } from 'type/proposalV2.type';
 import { useAuthContext, AppActionType } from 'providers/authProvider';
-import { Template } from '@taoist-labs/components';
-import { MdEditor } from 'md-editor-rt';
+import { Preview, Template } from '@taoist-labs/components';
+import { MdEditor, MdPreview } from 'md-editor-rt';
 import useCheckMetaforoLogin from 'hooks/useMetaforoLogin';
 import { updateProposal, getProposalDetail } from 'requests/proposalV2';
 import { Button } from 'react-bootstrap';
@@ -42,30 +42,18 @@ export default function EditProposal() {
   const [token, setToken] = useState('');
   const [showRht, setShowRht] = useState(false);
   const [voteType, setVoteType] = useState<number | undefined>(0);
+  const [beforeList, setBeforeList] = useState<any[]>([]);
+  const [componentName, setComponentName] = useState('');
+  const [holder, setHolder] = useState<any[]>([]);
 
   const [dataSource, setDataSource] = useState();
   const childRef = useRef(null);
+  const [preview, setPreview] = useState<any[]>([]);
+  const [previewTitle, setPreviewTitle] = useState('');
+  const [previewOrg, setPreviewOrg] = useState<any[]>([]);
 
   const { showToast } = useToast();
-
-  const [voteList, setVoteList] = useState([
-    {
-      id: 1,
-      value: 'test001',
-    },
-    {
-      id: 2,
-      value: 'test002',
-    },
-    {
-      id: 3,
-      value: 'test003',
-    },
-    {
-      id: 4,
-      value: 'test004',
-    },
-  ]);
+  const [voteList, setVoteList] = useState(['']);
 
   useEffect(() => {
     if (state) {
@@ -95,7 +83,31 @@ export default function EditProposal() {
   useEffect(() => {
     if (data) {
       setTitle(data.title);
-      setContentBlocks(data.content_blocks);
+
+      const arr = data.content_blocks;
+      const componentsIndex = arr.findIndex((i: any) => i.type === 'components');
+
+      const beforeComponents = arr.filter(
+        (item: any) => item.type !== 'components' && item.type !== 'preview' && arr.indexOf(item) < componentsIndex,
+      );
+      let componentsList = arr.filter((item: any) => item.type === 'components') || [];
+      const afterComponents = arr.filter(
+        (item: any) => item.type !== 'components' && item.type !== 'preview' && arr.indexOf(item) > componentsIndex,
+      );
+
+      const preview = arr.filter((i: any) => i.type === 'preview');
+      setPreviewOrg(preview);
+      const preArr = JSON.parse(preview[0].content);
+
+      setPreview(preArr);
+      setPreviewTitle(preview[0].title);
+
+      setComponentName(componentsList[0]?.title);
+      setBeforeList(beforeComponents ?? []);
+      setHolder(componentsList);
+      setContentBlocks(afterComponents);
+
+      // setContentBlocks(data.content_blocks);
     }
   }, [data]);
 
@@ -163,11 +175,20 @@ export default function EditProposal() {
     }
 
     await checkMetaforoLogin();
+
+    let holderNew = [...holder];
+
+    if (holder?.length) {
+      holderNew[0].name = JSON.stringify(holder[0]?.name);
+    }
+
+    let arr = [...previewOrg, ...beforeList, ...holderNew, ...contentBlocks];
+
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     updateProposal(Number(data.id), {
       title,
       proposal_category_id: data.proposal_category_id,
-      content_blocks: contentBlocks,
+      content_blocks: arr,
       vote_type: voteType,
       components: dataFormat,
       submit_to_metaforo: submitType === 'submit',
@@ -215,16 +236,13 @@ export default function EditProposal() {
 
   const handleAdd = () => {
     const arr = [...voteList];
-    arr.push({
-      id: 10,
-      value: '',
-    });
+    arr.push('');
     setVoteList(arr);
   };
 
   const handleVoteInput = (e: ChangeEvent, index: number) => {
     const arr = [...voteList];
-    arr[index].value = (e.target as HTMLInputElement).value;
+    arr[index] = (e.target as HTMLInputElement).value;
     setVoteList(arr);
   };
 
@@ -281,50 +299,81 @@ export default function EditProposal() {
                   <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} />
                 </InputBox>
               </ItemBox>
+
+              {!!preview?.length && (
+                <>
+                  <ItemBox>
+                    <TitleBox>{previewTitle}</TitleBox>
+                    <div>
+                      <Preview DataSource={preview} language={i18n.language} initialItems={components} theme={theme} />
+                    </div>
+                  </ItemBox>
+                </>
+              )}
+
+              {!!beforeList?.length &&
+                beforeList?.map((item, index: number) => (
+                  <ItemBox key={`block_${index}`}>
+                    <TitleBox>{item.title}</TitleBox>
+
+                    <MdEditor
+                      toolbarsExclude={['github', 'save']}
+                      theme={theme ? 'dark' : 'light'}
+                      modelValue={item.content}
+                      editorId={`block_${index}`}
+                      onChange={(val) => handleText(val, index)}
+                    />
+
+                    {/*<MarkdownEditor value={item.content} onChange={(val)=>handleText(val,index)} />*/}
+                  </ItemBox>
+                ))}
+
               <ComponnentBox>
-                <span>{t('Proposal.proposalComponents')}</span>
+                <span>{componentName || t('Proposal.proposalComponents')}</span>
               </ComponnentBox>
             </>
           }
           AfterComponent={
             <div>
-              {contentBlocks?.map((item, index: number) => (
-                <ItemBox key={`block_${index}`}>
-                  <TitleBox>{item.title}</TitleBox>
+              {!!contentBlocks?.length &&
+                contentBlocks?.map((item, index: number) => (
+                  <ItemBox key={`block_${index}`}>
+                    <TitleBox>{item.title}</TitleBox>
 
-                  <MdEditor
-                    toolbarsExclude={['github', 'save']}
-                    theme={theme ? 'dark' : 'light'}
-                    modelValue={item.content}
-                    editorId={`block_${index}`}
-                    onChange={(val) => handleText(val, index)}
-                  />
+                    <MdEditor
+                      toolbarsExclude={['github', 'save']}
+                      theme={theme ? 'dark' : 'light'}
+                      modelValue={item.content}
+                      editorId={`block_${index}`}
+                      onChange={(val) => handleText(val, index)}
+                    />
 
-                  {/*<MarkdownEditor value={item.content} onChange={(val)=>handleText(val,index)} />*/}
-                </ItemBox>
-              ))}
-
-              {/*<ItemBox>*/}
-              {/*  <TitleBox>投票选项</TitleBox>*/}
-              {/*  <VoteBox>*/}
-              {/*    {voteList.map((item, index) => (*/}
-              {/*      <li>*/}
-              {/*        <input type="text" value={item.value} onChange={(e) => handleVoteInput(e, index)} />*/}
-              {/*        {voteList.length - 1 === index && (*/}
-              {/*          <span onClick={() => handleAdd()}>*/}
+                    {/*<MarkdownEditor value={item.content} onChange={(val)=>handleText(val,index)} />*/}
+                  </ItemBox>
+                ))}
+              {/*{*/}
+              {/*  voteType === 99 &&<ItemBox>*/}
+              {/*    <TitleBox>投票选项</TitleBox>*/}
+              {/*    <VoteBox>*/}
+              {/*      {voteList.map((item, index) => (*/}
+              {/*        <li>*/}
+              {/*          <input type="text" value={item} onChange={(e) => handleVoteInput(e, index)} />*/}
+              {/*          {voteList.length - 1 === index && (*/}
+              {/*            <span onClick={() => handleAdd()}>*/}
               {/*            <img src={PlusImg} alt="" />*/}
               {/*          </span>*/}
-              {/*        )}*/}
+              {/*          )}*/}
 
-              {/*        {!!(voteList.length - 1) && (*/}
-              {/*          <span onClick={() => removeVote(index)}>*/}
+              {/*          {!!(voteList.length - 1) && (*/}
+              {/*            <span onClick={() => removeVote(index)}>*/}
               {/*            <img src={MinusImg} alt="" />*/}
               {/*          </span>*/}
-              {/*        )}*/}
-              {/*      </li>*/}
-              {/*    ))}*/}
-              {/*  </VoteBox>*/}
-              {/*</ItemBox>*/}
+              {/*          )}*/}
+              {/*        </li>*/}
+              {/*      ))}*/}
+              {/*    </VoteBox>*/}
+              {/*  </ItemBox>*/}
+              {/*}*/}
             </div>
           }
           ref={childRef}

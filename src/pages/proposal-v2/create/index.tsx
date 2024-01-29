@@ -9,7 +9,7 @@ import CreateStep from './createStep';
 import { useCreateProposalContext } from './store';
 import { useEffect } from 'react';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
-import { getAuthProposalCategoryList } from 'requests/proposalV2';
+import { getAuthProposalCategoryList, getTemplates } from 'requests/proposalV2';
 import useCheckMetaforoLogin from 'hooks/useMetaforoLogin';
 
 const CreateProposalSteps = () => {
@@ -29,9 +29,9 @@ const CreateProposalSteps = () => {
     checkMetaforoLogin().then(() => {
       dispatch({ type: AppActionType.SET_LOADING, payload: true });
 
-      getAuthProposalCategoryList()
+      getTemplates()
         .then((resp) => {
-          dispatch({ type: AppActionType.SET_PROPOSAL_CATEGORIES_V2, payload: resp.data });
+          dispatch({ type: AppActionType.SET_CATEGORIES_TEMPLATES, payload: resp.data });
         })
         .catch(() => {
           // no auth
@@ -47,9 +47,9 @@ const CreateProposalSteps = () => {
     switch (currentStep) {
       case 1:
         return <ChooseTypeStep />;
+      // case 2:
+      //   return <ChooseTemplateStep />;
       case 2:
-        return <ChooseTemplateStep />;
-      case 3:
         return <CreateStep onClick={backTo} />;
       default:
         return null;
@@ -63,16 +63,12 @@ const CreateProposalSteps = () => {
     }
   };
 
-  const backNavTitle = currentStep === 2 && proposalType ? t(proposalType.name as any) : t('Proposal.CreateProposal');
+  const backNavTitle = currentStep === 2 && proposalType ? t(proposalType.category_name as any) : t('Proposal.CreateProposal');
 
   return (
     <>
-      {currentStep !== 3 && (
-        <BackerNav
-          title={backNavTitle}
-          to={currentStep === 1 ? '/proposal' : '/proposal/create'}
-          onClick={backTo}
-        />
+      {currentStep !== 2 && (
+        <BackerNav title={backNavTitle} to={currentStep === 1 ? '/proposal' : '/proposal/create'} onClick={backTo} />
       )}
       {showstep()}
     </>

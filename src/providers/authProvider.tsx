@@ -1,9 +1,16 @@
 import React, { useReducer, createContext, useContext } from 'react';
 import { IUser, ITokenType } from 'type/user.type';
 import { ICategory } from 'type/proposal.type';
-import { IBaseCategory } from 'type/proposalV2.type';
+import { IBaseCategory, ICategoryWithTemplates } from 'type/proposalV2.type';
 import { Authorizer } from 'casbin.js';
-import { SEEDAO_ACCOUNT, SEEDAO_USER, SEEDAO_USER_DATA, SENDING_ME_USER, METAFORO_TOKEN } from '../utils/constant';
+import {
+  SEEDAO_ACCOUNT,
+  SEEDAO_USER,
+  SEEDAO_USER_DATA,
+  SENDING_ME_USER,
+  METAFORO_TOKEN,
+  SEE_AUTH,
+} from '../utils/constant';
 import { WalletType } from '../wallet/wallet';
 import getConfig from 'utils/envCofnig';
 
@@ -15,6 +22,7 @@ interface IState {
   tokenData?: ITokenType;
   proposal_categories: ICategory[];
   proposalCategories: IBaseCategory[];
+  categoryTemplates: ICategoryWithTemplates[];
   language: string;
   loading: boolean | null;
   authorizer?: Authorizer;
@@ -28,6 +36,7 @@ interface IState {
   rpc?: string;
   metaforoToken?: string;
   show_metaforo_login?: boolean;
+  deschoolToken?: string;
 }
 
 export enum AppActionType {
@@ -38,6 +47,7 @@ export enum AppActionType {
   CLEAR_AUTH = 'clear_auth',
   SET_PROPOSAL_CATEGORIES = 'set_proposal_categories',
   SET_PROPOSAL_CATEGORIES_V2 = 'set_proposal_categories_v2',
+  SET_CATEGORIES_TEMPLATES = 'set_categories_templates',
   SET_LAN = 'SET_LAN',
   SET_LOADING = 'SET_LOADING',
   SET_AUTHORIZER = 'SET_AUTHORIZER',
@@ -52,6 +62,7 @@ export enum AppActionType {
   SET_CURRENT_SEASON = 'set_current_season',
   SET_METAFORO_TOKEN = 'set_metaforo_token',
   SET_SHOW_METAFORO_LOGIN_MODAL = 'set_show_metaforo_login_modal',
+  SET_THIRD_PARTY_TOKEN = 'set_third_party_token',
 }
 
 interface IAction {
@@ -80,6 +91,7 @@ const INIT_STATE: IState = {
     // },
   ],
   proposalCategories: [],
+  categoryTemplates: [],
   language: '',
   loading: null,
   snsMap: new Map(),
@@ -131,6 +143,8 @@ const reducer = (state: IState, action: IAction): IState => {
       return { ...state, proposal_categories: action.payload };
     case AppActionType.SET_PROPOSAL_CATEGORIES_V2:
       return { ...state, proposalCategories: action.payload };
+    case AppActionType.SET_CATEGORIES_TEMPLATES:
+      return { ...state, categoryTemplates: action.payload };
     case AppActionType.SET_LOADING:
       return { ...state, loading: action.payload };
     case AppActionType.SET_AUTHORIZER:
@@ -157,6 +171,9 @@ const reducer = (state: IState, action: IAction): IState => {
       return { ...state, currentSeason: action.payload };
     case AppActionType.SET_METAFORO_TOKEN:
       return { ...state, metaforoToken: action.payload };
+    case AppActionType.SET_THIRD_PARTY_TOKEN:
+      localStorage.setItem(SEE_AUTH, JSON.stringify(action.payload));
+      return { ...state, deschoolToken: action.payload?.deschool, metaforoToken: action.payload?.metaforo };
     case AppActionType.SET_SHOW_METAFORO_LOGIN_MODAL:
       return { ...state, show_metaforo_login: action.payload };
     default:

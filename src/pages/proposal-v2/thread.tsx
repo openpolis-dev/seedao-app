@@ -54,6 +54,7 @@ export default function ThreadPage() {
   } = useAuthContext();
   const proposalCategories = useProposalCategories();
   const { checkMetaforoLogin } = useCheckMetaforoLogin();
+  const [voteType, setVoteType] = useState<number>(0);
 
   const [blockType, setBlockType] = useState<BlockContentType>(BlockContentType.Reply);
   const [data, setData] = useState<IProposal>();
@@ -74,25 +75,12 @@ export default function ThreadPage() {
   const [components, setComponents] = useState<any[]>([]);
   const [commentsArray, setCommentsArray] = useState<ICommentDisplay[][]>([]);
   const [currentCommentArrayIdx, setCurrentCommentArrayIdx] = useState<number>(0);
+  const [componentName, setComponentName] = useState('');
+  const [beforeList, setBeforeList] = useState<IContentBlock[]>([]);
+  const [preview, setPreview] = useState<any[]>([]);
+  const [previewTitle, setPreviewTitle] = useState('');
 
-  const [voteList, setVoteList] = useState([
-    {
-      id: 1,
-      value: 'test001',
-    },
-    {
-      id: 2,
-      value: 'test002',
-    },
-    {
-      id: 3,
-      value: 'test003',
-    },
-    {
-      id: 4,
-      value: 'test004',
-    },
-  ]);
+  const [voteList, setVoteList] = useState(['']);
 
   const [dataSource, setDatasource] = useState<any>();
 
@@ -125,8 +113,35 @@ export default function ThreadPage() {
         );
       }
       setData(res.data);
+      const arr = res.data.content_blocks;
+      const componentsIndex = arr.findIndex((i: any) => i.type === 'components');
 
-      setContentBlocks(res.data.content_blocks);
+      const beforeComponents = arr.filter(
+        (item: any) => item.type !== 'components' && item.type !== 'preview' && arr.indexOf(item) < componentsIndex,
+      );
+      let componentsList = arr.filter((item: any) => item.type === 'components') || [];
+      const afterComponents = arr.filter(
+        (item: any) => item.type !== 'components' && item.type !== 'preview' && arr.indexOf(item) > componentsIndex,
+      );
+
+      setVoteType(res.data.vote_type || 0);
+
+      let { votes } = res.data;
+      // setVoteList(votes ?? [''])
+
+      const preview = arr.filter((i: any) => i.type === 'preview');
+
+      if (preview.length) {
+        const preArr = JSON.parse(preview[0].content);
+        setPreview(preArr);
+        setPreviewTitle(preview[0].title);
+      }
+
+      setComponentName(componentsList[0]?.title);
+      setBeforeList(beforeComponents ?? []);
+
+      setContentBlocks(afterComponents);
+
       const comStr = res.data.components || [];
       comStr.map((item: any) => {
         if (typeof item.data === 'string') {
@@ -134,6 +149,7 @@ export default function ThreadPage() {
         }
         return item;
       });
+
       setDatasource(comStr ?? []);
       // comment
 
@@ -421,8 +437,10 @@ export default function ThreadPage() {
         <div className="title">{data?.title}</div>
         <FlexLine>
           {currentState && <ProposalStateTag state={currentState} />}
+          {data?.state === ProposalState.Vetoed && <StatusTag>{t('Proposal.veto')}</StatusTag>}
+
           {currentCategory && <CategoryTag>{currentCategory}</CategoryTag>}
-          {review && data?.template_name && <TemplateTag>{data?.template_name}</TemplateTag>}
+          {data?.template_name && <TemplateTag>{data?.template_name}</TemplateTag>}
           {data?.arweave && (
             <StoreHash href={`https://arweave.net/tx/${data?.arweave}/data.html`} target="_blank" rel="noreferrer">
               a
@@ -448,40 +466,80 @@ export default function ThreadPage() {
           <div className="desc">{data.reject_reason}</div>
         </RejectBlock>
       )}
+
       <ContentOuter>
         <Preview
-          DataSource={dataSource}
+          DataSource={JSON.parse(JSON.stringify(dataSource || []))}
           language={i18n.language}
           initialItems={components}
           theme={theme}
+          key="preview_main"
           BeforeComponent={
-            !!dataSource?.length && (
-              <ComponnentBox>
-                <div className="title">{t('Proposal.proposalComponents')}</div>
-              </ComponnentBox>
-            )
-          }
-          AfterComponent={contentBlocks.map((block, i) => (
             <>
-              <ProposalContentBlock key={block.title} $radius={i === 0 && !dataSource?.length ? '4px 4px 0 0' : '0'}>
-                <div className="title">{block.title}</div>
-                <div className="content">
-                  <MdPreview theme={theme ? 'dark' : 'light'} modelValue={block.content || ''} />
-                </div>
-              </ProposalContentBlock>
-              {/*<ItemBox>*/}
-              {/*  <TitleBox>投票选项</TitleBox>*/}
-              {/*  <VoteBox>*/}
-              {/*    {voteList.map((item, index) => (*/}
-              {/*      <li>*/}
-              {/*        <input type="checkbox" id={`vote_${index}`} />*/}
-              {/*        <label htmlFor={`vote_${index}`}>{item.value}</label>*/}
-              {/*      </li>*/}
-              {/*    ))}*/}
-              {/*  </VoteBox>*/}
-              {/*</ItemBox>*/}
+              {!!preview?.length && (
+                <>
+                  <ProposalContentBlock>
+                    <div className="title">{previewTitle}</div>
+                    <div className="constentPreview">
+                      <Preview
+                        DataSource={JSON.parse(JSON.stringify(preview || []))}
+                        key="preview_inner"
+                        language={i18n.language}
+                        initialItems={components}
+                        theme={theme}
+                      />
+                    </div>
+                  </ProposalContentBlock>
+                </>
+              )}
+              {!!beforeList?.length &&
+                beforeList.map((block, i) => (
+                  <ProposalContentBlock
+                    key={block.title}
+                    $radius={i === 0 && !dataSource?.length ? '4px 4px 0 0' : '0'}
+                  >
+                    <div className="title">{block.title}</div>
+                    <div className="content">
+                      <MdPreview theme={theme ? 'dark' : 'light'} modelValue={block.content || ''} />
+                    </div>
+                  </ProposalContentBlock>
+                ))}
+              {!!dataSource?.length && (
+                <ComponnentBox>
+                  <div className="title">{componentName || t('Proposal.proposalComponents')}</div>
+                </ComponnentBox>
+              )}
             </>
-          ))}
+          }
+          AfterComponent={
+            <>
+              {!!contentBlocks?.length &&
+                contentBlocks?.map((block, i) => (
+                  <ProposalContentBlock
+                    key={`ProposalContentBlock_${block.title}_${i}`}
+                    $radius={i === 0 && !dataSource?.length ? '4px 4px 0 0' : '0'}
+                  >
+                    <div className="title">{block.title}</div>
+                    <div className="content">
+                      <MdPreview theme={theme ? 'dark' : 'light'} modelValue={block.content || ''} />
+                    </div>
+                  </ProposalContentBlock>
+                ))}
+              {/*{*/}
+              {/*  voteType === 99 &&  <ItemBox>*/}
+              {/*    <TitleBox>投票选项</TitleBox>*/}
+              {/*    <VoteBox>*/}
+              {/*      {voteList.map((item:string, index) => (*/}
+              {/*        <li>*/}
+              {/*          <input type="checkbox" id={`vote_${index}`} />*/}
+              {/*          <label htmlFor={`vote_${index}`}>{item}</label>*/}
+              {/*        </li>*/}
+              {/*      ))}*/}
+              {/*    </VoteBox>*/}
+              {/*  </ItemBox>*/}
+              {/*}*/}
+            </>
+          }
         />
       </ContentOuter>
       {data?.state !== ProposalState.PendingSubmit && (
@@ -489,10 +547,13 @@ export default function ThreadPage() {
           <CardStyle>
             {showVote() && (
               <ProposalVote
+                proposalState={data!.state}
+                execution_ts={data?.execution_ts}
                 voteGate={data?.vote_gate}
                 poll={data!.votes[0]}
                 id={Number(id)}
                 updateStatus={getProposalDetail}
+                isOverrideProposal={data!.template_name === '否决提案'}
               />
             )}
 
@@ -735,6 +796,9 @@ const ProposalContentBlock = styled.div<{ $radius?: string }>`
   .content .md-editor-preview-wrapper {
     padding-inline: 32px;
   }
+  .constentPreview {
+    margin-top: 20px;
+  }
 `;
 
 const ComponnentBox = styled(ProposalContentBlock)`
@@ -818,4 +882,15 @@ const TitleBox = styled.div`
   font-weight: bold;
   margin-bottom: 20px;
   box-sizing: border-box;
+`;
+const StatusTag = styled.div`
+  background-color: #fb4e4e;
+  color: #fff;
+  font-size: 12px;
+  border-radius: 4px;
+  display: inline-block;
+  height: 24px;
+  line-height: 24px;
+  text-align: center;
+  padding: 0 20px;
 `;

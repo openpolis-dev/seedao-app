@@ -6,6 +6,7 @@ import {
   IContentBlock,
   IBaseCategory,
   IActivity,
+  ITemplate,
 } from 'type/proposalV2.type';
 import { METAFORO_TOKEN, SEEDAO_USER } from 'utils/constant';
 import { parseToken, checkTokenValid, clearStorage } from 'utils/auth';
@@ -72,11 +73,29 @@ export const getProposalDetail = (id: number, startPostId?: number): Promise<Res
   );
 };
 
+export const getCloseProposal = (
+  id: number,
+): Promise<
+  ResponseData<{
+    id: number;
+    title: string;
+  }[]>
+> => {
+  return request.get(
+    `${PATH_PREFIX}creating_project_proposals`,
+    {
+      category_id: id,
+    },
+    {},
+  );
+};
+
 type CreateProposalParamsType = {
   title: string;
   proposal_category_id: number | undefined;
-  vote_type: number | undefined;
+  vote_type?: number | undefined;
   template_id?: number | string;
+  vote_options?: string[] | null;
   content_blocks: IContentBlock[];
   submit_to_metaforo: boolean;
   components: any;
@@ -131,6 +150,13 @@ export const castVote = (id: number, vote_id: number, option: number) => {
   return request.post(`${PATH_PREFIX}vote/${id}`, {
     vote_id,
     options: [option],
+    metaforo_access_token: getMetaforoData()?.token,
+  });
+};
+
+export const closeVote = (id: number, vote_id: number) => {
+  return request.post(`${PATH_PREFIX}close_vote/${id}`, {
+    vote_id,
     metaforo_access_token: getMetaforoData()?.token,
   });
 };
@@ -192,4 +218,14 @@ export const getTemplate = () => {
 };
 export const getComponents = () => {
   return request.get('/proposal_components/');
+};
+
+interface ICatetoryTemplate {
+  category_id: number;
+  name: string;
+  templates: ITemplate[];
+}
+
+export const getTemplates = (): Promise<ResponseData<ICatetoryTemplate[]>> => {
+  return request.get('/proposal_tmpl/list_with_perm');
 };

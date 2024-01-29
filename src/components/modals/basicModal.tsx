@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import CloseIcon from 'assets/Imgs/close.svg';
 
-interface Iprops {
+export interface Iprops {
   title?: string;
   handleClose?: () => void;
   children?: React.ReactNode;
