@@ -133,6 +133,7 @@ export interface IProposal extends ISimpleProposal {
     lists: IProposalEditHistoy[];
   };
   template_name?: string;
+  execution_ts?: number;
 }
 
 export interface IActivity {

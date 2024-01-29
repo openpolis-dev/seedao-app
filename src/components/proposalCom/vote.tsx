@@ -23,6 +23,7 @@ interface IProps {
   poll: Poll;
   voteGate?: VoteGateType;
   isOverrideProposal?: boolean;
+  execution_ts?: number;
   updateStatus: () => void;
 }
 
@@ -43,7 +44,15 @@ const getPollStatus = (start_t: string, close_t: string) => {
   return VoteType.Open;
 };
 
-export default function ProposalVote({ proposalState, id, poll, voteGate, isOverrideProposal, updateStatus }: IProps) {
+export default function ProposalVote({
+  execution_ts,
+  proposalState,
+  id,
+  poll,
+  voteGate,
+  isOverrideProposal,
+  updateStatus,
+}: IProps) {
   const { t } = useTranslation();
   const [selectOption, setSelectOption] = useState<VoteOption>();
   const [openVoteItem, setOpenVoteItem] = useState<VoteOptionItem>();
@@ -73,7 +82,7 @@ export default function ProposalVote({ proposalState, id, poll, voteGate, isOver
         <>
           <OpenTag>
             {t('Proposal.AutoExecuteLeftTime', {
-              ...formatDeltaDate(new Date(poll.close_at).getTime() + 86400000),
+              ...formatDeltaDate(execution_ts ? execution_ts * 1000 : new Date(poll.close_at).getTime() + 86400000),
             })}
           </OpenTag>
           <OverlayTrigger overlay={renderExecutionTip} placement="right">
@@ -121,7 +130,7 @@ export default function ProposalVote({ proposalState, id, poll, voteGate, isOver
         </OpenTag>
       );
     }
-  }, [pollStatus, t, canUseCityhall, hasClosed]);
+  }, [pollStatus, t, canUseCityhall, hasClosed, execution_ts]);
 
   const onConfirmVote = () => {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
