@@ -213,8 +213,6 @@ export default function CreateStep({ onClick }: any) {
       const { schema, components } = template;
       const arr = JSON.parse(schema!);
 
-      console.log(extraData);
-
       const previewArr = arr.filter((i: any) => i.type === 'preview');
       if (previewArr?.length && extraData?.id) {
         setPreviewTitle(previewArr[0]?.title);
@@ -507,7 +505,7 @@ export default function CreateStep({ onClick }: any) {
             </BackBox>
             <TagsBox>
               <CategoryTag>{proposalType?.category_name}</CategoryTag>
-              {templateTitle && <TemplateTag>{templateTitle}</TemplateTag>}
+              {templateTitle && showType !== 'new' && <TemplateTag>{templateTitle}</TemplateTag>}
             </TagsBox>
           </NavLeft>
           <BtnGroup>
