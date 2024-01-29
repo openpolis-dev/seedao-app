@@ -65,7 +65,7 @@ export default function ProposalVote({ proposalState, id, poll, voteGate, isOver
   );
 
   const voteStatusTag = useMemo(() => {
-    if (proposalState === ProposalState.Executed || pollStatus === VoteType.Closed) {
+    if (proposalState === ProposalState.Executed) {
       return <CloseTag>{t('Proposal.VoteClose')}</CloseTag>;
     } else if (proposalState === ProposalState.PendingExecution) {
       return (
@@ -96,6 +96,8 @@ export default function ProposalVote({ proposalState, id, poll, voteGate, isOver
           </OverlayTrigger>
         </>
       );
+    } else if (pollStatus === VoteType.Closed) {
+      return <CloseTag>{t('Proposal.VoteClose')}</CloseTag>;
     } else if (pollStatus === VoteType.Open) {
       return (
         <>
