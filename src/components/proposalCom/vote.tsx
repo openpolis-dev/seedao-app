@@ -50,6 +50,7 @@ export default function ProposalVote({ proposalState, id, poll, voteGate, isOver
   const [showConfirmVote, setShowConfirmVote] = useState(false);
   const [showConfirmClose, setShowConfirmClose] = useState(false);
   const [hasPermission, setHasPermission] = useState(false);
+  const [hasClosed, setHasClosed] = useState(false);
 
   const { dispatch } = useAuthContext();
   const { showToast } = useToast();
@@ -67,7 +68,7 @@ export default function ProposalVote({ proposalState, id, poll, voteGate, isOver
   const voteStatusTag = useMemo(() => {
     if (proposalState === ProposalState.Executed) {
       return <CloseTag>{t('Proposal.VoteClose')}</CloseTag>;
-    } else if (proposalState === ProposalState.PendingExecution) {
+    } else if (hasClosed || proposalState === ProposalState.PendingExecution) {
       return (
         <>
           <OpenTag>
@@ -120,7 +121,7 @@ export default function ProposalVote({ proposalState, id, poll, voteGate, isOver
         </OpenTag>
       );
     }
-  }, [pollStatus, t]);
+  }, [pollStatus, t, canUseCityhall, hasClosed]);
 
   const onConfirmVote = () => {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
@@ -144,6 +145,7 @@ export default function ProposalVote({ proposalState, id, poll, voteGate, isOver
     closeVote(id, poll.id)
       .then((r) => {
         setShowConfirmClose(false);
+        setHasClosed(true);
       })
       .catch((error) => {
         logError(`close vote(${id}-${poll.id}) failed`, error);
@@ -174,7 +176,7 @@ export default function ProposalVote({ proposalState, id, poll, voteGate, isOver
   }, [poll, pollStatus]);
 
   const showVoteContent = () => {
-    if ((pollStatus === VoteType.Open && !!poll.is_vote) || pollStatus === VoteType.Closed) {
+    if ((pollStatus === VoteType.Open && !!poll.is_vote) || pollStatus === VoteType.Closed || hasClosed) {
       return (
         <table>
           <tbody>
