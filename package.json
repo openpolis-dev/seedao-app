@@ -101,7 +101,7 @@
   "scripts": {
     "dev": "react-app-rewired start",
     "start": "npm run dev",
-    "build:online": "react-app-rewired build && npm run sentry:sourcemaps",
+    "build:online": "react-app-rewired build",
     "build": "REACT_APP_ENV_VERSION=dev npm run build:online",
     "build:preview": "REACT_APP_ENV_VERSION=preview npm run build:online",
     "build:prod": "REACT_APP_ENV_VERSION=prod npm run build:online",
