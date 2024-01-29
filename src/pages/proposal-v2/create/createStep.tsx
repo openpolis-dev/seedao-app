@@ -243,6 +243,7 @@ export default function CreateStep({ onClick }: any) {
         setShowType('new');
         setShowRht(true);
         setComponentName(arr[componentsIndex].title);
+        getComponentList();
       }
 
       setBeforeList(beforeComponents ?? []);
