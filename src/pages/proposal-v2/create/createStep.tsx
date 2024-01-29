@@ -242,7 +242,7 @@ export default function CreateStep({ onClick }: any) {
       if (!arr[componentsIndex]?.name && !components?.length) {
         setShowType('new');
         setShowRht(true);
-        setComponentName(arr[componentsIndex].title);
+        setComponentName(arr[componentsIndex]?.title);
         getComponentList();
       }
 
@@ -565,7 +565,7 @@ export default function CreateStep({ onClick }: any) {
                     {/*<MarkdownEditor value={item.content} onChange={(val)=>handleText(val,index)} />*/}
                   </ItemBox>
                 ))}
-              {!!componentName.length && (
+              {!!componentName?.length && (
                 <>
                   <ComponnentBox>
                     <span>{componentName || t('Proposal.proposalComponents')}</span>
