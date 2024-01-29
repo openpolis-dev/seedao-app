@@ -147,6 +147,13 @@ export const castVote = (id: number, vote_id: number, option: number) => {
   });
 };
 
+export const closeVote = (id: number, vote_id: number) => {
+  return request.post(`${PATH_PREFIX}close_vote/${id}`, {
+    vote_id,
+    metaforo_access_token: getMetaforoData()?.token,
+  });
+};
+
 export type VoterType = {
   wallet: string;
   os_avatar: string;
