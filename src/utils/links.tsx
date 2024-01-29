@@ -27,6 +27,7 @@ import GuildImg from '../assets/Imgs/governance/guild.png';
 import DistributeImg from '../assets/Imgs/governance/distribute.png';
 import NodeImg from '../assets/Imgs/governance/node.png';
 import PodcastImg from '../assets/Imgs/podcast.jpeg';
+import getConfig from './envCofnig';
 
 /**
  * NOTE:
@@ -336,11 +337,13 @@ const links = {
       desc: 'apps.SNSDesc',
     },
     {
-      id: 'module-see',
+      id: ['preview', 'production'].includes(process.env.REACT_APP_ENV_VERSION as string)
+        ? 'coming-soon'
+        : 'module-see',
       name: 'See Swap',
       link: '/see-swap',
       icon: 'https://avatars.githubusercontent.com/u/36115574?s=200&v=4',
-      desc: '',
+      desc: 'Coming Soon',
     },
   ],
   publicity: [
