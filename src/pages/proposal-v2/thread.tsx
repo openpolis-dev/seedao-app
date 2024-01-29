@@ -437,7 +437,7 @@ export default function ThreadPage() {
         <div className="title">{data?.title}</div>
         <FlexLine>
           {currentState && <ProposalStateTag state={currentState} />}
-          {!!data?.vetoed && <StatusTag>{t('Proposal.veto')}</StatusTag>}
+          {data?.state === ProposalState.Vetoed && <StatusTag>{t('Proposal.veto')}</StatusTag>}
 
           {currentCategory && <CategoryTag>{currentCategory}</CategoryTag>}
           {data?.template_name && <TemplateTag>{data?.template_name}</TemplateTag>}
