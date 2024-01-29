@@ -548,6 +548,7 @@ export default function ThreadPage() {
             {showVote() && (
               <ProposalVote
                 proposalState={data!.state}
+                execution_ts={data?.execution_ts}
                 voteGate={data?.vote_gate}
                 poll={data!.votes[0]}
                 id={Number(id)}
