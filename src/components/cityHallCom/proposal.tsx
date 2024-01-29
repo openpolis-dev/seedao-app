@@ -60,7 +60,7 @@ export default function ProjectProposal(props: Iprops) {
       });
       setList(_list);
     } catch (error) {
-      console.error('get proposals error: ', error);
+      logError('get proposals error: ', error);
     } finally {
       setLoading(false);
     }

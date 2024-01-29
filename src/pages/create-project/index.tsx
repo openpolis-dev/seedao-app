@@ -18,6 +18,7 @@ import { UserRole } from 'type/user.type';
 import { ethers } from 'ethers';
 import sns from '@seedao/sns-js';
 import { BlackButton } from 'components/common/button';
+import { compressionFile, fileToDataURL } from 'utils/image';
 
 export default function CreateProject() {
   const navigate = useNavigate();
@@ -144,7 +145,7 @@ export default function CreateProject() {
           return;
         }
       } catch (error) {
-        console.error('resolved failed', error);
+        logError('resolved failed', error);
         return;
       }
     }
@@ -162,7 +163,12 @@ export default function CreateProject() {
     for (const l of proList) {
       if (l) {
         const _l = l.trim().toLocaleLowerCase();
+        if (_l.startsWith('https://forum.seedao.xyz/') && !_l.startsWith('https://forum.seedao.xyz/thread/sip-')) {
+          showToast(t('Msg.ProposalLinkMsg'), ToastType.Danger);
+          return;
+        }
         if (_l.startsWith('https://forum.seedao.xyz/thread/sip-')) {
+          // sip
           const items = _l.split('/').reverse();
           slugs.push(items[0]);
           for (const it of items) {
@@ -176,17 +182,21 @@ export default function CreateProject() {
               break;
             }
           }
-        }
-        // else if (l.indexOf('/proposal/thread/') > -1) {
-        //   const items = l.split('/').reverse();
-        //   for (const it of items) {
-        //     if (it) {
-        //       ids.push(it);
-        //       break;
-        //     }
-        //   }
-        // }
-        else {
+        } else if (l.indexOf('/proposal/thread/') > -1) {
+          // os
+          const items = l.split('/').reverse();
+          slugs.push(`os-${items[0]}`);
+          for (const it of items) {
+            if (it) {
+              if (ids.includes(it)) {
+                showToast(t('Msg.RepeatProposal'), ToastType.Danger);
+                return;
+              }
+              ids.push(it);
+              break;
+            }
+          }
+        } else {
           showToast(t('Msg.ProposalLinkMsg'), ToastType.Danger);
           return;
         }
@@ -223,29 +233,12 @@ export default function CreateProject() {
     }
   };
 
-  const getBase64 = (imgUrl: string) => {
-    window.URL = window.URL || window.webkitURL;
-    const xhr = new XMLHttpRequest();
-    xhr.open('get', imgUrl, true);
-    xhr.responseType = 'blob';
-    xhr.onload = function () {
-      if (this.status == 200) {
-        const blob = this.response;
-        const oFileReader = new FileReader();
-        oFileReader.onloadend = function (e) {
-          const { result } = e.target as any;
-          setUrl(result);
-        };
-        oFileReader.readAsDataURL(blob);
-      }
-    };
-    xhr.send();
-  };
-
-  const updateLogo = (e: FormEvent) => {
+  const updateLogo = async (e: FormEvent) => {
     const { files } = e.target as any;
-    const url = window.URL.createObjectURL(files[0]);
-    getBase64(url);
+    const file = files[0];
+    const new_file = await compressionFile(file, file.type);
+    const base64 = await fileToDataURL(new_file);
+    setUrl(base64);
   };
 
   const handleBack = () => {

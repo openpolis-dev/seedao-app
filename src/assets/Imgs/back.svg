@@ -1,5 +1,1 @@
-<svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g id="arrow-left">
-<path id="Vector" d="M9.99998 13.7123L5.65331 9.36568C5.13998 8.85234 5.13998 8.01234 5.65331 7.49901L9.99998 3.15234" stroke="#BBBBBB" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-</g>                        
-</svg>
+<svg fill="none" height="17" viewBox="0 0 16 17" width="16" xmlns="http://www.w3.org/2000/svg"><path d="m9.99998 13.7123-4.34667-4.34662c-.51333-.51334-.51333-1.35334 0-1.86667l4.34667-4.34667" stroke="#bbb" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="1.5"/></svg>

@@ -24,7 +24,7 @@ export default function useApplicants() {
           }),
         );
       } catch (error) {
-        console.error('getApplicants error', error);
+        logError('getApplicants error', error);
       }
     };
     getApplicants();

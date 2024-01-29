@@ -12,6 +12,19 @@ export interface ICategory extends IBaseCategory {
   children: IBaseCategory[];
 }
 
+interface CommentUser {
+  id: number;
+  photo_url: string;
+  username: string;
+  is_nft: number;
+}
+
+export type UserTitleType = {
+  name: string;
+  color: string;
+  background: string;
+};
+
 export enum VoteType {
   Open = 'open',
   Closed = 'close',
@@ -20,6 +33,7 @@ type VoteOption = {
   html: string;
   percent: number;
   voters: number;
+  id: number;
 };
 
 export interface Poll {
@@ -32,11 +46,19 @@ export interface Poll {
   leftTime: string;
   options: VoteOption[];
   totalVotes: number;
+  is_vote: 0 | 1; // 0: not voted, 1: voted
 }
 
 type ProposalTag = {
   id: number;
   name: string;
+};
+
+export type EditHistoryType = {
+  username: string;
+  created_at: string;
+  arweave: string;
+  post_type: 0 | 1;
 };
 
 export interface IBaseProposal {
@@ -56,17 +78,81 @@ export interface IBaseProposal {
   posts_count: number;
   user: {
     photo_url: string;
-    user_title: {
-      name: string;
-      background: string;
-    };
+    user_title: UserTitleType;
     username: string;
   };
   updated_at: string;
   tags: ProposalTag[];
-  user_title?: {
-    name: string;
-    background: string;
-  };
+  user_title?: UserTitleType;
   polls: Poll[];
+  posts: any[];
+  edit_history: {
+    count: number;
+    lists: EditHistoryType[];
+  };
+}
+
+export enum ProposalStatus {
+  Draft = 'draft',
+  Rejected = 'rejected',
+  WithDrawn = 'withdrawn',
+  Approved = 'approved',
+  Voting = 'voting',
+  End = 'end',
+}
+
+export type ProposalType = {
+  id: string;
+  name: string;
+};
+
+export const PROPOSAL_TYPES: ProposalType[] = [
+  {
+    id: '',
+    name: 'Proposal.ThreeLayerType',
+  },
+  {
+    id: '',
+    name: 'Proposal.TwoLayerType',
+  },
+  {
+    id: '',
+    name: 'Proposal.OneLayerType',
+  },
+  {
+    id: '',
+    name: 'Proposal.CityhallType',
+  },
+  {
+    id: '',
+    name: 'Proposal.NodesType',
+  },
+];
+
+export enum PROPOSAL_TIME {
+  LATEST = 'latest',
+  OLDEST = 'oldest',
+}
+
+export type ProposalTemplateType = {
+  id: number;
+  name?: string;
+  schema?: string;
+  vote_type?: number;
+  screenshot_uri?: string;
+  components?: any[];
+};
+
+export interface PostDataType {
+  id: number;
+  created_at: string;
+  updated_at: string;
+  content: string;
+  parent_id: number;
+  deleted: number;
+  reply_pid: number;
+  reply_user: CommentUser | null;
+  user: CommentUser;
+  user_title: UserTitleType;
+  children: { posts: PostDataType[] };
 }

@@ -32,7 +32,7 @@ export default function UserSNS() {
           setSnsList(res.map((item: any) => item.sns));
         })
         .catch((err) => {
-          console.error("Can't get sns list", err);
+          logError("Can't get sns list", err);
         })
         .finally(() => {
           setLoading(false);

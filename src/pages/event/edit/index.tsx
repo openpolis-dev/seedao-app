@@ -11,7 +11,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { MdEditor } from 'md-editor-rt';
 import { createEvent, editEventById, getEventById, uplodaEventImage } from 'requests/event';
-// import { useWeb3React } from '@web3-react/core';
+
 import { useNavigate } from 'react-router-dom';
 import { ChevronLeft, X, Upload } from 'react-bootstrap-icons';
 import { ContainerPadding } from 'assets/styles/global';
@@ -320,7 +320,7 @@ export default function CreateGuild() {
     } catch (e: any) {
       showToast(e.response?.data?.msg || JSON.stringify(e), ToastType.Danger);
       console.log(e.response?.data?.msg);
-      console.error('create event error:', e);
+      logError('create event error:', e);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: null });
     }

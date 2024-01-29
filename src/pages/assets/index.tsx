@@ -197,7 +197,7 @@ export default function Index() {
         credit_total_amount: Number(res.data.credit_total_amount),
       });
     } catch (error) {
-      console.error('getTreasury error', error);
+      logError('getTreasury error', error);
     }
   };
   useEffect(() => {
@@ -219,7 +219,7 @@ export default function Index() {
       showToast('success', ToastType.Success);
       setshowModifyModal(undefined);
     } catch (error: any) {
-      console.error('updateBudget error', error);
+      logError('updateBudget error', error);
       showToast(error?.data?.msg || 'failed', ToastType.Danger);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
@@ -237,7 +237,7 @@ export default function Index() {
           });
         });
     } catch (error) {
-      console.error('getFloorPrice error', error);
+      logError('getFloorPrice error', error);
     }
   };
 
@@ -268,7 +268,7 @@ export default function Index() {
       const supply = await contract.totalSupply();
       setTotalSCR(Number(ethers.utils.formatEther(supply)).format());
     } catch (error) {
-      console.error('getSCR error', error);
+      logError('getSCR error', error);
     }
   };
 
@@ -284,7 +284,7 @@ export default function Index() {
       res.data.wallets.forEach((w) => (v += Number(w.fiatTotal)));
       setTotalBalance(v.format());
     } catch (error) {
-      console.error(error);
+      logError(error);
     }
   };
 

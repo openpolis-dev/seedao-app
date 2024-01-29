@@ -26,7 +26,7 @@ export default function useProposalCategory(proposal_category_id?: number) {
         payload: resp.data.group.categories,
       });
     } catch (error) {
-      console.error('getCategories failed', error);
+      logError('getCategories failed', error);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }

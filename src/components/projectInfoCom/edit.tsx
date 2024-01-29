@@ -13,6 +13,7 @@ import CloseSuccess from './closeSuccess';
 import { createCloseProjectApplication } from 'requests/applications';
 import { useNavigate } from 'react-router-dom';
 import MarkdownEditor from 'components/common/markdownEditor';
+import { compressionFile, fileToDataURL } from 'utils/image';
 
 export default function EditProject({ detail }: { detail: ReTurnProject | undefined }) {
   const { t } = useTranslation();
@@ -38,7 +39,14 @@ export default function EditProject({ detail }: { detail: ReTurnProject | undefi
       setDesc(detail.desc);
       setUrl(detail.logo);
       setIntro(detail.intro);
-      setProList(detail?.proposals?.map((item) => `https://forum.seedao.xyz/thread/${item}`));
+      setProList(
+        detail?.proposals?.map((slug) => {
+          const isOS = slug.startsWith('os');
+          return isOS
+            ? `${window.location.origin}/proposal/thread/${slug.replace('os-', '')}`
+            : `https://forum.seedao.xyz/thread/${slug}`;
+        }),
+      );
     }
   }, [detail]);
 
@@ -89,7 +97,12 @@ export default function EditProject({ detail }: { detail: ReTurnProject | undefi
     for (const l of proList) {
       if (l) {
         const _l = l.trim().toLocaleLowerCase();
+        if (_l.startsWith('https://forum.seedao.xyz/') && !_l.startsWith('https://forum.seedao.xyz/thread/sip-')) {
+          showToast(t('Msg.ProposalLinkMsg'), ToastType.Danger);
+          return;
+        }
         if (_l.startsWith('https://forum.seedao.xyz/thread/sip-')) {
+          // sip
           const items = _l.split('/').reverse();
           slugs.push(items[0]);
           for (const it of items) {
@@ -103,21 +116,21 @@ export default function EditProject({ detail }: { detail: ReTurnProject | undefi
               break;
             }
           }
-        }
-        // else if (l.indexOf('/proposal/thread/') > -1) {
-        //   const items = l.split('/').reverse();
-        //   for (const it of items) {
-        //     if (it) {
-        //       if (ids.includes(it)) {
-        //         showToast(t('Msg.RepeatProposal'), ToastType.Danger);
-        //         return;
-        //       }
-        //       ids.push(it);
-        //       break;
-        //     }
-        //   }
-        // }
-        else {
+        } else if (l.indexOf('/proposal/thread/') > -1) {
+          // os
+          const items = l.split('/').reverse();
+          slugs.push(`os-${items[0]}`);
+          for (const it of items) {
+            if (it) {
+              if (ids.includes(it)) {
+                showToast(t('Msg.RepeatProposal'), ToastType.Danger);
+                return;
+              }
+              ids.push(it);
+              break;
+            }
+          }
+        } else {
           showToast(t('Msg.ProposalLinkMsg'), ToastType.Danger);
           return;
         }
@@ -142,29 +155,12 @@ export default function EditProject({ detail }: { detail: ReTurnProject | undefi
     }
   };
 
-  const getBase64 = (imgUrl: string) => {
-    window.URL = window.URL || window.webkitURL;
-    const xhr = new XMLHttpRequest();
-    xhr.open('get', imgUrl, true);
-    xhr.responseType = 'blob';
-    xhr.onload = function () {
-      if (this.status == 200) {
-        const blob = this.response;
-        const oFileReader = new FileReader();
-        oFileReader.onloadend = function (e) {
-          const { result } = e.target as any;
-          setUrl(result);
-        };
-        oFileReader.readAsDataURL(blob);
-      }
-    };
-    xhr.send();
-  };
-
-  const updateLogo = (e: FormEvent) => {
+  const updateLogo = async (e: FormEvent) => {
     const { files } = e.target as any;
-    const url = window.URL.createObjectURL(files[0]);
-    getBase64(url);
+    const file = files[0];
+    const new_file = await compressionFile(file, file.type);
+    const base64 = await fileToDataURL(new_file);
+    setUrl(base64);
   };
 
   const closeModal = () => {
@@ -193,7 +189,7 @@ export default function EditProject({ detail }: { detail: ReTurnProject | undefi
       // reset project status
       // updateProjectStatus(ProjectStatus.Pending);
     } catch (e) {
-      console.error(e);
+      logError(e);
       // showToast(JSON.stringify(e), ToastType.Danger);
       dispatch({ type: AppActionType.SET_LOADING, payload: null });
       closeModal();
@@ -206,7 +202,7 @@ export default function EditProject({ detail }: { detail: ReTurnProject | undefi
         <TopBox>
           <BtnBox htmlFor="fileUpload" onChange={(e) => updateLogo(e)}>
             <ImgBox>
-              <img src={url} alt="" />
+              {url && <img src={url} alt="" />}
               <UpladBox
                 className="upload"
                 bg={
@@ -249,7 +245,7 @@ export default function EditProject({ detail }: { detail: ReTurnProject | undefi
                   <InputBox>
                     <Form.Control
                       type="text"
-                      placeholder={`https://forum.seedao.xyz/thread...`}
+                      placeholder={`https://forum.seedao.xyz/thread/sip-...`}
                       value={item}
                       onChange={(e) => handleInput(e, index, 'proposal')}
                     />
@@ -288,7 +284,7 @@ export default function EditProject({ detail }: { detail: ReTurnProject | undefi
         <BtmBox>
           <Button
             onClick={() => handleSubmit()}
-            disabled={proName?.length === 0 || url?.length === 0 || (proList?.length === 1 && proList[0]?.length === 0)}
+            disabled={proName?.length === 0 || (proList?.length === 1 && proList[0]?.length === 0)}
           >
             {t('general.confirm')}
           </Button>

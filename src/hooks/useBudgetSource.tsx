@@ -22,7 +22,7 @@ export default function useBudgetSource(filter_closed = false) {
           data: ApplicationEntity.Project,
         }));
       } catch (error) {
-        console.error('getProjects in city-hall failed: ', error);
+        logError('getProjects in city-hall failed: ', error);
         return [];
       }
     };
@@ -40,7 +40,7 @@ export default function useBudgetSource(filter_closed = false) {
           data: ApplicationEntity.Guild,
         }));
       } catch (error) {
-        console.error('getGuilds in city-hall failed: ', error);
+        logError('getGuilds in city-hall failed: ', error);
         return [];
       }
     };

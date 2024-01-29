@@ -1,0 +1,35 @@
+
+{
+  "type": "delete",
+  "title": "删除市政厅成员",
+  "id": "",
+  "automation_action": "unknown/budget_apply/create_project",
+  "content": [
+    {
+      "type": "checkbox",
+      "dataList": "--budget-resource--",
+      "name": "delMemeberList",
+      "value":{
+      },
+      "properties":[
+        {
+          "name": "title",
+          "value": "删除成员"
+        },
+        {
+          "name": "size",
+          "value": "lg"
+        },
+        {
+          "name": "validate",
+          "value": {
+            "required": true,
+            "maxLength": 50
+          }
+        }
+      ]
+    }
+
+  ]
+}
+

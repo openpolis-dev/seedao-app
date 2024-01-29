@@ -84,7 +84,7 @@ export default function Members(props: Iprops) {
       });
       setUserMap(userData);
     } catch (error) {
-      console.error('getUsersInfo error:', error);
+      logError('getUsersInfo error:', error);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: null });
     }
@@ -167,7 +167,7 @@ export default function Members(props: Iprops) {
       showToast(t('Project.RemoveMemSuccess'), ToastType.Success);
       updateProject();
     } catch (e) {
-      console.error(e);
+      logError(e);
       showToast(JSON.stringify(e), ToastType.Danger);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: null });

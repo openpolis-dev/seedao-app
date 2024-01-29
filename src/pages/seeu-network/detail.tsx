@@ -24,7 +24,7 @@ export default function EventDetailPage() {
         const resp = await getSeeuEventDetail(id);
         setData(resp.data);
       } catch (error: any) {
-        console.error(error);
+        logError(error);
         showToast(error, ToastType.Danger);
       } finally {
         dispatch({ type: AppActionType.SET_LOADING, payload: false });

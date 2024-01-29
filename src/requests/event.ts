@@ -21,7 +21,7 @@ export const uplodaEventImage = async (filename: string, type: string, fileData:
       return url?.data.split('?')[0];
     }
   } catch (e) {
-    console.error(e);
+    logError(e);
   }
 };
 

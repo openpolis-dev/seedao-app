@@ -6,6 +6,8 @@ export const SEEDAO_USER = 'SEEDAO_USER';
 export const SEEDAO_USER_DATA = 'SEEDAO_USER_DATA';
 export const SENDING_ME_USER = 'sdn_user_id';
 
+export const METAFORO_TOKEN = 'METAFORO_TOKEN';
+
 // ------ ------ ------ ------ ------ ------ ------ ------ ------
 
 /*

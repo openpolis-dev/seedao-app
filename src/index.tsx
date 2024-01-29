@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import './i18n/i18n';
+import 'utils/tracing';
 import { isMobile, isPhone } from 'utils/userAgent';
 import getConfig from 'utils/envCofnig';
 import { unregister, register } from 'utils/serviceWorkerRegistration';

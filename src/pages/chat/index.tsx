@@ -1,20 +1,11 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import * as user from 'requests/user';
 
-// import { useWeb3React } from '@web3-react/core';
 import useCheckLogin from 'hooks/useCheckLogin';
 import { useAuthContext } from 'providers/authProvider';
-import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-// import { useRouter } from 'next/router';
-// import Script from 'next/script';
 import { ContainerPadding } from 'assets/styles/global';
-import { signMessage } from '@joyid/evm';
-import { SELECT_WALLET } from 'utils/constant';
-import { Wallet } from 'wallet/wallet';
-import getConfig from 'utils/envCofnig';
-import { ethers } from 'ethers';
-const network = getConfig().NETWORK;
+import { useSignMessage, useAccount } from 'wagmi';
 
 const Box = styled.div`
   height: 100%;
@@ -24,9 +15,11 @@ const Box = styled.div`
 `;
 
 export default function Index() {
-  const navigate = useNavigate();
+  const { signMessageAsync } = useSignMessage();
+  const { isConnected, address } = useAccount();
+
   const {
-    state: { userData, account, provider },
+    state: { account },
   } = useAuthContext();
   const isLogin = useCheckLogin(account);
   const [status, setStatus] = useState(false);
@@ -43,31 +36,14 @@ export default function Index() {
   }, []);
 
   const signerMsg = async ({ message }: { message: string }) => {
-    if (!provider || !account) {
-      return '';
-    }
-    const wallet = localStorage.getItem(SELECT_WALLET);
-    let signMsg = '';
-    if (wallet === Wallet.JOYID_WEB) {
-      console.log('===account', account);
-      signMsg = await signMessage(message, ethers.utils.getAddress(account), {
-        network: {
-          name: network.name,
-          chainId: network.chainId,
-        },
-      });
-    } else if (wallet !== Wallet.METAMASK) {
-      signMsg = await provider.send('personal_sign', [message, account]);
-    }
-    // const signData = await provider.signMessage(message);
-    return signMsg;
+    return await signMessageAsync({ message });
   };
   const loginCallback = (r: any) => {
     console.log('loginCallback: ', r);
   };
 
   const handleLogin = async () => {
-    if (!account || !provider) {
+    if (!account || !isConnected || !address) {
       return;
     }
     window.chatWidgetApi.thirdDIDLogin(account, signerMsg, loginCallback);
@@ -86,7 +62,7 @@ export default function Index() {
 
   return (
     <>
-      {!!provider && (
+      {isConnected && address && account && (
         <Box>
           {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
           {/* @ts-ignore */}
