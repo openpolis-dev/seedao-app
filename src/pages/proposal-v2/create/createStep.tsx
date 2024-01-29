@@ -239,7 +239,7 @@ export default function CreateStep({ onClick }: any) {
         item.content = item.hint;
       });
 
-      if (!arr[componentsIndex]?.name && !components?.length) {
+      if (!arr[componentsIndex]?.name && arr[componentsIndex]?.title && !components?.length) {
         setShowType('new');
         setShowRht(true);
         setComponentName(arr[componentsIndex]?.title);
