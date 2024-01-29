@@ -190,7 +190,7 @@ const Container = styled.div`
 `;
 
 const CenterBox = styled.div`
-  width: 548px;
+  min-width: 400px;
   padding: 48px 32px;
   background-color: var(--bs-box-background);
   border-radius: 16px;
