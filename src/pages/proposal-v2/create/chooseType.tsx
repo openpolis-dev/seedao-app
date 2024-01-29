@@ -116,22 +116,22 @@ export default function ChooseTypeStep() {
               <span>{tp.category_name}</span>
               <img src={theme ? ArrowRhtBlack : ArrowRht} alt="" />
               <TemplateBox>
-                {canUseCityhall && (
-                  <>
-                    <li onClick={() => onChooseTemplate(tp, { id: 0, has_perm_to_use: canUseCityhall })}>
-                      <span>{t('Proposal.CreateBlank')}</span>
-                      <img src={theme ? ArrowRhtBlack : ArrowRht} alt="" />
-                    </li>
-                    {tp.category_id !== 50 && (
-                      <li
-                        onClick={() => onChooseTemplate(tp, { id: 0, vote_type: 99, has_perm_to_use: canUseCityhall })}
-                      >
-                        <span>{t('Proposal.CreateBlank_Multi')}</span>
-                        <img src={theme ? ArrowRhtBlack : ArrowRht} alt="" />
-                      </li>
-                    )}
-                  </>
-                )}
+                {/*{canUseCityhall && (*/}
+                {/*  <>*/}
+                {/*    <li onClick={() => onChooseTemplate(tp, { id: 0, has_perm_to_use: canUseCityhall })}>*/}
+                {/*      <span>{t('Proposal.CreateBlank')}</span>*/}
+                {/*      <img src={theme ? ArrowRhtBlack : ArrowRht} alt="" />*/}
+                {/*    </li>*/}
+                {/*    {tp.category_id !== 50 && (*/}
+                {/*      <li*/}
+                {/*        onClick={() => onChooseTemplate(tp, { id: 0, vote_type: 99, has_perm_to_use: canUseCityhall })}*/}
+                {/*      >*/}
+                {/*        <span>{t('Proposal.CreateBlank_Multi')}</span>*/}
+                {/*        <img src={theme ? ArrowRhtBlack : ArrowRht} alt="" />*/}
+                {/*      </li>*/}
+                {/*    )}*/}
+                {/*  </>*/}
+                {/*)}*/}
 
                 {tp.templates.map((template) => (
                   <li
