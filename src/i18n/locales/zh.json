@@ -125,7 +125,7 @@
     "CityhallRejected": "市政厅已驳回",
     "veto": "市政厅一票否决",
     "TotalVoteCount": "共{{count}}票",
-    "proposalComponents":"提案执行组件",
+    "proposalComponents":"自动执行组件",
     "HasVote": "已投",
     "LoginTip": "使用完整功能，请先登录Metaforo",
     "LoginButton": "登录 Metaforo",
