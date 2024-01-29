@@ -5,6 +5,7 @@ const VERSION = '0.4.2';
 
 const SENTRY_DSN = 'https://b36d900b0a63b0466ff4e73d55e359b2@o4505590144106496.ingest.sentry.io/4506445116604416';
 
+
 const LOCAL = {
   REACT_APP_BASE_ENDPOINT: 'https://test-api.seedao.tech',
   REACT_APP_PUSH_ENDPOINT: 'https://test-push-api.seedao.tech',
