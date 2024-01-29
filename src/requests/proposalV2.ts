@@ -73,7 +73,14 @@ export const getProposalDetail = (id: number, startPostId?: number): Promise<Res
   );
 };
 
-export const getCloseProposal = (id: number) => {
+export const getCloseProposal = (
+  id: number,
+): Promise<
+  ResponseData<{
+    id: number;
+    title: string;
+  }[]>
+> => {
   return request.get(
     `${PATH_PREFIX}creating_project_proposals`,
     {

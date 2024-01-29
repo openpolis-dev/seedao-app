@@ -25,8 +25,8 @@ interface ICloseOutSelectModalProps extends IBasicModalProps {
 
 const CloseOutSelectModal = ({ id, handleConfirm, ...props }: ICloseOutSelectModalProps) => {
   const { t } = useTranslation();
-  const [proposalList, setProposalList] = useState<any[]>([]);
-  const [selectExtra, setSelectExtra] = useState<ExtraType>();
+  const [proposalList, setProposalList] = useState<ISelectItem[]>([]);
+  const [selectExtra, setSelectExtra] = useState<ISelectItem>();
 
   useEffect(() => {
     console.log(id);
@@ -36,12 +36,12 @@ const CloseOutSelectModal = ({ id, handleConfirm, ...props }: ICloseOutSelectMod
 
   const getSelectDetail = async (id: any) => {
     const res = await requests.proposalV2.getCloseProposal(Number(id));
-    setProposalList(res.data);
+    setProposalList(res.data.map((item) => ({ value: item.id, label: item.title })));
   };
 
   const onConfirm = () => {
     if (selectExtra) {
-      handleConfirm(selectExtra);
+      handleConfirm({ id: selectExtra.value, name: selectExtra.data });
     }
   };
 
@@ -50,7 +50,7 @@ const CloseOutSelectModal = ({ id, handleConfirm, ...props }: ICloseOutSelectMod
       {proposalList.length > 0 ? (
         <>
           <div className="label">{t('Proposal.AssociatedProposalComponent')}</div>
-          <SeeSelect value={selectExtra} />
+          <SeeSelect value={selectExtra} options={proposalList} onChange={(v: ISelectItem) => setSelectExtra(v)} />
           <CloseoutModalFooter>
             <PlainButton onClick={props.h}>{t('general.cancel')}</PlainButton>
             <Button variant="primary" onClick={onConfirm}>
