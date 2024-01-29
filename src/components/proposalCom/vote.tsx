@@ -5,7 +5,7 @@ import Tooltip from 'react-bootstrap/Tooltip';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { Poll, VoteType, VoteOption, VoteGateType, ProposalState } from 'type/proposalV2.type';
-import { castVote, checkCanVote } from 'requests/proposalV2';
+import { castVote, checkCanVote, closeVote } from 'requests/proposalV2';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import useToast, { ToastType } from 'hooks/useToast';
 import useCheckMetaforoLogin from 'hooks/useMetaforoLogin';
@@ -140,8 +140,18 @@ export default function ProposalVote({ proposalState, id, poll, voteGate, isOver
   };
 
   const onConfirmClose = () => {
-    // TODO: close vote
-    console.log('close vote');
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    closeVote(id, poll.id)
+      .then((r) => {
+        setShowConfirmClose(false);
+      })
+      .catch((error) => {
+        logError(`close vote(${id}-${poll.id}) failed`, error);
+        showToast(`close vote failed: ${error?.data?.msg || error?.code || error}`, ToastType.Danger);
+      })
+      .finally(() => {
+        dispatch({ type: AppActionType.SET_LOADING, payload: false });
+      });
   };
 
   const goVote = async (option: VoteOption) => {
