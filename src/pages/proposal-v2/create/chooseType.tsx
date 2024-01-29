@@ -87,14 +87,6 @@ export default function ChooseTypeStep() {
       return;
     }
 
-    if (template.is_closing_project) {
-      setSelected({ tp, template });
-      // setCloseoutVisibleId(undefined);
-      setCloseoutVisibleId(tp.category_id);
-
-      return;
-    }
-
     setTemplateRulesVisible(true);
     setSelected({ tp, template });
   };
