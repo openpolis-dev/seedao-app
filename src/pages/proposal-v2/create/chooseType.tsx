@@ -41,7 +41,7 @@ const CloseOutSelectModal = ({ id, handleConfirm, ...props }: ICloseOutSelectMod
 
   const onConfirm = () => {
     if (selectExtra) {
-      handleConfirm({ id: selectExtra.value, name: selectExtra.data });
+      handleConfirm({ id: selectExtra.value, name: selectExtra?.label });
     }
   };
 
