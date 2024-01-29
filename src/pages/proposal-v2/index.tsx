@@ -45,12 +45,15 @@ export default function ProposalIndexPage() {
   ];
   // filter status
   const STATUS_OPTIONS: ISelectItem[] = [
-    { value: ProposalState.Voting, label: t('Proposal.Voting') },
+    { value: [ProposalState.Voting, ProposalState.PendingExecution].join(','), label: t('Proposal.Voting') },
     { value: ProposalState.Draft, label: t('Proposal.Draft') },
     { value: ProposalState.Rejected, label: t('Proposal.Rejected') },
     { value: ProposalState.Withdrawn, label: t('Proposal.WithDrawn') },
-    { value: ProposalState.VotingPassed, label: t('Proposal.Passed') },
-    { value: ProposalState.VotingFailed, label: t('Proposal.Failed') },
+    {
+      value: [ProposalState.VotingPassed, ProposalState.Executed, ProposalState.ExecutionFailed].join(','),
+      label: t('Proposal.Passed'),
+    },
+    { value: [ProposalState.VotingFailed, ProposalState.Vetoed].join(','), label: t('Proposal.Failed') },
   ];
 
   const [selectCategory, setSelectCategory] = useState<ISelectItem>();
