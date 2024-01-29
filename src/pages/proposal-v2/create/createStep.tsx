@@ -213,6 +213,8 @@ export default function CreateStep({ onClick }: any) {
       const { schema, components } = template;
       const arr = JSON.parse(schema!);
 
+      console.log(extraData);
+
       const previewArr = arr.filter((i: any) => i.type === 'preview');
       if (previewArr?.length && extraData?.id) {
         setPreviewTitle(previewArr[0]?.title);
@@ -294,6 +296,7 @@ export default function CreateStep({ onClick }: any) {
       schema: '',
       data: {
         relate: extraData?.name,
+        proposal_id: extraData?.id,
       },
     };
     const comStr = res.data.components || [];
