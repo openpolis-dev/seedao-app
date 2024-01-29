@@ -239,10 +239,15 @@ export default function CreateStep({ onClick }: any) {
         item.content = item.hint;
       });
 
+      if (!arr[componentsIndex]?.name && !components?.length) {
+        setShowType('new');
+        setShowRht(true);
+        setComponentName(arr[componentsIndex].title);
+      }
+
       setBeforeList(beforeComponents ?? []);
       setList(afterComponents ?? []);
       setHolder(componentsList);
-      console.log(componentsList);
 
       setComponentName(componentsList[0]?.title);
       setTips(componentsList[0]?.content);
@@ -559,7 +564,7 @@ export default function CreateStep({ onClick }: any) {
                     {/*<MarkdownEditor value={item.content} onChange={(val)=>handleText(val,index)} />*/}
                   </ItemBox>
                 ))}
-              {!!components.length && (
+              {!!componentName.length && (
                 <>
                   <ComponnentBox>
                     <span>{componentName || t('Proposal.proposalComponents')}</span>
