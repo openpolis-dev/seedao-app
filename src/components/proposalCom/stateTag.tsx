@@ -37,7 +37,6 @@ export default function ProposalStateTag({ state }: { state?: ProposalState }) {
       break;
     case ProposalState.VotingPassed:
     case ProposalState.Executed:
-    case ProposalState.PendingExecution:
     case ProposalState.ExecutionFailed:
       color = '#1F9E14';
       text = t('Proposal.Passed');
@@ -48,6 +47,7 @@ export default function ProposalStateTag({ state }: { state?: ProposalState }) {
       text = t('Proposal.Failed');
       break;
     case ProposalState.Voting:
+    case ProposalState.PendingExecution:
       color = '#F9B617';
       text = t('Proposal.Voting');
       break;
