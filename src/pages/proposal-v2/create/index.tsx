@@ -29,9 +29,9 @@ const CreateProposalSteps = () => {
     getTemplates()
       .then((resp) => {
         const list = resp?.data || [];
-        list.sort((a, b) => a.category_name.localeCompare(b.category_name));
+        list.sort((a, b) => a.category_display_index - b.category_display_index || 0);
         list.forEach((item) => {
-          item.templates.sort((a, b) => a.id - b.id);
+          item.templates.sort((a, b) => (a.display_index || 0) - (b.display_index || 0));
         });
         dispatch({ type: AppActionType.SET_CATEGORIES_TEMPLATES, payload: list });
       })

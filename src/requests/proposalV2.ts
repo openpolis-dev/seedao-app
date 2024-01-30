@@ -6,7 +6,7 @@ import {
   IContentBlock,
   IBaseCategory,
   IActivity,
-  ITemplate,
+  ICategoryWithTemplates,
 } from 'type/proposalV2.type';
 import { SEE_AUTH } from 'utils/constant';
 
@@ -206,12 +206,7 @@ export const getComponents = () => {
   return request.get('/proposal_components/');
 };
 
-interface ICatetoryTemplate {
-  category_id: number;
-  category_name: string;
-  templates: ITemplate[];
-}
 
-export const getTemplates = (): Promise<ResponseData<ICatetoryTemplate[]>> => {
+export const getTemplates = (): Promise<ResponseData<ICategoryWithTemplates[]>> => {
   return request.get('/proposal_tmpl/list_with_perm');
 };
