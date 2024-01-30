@@ -160,8 +160,8 @@ export default function EditProposal() {
     (childRef.current as any).submitForm();
   };
 
-  const handleFormSubmit = async (submitData: any) => {
-    if (!data) {
+  const handleFormSubmit = async (success: boolean, submitData: any) => {
+    if (!data || !success) {
       return;
     }
 
@@ -213,7 +213,7 @@ export default function EditProposal() {
     console.error({
       ...data,
     });
-    handleFormSubmit(data);
+    handleFormSubmit(true, data);
   };
   const saveAllDraft = () => {
     (childRef.current as any).saveForm();
