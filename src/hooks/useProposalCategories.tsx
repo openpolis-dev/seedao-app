@@ -17,7 +17,7 @@ export default function useProposalCategories() {
         logError('getProposalCategories failed', error);
       }
     };
-    !proposalCategories.length && getProposalCategories();
+    proposalCategories !== undefined && getProposalCategories();
   }, [proposalCategories]);
 
   return proposalCategories;

@@ -247,7 +247,7 @@ export default function EditProposal() {
   };
 
   const categoryName = data?.proposal_category_id
-    ? proposalCategories.find((item) => item.id === data?.proposal_category_id)?.name
+    ? proposalCategories?.find((item) => item.id === data?.proposal_category_id)?.name
     : '';
 
   const submitDisabled = !title || !title.trim() || contentBlocks.some((item) => !item.content);

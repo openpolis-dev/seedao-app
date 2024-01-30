@@ -298,7 +298,7 @@ export default function ThreadPage() {
       return data.category_name;
     } else {
       if (data?.proposal_category_id) {
-        const findOne = proposalCategories.find((c) => c.id === data.proposal_category_id);
+        const findOne = proposalCategories?.find((c) => c.id === data.proposal_category_id);
         if (findOne) {
           return findOne.name;
         }
