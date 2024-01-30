@@ -128,16 +128,10 @@ const LoginModalContent = () => {
           dispatch({
             type: AppActionType.SET_THIRD_PARTY_TOKEN,
             payload: {
-              metaforo: loginResp[0].data.token,
+              metaforo: { id: loginResp[0].data.user_id, account: address, token: loginResp[0].data.token },
               deschool: loginResp[1].data.jwtToken,
             },
           });
-
-          // prepare metaforo
-          localStorage.setItem(
-            METAFORO_TOKEN,
-            JSON.stringify({ id: loginResp[0].data.user_id, account: address, token: loginResp[0].data.token }),
-          );
 
           // set context data
           const now = Date.now();
