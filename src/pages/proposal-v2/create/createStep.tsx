@@ -185,6 +185,7 @@ export default function CreateStep({ onClick }: any) {
   const [previewTitle, setPreviewTitle] = useState('');
   const [initList, setInitList] = useState<any[]>([]);
   const [tips, setTips] = useState('');
+  const [result, setResult] = useState<any[]>([]);
 
   const [voteList, setVoteList] = useState(['']);
 
@@ -357,7 +358,7 @@ export default function CreateStep({ onClick }: any) {
     }
   };
 
-  const handleFormSubmit = async (data: any) => {
+  const ToSubmit = async (data: any) => {
     if (!proposalType) {
       return;
     }
@@ -415,11 +416,21 @@ export default function CreateStep({ onClick }: any) {
     }
   };
 
+  const handleFormSubmit = async (success: boolean, data: any) => {
+    if (!success) return;
+    setResult(data);
+    if (template?.is_instant_vote) {
+      setIsInstantVoteAlertVisible(true);
+    } else {
+      ToSubmit(data);
+    }
+  };
+
   const handleSaveDraft = (data: any) => {
     console.log({
       ...data,
     });
-    handleFormSubmit(data);
+    ToSubmit(data);
   };
 
   const saveAllDraft = () => {
@@ -450,14 +461,6 @@ export default function CreateStep({ onClick }: any) {
   const handleConfirmSubmit = () => {
     setSubmitType('submit');
     setTimeout(allSubmit, 0);
-  };
-
-  const handleSubmit = () => {
-    if (template?.is_instant_vote) {
-      setIsInstantVoteAlertVisible(true);
-    } else {
-      handleConfirmSubmit();
-    }
   };
 
   const closeIsInstantVoteAlert = () => {
@@ -513,7 +516,7 @@ export default function CreateStep({ onClick }: any) {
             <Button className="save" onClick={handleSave} disabled={!title || !title.trim()}>
               {t('Proposal.SaveProposal')}
             </Button>
-            <Button onClick={handleSubmit} disabled={submitDisabled}>
+            <Button onClick={handleConfirmSubmit} disabled={submitDisabled}>
               {t('Proposal.SubmitProposal')}
             </Button>
           </BtnGroup>
@@ -639,7 +642,7 @@ export default function CreateStep({ onClick }: any) {
         <ConfirmModal
           title=""
           msg={t('Proposal.SubmitConfirmTip')}
-          onConfirm={handleConfirmSubmit}
+          onConfirm={() => ToSubmit(result)}
           onClose={closeIsInstantVoteAlert}
         />
       )}
