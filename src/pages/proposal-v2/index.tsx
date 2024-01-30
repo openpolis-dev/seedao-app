@@ -34,10 +34,10 @@ export default function ProposalIndexPage() {
   } = useAuthContext();
   const proposalCategories = useProposalCategories();
   // filter category
-  const CATEGORY_OPTIONS: ISelectItem[] = proposalCategories.map((c) => ({
+  const CATEGORY_OPTIONS: ISelectItem[] = proposalCategories?.map((c) => ({
     value: c.id,
     label: c.name,
-  }));
+  })) || [];
   // filter time
   const TIME_OPTIONS: ISelectItem[] = [
     { value: 'desc', label: t('Proposal.TheNeweset') },

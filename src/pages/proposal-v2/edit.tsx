@@ -165,14 +165,14 @@ export default function EditProposal() {
       return;
     }
 
-    let dataFormat: any = {};
-
-    for (const dataKey in submitData) {
-      dataFormat[dataKey] = {
-        name: dataKey,
-        data: submitData[dataKey],
-      };
-    }
+    // let dataFormat: any = {};
+    //
+    // for (const dataKey in submitData) {
+    //   dataFormat[dataKey] = {
+    //     name: dataKey,
+    //     data: submitData[dataKey],
+    //   };
+    // }
 
     await checkMetaforoLogin();
 
@@ -190,7 +190,7 @@ export default function EditProposal() {
       proposal_category_id: data.proposal_category_id,
       content_blocks: arr,
       vote_type: voteType,
-      components: dataFormat,
+      components: submitData,
       submit_to_metaforo: submitType === 'submit',
     })
       .then((r) => {
@@ -247,7 +247,7 @@ export default function EditProposal() {
   };
 
   const categoryName = data?.proposal_category_id
-    ? proposalCategories.find((item) => item.id === data?.proposal_category_id)?.name
+    ? proposalCategories?.find((item) => item.id === data?.proposal_category_id)?.name
     : '';
 
   const submitDisabled = !title || !title.trim() || contentBlocks.some((item) => !item.content);

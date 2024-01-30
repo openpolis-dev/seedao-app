@@ -21,7 +21,7 @@ interface IState {
   sns?: string;
   tokenData?: ITokenType;
   proposal_categories: ICategory[];
-  proposalCategories: IBaseCategory[];
+  proposalCategories?: IBaseCategory[];
   categoryTemplates: ICategoryWithTemplates[];
   language: string;
   loading: boolean | null;
@@ -90,7 +90,7 @@ const INIT_STATE: IState = {
     //   ],
     // },
   ],
-  proposalCategories: [],
+  proposalCategories: undefined ,
   categoryTemplates: [],
   language: '',
   loading: null,
@@ -131,6 +131,7 @@ const reducer = (state: IState, action: IAction): IState => {
       localStorage.removeItem(SEEDAO_USER);
       localStorage.removeItem(SENDING_ME_USER);
       localStorage.removeItem(METAFORO_TOKEN);
+      localStorage.removeItem(SEE_AUTH);
       return {
         ...state,
         account: undefined,

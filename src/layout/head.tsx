@@ -109,6 +109,10 @@ export default function Header() {
     const seeAuthData = localStorage.getItem(SEE_AUTH) || '';
     try {
       const data = JSON.parse(seeAuthData);
+      if (!data || !data.metaforo.id || !data.deschool) {
+        onClickLogout();
+        return;
+      }
       dispatch({ type: AppActionType.SET_THIRD_PARTY_TOKEN, payload: data });
     } catch (error) {
       return;
@@ -231,7 +235,7 @@ export default function Header() {
     } catch (error) {
       logError('onesignal logout failed', error);
     }
-    toGo();
+    if (!pathname.startsWith('/proposal')) toGo();
   };
 
   useEffect(() => {

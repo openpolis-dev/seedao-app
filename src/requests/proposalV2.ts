@@ -6,33 +6,17 @@ import {
   IContentBlock,
   IBaseCategory,
   IActivity,
-  ITemplate,
+  ICategoryWithTemplates,
 } from 'type/proposalV2.type';
-import { METAFORO_TOKEN, SEEDAO_USER } from 'utils/constant';
-import { parseToken, checkTokenValid, clearStorage } from 'utils/auth';
+import { SEE_AUTH } from 'utils/constant';
 
 const PATH_PREFIX = '/proposals/';
 
 export const getMetaforoData = () => {
   try {
-    const tokenstr = localStorage.getItem(SEEDAO_USER);
-    if (tokenstr) {
-      const tokenData = parseToken(tokenstr);
-      if (!checkTokenValid(tokenData?.token, tokenData?.token_exp)) {
-        clearStorage();
-        return;
-      }
-      const data = localStorage.getItem(METAFORO_TOKEN);
-      const metaforoData = JSON.parse(data || '');
-      // @ts-ignore FIXME: tokenData is not defined a correct type
-      const local_account = tokenData?.user?.data?.wallet || tokenData?.user?.wallet;
-
-      if (local_account?.toLowerCase() === metaforoData.account?.toLowerCase()) {
-        return metaforoData;
-      }
-
-      return;
-    }
+    const seeauth = localStorage.getItem(SEE_AUTH);
+    const authData = JSON.parse(seeauth || '');
+    return authData?.metaforo;
   } catch (error) {}
 };
 
@@ -76,10 +60,12 @@ export const getProposalDetail = (id: number, startPostId?: number): Promise<Res
 export const getCloseProposal = (
   id: number,
 ): Promise<
-  ResponseData<{
-    id: number;
-    title: string;
-  }[]>
+  ResponseData<
+    {
+      id: number;
+      title: string;
+    }[]
+  >
 > => {
   return request.get(
     `${PATH_PREFIX}creating_project_proposals`,
@@ -220,12 +206,7 @@ export const getComponents = () => {
   return request.get('/proposal_components/');
 };
 
-interface ICatetoryTemplate {
-  category_id: number;
-  name: string;
-  templates: ITemplate[];
-}
 
-export const getTemplates = (): Promise<ResponseData<ICatetoryTemplate[]>> => {
+export const getTemplates = (): Promise<ResponseData<ICategoryWithTemplates[]>> => {
   return request.get('/proposal_tmpl/list_with_perm');
 };

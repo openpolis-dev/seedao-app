@@ -12,7 +12,7 @@
     "@seedao/sns-js": "^0.7.0",
     "@sentry/cli": "^2.23.1",
     "@sentry/react": "^7.91.0",
-    "@taoist-labs/components": "^0.1.28",
+    "@taoist-labs/components": "^0.1.30",
     "@types/xlsx": "^0.0.36",
     "@unipasswallet/popup-types": "^1.1.11",
     "@unipasswallet/wagmi-connector": "^1.2.1",
@@ -101,7 +101,7 @@
   "scripts": {
     "dev": "react-app-rewired start",
     "start": "npm run dev",
-    "build:online": "react-app-rewired build && npm run sentry:sourcemaps",
+    "build:online": "react-app-rewired build",
     "build": "REACT_APP_ENV_VERSION=dev npm run build:online",
     "build:preview": "REACT_APP_ENV_VERSION=preview npm run build:online",
     "build:prod": "REACT_APP_ENV_VERSION=prod npm run build:online",

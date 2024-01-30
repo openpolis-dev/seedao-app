@@ -125,10 +125,6 @@ export default function ThreadPage() {
       );
 
       setVoteType(res.data.vote_type || 0);
-
-      let { votes } = res.data;
-      // setVoteList(votes ?? [''])
-
       const preview = arr.filter((i: any) => i.type === 'preview');
 
       if (preview.length) {
@@ -298,7 +294,7 @@ export default function ThreadPage() {
       return data.category_name;
     } else {
       if (data?.proposal_category_id) {
-        const findOne = proposalCategories.find((c) => c.id === data.proposal_category_id);
+        const findOne = proposalCategories?.find((c) => c.id === data.proposal_category_id);
         if (findOne) {
           return findOne.name;
         }

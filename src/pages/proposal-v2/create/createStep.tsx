@@ -361,14 +361,15 @@ export default function CreateStep({ onClick }: any) {
     if (!proposalType) {
       return;
     }
-    let dataFormat: any = {};
+    // let dataFormat: any = {};
+    //
+    // for (const dataKey in data) {
+    //   dataFormat[dataKey] = {
+    //     name: dataKey,
+    //     data: data[dataKey],
+    //   };
+    // }
 
-    for (const dataKey in data) {
-      dataFormat[dataKey] = {
-        name: dataKey,
-        data: data[dataKey],
-      };
-    }
     const canSubmit = await checkMetaforoLogin();
     if (canSubmit) {
       let holderNew: any[] = [];
@@ -393,7 +394,7 @@ export default function CreateStep({ onClick }: any) {
         vote_type: voteType,
         vote_options: voteType === 99 ? voteList : null,
         content_blocks: arr,
-        components: dataFormat,
+        components: data,
         template_id: template?.id,
         submit_to_metaforo: submitType === 'submit',
       })

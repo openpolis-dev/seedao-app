@@ -27,6 +27,7 @@ export interface ICategory {
 }
 
 export interface ICategoryWithTemplates extends ICategory {
+  category_display_index: number;
   templates: ITemplate[];
 }
 
@@ -156,4 +157,5 @@ export interface ITemplate {
   has_perm_to_use?: boolean;
   is_instant_vote?: boolean;
   is_closing_project?: boolean;
+  display_index?: number;
 }
