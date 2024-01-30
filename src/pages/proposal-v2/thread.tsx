@@ -125,10 +125,6 @@ export default function ThreadPage() {
       );
 
       setVoteType(res.data.vote_type || 0);
-
-      let { votes } = res.data;
-      // setVoteList(votes ?? [''])
-
       const preview = arr.filter((i: any) => i.type === 'preview');
 
       if (preview.length) {
