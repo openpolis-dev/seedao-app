@@ -208,7 +208,7 @@ export const getComponents = () => {
 
 interface ICatetoryTemplate {
   category_id: number;
-  name: string;
+  category_name: string;
   templates: ITemplate[];
 }
 

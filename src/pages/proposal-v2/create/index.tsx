@@ -4,13 +4,11 @@ import BackerNav from 'components/common/backNav';
 import { useTranslation } from 'react-i18next';
 import CreateProposalProvider from './store';
 import ChooseTypeStep from './chooseType';
-import ChooseTemplateStep from './chooseTemplate';
 import CreateStep from './createStep';
 import { useCreateProposalContext } from './store';
 import { useEffect } from 'react';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
-import { getAuthProposalCategoryList, getTemplates } from 'requests/proposalV2';
-import useCheckMetaforoLogin from 'hooks/useMetaforoLogin';
+import { getTemplates } from 'requests/proposalV2';
 
 const CreateProposalSteps = () => {
   const { t } = useTranslation();
@@ -18,30 +16,31 @@ const CreateProposalSteps = () => {
 
   const {
     dispatch,
-    state: { userData },
+    state: { metaforoToken },
   } = useAuthContext();
-  const { checkMetaforoLogin } = useCheckMetaforoLogin();
 
   useEffect(() => {
-    if (!userData) {
+    console.log('metaforoToken: ', metaforoToken);
+    if (!metaforoToken) {
       return;
     }
-    checkMetaforoLogin().then(() => {
-      dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
 
-      getTemplates()
-        .then((resp) => {
-          dispatch({ type: AppActionType.SET_CATEGORIES_TEMPLATES, payload: resp.data });
-        })
-        .catch(() => {
-          // no auth
-          checkMetaforoLogin();
-        })
-        .finally(() => {
-          dispatch({ type: AppActionType.SET_LOADING, payload: false });
+    getTemplates()
+      .then((resp) => {
+        const list = resp?.data || [];
+        list.sort((a, b) => {
+          return a.category_name.localeCompare(b.category_name);
         });
-    });
-  }, [userData]);
+        dispatch({ type: AppActionType.SET_CATEGORIES_TEMPLATES, payload: list });
+      })
+      .catch((eror) => {
+        logError('getTemplates failed', eror);
+      })
+      .finally(() => {
+        dispatch({ type: AppActionType.SET_LOADING, payload: false });
+      });
+  }, [metaforoToken]);
 
   const showstep = () => {
     switch (currentStep) {
@@ -63,7 +62,8 @@ const CreateProposalSteps = () => {
     }
   };
 
-  const backNavTitle = currentStep === 2 && proposalType ? t(proposalType.category_name as any) : t('Proposal.CreateProposal');
+  const backNavTitle =
+    currentStep === 2 && proposalType ? t(proposalType.category_name as any) : t('Proposal.CreateProposal');
 
   return (
     <>
