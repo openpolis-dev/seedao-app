@@ -58,18 +58,23 @@ export default function EditProposal() {
   useEffect(() => {
     if (state) {
       setData(state);
+
+      console.error(state);
       setDataSource(state?.components ?? []);
-      setShowRht(!state?.is_based_on_template);
+      setShowRht(!state?.is_based_on_custom_template);
       setVoteType(state?.vote_type);
+      setShowRht(state?.is_based_on_custom_template);
     } else {
       const getDetail = async () => {
         dispatch({ type: AppActionType.SET_LOADING, payload: true });
         try {
           const res = await getProposalDetail(Number(id));
           setData(res.data);
+
+          console.error(res.data);
           setVoteType(res.data?.vote_type);
           setDataSource(res.data?.components ?? []);
-          setShowRht(!res.data?.is_based_on_template);
+          setShowRht(!res.data?.is_based_on_custom_template);
         } catch (error) {
           logError('get proposal detail error:', error);
         } finally {
@@ -278,108 +283,115 @@ export default function EditProposal() {
         </FlexInner>
       </FixedBox>
       <BoxBg showRht={showRht?.toString()}>
-        <Template
-          DataSource={dataSource}
-          operate="edit"
-          initialItems={components}
-          language={i18n.language}
-          showRight={showRht}
-          theme={theme}
-          baseUrl={BASE_URL}
-          version={API_VERSION}
-          token={token}
-          BeforeComponent={
-            <>
-              <ItemBox>
-                <TitleBox>
-                  <span>{t('Proposal.title')}</span>
-                  {categoryName && <TagBox>{categoryName}</TagBox>}
-                </TitleBox>
-                <InputBox>
-                  <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} />
-                </InputBox>
-              </ItemBox>
+        <TemplateBox>
+          <Template
+            DataSource={dataSource}
+            operate="edit"
+            initialItems={components}
+            language={i18n.language}
+            showRight={showRht}
+            theme={theme}
+            baseUrl={BASE_URL}
+            version={API_VERSION}
+            token={token}
+            BeforeComponent={
+              <>
+                <ItemBox>
+                  <TitleBox>
+                    <span>{t('Proposal.title')}</span>
+                    {categoryName && <TagBox>{categoryName}</TagBox>}
+                  </TitleBox>
+                  <InputBox>
+                    <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} />
+                  </InputBox>
+                </ItemBox>
 
-              {!!preview?.length && (
-                <>
-                  <ItemBox>
-                    <TitleBox>{previewTitle}</TitleBox>
-                    <div>
-                      <Preview DataSource={preview} language={i18n.language} initialItems={components} theme={theme} />
-                    </div>
-                  </ItemBox>
-                </>
-              )}
+                {!!preview?.length && (
+                  <>
+                    <ItemBox>
+                      <TitleBox>{previewTitle}</TitleBox>
+                      <div>
+                        <Preview
+                          DataSource={preview}
+                          language={i18n.language}
+                          initialItems={components}
+                          theme={theme}
+                        />
+                      </div>
+                    </ItemBox>
+                  </>
+                )}
 
-              {!!beforeList?.length &&
-                beforeList?.map((item, index: number) => (
-                  <ItemBox key={`block_${index}`}>
-                    <TitleBox>{item.title}</TitleBox>
+                {!!beforeList?.length &&
+                  beforeList?.map((item, index: number) => (
+                    <ItemBox key={`block_${index}`}>
+                      <TitleBox>{item.title}</TitleBox>
 
-                    <MdEditor
-                      toolbarsExclude={['github', 'save']}
-                      theme={theme ? 'dark' : 'light'}
-                      modelValue={item.content}
-                      editorId={`block_${index}`}
-                      onChange={(val) => handleText(val, index)}
-                    />
+                      <MdEditor
+                        toolbarsExclude={['github', 'save']}
+                        theme={theme ? 'dark' : 'light'}
+                        modelValue={item.content}
+                        editorId={`block_${index}`}
+                        onChange={(val) => handleText(val, index)}
+                      />
 
-                    {/*<MarkdownEditor value={item.content} onChange={(val)=>handleText(val,index)} />*/}
-                  </ItemBox>
-                ))}
+                      {/*<MarkdownEditor value={item.content} onChange={(val)=>handleText(val,index)} />*/}
+                    </ItemBox>
+                  ))}
 
-              <ComponnentBox>
-                <span>{componentName || t('Proposal.proposalComponents')}</span>
-              </ComponnentBox>
-            </>
-          }
-          AfterComponent={
-            <div>
-              {!!contentBlocks?.length &&
-                contentBlocks?.map((item, index: number) => (
-                  <ItemBox key={`block_${index}`}>
-                    <TitleBox>{item.title}</TitleBox>
+                <ComponnentBox>
+                  <span>{componentName || t('Proposal.proposalComponents')}</span>
+                </ComponnentBox>
+              </>
+            }
+            AfterComponent={
+              <div>
+                {!!contentBlocks?.length &&
+                  contentBlocks?.map((item, index: number) => (
+                    <ItemBox key={`block_${index}`}>
+                      <TitleBox>{item.title}</TitleBox>
 
-                    <MdEditor
-                      toolbarsExclude={['github', 'save']}
-                      theme={theme ? 'dark' : 'light'}
-                      modelValue={item.content}
-                      editorId={`block_${index}`}
-                      onChange={(val) => handleText(val, index)}
-                    />
+                      <MdEditor
+                        toolbarsExclude={['github', 'save']}
+                        theme={theme ? 'dark' : 'light'}
+                        modelValue={item.content}
+                        editorId={`block_${index}`}
+                        onChange={(val) => handleText(val, index)}
+                      />
 
-                    {/*<MarkdownEditor value={item.content} onChange={(val)=>handleText(val,index)} />*/}
-                  </ItemBox>
-                ))}
-              {/*{*/}
-              {/*  voteType === 99 &&<ItemBox>*/}
-              {/*    <TitleBox>投票选项</TitleBox>*/}
-              {/*    <VoteBox>*/}
-              {/*      {voteList.map((item, index) => (*/}
-              {/*        <li>*/}
-              {/*          <input type="text" value={item} onChange={(e) => handleVoteInput(e, index)} />*/}
-              {/*          {voteList.length - 1 === index && (*/}
-              {/*            <span onClick={() => handleAdd()}>*/}
-              {/*            <img src={PlusImg} alt="" />*/}
-              {/*          </span>*/}
-              {/*          )}*/}
+                      {/*<MarkdownEditor value={item.content} onChange={(val)=>handleText(val,index)} />*/}
+                    </ItemBox>
+                  ))}
+                {/*{*/}
+                {/*  voteType === 99 &&<ItemBox>*/}
+                {/*    <TitleBox>投票选项</TitleBox>*/}
+                {/*    <VoteBox>*/}
+                {/*      {voteList.map((item, index) => (*/}
+                {/*        <li>*/}
+                {/*          <input type="text" value={item} onChange={(e) => handleVoteInput(e, index)} />*/}
+                {/*          {voteList.length - 1 === index && (*/}
+                {/*            <span onClick={() => handleAdd()}>*/}
+                {/*            <img src={PlusImg} alt="" />*/}
+                {/*          </span>*/}
+                {/*          )}*/}
 
-              {/*          {!!(voteList.length - 1) && (*/}
-              {/*            <span onClick={() => removeVote(index)}>*/}
-              {/*            <img src={MinusImg} alt="" />*/}
-              {/*          </span>*/}
-              {/*          )}*/}
-              {/*        </li>*/}
-              {/*      ))}*/}
-              {/*    </VoteBox>*/}
-              {/*  </ItemBox>*/}
-              {/*}*/}
-            </div>
-          }
-          ref={childRef}
-          onSubmitData={handleFormSubmit}
-          onSaveData={handleSaveDraft}
-        />
+                {/*          {!!(voteList.length - 1) && (*/}
+                {/*            <span onClick={() => removeVote(index)}>*/}
+                {/*            <img src={MinusImg} alt="" />*/}
+                {/*          </span>*/}
+                {/*          )}*/}
+                {/*        </li>*/}
+                {/*      ))}*/}
+                {/*    </VoteBox>*/}
+                {/*  </ItemBox>*/}
+                {/*}*/}
+              </div>
+            }
+            ref={childRef}
+            onSubmitData={handleFormSubmit}
+            onSaveData={handleSaveDraft}
+          />
+        </TemplateBox>
       </BoxBg>
     </Page>
   );
@@ -556,5 +568,11 @@ const VoteBox = styled.ul`
       border: 1px solid var(--proposal-border);
       cursor: pointer;
     }
+  }
+`;
+
+const TemplateBox = styled.div`
+  .p32Width {
+    padding: 0;
   }
 `;
