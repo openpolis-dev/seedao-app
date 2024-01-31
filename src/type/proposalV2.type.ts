@@ -110,11 +110,17 @@ export type VoteGateType = {
   token_id: number;
 };
 
+// 0: no vote
+// 1: endorsement Opposition
+// 2: predefined percentage
+// 99: custom vote options
+export type VoteOptionType = 0 | 1 | 2 | 99;
+
 export interface IProposal extends ISimpleProposal {
   reviewer: string;
   applicant_avatar: string;
   proposal_category_id: number | undefined;
-  vote_type?: number | undefined;
+  vote_type?: VoteOptionType;
   content_blocks: IContentBlock[];
   reject_metaforo_comment_id: number;
   reject_reason: string;

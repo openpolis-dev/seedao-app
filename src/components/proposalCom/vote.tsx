@@ -4,7 +4,7 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import { Poll, VoteType, VoteOption, VoteGateType, ProposalState } from 'type/proposalV2.type';
+import { Poll, VoteOptionType, VoteType, VoteOption, VoteGateType, ProposalState } from 'type/proposalV2.type';
 import { castVote, checkCanVote, closeVote } from 'requests/proposalV2';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import useToast, { ToastType } from 'hooks/useToast';
@@ -24,6 +24,7 @@ interface IProps {
   voteGate?: VoteGateType;
   isOverrideProposal?: boolean;
   execution_ts?: number;
+  voteOptionType: VoteOptionType;
   updateStatus: () => void;
 }
 
@@ -51,6 +52,7 @@ export default function ProposalVote({
   poll,
   voteGate,
   isOverrideProposal,
+  voteOptionType,
   updateStatus,
 }: IProps) {
   const { t } = useTranslation();
@@ -74,7 +76,16 @@ export default function ProposalVote({
     </Tooltip>
   );
 
+  const onlyShowVoteOption =
+    voteOptionType === 99 &&
+    [ProposalState.Rejected, ProposalState.Withdrawn, ProposalState.PendingSubmit, ProposalState.Draft].includes(
+      proposalState,
+    );
+
   const voteStatusTag = useMemo(() => {
+    if (onlyShowVoteOption) {
+      return null;
+    }
     if (proposalState === ProposalState.Executed) {
       return <CloseTag>{t('Proposal.VoteClose')}</CloseTag>;
     } else if (hasClosed || proposalState === ProposalState.PendingExecution) {
@@ -130,7 +141,7 @@ export default function ProposalVote({
         </OpenTag>
       );
     }
-  }, [pollStatus, t, canUseCityhall, hasClosed, execution_ts]);
+  }, [pollStatus, t, canUseCityhall, hasClosed, execution_ts, onlyShowVoteOption]);
 
   const onConfirmVote = () => {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
@@ -179,13 +190,16 @@ export default function ProposalVote({
         setHasPermission(r.data);
       });
     };
-    if (pollStatus === VoteType.Open && !poll.is_vote) {
+    if (!onlyShowVoteOption && pollStatus === VoteType.Open && !poll.is_vote) {
       getVotePermission();
     }
-  }, [poll, pollStatus]);
+  }, [poll, pollStatus, onlyShowVoteOption]);
 
   const showVoteContent = () => {
-    if ((pollStatus === VoteType.Open && !!poll.is_vote) || pollStatus === VoteType.Closed || hasClosed) {
+    if (
+      !onlyShowVoteOption &&
+      ((pollStatus === VoteType.Open && !!poll.is_vote) || pollStatus === VoteType.Closed || hasClosed)
+    ) {
       return (
         <table>
           <tbody>

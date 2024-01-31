@@ -7,7 +7,15 @@ import ProposalVote from 'components/proposalCom/vote';
 import ReplyComponent, { IReplyOutputProps } from 'components/proposalCom/reply';
 import ReviewProposalComponent from 'components/proposalCom/reviewProposalComponent';
 import EditActionHistory from 'components/proposalCom/editActionhistory';
-import { ICommentDisplay, IContentBlock, IProposal, IProposalEditHistoy, ProposalState } from 'type/proposalV2.type';
+import {
+  ICommentDisplay,
+  IContentBlock,
+  IProposal,
+  IProposalEditHistoy,
+  ProposalState,
+  VoteOption,
+  VoteOptionType,
+} from 'type/proposalV2.type';
 import { useAuthContext, AppActionType } from 'providers/authProvider';
 import requests from 'requests';
 import { formatTime } from 'utils/time';
@@ -311,7 +319,8 @@ export default function ThreadPage() {
     if (
       [ProposalState.Rejected, ProposalState.Withdrawn, ProposalState.PendingSubmit, ProposalState.Draft].includes(
         data?.state,
-      )
+      ) &&
+      data.vote_type !== 99
     ) {
       return false;
     }
@@ -550,6 +559,7 @@ export default function ThreadPage() {
                 id={Number(id)}
                 updateStatus={getProposalDetail}
                 isOverrideProposal={data!.template_name === '否决提案'}
+                voteOptionType={data!.vote_type as VoteOptionType}
               />
             )}
 
