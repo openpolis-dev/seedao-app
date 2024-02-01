@@ -135,8 +135,10 @@ export default function ThreadPage() {
       setVoteType(res.data.vote_type || 0);
       const preview = arr.filter((i: any) => i.type === 'preview');
 
+      console.log(preview);
+
       if (preview.length) {
-        const preArr = JSON.parse(preview[0].content);
+        const preArr = preview[0]?.content ? JSON.parse(preview[0]?.content) : '';
         setPreview(preArr);
         setPreviewTitle(preview[0].title);
       }
