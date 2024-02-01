@@ -114,6 +114,7 @@
     "NotSupportWallet": "该操作暂不支持使用{{wallet}}, 请切换使用其他钱包",
     "Vote": "投票",
     "voteOptions": "投票选项",
+    "VoteNotStart": "投票未开始",
     "Share": "分享",
     "Edit": "修改",
     "Withdrawn": "撤回",

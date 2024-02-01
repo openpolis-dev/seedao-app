@@ -70,6 +70,7 @@
     "VoteEndAt": "Voting ends in {{leftTime}}",
     "VoteStartAt": "Start in {{leftTime}}",
     "TotalVotes": "Total Votes",
+    "VoteNotStart": "Voting has not started",
     "Draft": "Draft",
     "Audit": "Audit",
     "all": "All",

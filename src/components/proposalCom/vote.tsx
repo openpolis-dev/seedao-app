@@ -84,7 +84,7 @@ export default function ProposalVote({
 
   const voteStatusTag = useMemo(() => {
     if (onlyShowVoteOption) {
-      return null;
+      return <OpenTag>{t('Proposal.VoteNotStart')}</OpenTag>;
     }
     if (proposalState === ProposalState.Executed) {
       return <CloseTag>{t('Proposal.VoteClose')}</CloseTag>;
@@ -258,7 +258,6 @@ export default function ProposalVote({
       <div className="innerBox">
         <VoteHead>
           <span>
-            {' '}
             {t('Proposal.TotalVotes')}: {poll.totalVotes}
           </span>
           <TotalVoters>
