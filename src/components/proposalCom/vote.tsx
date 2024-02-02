@@ -86,11 +86,7 @@ export default function ProposalVote({
     if (onlyShowVoteOption) {
       return <OpenTag>{t('Proposal.VoteNotStart')}</OpenTag>;
     }
-    if (proposalState === ProposalState.Executed) {
-      return <CloseTag>{t('Proposal.VoteClose')}</CloseTag>;
-    } else if (hasClosed || proposalState === ProposalState.PendingExecution) {
-      return null;
-    } else if (pollStatus === VoteType.Closed) {
+    if (proposalState === ProposalState.Executed || hasClosed || pollStatus === VoteType.Closed) {
       return <CloseTag>{t('Proposal.VoteClose')}</CloseTag>;
     } else if (pollStatus === VoteType.Open) {
       return (
