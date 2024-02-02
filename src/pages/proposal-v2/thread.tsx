@@ -320,7 +320,8 @@ export default function ThreadPage() {
       [ProposalState.Rejected, ProposalState.Withdrawn, ProposalState.PendingSubmit, ProposalState.Draft].includes(
         data?.state,
       ) &&
-      data.vote_type !== 99
+      data.vote_type !== 99 &&
+      data.vote_type !== 98
     ) {
       return false;
     }

@@ -114,7 +114,7 @@ export type VoteGateType = {
 // 1: endorsement Opposition
 // 2: predefined percentage
 // 99: custom vote options
-export type VoteOptionType = 0 | 1 | 2 | 99;
+export type VoteOptionType = 0 | 1 | 2 | 99 | 98;
 
 export interface IProposal extends ISimpleProposal {
   reviewer: string;
