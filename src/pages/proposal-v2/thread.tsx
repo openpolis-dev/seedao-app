@@ -393,6 +393,15 @@ export default function ThreadPage() {
 
   const getTimeTagDisplay = () => {
     if (data?.state === ProposalState.PendingExecution) {
+      if (data?.execution_ts && data?.execution_ts * 1000 > Date.now()) {
+        return (
+            <TimeTag>
+              {t('Proposal.AutoExecuteLeftTime', {
+                ...formatDeltaDate((data?.execution_ts || 0) * 1000),
+              })}
+            </TimeTag>
+        );
+      } 
     }
     const poll = data?.votes?.[0];
     if (!poll) {
