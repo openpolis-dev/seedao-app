@@ -77,7 +77,7 @@ export default function ProposalVote({
   );
 
   const onlyShowVoteOption =
-    voteOptionType === 99 &&
+    (voteOptionType === 99 || voteOptionType === 98) &&
     [ProposalState.Rejected, ProposalState.Withdrawn, ProposalState.PendingSubmit, ProposalState.Draft].includes(
       proposalState,
     );
