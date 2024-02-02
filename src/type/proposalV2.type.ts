@@ -111,8 +111,9 @@ export type VoteGateType = {
 };
 
 // 0: no vote
-// 1: endorsement Opposition
+// 1: endorsement opposition
 // 2: predefined percentage
+// 98: custom vote options
 // 99: custom vote options
 export type VoteOptionType = 0 | 1 | 2 | 99 | 98;
 
