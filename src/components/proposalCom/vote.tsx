@@ -33,7 +33,7 @@ type VoteOptionItem = {
   optionId: number;
 };
 
-const getPollStatus = (start_t: string, close_t: string) => {
+export const getPollStatus = (start_t: string, close_t: string) => {
   const start_at = new Date(start_t).getTime();
   const close_at = new Date(close_t).getTime();
   if (start_at > Date.now()) {

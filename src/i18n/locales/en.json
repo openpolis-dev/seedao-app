@@ -68,6 +68,7 @@
     "PollNFT": "Poll NFT address",
     "VoteClose": "Voting Closed",
     "VoteEndAt": "Voting ends in {{leftTime}}",
+    "DraftEndAt": "Under review in {{leftTime}}",
     "VoteStartAt": "Start in {{leftTime}}",
     "TotalVotes": "Total Votes",
     "VoteNotStart": "Voting has not started",

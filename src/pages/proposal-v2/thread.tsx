@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { ContainerPadding } from 'assets/styles/global';
-import ProposalVote from 'components/proposalCom/vote';
+import ProposalVote, { getPollStatus } from 'components/proposalCom/vote';
 import ReplyComponent, { IReplyOutputProps } from 'components/proposalCom/reply';
 import ReviewProposalComponent from 'components/proposalCom/reviewProposalComponent';
 import EditActionHistory from 'components/proposalCom/editActionhistory';
@@ -13,7 +13,7 @@ import {
   IProposal,
   IProposalEditHistoy,
   ProposalState,
-  VoteOption,
+  VoteType,
   VoteOptionType,
 } from 'type/proposalV2.type';
 import { useAuthContext, AppActionType } from 'providers/authProvider';
@@ -44,6 +44,7 @@ import CategoryTag from 'components/proposalCom/categoryTag';
 import TemplateTag from 'components/proposalCom/templateTag';
 import PlusImg from '../../assets/Imgs/light/plus.svg';
 import MinusImg from '../../assets/Imgs/light/minus.svg';
+import { formatDeltaDate } from 'utils/time';
 
 enum BlockContentType {
   Reply = 1,
@@ -390,6 +391,36 @@ export default function ThreadPage() {
     setShowModal(true);
   };
 
+  const getTimeTagDisplay = () => {
+    if (data?.state === ProposalState.PendingExecution) {
+    }
+    const poll = data?.votes?.[0];
+    if (!poll) {
+      return;
+    }
+    if (data?.state === ProposalState.Voting) {
+      const pollStatus = getPollStatus(poll.poll_start_at, poll.close_at);
+      if (pollStatus === VoteType.Open) {
+        return (
+          <TimeTag>
+            {t('Proposal.VoteEndAt', {
+              leftTime: t('Proposal.TimeDisplay', { ...formatDeltaDate(new Date(poll.close_at).getTime()) }),
+            })}
+          </TimeTag>
+        );
+      }
+    }
+    if (data?.state === ProposalState.Draft) {
+      return (
+        <TimeTag>
+          {t('Proposal.DraftEndAt', {
+            leftTime: t('Proposal.TimeDisplay', { ...formatDeltaDate(new Date(poll.poll_start_at).getTime()) }),
+          })}
+        </TimeTag>
+      );
+    }
+  };
+
   return (
     <Page>
       {review ? (
@@ -442,11 +473,10 @@ export default function ThreadPage() {
       <ThreadHead>
         <div className="title">{data?.title}</div>
         <FlexLine>
-          {currentState && <ProposalStateTag state={currentState} />}
-          {data?.state === ProposalState.Vetoed && <StatusTag>{t('Proposal.veto')}</StatusTag>}
-
           {currentCategory && <CategoryTag>{currentCategory}</CategoryTag>}
           {data?.template_name && <TemplateTag>{data?.template_name}</TemplateTag>}
+          {currentState && <ProposalStateTag state={currentState} />}
+          {getTimeTagDisplay()}
           {data?.arweave && (
             <StoreHash href={`https://arweave.net/tx/${data?.arweave}/data.html`} target="_blank" rel="noreferrer">
               a
@@ -900,4 +930,9 @@ const StatusTag = styled.div`
   line-height: 24px;
   text-align: center;
   padding: 0 20px;
+`;
+
+const TimeTag = styled.span`
+  color: var(--bs-primary);
+  font-size: 12px;
 `;

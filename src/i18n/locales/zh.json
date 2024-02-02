@@ -68,6 +68,7 @@
     "PollNFT": "投票NFT地址",
     "VoteClose": "投票结束",
     "VoteEndAt": "投票剩余时间 {{leftTime}}",
+    "DraftEndAt": "公示期剩余时间 {{leftTime}}",
     "VoteStartAt": "距离开始还剩 {{leftTime}}",
     "TotalVotes": "总投票数",
     "Draft": "公示中",
