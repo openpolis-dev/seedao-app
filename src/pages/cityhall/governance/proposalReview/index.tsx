@@ -16,7 +16,7 @@ import Pagination from 'components/pagination';
 
 const STATUS = [
   { name: 'Proposal.Draft', value: ProposalState.Draft },
-  { name: 'Proposal.Rejected', value: ProposalState.Rejected },
+  { name: 'Proposal.Discard', value: ProposalState.Rejected },
   { name: 'Proposal.WithDrawn', value: ProposalState.Withdrawn },
 ];
 

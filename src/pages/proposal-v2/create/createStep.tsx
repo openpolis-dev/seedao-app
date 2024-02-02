@@ -393,7 +393,7 @@ export default function CreateStep({ onClick }: any) {
         title,
         proposal_category_id: proposalType?.category_id,
         vote_type: voteType,
-        vote_options: voteType === 99 ? voteList : null,
+        vote_options: voteType === 99 || voteType === 98 ? voteList : null,
         content_blocks: arr,
         components: data,
         template_id: template?.id,
@@ -494,7 +494,9 @@ export default function CreateStep({ onClick }: any) {
   const EmptyArray = voteList.filter((item) => item === '');
 
   const submitDisabled =
-    !title || !title.trim() || list.some((item) => !item.content || (voteType === 99 && EmptyArray?.length));
+    !title ||
+    !title.trim() ||
+    list.some((item) => !item.content || ((voteType === 99 || voteType === 98) && EmptyArray?.length));
 
   return (
     <Box>
@@ -600,7 +602,7 @@ export default function CreateStep({ onClick }: any) {
                     {/*<MarkdownEditor value={item.content} onChange={(val)=>handleText(val,index)} />*/}
                   </ItemBox>
                 ))}
-              {voteType === 99 && (
+              {(voteType === 99 || voteType === 98) && (
                 <ItemBox>
                   <TitleBox>投票选项</TitleBox>
                   <VoteBox>

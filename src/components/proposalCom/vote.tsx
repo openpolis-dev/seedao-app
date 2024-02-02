@@ -4,7 +4,7 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import { Poll, VoteType, VoteOption, VoteGateType, ProposalState } from 'type/proposalV2.type';
+import { Poll, VoteOptionType, VoteType, VoteOption, VoteGateType, ProposalState } from 'type/proposalV2.type';
 import { castVote, checkCanVote, closeVote } from 'requests/proposalV2';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import useToast, { ToastType } from 'hooks/useToast';
@@ -24,6 +24,7 @@ interface IProps {
   voteGate?: VoteGateType;
   isOverrideProposal?: boolean;
   execution_ts?: number;
+  voteOptionType: VoteOptionType;
   updateStatus: () => void;
 }
 
@@ -32,7 +33,7 @@ type VoteOptionItem = {
   optionId: number;
 };
 
-const getPollStatus = (start_t: string, close_t: string) => {
+export const getPollStatus = (start_t: string, close_t: string) => {
   const start_at = new Date(start_t).getTime();
   const close_at = new Date(close_t).getTime();
   if (start_at > Date.now()) {
@@ -51,6 +52,7 @@ export default function ProposalVote({
   poll,
   voteGate,
   isOverrideProposal,
+  voteOptionType,
   updateStatus,
 }: IProps) {
   const { t } = useTranslation();
@@ -74,38 +76,51 @@ export default function ProposalVote({
     </Tooltip>
   );
 
+  const onlyShowVoteOption =
+    (voteOptionType === 99 || voteOptionType === 98) &&
+    [ProposalState.Rejected, ProposalState.Withdrawn, ProposalState.PendingSubmit, ProposalState.Draft].includes(
+      proposalState,
+    );
+
   const voteStatusTag = useMemo(() => {
+    if (onlyShowVoteOption) {
+      return <OpenTag>{t('Proposal.VoteNotStart')}</OpenTag>;
+    }
     if (proposalState === ProposalState.Executed) {
       return <CloseTag>{t('Proposal.VoteClose')}</CloseTag>;
     } else if (hasClosed || proposalState === ProposalState.PendingExecution) {
-      return (
-        <>
-          <OpenTag>
-            {t('Proposal.AutoExecuteLeftTime', {
-              ...formatDeltaDate(execution_ts ? execution_ts * 1000 : new Date(poll.close_at).getTime() + 86400000),
-            })}
-          </OpenTag>
-          <OverlayTrigger overlay={renderExecutionTip} placement="right">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width={18}
-              height={18}
-              fill="none"
-              viewBox="0 0 24 24"
-              style={{ marginLeft: '4px' }}
-            >
-              <path
-                stroke="var(--bs-border-color)"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 10a3 3 0 1 1 3 3v1m9-2a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"
-              />
-              <circle cx={12} cy={17} r={1} fill="var(--bs-border-color)" />
-            </svg>
-          </OverlayTrigger>
-        </>
-      );
+      if (execution_ts && execution_ts * 1000 > Date.now()) {
+        return (
+          <>
+            <OpenTag>
+              {t('Proposal.AutoExecuteLeftTime', {
+                ...formatDeltaDate((execution_ts || 0) * 1000),
+              })}
+            </OpenTag>
+            <OverlayTrigger overlay={renderExecutionTip} placement="right">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width={18}
+                height={18}
+                fill="none"
+                viewBox="0 0 24 24"
+                style={{ marginLeft: '4px' }}
+              >
+                <path
+                  stroke="var(--bs-border-color)"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 10a3 3 0 1 1 3 3v1m9-2a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"
+                />
+                <circle cx={12} cy={17} r={1} fill="var(--bs-border-color)" />
+              </svg>
+            </OverlayTrigger>
+          </>
+        );
+      } else {
+        return null;
+      }
     } else if (pollStatus === VoteType.Closed) {
       return <CloseTag>{t('Proposal.VoteClose')}</CloseTag>;
     } else if (pollStatus === VoteType.Open) {
@@ -116,9 +131,9 @@ export default function ProposalVote({
               leftTime: t('Proposal.TimeDisplay', { ...formatDeltaDate(new Date(poll.close_at).getTime()) }),
             })}
           </OpenTag>
-          {isOverrideProposal && canUseCityhall && (
+          {/* {isOverrideProposal && canUseCityhall && (
             <CloseButton onClick={() => setShowConfirmClose(true)}>{t('Proposal.CloseVote')}</CloseButton>
-          )}
+          )} */}
         </>
       );
     } else {
@@ -130,7 +145,7 @@ export default function ProposalVote({
         </OpenTag>
       );
     }
-  }, [pollStatus, t, canUseCityhall, hasClosed, execution_ts]);
+  }, [pollStatus, t, canUseCityhall, hasClosed, execution_ts, onlyShowVoteOption]);
 
   const onConfirmVote = () => {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
@@ -179,13 +194,16 @@ export default function ProposalVote({
         setHasPermission(r.data);
       });
     };
-    if (pollStatus === VoteType.Open && !poll.is_vote) {
+    if (!onlyShowVoteOption && pollStatus === VoteType.Open && !poll.is_vote) {
       getVotePermission();
     }
-  }, [poll, pollStatus]);
+  }, [poll, pollStatus, onlyShowVoteOption]);
 
   const showVoteContent = () => {
-    if ((pollStatus === VoteType.Open && !!poll.is_vote) || pollStatus === VoteType.Closed || hasClosed) {
+    if (
+      !onlyShowVoteOption &&
+      ((pollStatus === VoteType.Open && !!poll.is_vote) || pollStatus === VoteType.Closed || hasClosed)
+    ) {
       return (
         <table>
           <tbody>
@@ -244,7 +262,6 @@ export default function ProposalVote({
       <div className="innerBox">
         <VoteHead>
           <span>
-            {' '}
             {t('Proposal.TotalVotes')}: {poll.totalVotes}
           </span>
           <TotalVoters>

@@ -3,11 +3,19 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { ContainerPadding } from 'assets/styles/global';
-import ProposalVote from 'components/proposalCom/vote';
+import ProposalVote, { getPollStatus } from 'components/proposalCom/vote';
 import ReplyComponent, { IReplyOutputProps } from 'components/proposalCom/reply';
 import ReviewProposalComponent from 'components/proposalCom/reviewProposalComponent';
 import EditActionHistory from 'components/proposalCom/editActionhistory';
-import { ICommentDisplay, IContentBlock, IProposal, IProposalEditHistoy, ProposalState } from 'type/proposalV2.type';
+import {
+  ICommentDisplay,
+  IContentBlock,
+  IProposal,
+  IProposalEditHistoy,
+  ProposalState,
+  VoteType,
+  VoteOptionType,
+} from 'type/proposalV2.type';
 import { useAuthContext, AppActionType } from 'providers/authProvider';
 import requests from 'requests';
 import { formatTime } from 'utils/time';
@@ -36,6 +44,7 @@ import CategoryTag from 'components/proposalCom/categoryTag';
 import TemplateTag from 'components/proposalCom/templateTag';
 import PlusImg from '../../assets/Imgs/light/plus.svg';
 import MinusImg from '../../assets/Imgs/light/minus.svg';
+import { formatDeltaDate } from 'utils/time';
 
 enum BlockContentType {
   Reply = 1,
@@ -128,7 +137,7 @@ export default function ThreadPage() {
       const preview = arr.filter((i: any) => i.type === 'preview');
 
       if (preview.length) {
-        const preArr = JSON.parse(preview[0].content);
+        const preArr = preview[0]?.content ? JSON.parse(preview[0]?.content) : '';
         setPreview(preArr);
         setPreviewTitle(preview[0].title);
       }
@@ -311,7 +320,9 @@ export default function ThreadPage() {
     if (
       [ProposalState.Rejected, ProposalState.Withdrawn, ProposalState.PendingSubmit, ProposalState.Draft].includes(
         data?.state,
-      )
+      ) &&
+      data.vote_type !== 99 &&
+      data.vote_type !== 98
     ) {
       return false;
     }
@@ -380,6 +391,45 @@ export default function ThreadPage() {
     setShowModal(true);
   };
 
+  const getTimeTagDisplay = () => {
+    if (data?.state === ProposalState.PendingExecution) {
+      if (data?.execution_ts && data?.execution_ts * 1000 > Date.now()) {
+        return (
+            <TimeTag>
+              {t('Proposal.AutoExecuteLeftTime', {
+                ...formatDeltaDate((data?.execution_ts || 0) * 1000),
+              })}
+            </TimeTag>
+        );
+      } 
+    }
+    const poll = data?.votes?.[0];
+    if (!poll) {
+      return;
+    }
+    if (data?.state === ProposalState.Voting) {
+      const pollStatus = getPollStatus(poll.poll_start_at, poll.close_at);
+      if (pollStatus === VoteType.Open) {
+        return (
+          <TimeTag>
+            {t('Proposal.VoteEndAt', {
+              leftTime: t('Proposal.TimeDisplay', { ...formatDeltaDate(new Date(poll.close_at).getTime()) }),
+            })}
+          </TimeTag>
+        );
+      }
+    }
+    if (data?.state === ProposalState.Draft) {
+      return (
+        <TimeTag>
+          {t('Proposal.DraftEndAt', {
+            leftTime: t('Proposal.TimeDisplay', { ...formatDeltaDate(new Date(poll.poll_start_at).getTime()) }),
+          })}
+        </TimeTag>
+      );
+    }
+  };
+
   return (
     <Page>
       {review ? (
@@ -432,11 +482,10 @@ export default function ThreadPage() {
       <ThreadHead>
         <div className="title">{data?.title}</div>
         <FlexLine>
-          {currentState && <ProposalStateTag state={currentState} />}
-          {data?.state === ProposalState.Vetoed && <StatusTag>{t('Proposal.veto')}</StatusTag>}
-
           {currentCategory && <CategoryTag>{currentCategory}</CategoryTag>}
           {data?.template_name && <TemplateTag>{data?.template_name}</TemplateTag>}
+          {currentState && <ProposalStateTag state={currentState} />}
+          {getTimeTagDisplay()}
           {data?.arweave && (
             <StoreHash href={`https://arweave.net/tx/${data?.arweave}/data.html`} target="_blank" rel="noreferrer">
               a
@@ -550,6 +599,7 @@ export default function ThreadPage() {
                 id={Number(id)}
                 updateStatus={getProposalDetail}
                 isOverrideProposal={data!.template_name === '否决提案'}
+                voteOptionType={data!.vote_type as VoteOptionType}
               />
             )}
 
@@ -889,4 +939,9 @@ const StatusTag = styled.div`
   line-height: 24px;
   text-align: center;
   padding: 0 20px;
+`;
+
+const TimeTag = styled.span`
+  color: var(--bs-primary);
+  font-size: 12px;
 `;

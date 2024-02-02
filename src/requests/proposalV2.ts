@@ -189,7 +189,9 @@ export const deleteCommet = (id: number, cid: number) => {
 // =========== review ===========
 
 export const approveProposal = (id: number) => {
-  return request.post(`${PATH_PREFIX}approve/${id}`);
+  return request.post(`${PATH_PREFIX}approve/${id}`, {
+    metaforo_access_token: getMetaforoData()?.token,
+  });
 };
 
 export const rejectProposal = (id: number, reason: string) => {
