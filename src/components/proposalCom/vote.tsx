@@ -131,9 +131,9 @@ export default function ProposalVote({
               leftTime: t('Proposal.TimeDisplay', { ...formatDeltaDate(new Date(poll.close_at).getTime()) }),
             })}
           </OpenTag>
-          {isOverrideProposal && canUseCityhall && (
+          {/* {isOverrideProposal && canUseCityhall && (
             <CloseButton onClick={() => setShowConfirmClose(true)}>{t('Proposal.CloseVote')}</CloseButton>
-          )}
+          )} */}
         </>
       );
     } else {
