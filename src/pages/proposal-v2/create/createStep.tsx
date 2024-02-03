@@ -233,11 +233,11 @@ export default function CreateStep({ onClick }: any) {
       );
 
       beforeComponents.forEach((item: any) => {
-        item.content = item.hint;
+        item.content = `<!---${item.hint} --->`;
       });
 
       afterComponents.forEach((item: any) => {
-        item.content = item.hint;
+        item.content = `<!---${item.hint} --->`;
       });
 
       if (!arr[componentsIndex]?.name && arr[componentsIndex]?.title && !components?.length) {
