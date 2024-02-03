@@ -5,6 +5,7 @@ import { ISimpleProposal } from 'type/proposalV2.type';
 import ProposalStateTag, { getRealState } from './stateTag';
 import DefaultAvatarIcon from 'assets/Imgs/defaultAvatar.png';
 import CategoryTag from './categoryTag';
+import { getProposalSIPSlug } from 'utils';
 
 export enum TabType {
   All = 1,
@@ -40,7 +41,10 @@ export default function SimpleProposalItem({
     <CardBox key={data.id}>
       <div onClick={openProposal}>
         <CardHeaderStyled>
-          <Title>{data.title}</Title>
+          <Title>
+            {getProposalSIPSlug(data.sip)}
+            {data.title}
+          </Title>
         </CardHeaderStyled>
         <CardBody>
           <AvaBox>

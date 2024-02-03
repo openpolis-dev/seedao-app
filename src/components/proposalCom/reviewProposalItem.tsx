@@ -10,6 +10,7 @@ import RhtArrow from 'assets/Imgs/proposal/rightArrow.svg';
 import { useTranslation } from 'react-i18next';
 import useMetaforoLogin from 'hooks/useMetaforoLogin';
 import CategoryTag from './categoryTag';
+import { getProposalSIPSlug } from 'utils';
 
 export default function ReviewProposalItem({ data, sns }: { sns: string; data: ISimpleProposal; isReview?: boolean }) {
   const navigate = useNavigate();
@@ -33,7 +34,10 @@ export default function ReviewProposalItem({ data, sns }: { sns: string; data: I
     <CardBox key={data.id} border={borderStyle}>
       <FlexLine onClick={openProposal}>
         <div style={{ flex: 1 }}>
-          <Title>{data.title}</Title>
+          <Title>
+            {getProposalSIPSlug(data.sip)}
+            {data.title}
+          </Title>
           <CardHeaderStyled>
             <LeftBox>
               <div className="left">

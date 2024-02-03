@@ -45,6 +45,7 @@ import TemplateTag from 'components/proposalCom/templateTag';
 import PlusImg from '../../assets/Imgs/light/plus.svg';
 import MinusImg from '../../assets/Imgs/light/minus.svg';
 import { formatDeltaDate } from 'utils/time';
+import { getProposalSIPSlug } from 'utils';
 
 enum BlockContentType {
   Reply = 1,
@@ -480,7 +481,10 @@ export default function ThreadPage() {
       )}
 
       <ThreadHead>
-        <div className="title">{data?.title}</div>
+        <div className="title">
+          {getProposalSIPSlug(data?.sip)}
+          {data?.title}
+        </div>
         <FlexLine>
           {currentCategory && <CategoryTag>{currentCategory}</CategoryTag>}
           {data?.template_name && <TemplateTag>{data?.template_name}</TemplateTag>}

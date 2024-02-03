@@ -39,6 +39,7 @@ export interface ISimpleProposal {
   category_name: string;
   state: ProposalState;
   create_ts: number;
+  sip?: number;
 }
 
 export interface IContentBlock {
