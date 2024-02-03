@@ -485,7 +485,6 @@ export default function ThreadPage() {
           {currentCategory && <CategoryTag>{currentCategory}</CategoryTag>}
           {data?.template_name && <TemplateTag>{data?.template_name}</TemplateTag>}
           {currentState && <ProposalStateTag state={currentState} />}
-          {getTimeTagDisplay()}
           {data?.arweave && (
             <StoreHash href={`https://arweave.net/tx/${data?.arweave}/data.html`} target="_blank" rel="noreferrer">
               a
@@ -499,6 +498,7 @@ export default function ThreadPage() {
             <span className="name">{applicantSNS}</span>
           </UserBox>
           {data?.create_ts && <div className="date">{formatTime(data.create_ts * 1000)}</div>}
+          {getTimeTagDisplay()}
         </InfoBox>
       </ThreadHead>
 
