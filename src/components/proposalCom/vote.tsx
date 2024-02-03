@@ -244,7 +244,6 @@ export default function ProposalVote({
         </FlexLine>
         <VoteBody>
           {showVoteContent()}
-
           {voteGate && (
             <VoteNFT>
               <span>
@@ -255,6 +254,11 @@ export default function ProposalVote({
             </VoteNFT>
           )}
         </VoteBody>
+        <VoteRules>
+          <a href="http://" target="_blank" rel="noopener noreferrer">
+            {t('Proposal.ViewVoteRules')}
+          </a>
+        </VoteRules>
         {!!openVoteItem && <VoterListModal {...openVoteItem} onClose={() => setOpenVoteItem(undefined)} />}
         {showConfirmVote && (
           <ConfirmModal
@@ -304,7 +308,6 @@ const VoteBody = styled.div`
 const VoteNFT = styled.div`
   color: var(--bs-body-color);
   margin-top: 16px;
-  margin-bottom: 14px;
   span {
     margin-right: 20px;
   }
@@ -408,4 +411,12 @@ const Tip = styled.div`
   color: var(--bs-body-color_active);
   padding: 8px;
   border: 1px solid var(--bs-border-color);
+`;
+
+const VoteRules = styled.div`
+  a {
+    color: var(--bs-primary);
+  }
+  text-align: right;
+  margin-top: 16px;
 `;
