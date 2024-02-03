@@ -255,7 +255,7 @@ export default function ProposalVote({
           )}
         </VoteBody>
         <VoteRules>
-          <a href="http://" target="_blank" rel="noopener noreferrer">
+          <a href="https://docs.seedao.tech/seedao/Governance/proposal" target="_blank" rel="noopener noreferrer">
             {t('Proposal.ViewVoteRules')}
           </a>
         </VoteRules>
