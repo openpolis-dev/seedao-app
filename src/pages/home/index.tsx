@@ -419,7 +419,7 @@ export default function Home() {
               </div>
             </TitBox>
             <Row>
-              {events.slice(0, 9).map((item, idx) => (
+              {events.slice(0, 12).map((item, idx) => (
                 <Col key={idx} sm={12} md={4} lg={4} xl={4}>
                   <AppCard {...item} />
                 </Col>

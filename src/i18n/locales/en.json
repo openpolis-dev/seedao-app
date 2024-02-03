@@ -609,7 +609,9 @@
     "SeeU": "SeeU Network",
     "SeeUDesc": "SeeU Network is a decentralized social network that allows users to create and manage their own communities.",
     "SNS": "SNS",
-    "SNSDesc": "SNS is your identity based on blockchain in SeeDAO."
+    "SNSDesc": "SNS is your identity based on blockchain in SeeDAO.",
+    "Echo": "Echo",
+    "EchoDesc": "Echo is a social network that gives your echos to same habbies, passions or interests."
   },
   "SNS": {
     "EntranceTitle": "INVOLVED IN SEEDAO IN YOUR NAME",
