@@ -852,7 +852,7 @@ const ProposalContentBlock = styled.div<{ $radius?: string }>`
   .title {
     background: rgba(82, 0, 255, 0.08);
     line-height: 40px;
-    border-radius: ${(props) => props.$radius || '4px 4px 0 0'};
+
     color: var(--bs-body-color_active);
     padding-inline: 32px;
     font-size: 16px;
@@ -867,7 +867,7 @@ const ProposalContentBlock = styled.div<{ $radius?: string }>`
 `;
 
 const ComponnentBox = styled(ProposalContentBlock)`
-  margin-bottom: 0;
+  margin-bottom: 20px;
 `;
 
 const RejectBlock = styled.div`
