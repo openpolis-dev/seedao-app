@@ -393,6 +393,17 @@ export default function ThreadPage() {
   };
 
   const getTimeTagDisplay = () => {
+    if (data?.state === ProposalState.Draft) {
+      return (
+        <TimeTag>
+          {t('Proposal.DraftEndAt', {
+            leftTime: t('Proposal.TimeDisplay', {
+              ...formatDeltaDate(new Date((data?.publicity_ts || 0) * 1000).getTime()),
+            }),
+          })}
+        </TimeTag>
+      );
+    }
     if (data?.state === ProposalState.PendingExecution) {
       if (data?.execution_ts && data?.execution_ts * 1000 > Date.now()) {
         return (
@@ -419,15 +430,6 @@ export default function ThreadPage() {
           </TimeTag>
         );
       }
-    }
-    if (data?.state === ProposalState.Draft) {
-      return (
-        <TimeTag>
-          {t('Proposal.DraftEndAt', {
-            leftTime: t('Proposal.TimeDisplay', { ...formatDeltaDate(new Date(poll.poll_start_at).getTime()) }),
-          })}
-        </TimeTag>
-      );
     }
   };
 

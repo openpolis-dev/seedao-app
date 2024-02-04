@@ -143,6 +143,7 @@ export interface IProposal extends ISimpleProposal {
   };
   template_name?: string;
   execution_ts?: number;
+  publicity_ts?: number;
 }
 
 export interface IActivity {
