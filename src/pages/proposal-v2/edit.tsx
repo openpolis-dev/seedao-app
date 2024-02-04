@@ -261,7 +261,13 @@ export default function EditProposal() {
     ? proposalCategories?.find((item) => item.id === data?.proposal_category_id)?.name
     : '';
 
-  const submitDisabled = !title || !title.trim() || contentBlocks.some((item) => !item.content);
+  // const submitDisabled = !title || !title.trim() || contentBlocks.some((item) => !item.content);
+
+  const submitDisabled =
+    !title ||
+    !title.trim() ||
+    beforeList.some((item) => !item.content || !/^<!--.*-->(.|\n)+$|^(?!(<!--.*?-->))[\s\S]+$/.test(item.content)) ||
+    contentBlocks.some((item) => !item.content || !/^<!--.*-->(.|\n)+$|^(?!(<!--.*?-->))[\s\S]+$/.test(item.content));
 
   return (
     <Page>
