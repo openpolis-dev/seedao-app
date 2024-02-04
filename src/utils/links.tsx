@@ -8,6 +8,7 @@ import Wormhole3Icon from '../assets/Imgs/home/Wormhole3.png';
 import SeedIcon from '../assets/images/seed.png';
 import SeeUImg from '../assets/Imgs/home/seeuNetwork.jpg';
 import SNSImg from '../assets/Imgs/home/SNS.jpg';
+import EchoImg from '../assets/Imgs/home/echo.svg';
 
 import RImg1 from '../assets/Imgs/resources/1.png';
 import RImg2 from '../assets/Imgs/resources/2.png';
@@ -335,6 +336,13 @@ const links = {
       link: '/sns/register',
       icon: SNSImg,
       desc: 'apps.SNSDesc',
+    },
+    {
+      id: 'echo',
+      app: 'apps.Echo',
+      link: 'https://echo3.world/',
+      icon: EchoImg,
+      desc: 'apps.EchoDesc',
     },
     {
       id: ['preview', 'production'].includes(process.env.REACT_APP_ENV_VERSION as string)

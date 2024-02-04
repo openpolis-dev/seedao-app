@@ -45,6 +45,7 @@ import TemplateTag from 'components/proposalCom/templateTag';
 import PlusImg from '../../assets/Imgs/light/plus.svg';
 import MinusImg from '../../assets/Imgs/light/minus.svg';
 import { formatDeltaDate } from 'utils/time';
+import { getProposalSIPSlug } from 'utils';
 
 enum BlockContentType {
   Reply = 1,
@@ -149,7 +150,7 @@ export default function ThreadPage() {
 
       const comStr = res.data.components || [];
       comStr.map((item: any) => {
-        if (typeof item.data === 'string') {
+        if (item.data && typeof item.data === 'string') {
           item.data = JSON.parse(item.data);
         }
         return item;
@@ -391,17 +392,44 @@ export default function ThreadPage() {
     setShowModal(true);
   };
 
+  useEffect(() => {
+    if (applicant) {
+      requests.user
+        .getUsers([applicant])
+        .then((res) => publicJs.getImage(res.data[0]?.sp?.avatar))
+        .then((url: string | undefined) => {
+          if (url) {
+            setApplicantAvatar(url);
+          }
+        });
+    }
+  }, [applicant]);
+
   const getTimeTagDisplay = () => {
+    if (data?.state === ProposalState.Draft) {
+      if (!data?.publicity_ts) {
+        return null;
+      }
+      return (
+        <TimeTag>
+          {t('Proposal.DraftEndAt', {
+            leftTime: t('Proposal.TimeDisplay', {
+              ...formatDeltaDate(new Date((data?.publicity_ts || 0) * 1000).getTime()),
+            }),
+          })}
+        </TimeTag>
+      );
+    }
     if (data?.state === ProposalState.PendingExecution) {
       if (data?.execution_ts && data?.execution_ts * 1000 > Date.now()) {
         return (
-            <TimeTag>
-              {t('Proposal.AutoExecuteLeftTime', {
-                ...formatDeltaDate((data?.execution_ts || 0) * 1000),
-              })}
-            </TimeTag>
+          <TimeTag>
+            {t('Proposal.AutoExecuteLeftTime', {
+              ...formatDeltaDate((data?.execution_ts || 0) * 1000),
+            })}
+          </TimeTag>
         );
-      } 
+      }
     }
     const poll = data?.votes?.[0];
     if (!poll) {
@@ -418,15 +446,6 @@ export default function ThreadPage() {
           </TimeTag>
         );
       }
-    }
-    if (data?.state === ProposalState.Draft) {
-      return (
-        <TimeTag>
-          {t('Proposal.DraftEndAt', {
-            leftTime: t('Proposal.TimeDisplay', { ...formatDeltaDate(new Date(poll.poll_start_at).getTime()) }),
-          })}
-        </TimeTag>
-      );
     }
   };
 
@@ -480,17 +499,15 @@ export default function ThreadPage() {
       )}
 
       <ThreadHead>
-        <div className="title">{data?.title}</div>
+        <div className="title">
+          {getProposalSIPSlug(data?.sip)}
+          {data?.title}
+        </div>
         <FlexLine>
           {currentCategory && <CategoryTag>{currentCategory}</CategoryTag>}
-          {data?.template_name && <TemplateTag>{data?.template_name}</TemplateTag>}
+          {!data?.is_based_on_custom_template && <TemplateTag>{data?.template_name}</TemplateTag>}
           {currentState && <ProposalStateTag state={currentState} />}
           {getTimeTagDisplay()}
-          {data?.arweave && (
-            <StoreHash href={`https://arweave.net/tx/${data?.arweave}/data.html`} target="_blank" rel="noreferrer">
-              a
-            </StoreHash>
-          )}
         </FlexLine>
         {showModal && <ProfileComponent address={applicant} theme={theme} handleClose={handleClose} />}
         <InfoBox>
@@ -499,6 +516,11 @@ export default function ThreadPage() {
             <span className="name">{applicantSNS}</span>
           </UserBox>
           {data?.create_ts && <div className="date">{formatTime(data.create_ts * 1000)}</div>}
+          {data?.arweave && (
+            <StoreHash href={`https://arweave.net/tx/${data?.arweave}/data.html`} target="_blank" rel="noreferrer">
+              a
+            </StoreHash>
+          )}
         </InfoBox>
       </ThreadHead>
 
@@ -833,7 +855,7 @@ const ProposalContentBlock = styled.div<{ $radius?: string }>`
   .title {
     background: rgba(82, 0, 255, 0.08);
     line-height: 40px;
-    border-radius: ${(props) => props.$radius || '4px 4px 0 0'};
+
     color: var(--bs-body-color_active);
     padding-inline: 32px;
     font-size: 16px;
@@ -848,7 +870,7 @@ const ProposalContentBlock = styled.div<{ $radius?: string }>`
 `;
 
 const ComponnentBox = styled(ProposalContentBlock)`
-  margin-bottom: 0;
+  margin-bottom: 20px;
 `;
 
 const RejectBlock = styled.div`

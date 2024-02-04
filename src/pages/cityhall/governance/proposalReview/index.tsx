@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { ProposalState, ISimpleProposal } from 'type/proposalV2.type';
 import ClearSVGIcon from 'components/svgs/clear';
 import SearchSVGIcon from 'components/svgs/search';
-import ProposalItem from 'components/proposalCom/reviewProposalItem';
+import ReviewProposalItem from 'components/proposalCom/reviewProposalItem';
 import requests from 'requests';
 import { useAuthContext, AppActionType } from 'providers/authProvider';
 import NoItem from 'components/noItem';
@@ -126,7 +126,12 @@ export default function ProposalReview() {
         </SearchBox>
       </FilterBox>
       {proposalList.map((p) => (
-        <ProposalItem key={p.id} data={p} isReview sns={formatSNS(p.applicant?.toLocaleLowerCase())} />
+        <ReviewProposalItem
+          key={p.id}
+          data={p}
+          isReview={selectStatus === ProposalState.Draft}
+          sns={formatSNS(p.applicant?.toLocaleLowerCase())}
+        />
       ))}
       {totalCount === 0 && !loading && <NoItem />}
       {totalCount > PAGE_SIZE && (

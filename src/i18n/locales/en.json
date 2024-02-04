@@ -146,7 +146,8 @@
     "CloseVote": "Early closure of polls",
     "ConfirmToCloseVote": "Confirmation of the early closing of the polls?",
     "ExecutionTip": "The current ballot has closed and there is a 24-hour waiting period during which the City Council may veto the results of the proposal, or if the City Council does not veto the proposal, the proposal closes in accordance with the results of the ballot.",
-    "Create": "Create"
+    "Create": "Create",
+    "ViewVoteRules": "View voting rules >>"
   },
   "Project": {
     "ProjectOrGuildItem": "Nothing left here.",
@@ -609,7 +610,9 @@
     "SeeU": "SeeU Network",
     "SeeUDesc": "SeeU Network is a decentralized social network that allows users to create and manage their own communities.",
     "SNS": "SNS",
-    "SNSDesc": "SNS is your identity based on blockchain in SeeDAO."
+    "SNSDesc": "SNS is your identity based on blockchain in SeeDAO.",
+    "Echo": "Echo",
+    "EchoDesc": "Echo is a social network that gives your echos to same habbies, passions or interests."
   },
   "SNS": {
     "EntranceTitle": "INVOLVED IN SEEDAO IN YOUR NAME",

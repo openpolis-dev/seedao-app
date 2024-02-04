@@ -82,7 +82,6 @@ export const formatDeltaDate = (endTime: number, formatDay = true) => {
   const minutes = (hours - hour) * 60;
   let minute = Math.floor(minutes);
   const seconds = (minutes - minute) * 60;
-  console.log('hds', day, hour, seconds);
   if (!hour && !day && seconds) {
     minute += 1;
   }

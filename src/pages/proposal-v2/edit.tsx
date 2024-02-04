@@ -4,7 +4,7 @@ import { ContainerPadding } from 'assets/styles/global';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import React, { useEffect, useState, useRef, ChangeEvent } from 'react';
-import { IContentBlock, IProposal, ProposalState } from 'type/proposalV2.type';
+import { IContentBlock, IProposal, ProposalState, Poll } from 'type/proposalV2.type';
 import { useAuthContext, AppActionType } from 'providers/authProvider';
 import { Preview, Template } from '@taoist-labs/components';
 import { MdEditor, MdPreview } from 'md-editor-rt';
@@ -51,17 +51,18 @@ export default function EditProposal() {
   const [preview, setPreview] = useState<any[]>([]);
   const [previewTitle, setPreviewTitle] = useState('');
   const [previewOrg, setPreviewOrg] = useState<any[]>([]);
+  const [pid, setPid] = useState('');
 
   const { showToast } = useToast();
-  const [voteList, setVoteList] = useState(['']);
+  const [voteList, setVoteList] = useState<any[]>([]);
 
   useEffect(() => {
     if (state) {
       setData(state);
+      setVoteList((state?.votes as any)?.options ?? []);
 
-      console.error(state);
       setDataSource(state?.components ?? []);
-      setShowRht(!state?.is_based_on_custom_template);
+      // setShowRht(!state?.is_based_on_custom_template);
       setVoteType(state?.vote_type);
       setShowRht(state?.is_based_on_custom_template);
     } else {
@@ -70,8 +71,7 @@ export default function EditProposal() {
         try {
           const res = await getProposalDetail(Number(id));
           setData(res.data);
-
-          console.error(res.data);
+          setVoteList((res.data?.votes as any)?.options ?? []);
           setVoteType(res.data?.vote_type);
           setDataSource(res.data?.components ?? []);
           setShowRht(!res.data?.is_based_on_custom_template);
@@ -110,6 +110,13 @@ export default function EditProposal() {
       setComponentName(componentsList[0]?.title);
       setBeforeList(beforeComponents ?? []);
       setHolder(componentsList);
+
+      const propArr = preArr.filter((item: any) => item.name === 'relate');
+
+      if (propArr?.length) {
+        setPid(propArr[0]?.data?.proposal_id);
+      }
+
       setContentBlocks(afterComponents);
 
       // setContentBlocks(data.content_blocks);
@@ -124,6 +131,11 @@ export default function EditProposal() {
     let arr = [...contentBlocks];
     arr[index].content = value;
     setContentBlocks([...arr]);
+  };
+  const handleTextBefore = (value: any, index: number) => {
+    let arr = [...beforeList];
+    arr[index].content = value;
+    setBeforeList([...arr]);
   };
 
   const getComponentList = async () => {
@@ -190,12 +202,14 @@ export default function EditProposal() {
     let arr = [...previewOrg, ...beforeList, ...holderNew, ...contentBlocks];
 
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
+
     updateProposal(Number(data.id), {
       title,
       proposal_category_id: data.proposal_category_id,
       content_blocks: arr,
       vote_type: voteType,
       components: submitData,
+      create_project_proposal_id: pid?.length ? pid : 0,
       submit_to_metaforo: submitType === 'submit',
     })
       .then((r) => {
@@ -215,9 +229,6 @@ export default function EditProposal() {
   };
 
   const handleSaveDraft = (data: any) => {
-    console.error({
-      ...data,
-    });
     handleFormSubmit(true, data);
   };
   const saveAllDraft = () => {
@@ -241,7 +252,7 @@ export default function EditProposal() {
 
   const handleAdd = () => {
     const arr = [...voteList];
-    arr.push('');
+    arr.push({ html: '' });
     setVoteList(arr);
   };
 
@@ -255,7 +266,12 @@ export default function EditProposal() {
     ? proposalCategories?.find((item) => item.id === data?.proposal_category_id)?.name
     : '';
 
-  const submitDisabled = !title || !title.trim() || contentBlocks.some((item) => !item.content);
+  // const submitDisabled = !title || !title.trim() || contentBlocks.some((item) => !item.content);
+  const submitDisabled =
+    !title ||
+    !title.trim() ||
+    beforeList.some((item) => !item.content || !/^<!--.*-->(.|\n)+$|^(?!(<!--.*?-->))[\s\S]+$/.test(item.content)) ||
+    contentBlocks.some((item) => !item.content || !/^<!--.*-->(.|\n)+$|^(?!(<!--.*?-->))[\s\S]+$/.test(item.content));
 
   return (
     <Page>
@@ -332,16 +348,17 @@ export default function EditProposal() {
                         theme={theme ? 'dark' : 'light'}
                         modelValue={item.content}
                         editorId={`block_${index}`}
-                        onChange={(val) => handleText(val, index)}
+                        onChange={(val) => handleTextBefore(val, index)}
                       />
 
                       {/*<MarkdownEditor value={item.content} onChange={(val)=>handleText(val,index)} />*/}
                     </ItemBox>
                   ))}
-
-                <ComponnentBox>
-                  <span>{componentName || t('Proposal.proposalComponents')}</span>
-                </ComponnentBox>
+                {
+                  <ComponnentBox>
+                    <span>{componentName || t('Proposal.proposalComponents')}</span>
+                  </ComponnentBox>
+                }
               </>
             }
             AfterComponent={
@@ -362,12 +379,13 @@ export default function EditProposal() {
                       {/*<MarkdownEditor value={item.content} onChange={(val)=>handleText(val,index)} />*/}
                     </ItemBox>
                   ))}
+
                 {/*{*/}
-                {/*  voteType === 99 &&<ItemBox>*/}
+                {/*  ((voteType === 99 || voteType === 98) &&  data?.state === "pending_submit") &&<ItemBox>*/}
                 {/*    <TitleBox>投票选项</TitleBox>*/}
                 {/*    <VoteBox>*/}
                 {/*      {voteList.map((item, index) => (*/}
-                {/*        <li>*/}
+                {/*        <li key={`vote_${index}`}>*/}
                 {/*          <input type="text" value={item} onChange={(e) => handleVoteInput(e, index)} />*/}
                 {/*          {voteList.length - 1 === index && (*/}
                 {/*            <span onClick={() => handleAdd()}>*/}
@@ -541,7 +559,6 @@ const BoxBg = styled.div<{ showRht: string }>`
 `;
 
 const VoteBox = styled.ul`
-  padding: 0 32px;
   li {
     display: flex;
     align-items: center;

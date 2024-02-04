@@ -146,7 +146,8 @@
     "CloseVote": "提前结束投票",
     "ConfirmToCloseVote": "确认提前结束投票吗",
     "ExecutionTip": "当前投票已结束，进入 24 小时等待期，在此期间市政厅可对提案结果进行否决，如市政厅未否决，则提案按照投票结果结束。",
-    "Create": "创建"
+    "Create": "创建",
+    "ViewVoteRules": "查看投票规则 >>"
   },
   "Project": {
     "ProjectOrGuildItem": "还没有填写相关介绍信息～",
@@ -609,7 +610,9 @@
     "SeeU": "SeeU Network",
     "SeeUDesc": "SeeU Network is a decentralized social network that allows users to create and manage their own communities.",
     "SNS": "SNS",
-    "SNSDesc": "SNS is your identity based on blockchain in SeeDAO."
+    "SNSDesc": "SNS is your identity based on blockchain in SeeDAO.",
+    "Echo": "Echo",
+    "EchoDesc": "Echo is a social network that gives your echos to same habbies, passions or interests."
   },
   "SNS": {
     "EntranceTitle": "获取你的 SNS，开始你的 SeeDAO 之旅",

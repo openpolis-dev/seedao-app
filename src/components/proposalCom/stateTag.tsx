@@ -24,20 +24,20 @@ export default function ProposalStateTag({ state }: { state?: ProposalState }) {
       text = t('Proposal.Discard');
       break;
     case ProposalState.Draft:
-      color = '#2F8FFF';
+      color = 'rgb(36, 175, 255)';
       text = t('Proposal.Draft');
       break;
     case ProposalState.PendingSubmit:
-      color = 'rgb(253, 210, 255)';
+      color = 'rgb(255, 81, 209)';
       text = t('Proposal.PendingCommit');
       break;
     case ProposalState.Withdrawn:
-      color = '#B0B0B0';
+      color = 'rgb(163, 160, 160)';
       text = t('Proposal.WithDrawn');
       break;
     case ProposalState.VotingPassed:
     case ProposalState.Executed:
-      color = '#1F9E14';
+      color = 'rgb(0, 178, 29)';
       text = t('Proposal.Passed');
       break;
     case ProposalState.ExecutionFailed:
@@ -45,19 +45,19 @@ export default function ProposalStateTag({ state }: { state?: ProposalState }) {
       text = t('Proposal.ExecutedFailed');
       break;
     case ProposalState.VotingFailed:
-      color = '#FB4E4E';
+      color = 'rgb(255, 51, 51)';
       text = t('Proposal.Failed');
       break;
     case ProposalState.Vetoed:
-      color = '#FB4E4E';
+      color = 'rgb(255, 51, 51)';
       text = t('Proposal.Vetoed');
       break;
     case ProposalState.Voting:
-      color = '#F9B617';
+      color = 'rgb(251, 152, 17)';
       text = t('Proposal.Voting');
       break;
     case ProposalState.PendingExecution:
-      color = 'rgba(190, 166, 255, 0.8)';
+      color = 'rgb(137, 93, 255)';
       text = t('Proposal.PendingExecution');
       break;
 

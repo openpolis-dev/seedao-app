@@ -1,5 +1,5 @@
 import { configureChains, createConfig, WagmiConfig } from 'wagmi';
-import { mainnet, polygon, Chain } from 'wagmi/chains';
+import { mainnet, polygon, Chain, goerli } from 'wagmi/chains';
 import { publicProvider } from 'wagmi/providers/public';
 import { InjectedConnector } from 'wagmi/connectors/injected';
 import { UniPassConnector } from '@unipasswallet/wagmi-connector';
@@ -15,10 +15,10 @@ export default function WagmiProvider(props: React.PropsWithChildren) {
   let supportChains: Chain[] = [];
   switch (networkConfig.chainId) {
     case 1:
-      supportChains = [mainnet];
+      supportChains = [mainnet, goerli];
       break;
     case 137:
-      supportChains = [polygon];
+      supportChains = [mainnet, polygon, goerli];
       break;
     default:
       throw new Error(`[config] Unsupported chainId:${networkConfig.chainId}`);

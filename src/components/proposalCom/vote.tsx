@@ -86,42 +86,7 @@ export default function ProposalVote({
     if (onlyShowVoteOption) {
       return <OpenTag>{t('Proposal.VoteNotStart')}</OpenTag>;
     }
-    if (proposalState === ProposalState.Executed) {
-      return <CloseTag>{t('Proposal.VoteClose')}</CloseTag>;
-    } else if (hasClosed || proposalState === ProposalState.PendingExecution) {
-      if (execution_ts && execution_ts * 1000 > Date.now()) {
-        return (
-          <>
-            <OpenTag>
-              {t('Proposal.AutoExecuteLeftTime', {
-                ...formatDeltaDate((execution_ts || 0) * 1000),
-              })}
-            </OpenTag>
-            <OverlayTrigger overlay={renderExecutionTip} placement="right">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width={18}
-                height={18}
-                fill="none"
-                viewBox="0 0 24 24"
-                style={{ marginLeft: '4px' }}
-              >
-                <path
-                  stroke="var(--bs-border-color)"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 10a3 3 0 1 1 3 3v1m9-2a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"
-                />
-                <circle cx={12} cy={17} r={1} fill="var(--bs-border-color)" />
-              </svg>
-            </OverlayTrigger>
-          </>
-        );
-      } else {
-        return null;
-      }
-    } else if (pollStatus === VoteType.Closed) {
+    if (proposalState === ProposalState.Executed || hasClosed || pollStatus === VoteType.Closed) {
       return <CloseTag>{t('Proposal.VoteClose')}</CloseTag>;
     } else if (pollStatus === VoteType.Open) {
       return (
@@ -279,7 +244,6 @@ export default function ProposalVote({
         </FlexLine>
         <VoteBody>
           {showVoteContent()}
-
           {voteGate && (
             <VoteNFT>
               <span>
@@ -290,6 +254,11 @@ export default function ProposalVote({
             </VoteNFT>
           )}
         </VoteBody>
+        <VoteRules>
+          <a href="https://docs.seedao.tech/seedao/Governance/proposal" target="_blank" rel="noopener noreferrer">
+            {t('Proposal.ViewVoteRules')}
+          </a>
+        </VoteRules>
         {!!openVoteItem && <VoterListModal {...openVoteItem} onClose={() => setOpenVoteItem(undefined)} />}
         {showConfirmVote && (
           <ConfirmModal
@@ -339,7 +308,6 @@ const VoteBody = styled.div`
 const VoteNFT = styled.div`
   color: var(--bs-body-color);
   margin-top: 16px;
-  margin-bottom: 14px;
   span {
     margin-right: 20px;
   }
@@ -443,4 +411,12 @@ const Tip = styled.div`
   color: var(--bs-body-color_active);
   padding: 8px;
   border: 1px solid var(--bs-border-color);
+`;
+
+const VoteRules = styled.div`
+  a {
+    color: var(--bs-primary);
+  }
+  text-align: right;
+  margin-top: 16px;
 `;

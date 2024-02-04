@@ -353,7 +353,7 @@ const NormalInput = styled.input`
 `;
 
 const NoComments = styled.div`
-  text-align: center;
+  text-align: left;
   height: 58px;
   line-height: 58px;
   letter-spacing: 0.07px;
