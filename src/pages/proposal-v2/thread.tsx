@@ -150,7 +150,7 @@ export default function ThreadPage() {
 
       const comStr = res.data.components || [];
       comStr.map((item: any) => {
-        if (typeof item.data === 'string') {
+        if (item.data && typeof item.data === 'string') {
           item.data = JSON.parse(item.data);
         }
         return item;
