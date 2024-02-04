@@ -392,6 +392,22 @@ export default function ThreadPage() {
     setShowModal(true);
   };
 
+  useEffect(() => {
+    if (applicant) {
+      requests.user
+        .getUsers([applicant])
+        .then((res) => {
+          const detail = res.data[0]?.sp;
+          return publicJs.getImage(detail?.avatar);
+        })
+        .then((url: string | undefined) => {
+          if (url) {
+            setApplicantAvatar(url);
+          }
+        });
+    }
+  }, [applicant]);
+
   const getTimeTagDisplay = () => {
     if (data?.state === ProposalState.Draft) {
       return (
