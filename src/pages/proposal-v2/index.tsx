@@ -96,7 +96,7 @@ export default function ProposalIndexPage() {
         page: _page,
         size: PAGE_SIZE,
         sort_order: selectTime.value,
-        sort_field: 'create_ts',
+        sort_field: isFilterSIP ? 'sip' : 'create_ts',
         state: selectStatus?.value,
         category_id: selectCategory?.value,
         q: searchKeyword,
