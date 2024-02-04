@@ -396,10 +396,7 @@ export default function ThreadPage() {
     if (applicant) {
       requests.user
         .getUsers([applicant])
-        .then((res) => {
-          const detail = res.data[0]?.sp;
-          return publicJs.getImage(detail?.avatar);
-        })
+        .then((res) => publicJs.getImage(res.data[0]?.sp?.avatar))
         .then((url: string | undefined) => {
           if (url) {
             setApplicantAvatar(url);
