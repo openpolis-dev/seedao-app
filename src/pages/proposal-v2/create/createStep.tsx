@@ -497,8 +497,8 @@ export default function CreateStep({ onClick }: any) {
   const submitDisabled =
     !title ||
     !title.trim() ||
-    beforeList.some((item) => !item.content || !/^<!--.*-->(.|\n)+$/.test(item.content)) ||
-    list.some((item) => !item.content || !/^<!--.*-->(.|\n)+$/.test(item.content)) ||
+    beforeList.some((item) => !item.content || !/^<!--.*-->(.|\n)+$|^(?!(<!--.*?-->))[\s\S]+$/.test(item.content)) ||
+    list.some((item) => !item.content || !/^<!--.*-->(.|\n)+$|^(?!(<!--.*?-->))[\s\S]+$/.test(item.content)) ||
     ((voteType === 99 || voteType === 98) && !!EmptyArray?.length);
 
   return (
