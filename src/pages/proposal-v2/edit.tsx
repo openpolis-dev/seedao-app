@@ -132,6 +132,11 @@ export default function EditProposal() {
     arr[index].content = value;
     setContentBlocks([...arr]);
   };
+  const handleTextBefore = (value: any, index: number) => {
+    let arr = [...beforeList];
+    arr[index].content = value;
+    setBeforeList([...arr]);
+  };
 
   const getComponentList = async () => {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
@@ -262,18 +267,11 @@ export default function EditProposal() {
     : '';
 
   // const submitDisabled = !title || !title.trim() || contentBlocks.some((item) => !item.content);
-
   const submitDisabled =
     !title ||
     !title.trim() ||
-    (!!beforeList?.length &&
-      beforeList?.some(
-        (item) => !item.content || !/^<!--.*-->(.|\n)+$|^(?!(<!--.*?-->))[\s\S]+$/.test(item.content),
-      )) ||
-    (!!contentBlocks?.length &&
-      contentBlocks?.some(
-        (item) => !item.content || !/^<!--.*-->(.|\n)+$|^(?!(<!--.*?-->))[\s\S]+$/.test(item.content),
-      ));
+    beforeList.some((item) => !item.content || !/^<!--.*-->(.|\n)+$|^(?!(<!--.*?-->))[\s\S]+$/.test(item.content)) ||
+    contentBlocks.some((item) => !item.content || !/^<!--.*-->(.|\n)+$|^(?!(<!--.*?-->))[\s\S]+$/.test(item.content));
 
   return (
     <Page>
@@ -350,7 +348,7 @@ export default function EditProposal() {
                         theme={theme ? 'dark' : 'light'}
                         modelValue={item.content}
                         editorId={`block_${index}`}
-                        onChange={(val) => handleText(val, index)}
+                        onChange={(val) => handleTextBefore(val, index)}
                       />
 
                       {/*<MarkdownEditor value={item.content} onChange={(val)=>handleText(val,index)} />*/}
