@@ -407,6 +407,9 @@ export default function ThreadPage() {
 
   const getTimeTagDisplay = () => {
     if (data?.state === ProposalState.Draft) {
+      if (!data?.publicity_ts) {
+        return null;
+      }
       return (
         <TimeTag>
           {t('Proposal.DraftEndAt', {
