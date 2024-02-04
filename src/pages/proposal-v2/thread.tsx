@@ -505,7 +505,7 @@ export default function ThreadPage() {
         </div>
         <FlexLine>
           {currentCategory && <CategoryTag>{currentCategory}</CategoryTag>}
-          {data?.template_name && <TemplateTag>{data?.template_name}</TemplateTag>}
+          {!data?.is_based_on_custom_template && <TemplateTag>{data?.template_name}</TemplateTag>}
           {currentState && <ProposalStateTag state={currentState} />}
           {getTimeTagDisplay()}
         </FlexLine>
