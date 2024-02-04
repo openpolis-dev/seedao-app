@@ -24,6 +24,7 @@ interface IProposalPageParams extends IPageParams {
   category_id?: number;
   state?: ProposalState;
   q?: string;
+  sip?: number | string;
 }
 
 export const getProposalCategoryList = (): Promise<ResponseData<IBaseCategory[]>> => {
