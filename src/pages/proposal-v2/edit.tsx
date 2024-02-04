@@ -204,7 +204,7 @@ export default function EditProposal() {
       content_blocks: arr,
       vote_type: voteType,
       components: submitData,
-      create_project_proposal_id: pid,
+      create_project_proposal_id: pid?.length ? pid : 0,
       submit_to_metaforo: submitType === 'submit',
     })
       .then((r) => {
@@ -266,8 +266,14 @@ export default function EditProposal() {
   const submitDisabled =
     !title ||
     !title.trim() ||
-    beforeList.some((item) => !item.content || !/^<!--.*-->(.|\n)+$|^(?!(<!--.*?-->))[\s\S]+$/.test(item.content)) ||
-    contentBlocks.some((item) => !item.content || !/^<!--.*-->(.|\n)+$|^(?!(<!--.*?-->))[\s\S]+$/.test(item.content));
+    (!!beforeList?.length &&
+      beforeList?.some(
+        (item) => !item.content || !/^<!--.*-->(.|\n)+$|^(?!(<!--.*?-->))[\s\S]+$/.test(item.content),
+      )) ||
+    (!!contentBlocks?.length &&
+      contentBlocks?.some(
+        (item) => !item.content || !/^<!--.*-->(.|\n)+$|^(?!(<!--.*?-->))[\s\S]+$/.test(item.content),
+      ));
 
   return (
     <Page>
