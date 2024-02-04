@@ -496,7 +496,12 @@ export default function CreateStep({ onClick }: any) {
   const submitDisabled =
     !title ||
     !title.trim() ||
-    list.some((item) => !item.content || ((voteType === 99 || voteType === 98) && EmptyArray?.length));
+    list.some(
+      (item) =>
+        !item.content ||
+        !/^<!--.*-->(.|\n)+$/.test(item.content) ||
+        ((voteType === 99 || voteType === 98) && EmptyArray?.length),
+    );
 
   return (
     <Box>
