@@ -80,7 +80,7 @@ type CreateProposalParamsType = {
   title: string;
   proposal_category_id: number | undefined;
   vote_type?: number | undefined;
-  create_project_proposal_id?: number | undefined;
+  create_project_proposal_id?: any;
   template_id?: number | string;
   vote_options?: string[] | null;
   content_blocks: IContentBlock[];
