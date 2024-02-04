@@ -397,6 +397,7 @@ export default function CreateStep({ onClick }: any) {
         content_blocks: arr,
         components: data,
         template_id: template?.id,
+        create_project_proposal_id: extraData?.id,
         submit_to_metaforo: submitType === 'submit',
       })
         .then((r) => {
@@ -496,12 +497,9 @@ export default function CreateStep({ onClick }: any) {
   const submitDisabled =
     !title ||
     !title.trim() ||
-    list.some(
-      (item) =>
-        !item.content ||
-        !/^<!--.*-->(.|\n)+$/.test(item.content) ||
-        ((voteType === 99 || voteType === 98) && EmptyArray?.length),
-    );
+    beforeList.some((item) => !item.content || !/^<!--.*-->(.|\n)+$/.test(item.content)) ||
+    list.some((item) => !item.content || !/^<!--.*-->(.|\n)+$/.test(item.content)) ||
+    ((voteType === 99 || voteType === 98) && !!EmptyArray?.length);
 
   return (
     <Box>
