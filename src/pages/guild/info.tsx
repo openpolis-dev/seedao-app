@@ -20,6 +20,7 @@ import { ethers } from 'ethers';
 import { getUsers } from '../../requests/user';
 import useQuerySNS from '../../hooks/useQuerySNS';
 import { IUser } from '../../type/user.type';
+import LinkImg from '../../assets/Imgs/link.svg';
 
 type UserMap = { [w: string]: IUser };
 
@@ -141,7 +142,7 @@ export default function Index() {
                 {/*</LftBox>*/}
                 <ContentBox>
                   {canAuditApplication && (
-                    <BtnTop to={`/project/edit/${detail?.id}`} state={detail}>
+                    <BtnTop to={`/guilp/edit/${detail?.id}`} state={detail}>
                       <Button>{t('Project.Edit')}</Button>
                     </BtnTop>
                   )}
@@ -149,19 +150,12 @@ export default function Index() {
                   {/*<TitleBox>{t('Project.ProjectIntro')}</TitleBox>*/}
                   <DlBox>
                     <dl>
-                      <dt>{t('Project.ProjectIntro')}</dt>
+                      <dt>{t('Guild.GuildIntro')}</dt>
                       <dd>{detail?.intro}</dd>
                     </dl>
+
                     <dl>
-                      <dt>{t('Project.StartProjectLink')}</dt>
-                      <dd>{detail?.ApprovalLink}</dd>
-                    </dl>
-                    <dl>
-                      <dt>{t('Project.EndProjectLink')}</dt>
-                      <dd>{detail?.OverLink}</dd>
-                    </dl>
-                    <dl>
-                      <dt>{t('Project.Moderator')}</dt>
+                      <dt>{t('Guild.Moderator')}</dt>
                       <dd>
                         {sponserList.map((item: any, index: number) => (
                           <MemBox key={`avatar_${index}`}>
@@ -176,24 +170,22 @@ export default function Index() {
                       </dd>
                     </dl>
                     <dl>
-                      <dt>{t('Project.Contact')}</dt>
+                      <dt>{t('Guild.Contact')}</dt>
                       <dd>{detail?.ContantWay}</dd>
                     </dl>
+
                     <dl>
-                      <dt>{t('Project.OfficialLink')}</dt>
-                      <dd>{detail?.OfficialLink}</dd>
-                    </dl>
-                    <dl>
-                      <dt>{t('Project.Budget')}</dt>
-                      <dd>{detail?.Budgets}</dd>
-                    </dl>
-                    <dl>
-                      <dt>{t('Project.Deliverables')}</dt>
-                      <dd>{detail?.Deliverable}</dd>
-                    </dl>
-                    <dl>
-                      <dt>{t('Project.PlanFinishTime')}</dt>
-                      <dd>{detail?.PlanTime}</dd>
+                      <dt>{t('Guild.OfficialLink')}</dt>
+                      <dd>
+                        {!!detail?.OfficialLink && (
+                          <>
+                            <span>{detail?.OfficialLink}</span>
+                            <a href={detail?.OfficialLink} target="_blank" rel="noreferrer">
+                              <img src={LinkImg} alt="" />
+                            </a>
+                          </>
+                        )}
+                      </dd>
                     </dl>
                   </DlBox>
                   {/*<MdPreview theme={theme ? 'dark' : 'light'} modelValue={detail?.intro || ''} />*/}

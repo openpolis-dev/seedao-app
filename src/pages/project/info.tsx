@@ -190,19 +190,27 @@ export default function InfoPage() {
                     <dl>
                       <dt>{t('Project.StartProjectLink')}</dt>
                       <dd>
-                        <span>{detail?.ApprovalLink}</span>{' '}
-                        <Link to={detail?.ApprovalLink} target="_blank">
-                          <img src={LinkImg} alt="" />
-                        </Link>
+                        {!!detail?.ApprovalLink && (
+                          <>
+                            <span>{detail?.ApprovalLink}</span>{' '}
+                            <Link to={detail?.ApprovalLink} target="_blank">
+                              <img src={LinkImg} alt="" />
+                            </Link>
+                          </>
+                        )}
                       </dd>
                     </dl>
                     <dl>
                       <dt>{t('Project.EndProjectLink')}</dt>
                       <dd>
-                        <span>{detail?.OverLink}</span>{' '}
-                        <Link to={detail?.OverLink} target="_blank">
-                          <img src={LinkImg} alt="" />
-                        </Link>
+                        {!!detail?.OverLink && (
+                          <>
+                            <span>{detail?.OverLink}</span>{' '}
+                            <Link to={detail?.OverLink} target="_blank">
+                              <img src={LinkImg} alt="" />
+                            </Link>
+                          </>
+                        )}
                       </dd>
                     </dl>
                     <dl>
@@ -227,10 +235,14 @@ export default function InfoPage() {
                     <dl>
                       <dt>{t('Project.OfficialLink')}</dt>
                       <dd>
-                        <span>{detail?.OfficialLink}</span>{' '}
-                        <a href={detail?.OfficialLink} target="_blank" rel="noreferrer">
-                          <img src={LinkImg} alt="" />
-                        </a>
+                        {!!detail?.OfficialLink && (
+                          <>
+                            <span>{detail?.OfficialLink}</span>
+                            <a href={detail?.OfficialLink} target="_blank" rel="noreferrer">
+                              <img src={LinkImg} alt="" />
+                            </a>
+                          </>
+                        )}
                       </dd>
                     </dl>
                     <dl>
