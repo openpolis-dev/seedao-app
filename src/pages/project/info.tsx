@@ -14,7 +14,14 @@ import Members from 'components/projectInfoCom/members';
 import SipTag from 'components/common/sipTag';
 import { MdPreview } from 'md-editor-rt';
 import DefaultLogo from 'assets/Imgs/defaultLogo.png';
+import { ethers } from 'ethers';
+import { getUsers } from '../../requests/user';
+import useQuerySNS from '../../hooks/useQuerySNS';
+import { IUser } from '../../type/user.type';
+import publicJs from '../../utils/publicJs';
+import CategoryTag from 'components/proposalCom/categoryTag';
 
+type UserMap = { [w: string]: IUser };
 export default function InfoPage() {
   const { t } = useTranslation();
 
@@ -24,8 +31,11 @@ export default function InfoPage() {
   } = useAuthContext();
 
   const { id } = useParams();
-
-  const [detail, setDetail] = useState<ReTurnProject | undefined>();
+  const { getMultiSNS } = useQuerySNS();
+  const [detail, setDetail] = useState<any>();
+  const [snsMap, setSnsMap] = useState<any>({});
+  const [userMap, setUserMap] = useState<UserMap>({});
+  const [sponserList, setSponserList] = useState<any[]>([]);
 
   const canAuditApplication = usePermission(
     PermissionAction.CreateApplication,
@@ -36,11 +46,56 @@ export default function InfoPage() {
     id && getDetail();
   }, [id]);
 
+  const getUsersDetail = async (dt: any) => {
+    const _wallets: string[] = [];
+
+    dt?.forEach((w: any) => {
+      if (ethers.utils.isAddress(w)) {
+        _wallets.push(w);
+      }
+    });
+    const wallets = Array.from(new Set(_wallets));
+    let userSns = await getMultiSNS(wallets);
+    setSnsMap(userSns);
+    getUsersInfo(wallets);
+  };
+
+  const getUsersInfo = async (wallets: string[]) => {
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    try {
+      const res = await getUsers(wallets);
+      const userData: UserMap = {};
+      res.data?.forEach((r) => {
+        userData[(r.wallet || '').toLowerCase()] = r;
+      });
+      setUserMap(userData);
+
+      let arr: any[] = [];
+
+      detail.sponsors.map((item: any) => {
+        let itemInfo = userData[item];
+        let itemSns = snsMap.get(item);
+        arr.push({
+          ...itemInfo,
+          sns: itemSns,
+        });
+      });
+
+      setSponserList([...arr]);
+    } catch (error) {
+      logError('getUsersInfo error:', error);
+    } finally {
+      dispatch({ type: AppActionType.SET_LOADING, payload: null });
+    }
+  };
+
   const getDetail = async () => {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
       const dt = await getProjectById(id as string);
       setDetail(dt.data);
+
+      await getUsersDetail(dt.data.sponsors);
     } catch (error) {
       logError(error);
     } finally {
@@ -82,12 +137,16 @@ export default function InfoPage() {
                   </TopImg>
                   <TopInfo>
                     <TitleBox>{detail?.name}</TitleBox>
-                    <div className="desc">{detail?.desc}</div>
-                    <ProposalBox>
-                      {detail?.proposals?.map((item, index) => (
-                        <SipTag key={index} slug={item} />
-                      ))}
-                    </ProposalBox>
+                    {/*<div className="desc">{detail?.desc}</div>*/}
+                    <FlexFirst>
+                      <ProposalBox>
+                        {detail?.proposals?.map((item: any, index: number) => (
+                          <SipTag key={index} slug={item} />
+                        ))}
+                      </ProposalBox>
+                      {detail?.Category && <CategoryTag>{detail?.Category}</CategoryTag>}
+                      <StatusBox className={detail?.status}>{detail?.status}</StatusBox>
+                    </FlexFirst>
                   </TopInfo>
                 </TopBoxLeft>
 
@@ -108,14 +167,53 @@ export default function InfoPage() {
 
                   {/*<TitleBox>{t('Project.ProjectIntro')}</TitleBox>*/}
                   <DlBox>
-                    {[...Array(10)].map((item, index) => (
-                      <dl key={index}>
-                        <dt>项目简介</dt>
-                        <dd>
-                          提供当季SeeDAO有效知识，提供当季SeeDAO有效知识。提供当季SeeDAO有效知识。提供当季SeeDAO有效知识提供当季SeeDAO有效知识提供当季SeeDAO有效知识
-                        </dd>
-                      </dl>
-                    ))}
+                    <dl>
+                      <dt>{t('Project.ProjectIntro')}</dt>
+                      <dd>{detail?.intro}</dd>
+                    </dl>
+                    <dl>
+                      <dt>{t('Project.StartProjectLink')}</dt>
+                      <dd>{detail?.ApprovalLink}</dd>
+                    </dl>
+                    <dl>
+                      <dt>{t('Project.EndProjectLink')}</dt>
+                      <dd>{detail?.OverLink}</dd>
+                    </dl>
+                    <dl>
+                      <dt>{t('Project.Moderator')}</dt>
+                      <dd>
+                        {sponserList.map((item: any, index: number) => (
+                          <MemBox key={`avatar_${index}`}>
+                            <Avatar>
+                              <img src={item?.avatar} alt="" />
+                            </Avatar>
+                            <span>
+                              {item?.sns?.endsWith('.seedao') ? item.sns : publicJs.AddressToShow(item?.sns?.wallet)}
+                            </span>
+                          </MemBox>
+                        ))}
+                      </dd>
+                    </dl>
+                    <dl>
+                      <dt>{t('Project.Contact')}</dt>
+                      <dd>{detail?.ContantWay}</dd>
+                    </dl>
+                    <dl>
+                      <dt>{t('Project.OfficialLink')}</dt>
+                      <dd>{detail?.OfficialLink}</dd>
+                    </dl>
+                    <dl>
+                      <dt>{t('Project.Budget')}</dt>
+                      <dd>{detail?.Budgets}</dd>
+                    </dl>
+                    <dl>
+                      <dt>{t('Project.Deliverables')}</dt>
+                      <dd>{detail?.Deliverable}</dd>
+                    </dl>
+                    <dl>
+                      <dt>{t('Project.PlanFinishTime')}</dt>
+                      <dd>{detail?.PlanTime}</dd>
+                    </dl>
                   </DlBox>
                   {/*<MdPreview theme={theme ? 'dark' : 'light'} modelValue={detail?.intro || ''} />*/}
                 </ContentBox>
@@ -127,6 +225,48 @@ export default function InfoPage() {
     </OuterBox>
   );
 }
+
+const FlexFirst = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 14px;
+`;
+
+const StatusBox = styled.div`
+  font-size: 12px;
+  color: #fff;
+  background: var(--bs-primary);
+  padding: 2px 12px;
+  border-radius: 4px;
+  &.pending_close {
+    background: #1f9e14;
+  }
+`;
+
+const MemBox = styled.div`
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--font-color-title);
+  line-height: 18px;
+  margin-bottom: 10px;
+  gap: 10px;
+  //span {
+  //  margin-right: 5px;
+  //}
+`;
+
+const Avatar = styled.div`
+  img {
+    width: 30px;
+    height: 30px;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 100%;
+  }
+`;
 const DlBox = styled.div`
   margin-top: 40px;
   dl {
@@ -134,6 +274,8 @@ const DlBox = styled.div`
   }
   dt {
     margin-bottom: 10px;
+    font-size: 12px;
+    opacity: 0.6;
   }
   dd {
     opacity: 0.8;
@@ -255,9 +397,8 @@ const TopInfo = styled.div`
 const ProposalBox = styled.div`
   display: flex;
   align-items: center;
-  margin-top: 14px;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 10px;
 `;
 
 const ContentBox = styled.div`

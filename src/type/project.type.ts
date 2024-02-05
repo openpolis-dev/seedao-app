@@ -57,6 +57,7 @@ export interface ReTurnProject {
   sponsors: string[];
   status: ProjectStatus;
   updated_at: string;
+  user?: any;
   budgets: IBudgetItem[];
   intro: string;
 }

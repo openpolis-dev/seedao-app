@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
 import DefaultLogo from 'assets/Imgs/defaultLogo.png';
 import ProposalStateTag from './proposalCom/stateTag';
 import { ProposalState } from '../type/proposalV2.type';
+import publicJs from '../utils/publicJs';
 
 const Box = styled.div`
   width: 20%;
@@ -101,6 +102,17 @@ const Avatar = styled.div`
   }
 `;
 
+const StatusBox = styled.div`
+  font-size: 12px;
+  color: #fff;
+  background: var(--bs-primary);
+  padding: 2px 8px;
+  border-radius: 4px;
+  &.pending_close {
+    background: #1f9e14;
+  }
+`;
+
 interface Iprops {
   data: {
     id: number;
@@ -108,19 +120,24 @@ interface Iprops {
     name: string;
     intro: string;
     desc: string;
+    status?: string;
     members: string[];
     sponsors: string[];
+    user?: any;
   };
+  user?: any;
+  sns?: any;
   onClickItem: (id: number) => void;
 }
 
-export default function ProjectOrGuildItem({ data, onClickItem }: Iprops) {
+export default function ProjectOrGuildItem({ data, onClickItem, user, sns }: Iprops) {
   const { t } = useTranslation();
+
   return (
     <Box>
       <CardBox>
         <TagBox>
-          <ProposalStateTag state={ProposalState.Approved} />
+          <StatusBox className={data.status}>{data.status}</StatusBox>
         </TagBox>
         <Item onClick={() => onClickItem(data.id)}>
           <ImageBox>
@@ -128,16 +145,15 @@ export default function ProjectOrGuildItem({ data, onClickItem }: Iprops) {
           </ImageBox>
           <div className="title">{data.name}</div>
           <Desc>{data.desc ? data.desc : t('Project.ProjectOrGuildItem')}</Desc>
-          <MemBox>
-            <Avatar>
-              <img
-                src="https://seedao-os-superapp.s3.ap-northeast-2.amazonaws.com/user_avatars/0x4d4b78D37090eD3e1EAe6779bA2C3D6728052915_1704533838252.jpg"
-                alt=""
-              />
-            </Avatar>
-            <span>wendychaung.seedao</span>
-            {/*<span>{(data?.members?.length || 0) + (data?.sponsors?.length || 0)}</span> {t('Project.Members')}*/}
-          </MemBox>
+          {!!user && (
+            <MemBox>
+              <Avatar>
+                <img src={user?.avatar} alt="" />
+              </Avatar>
+              <span>{sns.endsWith('.seedao') ? sns : publicJs.AddressToShow(user?.wallet)}</span>
+              {/*<span>{(data?.members?.length || 0) + (data?.sponsors?.length || 0)}</span> {t('Project.Members')}*/}
+            </MemBox>
+          )}
         </Item>
       </CardBox>
     </Box>

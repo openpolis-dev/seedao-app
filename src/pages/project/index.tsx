@@ -13,6 +13,10 @@ import ProjectOrGuildItem from 'components/projectOrGuildItem';
 import SubTabbar from 'components/common/subTabbar';
 import usePermission from '../../hooks/usePermission';
 import { PermissionAction, PermissionObject } from '../../utils/constant';
+import useQuerySNS from '../../hooks/useQuerySNS';
+import { getUsers } from '../../requests/user';
+import { IUser } from '../../type/user.type';
+import { ethers } from 'ethers';
 
 const Box = styled.div`
   position: relative;
@@ -42,6 +46,7 @@ export interface listObj {
   key: number;
 }
 
+type UserMap = { [w: string]: IUser };
 export default function Index() {
   const { t } = useTranslation();
   const {
@@ -51,6 +56,9 @@ export default function Index() {
   const isLogin = useCheckLogin(account);
   const navigate = useNavigate();
 
+  const { getMultiSNS } = useQuerySNS();
+
+  const [userMap, setUserMap] = useState<UserMap>({});
   const [pageCur, setPageCur] = useState(1);
   const [pageSize, setPageSize] = useState(20);
   const [total, setTotal] = useState(1);
@@ -58,6 +66,7 @@ export default function Index() {
   const [current, setCurrent] = useState<number>(0);
   const [list, setList] = useState<listObj[]>([]);
   const [proList, setProList] = useState<ReTurnProject[]>([]);
+  const [snsMap, setSnsMap] = useState<any>({});
 
   useEffect(() => {
     if (current < 2) {
@@ -87,6 +96,38 @@ export default function Index() {
     setList(_list);
   }, [language, isLogin]);
 
+  const getUsersDetail = async (dt: any) => {
+    const _wallets: string[] = [];
+    dt.forEach((key: any) => {
+      if (key.sponsors?.length) {
+        let w = key.sponsors[0];
+        if (ethers.utils.isAddress(w)) {
+          _wallets.push(w);
+        }
+      }
+    });
+    const wallets = Array.from(new Set(_wallets));
+    getUsersInfo(wallets);
+    let userSns = await getMultiSNS(wallets);
+    setSnsMap(userSns);
+  };
+
+  const getUsersInfo = async (wallets: string[]) => {
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    try {
+      const res = await getUsers(wallets);
+      const userData: UserMap = {};
+      res.data.forEach((r) => {
+        userData[(r.wallet || '').toLowerCase()] = r;
+      });
+      setUserMap(userData);
+    } catch (error) {
+      logError('getUsersInfo error:', error);
+    } finally {
+      dispatch({ type: AppActionType.SET_LOADING, payload: null });
+    }
+  };
+
   const getList = async () => {
     if (current > 2) return;
     const stt = current === 1 ? 'closed' : '';
@@ -100,8 +141,10 @@ export default function Index() {
       sort_field: 'create_ts',
     };
     const rt = await getProjects(obj, false);
+
     dispatch({ type: AppActionType.SET_LOADING, payload: null });
     const { rows, page, size, total } = rt.data;
+    await getUsersDetail(rows);
     setProList(rows);
     setPageSize(size);
     setTotal(total);
@@ -119,6 +162,7 @@ export default function Index() {
     const rt = await getMyProjects(obj);
     dispatch({ type: AppActionType.SET_LOADING, payload: null });
     const { rows, page, size, total } = rt.data;
+    await getUsersDetail(rows);
     setProList(rows);
     setPageSize(size);
     setTotal(total);
@@ -139,20 +183,21 @@ export default function Index() {
 
   return (
     <Box>
-      <LineTop>
-        {list.length > 1 && (
-          <SubTabbarStyle defaultActiveKey={0} tabs={list} onSelect={(v: string | number) => setCurrent(v as number)} />
-        )}
-        <RTBox>
-          <Button>创建项目</Button>
-        </RTBox>
-      </LineTop>
+      {list.length > 1 && (
+        <SubTabbarStyle defaultActiveKey={0} tabs={list} onSelect={(v: string | number) => setCurrent(v as number)} />
+      )}
 
       <div>
         <ItemBox>
           <ListBox>
             {proList.map((item) => (
-              <ProjectOrGuildItem key={item.id} data={item} onClickItem={openDetail} />
+              <ProjectOrGuildItem
+                key={item.id}
+                data={item}
+                onClickItem={openDetail}
+                user={userMap[item.sponsors[0]]}
+                sns={snsMap.get(item.sponsors[0])}
+              />
             ))}
           </ListBox>
         </ItemBox>
