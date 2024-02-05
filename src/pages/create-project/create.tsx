@@ -190,7 +190,7 @@ export default function CreateProject() {
               </li>
 
               <li>
-                <div className="title">{t('Project.Intro')}</div>
+                <div className="title">{t('Project.Desc')}</div>
                 <Form.Control
                   placeholder=""
                   as="textarea"

@@ -6,13 +6,9 @@ import { UpdateInfo, addRelatedProposal } from 'requests/project';
 import { InfoObj, ProjectStatus, ReTurnProject } from 'type/project.type';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import useToast, { ToastType } from 'hooks/useToast';
-import PlusMinusButton from 'components/common/plusAndMinusButton';
 import CameraIconSVG from 'components/svgs/camera';
-import CloseTips from './closeTips';
-import CloseSuccess from './closeSuccess';
 import { createCloseProjectApplication } from 'requests/applications';
 import { useNavigate } from 'react-router-dom';
-import MarkdownEditor from 'components/common/markdownEditor';
 import { compressionFile, fileToDataURL } from 'utils/image';
 
 export default function EditProject({ detail }: { detail: ReTurnProject | undefined }) {
@@ -28,17 +24,17 @@ export default function EditProject({ detail }: { detail: ReTurnProject | undefi
   const [proName, setProName] = useState('');
   const [desc, setDesc] = useState('');
   const [url, setUrl] = useState('');
-  const [intro, setIntro] = useState('');
 
-  const [show, setShow] = useState(false);
-  const [showSuccess, setShowSuccess] = useState(false);
+  const [leader, setLeader] = useState('');
+  const [contact, setContact] = useState('');
+  const [endLink, setEndLink] = useState('');
+  const [link, setLink] = useState('');
 
   useEffect(() => {
     if (detail) {
       setProName(detail.name);
       setDesc(detail.desc);
       setUrl(detail.logo);
-      setIntro(detail.intro);
       setProList(
         detail?.proposals?.map((slug) => {
           const isOS = slug.startsWith('os');
@@ -50,44 +46,6 @@ export default function EditProject({ detail }: { detail: ReTurnProject | undefi
     }
   }, [detail]);
 
-  const handleInput = (e: ChangeEvent, index: number, type: string) => {
-    const { value } = e.target as HTMLInputElement;
-    let arr: any[] = [];
-    switch (type) {
-      case 'proposal':
-        arr = [...proList];
-        arr[index] = value;
-        setProList(arr);
-        break;
-      case 'proName':
-        setProName(value);
-        break;
-      case 'desc':
-        setDesc(value);
-        break;
-    }
-  };
-
-  const handleAdd = (type: string) => {
-    let arr: any[] = [];
-    switch (type) {
-      case 'proposal':
-        arr = [...proList];
-        arr.push('');
-        setProList(arr);
-        break;
-    }
-  };
-  const removeItem = (index: number, type: string) => {
-    let arr: any[] = [];
-    switch (type) {
-      case 'proposal':
-        arr = [...proList];
-        arr.splice(index, 1);
-        setProList(arr);
-        break;
-    }
-  };
   const handleSubmit = async () => {
     if (!detail?.id) {
       return;
@@ -140,7 +98,7 @@ export default function EditProject({ detail }: { detail: ReTurnProject | undefi
       logo: url,
       name: proName,
       desc,
-      intro,
+      intro: '',
     };
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
@@ -161,39 +119,6 @@ export default function EditProject({ detail }: { detail: ReTurnProject | undefi
     const new_file = await compressionFile(file, file.type);
     const base64 = await fileToDataURL(new_file);
     setUrl(base64);
-  };
-
-  const closeModal = () => {
-    setShow(false);
-  };
-  const handleShow = () => {
-    setShow(true);
-  };
-
-  const closeSuccess = () => {
-    setShowSuccess(false);
-    navigate(`/project/info/${detail?.id}`);
-  };
-
-  const handleClosePro = async (content: string) => {
-    if (!detail) {
-      return;
-    }
-    setShow(false);
-    dispatch({ type: AppActionType.SET_LOADING, payload: true });
-    try {
-      await createCloseProjectApplication(detail.id, content);
-      dispatch({ type: AppActionType.SET_LOADING, payload: null });
-      setShowSuccess(true);
-
-      // reset project status
-      // updateProjectStatus(ProjectStatus.Pending);
-    } catch (e) {
-      logError(e);
-      // showToast(JSON.stringify(e), ToastType.Danger);
-      dispatch({ type: AppActionType.SET_LOADING, payload: null });
-      closeModal();
-    }
   };
 
   return (
@@ -227,72 +152,52 @@ export default function EditProject({ detail }: { detail: ReTurnProject | undefi
         </TopBox>
         <UlBox>
           <li>
-            <div className="title">{t('Project.ProjectName')}</div>
+            <div className="title">{t('Project.EndProjectLink')}</div>
             <InputBox>
               <Form.Control
                 type="text"
-                placeholder={t('Project.ProjectName')}
-                value={proName}
-                onChange={(e) => handleInput(e, 0, 'proName')}
+                placeholder={`https://forum.seedao.xyz/thread/sip-...`}
+                value={endLink}
+                onChange={(e) => setEndLink(e.target.value)}
               />
             </InputBox>
           </li>
           <li>
-            <div className="title">{t('Project.AssociatedProposal')}</div>
-            <div>
-              {proList?.map((item, index) => (
-                <ItemBox key={`mem_${index}`}>
-                  <InputBox>
-                    <Form.Control
-                      type="text"
-                      placeholder={`https://forum.seedao.xyz/thread/sip-...`}
-                      value={item}
-                      onChange={(e) => handleInput(e, index, 'proposal')}
-                    />
-                  </InputBox>
-                  <PlusMinusButton
-                    showMinus={!(!index && index === proList.length - 1)}
-                    showPlus={index === proList.length - 1}
-                    onClickMinus={() => removeItem(index, 'proposal')}
-                    onClickPlus={() => handleAdd('proposal')}
-                  />
-                </ItemBox>
-              ))}
-            </div>
-          </li>
-          <li>
-            <div className="title">{t('Project.Desc')}</div>
+            <div className="title">{t('Project.Moderator')}</div>
             <InputBox>
               <Form.Control
-                placeholder=""
-                as="textarea"
-                rows={5}
-                value={desc}
-                onChange={(e) => handleInput(e, 0, 'desc')}
+                type="text"
+                placeholder={t('Project.AddMemberAddress')}
+                value={leader}
+                onChange={(e) => setLeader(e.target.value)}
               />
             </InputBox>
           </li>
           <li>
-            <div className="title">{t('Project.Intro')}</div>
-            <IntroBox>
-              <MarkdownEditor value={intro} onChange={(val) => setIntro(val)} />
-            </IntroBox>
+            <div className="title">{t('Project.Contact')}</div>
+            <InputBox>
+              <Form.Control type="text" value={contact} onChange={(e) => setContact(e.target.value)} />
+            </InputBox>
+          </li>
+          <li>
+            <div className="title">{t('Project.OfficialLink')}</div>
+            <InputBox>
+              <Form.Control type="text" value={link} onChange={(e) => setLink(e.target.value)} />
+            </InputBox>
+          </li>
+
+          <li>
+            <div className="title">{t('Project.Desc')}</div>
+            <Form.Control
+              placeholder=""
+              as="textarea"
+              rows={5}
+              value={desc}
+              onChange={(e) => setDesc(e.target.value)}
+            />
           </li>
         </UlBox>
       </MainContent>
-      {detail?.status === ProjectStatus.Open && (
-        <BtmBox>
-          <Button
-            onClick={() => handleSubmit()}
-            disabled={proName?.length === 0 || (proList?.length === 1 && proList[0]?.length === 0)}
-          >
-            {t('general.confirm')}
-          </Button>
-          <TextButton onClick={() => handleShow()}>{t('Project.CloseProject')}</TextButton>
-        </BtmBox>
-      )}
-      {show && <CloseTips closeModal={closeModal} handleClosePro={handleClosePro} />}
-      {showSuccess && <CloseSuccess closeModal={closeSuccess} />}
     </EditPage>
   );
 }
@@ -393,7 +298,7 @@ const BtmBox = styled.div`
 const UlBox = styled.ul`
   display: flex;
   flex-direction: column;
-  gap: 40px;
+  gap: 16px;
   li {
     .title {
       font-size: 16px;
