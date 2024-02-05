@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { getProjectById } from 'requests/guild';
-import { ReTurnProject } from 'type/project.type';
+import { ProjectStatus, ReTurnProject } from 'type/project.type';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import { useParams, Link } from 'react-router-dom';
 import { ContainerPadding } from 'assets/styles/global';
@@ -102,6 +102,19 @@ export default function Index() {
     }
   };
 
+  const showStatusComponent = () => {
+    if (detail?.status === ProjectStatus.Closed) {
+      return <StatusBox>{t('Project.Closed')}</StatusBox>;
+    }
+    if (detail?.status === ProjectStatus.Open) {
+      // @ts-ignore
+      return <StatusBox className="pending">{t('Project.Open')}</StatusBox>;
+    }
+    if (detail?.status === ProjectStatus.Pending) {
+      return <StatusBox>{t('Project.Pending')}</StatusBox>;
+    }
+  };
+
   return (
     <OuterBox>
       <Box>
@@ -116,16 +129,18 @@ export default function Index() {
                   </TopImg>
                   <TopInfo>
                     <TitleBox>{detail?.name}</TitleBox>
-                    {/*<div className="desc">{detail?.desc}</div>*/}
-                    <FlexFirst>
-                      <ProposalBox>
-                        {detail?.proposals?.map((item: any, index: number) => (
-                          <SipTag key={index} slug={item} />
-                        ))}
-                      </ProposalBox>
-                      {detail?.Category && <CategoryTag>{detail?.Category}</CategoryTag>}
-                      <StatusBox className={detail?.status}>{detail?.status}</StatusBox>
-                    </FlexFirst>
+
+                    {/*<FlexFirst>*/}
+                    {/*  /!*<ProposalBox>*!/*/}
+                    {/*  /!*  /!*{detail?.proposals?.map((item: any, index: number) => (*!/*!/*/}
+                    {/*  /!*  /!*  <SipTag key={index} slug={item} />*!/*!/*/}
+                    {/*  /!*  /!*))}*!/*!/*/}
+                    {/*  /!*  <SipTag  slug={detail?.SIP} />*!/*/}
+                    {/*  /!*</ProposalBox>*!/*/}
+                    {/*  <SipTag  slug={detail?.SIP} />*/}
+                    {/*  {detail?.Category && <CategoryTag>{detail?.Category}</CategoryTag>}*/}
+                    {/*  {showStatusComponent()}*/}
+                    {/*</FlexFirst>*/}
                   </TopInfo>
                 </TopBoxLeft>
 
@@ -339,6 +354,7 @@ const TopBox = styled.div`
 
 const TopBoxLeft = styled.div`
   display: flex;
+  align-items: center;
 `;
 
 const TopImg = styled.div`

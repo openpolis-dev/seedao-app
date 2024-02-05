@@ -110,18 +110,15 @@ export default function InfoPage() {
 
   const showStatusComponent = () => {
     if (detail?.status === ProjectStatus.Closed) {
-      return <StatusTag>{t('Project.Closed')}</StatusTag>;
+      return <StatusBox>{t('Project.Closed')}</StatusBox>;
+    }
+    if (detail?.status === ProjectStatus.Open) {
+      // @ts-ignore
+      return <StatusBox className="pending">{t('Project.Open')}</StatusBox>;
     }
     if (detail?.status === ProjectStatus.Pending) {
-      return <StatusTag>{t('Project.Pending')}</StatusTag>;
+      return <StatusBox>{t('Project.Pending')}</StatusBox>;
     }
-    // if (canAuditApplication) {
-    //   return (
-    //     <Link to={`/project/edit/${detail?.id}`} state={detail}>
-    //       <Button>{t('Project.Edit')}</Button>
-    //     </Link>
-    //   );
-    // }
   };
 
   return (
@@ -140,18 +137,18 @@ export default function InfoPage() {
                     <TitleBox>{detail?.name}</TitleBox>
                     {/*<div className="desc">{detail?.desc}</div>*/}
                     <FlexFirst>
-                      <ProposalBox>
-                        {detail?.proposals?.map((item: any, index: number) => (
-                          <SipTag key={index} slug={item} />
-                        ))}
-                      </ProposalBox>
+                      {/*<ProposalBox>*/}
+                      {/*  {detail?.proposals?.map((item: any, index: number) => (*/}
+                      {/*    <SipTag key={index} slug={item} />*/}
+                      {/*  ))}*/}
+                      {/*</ProposalBox>*/}
+                      <SipTagStyle>SIP - {detail?.SIP}</SipTagStyle>
                       {detail?.Category && <CategoryTag>{detail?.Category}</CategoryTag>}
-                      <StatusBox className={detail?.status}>{detail?.status}</StatusBox>
+                      {/*<StatusBox className={detail?.status}>{t(`Project.Edit`)}</StatusBox>*/}
+                      {showStatusComponent()}
                     </FlexFirst>
                   </TopInfo>
                 </TopBoxLeft>
-
-                {/*{showStatusComponent()}*/}
               </TopBox>
               <LastLine>
                 {/*<LftBox>*/}
@@ -255,8 +252,13 @@ const StatusBox = styled.div`
   background: var(--bs-primary);
   padding: 2px 12px;
   border-radius: 4px;
+  line-height: 22px;
+  height: 26px;
   &.pending_close {
-    background: #1f9e14;
+    background: #f9b617;
+  }
+  &.close {
+    background: #ff7193;
   }
 `;
 
@@ -379,6 +381,7 @@ const TopBox = styled.div`
 
 const TopBoxLeft = styled.div`
   display: flex;
+  align-items: center;
 `;
 
 const TopImg = styled.div`
@@ -442,4 +445,18 @@ const StatusTag = styled.span`
   height: 26px;
   font-size: 12px;
   color: var(--bs-primary);
+`;
+
+const SipTagStyle = styled.a`
+  display: inline-block;
+  border-radius: 5px;
+  border: 1px solid #0085ff;
+  font-size: 12px;
+  padding: 2px 12px;
+  line-height: 22px;
+  height: 26px;
+  color: #0085ff;
+  &:hover {
+    color: #0085ff;
+  }
 `;

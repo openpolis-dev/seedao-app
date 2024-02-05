@@ -5,6 +5,7 @@ import DefaultLogo from 'assets/Imgs/defaultLogo.png';
 import ProposalStateTag from './proposalCom/stateTag';
 import { ProposalState } from '../type/proposalV2.type';
 import publicJs from '../utils/publicJs';
+import { ProjectStatus } from '../type/project.type';
 
 const Box = styled.div`
   width: 20%;
@@ -108,8 +109,13 @@ const StatusBox = styled.div`
   background: var(--bs-primary);
   padding: 2px 8px;
   border-radius: 4px;
+  line-height: 22px;
+  height: 26px;
   &.pending_close {
-    background: #1f9e14;
+    background: #f9b617;
+  }
+  &.close {
+    background: #ff7193;
   }
 `;
 
@@ -127,18 +133,29 @@ interface Iprops {
   };
   user?: any;
   sns?: any;
+  noTag?: boolean;
   onClickItem: (id: number) => void;
 }
 
-export default function ProjectOrGuildItem({ data, onClickItem, user, sns }: Iprops) {
+export default function ProjectOrGuildItem({ data, onClickItem, user, sns, noTag }: Iprops) {
   const { t } = useTranslation();
-
+  const showStatusComponent = () => {
+    if (data?.status === ProjectStatus.Closed) {
+      return <StatusBox>{t('Project.Closed')}</StatusBox>;
+    }
+    if (data?.status === ProjectStatus.Open) {
+      // @ts-ignore
+      return <StatusBox className="pending">{t('Project.Open')}</StatusBox>;
+    }
+    if (data?.status === ProjectStatus.Pending) {
+      return <StatusBox>{t('Project.Pending')}</StatusBox>;
+    }
+  };
   return (
     <Box>
       <CardBox>
-        <TagBox>
-          <StatusBox className={data.status}>{data.status}</StatusBox>
-        </TagBox>
+        {!noTag && <TagBox>{showStatusComponent()}</TagBox>}
+
         <Item onClick={() => onClickItem(data.id)}>
           <ImageBox>
             <img src={data.logo || DefaultLogo} alt="" />

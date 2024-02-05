@@ -183,6 +183,7 @@ export default function Index() {
               <ProjectOrGuildItem
                 key={item.id}
                 data={item}
+                noTag={true}
                 onClickItem={openDetail}
                 user={userMap[item.sponsors[0]]}
                 sns={snsMap.get(item.sponsors[0])}
