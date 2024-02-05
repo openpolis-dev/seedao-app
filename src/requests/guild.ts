@@ -66,3 +66,7 @@ export interface IUpdateStaffsParams {
 export const updateStaffs = (projectId: string, data: IUpdateStaffsParams) => {
   return request.post(`${PATH_PREFIX}${projectId}/update_staffs`, data);
 };
+
+export const closeGuild = (guildId: number | string) => {
+  return request.post(`${PATH_PREFIX}${guildId}/close`);
+};

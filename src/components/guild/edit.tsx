@@ -1,9 +1,9 @@
 import { InputGroup, Button, Form } from 'react-bootstrap';
 import styled from 'styled-components';
-import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react';
+import React, { FormEvent, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { updateGuildInfo, UpdateGuildParamsType } from 'requests/guild';
-import { IGuildDisplay, InfoObj, ReTurnProject } from 'type/project.type';
+import { updateGuildInfo, UpdateGuildParamsType, closeGuild } from 'requests/guild';
+import { IGuildDisplay } from 'type/project.type';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import useToast, { ToastType } from 'hooks/useToast';
 import CameraIconSVG from 'components/svgs/camera';
@@ -117,10 +117,11 @@ export default function EditGuild({ detail }: { detail?: IGuildDisplay }) {
     (item) => !item || (typeof item === 'string' && !item.trim()),
   );
 
-  const handleClose = () => {
+  const handleClose = async () => {
     dispatch({ type: AppActionType.SET_LOADING, payload: false });
     try {
-      // TODO: request to close  guild
+      await closeGuild(detail!.id);
+      showToast(t('Msg.ApproveSuccess'), ToastType.Success);
       navigate('/explore?tab=guild');
     } catch (error: any) {
       showToast(error?.data?.message || error, ToastType.Danger);
