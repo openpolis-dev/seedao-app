@@ -38,10 +38,7 @@ export default function Index() {
   const [userMap, setUserMap] = useState<UserMap>({});
   const [sponserList, setSponserList] = useState<any[]>([]);
 
-  const canAuditApplication = usePermission(
-    PermissionAction.CreateApplication,
-    PermissionObject.GuildPrefix + detail?.id,
-  );
+  const canCreatePermission = usePermission(PermissionAction.CreateApplication, PermissionObject.Guild);
 
   const getUsersDetail = async (dt: any) => {
     const _wallets: string[] = [];
@@ -141,9 +138,9 @@ export default function Index() {
                 {/*  </InnerLft>*/}
                 {/*</LftBox>*/}
                 <ContentBox>
-                  {canAuditApplication && (
-                    <BtnTop to={`/guilp/edit/${detail?.id}`} state={detail}>
-                      <Button>{t('Project.Edit')}</Button>
+                  {canCreatePermission && (
+                    <BtnTop to={`/guild/edit/${detail?.id}`} state={detail}>
+                      <Button>{t('general.edit')}</Button>
                     </BtnTop>
                   )}
 
