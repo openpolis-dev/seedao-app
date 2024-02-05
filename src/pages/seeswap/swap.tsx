@@ -36,9 +36,10 @@ export default function SeeSwap() {
     checkNetwork();
   }, [signer, switchNetworkAsync]);
 
-  useEffect(() => {
+  const handleStyle = () => {
+    console.log('---- widget loaded ----');
     setTimeout(() => {
-      let iframeDocument = document.getElementsByTagName('iframe')[0].contentDocument;
+      const iframeDocument = document.getElementsByTagName('iframe')[0].contentDocument;
       [
         '.sc-jhGUec',
         '.liNYvh',
@@ -50,7 +51,7 @@ export default function SeeSwap() {
       });
       setShowIframe(true);
     }, 3000);
-  }, []);
+  };
 
   return (
     <Container>
@@ -63,6 +64,7 @@ export default function SeeSwap() {
             style={{ width: '100%', height: '500px' }}
             frameBorder={0}
             id="swap-widget"
+            onLoad={handleStyle}
           />
         )}
       </SwapContainer>
