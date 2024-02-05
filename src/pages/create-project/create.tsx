@@ -1,0 +1,399 @@
+import { InputGroup, Button, Form } from 'react-bootstrap';
+import styled from 'styled-components';
+import React, { ChangeEvent, FormEvent, useState, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+import { createProjects } from 'requests/project';
+import { IBaseProject } from 'type/project.type';
+import { AppActionType, useAuthContext } from 'providers/authProvider';
+import useToast, { ToastType } from 'hooks/useToast';
+import { useNavigate } from 'react-router-dom';
+import { ContainerPadding } from 'assets/styles/global';
+import CameraIconSVG from 'components/svgs/camera';
+import BackerNav from 'components/common/backNav';
+import SeeSelect from 'components/common/select';
+import { UserRole } from 'type/user.type';
+import { ethers } from 'ethers';
+import sns from '@seedao/sns-js';
+import { compressionFile, fileToDataURL } from 'utils/image';
+import DatePickerStyle from 'components/datePicker';
+import useProposalCategories from 'hooks/useProposalCategories';
+
+export default function CreateProject() {
+  const navigate = useNavigate();
+  const { t } = useTranslation();
+  const { showToast } = useToast();
+  const {
+    dispatch,
+    state: { theme },
+  } = useAuthContext();
+  const [proName, setProName] = useState('');
+  const [desc, setDesc] = useState('');
+  const [url, setUrl] = useState('');
+  const [link, setLink] = useState('');
+  const [contact, setContact] = useState('');
+  const [sip, setSip] = useState('');
+
+  const [startLink, setStartLink] = useState('');
+  const [endLink, setEndLink] = useState('');
+
+  const [budget, setBudget] = useState('');
+  const [deliverables, setDeliverables] = useState('');
+  const [endTime, setEndTime] = useState<Date | null>();
+
+  const [leader, setLeader] = useState('');
+
+  const proposalCategories = useProposalCategories();
+  const categoryOptions = proposalCategories
+    ? proposalCategories.map((item) => ({ value: item.id, label: item.name }))
+    : [];
+  const [selectCategory, setSelectCategory] = useState<ISelectItem>();
+
+  const handleSubmit = async () => {};
+
+  const updateLogo = async (e: FormEvent) => {
+    const { files } = e.target as any;
+    const file = files[0];
+    const new_file = await compressionFile(file, file.type);
+    const base64 = await fileToDataURL(new_file);
+    setUrl(base64);
+  };
+
+  const handleBack = () => {
+    navigate('/explore?tab=project');
+  };
+
+  return (
+    <OuterBox>
+      <BackerNav title={t('Project.create')} to="/explore" />
+      <FlexBox>
+        <CardBody>
+          <BtnBox htmlFor="fileUpload" onChange={(e) => updateLogo(e)}>
+            <ImgBox>
+              {url && <img src={url} alt="" />}
+              <UpladBox
+                className="upload"
+                bg={
+                  theme
+                    ? 'linear-gradient(180deg, rgba(13,12,15,0) 0%, rgba(38,27,70,0.6) 100%)'
+                    : 'linear-gradient(180deg, rgba(217,217,217,0) 0%, rgba(0,0,0,0.6) 100%)'
+                }
+              >
+                <input id="fileUpload" type="file" hidden accept=".jpg, .jpeg, .png, .svg" />
+                <CameraIconSVG />
+                <UploadImgText>{t('Project.upload')}</UploadImgText>
+              </UpladBox>
+            </ImgBox>
+            {!url && (
+              <UpladBox>
+                <input id="fileUpload" type="file" hidden accept=".jpg, .jpeg, .png, .svg" />
+                <CameraIconSVG />
+                <UploadImgText>{t('Project.upload')}</UploadImgText>
+              </UpladBox>
+            )}
+          </BtnBox>
+          <RightContent>
+            <UlBox>
+              <li>
+                <div className="title">{t('Project.ProjectName')}</div>
+                <InputBox>
+                  <Form.Control
+                    type="text"
+                    placeholder={t('Project.ProjectName')}
+                    value={proName}
+                    onChange={(e) => setProName(e.target.value)}
+                  />
+                </InputBox>
+              </li>
+
+              <li>
+                <div className="title">{t('Project.SIPNumber')}</div>
+                <InputBox>
+                  <Form.Control type="number" value={sip} onChange={(e) => setSip(e.target.value)} />
+                </InputBox>
+              </li>
+              <li>
+                <div className="title">{t('Project.ProjectType')}</div>
+                <InputBox>
+                  <SeeSelect
+                    width="100%"
+                    options={categoryOptions}
+                    onChange={(v: ISelectItem) => setSelectCategory(v)}
+                  />
+                </InputBox>
+              </li>
+              <li>
+                <div className="title">{t('Project.StartProjectLink')}</div>
+                <InputBox>
+                  <Form.Control
+                    type="text"
+                    placeholder={`https://forum.seedao.xyz/thread/sip-...`}
+                    value={startLink}
+                    onChange={(e) => setStartLink(e.target.value)}
+                  />
+                </InputBox>
+              </li>
+              <li>
+                <div className="title">{t('Project.EndProjectLink')}</div>
+                <InputBox>
+                  <Form.Control
+                    type="text"
+                    placeholder={`https://forum.seedao.xyz/thread/sip-...`}
+                    value={endLink}
+                    onChange={(e) => setEndLink(e.target.value)}
+                  />
+                </InputBox>
+              </li>
+              <li>
+                <div className="title">{t('Project.Budget')}</div>
+                <InputBox>
+                  <Form.Control type="number" value={budget} onChange={(e) => setBudget(e.target.value)} />
+                </InputBox>
+              </li>
+              <li>
+                <div className="title">{t('Project.Deliverables')}</div>
+                <Form.Control
+                  placeholder=""
+                  as="textarea"
+                  rows={5}
+                  value={deliverables}
+                  onChange={(e) => setDeliverables(e.target.value)}
+                />
+              </li>
+              <li>
+                <div className="title">{t('Project.PlanFinishTime')}</div>
+                <InputBox>
+                  <DatePickerStyle isDate placeholder="" dateTime={endTime} onChange={(e) => setEndTime(e)} />
+                </InputBox>
+              </li>
+              <li>
+                <div className="title">{t('Project.Moderator')}</div>
+                <InputBox>
+                  <Form.Control
+                    type="text"
+                    placeholder={t('Project.AddMemberAddress')}
+                    value={leader}
+                    onChange={(e) => setLeader(e.target.value)}
+                  />
+                </InputBox>
+              </li>
+              <li>
+                <div className="title">{t('Project.Contact')}</div>
+                <InputBox>
+                  <Form.Control type="text" value={contact} onChange={(e) => setContact(e.target.value)} />
+                </InputBox>
+              </li>
+              <li>
+                <div className="title">{t('Project.OfficialLink')}</div>
+                <InputBox>
+                  <Form.Control type="text" value={link} onChange={(e) => setLink(e.target.value)} />
+                </InputBox>
+              </li>
+
+              <li>
+                <div className="title">{t('Project.Intro')}</div>
+                <Form.Control
+                  placeholder=""
+                  as="textarea"
+                  rows={5}
+                  value={desc}
+                  onChange={(e) => setDesc(e.target.value)}
+                />
+              </li>
+            </UlBox>
+          </RightContent>
+        </CardBody>
+        <RhtBtnBox>
+          <Button style={{ width: '80px' }} onClick={() => handleSubmit()}>
+            {t('general.confirm')}
+          </Button>
+          <Button variant="light" style={{ width: '80px' }} onClick={handleBack}>
+            {t('general.cancel')}
+          </Button>
+        </RhtBtnBox>
+      </FlexBox>
+    </OuterBox>
+  );
+}
+
+const FlexBox = styled.div`
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+`;
+
+const RhtBtnBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  .btn {
+    margin-bottom: 20px;
+  }
+`;
+
+const OuterBox = styled.div`
+  box-sizing: border-box;
+  min-height: 100%;
+  ${ContainerPadding};
+`;
+
+const CardBody = styled.div`
+  display: flex;
+  gap: 32px;
+  padding-bottom: 100px;
+`;
+
+const BtmBox = styled.div`
+  margin-top: 10px;
+  button {
+    width: 76px;
+    height: 34px;
+    font-size: 14px;
+  }
+  button:first-child {
+    margin-right: 16px;
+  }
+`;
+
+const UlBox = styled.ul`
+  display: flex;
+  flex-direction: column;
+  li {
+    margin-bottom: 14px;
+    .title {
+      font-size: 16px;
+      font-family: Poppins-SemiBold, Poppins;
+      font-weight: 600;
+      color: var(--bs-body-color_active);
+      line-height: 22px;
+      margin-bottom: 14px;
+    }
+  }
+`;
+
+const InputBox = styled(InputGroup)`
+  width: 576px;
+  height: 40px;
+  @media (max-width: 870px) {
+    width: 400px;
+  }
+`;
+
+const DescInputBox = styled(InputBox)`
+  height: 78px;
+`;
+
+const ProposalInputBox = styled(InputBox)`
+  width: 480px;
+`;
+
+const MemberInputBox = styled(InputBox)`
+  width: 480px;
+`;
+
+const ItemBox = styled.div`
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+`;
+
+const BackBox = styled.div`
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  margin-bottom: 48px;
+  cursor: pointer;
+
+  svg {
+    margin-right: 10px;
+  }
+`;
+
+const BtnBox = styled.label`
+  background: var(--bs-box--background);
+  height: 110px;
+  width: 110px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16px;
+  font-weight: 700;
+  font-size: 14px;
+  position: relative;
+  overflow: hidden;
+  .iconRht {
+    margin-right: 10px;
+  }
+  img {
+    max-width: 100%;
+    max-height: 100%;
+  }
+  .uploadIcon {
+    font-size: 20px;
+    margin-right: 10px;
+  }
+`;
+
+const ImgBox = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  img {
+    width: 100%;
+    height: 100%;
+    object-position: center;
+    object-fit: cover;
+  }
+  .upload {
+    display: none;
+  }
+  &:hover .upload {
+    display: flex;
+  }
+`;
+
+const IntroBox = styled.div`
+  .cm-scroller,
+  .md-editor-preview-wrapper {
+    background: var(--bs-background);
+  }
+`;
+
+const RightContent = styled.div`
+  width: 576px;
+  @media (max-width: 870px) {
+    width: 400px;
+  }
+`;
+
+const UpladBox = styled.div<{ bg?: string }>`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  cursor: pointer;
+  background: ${(props) => props.bg};
+`;
+
+const UploadImgText = styled.p`
+  font-size: 12px;
+  font-family: Poppins-Regular, Poppins;
+  font-weight: 400;
+  color: var(--bs-svg-color);
+  line-height: 12px;
+`;
+
+const RoleSelect = styled(SeeSelect)`
+  .react-select__control {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+`;

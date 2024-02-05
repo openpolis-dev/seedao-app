@@ -150,6 +150,14 @@
     "ViewVoteRules": "View voting rules >>"
   },
   "Project": {
+    "OfficialLink": "Official link",
+    "Deliverables": "Deliverables",
+    "Contact": "Project Manager Contact",
+    "SIPNumber": "SIP No.",
+    "StartProjectLink": "立项链接",
+    "EndProjectLink": "结项链接",
+    "PlanFinishTime": "Planned completion time",
+    "ProjectType": "Project Type",
     "ProjectOrGuildItem": "Nothing left here.",
     "create": "Create Project",
     "Edit": "Edit Project",

@@ -120,23 +120,24 @@ const Box = styled.div`
 `;
 interface DateProps {
   placeholder: string;
-  dateTime: Date | null;
+  dateTime: Date | null | undefined;
   onChange: (a: any, b: string | undefined) => void;
   type?: string;
+  isDate?: boolean;
 }
 
 export default function DatePickerStyle(props: DateProps) {
-  const { placeholder, type, dateTime, onChange } = props;
+  const { placeholder, type, dateTime, onChange, isDate } = props;
   const MyDate = DatePicker as any;
 
-  const onChangeTime = (v: Date | null) => {
+  const onChangeTime = (v: Date | null | undefined) => {
     onChange && onChange(v, type);
   };
 
   return (
     <Box>
       <MyDate
-        showTimeSelect
+        showTimeSelect={!isDate}
         dateFormat="MM/dd/yyyy h:mm aa"
         selected={dateTime}
         onChange={onChangeTime}
