@@ -209,7 +209,7 @@ export default function EditGuild({ detail }: { detail?: IGuildDisplay }) {
         <Button onClick={() => handleSubmit()} disabled={submitDisabled}>
           {t('general.confirm')}
         </Button>
-        <TextButton onClick={() => setCofirmModalVisible(true)}>{t('general.cancel')}</TextButton>
+        <TextButton onClick={() => setCofirmModalVisible(true)}>{t('Guild.CloseGuild')}</TextButton>
       </BtmBox>
       {confirmModalVisible && (
         <ConfirmModal
@@ -339,4 +339,7 @@ const InputBox = styled(InputGroup)`
 
 const TextButton = styled.span`
   cursor: pointer;
+  text-align: center;
+  line-height: 40px;
+  font-size: 14px;
 `;

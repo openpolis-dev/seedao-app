@@ -156,6 +156,7 @@
     "SIPNumber": "SIP No.",
     "StartProjectLink": "立项链接",
     "EndProjectLink": "结项链接",
+    "Open": "Open",
     "PlanFinishTime": "Planned completion time",
     "ProjectType": "Project Type",
     "ProjectOrGuildItem": "Nothing left here.",
@@ -304,6 +305,7 @@
     "Credit": "Points",
     "Token": "Token",
     "MemberExist": "Please do not add members repeatedly",
+    "CloseGuild": "Close Guild",
     "Confirm2Close": "Confirm to close it?"
   },
   "city-hall": {

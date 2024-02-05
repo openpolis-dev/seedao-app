@@ -306,6 +306,7 @@
     "Credit": "积分",
     "Token": "Token",
     "MemberExist": "请不要重复添加成员",
+    "CloseGuild": "关闭公会",
     "Confirm2Close": "确定要关闭公会吗？"
   },
   "city-hall": {
