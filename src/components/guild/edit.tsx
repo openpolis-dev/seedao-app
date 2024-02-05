@@ -11,6 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import { compressionFile, fileToDataURL } from 'utils/image';
 import { ethers } from 'ethers';
 import sns from '@seedao/sns-js';
+import ConfirmModal from 'components/modals/confirmModal';
 
 export default function EditGuild({ detail }: { detail?: IGuildDisplay }) {
   const { t } = useTranslation();
@@ -27,6 +28,8 @@ export default function EditGuild({ detail }: { detail?: IGuildDisplay }) {
   const [leader, setLeader] = useState('');
   const [contact, setContact] = useState('');
   const [link, setLink] = useState('');
+
+  const [confirmModalVisible, setCofirmModalVisible] = useState(false);
 
   const handleLeaderSNS = (address: string) => {
     sns
@@ -113,6 +116,18 @@ export default function EditGuild({ detail }: { detail?: IGuildDisplay }) {
   const submitDisabled = [proName, desc, leader, link, contact].some(
     (item) => !item || (typeof item === 'string' && !item.trim()),
   );
+
+  const handleClose = () => {
+    dispatch({ type: AppActionType.SET_LOADING, payload: false });
+    try {
+      // TODO: request to close  guild
+      navigate('/explore?tab=guild');
+    } catch (error: any) {
+      showToast(error?.data?.message || error, ToastType.Danger);
+    } finally {
+      dispatch({ type: AppActionType.SET_LOADING, payload: false });
+    }
+  };
   return (
     <EditPage>
       <MainContent>
@@ -195,7 +210,15 @@ export default function EditGuild({ detail }: { detail?: IGuildDisplay }) {
         <Button onClick={() => handleSubmit()} disabled={submitDisabled}>
           {t('general.confirm')}
         </Button>
+        <TextButton onClick={() => setCofirmModalVisible(true)}>{t('general.cancel')}</TextButton>
       </BtmBox>
+      {confirmModalVisible && (
+        <ConfirmModal
+          msg={t('Guild.Confirm2Close')}
+          onConfirm={handleClose}
+          onClose={() => setCofirmModalVisible(false)}
+        />
+      )}
     </EditPage>
   );
 }
@@ -315,18 +338,6 @@ const InputBox = styled(InputGroup)`
   margin-right: 20px;
 `;
 
-const ItemBox = styled.div`
-  margin-bottom: 10px;
-  display: flex;
-  align-items: center;
-  .titleLft {
-    margin-right: 10px;
-    width: 50px;
-  }
-  .iconForm {
-    color: var(--bs-primary);
-    font-size: 20px;
-    margin-right: 10px;
-    cursor: pointer;
-  }
+const TextButton = styled.span`
+  cursor: pointer;
 `;

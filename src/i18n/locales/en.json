@@ -303,7 +303,8 @@
     "PointsOrToken": "Points or Token",
     "Credit": "Points",
     "Token": "Token",
-    "MemberExist": "Please do not add members repeatedly"
+    "MemberExist": "Please do not add members repeatedly",
+    "Confirm2Close": "Confirm to close it?"
   },
   "city-hall": {
     "Cityhall": "City Hall",
