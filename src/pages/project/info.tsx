@@ -20,6 +20,7 @@ import useQuerySNS from '../../hooks/useQuerySNS';
 import { IUser } from '../../type/user.type';
 import publicJs from '../../utils/publicJs';
 import CategoryTag from 'components/proposalCom/categoryTag';
+import LinkImg from '../../assets/Imgs/link.svg';
 
 type UserMap = { [w: string]: IUser };
 export default function InfoPage() {
@@ -150,7 +151,7 @@ export default function InfoPage() {
                   </TopInfo>
                 </TopBoxLeft>
 
-                {showStatusComponent()}
+                {/*{showStatusComponent()}*/}
               </TopBox>
               <LastLine>
                 {/*<LftBox>*/}
@@ -173,11 +174,21 @@ export default function InfoPage() {
                     </dl>
                     <dl>
                       <dt>{t('Project.StartProjectLink')}</dt>
-                      <dd>{detail?.ApprovalLink}</dd>
+                      <dd>
+                        <span>{detail?.ApprovalLink}</span>{' '}
+                        <Link to={detail?.ApprovalLink} target="_blank">
+                          <img src={LinkImg} alt="" />
+                        </Link>
+                      </dd>
                     </dl>
                     <dl>
                       <dt>{t('Project.EndProjectLink')}</dt>
-                      <dd>{detail?.OverLink}</dd>
+                      <dd>
+                        <span>{detail?.OverLink}</span>{' '}
+                        <Link to={detail?.OverLink} target="_blank">
+                          <img src={LinkImg} alt="" />
+                        </Link>
+                      </dd>
                     </dl>
                     <dl>
                       <dt>{t('Project.Moderator')}</dt>
@@ -200,7 +211,12 @@ export default function InfoPage() {
                     </dl>
                     <dl>
                       <dt>{t('Project.OfficialLink')}</dt>
-                      <dd>{detail?.OfficialLink}</dd>
+                      <dd>
+                        <span>{detail?.OfficialLink}</span>{' '}
+                        <a href={detail?.OfficialLink} target="_blank" rel="noreferrer">
+                          <img src={LinkImg} alt="" />
+                        </a>
+                      </dd>
                     </dl>
                     <dl>
                       <dt>{t('Project.Budget')}</dt>
@@ -278,7 +294,10 @@ const DlBox = styled.div`
     opacity: 0.6;
   }
   dd {
-    opacity: 0.8;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
   }
 `;
 

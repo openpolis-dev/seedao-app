@@ -14,6 +14,14 @@ import BackerNav from 'components/common/backNav';
 import SipTag from 'components/common/sipTag';
 import { MdPreview } from 'md-editor-rt';
 import DefaultLogo from 'assets/Imgs/defaultLogo.png';
+import CategoryTag from '../../components/proposalCom/categoryTag';
+import publicJs from '../../utils/publicJs';
+import { ethers } from 'ethers';
+import { getUsers } from '../../requests/user';
+import useQuerySNS from '../../hooks/useQuerySNS';
+import { IUser } from '../../type/user.type';
+
+type UserMap = { [w: string]: IUser };
 
 export default function Index() {
   const { t } = useTranslation();
@@ -23,13 +31,59 @@ export default function Index() {
   } = useAuthContext();
 
   const { id } = useParams();
-
-  const [detail, setDetail] = useState<ReTurnProject | undefined>();
+  const { getMultiSNS } = useQuerySNS();
+  const [detail, setDetail] = useState<any>();
+  const [snsMap, setSnsMap] = useState<any>({});
+  const [userMap, setUserMap] = useState<UserMap>({});
+  const [sponserList, setSponserList] = useState<any[]>([]);
 
   const canAuditApplication = usePermission(
     PermissionAction.CreateApplication,
     PermissionObject.GuildPrefix + detail?.id,
   );
+
+  const getUsersDetail = async (dt: any) => {
+    const _wallets: string[] = [];
+
+    dt?.forEach((w: any) => {
+      if (ethers.utils.isAddress(w)) {
+        _wallets.push(w);
+      }
+    });
+    const wallets = Array.from(new Set(_wallets));
+    let userSns = await getMultiSNS(wallets);
+    setSnsMap(userSns);
+    getUsersInfo(wallets);
+  };
+
+  const getUsersInfo = async (wallets: string[]) => {
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    try {
+      const res = await getUsers(wallets);
+      const userData: UserMap = {};
+      res.data?.forEach((r) => {
+        userData[(r.wallet || '').toLowerCase()] = r;
+      });
+      setUserMap(userData);
+
+      let arr: any[] = [];
+
+      detail.sponsors.map((item: any) => {
+        let itemInfo = userData[item];
+        let itemSns = snsMap.get(item);
+        arr.push({
+          ...itemInfo,
+          sns: itemSns,
+        });
+      });
+
+      setSponserList([...arr]);
+    } catch (error) {
+      logError('getUsersInfo error:', error);
+    } finally {
+      dispatch({ type: AppActionType.SET_LOADING, payload: null });
+    }
+  };
 
   useEffect(() => {
     id && getDetail();
@@ -40,6 +94,7 @@ export default function Index() {
     try {
       const dt = await getProjectById(id as string);
       setDetail(dt.data);
+      await getUsersDetail(dt.data.sponsors);
     } catch (error) {
       logError(error);
     } finally {
@@ -50,48 +105,167 @@ export default function Index() {
   return (
     <OuterBox>
       <Box>
-        <BackerNav to="/explore?tab=guild" title={detail?.name || ''} mb="40px" />
+        <BackerNav title={detail?.name || ''} to="/explore?tab=project" mb="40px" />
         <Content>
           <FlexLine>
             <AllBox>
               <TopBox>
-                <TopImg>
-                  <img src={detail?.logo || DefaultLogo} alt="" />
-                </TopImg>
-                <TopInfo>
-                  <TitleBox>{detail?.name}</TitleBox>
-                  <div className="desc">{detail?.desc}</div>
-                  <ProposalBox>
-                    {detail?.proposals?.map((item, index) => (
-                      <SipTag key={index} slug={item} />
-                    ))}
-                  </ProposalBox>
-                </TopInfo>
+                <TopBoxLeft>
+                  <TopImg>
+                    <img src={detail?.logo || DefaultLogo} alt="" />
+                  </TopImg>
+                  <TopInfo>
+                    <TitleBox>{detail?.name}</TitleBox>
+                    {/*<div className="desc">{detail?.desc}</div>*/}
+                    <FlexFirst>
+                      <ProposalBox>
+                        {detail?.proposals?.map((item: any, index: number) => (
+                          <SipTag key={index} slug={item} />
+                        ))}
+                      </ProposalBox>
+                      {detail?.Category && <CategoryTag>{detail?.Category}</CategoryTag>}
+                      <StatusBox className={detail?.status}>{detail?.status}</StatusBox>
+                    </FlexFirst>
+                  </TopInfo>
+                </TopBoxLeft>
+
+                {/*{showStatusComponent()}*/}
               </TopBox>
               <LastLine>
-                <LftBox>
-                  <InnerLft>
-                    <Members detail={detail} updateProject={getDetail} />
-                  </InnerLft>
-                </LftBox>
+                {/*<LftBox>*/}
+                {/*  <InnerLft>*/}
+                {/*    <Members detail={detail} updateProject={onUpdate} />*/}
+                {/*  </InnerLft>*/}
+                {/*</LftBox>*/}
                 <ContentBox>
-                  <TitleBox>{t('Guild.GuildIntro')}</TitleBox>
-                  {/*<ReactMarkdown>{detail?.intro || ''}</ReactMarkdown>*/}
-                  <MdPreview theme={theme ? 'dark' : 'light'} modelValue={detail?.intro || ''} />
+                  {canAuditApplication && (
+                    <BtnTop to={`/project/edit/${detail?.id}`} state={detail}>
+                      <Button>{t('Project.Edit')}</Button>
+                    </BtnTop>
+                  )}
+
+                  {/*<TitleBox>{t('Project.ProjectIntro')}</TitleBox>*/}
+                  <DlBox>
+                    <dl>
+                      <dt>{t('Project.ProjectIntro')}</dt>
+                      <dd>{detail?.intro}</dd>
+                    </dl>
+                    <dl>
+                      <dt>{t('Project.StartProjectLink')}</dt>
+                      <dd>{detail?.ApprovalLink}</dd>
+                    </dl>
+                    <dl>
+                      <dt>{t('Project.EndProjectLink')}</dt>
+                      <dd>{detail?.OverLink}</dd>
+                    </dl>
+                    <dl>
+                      <dt>{t('Project.Moderator')}</dt>
+                      <dd>
+                        {sponserList.map((item: any, index: number) => (
+                          <MemBox key={`avatar_${index}`}>
+                            <Avatar>
+                              <img src={item?.avatar} alt="" />
+                            </Avatar>
+                            <span>
+                              {item?.sns?.endsWith('.seedao') ? item.sns : publicJs.AddressToShow(item?.sns?.wallet)}
+                            </span>
+                          </MemBox>
+                        ))}
+                      </dd>
+                    </dl>
+                    <dl>
+                      <dt>{t('Project.Contact')}</dt>
+                      <dd>{detail?.ContantWay}</dd>
+                    </dl>
+                    <dl>
+                      <dt>{t('Project.OfficialLink')}</dt>
+                      <dd>{detail?.OfficialLink}</dd>
+                    </dl>
+                    <dl>
+                      <dt>{t('Project.Budget')}</dt>
+                      <dd>{detail?.Budgets}</dd>
+                    </dl>
+                    <dl>
+                      <dt>{t('Project.Deliverables')}</dt>
+                      <dd>{detail?.Deliverable}</dd>
+                    </dl>
+                    <dl>
+                      <dt>{t('Project.PlanFinishTime')}</dt>
+                      <dd>{detail?.PlanTime}</dd>
+                    </dl>
+                  </DlBox>
+                  {/*<MdPreview theme={theme ? 'dark' : 'light'} modelValue={detail?.intro || ''} />*/}
                 </ContentBox>
               </LastLine>
             </AllBox>
-            {canAuditApplication && (
-              <Link to={`/guild/edit/${detail?.id}`} state={detail}>
-                <Button>{t('general.edit')}</Button>
-              </Link>
-            )}
           </FlexLine>
         </Content>
       </Box>
     </OuterBox>
   );
 }
+
+const FlexFirst = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 14px;
+`;
+
+const StatusBox = styled.div`
+  font-size: 12px;
+  color: #fff;
+  background: var(--bs-primary);
+  padding: 2px 12px;
+  border-radius: 4px;
+  &.pending_close {
+    background: #1f9e14;
+  }
+`;
+
+const MemBox = styled.div`
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--font-color-title);
+  line-height: 18px;
+  margin-bottom: 10px;
+  gap: 10px;
+  //span {
+  //  margin-right: 5px;
+  //}
+`;
+
+const Avatar = styled.div`
+  img {
+    width: 30px;
+    height: 30px;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 100%;
+  }
+`;
+const DlBox = styled.div`
+  margin-top: 40px;
+  dl {
+    margin-bottom: 20px;
+  }
+  dt {
+    margin-bottom: 10px;
+    font-size: 12px;
+    opacity: 0.6;
+  }
+  dd {
+    opacity: 0.8;
+  }
+`;
+
+const BtnTop = styled(Link)`
+  position: absolute;
+  right: 20px;
+  top: 20px;
+`;
 
 const OuterBox = styled.div`
   ${ContainerPadding};
@@ -151,7 +325,6 @@ const LftBox = styled.div`
 
 const InnerLft = styled.div`
   box-sizing: border-box;
-  padding: 24px;
 `;
 
 const TopBox = styled.div`
@@ -203,9 +376,8 @@ const TopInfo = styled.div`
 const ProposalBox = styled.div`
   display: flex;
   align-items: center;
-  margin-top: 14px;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 10px;
 `;
 
 const ContentBox = styled.div`
@@ -213,14 +385,11 @@ const ContentBox = styled.div`
   background: var(--bs-box--background);
   padding: 24px;
   flex-grow: 1;
-  margin-left: 16px;
+  //margin-left: 16px;
   color: var(--bs-body-color_active);
-
+  position: relative;
   img {
     max-width: 100%;
-  }
-  .md-editor-dark {
-    background: var(--bs-box--background);
   }
 `;
 
