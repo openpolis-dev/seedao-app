@@ -126,7 +126,7 @@ export default function CreateProject() {
                 <InputBox>
                   <Form.Control
                     type="text"
-                    placeholder={`https://forum.seedao.xyz/thread/sip-...`}
+                    placeholder={`${window.location.origin}/proposal/thread/...`}
                     value={startLink}
                     onChange={(e) => setStartLink(e.target.value)}
                   />
@@ -137,7 +137,7 @@ export default function CreateProject() {
                 <InputBox>
                   <Form.Control
                     type="text"
-                    placeholder={`https://forum.seedao.xyz/thread/sip-...`}
+                    placeholder={`${window.location.origin}/proposal/thread/...`}
                     value={endLink}
                     onChange={(e) => setEndLink(e.target.value)}
                   />

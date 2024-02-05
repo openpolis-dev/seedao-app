@@ -156,7 +156,7 @@ export default function EditProject({ detail }: { detail: ReTurnProject | undefi
             <InputBox>
               <Form.Control
                 type="text"
-                placeholder={`https://forum.seedao.xyz/thread/sip-...`}
+                placeholder={`${window.location.origin}/proposal/thread/...`}
                 value={endLink}
                 onChange={(e) => setEndLink(e.target.value)}
               />
@@ -211,8 +211,6 @@ const EditPage = styled.div`
 const TopBox = styled.section`
   display: flex;
 `;
-
-const IntroBox = styled.div``;
 
 const MainContent = styled.div`
   display: flex;
@@ -288,13 +286,6 @@ const UploadImgText = styled.p`
   line-height: 12px;
 `;
 
-const BtmBox = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  min-width: 104px;
-`;
-
 const UlBox = styled.ul`
   display: flex;
   flex-direction: column;
@@ -314,29 +305,4 @@ const UlBox = styled.ul`
 const InputBox = styled(InputGroup)`
   width: 600px;
   margin-right: 20px;
-`;
-
-const ItemBox = styled.div`
-  margin-bottom: 10px;
-  display: flex;
-  align-items: center;
-  .titleLft {
-    margin-right: 10px;
-    width: 50px;
-  }
-  .iconForm {
-    color: var(--bs-primary);
-    font-size: 20px;
-    margin-right: 10px;
-    cursor: pointer;
-  }
-`;
-
-const TextButton = styled.div`
-  font-size: 14px;
-  font-family: Poppins-Medium;
-  font-weight: 500;
-  line-height: 20px;
-  text-align: center;
-  cursor: pointer;
 `;
