@@ -39,10 +39,7 @@ export default function InfoPage() {
   const [userMap, setUserMap] = useState<UserMap>({});
   const [sponserList, setSponserList] = useState<any[]>([]);
 
-  const canEdit = usePermission(
-    PermissionAction.Modify,
-    PermissionObject.ProjPrefix + detail?.id,
-  );
+  const canEdit = usePermission(PermissionAction.Modify, PermissionObject.ProjPrefix + detail?.id);
 
   useEffect(() => {
     id && getDetail();
@@ -185,7 +182,7 @@ export default function InfoPage() {
                   <DlBox>
                     <dl>
                       <dt>{t('Project.ProjectIntro')}</dt>
-                      <dd>{detail?.intro}</dd>
+                      <dd>{detail?.desc}</dd>
                     </dl>
                     <dl>
                       <dt>{t('Project.StartProjectLink')}</dt>

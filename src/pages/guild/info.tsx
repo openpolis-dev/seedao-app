@@ -148,7 +148,7 @@ export default function Index() {
                   <DlBox>
                     <dl>
                       <dt>{t('Guild.GuildIntro')}</dt>
-                      <dd>{detail?.intro}</dd>
+                      <dd>{detail?.desc}</dd>
                     </dl>
 
                     <dl>

@@ -167,7 +167,7 @@ export default function ProjectOrGuildItem({ data, onClickItem, user, sns, noTag
               <Avatar>
                 <img src={user?.avatar} alt="" />
               </Avatar>
-              <span>{sns.endsWith('.seedao') ? sns : publicJs.AddressToShow(user?.wallet)}</span>
+              <span>{sns?.endsWith('.seedao') ? sns : publicJs.AddressToShow(user?.wallet)}</span>
               {/*<span>{(data?.members?.length || 0) + (data?.sponsors?.length || 0)}</span> {t('Project.Members')}*/}
             </MemBox>
           )}
