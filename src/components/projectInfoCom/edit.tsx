@@ -11,6 +11,8 @@ import { compressionFile, fileToDataURL } from 'utils/image';
 import sns from '@seedao/sns-js';
 import { ethers } from 'ethers';
 import { UpdateProjectParamsType, updateProjectInfo } from 'requests/project';
+import usePermission from 'hooks/usePermission';
+import { PermissionObject, PermissionAction } from 'utils/constant';
 
 const LinkPrefix = `${window.location.origin}/proposal/thread/`;
 
@@ -22,6 +24,9 @@ export default function EditProject({ detail }: { detail: IProjectDisplay | unde
     dispatch,
     state: { theme },
   } = useAuthContext();
+
+  const canCreateProject = usePermission(PermissionAction.CreateApplication, PermissionObject.Project);
+
 
   const [proName, setProName] = useState('');
   const [desc, setDesc] = useState('');
@@ -161,6 +166,7 @@ export default function EditProject({ detail }: { detail: IProjectDisplay | unde
                 placeholder={`${window.location.origin}/proposal/thread/...`}
                 value={endLink}
                 onChange={(e) => setEndLink(e.target.value)}
+                disabled={!canCreateProject}
               />
             </InputBox>
           </li>
@@ -172,6 +178,7 @@ export default function EditProject({ detail }: { detail: IProjectDisplay | unde
                 placeholder={t('Project.AddMemberAddress')}
                 value={leader}
                 onChange={(e) => setLeader(e.target.value)}
+                disabled={!canCreateProject}
               />
             </InputBox>
           </li>
