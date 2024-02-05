@@ -1,10 +1,15 @@
 // Project Module API
 import request, { ResponseData } from './http';
-import { IBaseProject, InfoObj, ReTurnProject } from 'type/project.type';
+import { IBaseProject, InfoObj, ReTurnProject, IProject } from 'type/project.type';
 
 const PATH_PREFIX = '/projects/';
 
+// to be discarded
 export const createProjects = (data: IBaseProject) => {
+  return request.post(PATH_PREFIX, data);
+};
+
+export const createNewProject = (data: IProject) => {
   return request.post(PATH_PREFIX, data);
 };
 

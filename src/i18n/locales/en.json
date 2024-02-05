@@ -506,7 +506,9 @@
     "SubmitProposalSuccess": "Submit successfully",
     "SaveProposalSuccess": "Save successfully",
     "CastVoteSuccess": "Cast vote successfully",
-    "CommentSuccess": "Comment successfully"
+    "CommentSuccess": "Comment successfully",
+    "InvalidField": "Required correct {{field}}",
+    "QuerySNSFailed": "Query SNS failed"
   },
   "event": {
     "events": "Events",

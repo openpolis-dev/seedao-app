@@ -506,7 +506,9 @@
     "SubmitProposalSuccess": "提交成功",
     "SaveProposalSuccess": "保存成功",
     "CastVoteSuccess": "投票成功",
-    "CommentSuccess": "评论成功"
+    "CommentSuccess": "评论成功",
+    "InvalidField": "请填写正确的{{field}}",
+    "QuerySNSFailed": "查询SNS失败"
   },
   "event": {
     "events": "活动",

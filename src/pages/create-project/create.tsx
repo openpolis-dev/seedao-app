@@ -2,8 +2,8 @@ import { InputGroup, Button, Form } from 'react-bootstrap';
 import styled from 'styled-components';
 import React, { ChangeEvent, FormEvent, useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { createProjects } from 'requests/project';
-import { IBaseProject } from 'type/project.type';
+import { createNewProject, createProjects } from 'requests/project';
+import { IProject } from 'type/project.type';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import useToast, { ToastType } from 'hooks/useToast';
 import { useNavigate } from 'react-router-dom';
@@ -17,6 +17,9 @@ import sns from '@seedao/sns-js';
 import { compressionFile, fileToDataURL } from 'utils/image';
 import DatePickerStyle from 'components/datePicker';
 import useProposalCategories from 'hooks/useProposalCategories';
+import { toast } from 'react-toastify';
+
+const LinkPrefix = `${window.location.origin}/proposal/thread/`;
 
 export default function CreateProject() {
   const navigate = useNavigate();
@@ -48,7 +51,84 @@ export default function CreateProject() {
     : [];
   const [selectCategory, setSelectCategory] = useState<ISelectItem>();
 
-  const handleSubmit = async () => {};
+  const checkBeforeSubmit = async (): Promise<IProject | undefined> => {
+    const _sip = Number(sip);
+    if (_sip <= 0 || sip.includes('.')) {
+      showToast(t('Msg.InvalidField', { field: t('Project.SIPNumber') }), ToastType.Danger);
+      return;
+    }
+    if (!startLink.startsWith(LinkPrefix)) {
+      showToast(t('Msg.InvalidField', { field: t('Project.StartProjectLink') }), ToastType.Danger);
+      return;
+    }
+    if (!endLink.startsWith(LinkPrefix)) {
+      showToast(t('Msg.InvalidField', { field: t('Project.EndProjectLink') }), ToastType.Danger);
+      return;
+    }
+    const _endTime = endTime?.getTime();
+    if (!_endTime) {
+    // if (!_endTime || _endTime <= Date.now()) {
+      showToast(t('Msg.InvalidField', { field: t('Project.PlanFinishTime') }), ToastType.Danger);
+      return;
+    }
+    if (!link.startsWith('https://') && !link.startsWith('http://')) {
+      showToast(t('Msg.InvalidField', { field: t('Project.OfficialLink') }), ToastType.Danger);
+      return;
+    }
+    let _leader = leader;
+
+    if (!ethers.utils.isAddress(leader)) {
+      if (!leader!.endsWith('.seedao')) {
+        showToast(t('Msg.IncorrectAddress', { content: leader }), ToastType.Danger);
+        return;
+      }
+      try {
+        dispatch({ type: AppActionType.SET_LOADING, payload: true });
+        const res = await sns.resolves([leader]);
+        if (ethers.constants.AddressZero === res[0]) {
+          showToast(t('Msg.IncorrectAddress', { content: leader }), ToastType.Danger);
+          return;
+        }
+        _leader = res[0];
+      } catch (error) {
+        showToast(t('Msg.QuerySNSFailed'), ToastType.Danger);
+        dispatch({ type: AppActionType.SET_LOADING, payload: false });
+        return;
+      }
+    }
+    return {
+      name: proName,
+      desc,
+      logo: url,
+      OfficialLink: link,
+      ContantWay: contact,
+      SIP: String(_sip),
+      ApprovalLink: startLink,
+      OverLink: endLink,
+      budgets: [{ name: budget, total_amount: 0 }],
+      Deliverable: deliverables,
+      Category: String(selectCategory?.value),
+      PlanTime: String(_endTime),
+      sponsors: [_leader],
+    };
+  };
+
+  const handleSubmit = async () => {
+    const params = await checkBeforeSubmit();
+    if (!params) {
+      return;
+    }
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    try {
+      const resp = await createNewProject(params);
+      showToast(t('Project.createSuccess'), ToastType.Success);
+      navigate(`/project/info/${resp.data.id}`);
+    } catch (error: any) {
+      toast.error(error?.data?.message || error);
+    } finally {
+      dispatch({ type: AppActionType.SET_LOADING, payload: false });
+    }
+  };
 
   const updateLogo = async (e: FormEvent) => {
     const { files } = e.target as any;
@@ -61,6 +141,10 @@ export default function CreateProject() {
   const handleBack = () => {
     navigate('/explore?tab=project');
   };
+
+  const submitDisabled = [proName, desc, sip, selectCategory, startLink, endLink, budget, leader, contact, link].some(
+    (item) => !item || (typeof item === 'string' && !item.trim()),
+  );
 
   return (
     <OuterBox>
@@ -126,7 +210,7 @@ export default function CreateProject() {
                 <InputBox>
                   <Form.Control
                     type="text"
-                    placeholder={`${window.location.origin}/proposal/thread/...`}
+                    placeholder={LinkPrefix + '...'}
                     value={startLink}
                     onChange={(e) => setStartLink(e.target.value)}
                   />
@@ -137,7 +221,7 @@ export default function CreateProject() {
                 <InputBox>
                   <Form.Control
                     type="text"
-                    placeholder={`${window.location.origin}/proposal/thread/...`}
+                    placeholder={LinkPrefix + '...'}
                     value={endLink}
                     onChange={(e) => setEndLink(e.target.value)}
                   />
@@ -146,7 +230,7 @@ export default function CreateProject() {
               <li>
                 <div className="title">{t('Project.Budget')}</div>
                 <InputBox>
-                  <Form.Control type="number" value={budget} onChange={(e) => setBudget(e.target.value)} />
+                  <Form.Control type="string" value={budget} onChange={(e) => setBudget(e.target.value)} />
                 </InputBox>
               </li>
               <li>
@@ -185,7 +269,12 @@ export default function CreateProject() {
               <li>
                 <div className="title">{t('Project.OfficialLink')}</div>
                 <InputBox>
-                  <Form.Control type="text" value={link} onChange={(e) => setLink(e.target.value)} />
+                  <Form.Control
+                    type="text"
+                    value={link}
+                    onChange={(e) => setLink(e.target.value)}
+                    placeholder="https://..."
+                  />
                 </InputBox>
               </li>
 
@@ -203,7 +292,7 @@ export default function CreateProject() {
           </RightContent>
         </CardBody>
         <RhtBtnBox>
-          <Button style={{ width: '80px' }} onClick={() => handleSubmit()}>
+          <Button style={{ width: '80px' }} onClick={() => handleSubmit()} disabled={submitDisabled}>
             {t('general.confirm')}
           </Button>
           <Button variant="light" style={{ width: '80px' }} onClick={handleBack}>

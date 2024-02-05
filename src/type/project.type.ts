@@ -46,6 +46,22 @@ export interface IBaseProject {
   intro: string;
 }
 
+export interface IProject {
+  logo: string;
+  desc: string;
+  name: string;
+  ApprovalLink: string;
+  OverLink: string;
+  Category: string;
+  ContantWay: string;
+  Deliverable: string;
+  OfficialLink: string;
+  PlanTime: string;
+  SIP: string;
+  sponsors: string[];
+  budgets: [{ name: string; total_amount: number }];
+}
+
 export interface ReTurnProject {
   create_ts: number;
   id: number;
