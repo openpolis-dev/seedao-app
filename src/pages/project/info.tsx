@@ -59,13 +59,13 @@ export default function InfoPage() {
     if (detail?.status === ProjectStatus.Pending) {
       return <StatusTag>{t('Project.Pending')}</StatusTag>;
     }
-    if (canAuditApplication) {
-      return (
-        <Link to={`/project/edit/${detail?.id}`} state={detail}>
-          <Button>{t('Project.Edit')}</Button>
-        </Link>
-      );
-    }
+    // if (canAuditApplication) {
+    //   return (
+    //     <Link to={`/project/edit/${detail?.id}`} state={detail}>
+    //       <Button>{t('Project.Edit')}</Button>
+    //     </Link>
+    //   );
+    // }
   };
 
   return (
@@ -94,14 +94,30 @@ export default function InfoPage() {
                 {showStatusComponent()}
               </TopBox>
               <LastLine>
-                <LftBox>
-                  <InnerLft>
-                    <Members detail={detail} updateProject={onUpdate} />
-                  </InnerLft>
-                </LftBox>
+                {/*<LftBox>*/}
+                {/*  <InnerLft>*/}
+                {/*    <Members detail={detail} updateProject={onUpdate} />*/}
+                {/*  </InnerLft>*/}
+                {/*</LftBox>*/}
                 <ContentBox>
-                  <TitleBox>{t('Project.ProjectIntro')}</TitleBox>
-                  <MdPreview theme={theme ? 'dark' : 'light'} modelValue={detail?.intro || ''} />
+                  {canAuditApplication && (
+                    <BtnTop to={`/project/edit/${detail?.id}`} state={detail}>
+                      <Button>{t('Project.Edit')}</Button>
+                    </BtnTop>
+                  )}
+
+                  {/*<TitleBox>{t('Project.ProjectIntro')}</TitleBox>*/}
+                  <DlBox>
+                    {[...Array(10)].map((item, index) => (
+                      <dl key={index}>
+                        <dt>项目简介</dt>
+                        <dd>
+                          提供当季SeeDAO有效知识，提供当季SeeDAO有效知识。提供当季SeeDAO有效知识。提供当季SeeDAO有效知识提供当季SeeDAO有效知识提供当季SeeDAO有效知识
+                        </dd>
+                      </dl>
+                    ))}
+                  </DlBox>
+                  {/*<MdPreview theme={theme ? 'dark' : 'light'} modelValue={detail?.intro || ''} />*/}
                 </ContentBox>
               </LastLine>
             </AllBox>
@@ -111,6 +127,24 @@ export default function InfoPage() {
     </OuterBox>
   );
 }
+const DlBox = styled.div`
+  margin-top: 40px;
+  dl {
+    margin-bottom: 20px;
+  }
+  dt {
+    margin-bottom: 10px;
+  }
+  dd {
+    opacity: 0.8;
+  }
+`;
+
+const BtnTop = styled(Link)`
+  position: absolute;
+  right: 20px;
+  top: 20px;
+`;
 
 const OuterBox = styled.div`
   ${ContainerPadding};
@@ -231,9 +265,9 @@ const ContentBox = styled.div`
   background: var(--bs-box--background);
   padding: 24px;
   flex-grow: 1;
-  margin-left: 16px;
+  //margin-left: 16px;
   color: var(--bs-body-color_active);
-
+  position: relative;
   img {
     max-width: 100%;
   }

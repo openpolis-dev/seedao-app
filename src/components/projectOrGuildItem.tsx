@@ -2,6 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
 import DefaultLogo from 'assets/Imgs/defaultLogo.png';
+import ProposalStateTag from './proposalCom/stateTag';
+import { ProposalState } from '../type/proposalV2.type';
 
 const Box = styled.div`
   width: 20%;
@@ -40,10 +42,17 @@ const CardBox = styled.div`
   box-shadow: var(--box-shadow) !important;
   padding: 14px;
   height: 220px;
+  position: relative;
   &:hover {
     background: var(--home-right_hover);
   }
 `;
+
+const TagBox = styled.div`
+  position: absolute;
+  right: 10px;
+`;
+
 const ImageBox = styled.div`
   width: 100%;
   img {
@@ -70,14 +79,25 @@ const Desc = styled.div`
 
 const MemBox = styled.div`
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   font-size: 12px;
   font-weight: 400;
-  color: #8d57ff;
+  color: var(--font-color-title);
   line-height: 18px;
   margin-bottom: 10px;
-  span {
-    margin-right: 5px;
+  gap: 10px;
+  //span {
+  //  margin-right: 5px;
+  //}
+`;
+
+const Avatar = styled.div`
+  img {
+    width: 30px;
+    height: 30px;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 100%;
   }
 `;
 
@@ -99,6 +119,9 @@ export default function ProjectOrGuildItem({ data, onClickItem }: Iprops) {
   return (
     <Box>
       <CardBox>
+        <TagBox>
+          <ProposalStateTag state={ProposalState.Approved} />
+        </TagBox>
         <Item onClick={() => onClickItem(data.id)}>
           <ImageBox>
             <img src={data.logo || DefaultLogo} alt="" />
@@ -106,7 +129,14 @@ export default function ProjectOrGuildItem({ data, onClickItem }: Iprops) {
           <div className="title">{data.name}</div>
           <Desc>{data.desc ? data.desc : t('Project.ProjectOrGuildItem')}</Desc>
           <MemBox>
-            <span>{(data?.members?.length || 0) + (data?.sponsors?.length || 0)}</span> {t('Project.Members')}
+            <Avatar>
+              <img
+                src="https://seedao-os-superapp.s3.ap-northeast-2.amazonaws.com/user_avatars/0x4d4b78D37090eD3e1EAe6779bA2C3D6728052915_1704533838252.jpg"
+                alt=""
+              />
+            </Avatar>
+            <span>wendychaung.seedao</span>
+            {/*<span>{(data?.members?.length || 0) + (data?.sponsors?.length || 0)}</span> {t('Project.Members')}*/}
           </MemBox>
         </Item>
       </CardBox>

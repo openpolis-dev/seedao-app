@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Row } from 'react-bootstrap';
+import { Row, Button } from 'react-bootstrap';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -11,6 +11,8 @@ import NoItem from 'components/noItem';
 import useCheckLogin from 'hooks/useCheckLogin';
 import ProjectOrGuildItem from 'components/projectOrGuildItem';
 import SubTabbar from 'components/common/subTabbar';
+import usePermission from '../../hooks/usePermission';
+import { PermissionAction, PermissionObject } from '../../utils/constant';
 
 const Box = styled.div`
   position: relative;
@@ -130,12 +132,21 @@ export default function Index() {
   const openDetail = (id: number) => {
     navigate(`/project/info/${id}`);
   };
+  // const canAuditApplication = usePermission(
+  //   PermissionAction.CreateApplication,
+  //   PermissionObject.ProjPrefix + detail?.id,
+  // );
 
   return (
     <Box>
-      {list.length > 1 && (
-        <SubTabbarStyle defaultActiveKey={0} tabs={list} onSelect={(v: string | number) => setCurrent(v as number)} />
-      )}
+      <LineTop>
+        {list.length > 1 && (
+          <SubTabbarStyle defaultActiveKey={0} tabs={list} onSelect={(v: string | number) => setCurrent(v as number)} />
+        )}
+        <RTBox>
+          <Button>创建项目</Button>
+        </RTBox>
+      </LineTop>
 
       <div>
         <ItemBox>
@@ -155,6 +166,15 @@ export default function Index() {
     </Box>
   );
 }
+const LineTop = styled.div`
+  position: relative;
+`;
+
+const RTBox = styled.div`
+  position: absolute;
+  right: 0;
+  top: 0;
+`;
 
 const SubTabbarStyle = styled(SubTabbar)`
   margin-top: 12px;
