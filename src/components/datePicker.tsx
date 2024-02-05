@@ -9,7 +9,8 @@ const Box = styled.div`
     border: var(--bs-border-width) solid var(--bs-border-color);
     border-radius: var(--bs-border-radius);
     padding: 0.375rem 0.75rem;
-    font-size: 1rem;
+    font-size: 14px;
+    height: 40px;
     &:focus {
       outline: 0;
       border-color: var(--bs-border-color);

@@ -2,7 +2,7 @@ import { InputGroup, Button, Form } from 'react-bootstrap';
 import styled from 'styled-components';
 import React, { FormEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { createNewProject } from 'requests/project';
+import { createNewGuild } from 'requests/guild';
 import { IProject } from 'type/project.type';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import useToast, { ToastType } from 'hooks/useToast';
@@ -14,13 +14,14 @@ import SeeSelect from 'components/common/select';
 import { ethers } from 'ethers';
 import sns from '@seedao/sns-js';
 import { compressionFile, fileToDataURL } from 'utils/image';
-import DatePickerStyle from 'components/datePicker';
 import useProposalCategories from 'hooks/useProposalCategories';
+import DatePickerStyle from 'components/datePicker';
 
 const LinkPrefix = `${window.location.origin}/proposal/thread/`;
 
-export default function CreateProject() {
+export default function CreateGuild() {
   const navigate = useNavigate();
+
   const { t } = useTranslation();
   const { showToast } = useToast();
   const {
@@ -65,7 +66,7 @@ export default function CreateProject() {
     }
     const _endTime = endTime?.getTime();
     if (!_endTime) {
-    // if (!_endTime || _endTime <= Date.now()) {
+      // if (!_endTime || _endTime <= Date.now()) {
       showToast(t('Msg.InvalidField', { field: t('Project.PlanFinishTime') }), ToastType.Danger);
       return;
     }
@@ -118,9 +119,9 @@ export default function CreateProject() {
     }
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
-      const resp = await createNewProject(params);
-      showToast(t('Project.createSuccess'), ToastType.Success);
-      navigate(`/project/info/${resp.data.id}`);
+      const resp = await createNewGuild(params);
+      showToast(t('Guild.createSuccess'), ToastType.Success);
+      navigate(`/guild/info/${resp.data.id}`);
     } catch (error: any) {
       showToast(error?.data?.message || error, ToastType.Danger);
     } finally {
@@ -137,7 +138,7 @@ export default function CreateProject() {
   };
 
   const handleBack = () => {
-    navigate('/explore?tab=project');
+    navigate('/explore?tab=guild');
   };
 
   const submitDisabled = [proName, desc, sip, selectCategory, startLink, endLink, budget, leader, link].some(
@@ -146,7 +147,7 @@ export default function CreateProject() {
 
   return (
     <OuterBox>
-      <BackerNav title={t('Project.create')} to="/explore" />
+      <BackerNav title={t('Guild.create')} to="/city-hall/governance" />
       <FlexBox>
         <CardBody>
           <BtnBox htmlFor="fileUpload" onChange={(e) => updateLogo(e)}>
@@ -162,25 +163,25 @@ export default function CreateProject() {
               >
                 <input id="fileUpload" type="file" hidden accept=".jpg, .jpeg, .png, .svg" />
                 <CameraIconSVG />
-                <UploadImgText>{t('Project.upload')}</UploadImgText>
+                <UploadImgText>{t('Guild.upload')}</UploadImgText>
               </UpladBox>
             </ImgBox>
             {!url && (
               <UpladBox>
                 <input id="fileUpload" type="file" hidden accept=".jpg, .jpeg, .png, .svg" />
                 <CameraIconSVG />
-                <UploadImgText>{t('Project.upload')}</UploadImgText>
+                <UploadImgText>{t('Guild.upload')}</UploadImgText>
               </UpladBox>
             )}
           </BtnBox>
           <RightContent>
             <UlBox>
               <li>
-                <div className="title">{t('Project.ProjectName')}</div>
+                <div className="title">{t('Guild.ProjectName')}</div>
                 <InputBox>
                   <Form.Control
                     type="text"
-                    placeholder={t('Project.ProjectName')}
+                    placeholder={t('Guild.ProjectName')}
                     value={proName}
                     onChange={(e) => setProName(e.target.value)}
                   />
@@ -188,13 +189,13 @@ export default function CreateProject() {
               </li>
 
               <li>
-                <div className="title">{t('Project.SIPNumber')}</div>
+                <div className="title">{t('Guild.SIPNumber')}</div>
                 <InputBox>
                   <Form.Control type="number" value={sip} onChange={(e) => setSip(e.target.value)} />
                 </InputBox>
               </li>
               <li>
-                <div className="title">{t('Project.ProjectType')}</div>
+                <div className="title">{t('Guild.ProjectType')}</div>
                 <InputBox>
                   <SeeSelect
                     width="100%"
@@ -204,7 +205,7 @@ export default function CreateProject() {
                 </InputBox>
               </li>
               <li>
-                <div className="title">{t('Project.StartProjectLink')}</div>
+                <div className="title">{t('Guild.StartProjectLink')}</div>
                 <InputBox>
                   <Form.Control
                     type="text"
@@ -215,7 +216,7 @@ export default function CreateProject() {
                 </InputBox>
               </li>
               <li>
-                <div className="title">{t('Project.EndProjectLink')}</div>
+                <div className="title">{t('Guild.EndProjectLink')}</div>
                 <InputBox>
                   <Form.Control
                     type="text"
@@ -226,13 +227,13 @@ export default function CreateProject() {
                 </InputBox>
               </li>
               <li>
-                <div className="title">{t('Project.Budget')}</div>
+                <div className="title">{t('Guild.Budget')}</div>
                 <InputBox>
                   <Form.Control type="string" value={budget} onChange={(e) => setBudget(e.target.value)} />
                 </InputBox>
               </li>
               <li>
-                <div className="title">{t('Project.Deliverables')}</div>
+                <div className="title">{t('Guild.Deliverables')}</div>
                 <Form.Control
                   placeholder=""
                   as="textarea"
@@ -242,30 +243,30 @@ export default function CreateProject() {
                 />
               </li>
               <li>
-                <div className="title">{t('Project.PlanFinishTime')}</div>
+                <div className="title">{t('Guild.PlanFinishTime')}</div>
                 <InputBox>
                   <DatePickerStyle isDate placeholder="" dateTime={endTime} onChange={(e) => setEndTime(e)} />
                 </InputBox>
               </li>
               <li>
-                <div className="title">{t('Project.Moderator')}</div>
+                <div className="title">{t('Guild.Moderator')}</div>
                 <InputBox>
                   <Form.Control
                     type="text"
-                    placeholder={t('Project.AddMemberAddress')}
+                    placeholder={t('Guild.AddMemberAddress')}
                     value={leader}
                     onChange={(e) => setLeader(e.target.value)}
                   />
                 </InputBox>
               </li>
               <li>
-                <div className="title">{t('Project.Contact')}</div>
+                <div className="title">{t('Guild.Contact')}</div>
                 <InputBox>
                   <Form.Control type="text" value={contact} onChange={(e) => setContact(e.target.value)} />
                 </InputBox>
               </li>
               <li>
-                <div className="title">{t('Project.OfficialLink')}</div>
+                <div className="title">{t('Guild.OfficialLink')}</div>
                 <InputBox>
                   <Form.Control
                     type="text"
@@ -277,7 +278,7 @@ export default function CreateProject() {
               </li>
 
               <li>
-                <div className="title">{t('Project.Desc')}</div>
+                <div className="title">{t('Guild.Desc')}</div>
                 <Form.Control
                   placeholder=""
                   as="textarea"
@@ -290,7 +291,7 @@ export default function CreateProject() {
           </RightContent>
         </CardBody>
         <RhtBtnBox>
-          <Button style={{ width: '80px' }} onClick={() => handleSubmit()} disabled={submitDisabled}>
+          <Button onClick={() => handleSubmit()} disabled={submitDisabled}>
             {t('general.confirm')}
           </Button>
           <Button variant="light" style={{ width: '80px' }} onClick={handleBack}>
@@ -343,6 +344,7 @@ const BtmBox = styled.div`
 const UlBox = styled.ul`
   display: flex;
   flex-direction: column;
+  //gap: 40px;
   li {
     margin-bottom: 14px;
     .title {
@@ -362,10 +364,6 @@ const InputBox = styled(InputGroup)`
   @media (max-width: 870px) {
     width: 400px;
   }
-`;
-
-const DescInputBox = styled(InputBox)`
-  height: 78px;
 `;
 
 const ProposalInputBox = styled(InputBox)`
@@ -418,6 +416,13 @@ const BtnBox = styled.label`
     font-size: 20px;
     margin-right: 10px;
   }
+`;
+
+const CancelButton = styled.button`
+  background: #b0b0b0;
+  height: 34px;
+  border: none;
+  border-radius: 8px;
 `;
 
 const ImgBox = styled.div`

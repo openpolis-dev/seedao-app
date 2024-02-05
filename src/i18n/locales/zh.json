@@ -241,6 +241,14 @@
     "MemberExist": "请不要重复添加成员"
   },
   "Guild": {
+    "OfficialLink": "公会官方链接",
+    "Deliverables": "交付物",
+    "Contact": "公会负责人联系方式",
+    "SIPNumber": "SIP 编号",
+    "StartProjectLink": "立项链接",
+    "EndProjectLink": "结项链接",
+    "PlanFinishTime": "计划完成时限",
+    "ProjectType": "公会类型",
     "create": "创建公会",
     "createSuccess": "创建成功",
     "createFailed": "创建失败",

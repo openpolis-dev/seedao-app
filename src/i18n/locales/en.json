@@ -152,7 +152,7 @@
   "Project": {
     "OfficialLink": "Official link",
     "Deliverables": "Deliverables",
-    "Contact": "Project Manager Contact",
+    "Contact": "Project Moderator Contact",
     "SIPNumber": "SIP No.",
     "StartProjectLink": "立项链接",
     "EndProjectLink": "结项链接",
@@ -240,6 +240,14 @@
     "MemberExist": "Please do not add members repeatedly"
   },
   "Guild": {
+    "OfficialLink": "Official link",
+    "Deliverables": "Deliverables",
+    "Contact": "Guild Moderator Contact",
+    "SIPNumber": "SIP No.",
+    "StartProjectLink": "立项链接",
+    "EndProjectLink": "结项链接",
+    "PlanFinishTime": "Planned completion time",
+    "ProjectType": "Guild Type",
     "create": "Create Guild",
     "createSuccess": "Create Successfully",
     "createFailed": "Create Failed",

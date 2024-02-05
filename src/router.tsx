@@ -18,7 +18,7 @@ import ProjectEdit from './pages/project/edit';
 import GuildInfo from './pages/guild/info';
 import GuildEdit from './pages/guild/edit';
 import CreateProject from './pages/create-project/create';
-import CreateGuild from './pages/create-guild';
+import CreateGuild from './pages/create-guild/create';
 import Profile from './pages/user/profile';
 import ProfileEdit from './pages/user/profile/edit';
 import UserVault from './pages/user/vault';
