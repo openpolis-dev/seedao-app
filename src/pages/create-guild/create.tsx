@@ -106,7 +106,7 @@ export default function CreateGuild() {
       OverLink: endLink,
       budgets: [{ name: budget, total_amount: 0 }],
       Deliverable: deliverables,
-      Category: String(selectCategory?.value),
+      Category: selectCategory!.label,
       PlanTime: String(_endTime),
       sponsors: [_leader],
     };
