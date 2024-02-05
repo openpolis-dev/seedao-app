@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import React, { FormEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { createNewGuild } from 'requests/guild';
-import { IProject } from 'type/project.type';
+import { IGuild } from 'type/project.type';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import useToast, { ToastType } from 'hooks/useToast';
 import { useNavigate } from 'react-router-dom';
@@ -14,10 +14,6 @@ import SeeSelect from 'components/common/select';
 import { ethers } from 'ethers';
 import sns from '@seedao/sns-js';
 import { compressionFile, fileToDataURL } from 'utils/image';
-import useProposalCategories from 'hooks/useProposalCategories';
-import DatePickerStyle from 'components/datePicker';
-
-const LinkPrefix = `${window.location.origin}/proposal/thread/`;
 
 export default function CreateGuild() {
   const navigate = useNavigate();
@@ -33,43 +29,9 @@ export default function CreateGuild() {
   const [url, setUrl] = useState('');
   const [link, setLink] = useState('');
   const [contact, setContact] = useState('');
-  const [sip, setSip] = useState('');
-
-  const [startLink, setStartLink] = useState('');
-  const [endLink, setEndLink] = useState('');
-
-  const [budget, setBudget] = useState('');
-  const [deliverables, setDeliverables] = useState('');
-  const [endTime, setEndTime] = useState<Date | null>();
-
   const [leader, setLeader] = useState('');
 
-  const proposalCategories = useProposalCategories();
-  const categoryOptions = proposalCategories
-    ? proposalCategories.map((item) => ({ value: item.id, label: item.name }))
-    : [];
-  const [selectCategory, setSelectCategory] = useState<ISelectItem>();
-
-  const checkBeforeSubmit = async (): Promise<IProject | undefined> => {
-    const _sip = Number(sip);
-    if (_sip <= 0 || sip.includes('.')) {
-      showToast(t('Msg.InvalidField', { field: t('Project.SIPNumber') }), ToastType.Danger);
-      return;
-    }
-    if (!startLink.startsWith(LinkPrefix)) {
-      showToast(t('Msg.InvalidField', { field: t('Project.StartProjectLink') }), ToastType.Danger);
-      return;
-    }
-    if (!endLink.startsWith(LinkPrefix)) {
-      showToast(t('Msg.InvalidField', { field: t('Project.EndProjectLink') }), ToastType.Danger);
-      return;
-    }
-    const _endTime = endTime?.getTime();
-    if (!_endTime) {
-      // if (!_endTime || _endTime <= Date.now()) {
-      showToast(t('Msg.InvalidField', { field: t('Project.PlanFinishTime') }), ToastType.Danger);
-      return;
-    }
+  const checkBeforeSubmit = async (): Promise<IGuild | undefined> => {
     if (!link.startsWith('https://') && !link.startsWith('http://')) {
       showToast(t('Msg.InvalidField', { field: t('Project.OfficialLink') }), ToastType.Danger);
       return;
@@ -101,13 +63,6 @@ export default function CreateGuild() {
       logo: url,
       OfficialLink: link,
       ContantWay: contact,
-      SIP: String(_sip),
-      ApprovalLink: startLink,
-      OverLink: endLink,
-      budgets: [{ name: budget, total_amount: 0 }],
-      Deliverable: deliverables,
-      Category: selectCategory!.label,
-      PlanTime: String(_endTime),
       sponsors: [_leader],
     };
   };
@@ -141,7 +96,7 @@ export default function CreateGuild() {
     navigate('/explore?tab=guild');
   };
 
-  const submitDisabled = [proName, desc, sip, selectCategory, startLink, endLink, budget, leader, link].some(
+  const submitDisabled = [proName, desc, leader, link].some(
     (item) => !item || (typeof item === 'string' && !item.trim()),
   );
 
@@ -185,67 +140,6 @@ export default function CreateGuild() {
                     value={proName}
                     onChange={(e) => setProName(e.target.value)}
                   />
-                </InputBox>
-              </li>
-
-              <li>
-                <div className="title">{t('Guild.SIPNumber')}</div>
-                <InputBox>
-                  <Form.Control type="number" value={sip} onChange={(e) => setSip(e.target.value)} />
-                </InputBox>
-              </li>
-              <li>
-                <div className="title">{t('Guild.ProjectType')}</div>
-                <InputBox>
-                  <SeeSelect
-                    width="100%"
-                    options={categoryOptions}
-                    onChange={(v: ISelectItem) => setSelectCategory(v)}
-                  />
-                </InputBox>
-              </li>
-              <li>
-                <div className="title">{t('Guild.StartProjectLink')}</div>
-                <InputBox>
-                  <Form.Control
-                    type="text"
-                    placeholder={LinkPrefix + '...'}
-                    value={startLink}
-                    onChange={(e) => setStartLink(e.target.value)}
-                  />
-                </InputBox>
-              </li>
-              <li>
-                <div className="title">{t('Guild.EndProjectLink')}</div>
-                <InputBox>
-                  <Form.Control
-                    type="text"
-                    placeholder={LinkPrefix + '...'}
-                    value={endLink}
-                    onChange={(e) => setEndLink(e.target.value)}
-                  />
-                </InputBox>
-              </li>
-              <li>
-                <div className="title">{t('Guild.Budget')}</div>
-                <InputBox>
-                  <Form.Control type="string" value={budget} onChange={(e) => setBudget(e.target.value)} />
-                </InputBox>
-              </li>
-              <li>
-                <div className="title">{t('Guild.Deliverables')}</div>
-                <Form.Control
-                  placeholder=""
-                  as="textarea"
-                  rows={5}
-                  value={deliverables}
-                  onChange={(e) => setDeliverables(e.target.value)}
-                />
-              </li>
-              <li>
-                <div className="title">{t('Guild.PlanFinishTime')}</div>
-                <InputBox>
-                  <DatePickerStyle isDate placeholder="" dateTime={endTime} onChange={(e) => setEndTime(e)} />
                 </InputBox>
               </li>
               <li>

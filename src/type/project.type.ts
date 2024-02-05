@@ -62,6 +62,15 @@ export interface IProject {
   budgets: [{ name: string; total_amount: number }];
 }
 
+export interface IGuild {
+  logo: string;
+  desc: string;
+  name: string;
+  ContantWay: string;
+  OfficialLink: string;
+  sponsors: string[];
+}
+
 export interface ReTurnProject {
   create_ts: number;
   id: number;
