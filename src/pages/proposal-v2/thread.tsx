@@ -150,7 +150,7 @@ export default function ThreadPage() {
 
       const comStr = res.data.components || [];
       comStr.map((item: any) => {
-        if (typeof item.data === 'string') {
+        if (item.data && typeof item.data === 'string') {
           item.data = JSON.parse(item.data);
         }
         return item;
@@ -195,7 +195,7 @@ export default function ThreadPage() {
       const applicant = res.data.applicant;
       setApplicantSNS(publicJs.AddressToShow(applicant));
       setApplicant(applicant);
-      setApplicantAvatar(res.data.applicant_avatar || DefaultAvatarIcon);
+      res.data.applicant_avatar && setApplicantAvatar(res.data.applicant_avatar || DefaultAvatarIcon);
       if (applicant) {
         try {
           const snsMap = await getMultiSNS([applicant]);
@@ -392,8 +392,24 @@ export default function ThreadPage() {
     setShowModal(true);
   };
 
+  useEffect(() => {
+    if (applicant) {
+      requests.user
+        .getUsers([applicant])
+        .then((res) => publicJs.getImage(res.data[0]?.sp?.avatar))
+        .then((url: string | undefined) => {
+          if (url) {
+            setApplicantAvatar(url);
+          }
+        });
+    }
+  }, [applicant]);
+
   const getTimeTagDisplay = () => {
     if (data?.state === ProposalState.Draft) {
+      if (!data?.publicity_ts) {
+        return null;
+      }
       return (
         <TimeTag>
           {t('Proposal.DraftEndAt', {
@@ -489,7 +505,7 @@ export default function ThreadPage() {
         </div>
         <FlexLine>
           {currentCategory && <CategoryTag>{currentCategory}</CategoryTag>}
-          {data?.template_name && <TemplateTag>{data?.template_name}</TemplateTag>}
+          {!data?.is_based_on_custom_template && <TemplateTag>{data?.template_name}</TemplateTag>}
           {currentState && <ProposalStateTag state={currentState} />}
           {getTimeTagDisplay()}
         </FlexLine>
@@ -839,7 +855,7 @@ const ProposalContentBlock = styled.div<{ $radius?: string }>`
   .title {
     background: rgba(82, 0, 255, 0.08);
     line-height: 40px;
-    border-radius: ${(props) => props.$radius || '4px 4px 0 0'};
+
     color: var(--bs-body-color_active);
     padding-inline: 32px;
     font-size: 16px;
@@ -854,7 +870,7 @@ const ProposalContentBlock = styled.div<{ $radius?: string }>`
 `;
 
 const ComponnentBox = styled(ProposalContentBlock)`
-  margin-bottom: 0;
+  margin-bottom: 20px;
 `;
 
 const RejectBlock = styled.div`

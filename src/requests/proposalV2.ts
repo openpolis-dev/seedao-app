@@ -24,6 +24,7 @@ interface IProposalPageParams extends IPageParams {
   category_id?: number;
   state?: ProposalState;
   q?: string;
+  sip?: number | string;
 }
 
 export const getProposalCategoryList = (): Promise<ResponseData<IBaseCategory[]>> => {
@@ -80,6 +81,7 @@ type CreateProposalParamsType = {
   title: string;
   proposal_category_id: number | undefined;
   vote_type?: number | undefined;
+  create_project_proposal_id?: any;
   template_id?: number | string;
   vote_options?: string[] | null;
   content_blocks: IContentBlock[];
@@ -207,7 +209,6 @@ export const getTemplate = () => {
 export const getComponents = () => {
   return request.get('/proposal_components/');
 };
-
 
 export const getTemplates = (): Promise<ResponseData<ICategoryWithTemplates[]>> => {
   return request.get('/proposal_tmpl/list_with_perm');
