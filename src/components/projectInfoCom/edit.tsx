@@ -38,14 +38,12 @@ export default function EditProject({ detail }: { detail: IProjectDisplay | unde
   const [link, setLink] = useState('');
 
   const handleLeaderSNS = (address: string) => {
+    setLeader(address);
     sns
       .name(address)
       .then((res) => {
         setLeader(res || address);
       })
-      .catch((err) => {
-        setLeader(address);
-      });
   };
 
   useEffect(() => {
