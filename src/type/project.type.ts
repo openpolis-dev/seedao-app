@@ -77,6 +77,12 @@ export interface IGuild {
   sponsors: string[];
 }
 
+export interface IGuildDisplay extends IGuild {
+  id: number;
+  create_ts: number;
+  update_ts: number;
+}
+
 export interface ReTurnProject {
   create_ts: number;
   id: number;

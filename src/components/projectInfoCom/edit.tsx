@@ -163,7 +163,7 @@ export default function EditProject({ detail }: { detail: IProjectDisplay | unde
             <InputBox>
               <Form.Control
                 type="text"
-                placeholder={`${window.location.origin}/proposal/thread/...`}
+                placeholder={`${LinkPrefix}...`}
                 value={endLink}
                 onChange={(e) => setEndLink(e.target.value)}
                 disabled={!canCreateProject}
