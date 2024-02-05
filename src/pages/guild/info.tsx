@@ -102,19 +102,6 @@ export default function Index() {
     }
   };
 
-  const showStatusComponent = () => {
-    if (detail?.status === ProjectStatus.Closed) {
-      return <StatusBox>{t('Project.Closed')}</StatusBox>;
-    }
-    if (detail?.status === ProjectStatus.Open) {
-      // @ts-ignore
-      return <StatusBox className="pending">{t('Project.Open')}</StatusBox>;
-    }
-    if (detail?.status === ProjectStatus.Pending) {
-      return <StatusBox>{t('Project.Pending')}</StatusBox>;
-    }
-  };
-
   return (
     <OuterBox>
       <Box>

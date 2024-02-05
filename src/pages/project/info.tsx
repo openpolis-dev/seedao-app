@@ -21,6 +21,7 @@ import { IUser } from '../../type/user.type';
 import publicJs from '../../utils/publicJs';
 import CategoryTag from 'components/proposalCom/categoryTag';
 import LinkImg from '../../assets/Imgs/link.svg';
+import dayjs from 'dayjs';
 
 type UserMap = { [w: string]: IUser };
 export default function InfoPage() {
@@ -73,7 +74,7 @@ export default function InfoPage() {
 
       let arr: any[] = [];
 
-      detail.sponsors.map((item: any) => {
+      detail?.sponsors.map((item: any) => {
         let itemInfo = userData[item];
         let itemSns = snsMap.get(item);
         arr.push({
@@ -119,6 +120,23 @@ export default function InfoPage() {
     if (detail?.status === ProjectStatus.Pending) {
       return <StatusBox>{t('Project.Pending')}</StatusBox>;
     }
+  };
+
+  const formatDate = (date: number) => {
+    let time = date ? Number(date) : 0;
+    return dayjs(time).format(`YYYY-MM-DD HH:mm`);
+  };
+
+  const formatBudget = (str: string) => {
+    if (!str) return;
+    let strJson = JSON.parse(str);
+    console.log(str);
+
+    let strArr: any[] = [];
+    strJson.map((item: any) => {
+      strArr.push({ ...item });
+    });
+    return strArr ?? [];
   };
 
   return (
@@ -217,7 +235,14 @@ export default function InfoPage() {
                     </dl>
                     <dl>
                       <dt>{t('Project.Budget')}</dt>
-                      <dd>{detail?.Budgets}</dd>
+                      <dd>
+                        {formatBudget(detail?.Budgets)?.map((i, index) => (
+                          <FlexBox>
+                            <span>{i.name}</span>
+                            <span>{i.total_amount}</span>
+                          </FlexBox>
+                        ))}
+                      </dd>
                     </dl>
                     <dl>
                       <dt>{t('Project.Deliverables')}</dt>
@@ -225,7 +250,7 @@ export default function InfoPage() {
                     </dl>
                     <dl>
                       <dt>{t('Project.PlanFinishTime')}</dt>
-                      <dd>{detail?.PlanTime}</dd>
+                      <dd>{formatDate(detail?.PlanTime)}</dd>
                     </dl>
                   </DlBox>
                   {/*<MdPreview theme={theme ? 'dark' : 'light'} modelValue={detail?.intro || ''} />*/}
@@ -238,6 +263,12 @@ export default function InfoPage() {
     </OuterBox>
   );
 }
+
+const FlexBox = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+`;
 
 const FlexFirst = styled.div`
   display: flex;
