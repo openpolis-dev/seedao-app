@@ -39,8 +39,8 @@ export default function InfoPage() {
   const [userMap, setUserMap] = useState<UserMap>({});
   const [sponserList, setSponserList] = useState<any[]>([]);
 
-  const canAuditApplication = usePermission(
-    PermissionAction.CreateApplication,
+  const canEdit = usePermission(
+    PermissionAction.Modify,
     PermissionObject.ProjPrefix + detail?.id,
   );
 
@@ -175,7 +175,7 @@ export default function InfoPage() {
                 {/*  </InnerLft>*/}
                 {/*</LftBox>*/}
                 <ContentBox>
-                  {canAuditApplication && (
+                  {canEdit && (
                     <BtnTop to={`/project/edit/${detail?.id}`} state={detail}>
                       <Button>{t('Project.Edit')}</Button>
                     </BtnTop>
