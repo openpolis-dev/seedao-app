@@ -103,7 +103,7 @@ export default function Index() {
   return (
     <OuterBox>
       <Box>
-        <BackerNav title={detail?.name || ''} to="/explore?tab=project" mb="40px" />
+        <BackerNav title={detail?.name || ''} to="/explore?tab=guild" mb="40px" />
         <Content>
           <FlexLine>
             <AllBox>
