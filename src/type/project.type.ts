@@ -62,6 +62,12 @@ export interface IProject {
   budgets: [{ name: string; total_amount: number }];
 }
 
+export interface IProjectDisplay extends IProject {
+  id: number;
+  create_ts: number;
+  update_ts: number;
+}
+
 export interface IGuild {
   logo: string;
   desc: string;

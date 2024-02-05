@@ -1,17 +1,20 @@
 import { InputGroup, Button, Form } from 'react-bootstrap';
 import styled from 'styled-components';
-import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react';
+import React, { FormEvent, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { UpdateInfo, addRelatedProposal } from 'requests/project';
-import { InfoObj, ProjectStatus, ReTurnProject } from 'type/project.type';
+import { IProjectDisplay } from 'type/project.type';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import useToast, { ToastType } from 'hooks/useToast';
 import CameraIconSVG from 'components/svgs/camera';
-import { createCloseProjectApplication } from 'requests/applications';
 import { useNavigate } from 'react-router-dom';
 import { compressionFile, fileToDataURL } from 'utils/image';
+import sns from '@seedao/sns-js';
+import { ethers } from 'ethers';
+import { UpdateProjectParamsType, updateProjectInfo } from 'requests/project';
 
-export default function EditProject({ detail }: { detail: ReTurnProject | undefined }) {
+const LinkPrefix = `${window.location.origin}/proposal/thread/`;
+
+export default function EditProject({ detail }: { detail: IProjectDisplay | undefined }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { showToast } = useToast();
@@ -19,7 +22,6 @@ export default function EditProject({ detail }: { detail: ReTurnProject | undefi
     dispatch,
     state: { theme },
   } = useAuthContext();
-  const [proList, setProList] = useState(['']);
 
   const [proName, setProName] = useState('');
   const [desc, setDesc] = useState('');
@@ -30,86 +32,82 @@ export default function EditProject({ detail }: { detail: ReTurnProject | undefi
   const [endLink, setEndLink] = useState('');
   const [link, setLink] = useState('');
 
+  const handleLeaderSNS = (address: string) => {
+    sns
+      .name(address)
+      .then((res) => {
+        setLeader(res || address);
+      })
+      .catch((err) => {
+        setLeader(address);
+      });
+  };
+
   useEffect(() => {
     if (detail) {
       setProName(detail.name);
       setDesc(detail.desc);
       setUrl(detail.logo);
-      setProList(
-        detail?.proposals?.map((slug) => {
-          const isOS = slug.startsWith('os');
-          return isOS
-            ? `${window.location.origin}/proposal/thread/${slug.replace('os-', '')}`
-            : `https://forum.seedao.xyz/thread/${slug}`;
-        }),
-      );
+      setLink(detail.OfficialLink);
+      setEndLink(detail.OverLink);
+      handleLeaderSNS(detail.sponsors[0]);
+      setContact(detail.ContantWay);
     }
   }, [detail]);
 
-  const handleSubmit = async () => {
-    if (!detail?.id) {
+  const checkBeforeSubmit = async (): Promise<UpdateProjectParamsType | undefined> => {
+    if (!endLink.startsWith(LinkPrefix)) {
+      showToast(t('Msg.InvalidField', { field: t('Project.EndProjectLink') }), ToastType.Danger);
       return;
     }
-    const ids: string[] = [];
-    const slugs: string[] = [];
-    for (const l of proList) {
-      if (l) {
-        const _l = l.trim().toLocaleLowerCase();
-        if (_l.startsWith('https://forum.seedao.xyz/') && !_l.startsWith('https://forum.seedao.xyz/thread/sip-')) {
-          showToast(t('Msg.ProposalLinkMsg'), ToastType.Danger);
+    if (!link.startsWith('https://') && !link.startsWith('http://')) {
+      showToast(t('Msg.InvalidField', { field: t('Project.OfficialLink') }), ToastType.Danger);
+      return;
+    }
+    let _leader = leader;
+    if (!ethers.utils.isAddress(leader)) {
+      if (!leader!.endsWith('.seedao')) {
+        showToast(t('Msg.IncorrectAddress', { content: leader }), ToastType.Danger);
+        return;
+      }
+      try {
+        dispatch({ type: AppActionType.SET_LOADING, payload: true });
+        const res = await sns.resolves([leader]);
+        if (ethers.constants.AddressZero === res[0]) {
+          showToast(t('Msg.IncorrectAddress', { content: leader }), ToastType.Danger);
           return;
         }
-        if (_l.startsWith('https://forum.seedao.xyz/thread/sip-')) {
-          // sip
-          const items = _l.split('/').reverse();
-          slugs.push(items[0]);
-          for (const it of items) {
-            if (it) {
-              const _id = it.split('-').reverse()[0];
-              if (ids.includes(_id)) {
-                showToast(t('Msg.RepeatProposal'), ToastType.Danger);
-                return;
-              }
-              ids.push(_id);
-              break;
-            }
-          }
-        } else if (l.indexOf('/proposal/thread/') > -1) {
-          // os
-          const items = l.split('/').reverse();
-          slugs.push(`os-${items[0]}`);
-          for (const it of items) {
-            if (it) {
-              if (ids.includes(it)) {
-                showToast(t('Msg.RepeatProposal'), ToastType.Danger);
-                return;
-              }
-              ids.push(it);
-              break;
-            }
-          }
-        } else {
-          showToast(t('Msg.ProposalLinkMsg'), ToastType.Danger);
-          return;
-        }
+        _leader = res[0];
+      } catch (error) {
+        showToast(t('Msg.QuerySNSFailed'), ToastType.Danger);
+        dispatch({ type: AppActionType.SET_LOADING, payload: false });
+        return;
       }
     }
-    const obj: InfoObj = {
+    return {
+      ContantWay: contact,
+      OfficialLink: link,
+      OverLink: endLink,
+      desc: desc,
       logo: url,
-      name: proName,
-      desc,
-      intro: '',
+      sponsors: [_leader],
     };
-    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+  };
+
+  const handleSubmit = async () => {
+    const params = await checkBeforeSubmit();
+    if (!params) {
+      return;
+    }
     try {
-      await UpdateInfo(String(detail?.id), obj);
-      await addRelatedProposal(String(detail?.id), slugs);
+      dispatch({ type: AppActionType.SET_LOADING, payload: true });
+      await updateProjectInfo(detail!.id, params);
       showToast(t('Project.changeInfoSuccess'), ToastType.Success);
       navigate(`/project/info/${detail?.id}`);
-    } catch (error) {
-      showToast(JSON.stringify(error), ToastType.Danger);
+    } catch (error: any) {
+      showToast(error?.data?.message || error, ToastType.Danger);
     } finally {
-      dispatch({ type: AppActionType.SET_LOADING, payload: null });
+      dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }
   };
 
@@ -120,6 +118,10 @@ export default function EditProject({ detail }: { detail: ReTurnProject | undefi
     const base64 = await fileToDataURL(new_file);
     setUrl(base64);
   };
+
+  const submitDisabled = [proName, desc, leader, link, endLink].some(
+    (item) => !item || (typeof item === 'string' && !item.trim()),
+  );
 
   return (
     <EditPage>
@@ -198,6 +200,11 @@ export default function EditProject({ detail }: { detail: ReTurnProject | undefi
           </li>
         </UlBox>
       </MainContent>
+      <BtmBox>
+        <Button onClick={() => handleSubmit()} disabled={submitDisabled}>
+          {t('general.confirm')}
+        </Button>
+      </BtmBox>
     </EditPage>
   );
 }
@@ -305,4 +312,11 @@ const UlBox = styled.ul`
 const InputBox = styled(InputGroup)`
   width: 600px;
   margin-right: 20px;
+`;
+
+const BtmBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 104px;
 `;

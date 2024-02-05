@@ -38,7 +38,15 @@ export interface IUpdateBudgetParams {
 export const UpdateBudget = (projectId: string, data: IUpdateBudgetParams) => {
   return request.post(`${PATH_PREFIX}${projectId}/update_budget`, data);
 };
-export const UpdateInfo = (projectId: string, data: InfoObj) => {
+export type UpdateProjectParamsType = {
+  ContantWay: string;
+  OfficialLink: string;
+  OverLink: string;
+  desc: string;
+  logo: string;
+  sponsors: [string];
+};
+export const updateProjectInfo = (projectId: number, data: UpdateProjectParamsType) => {
   return request.put(`${PATH_PREFIX}${projectId}`, data);
 };
 export const updateMembers = (projectId: string, data: any) => {
