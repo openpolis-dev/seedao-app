@@ -35,7 +35,7 @@ export default function InfoPage() {
   const { id } = useParams();
   const { getMultiSNS } = useQuerySNS();
   const [detail, setDetail] = useState<any>();
-  const [snsMap, setSnsMap] = useState<any>({});
+  // const [snsMap, setSnsMap] = useState<any>({});
   const [userMap, setUserMap] = useState<UserMap>({});
   const [sponserList, setSponserList] = useState<any[]>([]);
 
@@ -44,6 +44,11 @@ export default function InfoPage() {
   useEffect(() => {
     id && getDetail();
   }, [id]);
+
+  useEffect(() => {
+    if (!detail) return;
+    getUsersDetail(detail.sponsors);
+  }, [detail]);
 
   const getUsersDetail = async (dt: any) => {
     const _wallets: string[] = [];
@@ -55,11 +60,12 @@ export default function InfoPage() {
     });
     const wallets = Array.from(new Set(_wallets));
     let userSns = await getMultiSNS(wallets);
-    setSnsMap(userSns);
-    getUsersInfo(wallets);
+
+    // setSnsMap(userSns);
+    await getUsersInfo(wallets, userSns);
   };
 
-  const getUsersInfo = async (wallets: string[]) => {
+  const getUsersInfo = async (wallets: string[], snsMap: any) => {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
       const res = await getUsers(wallets);
@@ -73,7 +79,8 @@ export default function InfoPage() {
 
       detail?.sponsors.map((item: any) => {
         let itemInfo = userData[item];
-        let itemSns = snsMap.get(item);
+        let itemSns = snsMap?.get(item);
+        console.log(itemInfo, snsMap);
         arr.push({
           ...itemInfo,
           sns: itemSns,
@@ -93,8 +100,6 @@ export default function InfoPage() {
     try {
       const dt = await getProjectById(id as string);
       setDetail(dt.data);
-
-      await getUsersDetail(dt.data.sponsors);
     } catch (error) {
       logError(error);
     } finally {
@@ -131,7 +136,6 @@ export default function InfoPage() {
   const formatBudget = (str: string) => {
     if (!str) return;
     let strJson = JSON.parse(str);
-    console.log(str);
 
     let strArr: any[] = [];
     strJson.map((item: any) => {
@@ -223,7 +227,7 @@ export default function InfoPage() {
                               <img src={item?.avatar} alt="" />
                             </Avatar>
                             <span>
-                              {item?.sns?.endsWith('.seedao') ? item.sns : publicJs.AddressToShow(item?.sns?.wallet)}
+                              {item?.sns?.endsWith('.seedao') ? item.sns : publicJs.AddressToShow(item?.wallet)}
                             </span>
                           </MemBox>
                         ))}
@@ -250,7 +254,7 @@ export default function InfoPage() {
                       <dt>{t('Project.Budget')}</dt>
                       <dd>
                         {formatBudget(detail?.Budgets)?.map((i, index) => (
-                          <FlexBox>
+                          <FlexBox key={`budget_${index}`}>
                             <span>{i.name}</span>
                             <span>{i.total_amount}</span>
                           </FlexBox>
