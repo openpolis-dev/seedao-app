@@ -21,6 +21,7 @@ import { IUser } from '../../type/user.type';
 import publicJs from '../../utils/publicJs';
 import CategoryTag from 'components/proposalCom/categoryTag';
 import LinkImg from '../../assets/Imgs/link.svg';
+import DefaultAvatar from 'assets/Imgs/defaultAvatar.png';
 import dayjs from 'dayjs';
 
 type UserMap = { [w: string]: IUser };
@@ -28,22 +29,35 @@ export default function InfoPage() {
   const { t } = useTranslation();
 
   const {
-    state: { theme },
+    state: { theme, account },
     dispatch,
   } = useAuthContext();
 
   const { id } = useParams();
   const { getMultiSNS } = useQuerySNS();
   const [detail, setDetail] = useState<any>();
-  const [snsMap, setSnsMap] = useState<any>({});
+  // const [snsMap, setSnsMap] = useState<any>({});
   const [userMap, setUserMap] = useState<UserMap>({});
   const [sponserList, setSponserList] = useState<any[]>([]);
+  const [show, setShow] = useState(false);
 
   const canCreateProject = usePermission(PermissionAction.CreateApplication, PermissionObject.Project);
 
   useEffect(() => {
     id && getDetail();
   }, [id]);
+
+  useEffect(() => {
+    if (!detail) return;
+    getUsersDetail(detail.sponsors);
+
+    const AccountAuth = detail.sponsors.filter((item: string) => item.toLocaleString() === account?.toLowerCase());
+    if (AccountAuth.length) {
+      setShow(true);
+    } else {
+      setShow(false);
+    }
+  }, [detail]);
 
   const getUsersDetail = async (dt: any) => {
     const _wallets: string[] = [];
@@ -55,11 +69,12 @@ export default function InfoPage() {
     });
     const wallets = Array.from(new Set(_wallets));
     let userSns = await getMultiSNS(wallets);
-    setSnsMap(userSns);
-    getUsersInfo(wallets);
+
+    // setSnsMap(userSns);
+    await getUsersInfo(wallets, userSns);
   };
 
-  const getUsersInfo = async (wallets: string[]) => {
+  const getUsersInfo = async (wallets: string[], snsMap: any) => {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
       const res = await getUsers(wallets);
@@ -73,7 +88,7 @@ export default function InfoPage() {
 
       detail?.sponsors.map((item: any) => {
         let itemInfo = userData[item];
-        let itemSns = snsMap.get(item);
+        let itemSns = snsMap?.get(item);
         arr.push({
           ...itemInfo,
           sns: itemSns,
@@ -93,8 +108,6 @@ export default function InfoPage() {
     try {
       const dt = await getProjectById(id as string);
       setDetail(dt.data);
-
-      await getUsersDetail(dt.data.sponsors);
     } catch (error) {
       logError(error);
     } finally {
@@ -120,14 +133,17 @@ export default function InfoPage() {
   };
 
   const formatDate = (date: number) => {
-    let time = date ? Number(date) : 0;
-    return dayjs(time).format(`YYYY-MM-DD HH:mm`);
+    if (date) {
+      let time = Number(date);
+      return dayjs(time).format(`YYYY-MM-DD`);
+    } else {
+      return '';
+    }
   };
 
   const formatBudget = (str: string) => {
     if (!str) return;
     let strJson = JSON.parse(str);
-    console.log(str);
 
     let strArr: any[] = [];
     strJson.map((item: any) => {
@@ -172,7 +188,9 @@ export default function InfoPage() {
                 {/*  </InnerLft>*/}
                 {/*</LftBox>*/}
                 <ContentBox>
-                  {canCreateProject && (
+
+                  {(canCreateProject|| show) && (
+
                     <BtnTop to={`/project/edit/${detail?.id}`} state={detail}>
                       <Button>{t('Project.Edit')}</Button>
                     </BtnTop>
@@ -216,10 +234,10 @@ export default function InfoPage() {
                         {sponserList.map((item: any, index: number) => (
                           <MemBox key={`avatar_${index}`}>
                             <Avatar>
-                              <img src={item?.avatar} alt="" />
+                              <img src={item?.avatar ? item?.avatar : DefaultAvatar} alt="" />
                             </Avatar>
                             <span>
-                              {item?.sns?.endsWith('.seedao') ? item.sns : publicJs.AddressToShow(item?.sns?.wallet)}
+                              {item?.sns?.endsWith('.seedao') ? item.sns : publicJs.AddressToShow(item?.wallet)}
                             </span>
                           </MemBox>
                         ))}
@@ -227,7 +245,13 @@ export default function InfoPage() {
                     </dl>
                     <dl>
                       <dt>{t('Project.Contact')}</dt>
-                      <dd>{detail?.ContantWay}</dd>
+                      <dd>
+                        {detail?.ContantWay
+                          ? detail?.ContantWay
+                          : sponserList[0]?.sns?.endsWith('.seedao')
+                          ? sponserList[0]?.sns
+                          : ''}
+                      </dd>
                     </dl>
                     <dl>
                       <dt>{t('Project.OfficialLink')}</dt>
@@ -246,7 +270,7 @@ export default function InfoPage() {
                       <dt>{t('Project.Budget')}</dt>
                       <dd>
                         {formatBudget(detail?.Budgets)?.map((i, index) => (
-                          <FlexBox>
+                          <FlexBox key={`budget_${index}`}>
                             <span>{i.name}</span>
                             <span>{i.total_amount}</span>
                           </FlexBox>
@@ -257,6 +281,7 @@ export default function InfoPage() {
                       <dt>{t('Project.Deliverables')}</dt>
                       <dd>{detail?.Deliverable}</dd>
                     </dl>
+
                     <dl>
                       <dt>{t('Project.PlanFinishTime')}</dt>
                       <dd>{formatDate(detail?.PlanTime)}</dd>

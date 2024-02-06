@@ -58,7 +58,7 @@ export default function Index() {
 
   const { getMultiSNS } = useQuerySNS();
 
-  const [userMap, setUserMap] = useState<UserMap>({});
+  // const [userMap, setUserMap] = useState<UserMap>({});
   const [pageCur, setPageCur] = useState(1);
   const [pageSize, setPageSize] = useState(20);
   const [total, setTotal] = useState(1);
@@ -66,7 +66,7 @@ export default function Index() {
   const [current, setCurrent] = useState<number>(0);
   const [list, setList] = useState<listObj[]>([]);
   const [proList, setProList] = useState<ReTurnProject[]>([]);
-  const [snsMap, setSnsMap] = useState<any>({});
+  // const [snsMap, setSnsMap] = useState<any>({});
 
   useEffect(() => {
     if (current < 2) {
@@ -107,9 +107,13 @@ export default function Index() {
       }
     });
     const wallets = Array.from(new Set(_wallets));
-    getUsersInfo(wallets);
+    let rt = await getUsersInfo(wallets);
     let userSns = await getMultiSNS(wallets);
-    setSnsMap(userSns);
+
+    return {
+      userMap: rt,
+      userSns,
+    };
   };
 
   const getUsersInfo = async (wallets: string[]) => {
@@ -120,7 +124,8 @@ export default function Index() {
       res.data.forEach((r) => {
         userData[(r.wallet || '').toLowerCase()] = r;
       });
-      setUserMap(userData);
+      // setUserMap(userData);
+      return userData;
     } catch (error) {
       logError('getUsersInfo error:', error);
     } finally {
@@ -144,7 +149,17 @@ export default function Index() {
 
     dispatch({ type: AppActionType.SET_LOADING, payload: null });
     const { rows, page, size, total } = rt.data;
-    await getUsersDetail(rows);
+
+    let userRT = await getUsersDetail(rows);
+    const { userMap, userSns } = userRT;
+    rows.map((d: any) => {
+      let m = d.sponsors[0];
+      if (m) {
+        d.user = userMap ? userMap[m] : {};
+        d.sns = userSns ? userSns.get(m) : '';
+      }
+    });
+
     setProList(rows);
     setPageSize(size);
     setTotal(total);
@@ -162,7 +177,18 @@ export default function Index() {
     const rt = await getMyProjects(obj);
     dispatch({ type: AppActionType.SET_LOADING, payload: null });
     const { rows, page, size, total } = rt.data;
-    await getUsersDetail(rows);
+
+    let userRT = await getUsersDetail(rows);
+    const { userMap, userSns } = userRT;
+
+    rows.map((d: any) => {
+      let m = d.sponsors[0];
+      if (m) {
+        d.user = userMap ? userMap[m] : {};
+        d.sns = userSns ? userSns.get(m) : '';
+      }
+    });
+
     setProList(rows);
     setPageSize(size);
     setTotal(total);
@@ -191,13 +217,7 @@ export default function Index() {
         <ItemBox>
           <ListBox>
             {proList.map((item) => (
-              <ProjectOrGuildItem
-                key={item.id}
-                data={item}
-                onClickItem={openDetail}
-                user={userMap[item.sponsors[0]]}
-                sns={snsMap.get(item.sponsors[0])}
-              />
+              <ProjectOrGuildItem key={item.id} data={item} onClickItem={openDetail} />
             ))}
           </ListBox>
         </ItemBox>
