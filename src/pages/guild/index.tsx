@@ -11,6 +11,10 @@ import NoItem from 'components/noItem';
 import useCheckLogin from 'hooks/useCheckLogin';
 import ProjectOrGuildItem from 'components/projectOrGuildItem';
 import SubTabbar from 'components/common/subTabbar';
+import { ethers } from 'ethers';
+import { getUsers } from '../../requests/user';
+import useQuerySNS from '../../hooks/useQuerySNS';
+import { IUser } from '../../type/user.type';
 
 const Box = styled.div`
   position: relative;
@@ -39,6 +43,8 @@ export interface listObj {
   title: string;
   key: number;
 }
+
+type UserMap = { [w: string]: IUser };
 export default function Index() {
   const { t } = useTranslation();
   const {
@@ -48,7 +54,9 @@ export default function Index() {
   const isLogin = useCheckLogin(account);
   const navigate = useNavigate();
 
-  console.log('isLogin', isLogin);
+  const { getMultiSNS } = useQuerySNS();
+
+  const [userMap, setUserMap] = useState<UserMap>({});
 
   const [pageCur, setPageCur] = useState(1);
   const [pageSize, setPageSize] = useState(20);
@@ -57,6 +65,8 @@ export default function Index() {
   const [current, setCurrent] = useState<number>(0);
   const [list, setList] = useState<listObj[]>([]);
   const [proList, setProList] = useState<ReTurnProject[]>([]);
+
+  const [snsMap, setSnsMap] = useState<any>({});
 
   useEffect(() => {
     if (current === 0) {
@@ -82,6 +92,43 @@ export default function Index() {
     setList(_list);
   }, [language, isLogin]);
 
+  const getUsersDetail = async (dt: any) => {
+    const _wallets: string[] = [];
+    dt.forEach((key: any) => {
+      if (key.sponsors?.length) {
+        let w = key.sponsors[0];
+        if (ethers.utils.isAddress(w)) {
+          _wallets.push(w);
+        }
+      }
+    });
+    const wallets = Array.from(new Set(_wallets));
+    let rt = await getUsersInfo(wallets);
+    let userSns = await getMultiSNS(wallets);
+
+    return {
+      userMap: rt,
+      userSns,
+    };
+  };
+
+  const getUsersInfo = async (wallets: string[]) => {
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    try {
+      const res = await getUsers(wallets);
+      const userData: UserMap = {};
+      res.data.forEach((r) => {
+        userData[(r.wallet || '').toLowerCase()] = r;
+      });
+      // setUserMap(userData);
+      return userData;
+    } catch (error) {
+      logError('getUsersInfo error:', error);
+    } finally {
+      dispatch({ type: AppActionType.SET_LOADING, payload: null });
+    }
+  };
+
   const getList = async () => {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     const obj: IPageParams = {
@@ -93,6 +140,17 @@ export default function Index() {
     const rt = await getProjects(obj);
     dispatch({ type: AppActionType.SET_LOADING, payload: null });
     const { rows, page, size, total } = rt.data;
+
+    let userRT = await getUsersDetail(rows);
+    const { userMap, userSns } = userRT;
+    rows.map((d: any) => {
+      let m = d.sponsors[0];
+      if (m) {
+        d.user = userMap ? userMap[m] : {};
+        d.sns = userSns ? userSns.get(m) : '';
+      }
+    });
+
     setProList(rows);
     setPageSize(size);
     setTotal(total);
@@ -110,6 +168,16 @@ export default function Index() {
     const rt = await getMyProjects(obj);
     dispatch({ type: AppActionType.SET_LOADING, payload: null });
     const { rows, page, size, total } = rt.data;
+
+    let userRT = await getUsersDetail(rows);
+    const { userMap, userSns } = userRT;
+    rows.map((d: any) => {
+      let m = d.sponsors[0];
+      if (m) {
+        d.user = userMap ? userMap[m] : {};
+        d.sns = userSns ? userSns.get(m) : '';
+      }
+    });
     setProList(rows);
     setPageSize(size);
     setTotal(total);
@@ -136,7 +204,7 @@ export default function Index() {
         <ItemBox>
           <ListBox>
             {proList.map((item) => (
-              <ProjectOrGuildItem key={item.id} data={item} onClickItem={openDetail} />
+              <ProjectOrGuildItem key={item.id} data={item} noTag={true} onClickItem={openDetail} />
             ))}
           </ListBox>
         </ItemBox>
