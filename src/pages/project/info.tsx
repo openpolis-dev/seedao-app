@@ -188,9 +188,7 @@ export default function InfoPage() {
                 {/*  </InnerLft>*/}
                 {/*</LftBox>*/}
                 <ContentBox>
-
-                  {(canCreateProject|| show) && (
-
+                  {detail?.status === 'open' && (canCreateProject || show) && (
                     <BtnTop to={`/project/edit/${detail?.id}`} state={detail}>
                       <Button>{t('Project.Edit')}</Button>
                     </BtnTop>
