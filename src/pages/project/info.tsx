@@ -29,7 +29,7 @@ export default function InfoPage() {
   const { t } = useTranslation();
 
   const {
-    state: { theme },
+    state: { theme, account },
     dispatch,
   } = useAuthContext();
 
@@ -39,6 +39,7 @@ export default function InfoPage() {
   // const [snsMap, setSnsMap] = useState<any>({});
   const [userMap, setUserMap] = useState<UserMap>({});
   const [sponserList, setSponserList] = useState<any[]>([]);
+  const [show, setShow] = useState(false);
 
   const canEdit = usePermission(PermissionAction.Modify, PermissionObject.ProjPrefix + detail?.id);
 
@@ -49,6 +50,13 @@ export default function InfoPage() {
   useEffect(() => {
     if (!detail) return;
     getUsersDetail(detail.sponsors);
+
+    const AccountAuth = detail.sponsors.filter((item: string) => item.toLocaleString() === account?.toLowerCase());
+    if (AccountAuth.length) {
+      setShow(true);
+    } else {
+      setShow(false);
+    }
   }, [detail]);
 
   const getUsersDetail = async (dt: any) => {
@@ -180,7 +188,7 @@ export default function InfoPage() {
                 {/*  </InnerLft>*/}
                 {/*</LftBox>*/}
                 <ContentBox>
-                  {canEdit && (
+                  {(canEdit || show) && (
                     <BtnTop to={`/project/edit/${detail?.id}`} state={detail}>
                       <Button>{t('Project.Edit')}</Button>
                     </BtnTop>

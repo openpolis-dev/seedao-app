@@ -27,7 +27,7 @@ type UserMap = { [w: string]: IUser };
 export default function Index() {
   const { t } = useTranslation();
   const {
-    state: { theme },
+    state: { theme, account },
     dispatch,
   } = useAuthContext();
 
@@ -37,12 +37,20 @@ export default function Index() {
   const [snsMap, setSnsMap] = useState<any>({});
   const [userMap, setUserMap] = useState<UserMap>({});
   const [sponserList, setSponserList] = useState<any[]>([]);
+  const [show, setShow] = useState(false);
 
   const canCreatePermission = usePermission(PermissionAction.CreateApplication, PermissionObject.Guild);
 
   useEffect(() => {
     if (!detail) return;
     getUsersDetail(detail.sponsors);
+
+    const AccountAuth = detail.sponsors.filter((item: string) => item.toLocaleString() === account?.toLowerCase());
+    if (AccountAuth.length) {
+      setShow(true);
+    } else {
+      setShow(false);
+    }
   }, [detail]);
 
   const getUsersDetail = async (dt: any) => {
@@ -143,7 +151,7 @@ export default function Index() {
                 {/*  </InnerLft>*/}
                 {/*</LftBox>*/}
                 <ContentBox>
-                  {canCreatePermission && (
+                  {(canCreatePermission || show) && (
                     <BtnTop to={`/guild/edit/${detail?.id}`} state={detail}>
                       <Button>{t('general.edit')}</Button>
                     </BtnTop>
