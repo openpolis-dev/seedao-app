@@ -6,6 +6,7 @@ import ProposalStateTag from './proposalCom/stateTag';
 import { ProposalState } from '../type/proposalV2.type';
 import publicJs from '../utils/publicJs';
 import { ProjectStatus } from '../type/project.type';
+import DefaultAvatar from '../assets/Imgs/defaultAvatarT.png';
 
 const Box = styled.div`
   width: 20%;
@@ -31,7 +32,7 @@ const Item = styled.div`
     word-break: break-all;
     text-overflow: ellipsis;
     display: -webkit-box;
-    -webkit-line-clamp: 2;
+    -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
     margin-bottom: 8px;
   }
@@ -70,7 +71,7 @@ const Desc = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
   margin-bottom: 8px;
   font-size: 12px;
@@ -88,6 +89,7 @@ const MemBox = styled.div`
   line-height: 18px;
   margin-bottom: 10px;
   gap: 10px;
+
   //span {
   //  margin-right: 5px;
   //}
@@ -165,7 +167,7 @@ export default function ProjectOrGuildItem({ data, onClickItem, user, sns, noTag
           {!!user && (
             <MemBox>
               <Avatar>
-                <img src={user?.avatar} alt="" />
+                <img src={user?.avatar ? user?.avatar : DefaultAvatar} alt="" />
               </Avatar>
               <span>{sns?.endsWith('.seedao') ? sns : publicJs.AddressToShow(user?.wallet)}</span>
               {/*<span>{(data?.members?.length || 0) + (data?.sponsors?.length || 0)}</span> {t('Project.Members')}*/}

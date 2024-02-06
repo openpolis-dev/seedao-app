@@ -120,8 +120,12 @@ export default function InfoPage() {
   };
 
   const formatDate = (date: number) => {
-    let time = date ? Number(date) : 0;
-    return dayjs(time).format(`YYYY-MM-DD HH:mm`);
+    if (date) {
+      let time = Number(date);
+      return dayjs(time).format(`YYYY-MM-DD`);
+    } else {
+      return '';
+    }
   };
 
   const formatBudget = (str: string) => {
@@ -257,6 +261,7 @@ export default function InfoPage() {
                       <dt>{t('Project.Deliverables')}</dt>
                       <dd>{detail?.Deliverable}</dd>
                     </dl>
+                    y
                     <dl>
                       <dt>{t('Project.PlanFinishTime')}</dt>
                       <dd>{formatDate(detail?.PlanTime)}</dd>
