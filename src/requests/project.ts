@@ -44,7 +44,7 @@ export type UpdateProjectParamsType = {
   OverLink: string;
   desc: string;
   logo: string;
-  sponsors: [string];
+  sponsors: string[];
 };
 export const updateProjectInfo = (projectId: number, data: UpdateProjectParamsType) => {
   return request.put(`${PATH_PREFIX}${projectId}`, data);
