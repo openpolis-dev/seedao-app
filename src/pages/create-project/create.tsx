@@ -35,7 +35,6 @@ export default function CreateProject() {
   const [sip, setSip] = useState('');
 
   const [startLink, setStartLink] = useState('');
-  const [endLink, setEndLink] = useState('');
 
   const [budget, setBudget] = useState('');
   const [deliverables, setDeliverables] = useState('');
@@ -57,10 +56,6 @@ export default function CreateProject() {
     }
     if (!startLink.startsWith(LinkPrefix)) {
       showToast(t('Msg.InvalidField', { field: t('Project.StartProjectLink') }), ToastType.Danger);
-      return;
-    }
-    if (!endLink.startsWith(LinkPrefix)) {
-      showToast(t('Msg.InvalidField', { field: t('Project.EndProjectLink') }), ToastType.Danger);
       return;
     }
     const _endTime = endTime?.getTime();
@@ -102,7 +97,7 @@ export default function CreateProject() {
       ContantWay: contact,
       SIP: String(_sip),
       ApprovalLink: startLink,
-      OverLink: endLink,
+      OverLink: "",
       budgets: [{ name: budget, total_amount: 0 }],
       Deliverable: deliverables,
       Category: selectCategory!.label,
@@ -140,7 +135,7 @@ export default function CreateProject() {
     navigate('/explore?tab=project');
   };
 
-  const submitDisabled = [proName, desc, sip, selectCategory, startLink, endLink, budget, leader, link, contact].some(
+  const submitDisabled = [proName, desc, sip, selectCategory, startLink, budget, leader, link, contact].some(
     (item) => !item || (typeof item === 'string' && !item.trim()),
   );
 
@@ -211,17 +206,6 @@ export default function CreateProject() {
                     placeholder={LinkPrefix + '...'}
                     value={startLink}
                     onChange={(e) => setStartLink(e.target.value)}
-                  />
-                </InputBox>
-              </li>
-              <li>
-                <div className="title">{t('Project.EndProjectLink')}</div>
-                <InputBox>
-                  <Form.Control
-                    type="text"
-                    placeholder={LinkPrefix + '...'}
-                    value={endLink}
-                    onChange={(e) => setEndLink(e.target.value)}
                   />
                 </InputBox>
               </li>
