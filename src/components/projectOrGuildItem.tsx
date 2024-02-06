@@ -1,7 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
 import DefaultLogo from 'assets/Imgs/defaultLogo.png';
+import ProposalStateTag from './proposalCom/stateTag';
+import { ProposalState } from '../type/proposalV2.type';
+import publicJs from '../utils/publicJs';
+import { ProjectStatus } from '../type/project.type';
 
 const Box = styled.div`
   width: 20%;
@@ -40,10 +44,17 @@ const CardBox = styled.div`
   box-shadow: var(--box-shadow) !important;
   padding: 14px;
   height: 220px;
+  position: relative;
   &:hover {
     background: var(--home-right_hover);
   }
 `;
+
+const TagBox = styled.div`
+  position: absolute;
+  right: 10px;
+`;
+
 const ImageBox = styled.div`
   width: 100%;
   img {
@@ -70,14 +81,41 @@ const Desc = styled.div`
 
 const MemBox = styled.div`
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   font-size: 12px;
   font-weight: 400;
-  color: #8d57ff;
+  color: var(--font-color-title);
   line-height: 18px;
   margin-bottom: 10px;
-  span {
-    margin-right: 5px;
+  gap: 10px;
+  //span {
+  //  margin-right: 5px;
+  //}
+`;
+
+const Avatar = styled.div`
+  img {
+    width: 30px;
+    height: 30px;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 100%;
+  }
+`;
+
+const StatusBox = styled.div`
+  font-size: 12px;
+  color: #fff;
+  background: var(--bs-primary);
+  padding: 2px 8px;
+  border-radius: 4px;
+  line-height: 22px;
+  height: 26px;
+  &.pending_close {
+    background: #f9b617;
+  }
+  &.close {
+    background: #ff7193;
   }
 `;
 
@@ -88,26 +126,51 @@ interface Iprops {
     name: string;
     intro: string;
     desc: string;
+    status?: string;
     members: string[];
     sponsors: string[];
+    user?: any;
   };
+  user?: any;
+  sns?: any;
+  noTag?: boolean;
   onClickItem: (id: number) => void;
 }
 
-export default function ProjectOrGuildItem({ data, onClickItem }: Iprops) {
+export default function ProjectOrGuildItem({ data, onClickItem, user, sns, noTag }: Iprops) {
   const { t } = useTranslation();
+  const showStatusComponent = () => {
+    if (data?.status === ProjectStatus.Closed) {
+      return <StatusBox>{t('Project.Closed')}</StatusBox>;
+    }
+    if (data?.status === ProjectStatus.Open) {
+      // @ts-ignore
+      return <StatusBox className="pending">{t('Project.Open')}</StatusBox>;
+    }
+    if (data?.status === ProjectStatus.Pending) {
+      return <StatusBox>{t('Project.Pending')}</StatusBox>;
+    }
+  };
   return (
     <Box>
       <CardBox>
+        {!noTag && <TagBox>{showStatusComponent()}</TagBox>}
+
         <Item onClick={() => onClickItem(data.id)}>
           <ImageBox>
             <img src={data.logo || DefaultLogo} alt="" />
           </ImageBox>
           <div className="title">{data.name}</div>
           <Desc>{data.desc ? data.desc : t('Project.ProjectOrGuildItem')}</Desc>
-          <MemBox>
-            <span>{(data?.members?.length || 0) + (data?.sponsors?.length || 0)}</span> {t('Project.Members')}
-          </MemBox>
+          {!!user && (
+            <MemBox>
+              <Avatar>
+                <img src={user?.avatar} alt="" />
+              </Avatar>
+              <span>{sns?.endsWith('.seedao') ? sns : publicJs.AddressToShow(user?.wallet)}</span>
+              {/*<span>{(data?.members?.length || 0) + (data?.sponsors?.length || 0)}</span> {t('Project.Members')}*/}
+            </MemBox>
+          )}
         </Item>
       </CardBox>
     </Box>

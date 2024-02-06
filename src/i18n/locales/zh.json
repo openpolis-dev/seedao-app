@@ -150,6 +150,15 @@
     "ViewVoteRules": "查看投票规则 >>"
   },
   "Project": {
+    "OfficialLink": "项目官方链接",
+    "Deliverables": "交付物",
+    "Contact": "项目负责人联系方式",
+    "SIPNumber": "SIP 编号",
+    "StartProjectLink": "立项链接",
+    "EndProjectLink": "结项链接",
+    "Open": "进行中",
+    "PlanFinishTime": "计划完成时限",
+    "ProjectType": "项目类型",
     "ProjectOrGuildItem": "还没有填写相关介绍信息～",
     "create": "创建项目",
     "Edit": "编辑项目",
@@ -159,9 +168,9 @@
     "Closed": "已关闭",
     "Joined": "已加入",
     "ProjectName": "项目名称",
-    "Moderator": "负责人",
+    "Moderator": "项目负责人",
     "AssociatedProposal": "关联提案",
-    "Budget": "预算",
+    "Budget": "项目预算",
     "Points": "积分",
     "Members": "成员",
     "Desc": "描述",
@@ -233,6 +242,14 @@
     "MemberExist": "请不要重复添加成员"
   },
   "Guild": {
+    "OfficialLink": "公会官方链接",
+    "Deliverables": "交付物",
+    "Contact": "公会负责人联系方式",
+    "SIPNumber": "SIP 编号",
+    "StartProjectLink": "立项链接",
+    "EndProjectLink": "结项链接",
+    "PlanFinishTime": "计划完成时限",
+    "ProjectType": "公会类型",
     "create": "创建公会",
     "createSuccess": "创建成功",
     "createFailed": "创建失败",
@@ -240,7 +257,7 @@
     "Closed": "已关闭",
     "Joined": "已加入",
     "ProjectName": "公会名称",
-    "Moderator": "负责人",
+    "Moderator": "公会负责人",
     "AssociatedProposal": "关联提案",
     "Budget": "预算",
     "Points": "积分",
@@ -288,7 +305,9 @@
     "PointsOrToken": "积分或Token",
     "Credit": "积分",
     "Token": "Token",
-    "MemberExist": "请不要重复添加成员"
+    "MemberExist": "请不要重复添加成员",
+    "CloseGuild": "关闭公会",
+    "Confirm2Close": "确定要关闭公会吗？"
   },
   "city-hall": {
     "Cityhall": "市政厅",
@@ -498,7 +517,9 @@
     "SubmitProposalSuccess": "提交成功",
     "SaveProposalSuccess": "保存成功",
     "CastVoteSuccess": "投票成功",
-    "CommentSuccess": "评论成功"
+    "CommentSuccess": "评论成功",
+    "InvalidField": "请填写正确的{{field}}",
+    "QuerySNSFailed": "查询SNS失败"
   },
   "event": {
     "events": "活动",

@@ -1,21 +1,22 @@
 import { InputGroup, Button, Form } from 'react-bootstrap';
 import styled from 'styled-components';
-import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react';
+import React, { FormEvent, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { UpdateInfo, addRelatedProposal } from 'requests/project';
-import { InfoObj, ProjectStatus, ReTurnProject } from 'type/project.type';
+import { IProjectDisplay } from 'type/project.type';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import useToast, { ToastType } from 'hooks/useToast';
-import PlusMinusButton from 'components/common/plusAndMinusButton';
 import CameraIconSVG from 'components/svgs/camera';
-import CloseTips from './closeTips';
-import CloseSuccess from './closeSuccess';
-import { createCloseProjectApplication } from 'requests/applications';
 import { useNavigate } from 'react-router-dom';
-import MarkdownEditor from 'components/common/markdownEditor';
 import { compressionFile, fileToDataURL } from 'utils/image';
+import sns from '@seedao/sns-js';
+import { ethers } from 'ethers';
+import { UpdateProjectParamsType, updateProjectInfo } from 'requests/project';
+import usePermission from 'hooks/usePermission';
+import { PermissionObject, PermissionAction } from 'utils/constant';
 
-export default function EditProject({ detail }: { detail: ReTurnProject | undefined }) {
+const LinkPrefix = `${window.location.origin}/proposal/thread/`;
+
+export default function EditProject({ detail }: { detail: IProjectDisplay | undefined }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { showToast } = useToast();
@@ -23,135 +24,93 @@ export default function EditProject({ detail }: { detail: ReTurnProject | undefi
     dispatch,
     state: { theme },
   } = useAuthContext();
-  const [proList, setProList] = useState(['']);
+
+  const canCreateProject = usePermission(PermissionAction.CreateApplication, PermissionObject.Project);
+
 
   const [proName, setProName] = useState('');
   const [desc, setDesc] = useState('');
   const [url, setUrl] = useState('');
-  const [intro, setIntro] = useState('');
 
-  const [show, setShow] = useState(false);
-  const [showSuccess, setShowSuccess] = useState(false);
+  const [leader, setLeader] = useState('');
+  const [contact, setContact] = useState('');
+  const [endLink, setEndLink] = useState('');
+  const [link, setLink] = useState('');
+
+  const handleLeaderSNS = (address: string) => {
+    setLeader(address);
+    sns
+      .name(address)
+      .then((res) => {
+        setLeader(res || address);
+      })
+  };
 
   useEffect(() => {
     if (detail) {
       setProName(detail.name);
       setDesc(detail.desc);
       setUrl(detail.logo);
-      setIntro(detail.intro);
-      setProList(
-        detail?.proposals?.map((slug) => {
-          const isOS = slug.startsWith('os');
-          return isOS
-            ? `${window.location.origin}/proposal/thread/${slug.replace('os-', '')}`
-            : `https://forum.seedao.xyz/thread/${slug}`;
-        }),
-      );
+      setLink(detail.OfficialLink);
+      setEndLink(detail.OverLink);
+      handleLeaderSNS(detail.sponsors[0]);
+      setContact(detail.ContantWay);
     }
   }, [detail]);
 
-  const handleInput = (e: ChangeEvent, index: number, type: string) => {
-    const { value } = e.target as HTMLInputElement;
-    let arr: any[] = [];
-    switch (type) {
-      case 'proposal':
-        arr = [...proList];
-        arr[index] = value;
-        setProList(arr);
-        break;
-      case 'proName':
-        setProName(value);
-        break;
-      case 'desc':
-        setDesc(value);
-        break;
-    }
-  };
-
-  const handleAdd = (type: string) => {
-    let arr: any[] = [];
-    switch (type) {
-      case 'proposal':
-        arr = [...proList];
-        arr.push('');
-        setProList(arr);
-        break;
-    }
-  };
-  const removeItem = (index: number, type: string) => {
-    let arr: any[] = [];
-    switch (type) {
-      case 'proposal':
-        arr = [...proList];
-        arr.splice(index, 1);
-        setProList(arr);
-        break;
-    }
-  };
-  const handleSubmit = async () => {
-    if (!detail?.id) {
+  const checkBeforeSubmit = async (): Promise<UpdateProjectParamsType | undefined> => {
+    if (!endLink.startsWith(LinkPrefix)) {
+      showToast(t('Msg.InvalidField', { field: t('Project.EndProjectLink') }), ToastType.Danger);
       return;
     }
-    const ids: string[] = [];
-    const slugs: string[] = [];
-    for (const l of proList) {
-      if (l) {
-        const _l = l.trim().toLocaleLowerCase();
-        if (_l.startsWith('https://forum.seedao.xyz/') && !_l.startsWith('https://forum.seedao.xyz/thread/sip-')) {
-          showToast(t('Msg.ProposalLinkMsg'), ToastType.Danger);
+    if (!link.startsWith('https://') && !link.startsWith('http://')) {
+      showToast(t('Msg.InvalidField', { field: t('Project.OfficialLink') }), ToastType.Danger);
+      return;
+    }
+    let _leader = leader;
+    if (!ethers.utils.isAddress(leader)) {
+      if (!leader!.endsWith('.seedao')) {
+        showToast(t('Msg.IncorrectAddress', { content: leader }), ToastType.Danger);
+        return;
+      }
+      try {
+        dispatch({ type: AppActionType.SET_LOADING, payload: true });
+        const res = await sns.resolves([leader]);
+        if (ethers.constants.AddressZero === res[0]) {
+          showToast(t('Msg.IncorrectAddress', { content: leader }), ToastType.Danger);
           return;
         }
-        if (_l.startsWith('https://forum.seedao.xyz/thread/sip-')) {
-          // sip
-          const items = _l.split('/').reverse();
-          slugs.push(items[0]);
-          for (const it of items) {
-            if (it) {
-              const _id = it.split('-').reverse()[0];
-              if (ids.includes(_id)) {
-                showToast(t('Msg.RepeatProposal'), ToastType.Danger);
-                return;
-              }
-              ids.push(_id);
-              break;
-            }
-          }
-        } else if (l.indexOf('/proposal/thread/') > -1) {
-          // os
-          const items = l.split('/').reverse();
-          slugs.push(`os-${items[0]}`);
-          for (const it of items) {
-            if (it) {
-              if (ids.includes(it)) {
-                showToast(t('Msg.RepeatProposal'), ToastType.Danger);
-                return;
-              }
-              ids.push(it);
-              break;
-            }
-          }
-        } else {
-          showToast(t('Msg.ProposalLinkMsg'), ToastType.Danger);
-          return;
-        }
+        _leader = res[0];
+      } catch (error) {
+        showToast(t('Msg.QuerySNSFailed'), ToastType.Danger);
+        dispatch({ type: AppActionType.SET_LOADING, payload: false });
+        return;
       }
     }
-    const obj: InfoObj = {
+    return {
+      ContantWay: contact,
+      OfficialLink: link,
+      OverLink: endLink,
+      desc: desc,
       logo: url,
-      name: proName,
-      desc,
-      intro,
+      sponsors: [_leader],
     };
-    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+  };
+
+  const handleSubmit = async () => {
+    const params = await checkBeforeSubmit();
+    if (!params) {
+      return;
+    }
     try {
-      await UpdateInfo(String(detail?.id), obj);
-      await addRelatedProposal(String(detail?.id), slugs);
+      dispatch({ type: AppActionType.SET_LOADING, payload: true });
+      await updateProjectInfo(detail!.id, params);
       showToast(t('Project.changeInfoSuccess'), ToastType.Success);
       navigate(`/project/info/${detail?.id}`);
-    } catch (error) {
-      showToast(JSON.stringify(error), ToastType.Danger);
+    } catch (error: any) {
+      showToast(error?.data?.message || error, ToastType.Danger);
     } finally {
-      dispatch({ type: AppActionType.SET_LOADING, payload: null });
+      dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }
   };
 
@@ -163,38 +122,9 @@ export default function EditProject({ detail }: { detail: ReTurnProject | undefi
     setUrl(base64);
   };
 
-  const closeModal = () => {
-    setShow(false);
-  };
-  const handleShow = () => {
-    setShow(true);
-  };
-
-  const closeSuccess = () => {
-    setShowSuccess(false);
-    navigate(`/project/info/${detail?.id}`);
-  };
-
-  const handleClosePro = async (content: string) => {
-    if (!detail) {
-      return;
-    }
-    setShow(false);
-    dispatch({ type: AppActionType.SET_LOADING, payload: true });
-    try {
-      await createCloseProjectApplication(detail.id, content);
-      dispatch({ type: AppActionType.SET_LOADING, payload: null });
-      setShowSuccess(true);
-
-      // reset project status
-      // updateProjectStatus(ProjectStatus.Pending);
-    } catch (e) {
-      logError(e);
-      // showToast(JSON.stringify(e), ToastType.Danger);
-      dispatch({ type: AppActionType.SET_LOADING, payload: null });
-      closeModal();
-    }
-  };
+  const submitDisabled = [proName, desc, leader, link, endLink].some(
+    (item) => !item || (typeof item === 'string' && !item.trim()),
+  );
 
   return (
     <EditPage>
@@ -227,72 +157,59 @@ export default function EditProject({ detail }: { detail: ReTurnProject | undefi
         </TopBox>
         <UlBox>
           <li>
-            <div className="title">{t('Project.ProjectName')}</div>
+            <div className="title">{t('Project.EndProjectLink')}</div>
             <InputBox>
               <Form.Control
                 type="text"
-                placeholder={t('Project.ProjectName')}
-                value={proName}
-                onChange={(e) => handleInput(e, 0, 'proName')}
+                placeholder={`${LinkPrefix}...`}
+                value={endLink}
+                onChange={(e) => setEndLink(e.target.value)}
+                disabled={!canCreateProject}
               />
             </InputBox>
           </li>
           <li>
-            <div className="title">{t('Project.AssociatedProposal')}</div>
-            <div>
-              {proList?.map((item, index) => (
-                <ItemBox key={`mem_${index}`}>
-                  <InputBox>
-                    <Form.Control
-                      type="text"
-                      placeholder={`https://forum.seedao.xyz/thread/sip-...`}
-                      value={item}
-                      onChange={(e) => handleInput(e, index, 'proposal')}
-                    />
-                  </InputBox>
-                  <PlusMinusButton
-                    showMinus={!(!index && index === proList.length - 1)}
-                    showPlus={index === proList.length - 1}
-                    onClickMinus={() => removeItem(index, 'proposal')}
-                    onClickPlus={() => handleAdd('proposal')}
-                  />
-                </ItemBox>
-              ))}
-            </div>
-          </li>
-          <li>
-            <div className="title">{t('Project.Desc')}</div>
+            <div className="title">{t('Project.Moderator')}</div>
             <InputBox>
               <Form.Control
-                placeholder=""
-                as="textarea"
-                rows={5}
-                value={desc}
-                onChange={(e) => handleInput(e, 0, 'desc')}
+                type="text"
+                placeholder={t('Project.AddMemberAddress')}
+                value={leader}
+                onChange={(e) => setLeader(e.target.value)}
+                disabled={!canCreateProject}
               />
             </InputBox>
           </li>
           <li>
-            <div className="title">{t('Project.Intro')}</div>
-            <IntroBox>
-              <MarkdownEditor value={intro} onChange={(val) => setIntro(val)} />
-            </IntroBox>
+            <div className="title">{t('Project.Contact')}</div>
+            <InputBox>
+              <Form.Control type="text" value={contact} onChange={(e) => setContact(e.target.value)} />
+            </InputBox>
+          </li>
+          <li>
+            <div className="title">{t('Project.OfficialLink')}</div>
+            <InputBox>
+              <Form.Control type="text" value={link} onChange={(e) => setLink(e.target.value)} />
+            </InputBox>
+          </li>
+
+          <li>
+            <div className="title">{t('Project.Desc')}</div>
+            <Form.Control
+              placeholder=""
+              as="textarea"
+              rows={5}
+              value={desc}
+              onChange={(e) => setDesc(e.target.value)}
+            />
           </li>
         </UlBox>
       </MainContent>
-      {detail?.status === ProjectStatus.Open && (
-        <BtmBox>
-          <Button
-            onClick={() => handleSubmit()}
-            disabled={proName?.length === 0 || (proList?.length === 1 && proList[0]?.length === 0)}
-          >
-            {t('general.confirm')}
-          </Button>
-          <TextButton onClick={() => handleShow()}>{t('Project.CloseProject')}</TextButton>
-        </BtmBox>
-      )}
-      {show && <CloseTips closeModal={closeModal} handleClosePro={handleClosePro} />}
-      {showSuccess && <CloseSuccess closeModal={closeSuccess} />}
+      <BtmBox>
+        <Button onClick={() => handleSubmit()} disabled={submitDisabled}>
+          {t('general.confirm')}
+        </Button>
+      </BtmBox>
     </EditPage>
   );
 }
@@ -306,8 +223,6 @@ const EditPage = styled.div`
 const TopBox = styled.section`
   display: flex;
 `;
-
-const IntroBox = styled.div``;
 
 const MainContent = styled.div`
   display: flex;
@@ -383,17 +298,10 @@ const UploadImgText = styled.p`
   line-height: 12px;
 `;
 
-const BtmBox = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  min-width: 104px;
-`;
-
 const UlBox = styled.ul`
   display: flex;
   flex-direction: column;
-  gap: 40px;
+  gap: 16px;
   li {
     .title {
       font-size: 16px;
@@ -411,27 +319,9 @@ const InputBox = styled(InputGroup)`
   margin-right: 20px;
 `;
 
-const ItemBox = styled.div`
-  margin-bottom: 10px;
+const BtmBox = styled.div`
   display: flex;
-  align-items: center;
-  .titleLft {
-    margin-right: 10px;
-    width: 50px;
-  }
-  .iconForm {
-    color: var(--bs-primary);
-    font-size: 20px;
-    margin-right: 10px;
-    cursor: pointer;
-  }
-`;
-
-const TextButton = styled.div`
-  font-size: 14px;
-  font-family: Poppins-Medium;
-  font-weight: 500;
-  line-height: 20px;
-  text-align: center;
-  cursor: pointer;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 104px;
 `;
