@@ -56,7 +56,7 @@ export default function EditProject({ detail }: { detail: IProjectDisplay | unde
   }, [detail]);
 
   const checkBeforeSubmit = async (): Promise<UpdateProjectParamsType | undefined> => {
-    if (!endLink.startsWith(LinkPrefix)) {
+    if (endLink && !endLink.startsWith(LinkPrefix)) {
       showToast(t('Msg.InvalidField', { field: t('Project.EndProjectLink') }), ToastType.Danger);
       return;
     }
@@ -119,7 +119,7 @@ export default function EditProject({ detail }: { detail: IProjectDisplay | unde
     setUrl(base64);
   };
 
-  const submitDisabled = [proName, desc, leader, link, endLink].some(
+  const submitDisabled = [proName, desc, leader, link].some(
     (item) => !item || (typeof item === 'string' && !item.trim()),
   );
 
