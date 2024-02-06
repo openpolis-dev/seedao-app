@@ -264,7 +264,7 @@ export default function InfoPage() {
                       <dt>{t('Project.Deliverables')}</dt>
                       <dd>{detail?.Deliverable}</dd>
                     </dl>
-                    y
+
                     <dl>
                       <dt>{t('Project.PlanFinishTime')}</dt>
                       <dd>{formatDate(detail?.PlanTime)}</dd>
