@@ -90,10 +90,10 @@ export default function EditProject({ detail }: { detail: IProjectDisplay | unde
     return {
       ContantWay: contact,
       OfficialLink: link,
-      OverLink: endLink,
+      OverLink: canCreateProject ? endLink : '',
       desc: desc,
       logo: url,
-      sponsors: [_leader],
+      sponsors: canCreateProject ? [_leader] : [],
     };
   };
 
