@@ -41,7 +41,7 @@ export default function InfoPage() {
   const [sponserList, setSponserList] = useState<any[]>([]);
   const [show, setShow] = useState(false);
 
-  const canEdit = usePermission(PermissionAction.Modify, PermissionObject.ProjPrefix + detail?.id);
+  const canCreateProject = usePermission(PermissionAction.CreateApplication, PermissionObject.Project);
 
   useEffect(() => {
     id && getDetail();
@@ -188,7 +188,9 @@ export default function InfoPage() {
                 {/*  </InnerLft>*/}
                 {/*</LftBox>*/}
                 <ContentBox>
-                  {(canEdit || show) && (
+
+                  {(canCreateProject|| show) && (
+
                     <BtnTop to={`/project/edit/${detail?.id}`} state={detail}>
                       <Button>{t('Project.Edit')}</Button>
                     </BtnTop>

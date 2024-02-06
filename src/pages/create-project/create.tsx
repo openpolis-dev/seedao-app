@@ -140,7 +140,7 @@ export default function CreateProject() {
     navigate('/explore?tab=project');
   };
 
-  const submitDisabled = [proName, desc, sip, selectCategory, startLink, endLink, budget, leader, link].some(
+  const submitDisabled = [proName, desc, sip, selectCategory, startLink, endLink, budget, leader, link, contact].some(
     (item) => !item || (typeof item === 'string' && !item.trim()),
   );
 

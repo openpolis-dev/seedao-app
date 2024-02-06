@@ -3,16 +3,24 @@ import { useEthersSigner } from 'hooks/ethersNew';
 import { ContainerPadding } from 'assets/styles/global';
 import BackerNav from 'components/common/backNav';
 import { useEffect, useState } from 'react';
-import { useSwitchNetwork } from 'wagmi';
+import { useAccount, useSwitchNetwork } from 'wagmi';
+import { readContract } from 'wagmi/actions';
 import LoadingImg from 'assets/Imgs/loading.png';
+import sns from '@seedao/sns-js';
+import useToast, { ToastType } from 'hooks/useToast';
 
 const CHAIN_ID = 5;
+const SEE_TOKEN_ADDRESS = '0xF0f214BE4Af4625F5B9EA8A3CE2cCf6d8f35F9f4';
 
 export default function SeeSwap() {
   const signer = useEthersSigner({ chainId: CHAIN_ID });
   const { switchNetworkAsync } = useSwitchNetwork();
   const [showIframe, setShowIframe] = useState(false);
   const [chainId, setChainId] = useState<number>();
+  const { address } = useAccount();
+  const { showToast } = useToast();
+  const [hasSNS, setHasSNS] = useState<0 | 1 | 2>(0);
+  const [hasInWhitelist, setHasInWhitelist] = useState<0 | 1 | 2>(0);
 
   useEffect(() => {
     const checkNetwork = async () => {
@@ -52,6 +60,59 @@ export default function SeeSwap() {
       setShowIframe(true);
     }, 3000);
   };
+
+  const toastNoAuth = () => {
+    showToast('You are not authorized to use this feature', ToastType.Danger, {
+      autoClose: false,
+      closeOnClick: false,
+    });
+  };
+
+  useEffect(() => {
+    if (hasSNS && hasInWhitelist) {
+      if (hasSNS !== 1 && hasInWhitelist !== 1) {
+        toastNoAuth();
+      }
+    }
+  }, [hasSNS, hasInWhitelist]);
+  console.log('====hasSNS', hasSNS);
+  console.log('====hasInWhitelist', hasInWhitelist);
+
+  useEffect(() => {
+    if (address) {
+      sns.name(address).then((name) => {
+        setHasSNS(name ? 1 : 2);
+      });
+      readContract({
+        abi: [
+          {
+            inputs: [
+              {
+                internalType: 'address',
+                name: '',
+                type: 'address',
+              },
+            ],
+            name: 'whiltelist',
+            outputs: [
+              {
+                internalType: 'uint256',
+                name: '',
+                type: 'uint256',
+              },
+            ],
+            stateMutability: 'view',
+            type: 'function',
+          },
+        ],
+        address: SEE_TOKEN_ADDRESS,
+        functionName: 'whiltelist',
+        args: [address],
+      }).then((res) => {
+        setHasInWhitelist(res ? 1 : 2);
+      });
+    }
+  }, [address]);
 
   return (
     <Container>

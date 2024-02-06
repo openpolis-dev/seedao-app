@@ -96,7 +96,7 @@ export default function CreateGuild() {
     navigate('/explore?tab=guild');
   };
 
-  const submitDisabled = [proName, desc, leader, link].some(
+  const submitDisabled = [proName, desc, leader, link, contact].some(
     (item) => !item || (typeof item === 'string' && !item.trim()),
   );
 
