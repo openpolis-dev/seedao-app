@@ -269,6 +269,7 @@ const DlBox = styled.div`
   }
   dd {
     opacity: 0.8;
+    word-break: break-all;
   }
 `;
 

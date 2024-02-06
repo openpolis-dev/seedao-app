@@ -365,6 +365,7 @@ const DlBox = styled.div`
     display: flex;
     align-items: center;
     gap: 10px;
+    word-break: break-all;
   }
 `;
 

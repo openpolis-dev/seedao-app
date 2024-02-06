@@ -44,7 +44,7 @@ const CardBox = styled.div`
   background: var(--bs-box--background);
   box-shadow: var(--box-shadow) !important;
   padding: 14px;
-  height: 220px;
+  height: 200px;
   position: relative;
   &:hover {
     background: var(--home-right_hover);
@@ -68,16 +68,20 @@ const ImageBox = styled.div`
 `;
 
 const Desc = styled.div`
+  //overflow: hidden;
+  //text-overflow: ellipsis;
+  //display: -webkit-box;
+  //-webkit-line-clamp: 1;
+  //-webkit-box-orient: vertical;
+
   overflow: hidden;
+  white-space: nowrap;
   text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 1;
-  -webkit-box-orient: vertical;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
   font-size: 12px;
   font-weight: 400;
   line-height: 18px;
-  min-height: 36px;
+  min-height: 18px;
 `;
 
 const MemBox = styled.div`
