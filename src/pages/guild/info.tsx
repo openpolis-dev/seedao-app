@@ -151,7 +151,7 @@ export default function Index() {
                 {/*  </InnerLft>*/}
                 {/*</LftBox>*/}
                 <ContentBox>
-                  {(canCreatePermission || show) && (
+                  {detail?.status === "open" && (canCreatePermission || show) && (
                     <BtnTop to={`/guild/edit/${detail?.id}`} state={detail}>
                       <Button>{t('general.edit')}</Button>
                     </BtnTop>
