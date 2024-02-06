@@ -40,6 +40,11 @@ export default function Index() {
 
   const canCreatePermission = usePermission(PermissionAction.CreateApplication, PermissionObject.Guild);
 
+  useEffect(() => {
+    if (!detail) return;
+    getUsersDetail(detail.sponsors);
+  }, [detail]);
+
   const getUsersDetail = async (dt: any) => {
     const _wallets: string[] = [];
 
@@ -50,11 +55,12 @@ export default function Index() {
     });
     const wallets = Array.from(new Set(_wallets));
     let userSns = await getMultiSNS(wallets);
-    setSnsMap(userSns);
-    getUsersInfo(wallets);
+
+    // setSnsMap(userSns);
+    await getUsersInfo(wallets, userSns);
   };
 
-  const getUsersInfo = async (wallets: string[]) => {
+  const getUsersInfo = async (wallets: string[], snsMap: any) => {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
       const res = await getUsers(wallets);
@@ -66,9 +72,9 @@ export default function Index() {
 
       let arr: any[] = [];
 
-      detail.sponsors.map((item: any) => {
+      detail?.sponsors.map((item: any) => {
         let itemInfo = userData[item];
-        let itemSns = snsMap.get(item);
+        let itemSns = snsMap?.get(item);
         arr.push({
           ...itemInfo,
           sns: itemSns,
@@ -92,7 +98,6 @@ export default function Index() {
     try {
       const dt = await getProjectById(id as string);
       setDetail(dt.data);
-      await getUsersDetail(dt.data.sponsors);
     } catch (error) {
       logError(error);
     } finally {
@@ -168,7 +173,13 @@ export default function Index() {
                     </dl>
                     <dl>
                       <dt>{t('Guild.Contact')}</dt>
-                      <dd>{detail?.ContantWay}</dd>
+                      <dd>
+                        {detail?.ContantWay
+                          ? detail?.ContantWay
+                          : sponserList[0]?.sns?.endsWith('.seedao')
+                          ? sponserList[0]?.sns
+                          : ''}
+                      </dd>
                     </dl>
 
                     <dl>

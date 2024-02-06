@@ -21,6 +21,7 @@ import { IUser } from '../../type/user.type';
 import publicJs from '../../utils/publicJs';
 import CategoryTag from 'components/proposalCom/categoryTag';
 import LinkImg from '../../assets/Imgs/link.svg';
+import DefaultAvatar from 'assets/Imgs/defaultAvatar.png';
 import dayjs from 'dayjs';
 
 type UserMap = { [w: string]: IUser };
@@ -223,7 +224,7 @@ export default function InfoPage() {
                         {sponserList.map((item: any, index: number) => (
                           <MemBox key={`avatar_${index}`}>
                             <Avatar>
-                              <img src={item?.avatar} alt="" />
+                              <img src={item?.avatar ? item?.avatar : DefaultAvatar} alt="" />
                             </Avatar>
                             <span>
                               {item?.sns?.endsWith('.seedao') ? item.sns : publicJs.AddressToShow(item?.wallet)}
@@ -234,7 +235,13 @@ export default function InfoPage() {
                     </dl>
                     <dl>
                       <dt>{t('Project.Contact')}</dt>
-                      <dd>{detail?.ContantWay}</dd>
+                      <dd>
+                        {detail?.ContantWay
+                          ? detail?.ContantWay
+                          : sponserList[0]?.sns?.endsWith('.seedao')
+                          ? sponserList[0]?.sns
+                          : ''}
+                      </dd>
                     </dl>
                     <dl>
                       <dt>{t('Project.OfficialLink')}</dt>

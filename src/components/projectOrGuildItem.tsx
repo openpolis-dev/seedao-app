@@ -132,14 +132,14 @@ interface Iprops {
     members: string[];
     sponsors: string[];
     user?: any;
+    sns?: string;
   };
-  user?: any;
-  sns?: any;
+
   noTag?: boolean;
   onClickItem: (id: number) => void;
 }
 
-export default function ProjectOrGuildItem({ data, onClickItem, user, sns, noTag }: Iprops) {
+export default function ProjectOrGuildItem({ data, onClickItem, noTag }: Iprops) {
   const { t } = useTranslation();
   const showStatusComponent = () => {
     if (data?.status === ProjectStatus.Closed) {
@@ -164,12 +164,12 @@ export default function ProjectOrGuildItem({ data, onClickItem, user, sns, noTag
           </ImageBox>
           <div className="title">{data.name}</div>
           <Desc>{data.desc ? data.desc : t('Project.ProjectOrGuildItem')}</Desc>
-          {!!user && (
+          {!!data.user && (
             <MemBox>
               <Avatar>
-                <img src={user?.avatar ? user?.avatar : DefaultAvatar} alt="" />
+                <img src={data.user?.avatar ? data.user?.avatar : DefaultAvatar} alt="" />
               </Avatar>
-              <span>{sns?.endsWith('.seedao') ? sns : publicJs.AddressToShow(user?.wallet)}</span>
+              <span>{data.sns?.endsWith('.seedao') ? data.sns : publicJs.AddressToShow(data.user?.wallet)}</span>
               {/*<span>{(data?.members?.length || 0) + (data?.sponsors?.length || 0)}</span> {t('Project.Members')}*/}
             </MemBox>
           )}
