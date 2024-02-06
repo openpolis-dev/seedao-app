@@ -139,7 +139,7 @@ export default function Index() {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     const obj: IPageParams = {
       // status: stt,
-      status: 'open,pending_close',
+      status: 'open,pending_close,closed',
       page: pageCur,
       size: pageSize,
       sort_order: 'desc',
