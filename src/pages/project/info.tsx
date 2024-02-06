@@ -80,7 +80,6 @@ export default function InfoPage() {
       detail?.sponsors.map((item: any) => {
         let itemInfo = userData[item];
         let itemSns = snsMap?.get(item);
-        console.log(itemInfo, snsMap);
         arr.push({
           ...itemInfo,
           sns: itemSns,
