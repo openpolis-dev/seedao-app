@@ -121,14 +121,14 @@ export default function InfoPage() {
 
   const showStatusComponent = () => {
     if (detail?.status === ProjectStatus.Closed) {
-      return <StatusBox>{t('Project.Closed')}</StatusBox>;
+      return <StatusBox className='close'>{t('Project.Closed')}</StatusBox>;
     }
     if (detail?.status === ProjectStatus.Open) {
       // @ts-ignore
       return <StatusBox className="pending">{t('Project.Open')}</StatusBox>;
     }
     if (detail?.status === ProjectStatus.Pending) {
-      return <StatusBox>{t('Project.Pending')}</StatusBox>;
+      return <StatusBox >{t('Project.Pending')}</StatusBox>;
     }
   };
 
@@ -189,7 +189,7 @@ export default function InfoPage() {
                 {/*</LftBox>*/}
                 <ContentBox>
                   {detail?.status === 'closed' ? (
-                    <ClosedButton disabled>{t('Project.Closed')}</ClosedButton>
+                    <ClosedButton disabled>{t('Project.Edit')}</ClosedButton>
                   ) : canCreateProject || show ? (
                     <BtnTop to={`/project/edit/${detail?.id}`} state={detail}>
                       <Button>{t('Project.Edit')}</Button>
@@ -323,7 +323,7 @@ const StatusBox = styled.div`
     background: #f9b617;
   }
   &.close {
-    background: #ff7193;
+    background: rgb(163, 160, 160);
   }
 `;
 

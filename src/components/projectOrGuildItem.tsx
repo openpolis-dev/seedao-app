@@ -121,7 +121,7 @@ const StatusBox = styled.div`
     background: #f9b617;
   }
   &.close {
-    background: #ff7193;
+    background: rgb(163, 160, 160);
   }
 `;
 
@@ -147,7 +147,7 @@ export default function ProjectOrGuildItem({ data, onClickItem, noTag }: Iprops)
   const { t } = useTranslation();
   const showStatusComponent = () => {
     if (data?.status === ProjectStatus.Closed) {
-      return <StatusBox>{t('Project.Closed')}</StatusBox>;
+      return <StatusBox className='close'>{t('Project.Closed')}</StatusBox>;
     }
     if (data?.status === ProjectStatus.Open) {
       // @ts-ignore
