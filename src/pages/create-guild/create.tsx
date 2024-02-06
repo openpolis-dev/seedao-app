@@ -102,7 +102,7 @@ export default function CreateGuild() {
 
   return (
     <OuterBox>
-      <BackerNav title={t('Guild.create')} to="/city-hall/governance" />
+      <BackerNav title={t('Guild.create')} to="/explore?tab=guild" />
       <FlexBox>
         <CardBody>
           <BtnBox htmlFor="fileUpload" onChange={(e) => updateLogo(e)}>
