@@ -8,11 +8,15 @@ import { readContract } from 'wagmi/actions';
 import LoadingImg from 'assets/Imgs/loading.png';
 import sns from '@seedao/sns-js';
 import useToast, { ToastType } from 'hooks/useToast';
+import { Button } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 
 const CHAIN_ID = 5;
 const SEE_TOKEN_ADDRESS = '0xF0f214BE4Af4625F5B9EA8A3CE2cCf6d8f35F9f4';
 
 export default function SeeSwap() {
+  const { t } = useTranslation();
   const signer = useEthersSigner({ chainId: CHAIN_ID });
   const { switchNetworkAsync } = useSwitchNetwork();
   const [showIframe, setShowIframe] = useState(false);
@@ -61,20 +65,6 @@ export default function SeeSwap() {
     }, 3000);
   };
 
-  const toastNoAuth = () => {
-    showToast('You are not authorized to use this feature', ToastType.Danger, {
-      autoClose: false,
-      closeOnClick: false,
-    });
-  };
-
-  useEffect(() => {
-    if (hasSNS && hasInWhitelist) {
-      if (hasSNS !== 1 && hasInWhitelist !== 1) {
-        toastNoAuth();
-      }
-    }
-  }, [hasSNS, hasInWhitelist]);
   console.log('====hasSNS', hasSNS);
   console.log('====hasInWhitelist', hasInWhitelist);
 
@@ -108,9 +98,14 @@ export default function SeeSwap() {
         address: SEE_TOKEN_ADDRESS,
         functionName: 'whiltelist',
         args: [address],
-      }).then((res) => {
-        setHasInWhitelist(res ? 1 : 2);
-      });
+      })
+        .then((res) => {
+          setHasInWhitelist(res ? 1 : 2);
+        })
+        .catch((err) => {
+          showToast("Network is poor, please try again later", ToastType.Danger);
+          console.error(err);
+        });
     }
   }, [address]);
 
@@ -133,6 +128,14 @@ export default function SeeSwap() {
         <SwapMask>
           <img src={LoadingImg} alt="" />
         </SwapMask>
+      )}
+      {hasSNS === 2 && hasInWhitelist !== 1 && (
+        <NoSNS>
+          <p>You are not authorized to use this feature</p>
+          <Link to="/sns/register">
+            <Button>{t('SNS.Started')}</Button>
+          </Link>
+        </NoSNS>
       )}
     </Container>
   );
@@ -162,6 +165,7 @@ const SwapMask = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
   img {
     user-select: none;
     width: 40px;
@@ -176,4 +180,8 @@ const SwapMask = styled.div`
       transform: rotate(360deg);
     }
   }
+`;
+
+const NoSNS = styled(SwapMask)`
+  gap: 20px;
 `;
