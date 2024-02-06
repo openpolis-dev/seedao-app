@@ -78,7 +78,7 @@ export default function CreateGuild() {
       showToast(t('Guild.createSuccess'), ToastType.Success);
       navigate(`/guild/info/${resp.data.id}`);
     } catch (error: any) {
-      showToast(error?.data?.message || error, ToastType.Danger);
+      showToast(error?.response?.data?.message || error, ToastType.Danger);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }

@@ -122,7 +122,7 @@ export default function EditGuild({ detail }: { detail?: IGuildDisplay }) {
       showToast(t('Msg.ApproveSuccess'), ToastType.Success);
       navigate('/explore?tab=guild');
     } catch (error: any) {
-      showToast(error?.data?.message || error, ToastType.Danger);
+      showToast(error?.response?.data?.message || error, ToastType.Danger);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }

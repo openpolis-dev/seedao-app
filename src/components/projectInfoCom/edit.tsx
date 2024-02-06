@@ -105,7 +105,7 @@ export default function EditProject({ detail }: { detail: IProjectDisplay | unde
       showToast(t('Project.changeInfoSuccess'), ToastType.Success);
       navigate(`/project/info/${detail?.id}`);
     } catch (error: any) {
-      showToast(error?.data?.message || error, ToastType.Danger);
+      showToast(error?.response?.data?.message || error, ToastType.Danger);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }
