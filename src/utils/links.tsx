@@ -181,14 +181,6 @@ const links = {
       Nolink: true,
     },
     {
-      name: 'city-hall.CloseProjectAudit',
-      link: '/city-hall/governance/audit-project',
-      id: 'module-governance-audit-project',
-      icon: RImg8,
-      desc: 'city-hall.CloseProjectAuditDesc',
-      Nolink: true,
-    },
-    {
       name: 'city-hall.ReviewProposal',
       link: '/city-hall/governance/review-proposal',
       id: 'module-governance-review-proposal',
@@ -198,20 +190,6 @@ const links = {
     },
   ],
   governanceBtm: [
-    {
-      name: 'city-hall.CreateProject',
-      link: '/create-project',
-      id: 'module-create-project',
-      icon: CreateImg,
-      desc: 'city-hall.CreateProjectDesc',
-    },
-    {
-      name: 'city-hall.CreateGuild',
-      link: '/create-guild',
-      id: 'module-create-guild',
-      icon: GuildImg,
-      desc: 'city-hall.CreateGuildDesc',
-    },
     {
       name: 'Governance.apply',
       link: '/city-hall/governance/issue',
