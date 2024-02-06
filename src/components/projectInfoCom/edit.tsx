@@ -27,7 +27,6 @@ export default function EditProject({ detail }: { detail: IProjectDisplay | unde
 
   const canCreateProject = usePermission(PermissionAction.CreateApplication, PermissionObject.Project);
 
-
   const [proName, setProName] = useState('');
   const [desc, setDesc] = useState('');
   const [url, setUrl] = useState('');
@@ -39,11 +38,9 @@ export default function EditProject({ detail }: { detail: IProjectDisplay | unde
 
   const handleLeaderSNS = (address: string) => {
     setLeader(address);
-    sns
-      .name(address)
-      .then((res) => {
-        setLeader(res || address);
-      })
+    sns.name(address).then((res) => {
+      setLeader(res || address);
+    });
   };
 
   useEffect(() => {
