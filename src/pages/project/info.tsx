@@ -188,11 +188,13 @@ export default function InfoPage() {
                 {/*  </InnerLft>*/}
                 {/*</LftBox>*/}
                 <ContentBox>
-                  {detail?.status === 'open' && (canCreateProject || show) && (
+                  {detail?.status === 'closed' ? (
+                    <ClosedButton disabled>{t('Project.Closed')}</ClosedButton>
+                  ) : canCreateProject || show ? (
                     <BtnTop to={`/project/edit/${detail?.id}`} state={detail}>
                       <Button>{t('Project.Edit')}</Button>
                     </BtnTop>
-                  )}
+                  ) : null}
 
                   {/*<TitleBox>{t('Project.ProjectIntro')}</TitleBox>*/}
                   <DlBox>
@@ -522,4 +524,10 @@ const SipTagStyle = styled.a`
   &:hover {
     color: #0085ff;
   }
+`;
+
+const ClosedButton = styled(Button)`
+  position: absolute;
+  right: 20px;
+  top: 20px;
 `;

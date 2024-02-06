@@ -151,12 +151,13 @@ export default function Index() {
                 {/*  </InnerLft>*/}
                 {/*</LftBox>*/}
                 <ContentBox>
-                  {detail?.status === 'open' && canCreatePermission && (
+                  {detail?.status === 'closed' ? (
+                    <ClosedButton disabled>{t('Guild.Closed')}</ClosedButton>
+                  ) : canCreatePermission ? (
                     <BtnTop to={`/guild/edit/${detail?.id}`} state={detail}>
                       <Button>{t('general.edit')}</Button>
                     </BtnTop>
-                  )}
-
+                  ) : null}
                   {/*<TitleBox>{t('Project.ProjectIntro')}</TitleBox>*/}
                   <DlBox>
                     <dl>
@@ -413,4 +414,10 @@ const StatusTag = styled.span`
   height: 26px;
   font-size: 12px;
   color: var(--bs-primary);
+`;
+
+const ClosedButton = styled(Button)`
+  position: absolute;
+  right: 20px;
+  top: 20px;
 `;
