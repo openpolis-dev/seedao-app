@@ -186,6 +186,7 @@ export default function CreateStep({ onClick }: any) {
   const [initList, setInitList] = useState<any[]>([]);
   const [tips, setTips] = useState('');
   const [result, setResult] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
 
   const [voteList, setVoteList] = useState(['']);
 
@@ -362,6 +363,7 @@ export default function CreateStep({ onClick }: any) {
     if (!proposalType) {
       return;
     }
+    setLoading(true);
     // let dataFormat: any = {};
     //
     // for (const dataKey in data) {
@@ -413,6 +415,7 @@ export default function CreateStep({ onClick }: any) {
         })
         .finally(() => {
           dispatch({ type: AppActionType.SET_LOADING, payload: false });
+          setLoading(false);
         });
     }
   };
@@ -521,9 +524,14 @@ export default function CreateStep({ onClick }: any) {
             <Button className="save" onClick={handleSave} disabled={!title || !title.trim()}>
               {t('Proposal.SaveProposal')}
             </Button>
-            <Button onClick={handleConfirmSubmit} disabled={submitDisabled}>
-              {t('Proposal.SubmitProposal')}
-            </Button>
+            <BtnFlex onClick={handleConfirmSubmit} disabled={submitDisabled || loading}>
+              {t('Proposal.SubmitProposal')}{' '}
+              {loading && (
+                <LoadingBox>
+                  <div className="loader" />
+                </LoadingBox>
+              )}
+            </BtnFlex>
           </BtnGroup>
         </FlexInner>
       </FixedBox>
@@ -682,6 +690,36 @@ const VoteBox = styled.ul`
       border-radius: 8px;
       border: 1px solid var(--proposal-border);
       cursor: pointer;
+    }
+  }
+`;
+
+const BtnFlex = styled(Button)`
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  gap: 5px;
+`;
+const LoadingBox = styled.div`
+  /* HTML: <div class="loader"></div> */
+  margin-top: 2px;
+  .loader {
+    width: 15px;
+    padding: 3px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: #fff;
+
+    --_m: conic-gradient(#0000 10%, #000), linear-gradient(#000 0 0) content-box;
+    -webkit-mask: var(--_m);
+    mask: var(--_m);
+    -webkit-mask-composite: source-out;
+    mask-composite: subtract;
+    animation: l3 1s infinite linear;
+  }
+  @keyframes l3 {
+    to {
+      transform: rotate(1turn);
     }
   }
 `;
