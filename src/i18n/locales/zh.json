@@ -519,7 +519,10 @@
     "CastVoteSuccess": "投票成功",
     "CommentSuccess": "评论成功",
     "InvalidField": "请填写正确的{{field}}",
-    "QuerySNSFailed": "查询SNS失败"
+    "QuerySNSFailed": "查询SNS失败",
+    "InstallMetaMaskTip": "还没有钱包？去安装 >>",
+    "SwapTip1": "您暂时没有权限使用此功能，请前往注册SNS获得权限",
+    "SwapTip2": "如果您已获得SNS，请耐心等待开启swap权限"
   },
   "event": {
     "events": "活动",

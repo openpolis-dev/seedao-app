@@ -128,7 +128,11 @@ const LoginModalContent = () => {
           dispatch({
             type: AppActionType.SET_THIRD_PARTY_TOKEN,
             payload: {
-              metaforo: { id: loginResp[0].data.user_id, account: address, token: loginResp[0].data.token },
+              metaforo: loginResp[0].data.user_id && {
+                id: loginResp[0].data.user_id,
+                account: address,
+                token: loginResp[0].data.token,
+              },
               deschool: loginResp[1].data.jwtToken,
             },
           });
@@ -158,8 +162,7 @@ const LoginModalContent = () => {
           } catch (error) {
             logError('OneSignal login error', error);
           }
-
-          prepareMetaforo();
+          loginResp[0].data.user_id && prepareMetaforo();
         } catch (error: any) {
           setClickConnectFlag(false);
           showToast(error?.data?.msg || error?.code || error, ToastType.Danger, { autoClose: false });
@@ -213,16 +216,16 @@ const LoginModalContent = () => {
   };
 
   const handleClickWallet = async (connector: Connector) => {
-    if (connector.id === CONNECTOR_ID.METAMASK && connector.name !== 'MetaMask') {
-      showToast(t('Msg.CloseInjected', { wallet: connector.name }), ToastType.Danger);
-      return;
-    }
     if (connector.id === CONNECTOR_ID.METAMASK && !connector.ready) {
       showToast(t('Msg.InstallMetaMask'), ToastType.Danger);
       window.open('https://metamask.io/download.html', '_blank');
       return;
     } else if (!connector.ready) {
       showToast(t('Msg.WalletNotReady', { wallet: connector.name }), ToastType.Danger);
+      return;
+    }
+    if (connector.id === CONNECTOR_ID.METAMASK && connector.name !== 'MetaMask') {
+      showToast(t('Msg.CloseInjected', { wallet: connector.name }), ToastType.Danger);
       return;
     }
 
@@ -271,6 +274,9 @@ const LoginModalContent = () => {
         </span>
         <Title>{t('general.ConnectWallet')}</Title>
         {getConnectionButtons()}
+        <InstallTip href="https://metamask.io/download/" target="_blank">
+          {t('Msg.InstallMetaMaskTip')}
+        </InstallTip>
       </Modal>
     </Mask>
   );
@@ -353,4 +359,10 @@ const WalletOption = styled.li`
     height: 32px;
     margin-right: 20px;
   }
+`;
+
+const InstallTip = styled.a`
+  color: var(--bs-primary);
+  text-align: center;
+  font-size: 12px;
 `;
