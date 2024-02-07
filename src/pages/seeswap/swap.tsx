@@ -103,7 +103,7 @@ export default function SeeSwap() {
           setHasInWhitelist(res ? 1 : 2);
         })
         .catch((err) => {
-          showToast("Network is poor, please try again later", ToastType.Danger);
+          showToast('Network is poor, please try again later', ToastType.Danger);
           console.error(err);
         });
     }
@@ -129,13 +129,13 @@ export default function SeeSwap() {
           <img src={LoadingImg} alt="" />
         </SwapMask>
       )}
-      {hasSNS === 2 && (
+      {hasSNS === 2 && hasInWhitelist !== 1 && (
         <NoSNS>
           <p>{t('Msg.SwapTip1')}</p>
           <Link to="/sns/register">
             <Button>{t('SNS.Started')}</Button>
           </Link>
-          {hasInWhitelist !== 1 && <p className='small'>{t('Msg.SwapTip2')}</p>}
+          <p className="small">{t('Msg.SwapTip2')}</p>
         </NoSNS>
       )}
     </Container>
