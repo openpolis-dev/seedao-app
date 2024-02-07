@@ -1,6 +1,6 @@
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import { useEffect, useState } from 'react';
-import { METAFORO_TOKEN } from 'utils/constant';
+import { METAFORO_TOKEN, SEE_AUTH } from 'utils/constant';
 import { WalletType } from 'wallet/wallet';
 import publicJs from 'utils/publicJs';
 import { initApiService, loginByWallet, LoginParam } from 'requests/proposal';
@@ -37,9 +37,16 @@ export default function useMetaforoLogin() {
     }
   }, [account]);
 
-  const saveToken = (userid: number, value: string) => {
-    localStorage.setItem(METAFORO_TOKEN, JSON.stringify({ id: userid, account, token: value }));
-    dispatch({ type: AppActionType.SET_METAFORO_TOKEN, payload: value });
+  const saveToken = (account: string, userId: number, value: string) => {
+    const see_auth = localStorage.getItem(SEE_AUTH) || '';
+    let data: any = {};
+    try {
+      data = JSON.parse(see_auth);
+    } finally {
+      data.metaforo = { account, id: userId, token: value };
+      localStorage.setItem(SEE_AUTH, JSON.stringify(data));
+      dispatch({ type: AppActionType.SET_METAFORO_TOKEN, payload: value });
+    }
   };
 
   const handleLogin = async (sign: string, signMsg: string) => {
@@ -51,7 +58,7 @@ export default function useMetaforoLogin() {
       wallet_type: 5,
     } as LoginParam;
     const data = await loginByWallet(loginParam);
-    saveToken(data.user.id, data.api_token);
+    saveToken(account!, data.user.id, data.api_token);
     // bind user
     await prepareMetaforo();
   };
