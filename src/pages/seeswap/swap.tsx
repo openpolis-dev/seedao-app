@@ -11,9 +11,37 @@ import useToast, { ToastType } from 'hooks/useToast';
 import { Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
+import { ethers } from 'ethers';
+import publicJs from 'utils/publicJs';
 
 const CHAIN_ID = 5;
 const SEE_TOKEN_ADDRESS = '0xF0f214BE4Af4625F5B9EA8A3CE2cCf6d8f35F9f4';
+const RPC_LIST = [
+  'https://eth-goerli.g.alchemy.com/v2/MATWeLJN1bEGTjSmtyLedn0i34o1ISLD',
+  'https://rpc.ankr.com/eth_goerli',
+  'https://endpoints.omniatech.io/v1/eth/goerli/public',
+];
+const ABI = [
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+    ],
+    name: 'whiltelist',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+];
 
 export default function SeeSwap() {
   const { t } = useTranslation();
@@ -68,44 +96,28 @@ export default function SeeSwap() {
   console.log('====hasSNS', hasSNS);
   console.log('====hasInWhitelist', hasInWhitelist);
 
+  const handleWhitelist = async () => {
+    const _network = { chainId: CHAIN_ID, name: 'Goerli' };
+    const rpc = await publicJs.checkRPCavailable(RPC_LIST, _network);
+    const _provider = new ethers.providers.StaticJsonRpcProvider(rpc, _network);
+    const contract = new ethers.Contract(SEE_TOKEN_ADDRESS, ABI, _provider);
+    contract
+      .whiltelist(address)
+      .then((res: any) => {
+        setHasInWhitelist(res ? 1 : 2);
+      })
+      .catch((err: any) => {
+        showToast('Network is poor, please try again later', ToastType.Danger);
+        console.error(err);
+      });
+  };
+
   useEffect(() => {
     if (address) {
       sns.name(address).then((name) => {
         setHasSNS(name ? 1 : 2);
       });
-      readContract({
-        abi: [
-          {
-            inputs: [
-              {
-                internalType: 'address',
-                name: '',
-                type: 'address',
-              },
-            ],
-            name: 'whiltelist',
-            outputs: [
-              {
-                internalType: 'uint256',
-                name: '',
-                type: 'uint256',
-              },
-            ],
-            stateMutability: 'view',
-            type: 'function',
-          },
-        ],
-        address: SEE_TOKEN_ADDRESS,
-        functionName: 'whiltelist',
-        args: [address],
-      })
-        .then((res) => {
-          setHasInWhitelist(res ? 1 : 2);
-        })
-        .catch((err) => {
-          showToast('Network is poor, please try again later', ToastType.Danger);
-          console.error(err);
-        });
+      handleWhitelist();
     }
   }, [address]);
 
