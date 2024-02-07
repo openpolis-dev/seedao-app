@@ -520,7 +520,9 @@
     "CommentSuccess": "Comment successfully",
     "InvalidField": "Required correct {{field}}",
     "QuerySNSFailed": "Query SNS failed",
-    "InstallMetaMaskTip": "Don't have a wallet? Go install it >>"
+    "InstallMetaMaskTip": "Don't have a wallet? Go install it >>",
+    "SwapTip1": "You don't have permission to use this feature, please go to Register SNS to get permission.",
+    "SwapTip2": "If you already have SNS, please be patient and wait to turn on swap permissions"
   },
   "event": {
     "events": "Events",

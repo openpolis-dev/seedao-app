@@ -129,12 +129,13 @@ export default function SeeSwap() {
           <img src={LoadingImg} alt="" />
         </SwapMask>
       )}
-      {hasSNS === 2 && hasInWhitelist !== 1 && (
+      {hasSNS === 2 && (
         <NoSNS>
-          <p>You are not authorized to use this feature</p>
+          <p>{t('Msg.SwapTip1')}</p>
           <Link to="/sns/register">
             <Button>{t('SNS.Started')}</Button>
           </Link>
+          {hasInWhitelist !== 1 && <p className='small'>{t('Msg.SwapTip2')}</p>}
         </NoSNS>
       )}
     </Container>
@@ -184,4 +185,7 @@ const SwapMask = styled.div`
 
 const NoSNS = styled(SwapMask)`
   gap: 20px;
+  .small {
+    font-size: 12px;
+  }
 `;
