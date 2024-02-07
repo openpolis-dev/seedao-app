@@ -519,7 +519,8 @@
     "CastVoteSuccess": "Cast vote successfully",
     "CommentSuccess": "Comment successfully",
     "InvalidField": "Required correct {{field}}",
-    "QuerySNSFailed": "Query SNS failed"
+    "QuerySNSFailed": "Query SNS failed",
+    "InstallMetaMaskTip": "Don't have a wallet? Go install it >>"
   },
   "event": {
     "events": "Events",

@@ -519,7 +519,8 @@
     "CastVoteSuccess": "投票成功",
     "CommentSuccess": "评论成功",
     "InvalidField": "请填写正确的{{field}}",
-    "QuerySNSFailed": "查询SNS失败"
+    "QuerySNSFailed": "查询SNS失败",
+    "InstallMetaMaskTip": "还没有钱包？去安装 >>"
   },
   "event": {
     "events": "活动",
