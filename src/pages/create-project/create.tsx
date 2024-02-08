@@ -49,11 +49,11 @@ export default function CreateProject() {
   const [selectCategory, setSelectCategory] = useState<ISelectItem>();
 
   const checkBeforeSubmit = async (): Promise<IProject | undefined> => {
-    const _sip = Number(sip);
-    if (_sip <= 0 || sip.includes('.')) {
-      showToast(t('Msg.InvalidField', { field: t('Project.SIPNumber') }), ToastType.Danger);
-      return;
-    }
+    // const _sip = Number(sip);
+    // if (_sip <= 0 || sip.includes('.')) {
+    //   showToast(t('Msg.InvalidField', { field: t('Project.SIPNumber') }), ToastType.Danger);
+    //   return;
+    // }
     if (!startLink.startsWith(LinkPrefix)) {
       showToast(t('Msg.InvalidField', { field: t('Project.StartProjectLink') }), ToastType.Danger);
       return;
@@ -95,7 +95,7 @@ export default function CreateProject() {
       logo: url,
       OfficialLink: link,
       ContantWay: contact,
-      SIP: String(_sip),
+      SIP: "",
       ApprovalLink: startLink,
       OverLink: "",
       budgets: [{ name: budget, total_amount: 0 }],
@@ -135,7 +135,7 @@ export default function CreateProject() {
     navigate('/explore?tab=project');
   };
 
-  const submitDisabled = [proName, desc, sip, selectCategory, startLink, budget, leader, link, contact].some(
+  const submitDisabled = [proName, desc, selectCategory, startLink, budget, leader, link, contact].some(
     (item) => !item || (typeof item === 'string' && !item.trim()),
   );
 
@@ -182,12 +182,12 @@ export default function CreateProject() {
                 </InputBox>
               </li>
 
-              <li>
+              {/* <li>
                 <div className="title">{t('Project.SIPNumber')}</div>
                 <InputBox>
                   <Form.Control type="number" value={sip} onChange={(e) => setSip(e.target.value)} />
                 </InputBox>
-              </li>
+              </li> */}
               <li>
                 <div className="title">{t('Project.ProjectType')}</div>
                 <InputBox>
