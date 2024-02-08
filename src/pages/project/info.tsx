@@ -23,6 +23,7 @@ import CategoryTag from 'components/proposalCom/categoryTag';
 import LinkImg from '../../assets/Imgs/link.svg';
 import DefaultAvatar from 'assets/Imgs/defaultAvatar.png';
 import dayjs from 'dayjs';
+import ReactQuill from 'react-quill';
 
 type UserMap = { [w: string]: IUser };
 export default function InfoPage() {
@@ -201,7 +202,7 @@ export default function InfoPage() {
                   <DlBox>
                     <dl>
                       <dt>{t('Project.ProjectIntro')}</dt>
-                      <dd>{detail?.desc}</dd>
+                      <ReactQuill theme="snow" value={detail?.desc} modules={{ toolbar: false }} readOnly={true} />
                     </dl>
                     <dl>
                       <dt>{t('Project.StartProjectLink')}</dt>
@@ -279,7 +280,15 @@ export default function InfoPage() {
                     </dl>
                     <dl>
                       <dt>{t('Project.Deliverables')}</dt>
-                      <dd>{detail?.Deliverable}</dd>
+                      <dd>
+                        {' '}
+                        <ReactQuill
+                          theme="snow"
+                          value={detail?.Deliverable}
+                          modules={{ toolbar: false }}
+                          readOnly={true}
+                        />
+                      </dd>
                     </dl>
 
                     <dl>
@@ -366,6 +375,20 @@ const DlBox = styled.div`
     align-items: center;
     gap: 10px;
     word-break: break-all;
+  }
+  .quill {
+    width: 100%;
+  }
+  .ql-container {
+    width: 100% !important;
+    border: 0;
+  }
+  p {
+    padding: 0;
+  }
+  .ql-editor {
+    width: 100%;
+    padding: 0;
   }
 `;
 
