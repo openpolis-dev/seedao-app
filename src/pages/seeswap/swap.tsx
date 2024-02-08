@@ -123,7 +123,7 @@ export default function SeeSwap() {
 
   return (
     <Container>
-      <BackerNav to="/home" title="SNS" />
+      <BackerNav to="/home" title="See Swap" />
       <SwapContainer>
         {chainId === CHAIN_ID && (
           <iframe
