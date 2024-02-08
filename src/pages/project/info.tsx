@@ -25,6 +25,14 @@ import DefaultAvatar from 'assets/Imgs/defaultAvatar.png';
 import dayjs from 'dayjs';
 import ReactQuill from 'react-quill';
 
+const formatLink = (link: string) => {
+  console.log('link', link, link.length);
+  if (link.startsWith('/proposal/')) {
+    return `${window.location.origin}${link}`;
+  }
+  return link;
+};
+
 type UserMap = { [w: string]: IUser };
 export default function InfoPage() {
   const { t } = useTranslation();
@@ -213,8 +221,8 @@ export default function InfoPage() {
                       <dd>
                         {!!detail?.ApprovalLink && (
                           <>
-                            <span>{detail?.ApprovalLink}</span>{' '}
-                            <Link to={detail?.ApprovalLink} target="_blank">
+                            <span>{formatLink(detail?.ApprovalLink)}</span>{' '}
+                            <Link to={formatLink(detail?.ApprovalLink)} target="_blank">
                               <img src={LinkImg} alt="" />
                             </Link>
                           </>
@@ -226,8 +234,8 @@ export default function InfoPage() {
                       <dd>
                         {!!detail?.OverLink && (
                           <>
-                            <span>{detail?.OverLink}</span>{' '}
-                            <Link to={detail?.OverLink} target="_blank">
+                            <span>{formatLink(detail?.OverLink)}</span>{' '}
+                            <Link to={formatLink(detail?.OverLink)} target="_blank">
                               <img src={LinkImg} alt="" />
                             </Link>
                           </>
