@@ -421,7 +421,9 @@ export default function CreateStep({ onClick }: any) {
   };
 
   const handleFormSubmit = async (success: boolean, data: any) => {
-    if (!success) return;
+    if (!success) {
+      setLoading(false);
+    }
     setResult(data);
     if (template?.is_instant_vote) {
       setIsInstantVoteAlertVisible(true);
