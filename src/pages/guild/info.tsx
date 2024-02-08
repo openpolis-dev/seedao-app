@@ -22,7 +22,7 @@ import useQuerySNS from '../../hooks/useQuerySNS';
 import { IUser } from '../../type/user.type';
 import LinkImg from '../../assets/Imgs/link.svg';
 import ReactQuill from 'react-quill';
-import DefaultAvatar from '../assets/Imgs/defaultAvatarT.png';
+import DefaultAvatar from 'assets/Imgs/defaultAvatarT.png';
 
 type UserMap = { [w: string]: IUser };
 
