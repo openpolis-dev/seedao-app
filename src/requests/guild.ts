@@ -12,7 +12,12 @@ export const createNewGuild = (data: IGuild) => {
   return request.post(PATH_PREFIX, data);
 };
 
-export const getProjects = (data: IPageParams): Promise<ResponseData<IPageResponse<ReTurnProject>>> => {
+export interface IGuildPageParams extends IPageParams {
+  keywords?: string;
+  wallet?: string;
+}
+
+export const getProjects = (data: IGuildPageParams): Promise<ResponseData<IPageResponse<ReTurnProject>>> => {
   return request.get(PATH_PREFIX, data);
 };
 export const getMyProjects = (data: IPageParams) => {

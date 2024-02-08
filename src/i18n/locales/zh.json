@@ -173,8 +173,8 @@
     "Budget": "项目预算",
     "Points": "积分",
     "Members": "成员",
-    "Desc": "描述",
-    "ProjectIntro": "项目介绍",
+    "Desc": "项目简介",
+    "ProjectIntro": "项目简介",
     "Intro": "介绍",
     "upload": "上传LOGO",
     "ProjectInformation": "项目信息",
@@ -262,8 +262,8 @@
     "Budget": "预算",
     "Points": "积分",
     "Members": "成员",
-    "Desc": "描述",
-    "GuildIntro": "公会介绍",
+    "Desc": "公会简介",
+    "GuildIntro": "公会简介",
     "Intro": "介绍",
     "upload": "上传LOGO",
     "ProjectInformation": "公会信息",
@@ -522,7 +522,8 @@
     "QuerySNSFailed": "查询SNS失败",
     "InstallMetaMaskTip": "还没有钱包？去安装 >>",
     "SwapTip1": "您暂时没有权限使用此功能，请前往注册SNS获得权限",
-    "SwapTip2": "如果您已获得SNS，请耐心等待开启swap权限"
+    "SwapTip2": "如果您已获得SNS，请耐心等待开启swap权限",
+    "SearchHint": "搜索{{type}}名称/负责人"
   },
   "event": {
     "events": "活动",

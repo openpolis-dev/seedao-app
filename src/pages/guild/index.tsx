@@ -3,7 +3,7 @@ import { Row } from 'react-bootstrap';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { getMyProjects, getProjects } from 'requests/guild';
+import { getMyProjects, getProjects, IGuildPageParams } from 'requests/guild';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import Page from 'components/pagination';
 import { ReTurnProject } from 'type/project.type';
@@ -45,7 +45,12 @@ export interface listObj {
 }
 
 type UserMap = { [w: string]: IUser };
-export default function Index() {
+interface IProps {
+  walletSearchVal: string | undefined;
+  nameSearchVal: string | undefined;
+  setShowInput: (v: boolean) => void;
+}
+export default function Index({ nameSearchVal, walletSearchVal, setShowInput }: IProps) {
   const { t } = useTranslation();
   const {
     state: { language, account },
@@ -70,11 +75,13 @@ export default function Index() {
 
   useEffect(() => {
     if (current === 0) {
+      setShowInput(true);
       getList();
     } else {
+      setShowInput(false);
       getMyList();
     }
-  }, [pageCur, current]);
+  }, [pageCur, current, walletSearchVal, nameSearchVal]);
 
   useEffect(() => {
     const _list = [
@@ -131,11 +138,13 @@ export default function Index() {
 
   const getList = async () => {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
-    const obj: IPageParams = {
+    const obj: IGuildPageParams = {
       page: pageCur,
       size: pageSize,
       sort_order: 'desc',
       sort_field: 'create_ts',
+      keywords: nameSearchVal,
+      wallet: walletSearchVal,
     };
     const rt = await getProjects(obj);
     dispatch({ type: AppActionType.SET_LOADING, payload: null });

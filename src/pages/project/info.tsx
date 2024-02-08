@@ -23,6 +23,7 @@ import CategoryTag from 'components/proposalCom/categoryTag';
 import LinkImg from '../../assets/Imgs/link.svg';
 import DefaultAvatar from 'assets/Imgs/defaultAvatar.png';
 import dayjs from 'dayjs';
+import ReactQuill from 'react-quill';
 
 type UserMap = { [w: string]: IUser };
 export default function InfoPage() {
@@ -121,14 +122,14 @@ export default function InfoPage() {
 
   const showStatusComponent = () => {
     if (detail?.status === ProjectStatus.Closed) {
-      return <StatusBox className='close'>{t('Project.Closed')}</StatusBox>;
+      return <StatusBox className="close">{t('Project.Closed')}</StatusBox>;
     }
     if (detail?.status === ProjectStatus.Open) {
       // @ts-ignore
       return <StatusBox className="pending">{t('Project.Open')}</StatusBox>;
     }
     if (detail?.status === ProjectStatus.Pending) {
-      return <StatusBox >{t('Project.Pending')}</StatusBox>;
+      return <StatusBox>{t('Project.Pending')}</StatusBox>;
     }
   };
 
@@ -143,10 +144,11 @@ export default function InfoPage() {
 
   const formatBudget = (str: string) => {
     if (!str) return;
+    console.error(str);
     let strJson = JSON.parse(str);
 
     let strArr: any[] = [];
-    strJson.map((item: any) => {
+    strJson?.map((item: any) => {
       strArr.push({ ...item });
     });
     return strArr ?? [];
@@ -200,7 +202,11 @@ export default function InfoPage() {
                   <DlBox>
                     <dl>
                       <dt>{t('Project.ProjectIntro')}</dt>
-                      <dd>{detail?.desc}</dd>
+                      <dd>
+                        {!!detail?.desc?.length && (
+                          <ReactQuill theme="snow" value={detail?.desc} modules={{ toolbar: false }} readOnly={true} />
+                        )}
+                      </dd>
                     </dl>
                     <dl>
                       <dt>{t('Project.StartProjectLink')}</dt>
@@ -272,14 +278,22 @@ export default function InfoPage() {
                         {formatBudget(detail?.Budgets)?.map((i, index) => (
                           <FlexBox key={`budget_${index}`}>
                             <span>{i.name}</span>
-                            <span>{i.total_amount}</span>
                           </FlexBox>
                         ))}
                       </dd>
                     </dl>
                     <dl>
                       <dt>{t('Project.Deliverables')}</dt>
-                      <dd>{detail?.Deliverable}</dd>
+                      <dd>
+                        {!!detail?.Deliverable?.length && (
+                          <ReactQuill
+                            theme="snow"
+                            value={detail?.Deliverable}
+                            modules={{ toolbar: false }}
+                            readOnly={true}
+                          />
+                        )}
+                      </dd>
                     </dl>
 
                     <dl>
@@ -366,6 +380,20 @@ const DlBox = styled.div`
     align-items: center;
     gap: 10px;
     word-break: break-all;
+  }
+  .quill {
+    width: 100%;
+  }
+  .ql-container {
+    width: 100% !important;
+    border: 0;
+  }
+  p {
+    padding: 0;
+  }
+  .ql-editor {
+    width: 100%;
+    padding: 0;
   }
 `;
 

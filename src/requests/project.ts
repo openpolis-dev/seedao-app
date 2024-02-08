@@ -13,8 +13,13 @@ export const createNewProject = (data: IProject) => {
   return request.post(PATH_PREFIX, data);
 };
 
+export interface IProjectPageParams extends IPageParams {
+  keywords?: string;
+  wallet?: string;
+}
+
 export const getProjects = (
-  data: IPageParams,
+  data: IProjectPageParams,
   show_special = true,
 ): Promise<ResponseData<IPageResponse<ReTurnProject>>> => {
   return request.get(`${PATH_PREFIX}?show_special=${show_special}`, data);

@@ -52,7 +52,7 @@ const CloseOutSelectModal = ({ id, handleConfirm, ...props }: ICloseOutSelectMod
           <div className="label">{t('Proposal.AssociatedProposalComponent')}</div>
           <SeeSelect value={selectExtra} options={proposalList} onChange={(v: ISelectItem) => setSelectExtra(v)} />
           <CloseoutModalFooter>
-            <PlainButton onClick={props.h}>{t('general.cancel')}</PlainButton>
+            <PlainButton onClick={props.handleClose}>{t('general.cancel')}</PlainButton>
             <Button variant="primary" onClick={onConfirm}>
               {t('general.confirm')}
             </Button>
