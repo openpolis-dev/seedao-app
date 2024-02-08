@@ -12,7 +12,9 @@ export default function useProposalCategories() {
     const getProposalCategories = async () => {
       try {
         const resp = await getProposalCategoryList();
-        dispatch({ type: AppActionType.SET_PROPOSAL_CATEGORIES_V2, payload: resp.data });
+        const _list = resp.data || [];
+        _list.sort((a, b) => a.name.localeCompare(b.name));
+        dispatch({ type: AppActionType.SET_PROPOSAL_CATEGORIES_V2, payload: _list });
       } catch (error) {
         logError('getProposalCategories failed', error);
       }

@@ -19,7 +19,7 @@ import { getUsers } from '../../requests/user';
 import useQuerySNS from '../../hooks/useQuerySNS';
 import { IUser } from '../../type/user.type';
 import publicJs from '../../utils/publicJs';
-import CategoryTag from 'components/proposalCom/categoryTag';
+import CategoryTag, { formatCategory } from 'components/proposalCom/categoryTag';
 import LinkImg from '../../assets/Imgs/link.svg';
 import DefaultAvatar from 'assets/Imgs/defaultAvatar.png';
 import dayjs from 'dayjs';
@@ -175,8 +175,8 @@ export default function InfoPage() {
                       {/*    <SipTag key={index} slug={item} />*/}
                       {/*  ))}*/}
                       {/*</ProposalBox>*/}
-                      <SipTagStyle>SIP - {detail?.SIP}</SipTagStyle>
-                      {detail?.Category && <CategoryTag>{detail?.Category}</CategoryTag>}
+                      {detail?.SIP && <SipTagStyle>SIP - {detail?.SIP}</SipTagStyle>}
+                      {detail?.Category && <CategoryTag>{formatCategory(detail?.Category)}</CategoryTag>}
                       {/*<StatusBox className={detail?.status}>{t(`Project.Edit`)}</StatusBox>*/}
                       {showStatusComponent()}
                     </FlexFirst>

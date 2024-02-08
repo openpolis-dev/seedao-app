@@ -16,6 +16,7 @@ import sns from '@seedao/sns-js';
 import { compressionFile, fileToDataURL } from 'utils/image';
 import DatePickerStyle from 'components/datePicker';
 import useProposalCategories from 'hooks/useProposalCategories';
+import { formatCategory } from 'components/proposalCom/categoryTag';
 
 const LinkPrefix = `${window.location.origin}/proposal/thread/`;
 
@@ -44,7 +45,7 @@ export default function CreateProject() {
 
   const proposalCategories = useProposalCategories();
   const categoryOptions = proposalCategories
-    ? proposalCategories.map((item) => ({ value: item.id, label: item.name }))
+    ? proposalCategories.map((item) => ({ value: item.id, label: formatCategory(item.name) }))
     : [];
   const [selectCategory, setSelectCategory] = useState<ISelectItem>();
 
