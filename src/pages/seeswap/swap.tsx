@@ -136,7 +136,7 @@ export default function SeeSwap() {
           <iframe
             src={`widget.html?fixtureId=%7B"path"%3A"src%2Fcosmos%2FMain.fixture.tsx"%2C"name"%3Anull%7D`}
             title="swap"
-            style={{ width: '100%', height: '490px' }}
+            style={{ width: '100%', height: '496px' }}
             frameBorder={0}
             id="swap-widget"
             onLoad={handleStyle}
