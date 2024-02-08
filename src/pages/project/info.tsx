@@ -121,14 +121,14 @@ export default function InfoPage() {
 
   const showStatusComponent = () => {
     if (detail?.status === ProjectStatus.Closed) {
-      return <StatusBox className='close'>{t('Project.Closed')}</StatusBox>;
+      return <StatusBox className="close">{t('Project.Closed')}</StatusBox>;
     }
     if (detail?.status === ProjectStatus.Open) {
       // @ts-ignore
       return <StatusBox className="pending">{t('Project.Open')}</StatusBox>;
     }
     if (detail?.status === ProjectStatus.Pending) {
-      return <StatusBox >{t('Project.Pending')}</StatusBox>;
+      return <StatusBox>{t('Project.Pending')}</StatusBox>;
     }
   };
 
@@ -143,10 +143,11 @@ export default function InfoPage() {
 
   const formatBudget = (str: string) => {
     if (!str) return;
+    console.error(str);
     let strJson = JSON.parse(str);
 
     let strArr: any[] = [];
-    strJson.map((item: any) => {
+    strJson?.map((item: any) => {
       strArr.push({ ...item });
     });
     return strArr ?? [];
@@ -272,7 +273,6 @@ export default function InfoPage() {
                         {formatBudget(detail?.Budgets)?.map((i, index) => (
                           <FlexBox key={`budget_${index}`}>
                             <span>{i.name}</span>
-                            <span>{i.total_amount}</span>
                           </FlexBox>
                         ))}
                       </dd>
