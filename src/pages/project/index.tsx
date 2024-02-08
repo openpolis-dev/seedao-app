@@ -3,7 +3,7 @@ import { Row, Button } from 'react-bootstrap';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { getMyProjects, getProjects } from 'requests/project';
+import { getMyProjects, getProjects, IProjectPageParams } from 'requests/project';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import Page from 'components/pagination';
 import { ReTurnProject } from 'type/project.type';
@@ -47,7 +47,12 @@ export interface listObj {
 }
 
 type UserMap = { [w: string]: IUser };
-export default function Index() {
+interface IProps {
+  walletSearchVal: string | undefined;
+  nameSearchVal: string | undefined;
+  setShowInput: (v: boolean) => void;
+}
+export default function Index({ nameSearchVal, walletSearchVal, setShowInput }: IProps) {
   const { t } = useTranslation();
   const {
     state: { language, account, theme },
@@ -70,11 +75,13 @@ export default function Index() {
 
   useEffect(() => {
     if (current < 2) {
+      setShowInput(true);
       getList();
     } else {
+      setShowInput(false);
       getMyList();
     }
-  }, [pageCur, current]);
+  }, [pageCur, current, walletSearchVal, nameSearchVal]);
 
   useEffect(() => {
     const _list = [
@@ -137,13 +144,14 @@ export default function Index() {
     if (current > 2) return;
     const stt = current === 1 ? 'closed' : '';
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
-    const obj: IPageParams = {
-      // status: stt,
+    const obj: IProjectPageParams = {
       status: 'open,pending_close,closed',
       page: pageCur,
       size: pageSize,
       sort_order: 'desc',
       sort_field: 'create_ts',
+      keywords: nameSearchVal,
+      wallet: walletSearchVal,
     };
     const rt = await getProjects(obj, false);
 
