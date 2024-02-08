@@ -21,6 +21,7 @@ import { getUsers } from '../../requests/user';
 import useQuerySNS from '../../hooks/useQuerySNS';
 import { IUser } from '../../type/user.type';
 import LinkImg from '../../assets/Imgs/link.svg';
+import ReactQuill from 'react-quill';
 
 type UserMap = { [w: string]: IUser };
 

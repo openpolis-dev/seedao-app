@@ -147,7 +147,7 @@ export default function ProjectOrGuildItem({ data, onClickItem, noTag }: Iprops)
   const { t } = useTranslation();
   const showStatusComponent = () => {
     if (data?.status === ProjectStatus.Closed) {
-      return <StatusBox className='close'>{t('Project.Closed')}</StatusBox>;
+      return <StatusBox className="close">{t('Project.Closed')}</StatusBox>;
     }
     if (data?.status === ProjectStatus.Open) {
       // @ts-ignore
@@ -156,6 +156,12 @@ export default function ProjectOrGuildItem({ data, onClickItem, noTag }: Iprops)
     if (data?.status === ProjectStatus.Pending) {
       return <StatusBox>{t('Project.Pending')}</StatusBox>;
     }
+  };
+
+  const formatContent = (html: string) => {
+    html = html.replace(/<!--[\s\S]*?-->/g, '');
+    html = html.replace(/<[^>]*>/g, '');
+    return html;
   };
   return (
     <Box>
@@ -167,7 +173,7 @@ export default function ProjectOrGuildItem({ data, onClickItem, noTag }: Iprops)
             <img src={data.logo || DefaultLogo} alt="" />
           </ImageBox>
           <div className="title">{data.name}</div>
-          <Desc>{data.desc ? data.desc : t('Project.ProjectOrGuildItem')}</Desc>
+          <Desc>{data.desc ? formatContent(data.desc) : t('Project.ProjectOrGuildItem')}</Desc>
           {!!data.user && (
             <MemBox>
               <Avatar>
