@@ -8,7 +8,7 @@ const Mask = styled.div`
   width: 100vw;
   height: 100vh;
   position: fixed;
-  z-index: 999;
+  z-index: 9999;
   left: 0;
   top: 0;
   display: flex;
