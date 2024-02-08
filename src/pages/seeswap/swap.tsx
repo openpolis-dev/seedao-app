@@ -13,6 +13,7 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { ethers } from 'ethers';
 import publicJs from 'utils/publicJs';
+import { useAuthContext } from 'providers/authProvider';
 
 const CHAIN_ID = 5;
 const SEE_TOKEN_ADDRESS = '0xF0f214BE4Af4625F5B9EA8A3CE2cCf6d8f35F9f4';
@@ -45,6 +46,9 @@ const ABI = [
 
 export default function SeeSwap() {
   const { t } = useTranslation();
+  const {
+    state: { theme },
+  } = useAuthContext();
   const signer = useEthersSigner({ chainId: CHAIN_ID });
   const { switchNetworkAsync } = useSwitchNetwork();
   const [showIframe, setShowIframe] = useState(false);
@@ -89,6 +93,9 @@ export default function SeeSwap() {
         const el = iframeDocument?.querySelector(classname);
         el?.setAttribute('style', 'display: none');
       });
+      const box = iframeDocument?.querySelector('.fNvcGj');
+      box?.setAttribute('style', 'background-color:#fafafa;background-image:unset');
+
       setShowIframe(true);
     }, 3000);
   };
@@ -129,7 +136,7 @@ export default function SeeSwap() {
           <iframe
             src={`widget.html?fixtureId=%7B"path"%3A"src%2Fcosmos%2FMain.fixture.tsx"%2C"name"%3Anull%7D`}
             title="swap"
-            style={{ width: '100%', height: '500px' }}
+            style={{ width: '100%', height: '490px' }}
             frameBorder={0}
             id="swap-widget"
             onLoad={handleStyle}
