@@ -19,11 +19,19 @@ import { getUsers } from '../../requests/user';
 import useQuerySNS from '../../hooks/useQuerySNS';
 import { IUser } from '../../type/user.type';
 import publicJs from '../../utils/publicJs';
-import CategoryTag from 'components/proposalCom/categoryTag';
+import CategoryTag, { formatCategory } from 'components/proposalCom/categoryTag';
 import LinkImg from '../../assets/Imgs/link.svg';
 import DefaultAvatar from 'assets/Imgs/defaultAvatar.png';
 import dayjs from 'dayjs';
 import ReactQuill from 'react-quill';
+
+const formatLink = (link: string) => {
+  console.log('link', link, link.length);
+  if (link.startsWith('/proposal/')) {
+    return `${window.location.origin}${link}`;
+  }
+  return link;
+};
 
 type UserMap = { [w: string]: IUser };
 export default function InfoPage() {
@@ -175,8 +183,8 @@ export default function InfoPage() {
                       {/*    <SipTag key={index} slug={item} />*/}
                       {/*  ))}*/}
                       {/*</ProposalBox>*/}
-                      <SipTagStyle>SIP - {detail?.SIP}</SipTagStyle>
-                      {detail?.Category && <CategoryTag>{detail?.Category}</CategoryTag>}
+                      {detail?.SIP && <SipTagStyle>SIP - {detail?.SIP}</SipTagStyle>}
+                      {detail?.Category && <CategoryTag>{formatCategory(detail?.Category)}</CategoryTag>}
                       {/*<StatusBox className={detail?.status}>{t(`Project.Edit`)}</StatusBox>*/}
                       {showStatusComponent()}
                     </FlexFirst>
@@ -213,8 +221,8 @@ export default function InfoPage() {
                       <dd>
                         {!!detail?.ApprovalLink && (
                           <>
-                            <span>{detail?.ApprovalLink}</span>{' '}
-                            <Link to={detail?.ApprovalLink} target="_blank">
+                            <span>{formatLink(detail?.ApprovalLink)}</span>{' '}
+                            <Link to={formatLink(detail?.ApprovalLink)} target="_blank">
                               <img src={LinkImg} alt="" />
                             </Link>
                           </>
@@ -226,8 +234,8 @@ export default function InfoPage() {
                       <dd>
                         {!!detail?.OverLink && (
                           <>
-                            <span>{detail?.OverLink}</span>{' '}
-                            <Link to={detail?.OverLink} target="_blank">
+                            <span>{formatLink(detail?.OverLink)}</span>{' '}
+                            <Link to={formatLink(detail?.OverLink)} target="_blank">
                               <img src={LinkImg} alt="" />
                             </Link>
                           </>
