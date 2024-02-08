@@ -202,7 +202,11 @@ export default function InfoPage() {
                   <DlBox>
                     <dl>
                       <dt>{t('Project.ProjectIntro')}</dt>
-                      <ReactQuill theme="snow" value={detail?.desc} modules={{ toolbar: false }} readOnly={true} />
+                      <dd>
+                        {!!detail?.desc?.length && (
+                          <ReactQuill theme="snow" value={detail?.desc} modules={{ toolbar: false }} readOnly={true} />
+                        )}
+                      </dd>
                     </dl>
                     <dl>
                       <dt>{t('Project.StartProjectLink')}</dt>
@@ -281,13 +285,14 @@ export default function InfoPage() {
                     <dl>
                       <dt>{t('Project.Deliverables')}</dt>
                       <dd>
-                        {' '}
-                        <ReactQuill
-                          theme="snow"
-                          value={detail?.Deliverable}
-                          modules={{ toolbar: false }}
-                          readOnly={true}
-                        />
+                        {!!detail?.Deliverable?.length && (
+                          <ReactQuill
+                            theme="snow"
+                            value={detail?.Deliverable}
+                            modules={{ toolbar: false }}
+                            readOnly={true}
+                          />
+                        )}
                       </dd>
                     </dl>
 
