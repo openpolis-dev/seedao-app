@@ -75,6 +75,8 @@ export default function ExplorePage() {
     } else if (ethers.utils.isAddress(inputSearchVal)) {
       // address
       setWalletSearchVal(inputSearchVal?.toLocaleLowerCase());
+    } else if (inputSearchVal) {
+      setNameSearchVal(inputSearchVal);
     } else {
       setNameSearchVal(inputSearchVal);
       setWalletSearchVal(inputSearchVal);
