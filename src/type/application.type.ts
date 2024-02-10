@@ -6,6 +6,7 @@ export enum ApplicationType {
 export enum ApplicationEntity {
   Project = 'project',
   Guild = 'guild',
+  CommonBudget = 'common_budget_source', // 非项目、非工会的预算来源，目前有孵化器和市政厅 [F]
 }
 
 export enum ApplicationStatus {

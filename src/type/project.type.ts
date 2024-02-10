@@ -83,6 +83,13 @@ export interface IGuildDisplay extends IGuild {
   update_ts: number;
 }
 
+export interface ReturnBudget {
+  id: number;
+  name: string;
+  created_ts: string;
+  updated_ts: string;
+}
+
 export interface ReTurnProject {
   create_ts: number;
   id: number;
