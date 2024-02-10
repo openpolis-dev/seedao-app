@@ -6,6 +6,7 @@ import * as application from './applications';
 import * as guild from './guild';
 import * as treasury from './treasury';
 import * as event from './event';
+import * as budget from './budget';
 
 export default {
   project,
@@ -16,4 +17,5 @@ export default {
   treasury,
   event,
   proposalV2,
+  budget,
 };
