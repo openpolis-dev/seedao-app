@@ -29,8 +29,9 @@ export interface IQueryApplicationsParams {
   detailed_type?: string;
 }
 
+export type EntityQueryType = 'project' | 'guild' | 'common_budget_source';
 export interface IQueryParams extends IQueryApplicationsParams {
-  entity?: 'project' | 'guild';
+  entity?: EntityQueryType;
   entity_id?: number;
 }
 
