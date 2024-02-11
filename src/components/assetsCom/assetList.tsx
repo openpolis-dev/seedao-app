@@ -4,8 +4,8 @@ import { Button, Form, Table } from 'react-bootstrap';
 import React, { useState, useEffect, useMemo } from 'react';
 import Page from 'components/pagination';
 import requests from 'requests';
-import { IQueryParams, EntityQueryType } from 'requests/applications';
-import { IApplicationDisplay, ApplicationStatus } from 'type/application.type';
+import { IQueryParams } from 'requests/applications';
+import { IApplicationDisplay, ApplicationStatus, ApplicationEntity } from 'type/application.type';
 import NoItem from 'components/noItem';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import { formatTime } from 'utils/time';
@@ -197,7 +197,7 @@ export default function AssetList() {
   const [selectStatus, setSelectStatus] = useState<ApplicationStatus>();
   // budget source
   const allSource = useBudgetSource();
-  const [selectSource, setSelectSource] = useState<{ id: number; type: EntityQueryType }>();
+  const [selectSource, setSelectSource] = useState<{ id: number; type: ApplicationEntity }>();
   const [detailDisplay, setDetailDisplay] = useState<IApplicationDisplay>();
   // season
   const seasons = useSeasons();

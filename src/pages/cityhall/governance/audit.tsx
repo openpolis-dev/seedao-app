@@ -2,9 +2,14 @@ import styled from 'styled-components';
 import React, { useEffect, useMemo, useState } from 'react';
 import Page from 'components/pagination';
 import requests from 'requests';
-import { IApplicantBundleDisplay, ApplicationStatus, IApplicationDisplay } from 'type/application.type';
+import {
+  IApplicantBundleDisplay,
+  ApplicationStatus,
+  IApplicationDisplay,
+  ApplicationEntity,
+} from 'type/application.type';
 import { formatTime } from 'utils/time';
-import { IQueryParams, EntityQueryType } from 'requests/applications';
+import { IQueryParams } from 'requests/applications';
 import NoItem from 'components/noItem';
 import publicJs from 'utils/publicJs';
 import { useTranslation } from 'react-i18next';
@@ -94,7 +99,7 @@ export default function Register() {
 
   // budget source
   const allSource = useBudgetSource();
-  const [selectSource, setSelectSource] = useState<{ id: number; type: EntityQueryType }>();
+  const [selectSource, setSelectSource] = useState<{ id: number; type: ApplicationEntity }>();
 
   // search applicant
   const [applicantKeyword, setApplicantKeyword] = useState('');
