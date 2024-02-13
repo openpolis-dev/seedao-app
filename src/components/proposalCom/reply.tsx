@@ -299,17 +299,17 @@ const ReplyComponent = React.forwardRef<IReplyOutputProps, IProps>(
                 )}
               </InputReply>
             )}
-            {toBeDeleteId && (
-              <ConfirmModal
-                msg={t('Proposal.ConfirmDeleteComment')}
-                onClose={() => {
-                  setTobeDeletedId(undefined);
-                  setCurrentBindIdx(undefined);
-                }}
-                onConfirm={handleDeletePost}
-              />
-            )}
           </ReplyArea>
+        )}
+        {toBeDeleteId && (
+          <ConfirmModal
+            msg={t('Proposal.ConfirmDeleteComment')}
+            onClose={() => {
+              setTobeDeletedId(undefined);
+              setCurrentBindIdx(undefined);
+            }}
+            onConfirm={handleDeletePost}
+          />
         )}
       </ReplyComponentStyle>
     );
