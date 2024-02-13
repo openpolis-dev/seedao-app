@@ -166,7 +166,9 @@ export default function Index() {
                   <DlBox>
                     <dl>
                       <dt>{t('Guild.GuildIntro')}</dt>
-                      <dd>{detail?.desc}</dd>
+                      <dd>
+                        <Desc>{detail?.desc}</Desc>
+                      </dd>
                     </dl>
 
                     <dl>
@@ -433,4 +435,8 @@ const ClosedButton = styled(Button)`
   position: absolute;
   right: 20px;
   top: 20px;
+`;
+
+const Desc = styled.div`
+  white-space: pre-wrap;
 `;

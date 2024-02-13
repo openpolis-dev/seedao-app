@@ -212,11 +212,7 @@ export default function InfoPage() {
                   <DlBox>
                     <dl>
                       <dt>{t('Project.ProjectIntro')}</dt>
-                      <dd>
-                        {!!detail?.desc?.length && (
-                          <ReactQuill theme="snow" value={detail?.desc} modules={{ toolbar: false }} readOnly={true} />
-                        )}
-                      </dd>
+                      <dd><Desc>{detail?.desc}</Desc></dd>
                     </dl>
                     <dl>
                       <dt>{t('Project.StartProjectLink')}</dt>
@@ -577,4 +573,8 @@ const ClosedButton = styled(Button)`
   position: absolute;
   right: 20px;
   top: 20px;
+`;
+
+const Desc = styled.div`
+  white-space: pre-wrap;
 `;
