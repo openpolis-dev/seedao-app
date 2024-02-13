@@ -131,15 +131,15 @@ export default function InfoPage() {
   };
 
   const showStatusComponent = () => {
-    if (detail?.status === ProjectStatus.Closed) {
-      return <StatusBox className="close">{t('Project.Closed')}</StatusBox>;
-    }
-    if (detail?.status === ProjectStatus.Open) {
-      // @ts-ignore
-      return <StatusBox className="pending">{t('Project.Open')}</StatusBox>;
-    }
-    if (detail?.status === ProjectStatus.Pending) {
-      return <StatusBox>{t('Project.Pending')}</StatusBox>;
+    switch (detail?.status) {
+      case ProjectStatus.Closed:
+        return <StatusBox className="close">{t('Project.Closed')}</StatusBox>;
+      case ProjectStatus.Open:
+        return <StatusBox>{t('Project.Open')}</StatusBox>;
+      case ProjectStatus.Closing:
+        return <StatusBox>{t('Project.Closing')}</StatusBox>;
+      case ProjectStatus.CloseFailed:
+        return <StatusBox className="close-failed">{t('Project.CloseFailed')}</StatusBox>;
     }
   };
 
@@ -351,6 +351,9 @@ const StatusBox = styled.div`
   }
   &.close {
     background: rgb(163, 160, 160);
+  }
+  &.close-failed {
+    background: rgb(255, 51, 51);
   }
 `;
 

@@ -33,6 +33,8 @@ export enum ProjectStatus {
   Open = 'open',
   Pending = 'pending_close',
   Closed = 'closed',
+  Closing = 'closing',
+  CloseFailed = 'close_failed',
 }
 
 export interface IBaseProject {

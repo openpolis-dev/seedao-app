@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { getMyProjects, getProjects, IProjectPageParams } from 'requests/project';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import Page from 'components/pagination';
-import { ReTurnProject } from 'type/project.type';
+import { ProjectStatus, ReTurnProject } from 'type/project.type';
 import NoItem from 'components/noItem';
 import useCheckLogin from 'hooks/useCheckLogin';
 import ProjectOrGuildItem from 'components/projectOrGuildItem';
@@ -145,7 +145,7 @@ export default function Index({ nameSearchVal, walletSearchVal, setShowInput }: 
     const stt = current === 1 ? 'closed' : '';
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     const obj: IProjectPageParams = {
-      status: 'open,pending_close,closed',
+      status: [ProjectStatus.Open, ProjectStatus.Closing, ProjectStatus.CloseFailed].join(','),
       page: pageCur,
       size: pageSize,
       sort_order: 'desc',
