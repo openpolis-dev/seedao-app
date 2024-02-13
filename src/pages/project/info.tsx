@@ -24,6 +24,7 @@ import LinkImg from '../../assets/Imgs/link.svg';
 import DefaultAvatar from 'assets/Imgs/defaultAvatar.png';
 import dayjs from 'dayjs';
 import ReactQuill from 'react-quill';
+import ProfileComponent from 'profile-components/profile';
 
 const formatLink = (link: string) => {
   console.log('link', link, link.length);
@@ -49,6 +50,7 @@ export default function InfoPage() {
   const [userMap, setUserMap] = useState<UserMap>({});
   const [sponserList, setSponserList] = useState<any[]>([]);
   const [show, setShow] = useState(false);
+  const [profileVisible, setProfileVisible] = useState(false);
 
   const canCreateProject = usePermission(PermissionAction.CreateApplication, PermissionObject.Project);
 
@@ -247,7 +249,7 @@ export default function InfoPage() {
                       <dd>
                         {sponserList.map((item: any, index: number) => (
                           <MemBox key={`avatar_${index}`}>
-                            <Avatar>
+                            <Avatar onClick={() => setProfileVisible(true)}>
                               <img src={item?.avatar ? item?.avatar : DefaultAvatar} alt="" />
                             </Avatar>
                             <span>
@@ -314,6 +316,13 @@ export default function InfoPage() {
               </LastLine>
             </AllBox>
           </FlexLine>
+          {profileVisible && (
+            <ProfileComponent
+              address={sponserList[0]?.wallet}
+              theme={theme}
+              handleClose={() => setProfileVisible(false)}
+            />
+          )}
         </Content>
       </Box>
     </OuterBox>
@@ -370,6 +379,7 @@ const Avatar = styled.div`
     object-fit: cover;
     object-position: center;
     border-radius: 100%;
+    cursor: pointer;
   }
 `;
 const DlBox = styled.div`

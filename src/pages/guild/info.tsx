@@ -23,6 +23,7 @@ import { IUser } from '../../type/user.type';
 import LinkImg from '../../assets/Imgs/link.svg';
 import ReactQuill from 'react-quill';
 import DefaultAvatar from 'assets/Imgs/defaultAvatarT.png';
+import ProfileComponent from 'profile-components/profile';
 
 type UserMap = { [w: string]: IUser };
 
@@ -40,6 +41,7 @@ export default function Index() {
   const [userMap, setUserMap] = useState<UserMap>({});
   const [sponserList, setSponserList] = useState<any[]>([]);
   const [show, setShow] = useState(false);
+  const [profileVisible, setProfileVisible] = useState(false);
 
   const canCreatePermission = usePermission(PermissionAction.CreateApplication, PermissionObject.Guild);
 
@@ -172,7 +174,7 @@ export default function Index() {
                       <dd>
                         {sponserList.map((item: any, index: number) => (
                           <MemBox key={`avatar_${index}`}>
-                            <Avatar>
+                            <Avatar onClick={() => setProfileVisible(true)}>
                               <img src={item?.avatar || DefaultAvatar} alt="" />
                             </Avatar>
                             <span>
@@ -212,6 +214,13 @@ export default function Index() {
               </LastLine>
             </AllBox>
           </FlexLine>
+          {profileVisible && (
+            <ProfileComponent
+              address={sponserList[0]?.wallet}
+              theme={theme}
+              handleClose={() => setProfileVisible(false)}
+            />
+          )}
         </Content>
       </Box>
     </OuterBox>
@@ -257,6 +266,7 @@ const Avatar = styled.div`
     object-fit: cover;
     object-position: center;
     border-radius: 100%;
+    cursor: pointer;
   }
 `;
 const DlBox = styled.div`
