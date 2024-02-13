@@ -157,6 +157,8 @@
     "StartProjectLink": "立项链接",
     "EndProjectLink": "结项链接",
     "Open": "Open",
+    "Closing": "Closing",
+    "CloseFailed": "Close Failed",
     "PlanFinishTime": "Planned completion time",
     "ProjectType": "Project Type",
     "ProjectOrGuildItem": "Nothing left here.",

@@ -8,7 +8,7 @@ import RangeDatePickerStyle from 'components/rangeDatePicker';
 // import { Checkbox } from '@paljs/ui/Checkbox';
 import requests from 'requests';
 import { IQueryParams } from 'requests/applications';
-import { IApplicationDisplay, ApplicationStatus } from 'type/application.type';
+import { IApplicationDisplay, ApplicationStatus, ApplicationEntity } from 'type/application.type';
 import utils from 'utils/publicJs';
 import NoItem from 'components/noItem';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
@@ -114,7 +114,7 @@ export default function AssetList() {
   const [selectApplicant, setSelectApplicant] = useState<string>();
 
   const [allSource, setAllSource] = useState<ISelectItem[]>([]);
-  const [selectSource, setSelectSource] = useState<{ id: number; type: 'project' | 'guild' }>();
+  const [selectSource, setSelectSource] = useState<{ id: number; type: ApplicationEntity }>();
 
   const statusOption = useMemo(() => {
     return [

@@ -123,6 +123,9 @@ const StatusBox = styled.div`
   &.close {
     background: rgb(163, 160, 160);
   }
+  &.close-failed {
+    background: rgb(255, 51, 51);
+  }
 `;
 
 interface Iprops {
@@ -146,15 +149,15 @@ interface Iprops {
 export default function ProjectOrGuildItem({ data, onClickItem, noTag }: Iprops) {
   const { t } = useTranslation();
   const showStatusComponent = () => {
-    if (data?.status === ProjectStatus.Closed) {
-      return <StatusBox className="close">{t('Project.Closed')}</StatusBox>;
-    }
-    if (data?.status === ProjectStatus.Open) {
-      // @ts-ignore
-      return <StatusBox className="pending">{t('Project.Open')}</StatusBox>;
-    }
-    if (data?.status === ProjectStatus.Pending) {
-      return <StatusBox>{t('Project.Pending')}</StatusBox>;
+    switch (data?.status) { 
+      case ProjectStatus.Closed:
+        return <StatusBox className="close">{t('Project.Closed')}</StatusBox>;
+      case ProjectStatus.Open:
+        return <StatusBox >{t('Project.Open')}</StatusBox>;
+      case ProjectStatus.Closing:
+        return <StatusBox>{t('Project.Closing')}</StatusBox>;
+      case ProjectStatus.CloseFailed:
+        return <StatusBox className="close-failed">{t('Project.CloseFailed')}</StatusBox>;
     }
   };
 

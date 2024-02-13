@@ -24,6 +24,7 @@ import LinkImg from '../../assets/Imgs/link.svg';
 import DefaultAvatar from 'assets/Imgs/defaultAvatar.png';
 import dayjs from 'dayjs';
 import ReactQuill from 'react-quill';
+import ProfileComponent from 'profile-components/profile';
 
 const formatLink = (link: string) => {
   console.log('link', link, link.length);
@@ -49,6 +50,7 @@ export default function InfoPage() {
   const [userMap, setUserMap] = useState<UserMap>({});
   const [sponserList, setSponserList] = useState<any[]>([]);
   const [show, setShow] = useState(false);
+  const [profileVisible, setProfileVisible] = useState(false);
 
   const canCreateProject = usePermission(PermissionAction.CreateApplication, PermissionObject.Project);
 
@@ -129,15 +131,15 @@ export default function InfoPage() {
   };
 
   const showStatusComponent = () => {
-    if (detail?.status === ProjectStatus.Closed) {
-      return <StatusBox className="close">{t('Project.Closed')}</StatusBox>;
-    }
-    if (detail?.status === ProjectStatus.Open) {
-      // @ts-ignore
-      return <StatusBox className="pending">{t('Project.Open')}</StatusBox>;
-    }
-    if (detail?.status === ProjectStatus.Pending) {
-      return <StatusBox>{t('Project.Pending')}</StatusBox>;
+    switch (detail?.status) {
+      case ProjectStatus.Closed:
+        return <StatusBox className="close">{t('Project.Closed')}</StatusBox>;
+      case ProjectStatus.Open:
+        return <StatusBox>{t('Project.Open')}</StatusBox>;
+      case ProjectStatus.Closing:
+        return <StatusBox>{t('Project.Closing')}</StatusBox>;
+      case ProjectStatus.CloseFailed:
+        return <StatusBox className="close-failed">{t('Project.CloseFailed')}</StatusBox>;
     }
   };
 
@@ -210,11 +212,7 @@ export default function InfoPage() {
                   <DlBox>
                     <dl>
                       <dt>{t('Project.ProjectIntro')}</dt>
-                      <dd>
-                        {!!detail?.desc?.length && (
-                          <ReactQuill theme="snow" value={detail?.desc} modules={{ toolbar: false }} readOnly={true} />
-                        )}
-                      </dd>
+                      <dd><Desc>{detail?.desc}</Desc></dd>
                     </dl>
                     <dl>
                       <dt>{t('Project.StartProjectLink')}</dt>
@@ -247,7 +245,7 @@ export default function InfoPage() {
                       <dd>
                         {sponserList.map((item: any, index: number) => (
                           <MemBox key={`avatar_${index}`}>
-                            <Avatar>
+                            <Avatar onClick={() => setProfileVisible(true)}>
                               <img src={item?.avatar ? item?.avatar : DefaultAvatar} alt="" />
                             </Avatar>
                             <span>
@@ -314,6 +312,13 @@ export default function InfoPage() {
               </LastLine>
             </AllBox>
           </FlexLine>
+          {profileVisible && (
+            <ProfileComponent
+              address={sponserList[0]?.wallet}
+              theme={theme}
+              handleClose={() => setProfileVisible(false)}
+            />
+          )}
         </Content>
       </Box>
     </OuterBox>
@@ -347,6 +352,9 @@ const StatusBox = styled.div`
   &.close {
     background: rgb(163, 160, 160);
   }
+  &.close-failed {
+    background: rgb(255, 51, 51);
+  }
 `;
 
 const MemBox = styled.div`
@@ -370,6 +378,7 @@ const Avatar = styled.div`
     object-fit: cover;
     object-position: center;
     border-radius: 100%;
+    cursor: pointer;
   }
 `;
 const DlBox = styled.div`
@@ -567,4 +576,8 @@ const ClosedButton = styled(Button)`
   position: absolute;
   right: 20px;
   top: 20px;
+`;
+
+const Desc = styled.div`
+  white-space: pre-wrap;
 `;

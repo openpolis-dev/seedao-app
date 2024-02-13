@@ -30,7 +30,7 @@ export interface IQueryApplicationsParams {
 }
 
 export interface IQueryParams extends IQueryApplicationsParams {
-  entity?: 'project' | 'guild';
+  entity?: ApplicationEntity;
   entity_id?: number;
 }
 
