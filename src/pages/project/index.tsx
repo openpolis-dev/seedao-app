@@ -142,10 +142,8 @@ export default function Index({ nameSearchVal, walletSearchVal, setShowInput }: 
 
   const getList = async () => {
     if (current > 2) return;
-    const stt = current === 1 ? 'closed' : '';
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     const obj: IProjectPageParams = {
-      status: [ProjectStatus.Open, ProjectStatus.Closing, ProjectStatus.CloseFailed].join(','),
       page: pageCur,
       size: pageSize,
       sort_order: 'desc',
