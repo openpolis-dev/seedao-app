@@ -471,7 +471,9 @@
     "levelTips": "To LV {{level}} you need",
     "nextLevel": "Next Level",
     "DefaultName": "No Name",
-    "DefaultBio": "No Bio"
+    "DefaultBio": "No Bio",
+    "InviteInfo": "{{amount}} SCR (including offchain) has been earned through invitation to register for SNS, ",
+    "ViewDetails": "view details >>"
   },
   "roles": {
     "SGN_HOLDER": "SEED Holder",

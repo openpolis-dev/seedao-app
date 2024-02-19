@@ -471,7 +471,9 @@
     "levelTips": "距离升级到 LV{{level}} 还需",
     "nextLevel": "下一等级" ,
     "DefaultName": "TA没有留下昵称",
-    "DefaultBio": "TA很神秘哦，并没有介绍自己"
+    "DefaultBio": "TA很神秘哦，并没有介绍自己",
+    "InviteInfo": "已通过邀请注册 SNS 获得 {{amount}} SCR（含未上链）, ",
+    "ViewDetails": "查看详情 >>"
   },
   "roles": {
     "SGN_HOLDER": "SEED持有者",

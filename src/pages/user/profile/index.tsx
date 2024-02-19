@@ -2,7 +2,7 @@ import { Button } from 'react-bootstrap';
 import styled from 'styled-components';
 import React, { useEffect, useState } from 'react';
 import { useAuthContext } from 'providers/authProvider';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import useToast from 'hooks/useToast';
 import { ContainerPadding } from 'assets/styles/global';
 import CopyBox from 'components/copy';
@@ -71,6 +71,7 @@ export default function Profile() {
   const [detail, setDetail] = useState<any>();
   const [sbtList, setSbtList] = useState<any[]>([]);
   const [sbtArr, setSbtArr] = useState<any[]>([]);
+  const [inviteScr, setInviteScr] = useState<number>(0);
 
   useEffect(() => {
     if (!seed?.length) return;
@@ -136,9 +137,14 @@ export default function Profile() {
     }
   };
 
+  const getInviteInfo = async () => {
+    // TODO;
+  };
+
   useEffect(() => {
     if (!userData) return;
     getDetail();
+    getInviteInfo();
   }, [userData]);
 
   const switchRoles = (role: string) => {
@@ -332,10 +338,13 @@ export default function Profile() {
         <LevelBox>LV{detail?.level?.current_lv}</LevelBox>
         <LevelInfo>
           <span>
-            {t('My.current')} {formatNumber(detail?.scr?.amount)} SCR
+            {t('My.current')} {formatNumber(detail?.scr?.amount)} SCR, 
           </span>
-          <span>{t('My.levelTips', { level: Number(detail?.level?.current_lv) + 1 })}</span>
+          <span>{t('My.levelTips', { level: Number(detail?.level?.current_lv) + 1 })}, </span>
           <span>{formatNumber(detail?.level?.scr_to_next_lv)} SCR</span>
+          <InviteDetail>{t("My.InviteInfo", { amount: inviteScr })}
+            <Link to={`/assets?target=${userData?.wallet}&content=邀请sns`}>{t('My.ViewDetails')}</Link>
+          </InviteDetail>
         </LevelInfo>
       </ProgressOuter>
       <BgBox>
@@ -622,4 +631,10 @@ const RhtBox = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-end;
+`;
+
+const InviteDetail = styled.span`
+  a {
+    color: var(--bs-primary);
+  }
 `;
