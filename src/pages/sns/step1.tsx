@@ -248,6 +248,7 @@ export default function RegisterSNSStep1() {
   const getInviteLink = () => {
     // TODO;
     showToast(t('SNS.InviteLinkCopied'), ToastType.Success);
+    navigator.clipboard.writeText(`${window.location.origin}/sns?invite=${111}`);
   };
 
   useEffect(() => {
