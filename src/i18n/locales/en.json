@@ -672,7 +672,9 @@
     "ContractNotReady": "Contract is not ready, switch metamask network to Polygon please.",
     "NetworkNotReady": "switch metamask network to Polygon please",
     "NotEnoughBalance": "{{token}} not enough",
-    "CommitmentTooOld": "Your {{sns}} submission has expired, please click \"Cancel registration\" to restart your registration."
+    "CommitmentTooOld": "Your {{sns}} submission has expired, please click \"Cancel registration\" to restart your registration.",
+    "ShareInviteLink": "Share invite link",
+    "InviteLinkCopied": "The invite link has been copied to your clipboard!"
   },
   "Governance": {
     "GovernanceRule": "Governance Rules",
