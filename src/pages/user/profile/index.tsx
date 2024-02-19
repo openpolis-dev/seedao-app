@@ -338,12 +338,13 @@ export default function Profile() {
         <LevelBox>LV{detail?.level?.current_lv}</LevelBox>
         <LevelInfo>
           <span>
-            {t('My.current')} {formatNumber(detail?.scr?.amount)} SCR, 
+            {t('My.current')} {formatNumber(detail?.scr?.amount)} SCR,
           </span>
           <span>{t('My.levelTips', { level: Number(detail?.level?.current_lv) + 1 })}, </span>
           <span>{formatNumber(detail?.level?.scr_to_next_lv)} SCR</span>
-          <InviteDetail>{t("My.InviteInfo", { amount: inviteScr })}
-            <Link to={`/assets?target=${userData?.wallet}&content=邀请sns`}>{t('My.ViewDetails')}</Link>
+          <InviteDetail>
+            {t('My.InviteInfo', { amount: inviteScr })}
+            <Link to={`/assets?target=${wallet}&content=邀请sns`}>{t('My.ViewDetails')}</Link>
           </InviteDetail>
         </LevelInfo>
       </ProgressOuter>
