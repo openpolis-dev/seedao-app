@@ -40,7 +40,7 @@ export default function Register() {
     const getAllSources = async () => {
       try {
         const res = await getAvailiableProjectsAndGuilds();
-        const { projects, guilds } = res.data;
+        const { projects, guilds, common_budget_source } = res.data;
         setAllSource(
           projects
             .map((item) => ({
@@ -53,6 +53,13 @@ export default function Register() {
                 value: item.id,
                 label: item.name,
                 data: ApplicationEntity.Guild,
+              })),
+            )
+            .concat(
+              common_budget_source.map((item) => ({
+                value: item.id,
+                label: item.name,
+                data: ApplicationEntity.CommonBudget,
               })),
             ),
         );
