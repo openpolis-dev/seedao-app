@@ -145,7 +145,7 @@ export default function Register() {
       });
     } catch (error) {
       logError(error);
-      return `error`;
+      return 'parse sns error, please try again';
     }
     if (err_sns_list.length) {
       return `${t('Msg.SNSError')}: ${err_sns_list.join(', ')}`;
