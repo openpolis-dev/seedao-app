@@ -227,6 +227,7 @@ export default function Index() {
   };
 
   const getFloorPrice = async () => {
+    // TODO: remove try-catch
     try {
       fetch(`${getConfig().INDEXER_ENDPOINT}/insight/erc721/total_supply/0x30093266E34a816a53e302bE3e59a93B52792FD4`)
         .then((res) => res.json())
@@ -301,9 +302,10 @@ export default function Index() {
   return (
     <BoxOuter>
       {Toast}
-      {!!showModifyModal && (
+      {/* TODO remove budget */}
+      {/* {!!showModifyModal && (
         <ModifyBudgetModal handleClose={() => setshowModifyModal(undefined)} handleModify={handleModifyBudget} />
-      )}
+      )} */}
       <CardBox>
         <Vault>
           <VaultOverview border={borderStyle}>
