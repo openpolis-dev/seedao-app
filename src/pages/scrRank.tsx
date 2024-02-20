@@ -148,7 +148,7 @@ export default function SCRRank() {
             ],
           },
           formats: ['B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K'].map((c) => ({
-            range: `${c}2:${c}1000`,
+            range: `${c}2:${c}${displayList.length}`,
             format: ExcellentExport.formats.NUMBER,
           })),
         },
