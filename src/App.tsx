@@ -12,6 +12,7 @@ function App() {
   return (
     <ErrorBoundary>
       <WagmiProvider>
+        {/* TODO: AuthProvider -- fix name to AppProvider */}
         <AuthProvider>
           <GlobalStyle />
           <RouterLink />
