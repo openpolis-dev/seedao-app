@@ -227,19 +227,17 @@ export default function Index() {
   };
 
   const getFloorPrice = async () => {
-    // TODO: remove try-catch
-    try {
-      fetch(`${getConfig().INDEXER_ENDPOINT}/insight/erc721/total_supply/0x30093266E34a816a53e302bE3e59a93B52792FD4`)
-        .then((res) => res.json())
-        .then((r) => {
-          setNftData({
-            floorPrice: '0',
-            totalSupply: r.totalSupply,
-          });
+    fetch(`${getConfig().INDEXER_ENDPOINT}/insight/erc721/total_supply/0x30093266E34a816a53e302bE3e59a93B52792FD4`)
+      .then((res) => res.json())
+      .then((r) => {
+        setNftData({
+          floorPrice: '0',
+          totalSupply: r.totalSupply,
         });
-    } catch (error) {
-      logError('getFloorPrice error', error);
-    }
+      })
+      .catch((error) => {
+        logError('getFloorPrice error', error);
+      });
   };
 
   const getSCR = async () => {
