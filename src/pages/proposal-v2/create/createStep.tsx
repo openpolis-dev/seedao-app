@@ -3,7 +3,7 @@ import { Template, Preview } from '@taoist-labs/components';
 
 import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { MdEditor } from 'md-editor-rt';
-import { saveOrSubmitProposal } from 'requests/proposalV2';
+import { saveOrSubmitProposal, UploadPictures } from 'requests/proposalV2';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import useCheckMetaforoLogin from 'hooks/useMetaforoLogin';
 import { Link, useNavigate } from 'react-router-dom';
@@ -415,7 +415,9 @@ export default function CreateStep({ onClick }: any) {
         })
         .finally(() => {
           dispatch({ type: AppActionType.SET_LOADING, payload: false });
-          setLoading(false);
+          setTimeout(() => {
+            setLoading(false);
+          }, 1000);
         });
     }
   };
@@ -497,6 +499,18 @@ export default function CreateStep({ onClick }: any) {
     setVoteList(arr);
   };
 
+  const uploadPic = async (files: any[], callback: any) => {
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    try {
+      const urlObjArr = await UploadPictures(files[0]);
+      callback([urlObjArr]);
+    } catch (e) {
+      console.error('uploadPic', e);
+    } finally {
+      dispatch({ type: AppActionType.SET_LOADING, payload: null });
+    }
+  };
+
   const EmptyArray = voteList.filter((item) => item === '');
 
   const submitDisabled =
@@ -573,9 +587,11 @@ export default function CreateStep({ onClick }: any) {
                     {!!item.title && <TitleBox>{item.title}</TitleBox>}
                     <InputBox>
                       <MdEditor
+                        key={`before_${index}_editor`}
                         toolbarsExclude={['github', 'save']}
                         modelValue={item.content}
-                        editorId={`before_${index}`}
+                        editorId={`before_${index}_editor`}
+                        onUploadImg={(files, callBack) => uploadPic(files, callBack)}
                         onChange={(val) => handleText(val, index, 'before')}
                         theme={theme ? 'dark' : 'light'}
                         placeholder={item.hint}
@@ -608,6 +624,7 @@ export default function CreateStep({ onClick }: any) {
                         editorId={`block_${index}`}
                         onChange={(val) => handleText(val, index, 'after')}
                         theme={theme ? 'dark' : 'light'}
+                        onUploadImg={(files, callBack) => uploadPic(files, callBack)}
                         placeholder={item.hint}
                       />
                     </InputBox>

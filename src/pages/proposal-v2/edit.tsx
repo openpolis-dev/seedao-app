@@ -264,9 +264,14 @@ export default function EditProposal() {
 
   const uploadPic = async (files: any[], callback: any) => {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
-    const urlObjArr = await UploadPictures(files[0]);
-    dispatch({ type: AppActionType.SET_LOADING, payload: null });
-    callback([urlObjArr]);
+    try {
+      const urlObjArr = await UploadPictures(files[0]);
+      callback([urlObjArr]);
+    } catch (e) {
+      console.error('uploadPic', e);
+    } finally {
+      dispatch({ type: AppActionType.SET_LOADING, payload: null });
+    }
   };
 
   const categoryName = data?.proposal_category_id
