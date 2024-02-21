@@ -9,6 +9,7 @@ import {
   ICategoryWithTemplates,
 } from 'type/proposalV2.type';
 import { SEE_AUTH } from 'utils/constant';
+import { v4 as uuidv4 } from 'uuid';
 
 const PATH_PREFIX = '/proposals/';
 
@@ -212,4 +213,30 @@ export const getComponents = () => {
 
 export const getTemplates = (): Promise<ResponseData<ICategoryWithTemplates[]>> => {
   return request.get('/proposal_tmpl/list_with_perm');
+};
+
+export const UploadPictures = async (file: File) => {
+  const blob = new Blob([file], { type: file.type });
+
+  const params = new URLSearchParams();
+  params.append('bucket', 'seedao-os-superapp');
+
+  const parts = file.name.split('.');
+
+  const extension = parts[parts.length - 1];
+  params.append('filename', `/proposal_images/${uuidv4()}.${extension}`);
+  params.append('type', file.type);
+
+  let rt = await request.get(`/url_for_uploading_s3?${params.toString()}`);
+
+  let fileRt = await fetch((rt as any).data, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': file.type,
+    },
+    body: blob,
+  });
+  if (fileRt.status === 200) {
+    return rt.data.split('?')[0];
+  }
 };

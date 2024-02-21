@@ -9,7 +9,7 @@ import { useAuthContext, AppActionType } from 'providers/authProvider';
 import { Preview, Template } from '@taoist-labs/components';
 import { MdEditor, MdPreview } from 'md-editor-rt';
 import useCheckMetaforoLogin from 'hooks/useMetaforoLogin';
-import { updateProposal, getProposalDetail } from 'requests/proposalV2';
+import { updateProposal, getProposalDetail, UploadPictures } from 'requests/proposalV2';
 import { Button } from 'react-bootstrap';
 import getConfig from '../../utils/envCofnig';
 import requests from '../../requests';
@@ -262,6 +262,13 @@ export default function EditProposal() {
     setVoteList(arr);
   };
 
+  const uploadPic = async (files: any[], callback: any) => {
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    const urlObjArr = await UploadPictures(files[0]);
+    dispatch({ type: AppActionType.SET_LOADING, payload: null });
+    callback([urlObjArr]);
+  };
+
   const categoryName = data?.proposal_category_id
     ? proposalCategories?.find((item) => item.id === data?.proposal_category_id)?.name
     : '';
@@ -348,6 +355,7 @@ export default function EditProposal() {
                         theme={theme ? 'dark' : 'light'}
                         modelValue={item.content}
                         editorId={`block_${index}`}
+                        onUploadImg={(files, callBack) => uploadPic(files, callBack)}
                         onChange={(val) => handleTextBefore(val, index)}
                       />
 
@@ -374,6 +382,7 @@ export default function EditProposal() {
                         modelValue={item.content}
                         editorId={`block_${index}`}
                         onChange={(val) => handleText(val, index)}
+                        onUploadImg={(files, callBack) => uploadPic(files, callBack)}
                       />
 
                       {/*<MarkdownEditor value={item.content} onChange={(val)=>handleText(val,index)} />*/}
