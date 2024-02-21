@@ -15,5 +15,5 @@ export const getMyRewards = (): Promise<ResponseData<RewardsData>> => {
 };
 
 export const inviteBy = (invite_code: string) => {
-  return request.post(`${PATH_PREFIX}/invited_by/${invite_code}`);
+  return request.post(`${PATH_PREFIX}invited_by/${invite_code}`);
 };
