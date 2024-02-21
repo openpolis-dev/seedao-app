@@ -24,6 +24,7 @@ import useTransaction, { TX_ACTION } from './useTransaction';
 import getConfig from 'utils/envCofnig';
 import { checkEstimateGasFeeEnough, checkTokenBalance } from './checkUserBalance';
 import parseError from './parseError';
+import { getInviteCode, inviteBy } from 'requests/invite';
 
 const networkConfig = getConfig().NETWORK;
 const PAY_NUMBER = networkConfig.tokens[0].price;
@@ -242,13 +243,29 @@ export default function RegisterSNSStep1() {
     if (!inviteCode) {
       return;
     }
-    // TODO;
+    inviteBy(inviteCode)
+      .then((r) => {
+        console.log('inviteBy called');
+      })
+      .catch((e) => {
+        logError(`use ${inviteCode} to invite ${account} failed`, e);
+      });
   };
 
   const getInviteLink = () => {
-    // TODO;
-    showToast(t('SNS.InviteLinkCopied'), ToastType.Success);
-    navigator.clipboard.writeText(`${window.location.origin}/sns?invite=${111}`);
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    getInviteCode()
+      .then((r) => {
+        showToast(t('SNS.InviteLinkCopied'), ToastType.Success);
+        navigator.clipboard.writeText(`${window.location.origin}/sns?invite=${r.data.invite_code}`);
+      })
+      .catch((e) => {
+        logError('get invite code failed', e);
+        showToast('get invite code failed, please try again', ToastType.Danger);
+      })
+      .finally(() => {
+        dispatch({ type: AppActionType.SET_LOADING, payload: false });
+      });
   };
 
   useEffect(() => {

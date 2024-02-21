@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import React, { useEffect, useState } from 'react';
 import { useAuthContext } from 'providers/authProvider';
 import { Trans, useTranslation } from 'react-i18next';
-import useToast from 'hooks/useToast';
+import useToast, { ToastType } from 'hooks/useToast';
 import { ContainerPadding } from 'assets/styles/global';
 import CopyBox from 'components/copy';
 import GithubImg from '../../../assets/Imgs/profile/Github2.svg';
@@ -23,6 +23,7 @@ import SbtImg from '../../../assets/Imgs/profile/sbt.svg';
 
 import SeedList from '../../../components/profile/seed';
 import Sbt from '../../../components/profile/Sbt';
+import { getMyRewards } from 'requests/invite';
 
 const OuterBox = styled.div`
   margin-bottom: 50px;
@@ -138,7 +139,13 @@ export default function Profile() {
   };
 
   const getInviteInfo = async () => {
-    // TODO;
+    getMyRewards()
+      .then((r) => {
+        setInviteScr(r.data.total_rewards);
+      })
+      .catch((e) => {
+        showToast(`get invite rewards failed: ${e?.data?.msg || e}`, ToastType.Danger);
+      });
   };
 
   useEffect(() => {
@@ -340,8 +347,8 @@ export default function Profile() {
           <span>
             {t('My.current')} {formatNumber(detail?.scr?.amount)} SCR,
           </span>
-          <span>{t('My.levelTips', { level: Number(detail?.level?.current_lv) + 1 })}, </span>
-          <span>{formatNumber(detail?.level?.scr_to_next_lv)} SCR</span>
+          <span>{t('My.levelTips', { level: Number(detail?.level?.current_lv) + 1 })}</span>
+          <span>{formatNumber(detail?.level?.scr_to_next_lv)} SCR, </span>
           <InviteDetail>
             {t('My.InviteInfo', { amount: inviteScr })}
             <Link to={`/assets?target=${wallet}&content=邀请sns`}>{t('My.ViewDetails')}</Link>
