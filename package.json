@@ -10,6 +10,7 @@
     "@joyid/wagmi": "^0.1.0",
     "@seedao/see-auth": "^0.1.14",
     "@seedao/sns-js": "^0.7.0",
+    "@seedao/sns-js-sepolia": "^0.1.0",
     "@sentry/cli": "^2.23.1",
     "@sentry/react": "^7.91.0",
     "@taoist-labs/components": "^0.2.2",
