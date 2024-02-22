@@ -187,6 +187,7 @@ export default function CreateStep({ onClick }: any) {
   const [tips, setTips] = useState('');
   const [result, setResult] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
+  const [showErrorTips, setShowErrorTips] = useState(false);
 
   const [voteList, setVoteList] = useState(['']);
 
@@ -428,6 +429,29 @@ export default function CreateStep({ onClick }: any) {
       setIsInstantVoteAlertVisible(false);
       return;
     }
+
+    let budgetArr = template?.components?.filter((item) => item.name === 'budget') || [];
+    if (template?.name === 'P2提案立项' && budgetArr?.length > 0) {
+      let err = false;
+
+      const budgetData = data.filter((item: any) => item.name === 'budget') || [];
+      if (budgetData.length) {
+        budgetData[0].data.budgetList.map((item: any) => {
+          if (item.typeTest.name === 'USDT') {
+            if (Number(item.amount) > 1000) {
+              err = true;
+            }
+          } else if (item.typeTest.name === 'SCR') {
+            if (Number(item.amount) > 50000) {
+              err = true;
+            }
+          }
+        });
+      }
+      setShowErrorTips(err);
+      if (err) return;
+    }
+
     setResult(data);
     if (template?.is_instant_vote) {
       setIsInstantVoteAlertVisible(true);
@@ -511,6 +535,10 @@ export default function CreateStep({ onClick }: any) {
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: null });
     }
+  };
+
+  const handleErrorClose = () => {
+    setShowErrorTips(false);
   };
 
   const EmptyArray = voteList.filter((item) => item === '');
@@ -670,6 +698,15 @@ export default function CreateStep({ onClick }: any) {
           msg={t('Proposal.ConfirmBackCreate')}
           onConfirm={handleBack}
           onClose={() => setShowLeaveConfirm(false)}
+        />
+      )}
+
+      {showErrorTips && (
+        <ConfirmModal
+          title=""
+          msg={t('Proposal.p2Tips')}
+          onConfirm={() => handleErrorClose()}
+          onClose={handleErrorClose}
         />
       )}
       {isInstantVoteAlertVisible && (
