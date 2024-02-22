@@ -472,7 +472,9 @@
     "levelTips": "距离升级到 LV{{level}} 还需",
     "nextLevel": "下一等级" ,
     "DefaultName": "TA没有留下昵称",
-    "DefaultBio": "TA很神秘哦，并没有介绍自己"
+    "DefaultBio": "TA很神秘哦，并没有介绍自己",
+    "InviteInfo": "已通过邀请注册 SNS 获得 {{amount}} SCR（含未上链）, ",
+    "ViewDetails": "查看详情 >>"
   },
   "roles": {
     "SGN_HOLDER": "SEED持有者",
@@ -673,8 +675,9 @@
     "ContractNotReady": "合约未初始化完成, 请切换您的钱包网络到Polygon",
     "NetworkNotReady": "请切换您的钱包网络到Polygon",
     "NotEnoughBalance": "{{token}}余额不足",
-    "CommitmentTooOld": "您的提交的{{sns}}已过有效期，请点击“取消注册”后重新开始注册"
-
+    "CommitmentTooOld": "您的提交的{{sns}}已过有效期，请点击“取消注册”后重新开始注册",
+    "ShareInviteLink": "分享我的邀请链接",
+    "InviteLinkCopied": "邀请链接已复制"
   },
   "Governance": {
     "GovernanceRule": "治理规则",

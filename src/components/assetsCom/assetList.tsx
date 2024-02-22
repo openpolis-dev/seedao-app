@@ -19,7 +19,7 @@ import ApplicationStatusTagNew from 'components/common/applicationStatusTagNew';
 import useSeasons from 'hooks/useSeasons';
 import useQuerySNS from 'hooks/useQuerySNS';
 import useBudgetSource from 'hooks/useBudgetSource';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import getConfig from 'utils/envCofnig';
 import useAssets from 'hooks/useAssets';
 
@@ -33,7 +33,7 @@ import ApplyWhite from 'assets/Imgs/dark/apply.svg';
 import RankWhite from 'assets/Imgs/dark/rank.svg';
 import SearchWhite from 'assets/Imgs/light/search.svg';
 import useToast, { ToastType } from 'hooks/useToast';
-import sns from '@seedao/sns-js';
+import sns from '@seedao/sns-js-sepolia';
 import { ethers } from 'ethers';
 import { PlainButton } from 'components/common/button';
 import ClearSVGIcon from 'components/svgs/clear';
@@ -184,6 +184,9 @@ const SearchBox = styled.div`
 
 export default function AssetList() {
   const navigate = useNavigate();
+  const [search] = useSearchParams();
+  const defaultTarget = search.get('target') || '';
+  const defaultContent = search.get('content') || '';
 
   const {
     state: { theme },
@@ -207,14 +210,14 @@ export default function AssetList() {
   const [selectAsset, setSelectAsset] = useState();
 
   // search target user
-  const [targetKeyword, setTargetKeyword] = useState('');
-  const [searchTargetVal, setSearchTargetVal] = useState('');
+  const [targetKeyword, setTargetKeyword] = useState(defaultTarget);
+  const [searchTargetVal, setSearchTargetVal] = useState(defaultTarget);
   // search applicant
   const [applicantKeyword, setApplicantKeyword] = useState('');
   const [searchApplicantVal, setSearchApplicantVal] = useState('');
   // search content
-  const [contentKeyword, setContentKeyword] = useState('');
-  const [searchContentVal, setSearchContentVal] = useState('');
+  const [contentKeyword, setContentKeyword] = useState(defaultContent);
+  const [searchContentVal, setSearchContentVal] = useState(defaultContent);
 
   const [snsMap, setSnsMap] = useState<Map<string, string>>(new Map());
 
