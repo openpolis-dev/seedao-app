@@ -351,7 +351,7 @@ export default function Profile() {
           <span>{formatNumber(detail?.level?.scr_to_next_lv)} SCR, </span>
           <InviteDetail>
             {t('My.InviteInfo', { amount: inviteScr })}
-            <Link to={`/assets?target=${wallet}&content=邀请sns`}>{t('My.ViewDetails')}</Link>
+            <Link to={`/assets?target=${wallet}&content=邀请 SNS`}>{t('My.ViewDetails')}</Link>
           </InviteDetail>
         </LevelInfo>
       </ProgressOuter>
