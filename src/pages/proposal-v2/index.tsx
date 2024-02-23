@@ -356,12 +356,13 @@ const SipButton = styled.div<{ $selected: number }>`
   height: 40px;
   box-sizing: border-box;
   border: 1px solid var(--bs-border-color);
+  border-color: ${(props) => (props.$selected ? 'var(--bs-primary)' : 'var(--bs-border-color)')};
   background-color: var(--bs-background);
   border-radius: 8px;
   cursor: pointer;
   font-size: 14px;
   &:hover {
-    border-color: rgb(179, 179, 179);
+    border-color: ${(props) => (props.$selected ? 'var(--bs-primary)' : 'rgb(179, 179, 179)')};
   }
-  color: ${(props) => (props.$selected ? 'var(--bs-body-color_active)' : 'var(--bs-body-color)')};
+  color: ${(props) => (props.$selected ? 'var(--bs-primary)' : 'var(--bs-body-color)')};
 `;
