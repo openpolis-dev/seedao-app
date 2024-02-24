@@ -473,7 +473,7 @@
     "nextLevel": "Next Level",
     "DefaultName": "No Name",
     "DefaultBio": "No Bio",
-    "InviteInfo": "{{amount}} SCR (including offchain) has been earned through invitation to register for SNS, ",
+    "InviteInfo": "{{amount}} SCR (including offchain) has been earned through invitation to register for SNS. ",
     "ViewDetails": "view details >>"
   },
   "roles": {
