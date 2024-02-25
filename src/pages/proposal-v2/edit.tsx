@@ -9,7 +9,7 @@ import { useAuthContext, AppActionType } from 'providers/authProvider';
 import { Preview, Template } from '@taoist-labs/components';
 import { MdEditor, MdPreview } from 'md-editor-rt';
 import useCheckMetaforoLogin from 'hooks/useMetaforoLogin';
-import { updateProposal, getProposalDetail } from 'requests/proposalV2';
+import { updateProposal, getProposalDetail, UploadPictures } from 'requests/proposalV2';
 import { Button } from 'react-bootstrap';
 import getConfig from '../../utils/envCofnig';
 import requests from '../../requests';
@@ -18,6 +18,7 @@ import useToast, { ToastType } from 'hooks/useToast';
 import useProposalCategories from 'hooks/useProposalCategories';
 import PlusImg from '../../assets/Imgs/light/plus.svg';
 import MinusImg from '../../assets/Imgs/light/minus.svg';
+import ConfirmModal from '../../components/modals/confirmModal';
 
 export default function EditProposal() {
   const { t, i18n } = useTranslation();
@@ -52,7 +53,7 @@ export default function EditProposal() {
   const [previewTitle, setPreviewTitle] = useState('');
   const [previewOrg, setPreviewOrg] = useState<any[]>([]);
   const [pid, setPid] = useState('');
-
+  const [showErrorTips, setShowErrorTips] = useState(false);
   const { showToast } = useToast();
   const [voteList, setVoteList] = useState<any[]>([]);
 
@@ -181,6 +182,27 @@ export default function EditProposal() {
     if (!data || !success) {
       return;
     }
+    let budgetArr = data?.components?.filter((item: any) => item.name === 'budget') || [];
+    if (data?.template_name === 'P2提案立项' && budgetArr?.length > 0) {
+      let err = false;
+
+      const budgetData = submitData.filter((item: any) => item.name === 'budget') || [];
+      if (budgetData.length) {
+        budgetData[0].data.budgetList.map((item: any) => {
+          if (item.typeTest.name === 'USDT') {
+            if (Number(item.amount) > 1000) {
+              err = true;
+            }
+          } else if (item.typeTest.name === 'SCR') {
+            if (Number(item.amount) > 50000) {
+              err = true;
+            }
+          }
+        });
+      }
+      setShowErrorTips(err);
+      if (err) return;
+    }
 
     // let dataFormat: any = {};
     //
@@ -260,6 +282,22 @@ export default function EditProposal() {
     const arr = [...voteList];
     arr[index] = (e.target as HTMLInputElement).value;
     setVoteList(arr);
+  };
+
+  const handleErrorClose = () => {
+    setShowErrorTips(false);
+  };
+
+  const uploadPic = async (files: any[], callback: any) => {
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    try {
+      const urlObjArr = await UploadPictures(files[0]);
+      callback([urlObjArr]);
+    } catch (e) {
+      console.error('uploadPic', e);
+    } finally {
+      dispatch({ type: AppActionType.SET_LOADING, payload: null });
+    }
   };
 
   const categoryName = data?.proposal_category_id
@@ -348,6 +386,7 @@ export default function EditProposal() {
                         theme={theme ? 'dark' : 'light'}
                         modelValue={item.content}
                         editorId={`block_${index}`}
+                        onUploadImg={(files, callBack) => uploadPic(files, callBack)}
                         onChange={(val) => handleTextBefore(val, index)}
                       />
 
@@ -374,6 +413,7 @@ export default function EditProposal() {
                         modelValue={item.content}
                         editorId={`block_${index}`}
                         onChange={(val) => handleText(val, index)}
+                        onUploadImg={(files, callBack) => uploadPic(files, callBack)}
                       />
 
                       {/*<MarkdownEditor value={item.content} onChange={(val)=>handleText(val,index)} />*/}
@@ -410,6 +450,14 @@ export default function EditProposal() {
             onSaveData={handleSaveDraft}
           />
         </TemplateBox>
+        {showErrorTips && (
+          <ConfirmModal
+            title=""
+            msg={t('Proposal.p2Tips')}
+            onConfirm={() => handleErrorClose()}
+            onClose={handleErrorClose}
+          />
+        )}
       </BoxBg>
     </Page>
   );

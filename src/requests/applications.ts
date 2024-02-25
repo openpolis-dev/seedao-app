@@ -237,6 +237,7 @@ export const rejectBundles = (bundle_ids: number[]) => {
 interface ISourceResponse {
   projects: ReTurnProject[];
   guilds: ReTurnProject[];
+  common_budget_source: ReTurnProject[];
 }
 
 export const getAvailiableProjectsAndGuilds = (): Promise<ResponseData<ISourceResponse>> => {

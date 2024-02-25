@@ -3,7 +3,7 @@ import { Template, Preview } from '@taoist-labs/components';
 
 import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { MdEditor } from 'md-editor-rt';
-import { saveOrSubmitProposal } from 'requests/proposalV2';
+import { saveOrSubmitProposal, UploadPictures } from 'requests/proposalV2';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import useCheckMetaforoLogin from 'hooks/useMetaforoLogin';
 import { Link, useNavigate } from 'react-router-dom';
@@ -187,6 +187,7 @@ export default function CreateStep({ onClick }: any) {
   const [tips, setTips] = useState('');
   const [result, setResult] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
+  const [showErrorTips, setShowErrorTips] = useState(false);
 
   const [voteList, setVoteList] = useState(['']);
 
@@ -415,7 +416,9 @@ export default function CreateStep({ onClick }: any) {
         })
         .finally(() => {
           dispatch({ type: AppActionType.SET_LOADING, payload: false });
-          setLoading(false);
+          setTimeout(() => {
+            setLoading(false);
+          }, 1000);
         });
     }
   };
@@ -423,7 +426,32 @@ export default function CreateStep({ onClick }: any) {
   const handleFormSubmit = async (success: boolean, data: any) => {
     if (!success) {
       setLoading(false);
+      setIsInstantVoteAlertVisible(false);
+      return;
     }
+
+    let budgetArr = template?.components?.filter((item) => item.name === 'budget') || [];
+    if (template?.name === 'P2提案立项' && budgetArr?.length > 0) {
+      let err = false;
+
+      const budgetData = data.filter((item: any) => item.name === 'budget') || [];
+      if (budgetData.length) {
+        budgetData[0].data.budgetList.map((item: any) => {
+          if (item.typeTest.name === 'USDT') {
+            if (Number(item.amount) > 1000) {
+              err = true;
+            }
+          } else if (item.typeTest.name === 'SCR') {
+            if (Number(item.amount) > 50000) {
+              err = true;
+            }
+          }
+        });
+      }
+      setShowErrorTips(err);
+      if (err) return;
+    }
+
     setResult(data);
     if (template?.is_instant_vote) {
       setIsInstantVoteAlertVisible(true);
@@ -495,6 +523,22 @@ export default function CreateStep({ onClick }: any) {
     const arr = [...voteList];
     arr[index] = (e.target as HTMLInputElement).value;
     setVoteList(arr);
+  };
+
+  const uploadPic = async (files: any[], callback: any) => {
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    try {
+      const urlObjArr = await UploadPictures(files[0]);
+      callback([urlObjArr]);
+    } catch (e) {
+      console.error('uploadPic', e);
+    } finally {
+      dispatch({ type: AppActionType.SET_LOADING, payload: null });
+    }
+  };
+
+  const handleErrorClose = () => {
+    setShowErrorTips(false);
   };
 
   const EmptyArray = voteList.filter((item) => item === '');
@@ -573,9 +617,11 @@ export default function CreateStep({ onClick }: any) {
                     {!!item.title && <TitleBox>{item.title}</TitleBox>}
                     <InputBox>
                       <MdEditor
+                        key={`before_${index}_editor`}
                         toolbarsExclude={['github', 'save']}
                         modelValue={item.content}
-                        editorId={`before_${index}`}
+                        editorId={`before_${index}_editor`}
+                        onUploadImg={(files, callBack) => uploadPic(files, callBack)}
                         onChange={(val) => handleText(val, index, 'before')}
                         theme={theme ? 'dark' : 'light'}
                         placeholder={item.hint}
@@ -608,6 +654,7 @@ export default function CreateStep({ onClick }: any) {
                         editorId={`block_${index}`}
                         onChange={(val) => handleText(val, index, 'after')}
                         theme={theme ? 'dark' : 'light'}
+                        onUploadImg={(files, callBack) => uploadPic(files, callBack)}
                         placeholder={item.hint}
                       />
                     </InputBox>
@@ -651,6 +698,15 @@ export default function CreateStep({ onClick }: any) {
           msg={t('Proposal.ConfirmBackCreate')}
           onConfirm={handleBack}
           onClose={() => setShowLeaveConfirm(false)}
+        />
+      )}
+
+      {showErrorTips && (
+        <ConfirmModal
+          title=""
+          msg={t('Proposal.p2Tips')}
+          onConfirm={() => handleErrorClose()}
+          onClose={handleErrorClose}
         />
       )}
       {isInstantVoteAlertVisible && (

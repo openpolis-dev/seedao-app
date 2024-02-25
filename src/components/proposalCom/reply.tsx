@@ -214,6 +214,35 @@ const ReplyComponent = React.forwardRef<IReplyOutputProps, IProps>(
       };
     });
 
+    const showList = () =>
+      filterPosts.map((p) => (
+        <CommentComponent
+          data={p}
+          key={p.metaforo_post_id}
+          onReply={onReply}
+          onEdit={onEdit}
+          onDelete={onDelete}
+          hideReply={hideReply}
+          isCurrentUser={isCurrentUser(p.wallet)}
+          isSpecial={p.is_rejected}
+        >
+          {p.children?.map((ip: ICommentDisplay) => (
+            <CommentComponent
+              data={ip}
+              isChild={true}
+              key={ip.metaforo_post_id}
+              parentData={findReplyData(ip.reply_metaforo_post_id)}
+              onReply={onReply}
+              onEdit={onEdit}
+              onDelete={onDelete}
+              hideReply={hideReply}
+              isCurrentUser={isCurrentUser(ip?.wallet)}
+              hideVersion
+            />
+          ))}
+        </CommentComponent>
+      ));
+
     return (
       <ReplyComponentStyle>
         {!!pinPost && (
@@ -243,41 +272,18 @@ const ReplyComponent = React.forwardRef<IReplyOutputProps, IProps>(
           </CommentComponent>
         )}
         {posts.length === 0 && <NoComments>{t('Proposal.EmptyComment')}</NoComments>}
-        <InfiniteScroll
-          scrollableTarget="scrollableDiv"
-          dataLength={posts.length}
-          next={getNextCommentList}
-          hasMore={hasMore}
-          loader={<></>}
-        >
-          {filterPosts.map((p) => (
-            <CommentComponent
-              data={p}
-              key={p.metaforo_post_id}
-              onReply={onReply}
-              onEdit={onEdit}
-              onDelete={onDelete}
-              hideReply={hideReply}
-              isCurrentUser={isCurrentUser(p.wallet)}
-              isSpecial={p.is_rejected}
-            >
-              {p.children?.map((ip: ICommentDisplay) => (
-                <CommentComponent
-                  data={ip}
-                  isChild={true}
-                  key={ip.metaforo_post_id}
-                  parentData={findReplyData(ip.reply_metaforo_post_id)}
-                  onReply={onReply}
-                  onEdit={onEdit}
-                  onDelete={onDelete}
-                  hideReply={hideReply}
-                  isCurrentUser={isCurrentUser(ip?.wallet)}
-                  hideVersion
-                />
-              ))}
-            </CommentComponent>
-          ))}
-        </InfiniteScroll>
+        {posts.length < 10 && posts.length > 0 && showList()}
+        {posts.length >= 10 && (
+          <InfiniteScroll
+            scrollableTarget="scrollableDiv"
+            dataLength={posts.length}
+            next={getNextCommentList}
+            hasMore={hasMore}
+            loader={<></>}
+          >
+            {showList()}
+          </InfiniteScroll>
+        )}
         {!hideReply && (
           <ReplyArea style={{ position: 'sticky' }} ref={replyRef}>
             <AvatarBox src={avatar || DefaultAvatar} alt="" />

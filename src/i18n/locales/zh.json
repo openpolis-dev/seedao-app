@@ -142,6 +142,7 @@
     "AssociatedProposalComponent": "关联提案组件",
     "EmptyAssociatedProposal": "暂无可结项的提案",
     "SubmitConfirmTip": "提案提交后即进入投票状态，无法撤回修改，是否确认提交？",
+    "p2Tips": "P2 提案可申请不超过 50000 SCR 和不超过 1000 USDT 的激励",
     "AutoExecuteLeftTime": "自动执行等待剩余时间 {{h}}小时{{m}}分钟",
     "CloseVote": "提前结束投票",
     "ConfirmToCloseVote": "确认提前结束投票吗",
@@ -471,7 +472,9 @@
     "levelTips": "距离升级到 LV{{level}} 还需",
     "nextLevel": "下一等级" ,
     "DefaultName": "TA没有留下昵称",
-    "DefaultBio": "TA很神秘哦，并没有介绍自己"
+    "DefaultBio": "TA很神秘哦，并没有介绍自己",
+    "InviteInfo": "已通过邀请注册 SNS 获得 {{amount}} SCR（含未上链）",
+    "ViewDetails": "查看详情 >>"
   },
   "roles": {
     "SGN_HOLDER": "SEED持有者",
@@ -626,6 +629,14 @@
     "NotFilled" : "未提供"
   },
   "apps": {
+    "OnlineEvent": "城邦日历",
+    "OnlineEventDesc": "查看日程安排",
+    "wiki": "Wiki",
+    "WikiDesc": "SeeDAO Wiki",
+    "hub": "悬赏酒馆",
+    "hubDesc": "领取任务获得激励",
+    "Event": "城邦活动",
+    "EventDesc": "参与线上线下活动",
     "DeschoolDesc": "DeSchool is building education infrastructure in Web3.",
     "AAAnyDesc": "AAAny wants everyone to enjoy AMA. We offers a wealth of exclusive features to make your AMA experience joyful and efficient.",
     "Cascad3Desc": "Co-create everything. Find your creative community.",
@@ -672,8 +683,9 @@
     "ContractNotReady": "合约未初始化完成, 请切换您的钱包网络到Polygon",
     "NetworkNotReady": "请切换您的钱包网络到Polygon",
     "NotEnoughBalance": "{{token}}余额不足",
-    "CommitmentTooOld": "您的提交的{{sns}}已过有效期，请点击“取消注册”后重新开始注册"
-
+    "CommitmentTooOld": "您的提交的{{sns}}已过有效期，请点击“取消注册”后重新开始注册",
+    "ShareInviteLink": "分享我的邀请链接",
+    "InviteLinkCopied": "邀请链接已复制"
   },
   "Governance": {
     "GovernanceRule": "治理规则",

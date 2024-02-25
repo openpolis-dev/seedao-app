@@ -2,12 +2,16 @@
 import MetaforoIcon from '../assets/Imgs/home/Metaforo.png';
 import AaanyIcon from '../assets/Imgs/home/AAAny.png';
 import DeschoolIcon from '../assets/Imgs/home/Deschool.png';
+import WikiImg from '../assets/Imgs/home/wiki.png';
+import EventImg from '../assets/Imgs/home/event.png';
+import HubImg from '../assets/Imgs/home/hub.png';
+import CalendarImg from '../assets/Imgs/home/calendar.png';
 import DaolinkIcon from '../assets/Imgs/home/DAOlink.png';
 import Cascad3Icon from '../assets/Imgs/home/Cascad3.png';
 import Wormhole3Icon from '../assets/Imgs/home/Wormhole3.png';
 import SeedIcon from '../assets/images/seed.png';
 import SeeUImg from '../assets/Imgs/home/seeuNetwork.jpg';
-import SNSImg from '../assets/Imgs/home/SNS.jpg';
+import SNSImg from '../assets/Imgs/home/sns2.jpg';
 import EchoImg from '../assets/Imgs/home/echo.svg';
 
 import RImg1 from '../assets/Imgs/resources/1.png';
@@ -245,6 +249,34 @@ const links = {
     // },
   ],
   apps: [
+    {
+      id: 'module-calendar',
+      name: 'apps.OnlineEvent',
+      link: '/online-event',
+      icon: CalendarImg,
+      desc: 'apps.OnlineEventDesc',
+    },
+    {
+      id: 'module-wiki',
+      name: 'apps.wiki',
+      link: '/wiki',
+      icon: WikiImg,
+      desc: 'apps.WikiDesc',
+    },
+    {
+      id: 'module-hub',
+      name: 'apps.hub',
+      link: '/hub',
+      icon: HubImg,
+      desc: 'apps.hubDesc',
+    },
+    {
+      id: 'module-event',
+      name: 'apps.Event',
+      link: '/event',
+      icon: EventImg,
+      desc: 'apps.EventDesc',
+    },
     {
       id: 'Deschool',
       name: 'DeSchool',

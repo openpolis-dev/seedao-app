@@ -235,7 +235,7 @@ export default function Header() {
     } catch (error) {
       logError('onesignal logout failed', error);
     }
-    if (!pathname.startsWith('/proposal')) toGo();
+    if (!pathname.startsWith('/proposal') && !pathname.startsWith("/sns")) toGo();
   };
 
   useEffect(() => {

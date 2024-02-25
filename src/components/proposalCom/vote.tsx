@@ -173,7 +173,7 @@ export default function ProposalVote({
         <table>
           <tbody>
             {poll.options.map((option, index) => (
-              <tr>
+              <tr key={index}>
                 <td>
                   <OptionContent $highlight={option.is_vote}>
                     {option.html}

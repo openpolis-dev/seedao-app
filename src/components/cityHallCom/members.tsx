@@ -102,8 +102,6 @@ export default function Members() {
       const dt = await getCityHallDetail();
       setMembersGroupMap(dt.data.grouped_sponsors);
       setId(dt.data.id);
-      setMembersGroupMap(dt.data.grouped_sponsors);
-
       const _wallets: string[] = [];
       Object.keys(dt.data.grouped_sponsors).forEach((key) => {
         if (dt.data.grouped_sponsors[key]) {
@@ -224,7 +222,7 @@ export default function Members() {
           ))}
         </UlBox>
       </TopList>
-
+        {/* TODO: 提取组件 */}
       <ItemBox>
         <Grouptitle>{t('city-hall.GovernanceGroup')}</Grouptitle>
         <Row>

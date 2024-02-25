@@ -64,7 +64,7 @@ export default function ThreadPage() {
   } = useAuthContext();
   const proposalCategories = useProposalCategories();
   const { checkMetaforoLogin } = useCheckMetaforoLogin();
-  const [voteType, setVoteType] = useState<number>(0);
+  // const [voteType, setVoteType] = useState<number>(0);
 
   const [blockType, setBlockType] = useState<BlockContentType>(BlockContentType.Reply);
   const [data, setData] = useState<IProposal>();
@@ -134,7 +134,7 @@ export default function ThreadPage() {
         (item: any) => item.type !== 'components' && item.type !== 'preview' && arr.indexOf(item) > componentsIndex,
       );
 
-      setVoteType(res.data.vote_type || 0);
+      // setVoteType(res.data.vote_type || 0);
       const preview = arr.filter((i: any) => i.type === 'preview');
 
       if (preview.length) {
