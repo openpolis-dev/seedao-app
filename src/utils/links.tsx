@@ -11,7 +11,7 @@ import Cascad3Icon from '../assets/Imgs/home/Cascad3.png';
 import Wormhole3Icon from '../assets/Imgs/home/Wormhole3.png';
 import SeedIcon from '../assets/images/seed.png';
 import SeeUImg from '../assets/Imgs/home/seeuNetwork.jpg';
-import SNSImg from '../assets/Imgs/home/SNS.jpg';
+import SNSImg from '../assets/Imgs/home/sns2.jpg';
 import EchoImg from '../assets/Imgs/home/echo.svg';
 
 import RImg1 from '../assets/Imgs/resources/1.png';
