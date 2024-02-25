@@ -266,14 +266,14 @@ const links = {
     {
       id: 'module-hub',
       name: 'apps.hub',
-      link: '/wiki',
+      link: '/hub',
       icon: HubImg,
       desc: 'apps.hubDesc',
     },
     {
       id: 'module-event',
       name: 'apps.Event',
-      link: '/wiki',
+      link: '/event',
       icon: EventImg,
       desc: 'apps.EventDesc',
     },
