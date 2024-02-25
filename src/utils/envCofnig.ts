@@ -60,7 +60,7 @@ const LOCAL = {
   REACT_APP_THEME_ENABLE: true,
   DESCHOOL_BASE_API: 'https://deschool.app/goapiDevelopment',
   JOY_ID_URL: 'https://app.joy.id',
-  NETWORK: Sepolia_Network,
+  NETWORK: Polygon_Network,
   INDEXER_ENDPOINT: 'https://test-spp-indexer.seedao.tech',
   SENTRY_DSN: '',
 };
