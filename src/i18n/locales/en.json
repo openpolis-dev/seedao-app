@@ -629,6 +629,14 @@
     "NotFilled": "Not available"
   },
   "apps": {
+    "OnlineEvent": "SeeDAO Calendar",
+    "OnlineEventDesc": "View Schedule",
+    "wiki": "Wiki",
+    "WikiDesc": "SeeDAO Wiki",
+    "hub": "SeeDAO Hub",
+    "hubDesc": "Receive rewards by completing tasks",
+    "Event": "SeeDAO Events",
+    "EventDesc": "Participate in online and offline activities",
     "DeschoolDesc": "DeSchool is building education infrastructure in Web3.",
     "AAAnyDesc": "AAAny wants everyone to enjoy AMA. We offers a wealth of exclusive features to make your AMA experience joyful and efficient.",
     "Cascad3Desc": "Co-create everything. Find your creative community.",
