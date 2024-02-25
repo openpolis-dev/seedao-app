@@ -11,7 +11,7 @@ import { ethers } from 'ethers';
 import { useSNSContext, ACTIONS } from './snsProvider';
 import { normalize } from '@seedao/sns-namehash';
 import { isAvailable } from '@seedao/sns-safe';
-import { builtin } from '@seedao/sns-js-sepolia';
+import { builtin } from '@seedao/sns-js';
 import { getRandomCode } from 'utils';
 import useToast, { ToastType } from 'hooks/useToast';
 import { useNavigate, useSearchParams } from 'react-router-dom';

@@ -12,7 +12,7 @@ import BackerNav from 'components/common/backNav';
 import CONTROLLER_ABI from 'assets/abi/SeeDAORegistrarController.json';
 import MINTER_ABI from 'assets/abi/SeeDAOMinter.json';
 import getConfig from 'utils/envCofnig';
-import { builtin } from '@seedao/sns-js-sepolia';
+import { builtin } from '@seedao/sns-js';
 import WhiteListData from 'utils/whitelist.json';
 import { useTranslation } from 'react-i18next';
 import HelperIcon from 'assets/Imgs/sns/helper.svg';

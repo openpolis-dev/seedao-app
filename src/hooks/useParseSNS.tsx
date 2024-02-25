@@ -1,4 +1,4 @@
-import sns from '@seedao/sns-js-sepolia';
+import sns from '@seedao/sns-js';
 import { useEffect, useState } from 'react';
 
 export default function useParseSNS(wallet?: string) {

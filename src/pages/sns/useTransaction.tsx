@@ -3,7 +3,7 @@ import { Wallet } from 'wallet/wallet';
 import { ethers } from 'ethers';
 import CONTROLLER_ABI from 'assets/abi/SeeDAORegistrarController.json';
 import REGISTER_ABI from 'assets/abi/SeeDAOMinter.json';
-import { builtin } from '@seedao/sns-js-sepolia';
+import { builtin } from '@seedao/sns-js';
 import { useAuthContext } from 'providers/authProvider';
 import { erc20ABI, useSendTransaction, Address } from 'wagmi';
 import { waitForTransaction } from 'wagmi/actions';
