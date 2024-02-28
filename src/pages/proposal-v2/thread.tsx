@@ -199,6 +199,7 @@ export default function ThreadPage() {
       const applicant = res.data.applicant;
       setApplicantSNS(publicJs.AddressToShow(applicant));
       setApplicant(applicant);
+      setApplicantAvatar(res.data.applicant_avatar);
       if (applicant) {
         try {
           const snsMap = await getMultiSNS([applicant]);
