@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { ContainerPadding } from 'assets/styles/global';
@@ -78,6 +78,7 @@ export default function ThreadPage() {
 
   const [applicantSNS, setApplicantSNS] = useState('');
   const [applicant, setApplicant] = useState('');
+  const [applicantAvatar, setApplicantAvatar] = useState(DefaultAvatarIcon);
   const [showModal, setShowModal] = useState(false);
 
   const [showConfirmWithdraw, setShowConfirmWithdraw] = useState(false);
@@ -97,7 +98,7 @@ export default function ThreadPage() {
   const posts = commentsArray.length ? commentsArray.reduce((a, b) => [...a, ...b], []) : [];
 
   const { getMultiSNS } = useQuerySNS();
-  const { getUsers, userMap } = useQueryUser();
+  const { getUsers } = useQueryUser();
   const { showToast } = useToast();
 
   const replyRef = useRef<IReplyOutputProps>(null);
@@ -186,7 +187,7 @@ export default function ThreadPage() {
         let now_count: number = all_comments.length;
         all_comments.forEach((item) => (now_count += item.children?.length || 0));
         setHasMore(all_comments.length === 0 ? false : now_count < res.data.comment_count);
-        const query_wallets = Array.from(new Set(all_comments.map((item) => item.wallet).concat(res.data.applicant)));
+        const query_wallets = Array.from(new Set(all_comments.map((item) => item.wallet)));
         getMultiSNS(query_wallets);
         getUsers(query_wallets);
       }
@@ -394,7 +395,11 @@ export default function ThreadPage() {
     setShowModal(true);
   };
 
-  const applicantData = userMap.get(applicant?.toLocaleLowerCase())
+  const applicantData = useMemo(() => {
+    applicant && requests.user.getUsers([applicant]).then(r => {
+      setApplicantAvatar(r.data[0]?.sp?.avatar);
+    })
+  }, [applicant]);
 
   const getTimeTagDisplay = () => {
     if (data?.state === ProposalState.Draft) {
@@ -501,11 +506,11 @@ export default function ThreadPage() {
           {getTimeTagDisplay()}
         </FlexLine>
         {showModal && (
-          <ProfileComponent userData={applicantData} address={applicant} theme={theme} handleClose={handleClose} />
+          <ProfileComponent address={applicant} theme={theme} handleClose={handleClose} />
         )}
         <InfoBox>
           <UserBox onClick={() => handleProfile()}>
-            <img src={applicantData?.sp?.avatar || DefaultAvatarIcon} alt="" />
+            <img src={applicantAvatar} alt="" />
             <span className="name">{applicantSNS}</span>
           </UserBox>
           {data?.create_ts && <div className="date">{formatTime(data.create_ts * 1000)}</div>}
