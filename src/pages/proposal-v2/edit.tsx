@@ -402,11 +402,11 @@ export default function EditProposal() {
                       {/*<MarkdownEditor value={item.content} onChange={(val)=>handleText(val,index)} />*/}
                     </ItemBox>
                   ))}
-                {
+                {!!componentName?.length && (
                   <ComponnentBox>
                     <span>{componentName || t('Proposal.proposalComponents')}</span>
                   </ComponnentBox>
-                }
+                )}
               </>
             }
             AfterComponent={
