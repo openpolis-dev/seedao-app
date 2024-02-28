@@ -124,6 +124,8 @@ export default function CommentComponent({
     setShowVersionTip(true);
   };
   const userData = userMap.get(data.wallet?.toLocaleLowerCase());
+  console.log('=====userMap', userMap);
+  console.log('=====data.wallet', data.wallet);
 
   return (
     <CommentStyle padding={isChild ? '64px' : '0'}>
@@ -137,7 +139,7 @@ export default function CommentComponent({
               address={data.wallet?.toLocaleLowerCase()}
               isSpecial={isSpecial}
               name={isSpecial ? t('city-hall.Cityhall') : formatSNS(snsMap, data.wallet?.toLocaleLowerCase())}
-              avatar={userData?.sp?.avatar || DefaultAvatar}
+              avatar={userData?.sp?.avatar || userData?.avatar || DefaultAvatar}
             />
 
             <RhtBtm>

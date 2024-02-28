@@ -757,6 +757,7 @@ const BtnFlex = styled(Button)`
   align-content: center;
   justify-content: center;
   gap: 5px;
+  line-height: 26px;
 `;
 const LoadingBox = styled.div`
   /* HTML: <div class="loader"></div> */
