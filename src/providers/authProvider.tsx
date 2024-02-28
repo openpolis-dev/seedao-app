@@ -37,6 +37,7 @@ interface IState {
   metaforoToken?: string;
   show_metaforo_login?: boolean;
   deschoolToken?: string;
+  userMap: Map<string, any>;
 }
 
 export enum AppActionType {
@@ -63,6 +64,7 @@ export enum AppActionType {
   SET_METAFORO_TOKEN = 'set_metaforo_token',
   SET_SHOW_METAFORO_LOGIN_MODAL = 'set_show_metaforo_login_modal',
   SET_THIRD_PARTY_TOKEN = 'set_third_party_token',
+  SET_USER_MAP = 'set_user_map',
 }
 
 interface IAction {
@@ -96,6 +98,7 @@ const INIT_STATE: IState = {
   loading: null,
   snsMap: new Map(),
   currentSeason: '',
+  userMap: new Map(),
 };
 
 const AuthContext = createContext<{
@@ -177,6 +180,8 @@ const reducer = (state: IState, action: IAction): IState => {
       return { ...state, deschoolToken: action.payload?.deschool, metaforoToken: action.payload?.metaforo };
     case AppActionType.SET_SHOW_METAFORO_LOGIN_MODAL:
       return { ...state, show_metaforo_login: action.payload };
+    case AppActionType.SET_USER_MAP:
+      return { ...state, userMap: action.payload };
     default:
       throw new Error(`Unknown type: ${action.type}`);
   }
