@@ -43,9 +43,10 @@ interface IUserProps {
   address: string;
   isSpecial: boolean | undefined;
   user_title?: UserTitleType;
+  userData?: any;
 }
 
-const UserBox = ({ address, name, avatar, user_title, isSpecial }: IUserProps) => {
+const UserBox = ({ address, name, avatar, user_title, isSpecial, userData }: IUserProps) => {
   const [showModal, setShowModal] = useState(false);
 
   const {
@@ -56,14 +57,16 @@ const UserBox = ({ address, name, avatar, user_title, isSpecial }: IUserProps) =
   };
 
   const handleProfile = () => {
-    setShowModal(true);
+    if (!isSpecial) {
+      setShowModal(true);
+    }
   };
 
   return (
     <>
-      {showModal && <ProfileComponent address={address} theme={theme} handleClose={handleClose} />}
+      {showModal && <ProfileComponent userData={userData} address={address} theme={theme} handleClose={handleClose} />}
       <UserBoxStyle onClick={() => handleProfile()}>
-        <Avatar src={isSpecial ? CityHallImg : avatar || DefaultAvatar} alt="" />
+        <Avatar src={isSpecial ? CityHallImg : userData?.avatar || DefaultAvatar} alt="" />
         {/*<NameBox>{name}</NameBox>*/}
         {/*{user_title && user_title.name && <UserTag bg={user_title.background}>{user_title?.name}</UserTag>}*/}
       </UserBoxStyle>
@@ -89,7 +92,7 @@ export default function CommentComponent({
   const versionTargetRef = useRef(null);
 
   const {
-    state: { snsMap, theme },
+    state: { snsMap, theme, userMap },
   } = useAuthContext();
   const content = useContentDisplay(data?.deleted ? DeletedContent : data?.content, !!isSpecial, theme);
 
@@ -120,6 +123,9 @@ export default function CommentComponent({
     e.nativeEvent.stopImmediatePropagation();
     setShowVersionTip(true);
   };
+  const userData = userMap.get(data.wallet?.toLocaleLowerCase());
+  console.log('=====userMap', userMap);
+  console.log('=====data.wallet', data.wallet);
 
   return (
     <CommentStyle padding={isChild ? '64px' : '0'}>
@@ -129,10 +135,11 @@ export default function CommentComponent({
         <RightBox>
           <RelationUserLine>
             <UserBox
+              userData={userData}
               address={data.wallet?.toLocaleLowerCase()}
               isSpecial={isSpecial}
               name={isSpecial ? t('city-hall.Cityhall') : formatSNS(snsMap, data.wallet?.toLocaleLowerCase())}
-              avatar={data.avatar}
+              avatar={userData?.sp?.avatar || userData?.avatar || DefaultAvatar}
             />
 
             <RhtBtm>

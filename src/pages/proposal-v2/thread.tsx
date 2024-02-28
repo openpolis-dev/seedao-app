@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { ContainerPadding } from 'assets/styles/global';
@@ -46,6 +46,7 @@ import PlusImg from '../../assets/Imgs/light/plus.svg';
 import MinusImg from '../../assets/Imgs/light/minus.svg';
 import { formatDeltaDate } from 'utils/time';
 import { getProposalSIPSlug } from 'utils';
+import useQueryUser from 'hooks/useQueryUser';
 
 enum BlockContentType {
   Reply = 1,
@@ -97,6 +98,7 @@ export default function ThreadPage() {
   const posts = commentsArray.length ? commentsArray.reduce((a, b) => [...a, ...b], []) : [];
 
   const { getMultiSNS } = useQuerySNS();
+  const { getUsers } = useQueryUser();
   const { showToast } = useToast();
 
   const replyRef = useRef<IReplyOutputProps>(null);
@@ -185,7 +187,9 @@ export default function ThreadPage() {
         let now_count: number = all_comments.length;
         all_comments.forEach((item) => (now_count += item.children?.length || 0));
         setHasMore(all_comments.length === 0 ? false : now_count < res.data.comment_count);
-        getMultiSNS(Array.from(new Set(all_comments.map((item) => item.wallet))));
+        const query_wallets = Array.from(new Set(all_comments.map((item) => item.wallet)));
+        getMultiSNS(query_wallets);
+        getUsers(query_wallets);
       }
       setTotalPostsCount(res.data.comment_count);
 
@@ -195,7 +199,6 @@ export default function ThreadPage() {
       const applicant = res.data.applicant;
       setApplicantSNS(publicJs.AddressToShow(applicant));
       setApplicant(applicant);
-      res.data.applicant_avatar && setApplicantAvatar(res.data.applicant_avatar || DefaultAvatarIcon);
       if (applicant) {
         try {
           const snsMap = await getMultiSNS([applicant]);
@@ -392,17 +395,10 @@ export default function ThreadPage() {
     setShowModal(true);
   };
 
-  useEffect(() => {
-    if (applicant) {
-      requests.user
-        .getUsers([applicant])
-        .then((res) => publicJs.getImage(res.data[0]?.sp?.avatar))
-        .then((url: string | undefined) => {
-          if (url) {
-            setApplicantAvatar(url);
-          }
-        });
-    }
+  const applicantData = useMemo(() => {
+    applicant && requests.user.getUsers([applicant]).then(r => {
+      setApplicantAvatar(r.data[0]?.sp?.avatar);
+    })
   }, [applicant]);
 
   const getTimeTagDisplay = () => {
@@ -509,7 +505,9 @@ export default function ThreadPage() {
           {currentState && <ProposalStateTag state={currentState} />}
           {getTimeTagDisplay()}
         </FlexLine>
-        {showModal && <ProfileComponent address={applicant} theme={theme} handleClose={handleClose} />}
+        {showModal && (
+          <ProfileComponent address={applicant} theme={theme} handleClose={handleClose} />
+        )}
         <InfoBox>
           <UserBox onClick={() => handleProfile()}>
             <img src={applicantAvatar} alt="" />
@@ -592,9 +590,18 @@ export default function ThreadPage() {
                     </div>
                   </ProposalContentBlock>
                 ))}
+              {data?.state === ProposalState.PendingSubmit && (data?.vote_type === 99 || data?.vote_type === 98) && (
+                <ItemBox>
+                  <TitleBox>投票选项</TitleBox>
+                  <VoteBox>
+                    {!!data?.os_vote_options?.length &&
+                      data?.os_vote_options?.map((item) => <li key={item.id}>{item.label}</li>)}
+                  </VoteBox>
+                </ItemBox>
+              )}
               {/*{*/}
-              {/*  voteType === 99 &&  <ItemBox>*/}
-              {/*    <TitleBox>投票选项</TitleBox>*/}
+              {/*    <ItemBox>*/}
+              {/*   */}
               {/*    <VoteBox>*/}
               {/*      {voteList.map((item:string, index) => (*/}
               {/*        <li>*/}
@@ -609,6 +616,7 @@ export default function ThreadPage() {
           }
         />
       </ContentOuter>
+
       {data?.state !== ProposalState.PendingSubmit && (
         <>
           <CardStyle>

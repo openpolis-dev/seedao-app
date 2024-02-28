@@ -60,7 +60,8 @@ export default function EditProposal() {
   useEffect(() => {
     if (state) {
       setData(state);
-      setVoteList((state?.votes as any)?.options ?? []);
+      // setVoteList((state?.votes as any)?.options ?? []);
+      setVoteList(state?.os_vote_options ?? []);
 
       setDataSource(state?.components ?? []);
       // setShowRht(!state?.is_based_on_custom_template);
@@ -72,7 +73,8 @@ export default function EditProposal() {
         try {
           const res = await getProposalDetail(Number(id));
           setData(res.data);
-          setVoteList((res.data?.votes as any)?.options ?? []);
+
+          setVoteList((res.data as any)?.os_vote_options ?? []);
           setVoteType(res.data?.vote_type);
           setDataSource(res.data?.components ?? []);
           setShowRht(!res.data?.is_based_on_custom_template);
@@ -222,6 +224,12 @@ export default function EditProposal() {
     }
 
     let arr = [...previewOrg, ...beforeList, ...holderNew, ...contentBlocks];
+    let newVoteList: string[] = [];
+    if (voteType === 99 || voteType === 98) {
+      voteList.map((item) => {
+        newVoteList.push(item.label);
+      });
+    }
 
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
 
@@ -230,6 +238,7 @@ export default function EditProposal() {
       proposal_category_id: data.proposal_category_id,
       content_blocks: arr,
       vote_type: voteType,
+      vote_options: voteType === 99 || voteType === 98 ? newVoteList : null,
       components: submitData,
       create_project_proposal_id: pid?.length ? pid : 0,
       submit_to_metaforo: submitType === 'submit',
@@ -274,13 +283,13 @@ export default function EditProposal() {
 
   const handleAdd = () => {
     const arr = [...voteList];
-    arr.push({ html: '' });
+    arr.push({ id: '', label: '', metaforo_id: 0 });
     setVoteList(arr);
   };
 
   const handleVoteInput = (e: ChangeEvent, index: number) => {
     const arr = [...voteList];
-    arr[index] = (e.target as HTMLInputElement).value;
+    arr[index].label = (e.target as HTMLInputElement).value;
     setVoteList(arr);
   };
 
@@ -420,29 +429,29 @@ export default function EditProposal() {
                     </ItemBox>
                   ))}
 
-                {/*{*/}
-                {/*  ((voteType === 99 || voteType === 98) &&  data?.state === "pending_submit") &&<ItemBox>*/}
-                {/*    <TitleBox>投票选项</TitleBox>*/}
-                {/*    <VoteBox>*/}
-                {/*      {voteList.map((item, index) => (*/}
-                {/*        <li key={`vote_${index}`}>*/}
-                {/*          <input type="text" value={item} onChange={(e) => handleVoteInput(e, index)} />*/}
-                {/*          {voteList.length - 1 === index && (*/}
-                {/*            <span onClick={() => handleAdd()}>*/}
-                {/*            <img src={PlusImg} alt="" />*/}
-                {/*          </span>*/}
-                {/*          )}*/}
+                {(voteType === 99 || voteType === 98) && data?.state === 'pending_submit' && (
+                  <ItemBox>
+                    <TitleBox>投票选项</TitleBox>
+                    <VoteBox>
+                      {voteList.map((item, index) => (
+                        <li key={`vote_${index}`}>
+                          <input type="text" value={item.label} onChange={(e) => handleVoteInput(e, index)} />
+                          {voteList.length - 1 === index && (
+                            <span onClick={() => handleAdd()}>
+                              <img src={PlusImg} alt="" />
+                            </span>
+                          )}
 
-                {/*          {!!(voteList.length - 1) && (*/}
-                {/*            <span onClick={() => removeVote(index)}>*/}
-                {/*            <img src={MinusImg} alt="" />*/}
-                {/*          </span>*/}
-                {/*          )}*/}
-                {/*        </li>*/}
-                {/*      ))}*/}
-                {/*    </VoteBox>*/}
-                {/*  </ItemBox>*/}
-                {/*}*/}
+                          {!!(voteList.length - 1) && (
+                            <span onClick={() => removeVote(index)}>
+                              <img src={MinusImg} alt="" />
+                            </span>
+                          )}
+                        </li>
+                      ))}
+                    </VoteBox>
+                  </ItemBox>
+                )}
               </div>
             }
             ref={childRef}
@@ -598,7 +607,7 @@ const BoxBg = styled.div<{ showRht: string }>`
   border-radius: 8px;
 
   width: ${(props) => (props.showRht === 'true' ? 'calc(100% - 410px)' : '100%')};
-  height: 100%;
+  //height: 100%;
   display: flex;
   flex-direction: column;
   align-items: stretch;

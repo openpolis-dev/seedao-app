@@ -136,6 +136,7 @@ export interface IProposal extends ISimpleProposal {
   components: any;
   comment_count: number;
   votes: Poll[];
+  os_vote_options?: any[];
   vote_gate: VoteGateType;
   histories: {
     total_count: number;
