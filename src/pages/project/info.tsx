@@ -246,7 +246,7 @@ export default function InfoPage() {
                         {sponserList.map((item: any, index: number) => (
                           <MemBox key={`avatar_${index}`}>
                             <Avatar onClick={() => setProfileVisible(true)}>
-                              <img src={item?.avatar ? item?.avatar : DefaultAvatar} alt="" />
+                              <img src={item?.sp?.avatar || item?.avatar || DefaultAvatar} alt="" />
                             </Avatar>
                             <span>
                               {item?.sns?.endsWith('.seedao') ? item.sns : publicJs.AddressToShow(item?.wallet)}
