@@ -592,9 +592,18 @@ export default function ThreadPage() {
                     </div>
                   </ProposalContentBlock>
                 ))}
+              {data?.state === ProposalState.PendingSubmit && (data?.vote_type === 99 || data?.vote_type === 98) && (
+                <ItemBox>
+                  <TitleBox>投票选项</TitleBox>
+                  <VoteBox>
+                    {!!data?.os_vote_options?.length &&
+                      data?.os_vote_options?.map((item) => <li key={item.id}>{item.label}</li>)}
+                  </VoteBox>
+                </ItemBox>
+              )}
               {/*{*/}
-              {/*  voteType === 99 &&  <ItemBox>*/}
-              {/*    <TitleBox>投票选项</TitleBox>*/}
+              {/*    <ItemBox>*/}
+              {/*   */}
               {/*    <VoteBox>*/}
               {/*      {voteList.map((item:string, index) => (*/}
               {/*        <li>*/}
@@ -609,6 +618,7 @@ export default function ThreadPage() {
           }
         />
       </ContentOuter>
+
       {data?.state !== ProposalState.PendingSubmit && (
         <>
           <CardStyle>
