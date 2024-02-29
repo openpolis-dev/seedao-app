@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { ReTurnProject } from 'type/project.type';
+import { IGuildDisplay, ReTurnProject } from 'type/project.type';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 
 import { getProjectById } from 'requests/guild';
@@ -14,7 +14,7 @@ export default function EditPage() {
   const { id } = useParams();
   const { state } = useLocation();
   const { dispatch } = useAuthContext();
-  const [detail, setDetail] = useState<ReTurnProject>();
+  const [detail, setDetail] = useState<IGuildDisplay>();
 
   useEffect(() => {
     const getDetail = async () => {

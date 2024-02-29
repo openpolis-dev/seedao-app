@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { getProjectById } from 'requests/guild';
-import { ReTurnProject } from 'type/project.type';
+import { ProjectStatus, ReTurnProject } from 'type/project.type';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import { useParams, Link } from 'react-router-dom';
 import { ContainerPadding } from 'assets/styles/global';
@@ -14,22 +14,92 @@ import BackerNav from 'components/common/backNav';
 import SipTag from 'components/common/sipTag';
 import { MdPreview } from 'md-editor-rt';
 import DefaultLogo from 'assets/Imgs/defaultLogo.png';
+import CategoryTag from '../../components/proposalCom/categoryTag';
+import publicJs from '../../utils/publicJs';
+import { ethers } from 'ethers';
+import { getUsers } from '../../requests/user';
+import useQuerySNS from '../../hooks/useQuerySNS';
+import { IUser } from '../../type/user.type';
+import LinkImg from '../../assets/Imgs/link.svg';
+import ReactQuill from 'react-quill';
+import DefaultAvatar from 'assets/Imgs/defaultAvatarT.png';
+import ProfileComponent from 'profile-components/profile';
+
+type UserMap = { [w: string]: IUser };
 
 export default function Index() {
   const { t } = useTranslation();
   const {
-    state: { theme },
+    state: { theme, account },
     dispatch,
   } = useAuthContext();
 
   const { id } = useParams();
+  const { getMultiSNS } = useQuerySNS();
+  const [detail, setDetail] = useState<any>();
+  const [snsMap, setSnsMap] = useState<any>({});
+  const [userMap, setUserMap] = useState<UserMap>({});
+  const [sponserList, setSponserList] = useState<any[]>([]);
+  const [show, setShow] = useState(false);
+  const [profileVisible, setProfileVisible] = useState(false);
 
-  const [detail, setDetail] = useState<ReTurnProject | undefined>();
+  const canCreatePermission = usePermission(PermissionAction.CreateApplication, PermissionObject.Guild);
 
-  const canAuditApplication = usePermission(
-    PermissionAction.CreateApplication,
-    PermissionObject.GuildPrefix + detail?.id,
-  );
+  useEffect(() => {
+    if (!detail) return;
+    getUsersDetail(detail.sponsors);
+
+    const AccountAuth = detail.sponsors.filter((item: string) => item.toLocaleString() === account?.toLowerCase());
+    if (AccountAuth.length) {
+      setShow(true);
+    } else {
+      setShow(false);
+    }
+  }, [detail]);
+
+  const getUsersDetail = async (dt: any) => {
+    const _wallets: string[] = [];
+
+    dt?.forEach((w: any) => {
+      if (ethers.utils.isAddress(w)) {
+        _wallets.push(w);
+      }
+    });
+    const wallets = Array.from(new Set(_wallets));
+    let userSns = await getMultiSNS(wallets);
+
+    // setSnsMap(userSns);
+    await getUsersInfo(wallets, userSns);
+  };
+
+  const getUsersInfo = async (wallets: string[], snsMap: any) => {
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    try {
+      const res = await getUsers(wallets);
+      const userData: UserMap = {};
+      res.data?.forEach((r) => {
+        userData[(r.wallet || '').toLowerCase()] = r;
+      });
+      setUserMap(userData);
+
+      let arr: any[] = [];
+
+      detail?.sponsors.map((item: any) => {
+        let itemInfo = userData[item];
+        let itemSns = snsMap?.get(item);
+        arr.push({
+          ...itemInfo,
+          sns: itemSns,
+        });
+      });
+
+      setSponserList([...arr]);
+    } catch (error) {
+      logError('getUsersInfo error:', error);
+    } finally {
+      dispatch({ type: AppActionType.SET_LOADING, payload: null });
+    }
+  };
 
   useEffect(() => {
     id && getDetail();
@@ -50,48 +120,178 @@ export default function Index() {
   return (
     <OuterBox>
       <Box>
-        <BackerNav to="/explore?tab=guild" title={detail?.name || ''} mb="40px" />
+        <BackerNav title={detail?.name || ''} to="/explore?tab=guild" mb="40px" />
         <Content>
           <FlexLine>
             <AllBox>
               <TopBox>
-                <TopImg>
-                  <img src={detail?.logo || DefaultLogo} alt="" />
-                </TopImg>
-                <TopInfo>
-                  <TitleBox>{detail?.name}</TitleBox>
-                  <div className="desc">{detail?.desc}</div>
-                  <ProposalBox>
-                    {detail?.proposals?.map((item, index) => (
-                      <SipTag key={index} slug={item} />
-                    ))}
-                  </ProposalBox>
-                </TopInfo>
+                <TopBoxLeft>
+                  <TopImg>
+                    <img src={detail?.logo || DefaultLogo} alt="" />
+                  </TopImg>
+                  <TopInfo>
+                    <TitleBox>{detail?.name}</TitleBox>
+
+                    {/*<FlexFirst>*/}
+                    {/*  /!*<ProposalBox>*!/*/}
+                    {/*  /!*  /!*{detail?.proposals?.map((item: any, index: number) => (*!/*!/*/}
+                    {/*  /!*  /!*  <SipTag key={index} slug={item} />*!/*!/*/}
+                    {/*  /!*  /!*))}*!/*!/*/}
+                    {/*  /!*  <SipTag  slug={detail?.SIP} />*!/*/}
+                    {/*  /!*</ProposalBox>*!/*/}
+                    {/*  <SipTag  slug={detail?.SIP} />*/}
+                    {/*  {detail?.Category && <CategoryTag>{detail?.Category}</CategoryTag>}*/}
+                    {/*  {showStatusComponent()}*/}
+                    {/*</FlexFirst>*/}
+                  </TopInfo>
+                </TopBoxLeft>
+
+                {/*{showStatusComponent()}*/}
               </TopBox>
               <LastLine>
-                <LftBox>
-                  <InnerLft>
-                    <Members detail={detail} updateProject={getDetail} />
-                  </InnerLft>
-                </LftBox>
+                {/*<LftBox>*/}
+                {/*  <InnerLft>*/}
+                {/*    <Members detail={detail} updateProject={onUpdate} />*/}
+                {/*  </InnerLft>*/}
+                {/*</LftBox>*/}
                 <ContentBox>
-                  <TitleBox>{t('Guild.GuildIntro')}</TitleBox>
-                  {/*<ReactMarkdown>{detail?.intro || ''}</ReactMarkdown>*/}
-                  <MdPreview theme={theme ? 'dark' : 'light'} modelValue={detail?.intro || ''} />
+                  {detail?.status === 'closed' ? (
+                    <ClosedButton disabled>{t('Guild.Closed')}</ClosedButton>
+                  ) : canCreatePermission ? (
+                    <BtnTop to={`/guild/edit/${detail?.id}`} state={detail}>
+                      <Button>{t('general.edit')}</Button>
+                    </BtnTop>
+                  ) : null}
+                  {/*<TitleBox>{t('Project.ProjectIntro')}</TitleBox>*/}
+                  <DlBox>
+                    <dl>
+                      <dt>{t('Guild.GuildIntro')}</dt>
+                      <dd>
+                        <Desc>{detail?.desc}</Desc>
+                      </dd>
+                    </dl>
+
+                    <dl>
+                      <dt>{t('Guild.Moderator')}</dt>
+                      <dd>
+                        {sponserList.map((item: any, index: number) => (
+                          <MemBox key={`avatar_${index}`}>
+                            <Avatar onClick={() => setProfileVisible(true)}>
+                              <img src={item?.sp?.avatar || item?.avatar || DefaultAvatar} alt="" />
+                            </Avatar>
+                            <span>
+                              {item?.sns?.endsWith('.seedao') ? item.sns : publicJs.AddressToShow(item?.sns?.wallet)}
+                            </span>
+                          </MemBox>
+                        ))}
+                      </dd>
+                    </dl>
+                    <dl>
+                      <dt>{t('Guild.Contact')}</dt>
+                      <dd>
+                        {detail?.ContantWay
+                          ? detail?.ContantWay
+                          : sponserList[0]?.sns?.endsWith('.seedao')
+                          ? sponserList[0]?.sns
+                          : ''}
+                      </dd>
+                    </dl>
+
+                    <dl>
+                      <dt>{t('Guild.OfficialLink')}</dt>
+                      <dd>
+                        {!!detail?.OfficialLink && (
+                          <>
+                            <span>{detail?.OfficialLink}</span>
+                            <a href={detail?.OfficialLink} target="_blank" rel="noreferrer">
+                              <img src={LinkImg} alt="" />
+                            </a>
+                          </>
+                        )}
+                      </dd>
+                    </dl>
+                  </DlBox>
+                  {/*<MdPreview theme={theme ? 'dark' : 'light'} modelValue={detail?.intro || ''} />*/}
                 </ContentBox>
               </LastLine>
             </AllBox>
-            {canAuditApplication && (
-              <Link to={`/guild/edit/${detail?.id}`} state={detail}>
-                <Button>{t('general.edit')}</Button>
-              </Link>
-            )}
           </FlexLine>
+          {profileVisible && (
+            <ProfileComponent
+              address={sponserList[0]?.wallet}
+              theme={theme}
+              handleClose={() => setProfileVisible(false)}
+            />
+          )}
         </Content>
       </Box>
     </OuterBox>
   );
 }
+
+const FlexFirst = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 14px;
+`;
+
+const StatusBox = styled.div`
+  font-size: 12px;
+  color: #fff;
+  background: var(--bs-primary);
+  padding: 2px 12px;
+  border-radius: 4px;
+  &.pending_close {
+    background: #1f9e14;
+  }
+`;
+
+const MemBox = styled.div`
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--font-color-title);
+  line-height: 18px;
+  margin-bottom: 10px;
+  gap: 10px;
+  //span {
+  //  margin-right: 5px;
+  //}
+`;
+
+const Avatar = styled.div`
+  img {
+    width: 30px;
+    height: 30px;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 100%;
+    cursor: pointer;
+  }
+`;
+const DlBox = styled.div`
+  margin-top: 40px;
+  dl {
+    margin-bottom: 20px;
+  }
+  dt {
+    margin-bottom: 10px;
+    font-size: 12px;
+    opacity: 0.6;
+  }
+  dd {
+    opacity: 0.8;
+    word-break: break-all;
+  }
+`;
+
+const BtnTop = styled(Link)`
+  position: absolute;
+  right: 20px;
+  top: 20px;
+`;
 
 const OuterBox = styled.div`
   ${ContainerPadding};
@@ -151,7 +351,6 @@ const LftBox = styled.div`
 
 const InnerLft = styled.div`
   box-sizing: border-box;
-  padding: 24px;
 `;
 
 const TopBox = styled.div`
@@ -166,6 +365,7 @@ const TopBox = styled.div`
 
 const TopBoxLeft = styled.div`
   display: flex;
+  align-items: center;
 `;
 
 const TopImg = styled.div`
@@ -203,9 +403,8 @@ const TopInfo = styled.div`
 const ProposalBox = styled.div`
   display: flex;
   align-items: center;
-  margin-top: 14px;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 10px;
 `;
 
 const ContentBox = styled.div`
@@ -213,14 +412,11 @@ const ContentBox = styled.div`
   background: var(--bs-box--background);
   padding: 24px;
   flex-grow: 1;
-  margin-left: 16px;
+  //margin-left: 16px;
   color: var(--bs-body-color_active);
-
+  position: relative;
   img {
     max-width: 100%;
-  }
-  .md-editor-dark {
-    background: var(--bs-box--background);
   }
 `;
 
@@ -233,4 +429,14 @@ const StatusTag = styled.span`
   height: 26px;
   font-size: 12px;
   color: var(--bs-primary);
+`;
+
+const ClosedButton = styled(Button)`
+  position: absolute;
+  right: 20px;
+  top: 20px;
+`;
+
+const Desc = styled.div`
+  white-space: pre-wrap;
 `;

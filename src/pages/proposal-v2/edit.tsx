@@ -4,12 +4,12 @@ import { ContainerPadding } from 'assets/styles/global';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import React, { useEffect, useState, useRef, ChangeEvent } from 'react';
-import { IContentBlock, IProposal, ProposalState } from 'type/proposalV2.type';
+import { IContentBlock, IProposal, ProposalState, Poll } from 'type/proposalV2.type';
 import { useAuthContext, AppActionType } from 'providers/authProvider';
-import { Template } from '@taoist-labs/components';
-import { MdEditor } from 'md-editor-rt';
+import { Preview, Template } from '@taoist-labs/components';
+import { MdEditor, MdPreview } from 'md-editor-rt';
 import useCheckMetaforoLogin from 'hooks/useMetaforoLogin';
-import { updateProposal, getProposalDetail } from 'requests/proposalV2';
+import { updateProposal, getProposalDetail, UploadPictures } from 'requests/proposalV2';
 import { Button } from 'react-bootstrap';
 import getConfig from '../../utils/envCofnig';
 import requests from '../../requests';
@@ -18,6 +18,7 @@ import useToast, { ToastType } from 'hooks/useToast';
 import useProposalCategories from 'hooks/useProposalCategories';
 import PlusImg from '../../assets/Imgs/light/plus.svg';
 import MinusImg from '../../assets/Imgs/light/minus.svg';
+import ConfirmModal from '../../components/modals/confirmModal';
 
 export default function EditProposal() {
   const { t, i18n } = useTranslation();
@@ -42,46 +43,41 @@ export default function EditProposal() {
   const [token, setToken] = useState('');
   const [showRht, setShowRht] = useState(false);
   const [voteType, setVoteType] = useState<number | undefined>(0);
+  const [beforeList, setBeforeList] = useState<any[]>([]);
+  const [componentName, setComponentName] = useState('');
+  const [holder, setHolder] = useState<any[]>([]);
 
   const [dataSource, setDataSource] = useState();
   const childRef = useRef(null);
-
+  const [preview, setPreview] = useState<any[]>([]);
+  const [previewTitle, setPreviewTitle] = useState('');
+  const [previewOrg, setPreviewOrg] = useState<any[]>([]);
+  const [pid, setPid] = useState('');
+  const [showErrorTips, setShowErrorTips] = useState(false);
   const { showToast } = useToast();
-
-  const [voteList, setVoteList] = useState([
-    {
-      id: 1,
-      value: 'test001',
-    },
-    {
-      id: 2,
-      value: 'test002',
-    },
-    {
-      id: 3,
-      value: 'test003',
-    },
-    {
-      id: 4,
-      value: 'test004',
-    },
-  ]);
+  const [voteList, setVoteList] = useState<any[]>([]);
 
   useEffect(() => {
     if (state) {
       setData(state);
+      // setVoteList((state?.votes as any)?.options ?? []);
+      setVoteList(state?.os_vote_options ?? []);
+
       setDataSource(state?.components ?? []);
-      setShowRht(!state?.is_based_on_template);
+      // setShowRht(!state?.is_based_on_custom_template);
       setVoteType(state?.vote_type);
+      setShowRht(state?.is_based_on_custom_template);
     } else {
       const getDetail = async () => {
         dispatch({ type: AppActionType.SET_LOADING, payload: true });
         try {
           const res = await getProposalDetail(Number(id));
           setData(res.data);
+
+          setVoteList((res.data as any)?.os_vote_options ?? []);
           setVoteType(res.data?.vote_type);
           setDataSource(res.data?.components ?? []);
-          setShowRht(!res.data?.is_based_on_template);
+          setShowRht(!res.data?.is_based_on_custom_template);
         } catch (error) {
           logError('get proposal detail error:', error);
         } finally {
@@ -95,7 +91,38 @@ export default function EditProposal() {
   useEffect(() => {
     if (data) {
       setTitle(data.title);
-      setContentBlocks(data.content_blocks);
+
+      const arr = data.content_blocks;
+      const componentsIndex = arr.findIndex((i: any) => i.type === 'components');
+
+      const beforeComponents = arr.filter(
+        (item: any) => item.type !== 'components' && item.type !== 'preview' && arr.indexOf(item) < componentsIndex,
+      );
+      let componentsList = arr.filter((item: any) => item.type === 'components') || [];
+      const afterComponents = arr.filter(
+        (item: any) => item.type !== 'components' && item.type !== 'preview' && arr.indexOf(item) > componentsIndex,
+      );
+
+      const preview = arr.filter((i: any) => i.type === 'preview');
+      setPreviewOrg(preview);
+      const preArr = JSON.parse(preview[0].content);
+
+      setPreview(preArr);
+      setPreviewTitle(preview[0].title);
+
+      setComponentName(componentsList[0]?.title);
+      setBeforeList(beforeComponents ?? []);
+      setHolder(componentsList);
+
+      const propArr = preArr.filter((item: any) => item.name === 'relate');
+
+      if (propArr?.length) {
+        setPid(propArr[0]?.data?.proposal_id);
+      }
+
+      setContentBlocks(afterComponents);
+
+      // setContentBlocks(data.content_blocks);
     }
   }, [data]);
 
@@ -107,6 +134,11 @@ export default function EditProposal() {
     let arr = [...contentBlocks];
     arr[index].content = value;
     setContentBlocks([...arr]);
+  };
+  const handleTextBefore = (value: any, index: number) => {
+    let arr = [...beforeList];
+    arr[index].content = value;
+    setBeforeList([...arr]);
   };
 
   const getComponentList = async () => {
@@ -148,28 +180,67 @@ export default function EditProposal() {
     (childRef.current as any).submitForm();
   };
 
-  const handleFormSubmit = async (submitData: any) => {
-    if (!data) {
+  const handleFormSubmit = async (success: boolean, submitData: any) => {
+    if (!data || !success) {
       return;
     }
+    let budgetArr = data?.components?.filter((item: any) => item.name === 'budget') || [];
+    if (data?.template_name === 'P2提案立项' && budgetArr?.length > 0) {
+      let err = false;
 
-    let dataFormat: any = {};
-
-    for (const dataKey in submitData) {
-      dataFormat[dataKey] = {
-        name: dataKey,
-        data: submitData[dataKey],
-      };
+      const budgetData = submitData.filter((item: any) => item.name === 'budget') || [];
+      if (budgetData.length) {
+        budgetData[0].data.budgetList.map((item: any) => {
+          if (item.typeTest.name === 'USDT') {
+            if (Number(item.amount) > 1000) {
+              err = true;
+            }
+          } else if (item.typeTest.name === 'SCR') {
+            if (Number(item.amount) > 50000) {
+              err = true;
+            }
+          }
+        });
+      }
+      setShowErrorTips(err);
+      if (err) return;
     }
 
+    // let dataFormat: any = {};
+    //
+    // for (const dataKey in submitData) {
+    //   dataFormat[dataKey] = {
+    //     name: dataKey,
+    //     data: submitData[dataKey],
+    //   };
+    // }
+
     await checkMetaforoLogin();
+
+    let holderNew = [...holder];
+
+    if (holder?.length) {
+      holderNew[0].name = JSON.stringify(holder[0]?.name);
+    }
+
+    let arr = [...previewOrg, ...beforeList, ...holderNew, ...contentBlocks];
+    let newVoteList: string[] = [];
+    if (voteType === 99 || voteType === 98) {
+      voteList.map((item) => {
+        newVoteList.push(item.label);
+      });
+    }
+
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
+
     updateProposal(Number(data.id), {
       title,
       proposal_category_id: data.proposal_category_id,
-      content_blocks: contentBlocks,
+      content_blocks: arr,
       vote_type: voteType,
-      components: dataFormat,
+      vote_options: voteType === 99 || voteType === 98 ? newVoteList : null,
+      components: submitData,
+      create_project_proposal_id: pid?.length ? pid : 0,
       submit_to_metaforo: submitType === 'submit',
     })
       .then((r) => {
@@ -189,10 +260,7 @@ export default function EditProposal() {
   };
 
   const handleSaveDraft = (data: any) => {
-    console.error({
-      ...data,
-    });
-    handleFormSubmit(data);
+    handleFormSubmit(true, data);
   };
   const saveAllDraft = () => {
     (childRef.current as any).saveForm();
@@ -215,24 +283,42 @@ export default function EditProposal() {
 
   const handleAdd = () => {
     const arr = [...voteList];
-    arr.push({
-      id: 10,
-      value: '',
-    });
+    arr.push({ id: '', label: '', metaforo_id: 0 });
     setVoteList(arr);
   };
 
   const handleVoteInput = (e: ChangeEvent, index: number) => {
     const arr = [...voteList];
-    arr[index].value = (e.target as HTMLInputElement).value;
+    arr[index].label = (e.target as HTMLInputElement).value;
     setVoteList(arr);
   };
 
+  const handleErrorClose = () => {
+    setShowErrorTips(false);
+  };
+
+  const uploadPic = async (files: any[], callback: any) => {
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    try {
+      const urlObjArr = await UploadPictures(files[0]);
+      callback([urlObjArr]);
+    } catch (e) {
+      console.error('uploadPic', e);
+    } finally {
+      dispatch({ type: AppActionType.SET_LOADING, payload: null });
+    }
+  };
+
   const categoryName = data?.proposal_category_id
-    ? proposalCategories.find((item) => item.id === data?.proposal_category_id)?.name
+    ? proposalCategories?.find((item) => item.id === data?.proposal_category_id)?.name
     : '';
 
-  const submitDisabled = !title || !title.trim() || contentBlocks.some((item) => !item.content);
+  // const submitDisabled = !title || !title.trim() || contentBlocks.some((item) => !item.content);
+  const submitDisabled =
+    !title ||
+    !title.trim() ||
+    beforeList.some((item) => !item.content || !/^<!--.*-->(.|\n)+$|^(?!(<!--.*?-->))[\s\S]+$/.test(item.content)) ||
+    contentBlocks.some((item) => !item.content || !/^<!--.*-->(.|\n)+$|^(?!(<!--.*?-->))[\s\S]+$/.test(item.content));
 
   return (
     <Page>
@@ -260,77 +346,127 @@ export default function EditProposal() {
         </FlexInner>
       </FixedBox>
       <BoxBg showRht={showRht?.toString()}>
-        <Template
-          DataSource={dataSource}
-          operate="edit"
-          initialItems={components}
-          language={i18n.language}
-          showRight={showRht}
-          theme={theme}
-          baseUrl={BASE_URL}
-          version={API_VERSION}
-          token={token}
-          BeforeComponent={
-            <>
-              <ItemBox>
-                <TitleBox>
-                  <span>{t('Proposal.title')}</span>
-                  {categoryName && <TagBox>{categoryName}</TagBox>}
-                </TitleBox>
-                <InputBox>
-                  <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} />
-                </InputBox>
-              </ItemBox>
-              <ComponnentBox>
-                <span>{t('Proposal.proposalComponents')}</span>
-              </ComponnentBox>
-            </>
-          }
-          AfterComponent={
-            <div>
-              {contentBlocks?.map((item, index: number) => (
-                <ItemBox key={`block_${index}`}>
-                  <TitleBox>{item.title}</TitleBox>
-
-                  <MdEditor
-                    toolbarsExclude={['github', 'save']}
-                    theme={theme ? 'dark' : 'light'}
-                    modelValue={item.content}
-                    editorId={`block_${index}`}
-                    onChange={(val) => handleText(val, index)}
-                  />
-
-                  {/*<MarkdownEditor value={item.content} onChange={(val)=>handleText(val,index)} />*/}
+        <TemplateBox>
+          <Template
+            DataSource={dataSource}
+            operate="edit"
+            initialItems={components}
+            language={i18n.language}
+            showRight={showRht}
+            theme={theme}
+            baseUrl={BASE_URL}
+            version={API_VERSION}
+            token={token}
+            BeforeComponent={
+              <>
+                <ItemBox>
+                  <TitleBox>
+                    <span>{t('Proposal.title')}</span>
+                    {categoryName && <TagBox>{categoryName}</TagBox>}
+                  </TitleBox>
+                  <InputBox>
+                    <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} />
+                  </InputBox>
                 </ItemBox>
-              ))}
 
-              {/*<ItemBox>*/}
-              {/*  <TitleBox>投票选项</TitleBox>*/}
-              {/*  <VoteBox>*/}
-              {/*    {voteList.map((item, index) => (*/}
-              {/*      <li>*/}
-              {/*        <input type="text" value={item.value} onChange={(e) => handleVoteInput(e, index)} />*/}
-              {/*        {voteList.length - 1 === index && (*/}
-              {/*          <span onClick={() => handleAdd()}>*/}
-              {/*            <img src={PlusImg} alt="" />*/}
-              {/*          </span>*/}
-              {/*        )}*/}
+                {!!preview?.length && (
+                  <>
+                    <ItemBox>
+                      <TitleBox>{previewTitle}</TitleBox>
+                      <div>
+                        <Preview
+                          DataSource={preview}
+                          language={i18n.language}
+                          initialItems={components}
+                          theme={theme}
+                        />
+                      </div>
+                    </ItemBox>
+                  </>
+                )}
 
-              {/*        {!!(voteList.length - 1) && (*/}
-              {/*          <span onClick={() => removeVote(index)}>*/}
-              {/*            <img src={MinusImg} alt="" />*/}
-              {/*          </span>*/}
-              {/*        )}*/}
-              {/*      </li>*/}
-              {/*    ))}*/}
-              {/*  </VoteBox>*/}
-              {/*</ItemBox>*/}
-            </div>
-          }
-          ref={childRef}
-          onSubmitData={handleFormSubmit}
-          onSaveData={handleSaveDraft}
-        />
+                {!!beforeList?.length &&
+                  beforeList?.map((item, index: number) => (
+                    <ItemBox key={`block_${index}`}>
+                      <TitleBox>{item.title}</TitleBox>
+
+                      <MdEditor
+                        toolbarsExclude={['github', 'save']}
+                        theme={theme ? 'dark' : 'light'}
+                        modelValue={item.content}
+                        editorId={`block_${index}`}
+                        onUploadImg={(files, callBack) => uploadPic(files, callBack)}
+                        onChange={(val) => handleTextBefore(val, index)}
+                      />
+
+                      {/*<MarkdownEditor value={item.content} onChange={(val)=>handleText(val,index)} />*/}
+                    </ItemBox>
+                  ))}
+                {!!componentName?.length && (
+                  <ComponnentBox>
+                    <span>{componentName || t('Proposal.proposalComponents')}</span>
+                  </ComponnentBox>
+                )}
+              </>
+            }
+            AfterComponent={
+              <div>
+                {!!contentBlocks?.length &&
+                  contentBlocks?.map((item, index: number) => (
+                    <ItemBox key={`block_${index}`}>
+                      <TitleBox>{item.title}</TitleBox>
+
+                      <MdEditor
+                        toolbarsExclude={['github', 'save']}
+                        theme={theme ? 'dark' : 'light'}
+                        modelValue={item.content}
+                        editorId={`block_${index}`}
+                        onChange={(val) => handleText(val, index)}
+                        onUploadImg={(files, callBack) => uploadPic(files, callBack)}
+                      />
+
+                      {/*<MarkdownEditor value={item.content} onChange={(val)=>handleText(val,index)} />*/}
+                    </ItemBox>
+                  ))}
+
+                {(voteType === 99 || voteType === 98) && data?.state === 'pending_submit' && (
+                  <ItemBox>
+                    <TitleBox>投票选项</TitleBox>
+                    <VoteBox>
+                      {voteList.map((item, index) => (
+                        <li key={`vote_${index}`}>
+                          <input type="text" value={item.label} onChange={(e) => handleVoteInput(e, index)} />
+                          {voteList.length - 1 === index && (
+                            <span onClick={() => handleAdd()}>
+                              <img src={PlusImg} alt="" />
+                            </span>
+                          )}
+
+                          {!!(voteList.length - 1) && (
+                            <span onClick={() => removeVote(index)}>
+                              <img src={MinusImg} alt="" />
+                            </span>
+                          )}
+                        </li>
+                      ))}
+                    </VoteBox>
+                  </ItemBox>
+                )}
+              </div>
+            }
+            ref={childRef}
+            onSubmitData={handleFormSubmit}
+            onSaveData={handleSaveDraft}
+          />
+        </TemplateBox>
+        {showErrorTips && (
+          <ConfirmModal
+            title=""
+            msg={t('Proposal.p2Tips')}
+            onConfirm={() => handleErrorClose()}
+            onClose={handleErrorClose}
+          />
+        )}
       </BoxBg>
     </Page>
   );
@@ -471,7 +607,7 @@ const BoxBg = styled.div<{ showRht: string }>`
   border-radius: 8px;
 
   width: ${(props) => (props.showRht === 'true' ? 'calc(100% - 410px)' : '100%')};
-  height: 100%;
+  //height: 100%;
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -480,7 +616,6 @@ const BoxBg = styled.div<{ showRht: string }>`
 `;
 
 const VoteBox = styled.ul`
-  padding: 0 32px;
   li {
     display: flex;
     align-items: center;
@@ -507,5 +642,11 @@ const VoteBox = styled.ul`
       border: 1px solid var(--proposal-border);
       cursor: pointer;
     }
+  }
+`;
+
+const TemplateBox = styled.div`
+  .p32Width {
+    padding: 0;
   }
 `;

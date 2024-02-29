@@ -68,18 +68,23 @@
     "PollNFT": "Poll NFT address",
     "VoteClose": "Voting Closed",
     "VoteEndAt": "Voting ends in {{leftTime}}",
+    "DraftEndAt": "Under review in {{leftTime}}",
     "VoteStartAt": "Start in {{leftTime}}",
     "TotalVotes": "Total Votes",
-    "Draft": "Draft",
+    "VoteNotStart": "Voting has not started",
+    "Draft": "Under review",
     "Audit": "Audit",
     "all": "All",
-    "Rejected": "Rejected",
+    "Discard": "Discard",
     "WithDrawn": "Withdrawn",
     "Voting": "Voting",
     "Approved": "Approved",
     "Passed": "Passed",
     "Failed": "Failed",
-    "PendingCommit": "Unsubmitted",
+    "Vetoed": "Rejected",
+    "PendingExecution": "Pending",
+    "ExecutedFailed": "Execution failed",
+    "PendingCommit": "Unsubmit",
     "NotPendingCommit": "Submitted",
     "ThreeLayerType": "三层提案 - P3",
     "TwoLayerType": "二层提案 - P2",
@@ -123,15 +128,40 @@
     "SaveProposal": "Save",
     "SubmitProposal": "Submit",
     "CityhallRejected": "Cityhall rejected",
+    "veto": "City Hall veto",
     "TotalVoteCount": "{{count}} voted",
-    "proposalComponents": "Proposal Components",
+    "proposalComponents": "Automation Components",
     "HasVote": "Voted",
     "LoginTip": "Login to Metaforo to use the full functionality.",
     "LoginButton": "Login to Metaforo",
     "WriteReplyHint": "write a reply",
-    "TimeDisplay": "{{d}} day(s) {{h}} hour(s) {{m}} minute(s)"
+    "TimeDisplay": "{{d}} day(s) {{h}} hour(s) {{m}} minute(s)",
+    "ChooseCloseoutProposal": "Please select the proposal to be closed",
+    "ProposalRulesIntro": "Explanation of the rules for {{name}}",
+    "NoPermisstionToPropose": "You cannot initiate this proposal at this time",
+    "AssociatedProposalComponent": "Associated Proposal Component",
+    "EmptyAssociatedProposal": "No proposals ready for closure",
+    "SubmitConfirmTip": "Once a proposal is submitted, it goes to a vote and cannot be withdrawn for modification, is the submission confirmed?",
+    "p2Tips": "P2 proposals can apply for incentives of no more than 50,000 SCR and no more than 1,000 USDT.",
+    "AutoExecuteLeftTime": "Auto-execute wait time left {{h}} hour(s) {{m}} minute(s)",
+    "CloseVote": "Early closure of polls",
+    "ConfirmToCloseVote": "Confirmation of the early closing of the polls?",
+    "ExecutionTip": "The current ballot has closed and there is a 24-hour waiting period during which the City Council may veto the results of the proposal, or if the City Council does not veto the proposal, the proposal closes in accordance with the results of the ballot.",
+    "Create": "Create",
+    "ViewVoteRules": "View voting rules >>"
   },
   "Project": {
+    "OfficialLink": "Official link",
+    "Deliverables": "Deliverables",
+    "Contact": "Project Moderator Contact",
+    "SIPNumber": "SIP No.",
+    "StartProjectLink": "立项链接",
+    "EndProjectLink": "结项链接",
+    "Open": "Open",
+    "Closing": "Closing",
+    "CloseFailed": "Close Failed",
+    "PlanFinishTime": "Planned completion time",
+    "ProjectType": "Project Type",
     "ProjectOrGuildItem": "Nothing left here.",
     "create": "Create Project",
     "Edit": "Edit Project",
@@ -214,6 +244,14 @@
     "MemberExist": "Please do not add members repeatedly"
   },
   "Guild": {
+    "OfficialLink": "Official link",
+    "Deliverables": "Deliverables",
+    "Contact": "Guild Moderator Contact",
+    "SIPNumber": "SIP No.",
+    "StartProjectLink": "立项链接",
+    "EndProjectLink": "结项链接",
+    "PlanFinishTime": "Planned completion time",
+    "ProjectType": "Guild Type",
     "create": "Create Guild",
     "createSuccess": "Create Successfully",
     "createFailed": "Create Failed",
@@ -269,7 +307,9 @@
     "PointsOrToken": "Points or Token",
     "Credit": "Points",
     "Token": "Token",
-    "MemberExist": "Please do not add members repeatedly"
+    "MemberExist": "Please do not add members repeatedly",
+    "CloseGuild": "Close Guild",
+    "Confirm2Close": "Confirm to close it?"
   },
   "city-hall": {
     "Cityhall": "City Hall",
@@ -432,7 +472,9 @@
     "levelTips": "To LV {{level}} you need",
     "nextLevel": "Next Level",
     "DefaultName": "No Name",
-    "DefaultBio": "No Bio"
+    "DefaultBio": "No Bio",
+    "InviteInfo": "{{amount}} SCR (including offchain) has been earned through invitation to register for SNS. ",
+    "ViewDetails": "view details >>"
   },
   "roles": {
     "SGN_HOLDER": "SEED Holder",
@@ -480,7 +522,13 @@
     "SubmitProposalSuccess": "Submit successfully",
     "SaveProposalSuccess": "Save successfully",
     "CastVoteSuccess": "Cast vote successfully",
-    "CommentSuccess": "Comment successfully"
+    "CommentSuccess": "Comment successfully",
+    "InvalidField": "Required correct {{field}}",
+    "QuerySNSFailed": "Query SNS failed",
+    "InstallMetaMaskTip": "Don't have a wallet? Go install it >>",
+    "SwapTip1": "You don't have permission to use this feature, please go to Register SNS to get permission.",
+    "SwapTip2": "If you already have SNS, please be patient and wait to turn on swap permissions",
+    "SearchHint": "Search {{type}} name or moderator"
   },
   "event": {
     "events": "Events",
@@ -581,6 +629,14 @@
     "NotFilled": "Not available"
   },
   "apps": {
+    "OnlineEvent": "SeeDAO Calendar",
+    "OnlineEventDesc": "View Schedule",
+    "wiki": "Wiki",
+    "WikiDesc": "SeeDAO Wiki",
+    "hub": "SeeDAO Hub",
+    "hubDesc": "Receive rewards by completing tasks",
+    "Event": "SeeDAO Events",
+    "EventDesc": "Participate in online and offline activities",
     "DeschoolDesc": "DeSchool is building education infrastructure in Web3.",
     "AAAnyDesc": "AAAny wants everyone to enjoy AMA. We offers a wealth of exclusive features to make your AMA experience joyful and efficient.",
     "Cascad3Desc": "Co-create everything. Find your creative community.",
@@ -592,7 +648,9 @@
     "SeeU": "SeeU Network",
     "SeeUDesc": "SeeU Network is a decentralized social network that allows users to create and manage their own communities.",
     "SNS": "SNS",
-    "SNSDesc": "SNS is your identity based on blockchain in SeeDAO."
+    "SNSDesc": "SNS is your identity based on blockchain in SeeDAO.",
+    "Echo": "Echo",
+    "EchoDesc": "Echo is a social network that gives your echos to same habbies, passions or interests."
   },
   "SNS": {
     "EntranceTitle": "INVOLVED IN SEEDAO IN YOUR NAME",
@@ -625,7 +683,9 @@
     "ContractNotReady": "Contract is not ready, switch metamask network to Polygon please.",
     "NetworkNotReady": "switch metamask network to Polygon please",
     "NotEnoughBalance": "{{token}} not enough",
-    "CommitmentTooOld": "Your {{sns}} submission has expired, please click \"Cancel registration\" to restart your registration."
+    "CommitmentTooOld": "Your {{sns}} submission has expired, please click \"Cancel registration\" to restart your registration.",
+    "ShareInviteLink": "Share invite link",
+    "InviteLinkCopied": "The invite link has been copied to your clipboard!"
   },
   "Governance": {
     "GovernanceRule": "Governance Rules",

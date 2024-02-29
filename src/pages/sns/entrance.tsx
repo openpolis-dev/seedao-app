@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import Animation from '../../components/sns/animation';
 import styled from 'styled-components';
 import LogoImg from '../../assets/Imgs/sns.svg';
@@ -57,13 +57,16 @@ const ButtonBox = styled.div`
 `;
 export default function SNSEntrancePage() {
   const { t } = useTranslation();
+
+  const [search] = useSearchParams();
+  const inviteCode = search.get('invite');
   return (
     <Box>
       <TopBox>
         <img src={LogoImg} alt="" />
         <TitleBox>{t('SNS.EntranceTitle')}</TitleBox>
         <TipBox>{t('SNS.EntranceDesc')}</TipBox>
-        <Link to="/sns/register">
+        <Link to={`/sns/register${inviteCode ? `?invite=${inviteCode}` : ''}`}>
           <ButtonBox>{t('SNS.Started')}</ButtonBox>
         </Link>
       </TopBox>

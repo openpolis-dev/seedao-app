@@ -226,48 +226,6 @@ const items: MenuItemType[] = [
     link: { href: '/home' },
   },
   {
-    title: 'Home.Apps',
-    icon: {
-      dark: {
-        nor: AppImg,
-        active: AppImgActive,
-      },
-      light: {
-        nor: AppImgLight,
-        active: AppImgActive,
-      },
-    },
-    link: { href: '/apps' },
-  },
-  {
-    title: 'menus.Event',
-    icon: {
-      dark: {
-        nor: EventImg,
-        active: EventImgActive,
-      },
-      light: {
-        nor: EventImgLight,
-        active: EventImgActive,
-      },
-    },
-    link: { href: '/event' },
-  },
-  {
-    title: 'Home.OnlineEvent',
-    icon: {
-      dark: {
-        nor: CalendarImg,
-        active: CalendarActive,
-      },
-      light: {
-        nor: CalendarImgLight,
-        active: CalendarActive,
-      },
-    },
-    link: { href: '/online-event' },
-  },
-  {
     title: 'menus.assets',
     icon: {
       dark: {
@@ -281,30 +239,6 @@ const items: MenuItemType[] = [
     },
     link: { href: '/assets' },
   },
-  {
-    title: 'menus.Explore',
-    icon: {
-      dark: {
-        nor: ExploreImg,
-        active: ExploreImgActive,
-      },
-      light: {
-        nor: ExploreImgLight,
-        active: ExploreImgActive,
-      },
-    },
-    link: { href: '/explore' },
-  },
-  // {
-  //   title: 'menus.Project',
-  //   icon: { name: <PieChart /> },
-  //   link: { href: '/project' },
-  // },
-  // {
-  //   title: 'menus.Guild',
-  //   icon: { name: <People /> },
-  //   link: { href: '/guild' },
-  // },
   {
     title: 'menus.Proposal',
     icon: {
@@ -320,18 +254,18 @@ const items: MenuItemType[] = [
     link: { href: '/proposal' },
   },
   {
-    title: 'menus.Pub',
+    title: 'menus.Resources',
     icon: {
       dark: {
-        nor: PubImg,
-        active: PubImgActive,
+        nor: ApplyImg,
+        active: ApplyImgActive,
       },
       light: {
-        nor: PubImgLight,
-        active: PubImgActive,
+        nor: ApplyImgLight,
+        active: ApplyImgActive,
       },
     },
-    link: { href: '/hub' },
+    link: { href: '/resources' },
   },
   {
     title: 'menus.city-hall',
@@ -347,6 +281,87 @@ const items: MenuItemType[] = [
     },
     link: { href: '/city-hall' },
   },
+  {
+    title: 'menus.Explore',
+    icon: {
+      dark: {
+        nor: ExploreImg,
+        active: ExploreImgActive,
+      },
+      light: {
+        nor: ExploreImgLight,
+        active: ExploreImgActive,
+      },
+    },
+    link: { href: '/explore' },
+  },
+  {
+    title: 'Home.Apps',
+    icon: {
+      dark: {
+        nor: AppImg,
+        active: AppImgActive,
+      },
+      light: {
+        nor: AppImgLight,
+        active: AppImgActive,
+      },
+    },
+    link: { href: '/apps' },
+  },
+  // {
+  //   title: 'menus.Event',
+  //   icon: {
+  //     dark: {
+  //       nor: EventImg,
+  //       active: EventImgActive,
+  //     },
+  //     light: {
+  //       nor: EventImgLight,
+  //       active: EventImgActive,
+  //     },
+  //   },
+  //   link: { href: '/event' },
+  // },
+  // {
+  //   title: 'Home.OnlineEvent',
+  //   icon: {
+  //     dark: {
+  //       nor: CalendarImg,
+  //       active: CalendarActive,
+  //     },
+  //     light: {
+  //       nor: CalendarImgLight,
+  //       active: CalendarActive,
+  //     },
+  //   },
+  //   link: { href: '/online-event' },
+  // },
+  // {
+  //   title: 'menus.Pub',
+  //   icon: {
+  //     dark: {
+  //       nor: PubImg,
+  //       active: PubImgActive,
+  //     },
+  //     light: {
+  //       nor: PubImgLight,
+  //       active: PubImgActive,
+  //     },
+  //   },
+  //   link: { href: '/hub' },
+  // },
+
+  // {
+  //   title: 'menus.Project',
+  //   icon: { name: <PieChart /> },
+  //   link: { href: '/project' },
+  // },
+  // {
+  //   title: 'menus.Guild',
+  //   icon: { name: <People /> },
+  //   link: { href: '/guild' },
+  // },
 
   // {
   //   title: 'menus.Chat',
@@ -361,51 +376,37 @@ const items: MenuItemType[] = [
   //   link: { href: '/feedback' },
   //   value: 'feedback',
   // },
-  {
-    title: 'menus.Resources',
-    icon: {
-      dark: {
-        nor: ApplyImg,
-        active: ApplyImgActive,
-      },
-      light: {
-        nor: ApplyImgLight,
-        active: ApplyImgActive,
-      },
-    },
-    link: { href: '/resources' },
-  },
 ];
-if (['dev', undefined].includes(process.env.REACT_APP_ENV_VERSION)) {
-  items.push({
-    title: 'menus.Newcomer',
-    icon: {
-      dark: {
-        nor: FreshWhite,
-        active: FreshActive,
-      },
-      light: {
-        nor: FreshImg,
-        active: FreshActive,
-      },
-    },
-    link: { href: '/newcomer' },
-  });
-}
-items.push({
-  title: 'Wiki',
-  icon: {
-    dark: {
-      nor: WikiWhite,
-      active: WikiImgActive,
-    },
-    light: {
-      nor: WikiImg,
-      active: WikiImgActive,
-    },
-  },
-  link: { href: '/wiki' },
-});
+// if (['dev', undefined].includes(process.env.REACT_APP_ENV_VERSION)) {
+//   items.push({
+//     title: 'menus.Newcomer',
+//     icon: {
+//       dark: {
+//         nor: FreshWhite,
+//         active: FreshActive,
+//       },
+//       light: {
+//         nor: FreshImg,
+//         active: FreshActive,
+//       },
+//     },
+//     link: { href: '/newcomer' },
+//   });
+// }
+// items.push({
+//   title: 'Wiki',
+//   icon: {
+//     dark: {
+//       nor: WikiWhite,
+//       active: WikiImgActive,
+//     },
+//     light: {
+//       nor: WikiImg,
+//       active: WikiImgActive,
+//     },
+//   },
+//   link: { href: '/wiki' },
+// });
 
 interface IMenuItem {
   data: MenuItemType;

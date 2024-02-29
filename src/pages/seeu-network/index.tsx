@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { EventCard } from 'seeucomp';
 import { getSeeuEventList } from 'requests/event';
@@ -10,6 +10,7 @@ import { ContainerPadding } from '../../assets/styles/global';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import Tabbar from 'components/common/tabbar';
+import BackerNav from '../../components/common/backNav';
 
 interface IEventProps {
   startTime: string;
@@ -27,6 +28,11 @@ interface IEventProps {
   tags?: string[];
   id: number;
 }
+
+const TopBox = styled.div`
+  border-bottom: 1px solid #eee;
+  margin-bottom: 30px;
+`;
 
 export default function SeeuNetwork() {
   const { t } = useTranslation();
@@ -66,6 +72,10 @@ export default function SeeuNetwork() {
       {/*    <Tabbar defaultActiveKey={0} tabs={[{ key: 0, title: t('event.events') }]} />*/}
       {/*  </div>*/}
       {/*</TitBox>*/}
+      <TopBox>
+        <BackerNav title={t('apps.Event')} to={`/`} mb="20px" />
+      </TopBox>
+
       <Row>
         {lst.map((item, idx) => (
           <Col key={idx} sm={12} md={6} lg={3} xl={3} style={{ marginBottom: '30px' }}>

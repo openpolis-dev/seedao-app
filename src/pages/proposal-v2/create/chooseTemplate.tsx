@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { useEffect, useState } from 'react';
-import { ProposalTemplateType } from 'type/proposal.type';
+import { ITemplate } from 'type/proposalV2.type';
 import { useTranslation } from 'react-i18next';
 import { useCreateProposalContext } from './store';
 import AddImg from '../../../assets/Imgs/proposal/add-square.png';
@@ -13,7 +13,7 @@ import { PermissionAction, PermissionObject } from 'utils/constant';
 export default function ChooseTemplateStep() {
   const { t } = useTranslation();
   const { proposalType, chooseTemplate, changeStep } = useCreateProposalContext();
-  const [templates, setTemplates] = useState<ProposalTemplateType[]>([]);
+  const [templates, setTemplates] = useState<ITemplate[]>([]);
 
   const {
     state: { loading },
@@ -41,29 +41,29 @@ export default function ChooseTemplateStep() {
 
   return (
     <ListBox>
-      {canUseCityhall && (
-        <>
-          <CreateBlankOne onClick={() => chooseTemplate({ id: 0 })}>
-            <InnerBox>
-              <ImgBox>
-                <img src={AddImg} alt="" />
-              </ImgBox>
-              <TitleBox>{t('Proposal.CreateBlank')}</TitleBox>
-            </InnerBox>
-          </CreateBlankOne>
-          <CreateBlankOne onClick={() => chooseTemplate({ id: 0, vote_type: 1 })}>
-            <InnerBox>
-              <ImgBox>
-                <img src={AddImg} alt="" />
-              </ImgBox>
-              <TitleBox>{t('Proposal.CreateBlank_Multi')}</TitleBox>
-            </InnerBox>
-          </CreateBlankOne>
-        </>
-      )}
+      {/*{canUseCityhall && (*/}
+      {/*  <>*/}
+      {/*    <CreateBlankOne onClick={() => chooseTemplate(undefined, { id: 0 })}>*/}
+      {/*      <InnerBox>*/}
+      {/*        <ImgBox>*/}
+      {/*          <img src={AddImg} alt="" />*/}
+      {/*        </ImgBox>*/}
+      {/*        <TitleBox>{t('Proposal.CreateBlank')}</TitleBox>*/}
+      {/*      </InnerBox>*/}
+      {/*    </CreateBlankOne>*/}
+      {/*    <CreateBlankOne onClick={() => chooseTemplate(undefined, { id: 0, vote_type: 99 })}>*/}
+      {/*      <InnerBox>*/}
+      {/*        <ImgBox>*/}
+      {/*          <img src={AddImg} alt="" />*/}
+      {/*        </ImgBox>*/}
+      {/*        <TitleBox>{t('Proposal.CreateBlank_Multi')}</TitleBox>*/}
+      {/*      </InnerBox>*/}
+      {/*    </CreateBlankOne>*/}
+      {/*  </>*/}
+      {/*)}*/}
 
       {templates.map((template) => (
-        <BaseTemplate key={template.id} onClick={() => chooseTemplate(template)}>
+        <BaseTemplate key={template.id} onClick={() => chooseTemplate(undefined, template)}>
           <InnerBox>
             <PicBox>
               <img src={template.screenshot_uri} alt="" />

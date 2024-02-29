@@ -10,8 +10,17 @@ import RhtArrow from 'assets/Imgs/proposal/rightArrow.svg';
 import { useTranslation } from 'react-i18next';
 import useMetaforoLogin from 'hooks/useMetaforoLogin';
 import CategoryTag from './categoryTag';
+import { getProposalSIPSlug } from 'utils';
 
-export default function ReviewProposalItem({ data, sns }: { sns: string; data: ISimpleProposal; isReview?: boolean }) {
+export default function ReviewProposalItem({
+  data,
+  sns,
+  isReview,
+}: {
+  sns: string;
+  data: ISimpleProposal;
+  isReview?: boolean;
+}) {
   const navigate = useNavigate();
   const {
     state: { theme },
@@ -21,7 +30,9 @@ export default function ReviewProposalItem({ data, sns }: { sns: string; data: I
   const openProposal = async () => {
     const canReview = await checkMetaforoLogin();
     if (canReview) {
-      navigate(`/city-hall/governance/review-proposal/${data.id}`, { state: data });
+      isReview
+        ? navigate(`/city-hall/governance/review-proposal/${data.id}`, { state: data })
+        : window.open(`${window.location.origin}/proposal/thread/${data.id}`, '_blank');
     }
   };
 
@@ -33,7 +44,10 @@ export default function ReviewProposalItem({ data, sns }: { sns: string; data: I
     <CardBox key={data.id} border={borderStyle}>
       <FlexLine onClick={openProposal}>
         <div style={{ flex: 1 }}>
-          <Title>{data.title}</Title>
+          <Title>
+            {getProposalSIPSlug(data.sip)}
+            {data.title}
+          </Title>
           <CardHeaderStyled>
             <LeftBox>
               <div className="left">
