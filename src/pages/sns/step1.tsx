@@ -14,7 +14,7 @@ import { isAvailable } from '@seedao/sns-safe';
 import { builtin } from '@seedao/sns-js';
 import { getRandomCode } from 'utils';
 import useToast, { ToastType } from 'hooks/useToast';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Address, useNetwork, useSwitchNetwork } from 'wagmi';
 import { WaitForTransactionResult, waitForTransaction } from 'wagmi/actions';
 import { Hex } from 'viem';
@@ -24,6 +24,7 @@ import useTransaction, { TX_ACTION } from './useTransaction';
 import getConfig from 'utils/envCofnig';
 import { checkEstimateGasFeeEnough, checkTokenBalance } from './checkUserBalance';
 import parseError from './parseError';
+import { getInviteCode, inviteBy } from 'requests/invite';
 
 const networkConfig = getConfig().NETWORK;
 const PAY_NUMBER = networkConfig.tokens[0].price;
@@ -37,6 +38,7 @@ enum AvailableStatus {
 export default function RegisterSNSStep1() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const [search] = useSearchParams();
 
   const [val, setVal] = useState<string>();
   const [searchVal, setSearchVal] = useState<string>('');
@@ -236,6 +238,36 @@ export default function RegisterSNSStep1() {
     }
   };
 
+  const requestBindInvite = () => {
+    const inviteCode = search.get('invite');
+    if (!inviteCode) {
+      return;
+    }
+    inviteBy(inviteCode)
+      .then((r) => {
+        console.log('inviteBy called');
+      })
+      .catch((e) => {
+        logError(`use ${inviteCode} to invite ${account} failed`, e);
+      });
+  };
+
+  const getInviteLink = () => {
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    getInviteCode()
+      .then((r) => {
+        showToast(t('SNS.InviteLinkCopied'), ToastType.Success);
+        navigator.clipboard.writeText(`${window.location.origin}/sns?invite=${r.data.invite_code}`);
+      })
+      .catch((e) => {
+        logError('get invite code failed', e);
+        showToast('get invite code failed, please try again', ToastType.Danger);
+      })
+      .finally(() => {
+        dispatch({ type: AppActionType.SET_LOADING, payload: false });
+      });
+  };
+
   useEffect(() => {
     if (!account || !localData || !provider) {
       return;
@@ -262,6 +294,7 @@ export default function RegisterSNSStep1() {
         const _d = { ...localData };
         if (r && r.status === 'success') {
           _d[account].stepStatus = 'success';
+          requestBindInvite();
           provider.getBlock(Number(r.blockNumber.toString())).then((block: any) => {
             _d[account].timestamp = block.timestamp;
             dispatchSNS({ type: ACTIONS.SET_STORAGE, payload: JSON.stringify(_d) });
@@ -336,6 +369,7 @@ export default function RegisterSNSStep1() {
         </SearchBox>
         <Tip>{t('SNS.InputTip')}</Tip>
         <OperateBox>{showButton()}</OperateBox>
+        <ShareButton onClick={getInviteLink}>{t('SNS.ShareInviteLink')}</ShareButton>
       </ContainerWrapper>
       {/* <UserEntrance onClick={handleGoUserSNS}>
         <UserSVGIcon />
@@ -446,6 +480,7 @@ const SearchRight = styled.div`
 
 const OperateBox = styled.div`
   margin-top: 43px;
+  margin-bottom: 24px;
 `;
 
 const MintButton = styled(Button)`
@@ -496,4 +531,11 @@ const UserEntrance = styled.span`
   user-select: none;
   color: var(--bs-body-color_active);
   cursor: pointer;
+`;
+
+const ShareButton = styled.span`
+  text-align: center;
+  cursor: pointer;
+  color: var(--bs-primary);
+  font-size: 14px;
 `;

@@ -164,6 +164,11 @@ const BackBox = styled.div`
   }
 `;
 
+const TopBox = styled.div`
+  border-bottom: 1px solid #eee;
+  margin-bottom: 30px;
+`;
+
 export default function Pub() {
   const { dispatch } = useAuthContext();
   const navigate = useNavigate();
@@ -262,6 +267,9 @@ export default function Pub() {
 
   return (
     <PageStyle>
+      <TopBox>
+        <BackerNav title={t('apps.hub')} to={`/`} mb="20px" />
+      </TopBox>
       <Box>
         {/*<FlexBox>*/}
         {/*  /!*<BackBox onClick={() => navigate(-1)}>*!/*/}

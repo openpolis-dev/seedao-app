@@ -21,6 +21,7 @@ import SearchImg from '../../assets/Imgs/proposal/search.svg';
 import AddImg from '../../assets/Imgs/proposal/add-square.svg';
 import useCheckMetaforoLogin from 'hooks/useMetaforoLogin';
 import MyProposalsTab from 'components/proposalCom/myProposalsTab';
+import { PlainButton } from 'components/common/button';
 
 const PAGE_SIZE = 10;
 
@@ -34,10 +35,11 @@ export default function ProposalIndexPage() {
   } = useAuthContext();
   const proposalCategories = useProposalCategories();
   // filter category
-  const CATEGORY_OPTIONS: ISelectItem[] = proposalCategories.map((c) => ({
-    value: c.id,
-    label: c.name,
-  }));
+  const CATEGORY_OPTIONS: ISelectItem[] =
+    proposalCategories?.map((c) => ({
+      value: c.id,
+      label: c.name,
+    })) || [];
   // filter time
   const TIME_OPTIONS: ISelectItem[] = [
     { value: 'desc', label: t('Proposal.TheNeweset') },
@@ -45,12 +47,15 @@ export default function ProposalIndexPage() {
   ];
   // filter status
   const STATUS_OPTIONS: ISelectItem[] = [
-    { value: ProposalState.Voting, label: t('Proposal.Voting') },
     { value: ProposalState.Draft, label: t('Proposal.Draft') },
-    { value: ProposalState.Rejected, label: t('Proposal.Rejected') },
+    { value: ProposalState.Voting, label: t('Proposal.Voting') },
+    { value: ProposalState.PendingExecution, label: t('Proposal.PendingExecution') },
+    { value: ProposalState.Rejected, label: t('Proposal.Discard') },
     { value: ProposalState.Withdrawn, label: t('Proposal.WithDrawn') },
-    { value: ProposalState.VotingPassed, label: t('Proposal.Passed') },
+    { value: ProposalState.Executed, label: t('Proposal.Passed') },
     { value: ProposalState.VotingFailed, label: t('Proposal.Failed') },
+    { value: ProposalState.Vetoed, label: t('Proposal.Vetoed') },
+    { value: ProposalState.ExecutionFailed, label: t('Proposal.ExecutedFailed') },
   ];
 
   const [selectCategory, setSelectCategory] = useState<ISelectItem>();
@@ -64,6 +69,7 @@ export default function ProposalIndexPage() {
   const [page, setPage] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
   const [initPage, setInitPage] = useState(true);
+  const [isFilterSIP, setIsFilterSIP] = useState(false);
 
   const [currentTab, setCurrentTab] = useState(state?.currentTab?.[0] || TabType.All);
   const secondTab = state?.currentTab?.[1];
@@ -90,10 +96,11 @@ export default function ProposalIndexPage() {
         page: _page,
         size: PAGE_SIZE,
         sort_order: selectTime.value,
-        sort_field: 'create_ts',
+        sort_field: isFilterSIP ? 'sip' : 'create_ts',
         state: selectStatus?.value,
         category_id: selectCategory?.value,
         q: searchKeyword,
+        sip: isFilterSIP ? 1 : '',
       });
       setProposalList(resp.data.rows);
       handleSNS(resp.data.rows.filter((d) => !!d.applicant).map((d) => d.applicant));
@@ -110,7 +117,7 @@ export default function ProposalIndexPage() {
       getProposalList();
       setPage(1);
     }
-  }, [selectCategory, selectTime, selectStatus, searchKeyword]);
+  }, [selectCategory, selectTime, selectStatus, searchKeyword, isFilterSIP]);
 
   useEffect(() => {
     initPage && getProposalList();
@@ -182,6 +189,10 @@ export default function ProposalIndexPage() {
                   placeholder={t('Proposal.StatusSelectHint')}
                   onChange={(v: ISelectItem) => setSelectStatus(v)}
                 />
+                <SipButton $selected={isFilterSIP ? 1 : 0} onClick={() => setIsFilterSIP((prev) => !prev)}>
+                  SIP
+                </SipButton>
+
                 <SearchBox>
                   {/*<SearchSVGIcon />*/}
                   <img src={SearchImg} alt="" className="iconBg" />
@@ -336,4 +347,22 @@ const FlexLine = styled.div`
   justify-content: space-between;
   margin-top: 24px;
   margin-bottom: 20px;
+`;
+
+const SipButton = styled.div<{ $selected: number }>`
+  width: 100px;
+  text-align: center;
+  line-height: 38px;
+  height: 40px;
+  box-sizing: border-box;
+  border: 1px solid var(--bs-border-color);
+  border-color: ${(props) => (props.$selected ? 'var(--bs-primary)' : 'var(--bs-border-color)')};
+  background-color: var(--bs-background);
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  &:hover {
+    border-color: ${(props) => (props.$selected ? 'var(--bs-primary)' : 'rgb(179, 179, 179)')};
+  }
+  color: ${(props) => (props.$selected ? 'var(--bs-primary)' : 'var(--bs-body-color)')};
 `;

@@ -7,6 +7,10 @@ export enum ProposalState {
   Voting = 'voting',
   VotingPassed = 'vote_passed',
   VotingFailed = 'vote_failed',
+  PendingExecution = 'pending_execution',
+  Executed = 'executed',
+  ExecutionFailed = 'execution_failed',
+  Vetoed = 'vetoed',
 }
 
 export interface IBaseCategory {
@@ -17,6 +21,16 @@ export interface IBaseCategory {
   has_perm?: boolean;
 }
 
+export interface ICategory {
+  category_id: number;
+  category_name: string;
+}
+
+export interface ICategoryWithTemplates extends ICategory {
+  category_display_index: number;
+  templates: ITemplate[];
+}
+
 export interface ISimpleProposal {
   id: number;
   title: string;
@@ -25,6 +39,7 @@ export interface ISimpleProposal {
   category_name: string;
   state: ProposalState;
   create_ts: number;
+  sip?: number;
 }
 
 export interface IContentBlock {
@@ -96,29 +111,40 @@ export type VoteGateType = {
   token_id: number;
 };
 
+// 0: no vote
+// 1: endorsement opposition
+// 2: predefined percentage
+// 98: custom vote options
+// 99: custom vote options
+export type VoteOptionType = 0 | 1 | 2 | 99 | 98;
+
 export interface IProposal extends ISimpleProposal {
   reviewer: string;
   applicant_avatar: string;
   proposal_category_id: number | undefined;
-  vote_type?: number | undefined;
+  vote_type?: VoteOptionType;
   content_blocks: IContentBlock[];
   reject_metaforo_comment_id: number;
   reject_reason: string;
   is_rejected: string;
-  is_based_on_template: boolean | undefined;
+  is_based_on_custom_template: boolean | undefined;
   template_id: number | string;
   reject_ts: number;
+  vetoed?: any;
   arweave: string;
   comments: ICommentDisplay[];
   components: any;
   comment_count: number;
   votes: Poll[];
+  os_vote_options?: any[];
   vote_gate: VoteGateType;
   histories: {
     total_count: number;
     lists: IProposalEditHistoy[];
   };
   template_name?: string;
+  execution_ts?: number;
+  publicity_ts?: number;
 }
 
 export interface IActivity {
@@ -128,4 +154,18 @@ export interface IActivity {
   target_title: string;
   wallet: string;
   reply_to_wallet: string;
+}
+
+export interface ITemplate {
+  id: number;
+  vote_type?: number;
+  name?: string;
+  schema?: string;
+  rule_description?: string;
+  screenshot_uri?: string;
+  components?: any[];
+  has_perm_to_use?: boolean;
+  is_instant_vote?: boolean;
+  is_closing_project?: boolean;
+  display_index?: number;
 }

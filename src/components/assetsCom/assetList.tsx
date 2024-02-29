@@ -5,7 +5,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import Page from 'components/pagination';
 import requests from 'requests';
 import { IQueryParams } from 'requests/applications';
-import { IApplicationDisplay, ApplicationStatus } from 'type/application.type';
+import { IApplicationDisplay, ApplicationStatus, ApplicationEntity } from 'type/application.type';
 import NoItem from 'components/noItem';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import { formatTime } from 'utils/time';
@@ -19,7 +19,7 @@ import ApplicationStatusTagNew from 'components/common/applicationStatusTagNew';
 import useSeasons from 'hooks/useSeasons';
 import useQuerySNS from 'hooks/useQuerySNS';
 import useBudgetSource from 'hooks/useBudgetSource';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import getConfig from 'utils/envCofnig';
 import useAssets from 'hooks/useAssets';
 
@@ -184,6 +184,9 @@ const SearchBox = styled.div`
 
 export default function AssetList() {
   const navigate = useNavigate();
+  const [search] = useSearchParams();
+  const defaultTarget = search.get('target') || '';
+  const defaultContent = search.get('content') || '';
 
   const {
     state: { theme },
@@ -197,7 +200,7 @@ export default function AssetList() {
   const [selectStatus, setSelectStatus] = useState<ApplicationStatus>();
   // budget source
   const allSource = useBudgetSource();
-  const [selectSource, setSelectSource] = useState<{ id: number; type: 'project' | 'guild' }>();
+  const [selectSource, setSelectSource] = useState<{ id: number; type: ApplicationEntity }>();
   const [detailDisplay, setDetailDisplay] = useState<IApplicationDisplay>();
   // season
   const seasons = useSeasons();
@@ -207,14 +210,14 @@ export default function AssetList() {
   const [selectAsset, setSelectAsset] = useState();
 
   // search target user
-  const [targetKeyword, setTargetKeyword] = useState('');
-  const [searchTargetVal, setSearchTargetVal] = useState('');
+  const [targetKeyword, setTargetKeyword] = useState(defaultTarget);
+  const [searchTargetVal, setSearchTargetVal] = useState(defaultTarget);
   // search applicant
   const [applicantKeyword, setApplicantKeyword] = useState('');
   const [searchApplicantVal, setSearchApplicantVal] = useState('');
   // search content
-  const [contentKeyword, setContentKeyword] = useState('');
-  const [searchContentVal, setSearchContentVal] = useState('');
+  const [contentKeyword, setContentKeyword] = useState(defaultContent);
+  const [searchContentVal, setSearchContentVal] = useState(defaultContent);
 
   const [snsMap, setSnsMap] = useState<Map<string, string>>(new Map());
 

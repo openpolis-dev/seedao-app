@@ -21,7 +21,7 @@ const usePermission = (action: string, object: string) => {
 
   useEffect(() => {
     checkLogic();
-  }, [isLogin, authorizer]);
+  }, [isLogin, authorizer, action, object]);
 
   return checkResult;
 };

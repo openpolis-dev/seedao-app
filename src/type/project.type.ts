@@ -33,6 +33,8 @@ export enum ProjectStatus {
   Open = 'open',
   Pending = 'pending_close',
   Closed = 'closed',
+  Closing = 'closing',
+  CloseFailed = 'close_failed',
 }
 
 export interface IBaseProject {
@@ -46,6 +48,50 @@ export interface IBaseProject {
   intro: string;
 }
 
+export interface IProject {
+  logo: string;
+  desc: string;
+  name: string;
+  ApprovalLink: string;
+  OverLink: string;
+  Category: string;
+  ContantWay: string;
+  Deliverable: string;
+  OfficialLink: string;
+  PlanTime: string;
+  SIP: string;
+  sponsors: string[];
+  budgets: [{ name: string; total_amount: number }];
+}
+
+export interface IProjectDisplay extends IProject {
+  id: number;
+  create_ts: number;
+  update_ts: number;
+}
+
+export interface IGuild {
+  logo: string;
+  desc: string;
+  name: string;
+  ContantWay: string;
+  OfficialLink: string;
+  sponsors: string[];
+}
+
+export interface IGuildDisplay extends IGuild {
+  id: number;
+  create_ts: number;
+  update_ts: number;
+}
+
+export interface ReturnBudget {
+  id: number;
+  name: string;
+  created_ts: string;
+  updated_ts: string;
+}
+
 export interface ReTurnProject {
   create_ts: number;
   id: number;
@@ -57,6 +103,7 @@ export interface ReTurnProject {
   sponsors: string[];
   status: ProjectStatus;
   updated_at: string;
+  user?: any;
   budgets: IBudgetItem[];
   intro: string;
 }

@@ -47,15 +47,15 @@ interface IRowData {
 
 enum RankDirection {
   default = 0,
-  down,
-  up,
+  descend,
+  ascend,
 }
 
 const getRankIcon = (direction: RankDirection) => {
   switch (direction) {
-    case RankDirection.down:
+    case RankDirection.descend:
       return RankDownIcon;
-    case RankDirection.up:
+    case RankDirection.ascend:
       return RankUpIcon;
     default:
       return RankIcon;
@@ -75,7 +75,7 @@ export default function SCRRank() {
   const { getMultiSNS } = useQuerySNS();
 
   const [rankCurrent, setRankCurrent] = useState(RankDirection.default);
-  const [rankTotal, setRankTotal] = useState(RankDirection.down);
+  const [rankTotal, setRankTotal] = useState(RankDirection.descend);
 
   const canUseCityhall = usePermission(PermissionAction.AuditApplication, PermissionObject.ProjectAndGuild);
 
@@ -98,7 +98,7 @@ export default function SCRRank() {
         const a_total = Number(a.season_total_credit);
         const b_total = Number(b.season_total_credit);
 
-        if (rankTotal === RankDirection.down) {
+        if (rankTotal === RankDirection.descend) {
           return b_total - a_total;
         } else {
           return a_total - b_total;
@@ -109,7 +109,7 @@ export default function SCRRank() {
       newList.sort((a, b) => {
         const a_current = a.seasons_credit.find((item) => item.season_name === currentSeason)?.total || 0;
         const b_current = b.seasons_credit.find((item) => item.season_name === currentSeason)?.total || 0;
-        if (rankCurrent === RankDirection.down) {
+        if (rankCurrent === RankDirection.descend) {
           return Number(b_current) - Number(a_current);
         } else {
           return Number(a_current) - Number(b_current);
@@ -148,7 +148,7 @@ export default function SCRRank() {
             ],
           },
           formats: ['B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K'].map((c) => ({
-            range: `${c}2:${c}1000`,
+            range: `${c}2:${c}${displayList.length}`,
             format: ExcellentExport.formats.NUMBER,
           })),
         },
@@ -186,19 +186,19 @@ export default function SCRRank() {
   }, []);
 
   const onClickCurrentRank = () => {
-    if (rankCurrent === RankDirection.down) {
-      setRankCurrent(RankDirection.up);
+    if (rankCurrent === RankDirection.descend) {
+      setRankCurrent(RankDirection.ascend);
     } else {
-      setRankCurrent(RankDirection.down);
+      setRankCurrent(RankDirection.descend);
     }
     setRankTotal(RankDirection.default);
   };
 
   const onClicktotalRank = () => {
-    if (rankTotal === RankDirection.down) {
-      setRankTotal(RankDirection.up);
+    if (rankTotal === RankDirection.descend) {
+      setRankTotal(RankDirection.ascend);
     } else {
-      setRankTotal(RankDirection.down);
+      setRankTotal(RankDirection.descend);
     }
     setRankCurrent(RankDirection.default);
   };

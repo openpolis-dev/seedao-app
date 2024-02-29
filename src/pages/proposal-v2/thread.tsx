@@ -1,13 +1,21 @@
 import styled from 'styled-components';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { ContainerPadding } from 'assets/styles/global';
-import ProposalVote from 'components/proposalCom/vote';
+import ProposalVote, { getPollStatus } from 'components/proposalCom/vote';
 import ReplyComponent, { IReplyOutputProps } from 'components/proposalCom/reply';
 import ReviewProposalComponent from 'components/proposalCom/reviewProposalComponent';
 import EditActionHistory from 'components/proposalCom/editActionhistory';
-import { ICommentDisplay, IContentBlock, IProposal, IProposalEditHistoy, ProposalState } from 'type/proposalV2.type';
+import {
+  ICommentDisplay,
+  IContentBlock,
+  IProposal,
+  IProposalEditHistoy,
+  ProposalState,
+  VoteType,
+  VoteOptionType,
+} from 'type/proposalV2.type';
 import { useAuthContext, AppActionType } from 'providers/authProvider';
 import requests from 'requests';
 import { formatTime } from 'utils/time';
@@ -36,6 +44,9 @@ import CategoryTag from 'components/proposalCom/categoryTag';
 import TemplateTag from 'components/proposalCom/templateTag';
 import PlusImg from '../../assets/Imgs/light/plus.svg';
 import MinusImg from '../../assets/Imgs/light/minus.svg';
+import { formatDeltaDate } from 'utils/time';
+import { getProposalSIPSlug } from 'utils';
+import useQueryUser from 'hooks/useQueryUser';
 
 enum BlockContentType {
   Reply = 1,
@@ -54,6 +65,7 @@ export default function ThreadPage() {
   } = useAuthContext();
   const proposalCategories = useProposalCategories();
   const { checkMetaforoLogin } = useCheckMetaforoLogin();
+  // const [voteType, setVoteType] = useState<number>(0);
 
   const [blockType, setBlockType] = useState<BlockContentType>(BlockContentType.Reply);
   const [data, setData] = useState<IProposal>();
@@ -74,31 +86,19 @@ export default function ThreadPage() {
   const [components, setComponents] = useState<any[]>([]);
   const [commentsArray, setCommentsArray] = useState<ICommentDisplay[][]>([]);
   const [currentCommentArrayIdx, setCurrentCommentArrayIdx] = useState<number>(0);
+  const [componentName, setComponentName] = useState('');
+  const [beforeList, setBeforeList] = useState<IContentBlock[]>([]);
+  const [preview, setPreview] = useState<any[]>([]);
+  const [previewTitle, setPreviewTitle] = useState('');
 
-  const [voteList, setVoteList] = useState([
-    {
-      id: 1,
-      value: 'test001',
-    },
-    {
-      id: 2,
-      value: 'test002',
-    },
-    {
-      id: 3,
-      value: 'test003',
-    },
-    {
-      id: 4,
-      value: 'test004',
-    },
-  ]);
+  const [voteList, setVoteList] = useState(['']);
 
   const [dataSource, setDatasource] = useState<any>();
 
   const posts = commentsArray.length ? commentsArray.reduce((a, b) => [...a, ...b], []) : [];
 
   const { getMultiSNS } = useQuerySNS();
+  const { getUsers } = useQueryUser();
   const { showToast } = useToast();
 
   const replyRef = useRef<IReplyOutputProps>(null);
@@ -125,15 +125,39 @@ export default function ThreadPage() {
         );
       }
       setData(res.data);
+      const arr = res.data.content_blocks;
+      const componentsIndex = arr.findIndex((i: any) => i.type === 'components');
 
-      setContentBlocks(res.data.content_blocks);
+      const beforeComponents = arr.filter(
+        (item: any) => item.type !== 'components' && item.type !== 'preview' && arr.indexOf(item) < componentsIndex,
+      );
+      let componentsList = arr.filter((item: any) => item.type === 'components') || [];
+      const afterComponents = arr.filter(
+        (item: any) => item.type !== 'components' && item.type !== 'preview' && arr.indexOf(item) > componentsIndex,
+      );
+
+      // setVoteType(res.data.vote_type || 0);
+      const preview = arr.filter((i: any) => i.type === 'preview');
+
+      if (preview.length) {
+        const preArr = preview[0]?.content ? JSON.parse(preview[0]?.content) : '';
+        setPreview(preArr);
+        setPreviewTitle(preview[0].title);
+      }
+
+      setComponentName(componentsList[0]?.title);
+      setBeforeList(beforeComponents ?? []);
+
+      setContentBlocks(afterComponents);
+
       const comStr = res.data.components || [];
       comStr.map((item: any) => {
-        if (typeof item.data === 'string') {
+        if (item.data && typeof item.data === 'string') {
           item.data = JSON.parse(item.data);
         }
         return item;
       });
+
       setDatasource(comStr ?? []);
       // comment
 
@@ -163,7 +187,9 @@ export default function ThreadPage() {
         let now_count: number = all_comments.length;
         all_comments.forEach((item) => (now_count += item.children?.length || 0));
         setHasMore(all_comments.length === 0 ? false : now_count < res.data.comment_count);
-        getMultiSNS(Array.from(new Set(all_comments.map((item) => item.wallet))));
+        const query_wallets = Array.from(new Set(all_comments.map((item) => item.wallet)));
+        getMultiSNS(query_wallets);
+        getUsers(query_wallets);
       }
       setTotalPostsCount(res.data.comment_count);
 
@@ -173,7 +199,7 @@ export default function ThreadPage() {
       const applicant = res.data.applicant;
       setApplicantSNS(publicJs.AddressToShow(applicant));
       setApplicant(applicant);
-      setApplicantAvatar(res.data.applicant_avatar || DefaultAvatarIcon);
+      setApplicantAvatar(res.data.applicant_avatar);
       if (applicant) {
         try {
           const snsMap = await getMultiSNS([applicant]);
@@ -282,7 +308,7 @@ export default function ThreadPage() {
       return data.category_name;
     } else {
       if (data?.proposal_category_id) {
-        const findOne = proposalCategories.find((c) => c.id === data.proposal_category_id);
+        const findOne = proposalCategories?.find((c) => c.id === data.proposal_category_id);
         if (findOne) {
           return findOne.name;
         }
@@ -299,7 +325,9 @@ export default function ThreadPage() {
     if (
       [ProposalState.Rejected, ProposalState.Withdrawn, ProposalState.PendingSubmit, ProposalState.Draft].includes(
         data?.state,
-      )
+      ) &&
+      data.vote_type !== 99 &&
+      data.vote_type !== 98
     ) {
       return false;
     }
@@ -368,6 +396,56 @@ export default function ThreadPage() {
     setShowModal(true);
   };
 
+  const applicantData = useMemo(() => {
+    applicant && requests.user.getUsers([applicant]).then(r => {
+      setApplicantAvatar(r.data[0]?.sp?.avatar);
+    })
+  }, [applicant]);
+
+  const getTimeTagDisplay = () => {
+    if (data?.state === ProposalState.Draft) {
+      if (!data?.publicity_ts) {
+        return null;
+      }
+      return (
+        <TimeTag>
+          {t('Proposal.DraftEndAt', {
+            leftTime: t('Proposal.TimeDisplay', {
+              ...formatDeltaDate(new Date((data?.publicity_ts || 0) * 1000).getTime()),
+            }),
+          })}
+        </TimeTag>
+      );
+    }
+    if (data?.state === ProposalState.PendingExecution) {
+      if (data?.execution_ts && data?.execution_ts * 1000 > Date.now()) {
+        return (
+          <TimeTag>
+            {t('Proposal.AutoExecuteLeftTime', {
+              ...formatDeltaDate((data?.execution_ts || 0) * 1000),
+            })}
+          </TimeTag>
+        );
+      }
+    }
+    const poll = data?.votes?.[0];
+    if (!poll) {
+      return;
+    }
+    if (data?.state === ProposalState.Voting) {
+      const pollStatus = getPollStatus(poll.poll_start_at, poll.close_at);
+      if (pollStatus === VoteType.Open) {
+        return (
+          <TimeTag>
+            {t('Proposal.VoteEndAt', {
+              leftTime: t('Proposal.TimeDisplay', { ...formatDeltaDate(new Date(poll.close_at).getTime()) }),
+            })}
+          </TimeTag>
+        );
+      }
+    }
+  };
+
   return (
     <Page>
       {review ? (
@@ -418,24 +496,30 @@ export default function ThreadPage() {
       )}
 
       <ThreadHead>
-        <div className="title">{data?.title}</div>
+        <div className="title">
+          {getProposalSIPSlug(data?.sip)}
+          {data?.title}
+        </div>
         <FlexLine>
-          {currentState && <ProposalStateTag state={currentState} />}
           {currentCategory && <CategoryTag>{currentCategory}</CategoryTag>}
-          {review && data?.template_name && <TemplateTag>{data?.template_name}</TemplateTag>}
-          {data?.arweave && (
-            <StoreHash href={`https://arweave.net/tx/${data?.arweave}/data.html`} target="_blank" rel="noreferrer">
-              a
-            </StoreHash>
-          )}
+          {!data?.is_based_on_custom_template && <TemplateTag>{data?.template_name}</TemplateTag>}
+          {currentState && <ProposalStateTag state={currentState} />}
+          {getTimeTagDisplay()}
         </FlexLine>
-        {showModal && <ProfileComponent address={applicant} theme={theme} handleClose={handleClose} />}
+        {showModal && (
+          <ProfileComponent address={applicant} theme={theme} handleClose={handleClose} />
+        )}
         <InfoBox>
           <UserBox onClick={() => handleProfile()}>
             <img src={applicantAvatar} alt="" />
             <span className="name">{applicantSNS}</span>
           </UserBox>
           {data?.create_ts && <div className="date">{formatTime(data.create_ts * 1000)}</div>}
+          {data?.arweave && (
+            <StoreHash href={`https://arweave.net/tx/${data?.arweave}/data.html`} target="_blank" rel="noreferrer">
+              a
+            </StoreHash>
+          )}
         </InfoBox>
       </ThreadHead>
 
@@ -448,51 +532,105 @@ export default function ThreadPage() {
           <div className="desc">{data.reject_reason}</div>
         </RejectBlock>
       )}
+
       <ContentOuter>
         <Preview
-          DataSource={dataSource}
+          DataSource={JSON.parse(JSON.stringify(dataSource || []))}
           language={i18n.language}
           initialItems={components}
           theme={theme}
+          key="preview_main"
           BeforeComponent={
-            !!dataSource?.length && (
-              <ComponnentBox>
-                <div className="title">{t('Proposal.proposalComponents')}</div>
-              </ComponnentBox>
-            )
-          }
-          AfterComponent={contentBlocks.map((block, i) => (
             <>
-              <ProposalContentBlock key={block.title} $radius={i === 0 && !dataSource?.length ? '4px 4px 0 0' : '0'}>
-                <div className="title">{block.title}</div>
-                <div className="content">
-                  <MdPreview theme={theme ? 'dark' : 'light'} modelValue={block.content || ''} />
-                </div>
-              </ProposalContentBlock>
-              {/*<ItemBox>*/}
-              {/*  <TitleBox>投票选项</TitleBox>*/}
-              {/*  <VoteBox>*/}
-              {/*    {voteList.map((item, index) => (*/}
-              {/*      <li>*/}
-              {/*        <input type="checkbox" id={`vote_${index}`} />*/}
-              {/*        <label htmlFor={`vote_${index}`}>{item.value}</label>*/}
-              {/*      </li>*/}
-              {/*    ))}*/}
-              {/*  </VoteBox>*/}
-              {/*</ItemBox>*/}
+              {!!preview?.length && (
+                <>
+                  <ProposalContentBlock>
+                    <div className="title">{previewTitle}</div>
+                    <div className="constentPreview">
+                      <Preview
+                        DataSource={JSON.parse(JSON.stringify(preview || []))}
+                        key="preview_inner"
+                        language={i18n.language}
+                        initialItems={components}
+                        theme={theme}
+                      />
+                    </div>
+                  </ProposalContentBlock>
+                </>
+              )}
+              {!!beforeList?.length &&
+                beforeList.map((block, i) => (
+                  <ProposalContentBlock
+                    key={block.title}
+                    $radius={i === 0 && !dataSource?.length ? '4px 4px 0 0' : '0'}
+                  >
+                    <div className="title">{block.title}</div>
+                    <div className="content">
+                      <MdPreview theme={theme ? 'dark' : 'light'} modelValue={block.content || ''} />
+                    </div>
+                  </ProposalContentBlock>
+                ))}
+              {!!dataSource?.length && (
+                <ComponnentBox>
+                  <div className="title">{componentName || t('Proposal.proposalComponents')}</div>
+                </ComponnentBox>
+              )}
             </>
-          ))}
+          }
+          AfterComponent={
+            <>
+              {!!contentBlocks?.length &&
+                contentBlocks?.map((block, i) => (
+                  <ProposalContentBlock
+                    key={`ProposalContentBlock_${block.title}_${i}`}
+                    $radius={i === 0 && !dataSource?.length ? '4px 4px 0 0' : '0'}
+                  >
+                    <div className="title">{block.title}</div>
+                    <div className="content">
+                      <MdPreview theme={theme ? 'dark' : 'light'} modelValue={block.content || ''} />
+                    </div>
+                  </ProposalContentBlock>
+                ))}
+              {data?.state === ProposalState.PendingSubmit && (data?.vote_type === 99 || data?.vote_type === 98) && (
+                <ItemBox>
+                  <TitleBox>投票选项</TitleBox>
+                  <VoteBox>
+                    {!!data?.os_vote_options?.length &&
+                      data?.os_vote_options?.map((item) => <li key={item.id}>{item.label}</li>)}
+                  </VoteBox>
+                </ItemBox>
+              )}
+              {/*{*/}
+              {/*    <ItemBox>*/}
+              {/*   */}
+              {/*    <VoteBox>*/}
+              {/*      {voteList.map((item:string, index) => (*/}
+              {/*        <li>*/}
+              {/*          <input type="checkbox" id={`vote_${index}`} />*/}
+              {/*          <label htmlFor={`vote_${index}`}>{item}</label>*/}
+              {/*        </li>*/}
+              {/*      ))}*/}
+              {/*    </VoteBox>*/}
+              {/*  </ItemBox>*/}
+              {/*}*/}
+            </>
+          }
         />
       </ContentOuter>
+
       {data?.state !== ProposalState.PendingSubmit && (
         <>
           <CardStyle>
             {showVote() && (
               <ProposalVote
+                proposalState={data!.state}
+                execution_ts={data?.execution_ts}
                 voteGate={data?.vote_gate}
                 poll={data!.votes[0]}
                 id={Number(id)}
                 updateStatus={getProposalDetail}
+                isOverrideProposal={data!.template_name === '否决提案'}
+                voteOptionType={data!.vote_type as VoteOptionType}
               />
             )}
 
@@ -726,7 +864,7 @@ const ProposalContentBlock = styled.div<{ $radius?: string }>`
   .title {
     background: rgba(82, 0, 255, 0.08);
     line-height: 40px;
-    border-radius: ${(props) => props.$radius || '4px 4px 0 0'};
+
     color: var(--bs-body-color_active);
     padding-inline: 32px;
     font-size: 16px;
@@ -735,10 +873,13 @@ const ProposalContentBlock = styled.div<{ $radius?: string }>`
   .content .md-editor-preview-wrapper {
     padding-inline: 32px;
   }
+  .constentPreview {
+    margin-top: 20px;
+  }
 `;
 
 const ComponnentBox = styled(ProposalContentBlock)`
-  margin-bottom: 0;
+  margin-bottom: 20px;
 `;
 
 const RejectBlock = styled.div`
@@ -818,4 +959,20 @@ const TitleBox = styled.div`
   font-weight: bold;
   margin-bottom: 20px;
   box-sizing: border-box;
+`;
+const StatusTag = styled.div`
+  background-color: #fb4e4e;
+  color: #fff;
+  font-size: 12px;
+  border-radius: 4px;
+  display: inline-block;
+  height: 24px;
+  line-height: 24px;
+  text-align: center;
+  padding: 0 20px;
+`;
+
+const TimeTag = styled.span`
+  color: var(--bs-primary);
+  font-size: 12px;
 `;

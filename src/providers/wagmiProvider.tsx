@@ -1,5 +1,5 @@
 import { configureChains, createConfig, WagmiConfig } from 'wagmi';
-import { mainnet, polygon, Chain } from 'wagmi/chains';
+import { mainnet, polygon, Chain, goerli, sepolia } from 'wagmi/chains';
 import { publicProvider } from 'wagmi/providers/public';
 import { InjectedConnector } from 'wagmi/connectors/injected';
 import { UniPassConnector } from '@unipasswallet/wagmi-connector';
@@ -12,17 +12,17 @@ const APP_NAME = 'SeeDAO';
 const APP_ICON = `${window.location.origin}/icon192.png`;
 
 export default function WagmiProvider(props: React.PropsWithChildren) {
-  let supportChains: Chain[] = [];
-  switch (networkConfig.chainId) {
-    case 1:
-      supportChains = [mainnet];
-      break;
-    case 137:
-      supportChains = [polygon];
-      break;
-    default:
-      throw new Error(`[config] Unsupported chainId:${networkConfig.chainId}`);
-  }
+  let supportChains: Chain[] = [mainnet, polygon, goerli, sepolia];
+  // switch (networkConfig.chainId) {
+  //   case 1:
+  //     supportChains = [mainnet, goerli];
+  //     break;
+  //   case 137:
+  //     supportChains = [mainnet, polygon, goerli, sepolia];
+  //     break;
+  //   default:
+  //     throw new Error(`[config] Unsupported chainId:${networkConfig.chainId}`);
+  // }
 
   const { chains, publicClient } = configureChains(supportChains, [publicProvider()]);
 

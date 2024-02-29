@@ -1,21 +1,30 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Button, Form } from 'react-bootstrap';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Tooltip from 'react-bootstrap/Tooltip';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import { Poll, VoteType, VoteOption, VoteGateType } from 'type/proposalV2.type';
-import { castVote, checkCanVote } from 'requests/proposalV2';
+import { Poll, VoteOptionType, VoteType, VoteOption, VoteGateType, ProposalState } from 'type/proposalV2.type';
+import { castVote, checkCanVote, closeVote } from 'requests/proposalV2';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import useToast, { ToastType } from 'hooks/useToast';
 import useCheckMetaforoLogin from 'hooks/useMetaforoLogin';
 import VoterListModal from 'components/modals/voterListModal';
 import ConfirmModal from 'components/modals/confirmModal';
 import { formatDeltaDate } from 'utils/time';
+import usePermission from 'hooks/usePermission';
+import { PermissionAction, PermissionObject } from 'utils/constant';
+
 const { Check } = Form;
 
 interface IProps {
+  proposalState: ProposalState;
   id: number;
   poll: Poll;
   voteGate?: VoteGateType;
+  isOverrideProposal?: boolean;
+  execution_ts?: number;
+  voteOptionType: VoteOptionType;
   updateStatus: () => void;
 }
 
@@ -24,7 +33,7 @@ type VoteOptionItem = {
   optionId: number;
 };
 
-const getPollStatus = (start_t: string, close_t: string) => {
+export const getPollStatus = (start_t: string, close_t: string) => {
   const start_at = new Date(start_t).getTime();
   const close_at = new Date(close_t).getTime();
   if (start_at > Date.now()) {
@@ -36,30 +45,61 @@ const getPollStatus = (start_t: string, close_t: string) => {
   return VoteType.Open;
 };
 
-export default function ProposalVote({ id, poll, voteGate, updateStatus }: IProps) {
+export default function ProposalVote({
+  execution_ts,
+  proposalState,
+  id,
+  poll,
+  voteGate,
+  isOverrideProposal,
+  voteOptionType,
+  updateStatus,
+}: IProps) {
   const { t } = useTranslation();
   const [selectOption, setSelectOption] = useState<VoteOption>();
   const [openVoteItem, setOpenVoteItem] = useState<VoteOptionItem>();
   const [showConfirmVote, setShowConfirmVote] = useState(false);
+  const [showConfirmClose, setShowConfirmClose] = useState(false);
   const [hasPermission, setHasPermission] = useState(false);
+  const [hasClosed, setHasClosed] = useState(false);
 
   const { dispatch } = useAuthContext();
   const { showToast } = useToast();
 
   const { checkMetaforoLogin } = useCheckMetaforoLogin();
+  const canUseCityhall = usePermission(PermissionAction.AuditApplication, PermissionObject.ProjectAndGuild);
 
   const pollStatus = getPollStatus(poll.poll_start_at, poll.close_at);
+  const renderExecutionTip = (props: any) => (
+    <Tooltip {...props}>
+      <Tip>{t('Proposal.ExecutionTip')}</Tip>
+    </Tooltip>
+  );
+
+  const onlyShowVoteOption =
+    (voteOptionType === 99 || voteOptionType === 98) &&
+    [ProposalState.Rejected, ProposalState.Withdrawn, ProposalState.PendingSubmit, ProposalState.Draft].includes(
+      proposalState,
+    );
 
   const voteStatusTag = useMemo(() => {
-    if (pollStatus === VoteType.Closed) {
+    if (onlyShowVoteOption) {
+      return <OpenTag>{t('Proposal.VoteNotStart')}</OpenTag>;
+    }
+    if (proposalState === ProposalState.Executed || hasClosed || pollStatus === VoteType.Closed) {
       return <CloseTag>{t('Proposal.VoteClose')}</CloseTag>;
     } else if (pollStatus === VoteType.Open) {
       return (
-        <OpenTag>
-          {t('Proposal.VoteEndAt', {
-            leftTime: t('Proposal.TimeDisplay', { ...formatDeltaDate(new Date(poll.close_at).getTime()) }),
-          })}
-        </OpenTag>
+        <>
+          <OpenTag>
+            {t('Proposal.VoteEndAt', {
+              leftTime: t('Proposal.TimeDisplay', { ...formatDeltaDate(new Date(poll.close_at).getTime()) }),
+            })}
+          </OpenTag>
+          {/* {isOverrideProposal && canUseCityhall && (
+            <CloseButton onClick={() => setShowConfirmClose(true)}>{t('Proposal.CloseVote')}</CloseButton>
+          )} */}
+        </>
       );
     } else {
       return (
@@ -70,7 +110,7 @@ export default function ProposalVote({ id, poll, voteGate, updateStatus }: IProp
         </OpenTag>
       );
     }
-  }, [pollStatus, t]);
+  }, [pollStatus, t, canUseCityhall, hasClosed, execution_ts, onlyShowVoteOption]);
 
   const onConfirmVote = () => {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
@@ -83,6 +123,22 @@ export default function ProposalVote({ id, poll, voteGate, updateStatus }: IProp
       .catch((error) => {
         logError('cast error failed', error);
         showToast(`cast error failed: ${error?.data?.msg || error?.code || error}`, ToastType.Danger);
+      })
+      .finally(() => {
+        dispatch({ type: AppActionType.SET_LOADING, payload: false });
+      });
+  };
+
+  const onConfirmClose = () => {
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    closeVote(id, poll.id)
+      .then((r) => {
+        setShowConfirmClose(false);
+        setHasClosed(true);
+      })
+      .catch((error) => {
+        logError(`close vote(${id}-${poll.id}) failed`, error);
+        showToast(`close vote failed: ${error?.data?.msg || error?.code || error}`, ToastType.Danger);
       })
       .finally(() => {
         dispatch({ type: AppActionType.SET_LOADING, payload: false });
@@ -103,18 +159,21 @@ export default function ProposalVote({ id, poll, voteGate, updateStatus }: IProp
         setHasPermission(r.data);
       });
     };
-    if (pollStatus === VoteType.Open && !poll.is_vote) {
+    if (!onlyShowVoteOption && pollStatus === VoteType.Open && !poll.is_vote) {
       getVotePermission();
     }
-  }, [poll, pollStatus]);
+  }, [poll, pollStatus, onlyShowVoteOption]);
 
   const showVoteContent = () => {
-    if ((pollStatus === VoteType.Open && !!poll.is_vote) || pollStatus === VoteType.Closed) {
+    if (
+      !onlyShowVoteOption &&
+      ((pollStatus === VoteType.Open && !!poll.is_vote) || pollStatus === VoteType.Closed || hasClosed)
+    ) {
       return (
         <table>
           <tbody>
             {poll.options.map((option, index) => (
-              <tr>
+              <tr key={index}>
                 <td>
                   <OptionContent $highlight={option.is_vote}>
                     {option.html}
@@ -168,7 +227,6 @@ export default function ProposalVote({ id, poll, voteGate, updateStatus }: IProp
       <div className="innerBox">
         <VoteHead>
           <span>
-            {' '}
             {t('Proposal.TotalVotes')}: {poll.totalVotes}
           </span>
           <TotalVoters>
@@ -186,7 +244,6 @@ export default function ProposalVote({ id, poll, voteGate, updateStatus }: IProp
         </FlexLine>
         <VoteBody>
           {showVoteContent()}
-
           {voteGate && (
             <VoteNFT>
               <span>
@@ -197,12 +254,24 @@ export default function ProposalVote({ id, poll, voteGate, updateStatus }: IProp
             </VoteNFT>
           )}
         </VoteBody>
+        <VoteRules>
+          <a href="https://docs.seedao.tech/seedao/Governance/proposal" target="_blank" rel="noopener noreferrer">
+            {t('Proposal.ViewVoteRules')}
+          </a>
+        </VoteRules>
         {!!openVoteItem && <VoterListModal {...openVoteItem} onClose={() => setOpenVoteItem(undefined)} />}
         {showConfirmVote && (
           <ConfirmModal
             msg={t('Proposal.ConfirmVoteOption', { option: selectOption?.html })}
             onConfirm={onConfirmVote}
             onClose={() => setShowConfirmVote(false)}
+          />
+        )}
+        {showConfirmClose && (
+          <ConfirmModal
+            msg={t('Proposal.ConfirmToCloseVote')}
+            onConfirm={onConfirmClose}
+            onClose={() => setShowConfirmClose(false)}
           />
         )}
       </div>
@@ -239,7 +308,6 @@ const VoteBody = styled.div`
 const VoteNFT = styled.div`
   color: var(--bs-body-color);
   margin-top: 16px;
-  margin-bottom: 14px;
   span {
     margin-right: 20px;
   }
@@ -327,4 +395,28 @@ const VoteButton = styled(Button)`
 
 const HasVote = styled.span`
   color: var(--bs-primary);
+`;
+
+const CloseButton = styled(Button)`
+  height: 32px;
+  margin-left: 10px;
+`;
+
+const Tip = styled.div`
+  width: 300px;
+  font-size: 14px;
+  background-color: var(--bs-box--background);
+  border-radius: 8px;
+  box-shadow: var(--box-shadow);
+  color: var(--bs-body-color_active);
+  padding: 8px;
+  border: 1px solid var(--bs-border-color);
+`;
+
+const VoteRules = styled.div`
+  a {
+    color: var(--bs-primary);
+  }
+  text-align: right;
+  margin-top: 16px;
 `;

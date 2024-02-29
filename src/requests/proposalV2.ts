@@ -6,32 +6,18 @@ import {
   IContentBlock,
   IBaseCategory,
   IActivity,
+  ICategoryWithTemplates,
 } from 'type/proposalV2.type';
-import { METAFORO_TOKEN, SEEDAO_USER } from 'utils/constant';
-import { parseToken, checkTokenValid, clearStorage } from 'utils/auth';
+import { SEE_AUTH } from 'utils/constant';
+import { v4 as uuidv4 } from 'uuid';
 
 const PATH_PREFIX = '/proposals/';
 
 export const getMetaforoData = () => {
   try {
-    const tokenstr = localStorage.getItem(SEEDAO_USER);
-    if (tokenstr) {
-      const tokenData = parseToken(tokenstr);
-      if (!checkTokenValid(tokenData?.token, tokenData?.token_exp)) {
-        clearStorage();
-        return;
-      }
-      const data = localStorage.getItem(METAFORO_TOKEN);
-      const metaforoData = JSON.parse(data || '');
-      // @ts-ignore FIXME: tokenData is not defined a correct type
-      const local_account = tokenData?.user?.data?.wallet || tokenData?.user?.wallet;
-
-      if (local_account?.toLowerCase() === metaforoData.account?.toLowerCase()) {
-        return metaforoData;
-      }
-
-      return;
-    }
+    const seeauth = localStorage.getItem(SEE_AUTH);
+    const authData = JSON.parse(seeauth || '');
+    return authData?.metaforo;
   } catch (error) {}
 };
 
@@ -39,6 +25,7 @@ interface IProposalPageParams extends IPageParams {
   category_id?: number;
   state?: ProposalState;
   q?: string;
+  sip?: number | string;
 }
 
 export const getProposalCategoryList = (): Promise<ResponseData<IBaseCategory[]>> => {
@@ -72,11 +59,32 @@ export const getProposalDetail = (id: number, startPostId?: number): Promise<Res
   );
 };
 
+export const getCloseProposal = (
+  id: number,
+): Promise<
+  ResponseData<
+    {
+      id: number;
+      title: string;
+    }[]
+  >
+> => {
+  return request.get(
+    `${PATH_PREFIX}creating_project_proposals`,
+    {
+      category_id: id,
+    },
+    {},
+  );
+};
+
 type CreateProposalParamsType = {
   title: string;
   proposal_category_id: number | undefined;
-  vote_type: number | undefined;
+  vote_type?: number | undefined;
+  create_project_proposal_id?: any;
   template_id?: number | string;
+  vote_options?: string[] | null;
   content_blocks: IContentBlock[];
   submit_to_metaforo: boolean;
   components: any;
@@ -135,6 +143,13 @@ export const castVote = (id: number, vote_id: number, option: number) => {
   });
 };
 
+export const closeVote = (id: number, vote_id: number) => {
+  return request.post(`${PATH_PREFIX}close_vote/${id}`, {
+    vote_id,
+    metaforo_access_token: getMetaforoData()?.token,
+  });
+};
+
 export type VoterType = {
   wallet: string;
   os_avatar: string;
@@ -177,7 +192,9 @@ export const deleteCommet = (id: number, cid: number) => {
 // =========== review ===========
 
 export const approveProposal = (id: number) => {
-  return request.post(`${PATH_PREFIX}approve/${id}`);
+  return request.post(`${PATH_PREFIX}approve/${id}`, {
+    metaforo_access_token: getMetaforoData()?.token,
+  });
 };
 
 export const rejectProposal = (id: number, reason: string) => {
@@ -192,4 +209,34 @@ export const getTemplate = () => {
 };
 export const getComponents = () => {
   return request.get('/proposal_components/');
+};
+
+export const getTemplates = (): Promise<ResponseData<ICategoryWithTemplates[]>> => {
+  return request.get('/proposal_tmpl/list_with_perm');
+};
+
+export const UploadPictures = async (file: File) => {
+  const blob = new Blob([file], { type: file.type });
+
+  const params = new URLSearchParams();
+  params.append('bucket', 'seedao-os-superapp');
+
+  const parts = file.name.split('.');
+
+  const extension = parts[parts.length - 1];
+  params.append('filename', `/proposal_images/${uuidv4()}.${extension}`);
+  params.append('type', file.type);
+
+  let rt = await request.get(`/url_for_uploading_s3?${params.toString()}`);
+
+  let fileRt = await fetch((rt as any).data, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': file.type,
+    },
+    body: blob,
+  });
+  if (fileRt.status === 200) {
+    return rt.data.split('?')[0];
+  }
 };

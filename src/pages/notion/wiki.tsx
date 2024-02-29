@@ -1,18 +1,26 @@
 import Notion from './notion';
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { AppActionType, useAuthContext } from '../../providers/authProvider';
+import BackerNav from '../../components/common/backNav';
+import { useTranslation } from 'react-i18next';
 
 const OuterBox = styled.div`
   min-height: 100%;
+`;
+
+const TopBox = styled.div`
+  border-bottom: 1px solid #eee;
+  margin: 20px 20px 0;
 `;
 export default function Wiki() {
   const [list, setList] = useState(null);
   const [articleId, setArticleId] = useState<string | undefined>('');
   const { id } = useParams();
   const { pathname } = useLocation();
+  const { t } = useTranslation();
 
   const { dispatch } = useAuthContext();
 
@@ -52,5 +60,12 @@ export default function Wiki() {
     }
   }, [list]);
 
-  return <OuterBox>{list && <Notion recordMap={list} />}</OuterBox>;
+  return (
+    <OuterBox>
+      <TopBox>
+        <BackerNav title={t('apps.wiki')} to={`/`} mb="20px" />
+      </TopBox>
+      {list && <Notion recordMap={list} />}
+    </OuterBox>
+  );
 }

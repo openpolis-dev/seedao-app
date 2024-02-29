@@ -35,7 +35,9 @@ const AppCard = ({
     dispatch,
   } = useAuthContext();
   const handleClickEvent = () => {
-    if (id.startsWith('module-')) {
+    if (id === 'coming-soon') {
+      return;
+    } else if (id.startsWith('module-')) {
       navigate(link);
     } else if (id.startsWith('resource-')) {
       if ((hiddenFields && hiddenFields?.length && userData) || !(hiddenFields && hiddenFields?.length)) {
@@ -187,5 +189,5 @@ const AppCardStyleEmp = styled(AppCardStyle)`
  cursor: auto;
   &:hover {
     background-color: var(--bs-box--background);
- 
+  }
 `;

@@ -2,12 +2,17 @@
 import MetaforoIcon from '../assets/Imgs/home/Metaforo.png';
 import AaanyIcon from '../assets/Imgs/home/AAAny.png';
 import DeschoolIcon from '../assets/Imgs/home/Deschool.png';
+import WikiImg from '../assets/Imgs/home/wiki.png';
+import EventImg from '../assets/Imgs/home/event.png';
+import HubImg from '../assets/Imgs/home/hub.png';
+import CalendarImg from '../assets/Imgs/home/calendar.png';
 import DaolinkIcon from '../assets/Imgs/home/DAOlink.png';
 import Cascad3Icon from '../assets/Imgs/home/Cascad3.png';
 import Wormhole3Icon from '../assets/Imgs/home/Wormhole3.png';
 import SeedIcon from '../assets/images/seed.png';
 import SeeUImg from '../assets/Imgs/home/seeuNetwork.jpg';
-import SNSImg from '../assets/Imgs/home/SNS.jpg';
+import SNSImg from '../assets/Imgs/home/sns2.jpg';
+import EchoImg from '../assets/Imgs/home/echo.svg';
 
 import RImg1 from '../assets/Imgs/resources/1.png';
 import RImg2 from '../assets/Imgs/resources/2.png';
@@ -27,6 +32,7 @@ import GuildImg from '../assets/Imgs/governance/guild.png';
 import DistributeImg from '../assets/Imgs/governance/distribute.png';
 import NodeImg from '../assets/Imgs/governance/node.png';
 import PodcastImg from '../assets/Imgs/podcast.jpeg';
+import getConfig from './envCofnig';
 
 /**
  * NOTE:
@@ -179,14 +185,6 @@ const links = {
       Nolink: true,
     },
     {
-      name: 'city-hall.CloseProjectAudit',
-      link: '/city-hall/governance/audit-project',
-      id: 'module-governance-audit-project',
-      icon: RImg8,
-      desc: 'city-hall.CloseProjectAuditDesc',
-      Nolink: true,
-    },
-    {
       name: 'city-hall.ReviewProposal',
       link: '/city-hall/governance/review-proposal',
       id: 'module-governance-review-proposal',
@@ -196,20 +194,6 @@ const links = {
     },
   ],
   governanceBtm: [
-    {
-      name: 'city-hall.CreateProject',
-      link: '/create-project',
-      id: 'module-create-project',
-      icon: CreateImg,
-      desc: 'city-hall.CreateProjectDesc',
-    },
-    {
-      name: 'city-hall.CreateGuild',
-      link: '/create-guild',
-      id: 'module-create-guild',
-      icon: GuildImg,
-      desc: 'city-hall.CreateGuildDesc',
-    },
     {
       name: 'Governance.apply',
       link: '/city-hall/governance/issue',
@@ -265,6 +249,34 @@ const links = {
     // },
   ],
   apps: [
+    {
+      id: 'module-calendar',
+      name: 'apps.OnlineEvent',
+      link: '/online-event',
+      icon: CalendarImg,
+      desc: 'apps.OnlineEventDesc',
+    },
+    {
+      id: 'module-wiki',
+      name: 'apps.wiki',
+      link: '/wiki',
+      icon: WikiImg,
+      desc: 'apps.WikiDesc',
+    },
+    {
+      id: 'module-hub',
+      name: 'apps.hub',
+      link: '/hub',
+      icon: HubImg,
+      desc: 'apps.hubDesc',
+    },
+    {
+      id: 'module-event',
+      name: 'apps.Event',
+      link: '/event',
+      icon: EventImg,
+      desc: 'apps.EventDesc',
+    },
     {
       id: 'Deschool',
       name: 'DeSchool',
@@ -334,6 +346,22 @@ const links = {
       link: '/sns/register',
       icon: SNSImg,
       desc: 'apps.SNSDesc',
+    },
+    {
+      id: 'echo',
+      app: 'apps.Echo',
+      link: 'https://echo3.world/',
+      icon: EchoImg,
+      desc: 'apps.EchoDesc',
+    },
+    {
+      id: ['preview', 'production'].includes(process.env.REACT_APP_ENV_VERSION as string)
+        ? 'coming-soon'
+        : 'module-see',
+      name: 'See Swap',
+      link: '/see-swap',
+      icon: 'https://avatars.githubusercontent.com/u/36115574?s=200&v=4',
+      desc: 'Coming Soon',
     },
   ],
   publicity: [

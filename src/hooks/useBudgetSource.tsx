@@ -44,10 +44,32 @@ export default function useBudgetSource(filter_closed = false) {
         return [];
       }
     };
+    const getBudgetSources = async () => {
+      try {
+        const res = await requests.budget.getBudgetSources({
+          page: 1,
+          size: 1000,
+          sort_order: 'desc',
+          sort_field: 'create_ts',
+        });
+
+        console.log(res.data.rows);
+        return res.data.rows.map((item) => ({
+          label: item.name,
+          value: item.id,
+          data: ApplicationEntity.CommonBudget,
+        }));
+      } catch (error) {
+        logError('getBudgetSources in city-hall failed: ', error);
+        return [];
+      }
+    };
+
     const getSources = async () => {
       const projects = await getProjects();
       const guilds = await getGuilds();
-      setAllSource([...projects, ...guilds]);
+      const budgetSources = await getBudgetSources();
+      setAllSource([...projects, ...guilds, ...budgetSources]);
     };
     getSources();
   }, []);
