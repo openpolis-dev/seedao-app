@@ -177,7 +177,7 @@ export default function Issued() {
 
   useEffect(() => {
     selectStatus && getRecords();
-  }, [selectStatus]);
+  }, [selectStatus, page, pageSize]);
 
   const handleExport = async () => {
     window.open(requests.application.getExportFileUrlFromVault({ state: selectStatus }), '_blank');
