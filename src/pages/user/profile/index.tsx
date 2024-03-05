@@ -160,21 +160,6 @@ export default function Profile() {
       case 'SGN_HOLDER':
         str = t('roles.SGN_HOLDER');
         break;
-      case 'NODE_S1':
-        str = t('roles.NODE_S1');
-        break;
-      case 'NODE_S2':
-        str = t('roles.NODE_S2');
-        break;
-      case 'NODE_S3':
-        str = t('roles.NODE_S3');
-        break;
-      case 'NODE_S4':
-        str = t('roles.NODE_S4');
-        break;
-      case 'NODE_S5':
-        str = t('roles.NODE_S5');
-        break;
       case 'CITYHALL_S1':
         str = t('roles.CITYHALL_S1');
         break;
@@ -226,6 +211,25 @@ export default function Profile() {
       default:
         str = role;
         break;
+    }
+
+    // case 'NODE_S1':
+    //   str = t('roles.NODE_S1');
+    //   break;
+    // case 'NODE_S2':
+    //   str = t('roles.NODE_S2');
+    //   break;
+    // case 'NODE_S3':
+    //   str = t('roles.NODE_S3');
+    //   break;
+    // case 'NODE_S4':
+    //   str = t('roles.NODE_S4');
+    //   break;
+    // case 'NODE_S5':
+    //   str = t('roles.NODE_S5');
+    if (role.indexOf('NODE_S') > -1) {
+      let num = role.split('NODE_S')[1];
+      str = `${t('roles.NODE_S')} S${num}`;
     }
     return str;
   };
