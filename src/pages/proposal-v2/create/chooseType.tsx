@@ -236,7 +236,7 @@ const TemplateBox = styled.ul`
   min-width: 240px;
   top: 0;
   border-radius: 8px;
-  padding-block: 4px;
+  //padding-block: 4px;
   background-color: var(--bs-box-background);
   border: 1px solid var(--proposal-border);
   overflow: hidden;
