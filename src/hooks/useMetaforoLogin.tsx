@@ -42,6 +42,8 @@ export default function useMetaforoLogin() {
     let data: any = {};
     try {
       data = JSON.parse(see_auth);
+    } catch {
+      // do nothing
     } finally {
       data.metaforo = { account, id: userId, token: value };
       localStorage.setItem(SEE_AUTH, JSON.stringify(data));
