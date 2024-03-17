@@ -124,18 +124,30 @@ const LoginModalContent = () => {
             walletName: getSeeAuthWalletName(selectConnectorId),
           });
           // login to third party
-          const loginResp = await Promise.all([loginToMetafo(res.data.see_auth), loginToDeschool(res.data.see_auth)]);
-          dispatch({
-            type: AppActionType.SET_THIRD_PARTY_TOKEN,
-            payload: {
-              metaforo: loginResp[0].data.user_id && {
-                id: loginResp[0].data.user_id,
-                account: address,
-                token: loginResp[0].data.token,
-              },
-              deschool: loginResp[1].data.jwtToken,
-            },
-          });
+          let loginedMetaforo = false;
+          try {
+            const loginResp = await Promise.all([
+              loginToMetafo(res.data.see_auth),
+              // loginToDeschool(res.data.see_auth)
+            ]);
+            if (loginResp[0].data.user_id) {
+              loginedMetaforo = true;
+              dispatch({
+                type: AppActionType.SET_THIRD_PARTY_TOKEN,
+                payload: {
+                  metaforo: loginResp[0].data.user_id && {
+                    id: loginResp[0].data.user_id,
+                    account: address,
+                    token: loginResp[0].data.token,
+                  },
+                  // deschool: loginResp[1].data.jwtToken,
+                },
+              });
+            }
+            
+          } catch (error) {
+            console.error('3rd party login error', error);
+          }
 
           // set context data
           const now = Date.now();
@@ -162,7 +174,7 @@ const LoginModalContent = () => {
           } catch (error) {
             logError('OneSignal login error', error);
           }
-          loginResp[0].data.user_id && prepareMetaforo();
+          loginedMetaforo && prepareMetaforo();
         } catch (error: any) {
           setClickConnectFlag(false);
           showToast(error?.data?.msg || error?.code || error, ToastType.Danger, { autoClose: false });

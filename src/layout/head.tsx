@@ -110,12 +110,13 @@ export default function Header() {
     try {
       const data = JSON.parse(seeAuthData);
       if (!data || !data.metaforo.id || !data.deschool) {
-        onClickLogout();
-        return;
+        // onClickLogout();
+        // return;
+      } else {
+        dispatch({ type: AppActionType.SET_THIRD_PARTY_TOKEN, payload: data });
       }
-      dispatch({ type: AppActionType.SET_THIRD_PARTY_TOKEN, payload: data });
     } catch (error) {
-      return;
+      // return;
     }
     if (acc) {
       dispatch({ type: AppActionType.SET_ACCOUNT, payload: acc });
