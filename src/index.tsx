@@ -12,9 +12,7 @@ const config = getConfig();
 const isLargeScreen = window.innerWidth >= 768;
 
 if (config.REACT_APP_MOBILE_OPEN && (isPhone || (isMobile && !isLargeScreen))) {
-  const isSnsPath = window.location.href.includes('/sns');
-  const mobile_app = config.REACT_APP_MOBILE_URL + (isSnsPath ? `/sns${window.location.search}` : '');
-  mobile_app && window.location.replace(mobile_app);
+  window.location.replace(`${config.REACT_APP_MOBILE_URL}${window.location.href.replace(window.location.origin, '')}`);
 } else {
   const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
   root.render(<App />);
