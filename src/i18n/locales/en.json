@@ -115,7 +115,7 @@
     "ConfirmApproveProposal": "Confirm to approve the proposal?",
     "ConfirmWithdrawProposal": "Confirm to withdraw the proposal?",
     "ConfirmBackCreate": "Leaving this webpage will result in the loss of unsaved changes. Continue?",
-    "ConfirmVoteOption": "Confirm to vote '{{option}}' ?",
+    "ConfirmVoteOption": "Confirm to vote '{{option}}' ? Once confirmed, the voting options cannot be modified.",
     "NotSupportWallet": "This operation is not supported by {{wallet}}, please change to others",
     "Vote": "Vote",
     "voteOptions": "Voting Options",
