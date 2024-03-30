@@ -114,7 +114,7 @@
     "ConfirmApproveProposal": "确定通过该提案的审核吗？",
     "ConfirmWithdrawProposal": "确定撤回提案吗？",
     "ConfirmBackCreate": "离开当前页面，修改内容将不会被保存，确定离开吗？",
-    "ConfirmVoteOption": "确定投票\"{{option}}\"吗？",
+    "ConfirmVoteOption": "确定投票\"{{option}}\"吗？确认后将无法修改投票选项",
     "NotSupportWallet": "该操作暂不支持使用{{wallet}}, 请切换使用其他钱包",
     "Vote": "投票",
     "voteOptions": "投票选项",
