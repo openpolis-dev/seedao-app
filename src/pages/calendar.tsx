@@ -20,7 +20,7 @@ export default function CalendarPage() {
   return (
     <PageStyle>
       <TopBox>
-        <BackerNav title={t('apps.OnlineEvent')} to={`/`} mb="20px" />
+        <BackerNav title={t('apps.OnlineEvent')} to={`/apps`} mb="20px" />
       </TopBox>
       {/*{loading && <LoadingBox />}*/}
       <CalendarBox theme={theme} />
