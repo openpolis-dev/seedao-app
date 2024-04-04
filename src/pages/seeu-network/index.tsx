@@ -73,7 +73,7 @@ export default function SeeuNetwork() {
       {/*  </div>*/}
       {/*</TitBox>*/}
       <TopBox>
-        <BackerNav title={t('apps.Event')} to={`/`} mb="20px" />
+        <BackerNav title={t('apps.Event')} to={`/apps`} mb="20px" />
       </TopBox>
 
       <Row>

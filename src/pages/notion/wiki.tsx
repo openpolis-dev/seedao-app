@@ -63,7 +63,7 @@ export default function Wiki() {
   return (
     <OuterBox>
       <TopBox>
-        <BackerNav title={t('apps.wiki')} to={`/`} mb="20px" />
+        <BackerNav title={t('apps.wiki')} to={`/apps`} mb="20px" />
       </TopBox>
       {list && <Notion recordMap={list} />}
     </OuterBox>
