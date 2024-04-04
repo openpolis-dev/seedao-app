@@ -268,7 +268,7 @@ export default function Pub() {
   return (
     <PageStyle>
       <TopBox>
-        <BackerNav title={t('apps.hub')} to={`/`} mb="20px" />
+        <BackerNav title={t('apps.hub')} to={`/apps`} mb="20px" />
       </TopBox>
       <Box>
         {/*<FlexBox>*/}
