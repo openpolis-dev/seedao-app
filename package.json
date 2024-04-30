@@ -5,7 +5,7 @@
   "dependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@deschool-protocol/react": "^0.1.4",
-    "@ericz1803/react-google-calendar": "^4.3.1",
+    "@ericz1803/react-google-calendar": "^4.3.2",
     "@joyid/evm": "^0.2.6",
     "@joyid/wagmi": "^0.1.0",
     "@seedao/see-auth": "^0.1.14",
