@@ -47,6 +47,7 @@ import MinusImg from '../../assets/Imgs/light/minus.svg';
 import { formatDeltaDate } from 'utils/time';
 import { getProposalSIPSlug } from 'utils';
 import useQueryUser from 'hooks/useQueryUser';
+import defaultImg from '../../assets/Imgs/defaultAvatar.png';
 
 enum BlockContentType {
   Reply = 1,
@@ -199,6 +200,7 @@ export default function ThreadPage() {
       const applicant = res.data.applicant;
       setApplicantSNS(publicJs.AddressToShow(applicant));
       setApplicant(applicant);
+
       setApplicantAvatar(res.data.applicant_avatar);
       if (applicant) {
         try {
@@ -397,9 +399,10 @@ export default function ThreadPage() {
   };
 
   const applicantData = useMemo(() => {
-    applicant && requests.user.getUsers([applicant]).then(r => {
-      setApplicantAvatar(r.data[0]?.sp?.avatar);
-    })
+    applicant &&
+      requests.user.getUsers([applicant]).then((r) => {
+        setApplicantAvatar(r.data[0]?.sp?.avatar);
+      });
   }, [applicant]);
 
   const getTimeTagDisplay = () => {
@@ -506,12 +509,10 @@ export default function ThreadPage() {
           {currentState && <ProposalStateTag state={currentState} />}
           {getTimeTagDisplay()}
         </FlexLine>
-        {showModal && (
-          <ProfileComponent address={applicant} theme={theme} handleClose={handleClose} />
-        )}
+        {showModal && <ProfileComponent address={applicant} theme={theme} handleClose={handleClose} />}
         <InfoBox>
           <UserBox onClick={() => handleProfile()}>
-            <img src={applicantAvatar} alt="" />
+            <img src={applicantAvatar ? applicantAvatar : defaultImg} alt="" />
             <span className="name">{applicantSNS}</span>
           </UserBox>
           {data?.create_ts && <div className="date">{formatTime(data.create_ts * 1000)}</div>}
