@@ -130,7 +130,7 @@
     "CityhallRejected": "市政厅已驳回",
     "veto": "市政厅一票否决",
     "TotalVoteCount": "共{{count}}票",
-    "proposalComponents":"自动执行组件",
+    "proposalComponents": "自动执行组件",
     "HasVote": "已投",
     "LoginTip": "使用完整功能，请先登录Metaforo",
     "LoginButton": "登录 Metaforo",
@@ -470,7 +470,7 @@
     "current": "当前",
     "level": "等级",
     "levelTips": "距离升级到 LV{{level}} 还需",
-    "nextLevel": "下一等级" ,
+    "nextLevel": "下一等级",
     "DefaultName": "TA没有留下昵称",
     "DefaultBio": "TA很神秘哦，并没有介绍自己",
     "InviteInfo": "已通过邀请注册 SNS 获得 {{amount}} SCR（含未上链）",
@@ -627,7 +627,7 @@
     "RemoveConfirm": "确定要移除以下成员？",
     "AddressName": "SNS/地址",
     "NotRegister": "未登记",
-    "NotFilled" : "未提供"
+    "NotFilled": "未提供"
   },
   "apps": {
     "OnlineEvent": "城邦日历",
@@ -687,6 +687,27 @@
     "CommitmentTooOld": "您的提交的{{sns}}已过有效期，请点击“取消注册”后重新开始注册",
     "ShareInviteLink": "分享我的邀请链接",
     "InviteLinkCopied": "邀请链接已复制"
+  },
+  "Credit": {
+    "NavTitle": "积分信用贷",
+    "CardLogin": "您未登录，请登录后查看",
+    "GoToBorrow": "去借款",
+    "GoToRepay": "去还款",
+    "MyBorrowQuota": "我的借款额度",
+    "MyBorrow": "我的借款",
+    "MyBorrowTip": "日利率（单利）0.10‰，1 SCR 可借 0.01 USDT 最长可借 30 日",
+    "MyBorrowTip2": "逾期未还，$SCR 将被罚没至社区金库",
+    "LatestRepaymentDate": "最近还款日",
+    "MySCR": "我的SCR",
+    "TotalQuota": "总额度",
+    "CurrentBorrow": "当前在借 {{num}} 笔",
+    "Overdue": "已逾期 {{num}} 笔",
+    "DaoTotalQuota": "社区总借款额度",
+    "DaoTip": "计划总资金180000USDT，每月补充资金，详情 >>",
+    "TotalBorrow": "已借出 {{num}} 笔",
+    "TotalClear": "已结清 {{num}} 笔",
+    "TotalOverdue": "逾期未还 {{num}} 笔",
+    "TotalForfeit": "已罚没质押物"
   },
   "Governance": {
     "GovernanceRule": "治理规则",

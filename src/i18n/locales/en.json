@@ -688,6 +688,27 @@
     "ShareInviteLink": "Share invite link",
     "InviteLinkCopied": "The invite link has been copied to your clipboard!"
   },
+  "Credit": {
+    "NavTitle": "积分信用贷",
+    "CardLogin": "您未登录，请登录后查看",
+    "GoToBorrow": "Go to borrow",
+    "GoToRepay": "Go to repay",
+    "MyBorrowQuota": "My loan quota",
+    "MyBorrow": "My Loan",
+    "MyBorrowTip": "日利率（单利）0.10‰，1 SCR 可借 0.01 USDT 最长可借 30 日",
+    "MyBorrowTip2": "逾期未还，$SCR 将被罚没至社区金库",
+    "LatestRepaymentDate": "Latest Repayment Date",
+    "MySCR": "My SCR",
+    "TotalQuota": "Total Quota",
+    "CurrentBorrow": "当前在借{{num}}笔",
+    "Overdue": "已逾期{{num}}笔",
+    "DaoTotalQuota": "社区总借款额度",
+    "DaoTip": "计划总资金180000USDT，每月补充资金，详情 >>",
+    "TotalBorrow": "已借出 {{num}} 笔",
+    "TotalClear": "已结清 {{num}} 笔",
+    "TotalOverdue": "逾期未还 {{num}} 笔",
+    "TotalForfeit": "已罚没质押物"
+  },
   "Governance": {
     "GovernanceRule": "Governance Rules",
     "MetaRule": "SeeDAO Meta Rules",
