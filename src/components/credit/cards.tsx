@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 import styled from 'styled-components';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import useCheckLogin from 'hooks/useCheckLogin';
@@ -5,6 +7,8 @@ import { useTranslation } from 'react-i18next';
 import CreditLogo from 'assets/Imgs/light/creditLogo.svg';
 import CreditLogo2 from 'assets/Imgs/light/creditLogo2.svg';
 import TipIcon from 'assets/Imgs/light/tip.svg';
+import { BorrowItemsModal } from './itemsModal';
+import BorrowModal from './borrowModal';
 
 const RightArrowIcon = () => (
   <svg
@@ -39,8 +43,22 @@ type BorrowCardProps = {
 
 const MyBorrowingQuota = ({ isLogin, onClickLogin, onOpenBorrow }: BorrowCardProps) => {
   const { t } = useTranslation();
+  const [showBorrowModal, setShowBorrowModal] = useState(true);
+  const [showBorrowItemsModal, setShowBorrowItemsModal] = useState(false);
   const onClickBottom = () => {
-    isLogin ? onOpenBorrow() : onClickLogin();
+    isLogin ? setShowBorrowItemsModal(true) : onClickLogin();
+  };
+
+  const go2Borrow = () => {
+    setShowBorrowItemsModal(false);
+    setShowBorrowModal(true);
+  };
+
+  const closeBorrowModal = (openMine?: boolean) => {
+    setShowBorrowModal(false);
+    if (openMine) {
+      // TODO
+    }
   };
   return (
     <CardStyle>
@@ -82,6 +100,8 @@ const MyBorrowingQuota = ({ isLogin, onClickLogin, onOpenBorrow }: BorrowCardPro
           <RightArrowIcon />
         </span>
       </MyCardBottom>
+      {showBorrowItemsModal && <BorrowItemsModal onConfirm={go2Borrow} />}
+      {showBorrowModal && <BorrowModal handleClose={closeBorrowModal} />}
     </CardStyle>
   );
 };
