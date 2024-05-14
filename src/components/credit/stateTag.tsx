@@ -32,6 +32,9 @@ export default function StateTag({ state, solid }: { state: CreditRecordStatus; 
     default:
       text = '';
   }
+  if (solid) {
+    color = 'white';
+  }
 
   return (
     <StatusTagStyle $color={color} $bg={bg}>

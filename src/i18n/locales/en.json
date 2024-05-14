@@ -732,7 +732,14 @@
     "Rate": "利率",
     "BorrowDuration": "已借款时长",
     "TotalInterest": "累积利息",
-    "DayRate": "利率（日）"
+    "DayRate": "利率（日）",
+    "TotalRepay": "合计还款",
+    "RepayRecord": "还款记录",
+    "Principal": "本金",
+    "Interest": "利息",
+    "ForfeitRepay": "质押物退还",
+    "RepayTime": "还款时间",
+    "RepayHash": "还款交易hash"
   },
   "Governance": {
     "GovernanceRule": "Governance Rules",

@@ -12,12 +12,17 @@ import sns from '@seedao/sns-js';
 import { ethers } from 'ethers';
 import ClearSVGIcon from 'components/svgs/clear';
 import Select from 'components/common/select';
-import { CreditRecordStatus } from 'type/credit.type';
+import { CreditRecordStatus, ICreditRecord } from 'type/credit.type';
+import RecordDetailModal from './recordDetailModal';
 
 const AllBorrowTable = () => {
   const { t } = useTranslation();
-
-  const [list, setList] = useState([1, 2, 3]);
+  const [detailData, setDetailData] = useState<any>(undefined);
+  const [list, setList] = useState<ICreditRecord[]>([
+    { status: CreditRecordStatus.CLEAR },
+    { status: CreditRecordStatus.INUSE },
+    { status: CreditRecordStatus.OVERDUE },
+  ]);
   const [total, setTotal] = useState(10);
   const [page, setPage] = useState(1);
   const handlePageChange = () => {};
@@ -42,14 +47,14 @@ const AllBorrowTable = () => {
               {list.map((item, idx) => (
                 <tr key={idx}>
                   <td>
-                    <BlueText>8800001</BlueText>
+                    <BlueText onClick={() => setDetailData({ status: item.status })}>880000{idx + 1}</BlueText>
                   </td>
                   <td>amanda.seedao</td>
                   <td>
                     5,000.00 <span className="unit">USDT</span>
                   </td>
                   <td>
-                    <StateTag state={CreditRecordStatus.CLEAR} />
+                    <StateTag state={item.status} />
                   </td>
                   <td>2024-05-09 20:00 UTC+8</td>
                   <td>2024-05-09 20:00 UTC+8</td>
@@ -67,6 +72,7 @@ const AllBorrowTable = () => {
       {!!list.length && (
         <Pagination dir="right" itemsPerPage={10} total={total} current={page - 1} handleToPage={handlePageChange} />
       )}
+      {detailData && <RecordDetailModal data={detailData} handleClose={() => setDetailData(undefined)} />}
     </>
   );
 };

@@ -18,4 +18,7 @@ export default function CreditPage() {
 
 const Page = styled.div`
   ${ContainerPadding};
+  * {
+    font-family: Inter-Regular;
+  }
 `;
