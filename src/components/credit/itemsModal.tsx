@@ -8,11 +8,12 @@ interface Iprops {
   steps: string[];
   confirmText: string;
   onConfirm: () => void;
+  handleClose: () => void;
 }
 
-function ItemsModal({ title, steps, confirmText, onConfirm }: Iprops) {
+function ItemsModal({ title, steps, confirmText, onConfirm, handleClose }: Iprops) {
   return (
-    <ItemsModalStyle closeColor="#343C6A">
+    <ItemsModalStyle closeColor="#343C6A" handleClose={handleClose}>
       <ModalTitle>{title}</ModalTitle>
       <StepsBox>
         {steps.map((step, index) => (
@@ -29,7 +30,7 @@ function ItemsModal({ title, steps, confirmText, onConfirm }: Iprops) {
   );
 }
 
-export const BorrowItemsModal = ({ onConfirm }: { onConfirm: () => void }) => {
+export const BorrowItemsModal = ({ onConfirm, handleClose }: { onConfirm: () => void; handleClose: () => void }) => {
   const { t } = useTranslation();
   return (
     <ItemsModal
@@ -37,11 +38,12 @@ export const BorrowItemsModal = ({ onConfirm }: { onConfirm: () => void }) => {
       steps={[t('Credit.BorrowStep1'), t('Credit.BorrowStep2'), t('Credit.BorrowStep3')]}
       onConfirm={onConfirm}
       confirmText={t('Credit.BorrowStepConfirmButton')}
+      handleClose={handleClose}
     />
   );
 };
 
-export const RepayItemsModal = ({ onConfirm }: { onConfirm: () => void }) => {
+export const RepayItemsModal = ({ onConfirm, handleClose }: { onConfirm: () => void; handleClose: () => void }) => {
   const { t } = useTranslation();
   return (
     <ItemsModal
@@ -49,6 +51,7 @@ export const RepayItemsModal = ({ onConfirm }: { onConfirm: () => void }) => {
       steps={[t('Credit.RepayStep1'), t('Credit.RepayStep2'), t('Credit.RepayStep3')]}
       onConfirm={onConfirm}
       confirmText={t('Credit.RepayStepConfirmButton')}
+      handleClose={handleClose}
     />
   );
 };

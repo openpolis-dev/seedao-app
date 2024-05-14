@@ -66,11 +66,10 @@ const MyBorrowingQuota = ({ isLogin, onClickLogin, onOpenBorrow }: BorrowCardPro
       <img src={CreditLogo} alt="" className="logo" />
       <MyCardTop>
         <MyCardLine>
-          <div className="label">{t('Credit.MyBorrowQuota')}</div>
+          <div className="label">{t('Credit.MyBorrowQuota')} (USDT)</div>
           {isLogin ? (
             <div className="value">
               <span className="num">100,000.00</span>
-              <span className="unit">USDT</span>
             </div>
           ) : (
             <div className="secret">*********</div>
@@ -83,12 +82,11 @@ const MyBorrowingQuota = ({ isLogin, onClickLogin, onOpenBorrow }: BorrowCardPro
             {isLogin ? <div className="value">100,000.00</div> : <div className="secret">*********</div>}
           </div>
           <div>
-            <div className="label">{t('Credit.TotalQuota')}</div>
+            <div className="label">{t('Credit.TotalQuota')} (USDT)</div>
             {isLogin ? (
-              <div>
+              <ItemAmountBox>
                 <span className="value">100,000.00</span>
-                <span className="unit">usdt</span>
-              </div>
+              </ItemAmountBox>
             ) : (
               <div className="secret">*********</div>
             )}
@@ -101,7 +99,9 @@ const MyBorrowingQuota = ({ isLogin, onClickLogin, onOpenBorrow }: BorrowCardPro
           <RightArrowIcon />
         </span>
       </MyCardBottom>
-      {showBorrowItemsModal && <BorrowItemsModal onConfirm={go2Borrow} />}
+      {showBorrowItemsModal && (
+        <BorrowItemsModal onConfirm={go2Borrow} handleClose={() => setShowBorrowItemsModal(false)} />
+      )}
       {showBorrowModal && <BorrowModal handleClose={closeBorrowModal} />}
     </CardStyle>
   );
@@ -130,11 +130,10 @@ const MyBorrowing = ({ isLogin, onClickLogin, onOpenBorrow }: BorrowCardProps) =
       <img src={CreditLogo} alt="" className="logo" />
       <MyCardTop>
         <MyCardLine>
-          <div className="label">{t('Credit.MyBorrow')}</div>
-          {!isLogin ? (
+          <div className="label">{t('Credit.MyBorrow')} (USDT)</div>
+          {isLogin ? (
             <div className="value">
               <span className="num">100,000.00</span>
-              <span className="unit">USDT</span>
             </div>
           ) : (
             <div className="secret">*********</div>
@@ -155,15 +154,22 @@ const MyBorrowing = ({ isLogin, onClickLogin, onOpenBorrow }: BorrowCardProps) =
         <MyCardColomnLine>
           <div>
             <div className="label">{t('Credit.CurrentBorrow', { num: isLogin ? 1 : '*' })}</div>
-            {isLogin ? <div className="value">100,000.00</div> : <div className="secret">*********</div>}
+            {isLogin ? (
+              <ItemAmountBox>
+                <span className="value">100,000.00</span>
+                <span className="unit">USDT</span>
+              </ItemAmountBox>
+            ) : (
+              <div className="secret">*********</div>
+            )}
           </div>
           <div>
             <div className="label">{t('Credit.Overdue', { num: isLogin ? 1 : '*' })}</div>
             {isLogin ? (
-              <div>
+              <ItemAmountBox>
                 <span className="value">100,000.00</span>
                 <span className="unit">USDT</span>
-              </div>
+              </ItemAmountBox>
             ) : (
               <div className="secret">*********</div>
             )}
@@ -176,7 +182,10 @@ const MyBorrowing = ({ isLogin, onClickLogin, onOpenBorrow }: BorrowCardProps) =
           <RightArrowIcon />
         </span>
       </MyCardBottom>
-      {showRepayItemsModal && <RepayItemsModal onConfirm={go2Repay} />}
+
+      {showRepayItemsModal && (
+        <RepayItemsModal onConfirm={go2Repay} handleClose={() => setShowRepayItemsModal(false)} />
+      )}
       {showRepayModal && <RepayModal handleClose={closeRepayModal} />}
     </CardStyle2>
   );
@@ -189,10 +198,9 @@ const VaultCard = () => {
       <img src={CreditLogo2} alt="" className="logo" />
 
       <div>
-        <div className="label">{t('Credit.DaoTotalQuota')}</div>
+        <div className="label">{t('Credit.DaoTotalQuota')} (USDT)</div>
         <div>
           <span className="value">100,000.00</span>
-          <span className="unit">USDT</span>
         </div>
       </div>
       <div className="tip">{t('Credit.DaoTip')}</div>
@@ -371,13 +379,6 @@ const MyCardColomnLine = styled.div`
     opacity: 0.7;
     font-size: 12px;
   }
-  .value {
-    font-size: 15px;
-  }
-  .unit {
-    font-size: 12px;
-    margin-left: 4px;
-  }
 `;
 
 const VaultCardColumnLine = styled.div`
@@ -386,6 +387,16 @@ const VaultCardColumnLine = styled.div`
   > div {
     flex: 1;
   }
+  .value {
+    font-size: 15px;
+  }
+  .unit {
+    font-size: 10px;
+    margin-left: 4px;
+  }
+`;
+
+const ItemAmountBox = styled.div`
   .value {
     font-size: 15px;
   }

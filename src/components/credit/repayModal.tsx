@@ -56,7 +56,7 @@ export default function RepayModal({ handleClose }: IProps) {
     },
     {
       title: t('Credit.RepayStepTitle4'),
-      button: <CreditButton onClick={checkMine}>{t('Credit.RepayStepButton3')}</CreditButton>,
+      button: <CreditButton onClick={checkMine}>{t('Credit.RepayStepButton4')}</CreditButton>,
     },
   ];
 
@@ -65,7 +65,7 @@ export default function RepayModal({ handleClose }: IProps) {
     setList(newList);
   };
   return (
-    <RepayModalStyle handleClose={() => handleClose()}>
+    <RepayModalStyle handleClose={() => handleClose()} closeColor="#343C6A">
       <ModalTitle>{steps[step].title}</ModalTitle>
       {step === 3 && <FinishContent>5,000 USDT</FinishContent>}
       {step === 0 && (
