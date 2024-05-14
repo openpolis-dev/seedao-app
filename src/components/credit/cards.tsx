@@ -7,8 +7,9 @@ import { useTranslation } from 'react-i18next';
 import CreditLogo from 'assets/Imgs/light/creditLogo.svg';
 import CreditLogo2 from 'assets/Imgs/light/creditLogo2.svg';
 import TipIcon from 'assets/Imgs/light/tip.svg';
-import { BorrowItemsModal } from './itemsModal';
+import { BorrowItemsModal, RepayItemsModal } from './itemsModal';
 import BorrowModal from './borrowModal';
+import RepayModal from './repayModal';
 
 const RightArrowIcon = () => (
   <svg
@@ -43,7 +44,7 @@ type BorrowCardProps = {
 
 const MyBorrowingQuota = ({ isLogin, onClickLogin, onOpenBorrow }: BorrowCardProps) => {
   const { t } = useTranslation();
-  const [showBorrowModal, setShowBorrowModal] = useState(true);
+  const [showBorrowModal, setShowBorrowModal] = useState(false);
   const [showBorrowItemsModal, setShowBorrowItemsModal] = useState(false);
   const onClickBottom = () => {
     isLogin ? setShowBorrowItemsModal(true) : onClickLogin();
@@ -108,8 +109,21 @@ const MyBorrowingQuota = ({ isLogin, onClickLogin, onOpenBorrow }: BorrowCardPro
 
 const MyBorrowing = ({ isLogin, onClickLogin, onOpenBorrow }: BorrowCardProps) => {
   const { t } = useTranslation();
+  const [showRepayModal, setShowRepayModal] = useState(false);
+  const [showRepayItemsModal, setShowRepayItemsModal] = useState(false);
   const onClickBottom = () => {
-    isLogin ? onOpenBorrow() : onClickLogin();
+    isLogin ? setShowRepayItemsModal(true) : onClickLogin();
+  };
+  const go2Repay = () => {
+    setShowRepayItemsModal(false);
+    setShowRepayModal(true);
+  };
+
+  const closeRepayModal = (openMine?: boolean) => {
+    setShowRepayModal(false);
+    if (openMine) {
+      // TODO
+    }
   };
   return (
     <CardStyle2>
@@ -162,6 +176,8 @@ const MyBorrowing = ({ isLogin, onClickLogin, onOpenBorrow }: BorrowCardProps) =
           <RightArrowIcon />
         </span>
       </MyCardBottom>
+      {showRepayItemsModal && <RepayItemsModal onConfirm={go2Repay} />}
+      {showRepayModal && <RepayModal handleClose={closeRepayModal} />}
     </CardStyle2>
   );
 };

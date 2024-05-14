@@ -769,7 +769,13 @@
     "ForfeitTip": "质押的 $SCR 将从您的钱包中扣除",
     "BorrowTip1": "借款期限最长为 30 日，30 日内随时可还款。逾期未还，您的 $SCR 将被罚没至社区金库！",
     "BorrowTip2": "*利息及借款期限按北京时间（UTC+8）自然日计算",
-    "BorrowTip3": "签名前，需要先授权合约使用您的SCR"
+    "BorrowTip3": "签名前，需要先授权合约使用您的SCR",
+    "RepayTip": "由于链上交易时间的不确定性，为了确保还款成功，我们将在您Approve时默认多加1天利息，如最终未使用，多出的USDT将退回至您的钱包！",
+    "DayRate01": "日利率（单利） {{rate}}‰",
+    "BorrowPrincipal": "借款本金",
+    "CurrentBorrowDays": "已借 {{day}} 日",
+    "ShouldRepay": "合计应还",
+    "ReturnForfeit": "退回质押物"
   },
   "Governance": {
     "GovernanceRule": "治理规则",
