@@ -363,6 +363,13 @@ const links = {
       icon: 'https://avatars.githubusercontent.com/u/36115574?s=200&v=4',
       desc: 'Coming Soon',
     },
+    {
+      id: 'module-credit',
+      name: 'apps.Credit',
+      link: '/credit',
+      icon: '',
+      desc: 'apps.CreditDesc',
+    },
   ],
   publicity: [
     {

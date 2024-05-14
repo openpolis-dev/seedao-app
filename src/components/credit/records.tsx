@@ -5,15 +5,13 @@ import { useTranslation } from 'react-i18next';
 import { useState, useMemo } from 'react';
 import StateTag from './stateTag';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
-import SearchWhite from 'assets/Imgs/light/search.svg';
-import SearchImg from 'assets/Imgs/light/search.svg';
 import useToast, { ToastType } from 'hooks/useToast';
 import sns from '@seedao/sns-js';
 import { ethers } from 'ethers';
-import ClearSVGIcon from 'components/svgs/clear';
-import Select from 'components/common/select';
+import Select from './select';
 import { CreditRecordStatus, ICreditRecord } from 'type/credit.type';
 import RecordDetailModal from './recordDetailModal';
+import useCheckLogin from 'hooks/useCheckLogin';
 
 const AllBorrowTable = () => {
   const { t } = useTranslation();
@@ -23,7 +21,7 @@ const AllBorrowTable = () => {
     { status: CreditRecordStatus.INUSE },
     { status: CreditRecordStatus.OVERDUE },
   ]);
-  const [total, setTotal] = useState(10);
+  const [total, setTotal] = useState(100);
   const [page, setPage] = useState(1);
   const handlePageChange = () => {};
 
@@ -70,7 +68,14 @@ const AllBorrowTable = () => {
         )}
       </TableBox>
       {!!list.length && (
-        <Pagination dir="right" itemsPerPage={10} total={total} current={page - 1} handleToPage={handlePageChange} />
+        <Pagination
+          dir="right"
+          itemsPerPage={10}
+          total={total}
+          current={page - 1}
+          handleToPage={handlePageChange}
+          showGotopage={false}
+        />
       )}
       {detailData && <RecordDetailModal data={detailData} handleClose={() => setDetailData(undefined)} />}
     </>
@@ -136,7 +141,14 @@ const MyTable = () => {
         )}
       </TableBox>
       {!!list.length && (
-        <Pagination dir="right" itemsPerPage={10} total={total} current={page - 1} handleToPage={handlePageChange} />
+        <Pagination
+          dir="right"
+          itemsPerPage={10}
+          total={total}
+          current={page - 1}
+          handleToPage={handlePageChange}
+          showGotopage={false}
+        />
       )}
     </>
   );
@@ -168,12 +180,19 @@ export default function CreditRecords() {
   const [selectValue, setSeletValue] = useState(filterOptions[0].value);
 
   const {
-    state: { theme },
+    state: { account },
     dispatch,
   } = useAuthContext();
 
+  const isLogin = useCheckLogin(account);
+
+  const loginStatus = isLogin && !!account;
+
   const openMine = () => {
-    //   TODO check login
+    if (!loginStatus) {
+      dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: true });
+      return;
+    }
     setCurrentTab('mine');
   };
 
@@ -213,16 +232,23 @@ export default function CreditRecords() {
       <NavBox>{t('Credit.Records')}</NavBox>
       <TabbarBox>
         <TitBox>
-          <dl className={currentTab === 'all' ? 'active' : ''} onClick={() => setCurrentTab('all')}>
-            <dd>{t('Credit.AllBorrow')}</dd>
-          </dl>
-          <dl className={currentTab === 'mine' ? 'active' : ''} onClick={openMine}>
-            <dd>{t('Credit.MyBorrow')}</dd>
-          </dl>
+          <div onClick={() => setCurrentTab('all')}>
+            <div className={currentTab === 'all' ? 'active' : ''}>{t('Credit.AllBorrow')}</div>
+            {currentTab === 'all' && <div className="line" />}
+          </div>
+          <div onClick={openMine}>
+            <div className={currentTab === 'mine' ? 'active' : ''}>{t('Credit.MyBorrow')}</div>
+            {currentTab === 'mine' && <div className="line" />}
+          </div>
         </TitBox>
         <FilterBox>
           <SearchBox>
-            <img src={theme ? SearchWhite : SearchImg} alt="" />
+            <svg fill="none" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+              <g stroke="rgba(113, 142, 191, 0.54)" stroke-width="2">
+                <circle cx="10.3446" cy="11.3209" r="6.10797" />
+                <path d="m15.1745 15.6406 3.6867 2.7891" stroke-linecap="round" />
+              </g>
+            </svg>
             <input
               type="text"
               placeholder={t('Credit.AddressHint')}
@@ -230,11 +256,24 @@ export default function CreditRecords() {
               value={targetKeyword}
               onChange={(e) => setTargetKeyword(e.target.value)}
             />
-            {targetKeyword && <ClearSVGIcon onClick={clearSearch} />}
+            {targetKeyword && (
+              <svg
+                onClick={clearSearch}
+                className="clear"
+                xmlns="http://www.w3.org/2000/svg"
+                width={20}
+                height={20}
+                aria-hidden="true"
+              >
+                <path
+                  style={{ fill: 'rgba(113, 142, 191, 0.54)' }}
+                  d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z"
+                />
+              </svg>
+            )}
           </SearchBox>
-          <SelectStyle
+          <Select
             menuPortalTarget={document.body}
-            width="150px"
             NotClear={true}
             options={filterOptions}
             onChange={(value: any) => {
@@ -250,6 +289,26 @@ export default function CreditRecords() {
 
 const CreditRecordsStyle = styled.div`
   margin-top: 40px;
+  .page-link {
+    width: 38px;
+    height: 38px;
+    line-height: 38px;
+    margin-right: 0;
+    background-color: transparent;
+    color: #1814f3;
+    font-family: 'Inter-Medium';
+    font-weight: 500;
+    &:hover {
+      color: #1814f3;
+      background: unset;
+    }
+  }
+  .active {
+    .page-link {
+      background: #1814f3;
+      color: #fff;
+    }
+  }
 `;
 
 const NavBox = styled.div`
@@ -263,6 +322,7 @@ const TabbarBox = styled.div`
   border-bottom: 1px solid #ebeef2;
   display: flex;
   justify-content: space-between;
+  align-items: end;
   margin-bottom: 20px;
   padding-bottom: 12px;
 `;
@@ -274,24 +334,23 @@ const TitBox = styled.div`
   font-weight: 500;
   color: #718ebf;
   line-height: 10px;
-  dl {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-right: 40px;
+  gap: 30px;
+  > div {
+    position: relative;
     cursor: pointer;
-    &.active {
+    line-height: 20px;
+    padding-inline: 10px;
+    .active {
       color: #1814f3;
-      dd:after {
-        content: '';
-        width: 100%;
-        height: 3px;
-        border-radius: 10px, 0px, 0px;
-        background: #1814f3;
-        position: absolute;
-        bottom: -18px;
-        left: 0;
-      }
+    }
+    .line {
+      width: 100%;
+      position: absolute;
+      left: 0;
+      bottom: -13px;
+      border-radius: 10px 10px 0 0;
+      background-color: #1814f3;
+      height: 3px;
     }
   }
   dd {
@@ -314,13 +373,16 @@ const TableBox = styled.div`
       border-radius: 0;
       border-bottom: 1px solid #f2f4f7;
       padding: 0 0 6px !important;
-      font-family: Poppins-Regular;
-      font-size: 400;
+      font-weight: 400;
+    }
+    th:first-child {
+      padding-left: 0 !important;
     }
     td {
       background: transparent;
       border-top-color: #f2f4f7;
       height: 54px;
+      padding: 0 !important;
     }
     tr td:first-child {
       padding-left: 0 !important;
@@ -339,28 +401,28 @@ const BlueText = styled.div`
 const SearchBox = styled.div`
   width: 270px;
   height: 32px;
-  background: var(--bs-box-background);
   border-radius: 8px;
   display: flex;
   align-items: center;
-  justify-content: center;
   padding: 0 8px;
   border: 1px solid #718ebf;
   font-size: 14px;
   input {
-    width: calc(100% - 40px);
+    flex: 1;
     border: 0;
     background: transparent;
-    margin-left: 9px;
+    margin-left: 6px;
     height: 24px;
+    color: #718ebf;
     &::placeholder {
-      color: var(--bs-body-color);
+      color: rgba(113, 142, 191, 0.54);
+      font-size: 12px;
     }
     &:focus {
       outline: none;
     }
   }
-  svg {
+  svg.clear {
     cursor: pointer;
   }
 `;
@@ -368,15 +430,4 @@ const SearchBox = styled.div`
 const FilterBox = styled.div`
   display: flex;
   gap: 30px;
-`;
-
-const SelectStyle = styled(Select)`
-  font-size: 14px;
-  .react-select__control {
-    height: 32px !important;
-    min-height: unset;
-  }
-  .react-select__value-container {
-    padding-block: 4px;
-  }
 `;

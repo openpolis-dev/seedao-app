@@ -651,7 +651,9 @@
     "SNS": "SNS",
     "SNSDesc": "SNS is your identity based on blockchain in SeeDAO.",
     "Echo": "Echo",
-    "EchoDesc": "Echo is a social network that gives your echos to same habbies, passions or interests."
+    "EchoDesc": "Echo is a social network that gives your echos to same habbies, passions or interests.",
+    "Credit": "积分信用贷",
+    "CreditDesc": "test"
   },
   "SNS": {
     "EntranceTitle": "获取你的 SNS，开始你的 SeeDAO 之旅",
