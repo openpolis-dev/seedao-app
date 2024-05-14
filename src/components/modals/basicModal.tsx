@@ -1,20 +1,21 @@
 import styled from 'styled-components';
-import CloseIcon from 'assets/Imgs/close.svg';
+import CloseSVG from 'components/svgs/close';
 
 export interface Iprops {
   title?: string;
   handleClose?: () => void;
   children?: React.ReactNode;
   disabledClose?: boolean;
+  closeColor?: string;
   [key: string]: any;
 }
 
-export default function BasicModal({ title, handleClose, children, disabledClose, ...rest }: Iprops) {
+export default function BasicModal({ title, handleClose, children, disabledClose, closeColor, ...rest }: Iprops) {
   return (
     <Mask>
       <CardBox {...rest}>
         {!disabledClose && (
-          <img className="btn-close-modal" src={CloseIcon} alt="" onClick={() => handleClose && handleClose()} />
+          <CloseSVG className="btn-close-modal" onClick={() => handleClose && handleClose()} color={closeColor} />
         )}
         {title && (
           <HeaderBox className="modal-header">

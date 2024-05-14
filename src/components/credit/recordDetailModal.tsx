@@ -12,7 +12,7 @@ interface IProps {
 export default function RecordDetailModal({ data, handleClose }: IProps) {
   const { t } = useTranslation();
   return (
-    <RecordDetailModalStyle handleClose={handleClose}>
+    <RecordDetailModalStyle handleClose={handleClose} closeColor="#343C6A">
       <ModalTitle>{t('Credit.Records')}</ModalTitle>
       <Content>
         <div className="id">{t('Credit.BorrowID')}: 8800001</div>
@@ -102,6 +102,10 @@ export default function RecordDetailModal({ data, handleClose }: IProps) {
 const RecordDetailModalStyle = styled(BasicModal)`
   width: 670px;
   font-family: inter;
+  .btn-close-modal {
+    right: 26px;
+    top: 26px;
+  }
 `;
 
 const Content = styled.div`
@@ -168,4 +172,5 @@ const ModalTitle = styled.div`
   color: #343c6a;
   font-family: Inter-SemiBold;
   font-weight: 600;
+  margin-top: 14px;
 `;
