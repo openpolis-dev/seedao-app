@@ -29,6 +29,17 @@ const Polygon_Network = {
     },
   ],
   whitelistId: 0,
+  SCRContract: { address: '0xdC907cd32Bc3D6bb2c63Ede4E28c3fAcdd1d5189', decimals: 18 },
+  lend: {
+    quotaPerUser: 5000,
+    bondNFTContract: '0xE766Fe7e59306C602722e0fFFB7Ae6eE5718B617',
+    scoreLendContract: '0x7422CD95EDDE8AC601e6A3121B7C8AdA9fDa4384',
+    lendToken: {
+      address: '0xca152522f26811fF8FcAf967d4040F7C6BbF8eaA',
+      decimals: 6,
+      symbol: 'USDT',
+    },
+  },
 };
 
 const Sepolia_Network = {

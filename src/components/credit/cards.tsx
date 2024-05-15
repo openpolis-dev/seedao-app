@@ -13,6 +13,14 @@ import RepayModal from './repayModal';
 import { useNetwork, useSwitchNetwork } from 'wagmi';
 import { useEthersProvider } from 'hooks/ethersNew';
 import { amoy } from 'utils/chain';
+import { ethers } from 'ethers';
+import getConfig from 'utils/envCofnig';
+import BondNFTABI from 'assets/abi/BondNFT.json';
+import ScoreLendABI from 'assets/abi/ScoreLend.json';
+import { useCreditContext, ACTIONS } from 'pages/credit/provider';
+import { erc20ABI } from 'wagmi';
+
+const networkConfig = getConfig().NETWORK;
 
 const RightArrowIcon = () => (
   <svg
@@ -49,6 +57,14 @@ const MyBorrowingQuota = ({ isLogin, onClickLogin, onOpenBorrow }: BorrowCardPro
   const { t } = useTranslation();
   const [showBorrowModal, setShowBorrowModal] = useState(false);
   const [showBorrowItemsModal, setShowBorrowItemsModal] = useState(false);
+  const {
+    state: { account },
+  } = useAuthContext();
+  const {
+    dispatch: dispatchCreditEvent,
+    state: { myAvaliableQuota, myScore },
+  } = useCreditContext();
+
   const onClickBottom = () => {
     isLogin ? setShowBorrowItemsModal(true) : onClickLogin();
   };
@@ -64,6 +80,20 @@ const MyBorrowingQuota = ({ isLogin, onClickLogin, onOpenBorrow }: BorrowCardPro
       // TODO
     }
   };
+
+  useEffect(() => {
+    if (isLogin && account) {
+      const _provider = new ethers.providers.StaticJsonRpcProvider(amoy.rpcUrls.public.http[0], amoy.id);
+      const scoreContract = new ethers.Contract(networkConfig.SCRContract.address, erc20ABI, _provider);
+      scoreContract.balanceOf(account).then((r: ethers.BigNumber) => {
+        dispatchCreditEvent({
+          type: ACTIONS.SET_MY_SCORE,
+          payload: Number(ethers.utils.formatUnits(r, networkConfig.SCRContract.decimals)),
+        });
+      });
+    }
+  }, [isLogin, account]);
+
   return (
     <CardStyle>
       <img src={CreditLogo} alt="" className="logo" />
@@ -72,7 +102,7 @@ const MyBorrowingQuota = ({ isLogin, onClickLogin, onOpenBorrow }: BorrowCardPro
           <div className="label">{t('Credit.MyBorrowQuota')} (USDT)</div>
           {isLogin ? (
             <div className="value">
-              <span className="num">100,000.00</span>
+              <span className="num">{myAvaliableQuota.format()}</span>
             </div>
           ) : (
             <div className="secret">*********</div>
@@ -82,13 +112,13 @@ const MyBorrowingQuota = ({ isLogin, onClickLogin, onOpenBorrow }: BorrowCardPro
         <MyCardColomnLine>
           <div>
             <div className="label">{t('Credit.MySCR')}</div>
-            {isLogin ? <div className="value">100,000.00</div> : <div className="secret">*********</div>}
+            {isLogin ? <div className="value">{myScore.format()}</div> : <div className="secret">*********</div>}
           </div>
           <div>
             <div className="label">{t('Credit.TotalQuota')} (USDT)</div>
             {isLogin ? (
               <ItemAmountBox>
-                <span className="value">100,000.00</span>
+                <span className="value">{networkConfig.lend.quotaPerUser.format()}</span>
               </ItemAmountBox>
             ) : (
               <div className="secret">*********</div>
@@ -114,6 +144,11 @@ const MyBorrowing = ({ isLogin, onClickLogin, onOpenBorrow }: BorrowCardProps) =
   const { t } = useTranslation();
   const [showRepayModal, setShowRepayModal] = useState(false);
   const [showRepayItemsModal, setShowRepayItemsModal] = useState(false);
+
+  const {
+    state: { myOverdueAmount, myInuseAmount },
+  } = useCreditContext();
+
   const onClickBottom = () => {
     isLogin ? setShowRepayItemsModal(true) : onClickLogin();
   };
@@ -136,7 +171,7 @@ const MyBorrowing = ({ isLogin, onClickLogin, onOpenBorrow }: BorrowCardProps) =
           <div className="label">{t('Credit.MyBorrow')} (USDT)</div>
           {isLogin ? (
             <div className="value">
-              <span className="num">100,000.00</span>
+              <span className="num">{myInuseAmount.format()}</span>
             </div>
           ) : (
             <div className="secret">*********</div>
@@ -159,7 +194,7 @@ const MyBorrowing = ({ isLogin, onClickLogin, onOpenBorrow }: BorrowCardProps) =
             <div className="label">{t('Credit.CurrentBorrow', { num: isLogin ? 1 : '*' })}</div>
             {isLogin ? (
               <ItemAmountBox>
-                <span className="value">100,000.00</span>
+                <span className="value">{myInuseAmount.format()}</span>
                 <span className="unit">USDT</span>
               </ItemAmountBox>
             ) : (
@@ -167,10 +202,10 @@ const MyBorrowing = ({ isLogin, onClickLogin, onOpenBorrow }: BorrowCardProps) =
             )}
           </div>
           <div>
-            <div className="label">{t('Credit.Overdue', { num: isLogin ? 1 : '*' })}</div>
+            <div className="label">{t('Credit.Overdue', { num: isLogin ? 0 : '*' })}</div>
             {isLogin ? (
               <ItemAmountBox>
-                <span className="value">100,000.00</span>
+                <span className="value">{myOverdueAmount.format()}</span>
                 <span className="unit">USDT</span>
               </ItemAmountBox>
             ) : (
@@ -196,6 +231,17 @@ const MyBorrowing = ({ isLogin, onClickLogin, onOpenBorrow }: BorrowCardProps) =
 
 const VaultCard = () => {
   const { t } = useTranslation();
+  const {
+    state: { scoreLendContract },
+  } = useCreditContext();
+  const [total, setTotal] = useState('0.00');
+
+  useEffect(() => {
+    scoreLendContract?.totalAvailableAmount().then((r: ethers.BigNumber) => {
+      const value = ethers.utils.formatUnits(r, networkConfig.lend.lendToken.decimals);
+      setTotal(Number(value).format());
+    });
+  }, [scoreLendContract]);
   return (
     <CardStyle3>
       <img src={CreditLogo2} alt="" className="logo" />
@@ -203,7 +249,7 @@ const VaultCard = () => {
       <div>
         <div className="label">{t('Credit.DaoTotalQuota')} (USDT)</div>
         <div>
-          <span className="value">100,000.00</span>
+          <span className="value">{total}</span>
         </div>
       </div>
       <div className="tip">{t('Credit.DaoTip')}</div>
@@ -249,6 +295,11 @@ export default function CreditCards() {
     state: { account },
   } = useAuthContext();
 
+  const {
+    dispatch: dispatchCreditEvent,
+    state: { scoreLendContract },
+  } = useCreditContext();
+
   const isLogin = useCheckLogin(account);
 
   const loginStatus = isLogin && !!account;
@@ -263,11 +314,32 @@ export default function CreditCards() {
   const provider = useEthersProvider({});
 
   useEffect(() => {
+    const _provider = new ethers.providers.StaticJsonRpcProvider(amoy.rpcUrls.public.http[0], amoy.id);
+    const bondNFTContract = new ethers.Contract(networkConfig.lend.bondNFTContract, BondNFTABI, _provider);
+    dispatchCreditEvent({ type: ACTIONS.SET_BOND_NFT_CONTRACT, payload: bondNFTContract });
+    const scoreLendontract = new ethers.Contract(networkConfig.lend.scoreLendContract, ScoreLendABI, _provider);
+    dispatchCreditEvent({ type: ACTIONS.SET_LEND_CONTRACT, payload: scoreLendontract });
+  }, []);
+
+  useEffect(() => {
+    account &&
+      scoreLendContract?.userAvailableAmount(account).then((r: any) => {
+        const decimals = networkConfig.lend.lendToken.decimals;
+        dispatchCreditEvent({
+          type: ACTIONS.SET_MY_DATA,
+          payload: {
+            overdueAmount: Number(ethers.utils.formatUnits(r.overdueAmount, decimals)),
+            inUseAmount: Number(ethers.utils.formatUnits(r.inUseAmount, decimals)),
+            availableAmount: Number(ethers.utils.formatUnits(r.availableAmount, decimals)),
+          },
+        });
+      });
+  }, [scoreLendContract, account]);
+
+  useEffect(() => {
     // check network
     if (loginStatus && chain && switchNetwork && chain?.id !== amoy.id) {
       switchNetwork(amoy.id);
-      return;
-    } else if (chain?.id === amoy.id) {
     }
   }, [loginStatus, chain, provider?.network.chainId]);
   return (
