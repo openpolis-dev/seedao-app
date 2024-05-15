@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import styled from 'styled-components';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
@@ -10,6 +10,9 @@ import TipIcon from 'assets/Imgs/light/tip.svg';
 import { BorrowItemsModal, RepayItemsModal } from './itemsModal';
 import BorrowModal from './borrowModal';
 import RepayModal from './repayModal';
+import { useNetwork, useSwitchNetwork } from 'wagmi';
+import { useEthersProvider } from 'hooks/ethersNew';
+import { amoy } from 'utils/chain';
 
 const RightArrowIcon = () => (
   <svg
@@ -254,6 +257,19 @@ export default function CreditCards() {
     dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: true });
   };
   const openBorrow = () => {};
+
+  const { chain } = useNetwork();
+  const { switchNetwork } = useSwitchNetwork();
+  const provider = useEthersProvider({});
+
+  useEffect(() => {
+    // check network
+    if (loginStatus && chain && switchNetwork && chain?.id !== amoy.id) {
+      switchNetwork(amoy.id);
+      return;
+    } else if (chain?.id === amoy.id) {
+    }
+  }, [loginStatus, chain, provider?.network.chainId]);
   return (
     <CardsRow>
       <MyBorrowingQuota isLogin={!!loginStatus} onClickLogin={openLogin} onOpenBorrow={openBorrow}></MyBorrowingQuota>
