@@ -171,7 +171,7 @@ const MyBorrowing = ({ isLogin, onClickLogin, onOpenBorrow }: BorrowCardProps) =
           <div className="label">{t('Credit.MyBorrow')} (USDT)</div>
           {isLogin ? (
             <div className="value">
-              <span className="num">{myInuseAmount.format()}</span>
+              <span className="num">{(myInuseAmount + myOverdueAmount).format()}</span>
             </div>
           ) : (
             <div className="secret">*********</div>
