@@ -17,6 +17,9 @@ import sns from '@seedao/sns-js';
 import { AssetName } from 'utils/constant';
 import { getAvailiableProjectsAndGuilds } from 'requests/applications';
 import BackerNav from 'components/common/backNav';
+import ProjectInfo from '../../components/assetsCom/projectInfo';
+import TotalImg from '../../assets/Imgs/light/total.svg';
+import TotalImgLt from '../../assets/Imgs/dark/total.svg';
 
 type ErrorDataType = {
   line: number;
@@ -25,7 +28,10 @@ type ErrorDataType = {
 
 export default function Register() {
   const { t } = useTranslation();
-  const { dispatch } = useAuthContext();
+  const {
+    dispatch,
+    state: { theme },
+  } = useAuthContext();
   const { showToast } = useToast();
   const navigate = useNavigate();
 
@@ -216,10 +222,18 @@ export default function Register() {
           value={selectSource}
         />
       </SectionBlock>
+      <ProjectInfo />
       <SectionBlock>
         <div className="title lftTit">{t('Assets.RegisterList')}</div>
         <RegList list={list} setList={setList} />
       </SectionBlock>
+      <TotalBox>
+        <img src={theme ? TotalImgLt : TotalImg} alt="" />
+        <div>
+          <span>申请总资产</span>
+          <span>200 USDT, 100 SCR</span>
+        </div>
+      </TotalBox>
 
       <SectionBlock>
         <div className="title">{t('Assets.RegisterIntro')}</div>
@@ -243,6 +257,20 @@ export default function Register() {
     </OuterBox>
   );
 }
+
+const TotalBox = styled.div`
+  margin-top: 35px;
+  color: var(--bs-body-color_active);
+  font-size: 14px;
+  margin-left: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  & > div {
+    display: flex;
+    gap: 10px;
+  }
+`;
 
 const OuterBox = styled.div`
   box-sizing: border-box;
