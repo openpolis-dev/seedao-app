@@ -13,6 +13,7 @@ import { AppActionType, useAuthContext } from 'providers/authProvider';
 import { useEthersProvider } from 'hooks/ethersNew';
 import useToast, { ToastType } from 'hooks/useToast';
 import parseError from './parseError';
+import { getShortDisplay } from 'utils/number';
 
 const networkConfig = getConfig().NETWORK;
 
@@ -23,7 +24,7 @@ interface IProps {
 export default function BorrowModal({ handleClose }: IProps) {
   const { t } = useTranslation();
   const [step, setStep] = useState(0);
-  const [inputNum, setInputNum] = useState<number>();
+  const [inputNum, setInputNum] = useState<string>('100.00');
   const [forfeitNum, setForfeitNum] = useState(0);
 
   const { showToast } = useToast();
@@ -64,7 +65,7 @@ export default function BorrowModal({ handleClose }: IProps) {
     try {
       const result = await handleEstimateGas(TX_ACTION.BORROW, inputNum!);
       console.log('====result', result);
-      await handleTransaction(provider, TX_ACTION.BORROW, inputNum!);
+      await handleTransaction(provider, TX_ACTION.BORROW, Number(inputNum));
       setStep(2);
     } catch (error: any) {
       logError('[borrow]', error);
@@ -75,7 +76,7 @@ export default function BorrowModal({ handleClose }: IProps) {
   };
 
   const clearModalData = () => {
-    setInputNum(0);
+    setInputNum('100.00');
     setForfeitNum(0);
     setStep(0);
   };
@@ -120,10 +121,41 @@ export default function BorrowModal({ handleClose }: IProps) {
   const onChangeVal = useCallback(debounce(computeAmount, 1500), [scoreLendContract]);
 
   const onChangeInput = (e: any) => {
-    const v = Number(e.target.value);
-    setInputNum(v);
-    onChangeVal(v);
+    const newValue = e.target.value;
+    if (newValue === '') {
+      setInputNum('');
+      onChangeVal(0);
+      return;
+    }
+    const numberRegex = /^\d*\.?\d{0,2}$/;
+    if (!numberRegex.test(newValue)) {
+      return;
+    }
+    setInputNum(newValue);
+    onChangeVal(Number(newValue));
   };
+
+  const handleBlur = () => {
+    // 在输入框失去焦点时验证最小值
+    const numericValue = parseFloat(inputNum);
+    if (!isNaN(numericValue)) {
+      if (numericValue < 100) {
+        setInputNum('100.00');
+        onChangeVal(100);
+      } else if (numericValue > networkConfig.lend.quotaPerUser) {
+        setInputNum(getShortDisplay(networkConfig.lend.quotaPerUser));
+        onChangeVal(networkConfig.lend.quotaPerUser);
+      } else {
+        setInputNum(Number(numericValue).format());
+      }
+    }
+  };
+
+  useEffect(() => {
+    onChangeVal(100);
+  }, []);
+
+  const dayIntrestAmount = inputNum ? getShortDisplay((Number(inputNum) * 10000 * Number(0.0001)) / 10000, 5) : 0;
 
   return (
     <BorrowModalStyle
@@ -141,11 +173,18 @@ export default function BorrowModal({ handleClose }: IProps) {
           <LineLabel>{t('Credit.BorrowAmount')}</LineLabel>
           <LineBox>
             <div className="left">
-              <input type="number" autoFocus disabled={step === 1} value={inputNum} onChange={onChangeInput} />
+              <input
+                type="number"
+                autoFocus
+                disabled={step === 1}
+                value={inputNum}
+                onChange={onChangeInput}
+                onBlur={handleBlur}
+              />
             </div>
             <span className="right">USDT</span>
           </LineBox>
-          <LineTip>{t('Credit.RateAmount', { rate: 0.1, amount: 0.5 })}</LineTip>
+          <LineTip>{t('Credit.RateAmount', { rate: 0.1, amount: dayIntrestAmount })}</LineTip>
           <LineLabel>{t('Credit.NeedForfeit')}</LineLabel>
           <LineBox>
             <div className="left">
