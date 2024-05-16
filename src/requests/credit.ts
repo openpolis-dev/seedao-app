@@ -20,7 +20,7 @@ export const getVaultData = (): Promise<VaultData> => {
   return fetch(`${PATH_PREFIX}/total_borrow`).then((res) => res.json());
 };
 
-interface IFilterParams {
+export interface IFilterParams {
   debtor?: string;
   lendStatus?: CreditRecordStatus;
   sortField?: 'borrowAmount' | 'borrowTimestamp';

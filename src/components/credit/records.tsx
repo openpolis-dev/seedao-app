@@ -12,8 +12,7 @@ import Select from './select';
 import { CreditRecordStatus, ICreditRecord } from 'type/credit.type';
 import RecordDetailModal from './recordDetailModal';
 import useCheckLogin from 'hooks/useCheckLogin';
-import { getBorrowList } from 'requests/credit';
-import { formatTime, getUTC } from 'utils/time';
+import { IFilterParams, getBorrowList } from 'requests/credit';
 import publicJs from 'utils/publicJs';
 import { amoy } from 'utils/chain';
 
@@ -57,7 +56,9 @@ const AllBorrowTable = ({ list, openDetail }: ITableProps) => {
                   <td>{item.borrowTime}</td>
                   <td>{item.overdueTime}</td>
                   <td>
-                    <BlueText onClick={() => window.open(`${amoy.blockExplorers.default.url}/tx/${item.borrowTx}`, '_blank')}>
+                    <BlueText
+                      onClick={() => window.open(`${amoy.blockExplorers.default.url}/tx/${item.borrowTx}`, '_blank')}
+                    >
                       {publicJs.AddressToShow(item.borrowTx)}
                     </BlueText>
                   </td>
@@ -137,7 +138,6 @@ export default function CreditRecords() {
   const [list, setList] = useState<ICreditRecord[]>([]);
   const [total, setTotal] = useState(100);
   const [page, setPage] = useState(1);
-  const handlePageChange = () => {};
 
   // search target user
   const [targetKeyword, setTargetKeyword] = useState('');
@@ -171,18 +171,27 @@ export default function CreditRecords() {
 
   const loginStatus = isLogin && !!account;
 
-  const openMine = () => {
-    if (!loginStatus) {
-      dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: true });
-      return;
-    }
-    setCurrentTab('mine');
-  };
-
-  const getList = () => {
+  const getList = (page: number, tab: 'all' | 'mine') => {
     dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: true });
-
-    getBorrowList({ lendStatus: CreditRecordStatus.INUSE, page: 1, size: 10 })
+    const params: IFilterParams = {
+      page,
+      size: 10,
+    };
+    if (selectValue) {
+      const [field, v] = selectValue.split(';');
+      if (field === 'lendStatus') {
+        params.lendStatus = Number(v);
+      } else {
+        params.sortField = field as 'borrowAmount' | 'borrowTimestamp';
+        params.sortOrder = v as 'asc' | 'desc';
+      }
+    }
+    if (tab === 'mine') {
+      params.debtor = account;
+    } else if (searchTargetVal) {
+      params.debtor = searchTargetVal;
+    }
+    getBorrowList(params)
       .then((r) => {
         console.log('r', r);
         setTotal(r.total);
@@ -194,8 +203,22 @@ export default function CreditRecords() {
   };
 
   useEffect(() => {
-    getList();
-  }, [currentTab, page, selectValue]);
+    getList(page, currentTab);
+  }, [selectValue, searchTargetVal]);
+
+  const onChangeTab = (tab: 'all' | 'mine') => {
+    setPage(1);
+    setCurrentTab(tab);
+    getList(1, tab);
+  };
+
+  const openMine = () => {
+    if (!loginStatus) {
+      dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: true });
+      return;
+    }
+    onChangeTab('mine');
+  };
 
   const handleSearch = async (keyword: string, setSearchVal: (v: string) => void) => {
     if (keyword.endsWith('.seedao')) {
@@ -228,12 +251,17 @@ export default function CreditRecords() {
     setSearchTargetVal('');
     setTargetKeyword('');
   };
+
+  const handlePageChange = (num: number) => {
+    setPage(num + 1);
+    getList(num + 1, currentTab);
+  };
   return (
     <CreditRecordsStyle>
       <NavBox>{t('Credit.Records')}</NavBox>
       <TabbarBox>
         <TitBox>
-          <div onClick={() => setCurrentTab('all')}>
+          <div onClick={() => onChangeTab('all')}>
             <div className={currentTab === 'all' ? 'active' : ''}>{t('Credit.AllBorrow')}</div>
             {currentTab === 'all' && <div className="line" />}
           </div>
@@ -243,40 +271,44 @@ export default function CreditRecords() {
           </div>
         </TitBox>
         <FilterBox>
-          <SearchBox>
-            <svg fill="none" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-              <g stroke="rgba(113, 142, 191, 0.54)" stroke-width="2">
-                <circle cx="10.3446" cy="11.3209" r="6.10797" />
-                <path d="m15.1745 15.6406 3.6867 2.7891" stroke-linecap="round" />
-              </g>
-            </svg>
-            <input
-              type="text"
-              placeholder={t('Credit.AddressHint')}
-              onKeyUp={onKeyUp}
-              value={targetKeyword}
-              onChange={(e) => setTargetKeyword(e.target.value)}
-            />
-            {targetKeyword && (
-              <svg
-                onClick={clearSearch}
-                className="clear"
-                xmlns="http://www.w3.org/2000/svg"
-                width={20}
-                height={20}
-                aria-hidden="true"
-              >
-                <path
-                  style={{ fill: 'rgba(113, 142, 191, 0.54)' }}
-                  d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z"
-                />
+          {currentTab === 'all' && (
+            <SearchBox>
+              <svg fill="none" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                <g stroke="rgba(113, 142, 191, 0.54)" stroke-width="2">
+                  <circle cx="10.3446" cy="11.3209" r="6.10797" />
+                  <path d="m15.1745 15.6406 3.6867 2.7891" stroke-linecap="round" />
+                </g>
               </svg>
-            )}
-          </SearchBox>
+              <input
+                type="text"
+                placeholder={t('Credit.AddressHint')}
+                onKeyUp={onKeyUp}
+                value={targetKeyword}
+                onChange={(e) => setTargetKeyword(e.target.value)}
+              />
+              {targetKeyword && (
+                <svg
+                  onClick={clearSearch}
+                  className="clear"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width={20}
+                  height={20}
+                  aria-hidden="true"
+                >
+                  <path
+                    style={{ fill: 'rgba(113, 142, 191, 0.54)' }}
+                    d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z"
+                  />
+                </svg>
+              )}
+            </SearchBox>
+          )}
+
           <Select
             menuPortalTarget={document.body}
             NotClear={true}
             options={filterOptions}
+            defaultValue={filterOptions[0]}
             onChange={(value: any) => {
               setSeletValue(value?.value);
             }}
