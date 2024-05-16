@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import StateTag from './stateTag';
 import { CreditRecordStatus, ICreditRecord } from 'type/credit.type';
+import publicJs from 'utils/publicJs';
 
 interface IProps {
   data: ICreditRecord;
@@ -15,47 +16,49 @@ export default function RecordDetailModal({ data, handleClose }: IProps) {
     <RecordDetailModalStyle handleClose={handleClose} closeColor="#343C6A">
       <ModalTitle>{t('Credit.Records')}</ModalTitle>
       <Content>
-        <div className="id">{t('Credit.BorrowID')}: 8800001</div>
+        <div className="id">
+          {t('Credit.BorrowID')}: {data.lendIdDisplay}
+        </div>
         <TotalBox>
-          <div className="amount">5,000.00 USDT</div>
+          <div className="amount">{data.borrowAmount.format()} USDT</div>
           <StateTag state={data.status} solid />
         </TotalBox>
         <DetailLines>
           <Line>
             <dt>{t('Credit.BorrowName')}</dt>
-            <dd>amanda.seedao</dd>
+            <dd>{publicJs.AddressToShow(data.debtor)}</dd>
           </Line>
           <Line>
             <dt>{t('Credit.Forfeit')}</dt>
-            <dd>5,000.00 SCR</dd>
+            <dd>{data.mortgageSCRAmount.format()} SCR</dd>
           </Line>
           <Line>
             <dt>{t('Credit.BorrowHash')}</dt>
             <dd>
               <a className="hash" href="http://" target="_blank" rel="noopener noreferrer">
-                0x2efj3883jejdej5ergdbhebfiijpoe3o
+                {publicJs.AddressToShow(data.borrowTx)}
               </a>
             </dd>
           </Line>
           <Line>
             <dt>{t('Credit.BorrowTime')}</dt>
-            <dd>2024-05-02 17:00 UTC+8</dd>
+            <dd>{data.borrowTime}</dd>
           </Line>
           <Line>
             <dt>{t('Credit.Rate')}</dt>
-            <dd>日利率（单利）0.10‰</dd>
+            <dd>{t('Credit.DayRate01', { rate: data.rate })}</dd>
           </Line>
           <Line>
             <dt>{t('Credit.BorrowDuration')}</dt>
-            <dd>2024-05-02 17:00 UTC+8</dd>
+            <dd>{t('Credit.Days', { days: data.interestDays })}</dd>
           </Line>
           <Line>
             <dt>{t('Credit.TotalInterest')}</dt>
-            <dd>2024-05-02 17:00 UTC+8</dd>
+            <dd>{data.interestAmount} USDT</dd>
           </Line>
           <Line>
             <dt>{t('Credit.LastRepaymentTime')}</dt>
-            <dd>2024-05-02 17:00 UTC+8</dd>
+            <dd>{data.overdueTime}</dd>
           </Line>
         </DetailLines>
         {data.status === CreditRecordStatus.CLEAR && (
@@ -65,31 +68,31 @@ export default function RecordDetailModal({ data, handleClose }: IProps) {
             <DetailLines>
               <Line>
                 <dt>{t('Credit.TotalRepay')}</dt>
-                <dd>5,015.00 USDT</dd>
+                <dd>{(data.borrowAmount + data.interestAmount).format()} USDT</dd>
               </Line>
               <Line>
                 <dt>{t('Credit.Principal')}</dt>
-                <dd>5,000.00 SCR</dd>
+                <dd>{data.borrowAmount.format()} USDT</dd>
               </Line>
               <Line>
                 <dt>{t('Credit.Interest')}</dt>
-                <dd>15.00 SCR</dd>
+                <dd>{data.interestAmount.format()} USDT</dd>
               </Line>
               <Line>
                 <dt>{t('Credit.ForfeitRepay')}</dt>
-                <dd>5,000.00 SCR</dd>
+                <dd>{data.mortgageSCRAmount.format()} SCR</dd>
               </Line>
               <Line>
                 <dt>{t('Credit.RepayHash')}</dt>
                 <dd>
                   <a className="hash" href="http://" target="_blank" rel="noopener noreferrer">
-                    0x2efj3883jejdej5ergdbhebfiijpoe3o
+                    {publicJs.AddressToShow(data.paybackTx)}
                   </a>
                 </dd>
               </Line>
               <Line>
                 <dt>{t('Credit.RepayTime')}</dt>
-                <dd>2024-05-02 17:00 UTC+8</dd>
+                <dd>{data.paybackTime}</dd>
               </Line>
             </DetailLines>
           </>

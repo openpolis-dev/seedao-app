@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import Pagination from 'components/pagination';
 import NoItem from 'components/noItem';
 import { useTranslation } from 'react-i18next';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import StateTag from './stateTag';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import useToast, { ToastType } from 'hooks/useToast';
@@ -12,18 +12,17 @@ import Select from './select';
 import { CreditRecordStatus, ICreditRecord } from 'type/credit.type';
 import RecordDetailModal from './recordDetailModal';
 import useCheckLogin from 'hooks/useCheckLogin';
+import { getBorrowList } from 'requests/credit';
+import { formatTime, getUTC } from 'utils/time';
+import publicJs from 'utils/publicJs';
 
-const AllBorrowTable = () => {
+interface ITableProps {
+  list: ICreditRecord[];
+  openDetail: (data: ICreditRecord) => void;
+}
+
+const AllBorrowTable = ({ list, openDetail }: ITableProps) => {
   const { t } = useTranslation();
-  const [detailData, setDetailData] = useState<any>(undefined);
-  const [list, setList] = useState<ICreditRecord[]>([
-    { status: CreditRecordStatus.CLEAR },
-    { status: CreditRecordStatus.INUSE },
-    { status: CreditRecordStatus.OVERDUE },
-  ]);
-  const [total, setTotal] = useState(100);
-  const [page, setPage] = useState(1);
-  const handlePageChange = () => {};
 
   return (
     <>
@@ -45,19 +44,19 @@ const AllBorrowTable = () => {
               {list.map((item, idx) => (
                 <tr key={idx}>
                   <td>
-                    <BlueText onClick={() => setDetailData({ status: item.status })}>880000{idx + 1}</BlueText>
+                    <BlueText onClick={() => openDetail(item)}>{item.lendIdDisplay}</BlueText>
                   </td>
-                  <td>amanda.seedao</td>
+                  <td>{publicJs.AddressToShow(item.debtor)}</td>
                   <td>
-                    5,000.00 <span className="unit">USDT</span>
+                    {item.borrowAmount.format()} <span className="unit">USDT</span>
                   </td>
                   <td>
                     <StateTag state={item.status} />
                   </td>
-                  <td>2024-05-09 20:00 UTC+8</td>
-                  <td>2024-05-09 20:00 UTC+8</td>
+                  <td>{item.borrowTime}</td>
+                  <td>{item.overdueTime}</td>
                   <td>
-                    <BlueText>0xe84o...56bd</BlueText>
+                    <BlueText>{publicJs.AddressToShow(item.borrowTx)}</BlueText>
                   </td>
                 </tr>
               ))}
@@ -67,95 +66,71 @@ const AllBorrowTable = () => {
           <NoItem />
         )}
       </TableBox>
-      {!!list.length && (
-        <Pagination
-          dir="right"
-          itemsPerPage={10}
-          total={total}
-          current={page - 1}
-          handleToPage={handlePageChange}
-          showGotopage={false}
-        />
-      )}
-      {detailData && <RecordDetailModal data={detailData} handleClose={() => setDetailData(undefined)} />}
     </>
   );
 };
 
-const MyTable = () => {
+const MyTable = ({ list, openDetail }: ITableProps) => {
   const { t } = useTranslation();
-
-  const [list, setList] = useState([1, 2, 3]);
-  const [total, setTotal] = useState(20);
-  const [page, setPage] = useState(1);
-  const handlePageChange = () => {};
-
   return (
-    <>
-      <TableBox>
-        {list.length ? (
-          <table className="table" cellPadding="0" cellSpacing="0">
-            <thead>
-              <tr>
-                <th>{t('Credit.BorrowID')}</th>
-                <th>{t('Credit.BorrowAmount')}</th>
-                <th>{t('Credit.BorrowStatus')}</th>
-                <th>{t('Credit.BorrowHash')}</th>
-                <th>{t('Credit.BorrowTime')}</th>
+    <TableBox>
+      {list.length ? (
+        <table className="table" cellPadding="0" cellSpacing="0">
+          <thead>
+            <tr>
+              <th>{t('Credit.BorrowID')}</th>
+              <th>{t('Credit.BorrowAmount')}</th>
+              <th>{t('Credit.BorrowStatus')}</th>
+              <th>{t('Credit.BorrowHash')}</th>
+              <th>{t('Credit.BorrowTime')}</th>
 
-                <th>{t('Credit.DayRate')}</th>
-                <th>{t('Credit.BorrowDuration')}</th>
-                <th>{t('Credit.TotalInterest')}</th>
+              <th>{t('Credit.DayRate')}</th>
+              <th>{t('Credit.BorrowDuration')}</th>
+              <th>{t('Credit.TotalInterest')}</th>
 
-                <th>{t('Credit.LastRepaymentTime')}</th>
+              <th>{t('Credit.LastRepaymentTime')}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {list.map((item, idx) => (
+              <tr key={idx}>
+                <td>
+                  <BlueText onClick={() => openDetail(item)}>{item.lendIdDisplay}</BlueText>
+                </td>
+                <td>
+                  {item.borrowAmount.format()} <span className="unit">USDT</span>
+                </td>
+                <td>
+                  <StateTag state={CreditRecordStatus.CLEAR} />
+                </td>
+                <td>
+                  <BlueText> {publicJs.AddressToShow(item.borrowTx)}</BlueText>
+                </td>
+                <td>{item.borrowTime}</td>
+                <td>{item.rate}‰</td>
+                <td>{item.interestDays}日</td>
+                <td>
+                  {item.interestAmount.format()} <span className="unit">USDT</span>
+                </td>
+                <td>{item.overdueTime}</td>
               </tr>
-            </thead>
-            <tbody>
-              {list.map((item, idx) => (
-                <tr key={idx}>
-                  <td>
-                    <BlueText>8800001</BlueText>
-                  </td>
-                  <td>
-                    5,000.00 <span className="unit">USDT</span>
-                  </td>
-                  <td>
-                    <StateTag state={CreditRecordStatus.CLEAR} />
-                  </td>
-                  <td>
-                    <BlueText>0xe84o...56bd</BlueText>
-                  </td>
-                  <td>2024-05-09 20:00 UTC+8</td>
-                  <td>0.10%</td>
-                  <td>30日</td>
-                  <td>
-                    5,000.00 <span className="unit">USDT</span>
-                  </td>
-                  <td>2024-05-09 20:00 UTC+8</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        ) : (
-          <NoItem />
-        )}
-      </TableBox>
-      {!!list.length && (
-        <Pagination
-          dir="right"
-          itemsPerPage={10}
-          total={total}
-          current={page - 1}
-          handleToPage={handlePageChange}
-          showGotopage={false}
-        />
+            ))}
+          </tbody>
+        </table>
+      ) : (
+        <NoItem />
       )}
-    </>
+    </TableBox>
   );
 };
 
 export default function CreditRecords() {
   const { t } = useTranslation();
+
+  const [list, setList] = useState<ICreditRecord[]>([]);
+  const [total, setTotal] = useState(100);
+  const [page, setPage] = useState(1);
+  const handlePageChange = () => {};
 
   // search target user
   const [targetKeyword, setTargetKeyword] = useState('');
@@ -164,16 +139,17 @@ export default function CreditRecords() {
   const { showToast } = useToast();
 
   const [currentTab, setCurrentTab] = useState<'all' | 'mine'>('all');
+  const [detailData, setDetailData] = useState<ICreditRecord>();
 
   const filterOptions = useMemo(() => {
     return [
-      { label: t('Credit.FilterTimeLatest'), value: `time;desc` },
-      { label: t('Credit.FilterTimeEarliest'), value: `time;asc` },
-      { label: t('Credit.FilterStatusInUse'), value: `state;${CreditRecordStatus.INUSE}` },
-      { label: t('Credit.FilterStatusClear'), value: `state;${CreditRecordStatus.CLEAR}` },
-      { label: t('Credit.FilterStatusOverdue'), value: `state;${CreditRecordStatus.OVERDUE}` },
-      { label: t('Credit.FilterAmountFromLarge'), value: `amount;1` },
-      { label: t('Credit.FilterAmountFromSmall'), value: `amount;0` },
+      { label: t('Credit.FilterTimeLatest'), value: `borrowTimestamp;desc` },
+      { label: t('Credit.FilterTimeEarliest'), value: `borrowTimestamp;asc` },
+      { label: t('Credit.FilterStatusInUse'), value: `lendStatus;${CreditRecordStatus.INUSE}` },
+      { label: t('Credit.FilterStatusClear'), value: `lendStatus;${CreditRecordStatus.CLEAR}` },
+      { label: t('Credit.FilterStatusOverdue'), value: `lendStatus;${CreditRecordStatus.OVERDUE}` },
+      { label: t('Credit.FilterAmountFromLarge'), value: `borrowAmount;desc` },
+      { label: t('Credit.FilterAmountFromSmall'), value: `borrowAmount;asc` },
     ];
   }, [t]);
   // filter
@@ -195,6 +171,41 @@ export default function CreditRecords() {
     }
     setCurrentTab('mine');
   };
+
+  const getList = () => {
+    dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: true });
+
+    getBorrowList({ lendStatus: CreditRecordStatus.INUSE, page: 1, size: 10 })
+      .then((r) => {
+        console.log('r', r);
+        setTotal(r.total);
+        setList(
+          r.data.map((item) => ({
+            lendId: item.lendId,
+            lendIdDisplay: String(88000 + Number(item.lendId)),
+            status: item.lendStatus,
+            debtor: item.debtor,
+            borrowAmount: Number(item.borrowAmount),
+            borrowTime: formatTime(item.borrowTimestamp * 1000) + ' ' + getUTC(),
+            borrowTx: item.borrowTx,
+            rate: `${Number(item.interestRate) * 100}`,
+            interestDays: item.interestDays,
+            interestAmount: Number(item.interestAmount),
+            paybackTime: formatTime(item.paybackTimestamp * 100) + ' ' + getUTC(),
+            paybackTx: item.paybackTx,
+            overdueTime: formatTime(item.overdueTimestamp * 100) + ' ' + getUTC(),
+            mortgageSCRAmount: Number(item.mortgageSCRAmount),
+          })),
+        );
+      })
+      .finally(() => {
+        dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: false });
+      });
+  };
+
+  useEffect(() => {
+    getList();
+  }, [currentTab, page, selectValue]);
 
   const handleSearch = async (keyword: string, setSearchVal: (v: string) => void) => {
     if (keyword.endsWith('.seedao')) {
@@ -282,7 +293,22 @@ export default function CreditRecords() {
           />
         </FilterBox>
       </TabbarBox>
-      {currentTab === 'all' ? <AllBorrowTable /> : <MyTable />}
+      {currentTab === 'all' ? (
+        <AllBorrowTable list={list} openDetail={setDetailData} />
+      ) : (
+        <MyTable list={list} openDetail={setDetailData} />
+      )}
+      {!!list.length && (
+        <Pagination
+          dir="right"
+          itemsPerPage={10}
+          total={total}
+          current={page - 1}
+          handleToPage={handlePageChange}
+          showGotopage={false}
+        />
+      )}
+      {detailData && <RecordDetailModal data={detailData} handleClose={() => setDetailData(undefined)} />}
     </CreditRecordsStyle>
   );
 }

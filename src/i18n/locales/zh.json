@@ -777,7 +777,8 @@
     "BorrowPrincipal": "借款本金",
     "CurrentBorrowDays": "已借 {{day}} 日",
     "ShouldRepay": "合计应还",
-    "ReturnForfeit": "退回质押物"
+    "ReturnForfeit": "退回质押物",
+    "Days": "{{days}}日"
   },
   "Governance": {
     "GovernanceRule": "治理规则",
