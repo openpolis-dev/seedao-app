@@ -5,6 +5,13 @@ import { useTranslation } from 'react-i18next';
 import CreditButton from './button';
 import { ICreditRecord } from 'type/credit.type';
 import { getBorrowList } from 'requests/credit';
+import CalculateLoading from './calculateLoading';
+import NoItem from 'components/noItem';
+import { AppActionType, useAuthContext } from 'providers/authProvider';
+import useTransaction, { TX_ACTION } from './useTransaction';
+import parseError from './parseError';
+import useToast, { ToastType } from 'hooks/useToast';
+import { useEthersProvider } from 'hooks/ethersNew';
 
 interface IProps {
   handleClose: (openMine?: boolean) => void;
@@ -21,18 +28,20 @@ export default function RepayModal({ handleClose }: IProps) {
   const [step, setStep] = useState(0);
   const [list, setList] = useState<ListItem[]>([]);
   const [getting, setGetting] = useState(false);
+  const provider = useEthersProvider({});
+
+  const {
+    dispatch,
+    state: { account },
+  } = useAuthContext();
+
+  const { checkEnoughBalance, handleTransaction, approveToken, handleEstimateGas } = useTransaction();
+
+  const { showToast } = useToast();
 
   const clearModalData = () => {
     setStep(0);
     setList(list.map((item) => ({ ...item, selected: false })));
-  };
-
-  const checkApprove = () => {
-    setStep(2);
-  };
-
-  const checkRepay = () => {
-    setStep(3);
   };
 
   const checkMine = () => {
@@ -41,6 +50,66 @@ export default function RepayModal({ handleClose }: IProps) {
   };
 
   const selectedList = list.filter((l) => !!l.selected);
+
+  const onSelect = (id: string, selected: boolean) => {
+    const newList = list.map((item) => (item.id === id ? { ...item, selected } : item));
+    setList(newList);
+  };
+
+  const selectedTotalAmount = selectedList.reduce(
+    (acc, item) => acc + item.data.borrowAmount + item.data.interestAmount,
+    0,
+  );
+
+  const checkApprove = async () => {
+    // TODO check network
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    try {
+      const result = await checkEnoughBalance(account!, 'usdt', selectedTotalAmount);
+      if (!result) {
+        throw new Error('Insufficient balance');
+      }
+      await approveToken('usdt', selectedTotalAmount);
+      setStep(2);
+    } catch (error: any) {
+      console.error(error);
+      showToast(parseError(error), ToastType.Danger);
+    } finally {
+      dispatch({ type: AppActionType.SET_LOADING, payload: false });
+    }
+  };
+
+  const checkRepay = async () => {
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    try {
+      const result = await handleEstimateGas(TX_ACTION.REPAY, selectedTotalAmount!);
+      await handleTransaction(provider, TX_ACTION.REPAY, selectedTotalAmount);
+      setStep(3);
+    } catch (error: any) {
+      console.error(error);
+      showToast(parseError(error), ToastType.Danger);
+    } finally {
+      dispatch({ type: AppActionType.SET_LOADING, payload: false });
+    }
+  };
+
+  useEffect(() => {
+    setGetting(true);
+    getBorrowList({
+      debtor: account,
+      sortField: 'borrowTimestamp',
+      sortOrder: 'desc',
+      page: 1,
+      size: 100,
+    })
+      .then((r) => {
+        setList(r.data.map((item) => ({ id: item.lendId, data: item, selected: false })));
+      })
+      .catch((error) => {
+        console.error(error);
+      })
+      .finally(() => setGetting(false));
+  }, []);
 
   const steps = [
     {
@@ -64,38 +133,35 @@ export default function RepayModal({ handleClose }: IProps) {
       button: <CreditButton onClick={checkMine}>{t('Credit.RepayStepButton4')}</CreditButton>,
     },
   ];
-
-  const onSelect = (id: string, selected: boolean) => {
-    const newList = list.map((item) => (item.id === id ? { ...item, selected } : item));
-    setList(newList);
-  };
-
-  useEffect(() => {
-    setGetting(true);
-    getBorrowList({
-      sortField: 'borrowTimestamp',
-      sortOrder: 'desc',
-      page: 1,
-      size: 100,
-    }).then((r) => {
-      setList(r.data.map((item) => ({ id: item.lendId, data: item, selected: false })));
-    });
-  }, []);
   return (
     <RepayModalStyle handleClose={() => handleClose()} closeColor="#343C6A">
       <ModalTitle>{steps[step].title}</ModalTitle>
-      {step === 3 && <FinishContent>5,000 USDT</FinishContent>}
+      {step === 3 && <FinishContent>{selectedTotalAmount.format()} USDT</FinishContent>}
       {step === 0 && (
         <RepayContent>
-          {list.map((item) => (
-            <RecordCheckbox key={item.id} id={item.id} data={item.data} selected={item.selected} onSelect={onSelect} />
-          ))}
+          {getting ? (
+            <LoadingBox>
+              <CalculateLoading />
+            </LoadingBox>
+          ) : list.length ? (
+            list.map((item) => (
+              <RecordCheckbox
+                key={item.id}
+                id={item.id}
+                data={item.data}
+                selected={item.selected}
+                onSelect={onSelect}
+              />
+            ))
+          ) : (
+            <NoItem />
+          )}
         </RepayContent>
       )}
       {(step === 1 || step === 2) && (
         <RepayContent>
           <TotalRepay>
-            <div className="number">5,000.00 USDT</div>
+            <div className="number">{selectedTotalAmount.format()} USDT</div>
             <div className="label">{t('Credit.ShouldRepay')}</div>
           </TotalRepay>
           {selectedList.map((item) => (
@@ -236,6 +302,8 @@ const FinishContent = styled.div`
 
 const RepayContent = styled.div`
   width: 443px;
+  max-height: 500px;
+  overflow-y: auto;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
@@ -369,4 +437,12 @@ const TotalRepay = styled.div`
   .label {
     font-size: 14px;
   }
+`;
+
+const LoadingBox = styled.div`
+  height: 321px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 `;

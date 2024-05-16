@@ -30,7 +30,7 @@ export default function BorrowModal({ handleClose }: IProps) {
 
   const provider = useEthersProvider({});
 
-  const { handleTransaction, approveToken, handleEstimateGas } = useTransaction();
+  const { handleTransaction, approveToken, handleEstimateGas, checkEnoughBalance } = useTransaction();
 
   const { dispatch } = useAuthContext();
   const {
@@ -41,6 +41,7 @@ export default function BorrowModal({ handleClose }: IProps) {
   const checkApprove = async () => {
     // check enough
     if (forfeitNum === 0 || myScore < forfeitNum) {
+      showToast('Insufficient balance', ToastType.Danger);
       return;
     }
     // TODO check chain

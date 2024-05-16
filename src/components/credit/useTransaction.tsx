@@ -132,5 +132,16 @@ export default function useTransaction() {
     }
   };
 
-  return { handleTransaction, approveToken, handleEstimateGas };
+  const checkEnoughBalance = async (account: string, token: 'usdt' | 'scr', amount: number) => {
+    const address = token === 'usdt' ? lendToken.address : networkConfig.SCRContract.address;
+    const balance = await readContract({
+      address: address as Address,
+      abi: erc20ABI,
+      functionName: 'balanceOf',
+      args: [account as Address],
+    });
+    return balance >= BigInt(amount);
+  };
+
+  return { handleTransaction, approveToken, handleEstimateGas, checkEnoughBalance };
 }

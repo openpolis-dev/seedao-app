@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import StateTag from './stateTag';
 import { CreditRecordStatus, ICreditRecord } from 'type/credit.type';
 import publicJs from 'utils/publicJs';
+import { amoy } from 'utils/chain';
 
 interface IProps {
   data: ICreditRecord;
@@ -35,7 +36,12 @@ export default function RecordDetailModal({ data, handleClose }: IProps) {
           <Line>
             <dt>{t('Credit.BorrowHash')}</dt>
             <dd>
-              <a className="hash" href="http://" target="_blank" rel="noopener noreferrer">
+              <a
+                className="hash"
+                href={`${amoy.blockExplorers.default.url}/tx/${data.borrowTx}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 {publicJs.AddressToShow(data.borrowTx)}
               </a>
             </dd>
@@ -85,7 +91,12 @@ export default function RecordDetailModal({ data, handleClose }: IProps) {
               <Line>
                 <dt>{t('Credit.RepayHash')}</dt>
                 <dd>
-                  <a className="hash" href="http://" target="_blank" rel="noopener noreferrer">
+                  <a
+                    className="hash"
+                    href={`${amoy.blockExplorers.default.url}/tx/${data.paybackTx}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     {publicJs.AddressToShow(data.paybackTx)}
                   </a>
                 </dd>

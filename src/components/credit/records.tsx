@@ -15,6 +15,7 @@ import useCheckLogin from 'hooks/useCheckLogin';
 import { getBorrowList } from 'requests/credit';
 import { formatTime, getUTC } from 'utils/time';
 import publicJs from 'utils/publicJs';
+import { amoy } from 'utils/chain';
 
 interface ITableProps {
   list: ICreditRecord[];
@@ -56,7 +57,9 @@ const AllBorrowTable = ({ list, openDetail }: ITableProps) => {
                   <td>{item.borrowTime}</td>
                   <td>{item.overdueTime}</td>
                   <td>
-                    <BlueText>{publicJs.AddressToShow(item.borrowTx)}</BlueText>
+                    <BlueText onClick={() => window.open(`${amoy.blockExplorers.default.url}/tx/${item.borrowTx}`, '_blank')}>
+                      {publicJs.AddressToShow(item.borrowTx)}
+                    </BlueText>
                   </td>
                 </tr>
               ))}
@@ -104,7 +107,11 @@ const MyTable = ({ list, openDetail }: ITableProps) => {
                   <StateTag state={CreditRecordStatus.CLEAR} />
                 </td>
                 <td>
-                  <BlueText> {publicJs.AddressToShow(item.borrowTx)}</BlueText>
+                  <BlueText
+                    onClick={() => window.open(`${amoy.blockExplorers.default.url}/tx/${item.borrowTx}`, '_blank')}
+                  >
+                    {publicJs.AddressToShow(item.borrowTx)}
+                  </BlueText>
                 </td>
                 <td>{item.borrowTime}</td>
                 <td>{item.rate}‰</td>
