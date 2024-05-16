@@ -146,7 +146,7 @@ const MyBorrowing = ({ isLogin, onClickLogin, onOpenBorrow }: BorrowCardProps) =
   const [showRepayItemsModal, setShowRepayItemsModal] = useState(false);
 
   const {
-    state: { myOverdueAmount, myInuseAmount },
+    state: { myOverdueAmount, myInuseAmount, myOverdueCount, myInUseCount },
   } = useCreditContext();
 
   const onClickBottom = () => {
@@ -163,6 +163,7 @@ const MyBorrowing = ({ isLogin, onClickLogin, onOpenBorrow }: BorrowCardProps) =
       // TODO
     }
   };
+
   return (
     <CardStyle2>
       <img src={CreditLogo} alt="" className="logo" />
@@ -191,7 +192,7 @@ const MyBorrowing = ({ isLogin, onClickLogin, onOpenBorrow }: BorrowCardProps) =
         </MyCardTipLine2>
         <MyCardColomnLine>
           <div>
-            <div className="label">{t('Credit.CurrentBorrow', { num: isLogin ? 1 : '*' })}</div>
+            <div className="label">{t('Credit.CurrentBorrow', { num: isLogin ? myInUseCount : '*' })}</div>
             {isLogin ? (
               <ItemAmountBox>
                 <span className="value">{myInuseAmount.format()}</span>
@@ -202,7 +203,7 @@ const MyBorrowing = ({ isLogin, onClickLogin, onOpenBorrow }: BorrowCardProps) =
             )}
           </div>
           <div>
-            <div className="label">{t('Credit.Overdue', { num: isLogin ? 0 : '*' })}</div>
+            <div className="label">{t('Credit.Overdue', { num: isLogin ? myOverdueCount : '*' })}</div>
             {isLogin ? (
               <ItemAmountBox>
                 <span className="value">{myOverdueAmount.format()}</span>
@@ -297,7 +298,7 @@ export default function CreditCards() {
 
   const {
     dispatch: dispatchCreditEvent,
-    state: { scoreLendContract },
+    state: { scoreLendContract, bondNFTContract },
   } = useCreditContext();
 
   const isLogin = useCheckLogin(account);
@@ -322,18 +323,27 @@ export default function CreditCards() {
   }, []);
 
   useEffect(() => {
-    account &&
-      scoreLendContract?.userAvailableAmount(account).then((r: any) => {
-        const decimals = networkConfig.lend.lendToken.decimals;
-        dispatchCreditEvent({
-          type: ACTIONS.SET_MY_DATA,
-          payload: {
-            overdueAmount: Number(ethers.utils.formatUnits(r.overdueAmount, decimals)),
-            inUseAmount: Number(ethers.utils.formatUnits(r.inUseAmount, decimals)),
-            availableAmount: Number(ethers.utils.formatUnits(r.availableAmount, decimals)),
-          },
-        });
+    if (!account) {
+      return;
+    }
+    const decimals = networkConfig.lend.lendToken.decimals;
+    bondNFTContract?.userBorrow(account).then((r: any) => {
+      dispatchCreditEvent({
+        type: ACTIONS.SET_MY_DATA,
+        payload: {
+          overdueCount: r.overdueCount.toNumber(),
+          overdueAmount: Number(ethers.utils.formatUnits(r.overdueAmount, decimals)),
+          inUseCount: r.inUseCount.toNumber(),
+          inUseAmount: Number(ethers.utils.formatUnits(r.inUseAmount, decimals)),
+        },
       });
+    });
+    scoreLendContract?.userAvailableAmount(account).then((r: any) => {
+      dispatchCreditEvent({
+        type: ACTIONS.SET_MY_QUOTA,
+        payload: Number(ethers.utils.formatUnits(r.availableAmount, decimals)),
+      });
+    });
   }, [scoreLendContract, account]);
 
   useEffect(() => {

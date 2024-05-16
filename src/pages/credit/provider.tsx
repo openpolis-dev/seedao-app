@@ -5,6 +5,7 @@ export enum ACTIONS {
   SET_LEND_CONTRACT = 'SET_LEND_CONTRACT',
   SET_MY_DATA = 'SET_MY_DATA',
   SET_MY_SCORE = 'SET_MY_SCORE',
+  SET_MY_QUOTA = 'SET_MY_QUOTA',
 }
 
 interface IState {
@@ -13,7 +14,9 @@ interface IState {
   myAvaliableQuota: number;
   myScore: number;
   myOverdueAmount: number;
+  myOverdueCount: number;
   myInuseAmount: number;
+  myInUseCount: number;
 }
 interface IAction {
   type: ACTIONS;
@@ -26,7 +29,9 @@ const INIT_STATE: IState = {
   myAvaliableQuota: 0,
   myScore: 0,
   myOverdueAmount: 0,
+  myOverdueCount: 0,
   myInuseAmount: 0,
+  myInUseCount: 0,
 };
 
 const CreditContext = createContext<{
@@ -46,10 +51,13 @@ const reducer = (state: IState, action: IAction): IState => {
     case ACTIONS.SET_MY_DATA:
       return {
         ...state,
-        myAvaliableQuota: action.payload.availableAmount,
         myOverdueAmount: action.payload.overdueAmount,
+        myOverdueCount: action.payload.overdueCount,
         myInuseAmount: action.payload.inUseAmount,
+        myInUseCount: action.payload.inUseCount,
       };
+    case ACTIONS.SET_MY_QUOTA:
+      return { ...state, myAvaliableQuota: action.payload };
     case ACTIONS.SET_MY_SCORE:
       return { ...state, myScore: action.payload };
     default:
