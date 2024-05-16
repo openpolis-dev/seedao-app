@@ -19,6 +19,7 @@ import BondNFTABI from 'assets/abi/BondNFT.json';
 import ScoreLendABI from 'assets/abi/ScoreLend.json';
 import { useCreditContext, ACTIONS } from 'pages/credit/provider';
 import { erc20ABI } from 'wagmi';
+import { getVaultData, VaultData } from 'requests/credit';
 
 const networkConfig = getConfig().NETWORK;
 
@@ -236,6 +237,17 @@ const VaultCard = () => {
     state: { scoreLendContract },
   } = useCreditContext();
   const [total, setTotal] = useState('0.00');
+  const [data, setData] = useState<VaultData>({
+    totalBorrowed: 1,
+    totalBorrowedAmount: 0,
+    inUseCount: 0,
+    inUseAmount: 0,
+    paybackCount: 0,
+    paybackAmount: 0,
+    overdueCount: 0,
+    overdueAmount: 0,
+    forfeitSCRAmount: 0,
+  });
 
   useEffect(() => {
     scoreLendContract?.totalAvailableAmount().then((r: ethers.BigNumber) => {
@@ -243,6 +255,13 @@ const VaultCard = () => {
       setTotal(Number(value).format());
     });
   }, [scoreLendContract]);
+
+  useEffect(() => {
+    getVaultData().then((r: VaultData) => {
+      r && setData(r);
+    });
+  }, []);
+
   return (
     <CardStyle3>
       <img src={CreditLogo2} alt="" className="logo" />
@@ -256,32 +275,32 @@ const VaultCard = () => {
       <div className="tip">{t('Credit.DaoTip')}</div>
       <VaultCardColumnLine>
         <div>
-          <div className="label">{t('Credit.TotalBorrow', { num: 123 })}</div>
+          <div className="label">{t('Credit.TotalBorrow', { num: data.totalBorrowed })}</div>
           <div className="value">
-            <span>343,377.00</span>
+            <span>{Number(data.totalBorrowedAmount).format()}</span>
             <span className="unit">USDT</span>
           </div>
         </div>
         <div>
-          <div className="label">{t('Credit.TotalClear', { num: 123 })}</div>
+          <div className="label">{t('Credit.TotalClear', { num: data.paybackCount })}</div>
           <div className="value">
-            <span>343,377.00</span>
+            <span>{Number(data.paybackAmount).format()}</span>
             <span className="unit">USDT</span>
           </div>
         </div>
       </VaultCardColumnLine>
       <VaultCardColumnLine>
         <div>
-          <div className="label">{t('Credit.TotalOverdue', { num: 123 })}</div>
+          <div className="label">{t('Credit.TotalOverdue', { num: data.overdueCount })}</div>
           <div className="value">
-            <span>343,377.00</span>
+            <span>{Number(data.overdueAmount).format()}</span>
             <span className="unit">USDT</span>
           </div>
         </div>
         <div>
-          <div className="label">{t('Credit.TotalForfeit', { num: 123 })}</div>
+          <div className="label">{t('Credit.TotalForfeit', { num: data.overdueAmount })}</div>
           <div className="value">
-            <span>343,377.00</span>
+            <span>{Number(data.forfeitSCRAmount).format()}</span>
             <span className="unit">SCR</span>
           </div>
         </div>
