@@ -179,24 +179,7 @@ export default function CreditRecords() {
       .then((r) => {
         console.log('r', r);
         setTotal(r.total);
-        setList(
-          r.data.map((item) => ({
-            lendId: item.lendId,
-            lendIdDisplay: String(88000 + Number(item.lendId)),
-            status: item.lendStatus,
-            debtor: item.debtor,
-            borrowAmount: Number(item.borrowAmount),
-            borrowTime: formatTime(item.borrowTimestamp * 1000) + ' ' + getUTC(),
-            borrowTx: item.borrowTx,
-            rate: `${Number(item.interestRate) * 100}`,
-            interestDays: item.interestDays,
-            interestAmount: Number(item.interestAmount),
-            paybackTime: formatTime(item.paybackTimestamp * 100) + ' ' + getUTC(),
-            paybackTx: item.paybackTx,
-            overdueTime: formatTime(item.overdueTimestamp * 100) + ' ' + getUTC(),
-            mortgageSCRAmount: Number(item.mortgageSCRAmount),
-          })),
-        );
+        setList(r.data);
       })
       .finally(() => {
         dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: false });

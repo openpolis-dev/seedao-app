@@ -4,7 +4,7 @@ export enum CreditRecordStatus {
   CLEAR,
 }
 
-export interface RowCreditRecord {
+export interface RawCreditRecord {
   id: number;
   lendId: string;
   lendStatus: CreditRecordStatus;

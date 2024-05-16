@@ -1,21 +1,26 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import BasicModal from 'components/modals/basicModal';
 import { useTranslation } from 'react-i18next';
 import CreditButton from './button';
+import { ICreditRecord } from 'type/credit.type';
+import { getBorrowList } from 'requests/credit';
 
 interface IProps {
   handleClose: (openMine?: boolean) => void;
 }
 
+type ListItem = {
+  id: string;
+  data: ICreditRecord;
+  selected: boolean;
+};
+
 export default function RepayModal({ handleClose }: IProps) {
   const { t } = useTranslation();
   const [step, setStep] = useState(0);
-  const [list, setList] = useState([
-    { id: 1, data: {}, selected: false },
-    { id: 2, data: {}, selected: false },
-    { id: 3, data: {}, selected: false },
-  ]);
+  const [list, setList] = useState<ListItem[]>([]);
+  const [getting, setGetting] = useState(false);
 
   const clearModalData = () => {
     setStep(0);
@@ -60,10 +65,22 @@ export default function RepayModal({ handleClose }: IProps) {
     },
   ];
 
-  const onSelect = (id: number, selected: boolean) => {
+  const onSelect = (id: string, selected: boolean) => {
     const newList = list.map((item) => (item.id === id ? { ...item, selected } : item));
     setList(newList);
   };
+
+  useEffect(() => {
+    setGetting(true);
+    getBorrowList({
+      sortField: 'borrowTimestamp',
+      sortOrder: 'desc',
+      page: 1,
+      size: 100,
+    }).then((r) => {
+      setList(r.data.map((item) => ({ id: item.lendId, data: item, selected: false })));
+    });
+  }, []);
   return (
     <RepayModalStyle handleClose={() => handleClose()} closeColor="#343C6A">
       <ModalTitle>{steps[step].title}</ModalTitle>
@@ -82,7 +99,7 @@ export default function RepayModal({ handleClose }: IProps) {
             <div className="label">{t('Credit.ShouldRepay')}</div>
           </TotalRepay>
           {selectedList.map((item) => (
-            <SelectedRecord />
+            <SelectedRecord key={item.id} data={item.data} />
           ))}
         </RepayContent>
       )}
@@ -101,10 +118,10 @@ const RecordCheckbox = ({
   data,
   onSelect,
 }: {
-  id: number;
+  id: string;
   selected?: boolean;
-  data: any;
-  onSelect: (id: number, selected: boolean) => void;
+  data: ICreditRecord;
+  onSelect: (id: string, selected: boolean) => void;
 }) => {
   const { t } = useTranslation();
   return (
@@ -117,45 +134,65 @@ const RecordCheckbox = ({
       </div>
       <RecordRight>
         <li>
-          <span>{t('Credit.BorrowID')}: 8800001</span>
-          <span> 5,000.00 USDT</span>
+          <span>
+            {t('Credit.BorrowID')}: {data.lendIdDisplay}
+          </span>
+          <span> {data.borrowAmount.format()} USDT</span>
         </li>
         <li>
-          <span>{t('Credit.BorrowTime')} 2024-05-02 17:00 UTC+8</span>
-          <span>{t('Credit.DayRate01', { rate: 0.1 })}</span>
+          <span>
+            {t('Credit.BorrowTime')} {data.borrowTime}
+          </span>
+          <span>{t('Credit.DayRate01', { rate: data.rate })}</span>
         </li>
         <li>
-          <span>{t('Credit.LastRepaymentTime')} 2024-05-02 17:00 UTC+8</span>
-          <span>{t('Credit.TotalInterest')} 10.00 USDT</span>
+          <span>
+            {t('Credit.LastRepaymentTime')} {data.overdueTime}
+          </span>
+          <span>
+            {t('Credit.TotalInterest')} {data.interestAmount} USDT
+          </span>
         </li>
       </RecordRight>
     </RecordStyle>
   );
 };
 
-const SelectedRecord = () => {
+const SelectedRecord = ({ data }: { data: ICreditRecord }) => {
   const { t } = useTranslation();
   return (
     <SelectRecordStyle>
       <RecordRight>
         <li>
-          <span>{t('Credit.BorrowID')}: 8800001</span>
-          <span>5,000.00 USDT</span>
+          <span>
+            {t('Credit.BorrowID')}: {data.lendIdDisplay}
+          </span>
+          <span>{data.borrowAmount.format()} USDT</span>
         </li>
         <li>
-          <span>{t('Credit.BorrowTime')} 2024-05-02 17:00 UTC+8</span>
-          <span>{t('Credit.CurrentBorrowDays', { day: 30 })}</span>
+          <span>
+            {t('Credit.BorrowTime')} {data.borrowTime}
+          </span>
+          <span>{t('Credit.CurrentBorrowDays', { day: data.interestDays })}</span>
         </li>
         <li>
-          <span>{t('Credit.BorrowPrincipal')} 1,000.00 USDT</span>
-          <span>{t('Credit.DayRate01', { rate: 0.1 })}</span>
+          <span>
+            {t('Credit.BorrowPrincipal')} {data.borrowAmount.format()} USDT
+          </span>
+          <span>{t('Credit.DayRate01', { rate: data.rate })}</span>
         </li>
         <li>
-          <span>{t('Credit.Interest')} 10</span>
-          <span>{t('Credit.ShouldRepay')} 10.00 USDT</span>
+          <span>
+            {t('Credit.Interest')} {data.interestAmount}
+          </span>
+          <span>
+            {t('Credit.ShouldRepay')} {(data.interestAmount + data.borrowAmount).format()} USDT
+          </span>
         </li>
         <li>
-          <span>{t('Credit.ReturnForfeit')} 1,000.00 SCR</span>
+          <span>
+            {t('Credit.ReturnForfeit')} {data.mortgageSCRAmount.format()} SCR
+          </span>
         </li>
       </RecordRight>
     </SelectRecordStyle>
