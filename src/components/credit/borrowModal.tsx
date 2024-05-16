@@ -1,8 +1,20 @@
-import { useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import styled from 'styled-components';
 import BasicModal from 'components/modals/basicModal';
 import { useTranslation } from 'react-i18next';
 import CreditButton from './button';
+import { useCreditContext } from 'pages/credit/provider';
+import CalculateLoading from './calculateLoading';
+import { ethers } from 'ethers';
+import getConfig from 'utils/envCofnig';
+import useTransaction, { TX_ACTION } from './useTransaction';
+import { debounce } from 'utils';
+import { AppActionType, useAuthContext } from 'providers/authProvider';
+import { useEthersProvider } from 'hooks/ethersNew';
+import useToast, { ToastType } from 'hooks/useToast';
+import parseError from './parseError';
+
+const networkConfig = getConfig().NETWORK;
 
 interface IProps {
   handleClose: (openMine?: boolean) => void;
@@ -11,15 +23,54 @@ interface IProps {
 export default function BorrowModal({ handleClose }: IProps) {
   const { t } = useTranslation();
   const [step, setStep] = useState(0);
-  const [inputNum, setInputNum] = useState(100);
-  const [forfeitNum, setForfeitNum] = useState(5000);
+  const [inputNum, setInputNum] = useState<number>();
+  const [forfeitNum, setForfeitNum] = useState(0);
 
-  const checkApprove = () => {
-    setStep(1);
+  const { showToast } = useToast();
+
+  const provider = useEthersProvider({});
+
+  const { handleTransaction, approveToken, handleEstimateGas } = useTransaction();
+
+  const { dispatch } = useAuthContext();
+  const {
+    state: { scoreLendContract, myScore },
+  } = useCreditContext();
+  const [calculating, setCalculating] = useState(false);
+
+  const checkApprove = async () => {
+    // check enough
+    if (forfeitNum === 0 || myScore < forfeitNum) {
+      return;
+    }
+    // TODO check chain
+    // approve
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    try {
+      await approveToken('scr', forfeitNum);
+      setStep(1);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      dispatch({ type: AppActionType.SET_LOADING, payload: false });
+    }
   };
 
-  const checkBorrow = () => {
-    setStep(2);
+  const checkBorrow = async () => {
+    // TODO check chain
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+
+    try {
+      const result = await handleEstimateGas(TX_ACTION.BORROW, inputNum!);
+      console.log('====result', result);
+      await handleTransaction(provider, TX_ACTION.BORROW, inputNum!);
+      setStep(2);
+    } catch (error: any) {
+      logError('[borrow]', error);
+      showToast(parseError(error), ToastType.Danger);
+    } finally {
+      dispatch({ type: AppActionType.SET_LOADING, payload: false });
+    }
   };
 
   const clearModalData = () => {
@@ -48,7 +99,30 @@ export default function BorrowModal({ handleClose }: IProps) {
     },
   ];
 
-  const computeAmount = (e: any) => {};
+  const computeAmount = (num: number) => {
+    if (num === 0) {
+      setForfeitNum(0);
+      return;
+    }
+    setCalculating(true);
+    const v = ethers.utils.parseUnits(String(num), networkConfig.lend.lendToken.decimals);
+    scoreLendContract
+      ?.calculateMortgageSCRAmount(v)
+      .then((r: ethers.BigNumber) => {
+        setForfeitNum(Number(ethers.utils.formatUnits(r, networkConfig.SCRContract.decimals)));
+      })
+      .finally(() => {
+        setCalculating(false);
+      });
+  };
+
+  const onChangeVal = useCallback(debounce(computeAmount, 1500), [scoreLendContract]);
+
+  const onChangeInput = (e: any) => {
+    const v = Number(e.target.value);
+    setInputNum(v);
+    onChangeVal(v);
+  };
 
   return (
     <BorrowModalStyle
@@ -66,14 +140,16 @@ export default function BorrowModal({ handleClose }: IProps) {
           <LineLabel>{t('Credit.BorrowAmount')}</LineLabel>
           <LineBox>
             <div className="left">
-              <input type="number" autoFocus disabled={step === 1} />
+              <input type="number" autoFocus disabled={step === 1} value={inputNum} onChange={onChangeInput} />
             </div>
             <span className="right">USDT</span>
           </LineBox>
           <LineTip>{t('Credit.RateAmount', { rate: 0.1, amount: 0.5 })}</LineTip>
           <LineLabel>{t('Credit.NeedForfeit')}</LineLabel>
           <LineBox>
-            <div className="left">{forfeitNum}</div>
+            <div className="left">
+              {calculating ? <CalculateLoading style={{ margin: '20px' }} /> : forfeitNum.format()}
+            </div>
             <span className="right">SCR</span>
           </LineBox>
           <LineTip>{t('Credit.ForfeitTip')}</LineTip>
