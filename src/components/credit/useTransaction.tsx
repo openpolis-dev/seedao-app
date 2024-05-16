@@ -52,9 +52,9 @@ const buildBorrowData = (amount: number) => {
   return iface.encodeFunctionData('borrow', [amountNB]);
 };
 
-const buildRepayData = (id: number) => {
+const buildRepayData = (ids: number[]) => {
   const iface = new ethers.utils.Interface(ScoreLendABI);
-  return iface.encodeFunctionData('payback', [id]);
+  return iface.encodeFunctionData('paybackBatch', [ids]);
 };
 export default function useTransaction() {
   const {
@@ -72,21 +72,21 @@ export default function useTransaction() {
     });
     return checkTransaction(provider, tx?.hash);
   };
-  const handleRepay = async (provider: any, amount: number) => {
+  const handleRepay = async (provider: any, ids: number[]) => {
     const tx = await sendTransactionAsync({
       to: networkConfig.lend.scoreLendContract,
       account: account as Address,
       value: BigInt(0),
-      data: buildRepayData(amount) as Hex,
+      data: buildRepayData(ids) as Hex,
     });
     return checkTransaction(provider, tx?.hash);
   };
 
-  const handleTransaction = (provider: any, action: TX_ACTION, data: number) => {
+  const handleTransaction = (provider: any, action: TX_ACTION, data: number | number[]) => {
     if (action === TX_ACTION.BORROW) {
-      return handleBorrow(provider, data);
+      return handleBorrow(provider, data as number);
     } else if (action === TX_ACTION.REPAY) {
-      return handleRepay(provider, data);
+      return handleRepay(provider, data as number[]);
     }
   };
   const handleEsitmateBorrow = (amount: number) => {
@@ -96,11 +96,11 @@ export default function useTransaction() {
       data: buildBorrowData(amount) as Hex,
     });
   };
-  const handleEsitmateRepay = (amount: number) => {
+  const handleEsitmateRepay = (ids: number[]) => {
     return prepareSendTransaction({
       account: account as Address,
       to: networkConfig.lend.scoreLendContract,
-      data: buildRepayData(amount) as Hex,
+      data: buildRepayData(ids) as Hex,
     });
   };
 

@@ -82,8 +82,12 @@ export default function RepayModal({ handleClose }: IProps) {
   const checkRepay = async () => {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
-      const result = await handleEstimateGas(TX_ACTION.REPAY, selectedTotalAmount!);
-      await handleTransaction(provider, TX_ACTION.REPAY, selectedTotalAmount);
+      const result = await handleEstimateGas(TX_ACTION.REPAY, selectedList.map((item) => Number(item.id)));
+      await handleTransaction(
+        provider,
+        TX_ACTION.REPAY,
+        selectedList.map((item) => Number(item.id)),
+      );
       setStep(3);
     } catch (error: any) {
       console.error(error);
