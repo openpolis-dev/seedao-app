@@ -127,6 +127,7 @@ export default function useTransaction() {
 
   const approveToken = async (token: 'usdt' | 'scr', amount: number) => {
     const address = token === 'usdt' ? lendToken.address : networkConfig.SCRContract.address;
+    const decimals = token === 'usdt' ? lendToken.decimals : networkConfig.SCRContract.decimals;
     const allowanceResult = await readContract({
       address: address as Address,
       abi: erc20ABI,
@@ -136,7 +137,7 @@ export default function useTransaction() {
     console.log('=======approveToken allowance=======', allowanceResult);
     if (
       !allowanceResult ||
-      ethers.BigNumber.from(allowanceResult.toString()).lt(ethers.utils.parseUnits(String(amount), lendToken.decimals))
+      ethers.BigNumber.from(allowanceResult.toString()).lt(ethers.utils.parseUnits(String(amount), decimals))
     ) {
       const tx = await sendTransactionAsync({
         to: address,
