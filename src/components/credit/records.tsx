@@ -233,7 +233,7 @@ export default function CreditRecords() {
   };
 
   const formatSNS = (wallet: string, shorten = true) => {
-    const name = snsMap.get(wallet) || wallet;
+    const name = snsMap.get(wallet?.toLocaleLowerCase()) || wallet;
     return name?.endsWith('.seedao') ? name : shorten ? publicJs.AddressToShow(name, 4) : wallet;
   };
 
