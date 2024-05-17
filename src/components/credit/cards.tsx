@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import styled from 'styled-components';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
@@ -51,10 +51,9 @@ const RightArrowIcon = () => (
 type BorrowCardProps = {
   isLogin: boolean;
   onClickLogin: () => void;
-  onOpenBorrow: () => void;
 };
 
-const MyBorrowingQuota = ({ isLogin, onClickLogin, onOpenBorrow }: BorrowCardProps) => {
+const MyBorrowingQuota = ({ isLogin, onClickLogin }: BorrowCardProps) => {
   const { t } = useTranslation();
   const [showBorrowModal, setShowBorrowModal] = useState(false);
   const [showBorrowItemsModal, setShowBorrowItemsModal] = useState(false);
@@ -75,25 +74,31 @@ const MyBorrowingQuota = ({ isLogin, onClickLogin, onOpenBorrow }: BorrowCardPro
     setShowBorrowModal(true);
   };
 
-  const closeBorrowModal = (openMine?: boolean) => {
-    setShowBorrowModal(false);
-    if (openMine) {
-      // TODO
-    }
+  const getData = () => {
+    const _provider = new ethers.providers.StaticJsonRpcProvider(amoy.rpcUrls.public.http[0], amoy.id);
+    const scoreContract = new ethers.Contract(networkConfig.SCRContract.address, erc20ABI, _provider);
+    scoreContract.balanceOf(account).then((r: ethers.BigNumber) => {
+      dispatchCreditEvent({
+        type: ACTIONS.SET_MY_SCORE,
+        payload: Number(ethers.utils.formatUnits(r, networkConfig.SCRContract.decimals)),
+      });
+    });
   };
 
   useEffect(() => {
     if (isLogin && account) {
-      const _provider = new ethers.providers.StaticJsonRpcProvider(amoy.rpcUrls.public.http[0], amoy.id);
-      const scoreContract = new ethers.Contract(networkConfig.SCRContract.address, erc20ABI, _provider);
-      scoreContract.balanceOf(account).then((r: ethers.BigNumber) => {
-        dispatchCreditEvent({
-          type: ACTIONS.SET_MY_SCORE,
-          payload: Number(ethers.utils.formatUnits(r, networkConfig.SCRContract.decimals)),
-        });
-      });
+      getData();
     }
   }, [isLogin, account]);
+
+  const closeBorrowModal = (openMine?: boolean) => {
+    setShowBorrowModal(false);
+    if (openMine) {
+      const evt = new Event('openMine');
+      document.dispatchEvent(evt);
+      getData();
+    }
+  };
 
   return (
     <CardStyle>
@@ -141,7 +146,7 @@ const MyBorrowingQuota = ({ isLogin, onClickLogin, onOpenBorrow }: BorrowCardPro
   );
 };
 
-const MyBorrowing = ({ isLogin, onClickLogin, onOpenBorrow }: BorrowCardProps) => {
+const MyBorrowing = ({ isLogin, onClickLogin }: BorrowCardProps) => {
   const { t } = useTranslation();
   const [showRepayModal, setShowRepayModal] = useState(false);
   const [showRepayItemsModal, setShowRepayItemsModal] = useState(false);
@@ -161,7 +166,8 @@ const MyBorrowing = ({ isLogin, onClickLogin, onOpenBorrow }: BorrowCardProps) =
   const closeRepayModal = (openMine?: boolean) => {
     setShowRepayModal(false);
     if (openMine) {
-      // TODO
+      const evt = new Event('openMine');
+      document.dispatchEvent(evt);
     }
   };
 
@@ -249,7 +255,7 @@ const VaultCard = () => {
     forfeitSCRAmount: 0,
   });
 
-  useEffect(() => {
+  const getData = useCallback(() => {
     scoreLendContract?.totalAvailableAmount().then((r: ethers.BigNumber) => {
       const value = ethers.utils.formatUnits(r, networkConfig.lend.lendToken.decimals);
       setTotal(Number(value).format());
@@ -257,10 +263,21 @@ const VaultCard = () => {
   }, [scoreLendContract]);
 
   useEffect(() => {
+    getData();
+  }, [scoreLendContract, getData]);
+
+  useEffect(() => {
     getVaultData().then((r: VaultData) => {
       r && setData(r);
     });
   }, []);
+
+  useEffect(() => {
+    document.addEventListener('openMine', getData);
+    return () => {
+      document.removeEventListener('openMine', getData);
+    };
+  }, [getData]);
 
   return (
     <CardStyle3>
@@ -327,7 +344,6 @@ export default function CreditCards() {
   const openLogin = () => {
     dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: true });
   };
-  const openBorrow = () => {};
 
   const { chain } = useNetwork();
   const { switchNetwork } = useSwitchNetwork();
@@ -341,10 +357,7 @@ export default function CreditCards() {
     dispatchCreditEvent({ type: ACTIONS.SET_LEND_CONTRACT, payload: scoreLendontract });
   }, []);
 
-  useEffect(() => {
-    if (!account) {
-      return;
-    }
+  const getData = useCallback(() => {
     const decimals = networkConfig.lend.lendToken.decimals;
     bondNFTContract?.userBorrow(account).then((r: any) => {
       dispatchCreditEvent({
@@ -363,7 +376,14 @@ export default function CreditCards() {
         payload: Number(ethers.utils.formatUnits(r.availableAmount, decimals)),
       });
     });
-  }, [scoreLendContract, account]);
+  }, [bondNFTContract, scoreLendContract, account, dispatchCreditEvent]);
+
+  useEffect(() => {
+    if (!account) {
+      return;
+    }
+    getData();
+  }, [scoreLendContract, account, getData]);
 
   useEffect(() => {
     // check network
@@ -371,10 +391,15 @@ export default function CreditCards() {
       switchNetwork(amoy.id);
     }
   }, [loginStatus, chain, provider?.network.chainId]);
+
+  useEffect(() => {
+    document.addEventListener('openMine', getData);
+    return () => document.removeEventListener('openMine', getData);
+  }, [getData]);
   return (
     <CardsRow>
-      <MyBorrowingQuota isLogin={!!loginStatus} onClickLogin={openLogin} onOpenBorrow={openBorrow}></MyBorrowingQuota>
-      <MyBorrowing isLogin={!!loginStatus} onClickLogin={openLogin} onOpenBorrow={openBorrow}></MyBorrowing>
+      <MyBorrowingQuota isLogin={!!loginStatus} onClickLogin={openLogin}></MyBorrowingQuota>
+      <MyBorrowing isLogin={!!loginStatus} onClickLogin={openLogin}></MyBorrowing>
       <VaultCard />
     </CardsRow>
   );

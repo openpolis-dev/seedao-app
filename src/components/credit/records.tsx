@@ -274,6 +274,16 @@ export default function CreditRecords() {
     setPage(num + 1);
     getList(num + 1, currentTab);
   };
+
+  useEffect(() => {
+    const openMine = () => {
+      onChangeTab('mine');
+    };
+    document.addEventListener('openMine', openMine);
+    return () => {
+      document.removeEventListener('openMine', openMine);
+    };
+  }, []);
   return (
     <CreditRecordsStyle>
       <NavBox>{t('Credit.Records')}</NavBox>
