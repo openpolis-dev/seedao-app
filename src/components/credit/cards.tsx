@@ -19,7 +19,9 @@ import BondNFTABI from 'assets/abi/BondNFT.json';
 import ScoreLendABI from 'assets/abi/ScoreLend.json';
 import { useCreditContext, ACTIONS } from 'pages/credit/provider';
 import { erc20ABI } from 'wagmi';
-import { getVaultData, VaultData } from 'requests/credit';
+import { getBorrowList, getVaultData, VaultData } from 'requests/credit';
+import { CreditRecordStatus, ICreditRecord } from 'type/credit.type';
+import { formatDate } from 'utils/time';
 
 const networkConfig = getConfig().NETWORK;
 
@@ -155,6 +157,8 @@ const MyBorrowing = ({ isLogin, onClickLogin }: BorrowCardProps) => {
     state: { myOverdueAmount, myInuseAmount, myOverdueCount, myInUseCount },
   } = useCreditContext();
 
+  const [earlyDate, setEarlyDate] = useState('');
+
   const onClickBottom = () => {
     isLogin ? setShowRepayItemsModal(true) : onClickLogin();
   };
@@ -170,6 +174,30 @@ const MyBorrowing = ({ isLogin, onClickLogin }: BorrowCardProps) => {
       document.dispatchEvent(evt);
     }
   };
+
+  const getMyData = () => {
+    getBorrowList({
+      lendStatus: CreditRecordStatus.INUSE,
+      sortField: 'borrowTimestamp',
+      sortOrder: 'asc',
+      page: 1,
+      size: 1,
+    }).then((r) => {
+      if (r.data.length) {
+        const d = r.data[0] as ICreditRecord;
+        setEarlyDate(d.borrowTime.slice(0, 10));
+      }
+    });
+  };
+
+  useEffect(() => {
+    myInUseCount > 0 && getMyData();
+  }, [myInUseCount]);
+
+  useEffect(() => {
+    document.addEventListener('openMine', getMyData);
+    return () => document.removeEventListener('openMine', getMyData);
+  }, []);
 
   return (
     <CardStyle2>
@@ -188,7 +216,7 @@ const MyBorrowing = ({ isLogin, onClickLogin }: BorrowCardProps) => {
         <MyCardTipLine2>
           <div>
             {t('Credit.LatestRepaymentDate')}
-            {isLogin ? (myInUseCount > 0 ? '2024-02-02' : ` ${t('Credit.NoDate')}`) : '*******'}
+            {isLogin ? (myInUseCount > 0 ? earlyDate : ` ${t('Credit.NoDate')}`) : '*******'}
           </div>
           <div>
             <span>{t('Credit.MyBorrowTip2')}</span>
