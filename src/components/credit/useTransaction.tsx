@@ -1,4 +1,4 @@
-import { ethers } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 import { useAuthContext } from 'providers/authProvider';
 import { erc20ABI, useSendTransaction, Address, useSwitchNetwork, useNetwork } from 'wagmi';
 import { waitForTransaction } from 'wagmi/actions';
@@ -134,7 +134,10 @@ export default function useTransaction() {
       args: [account as Address, networkConfig.lend.scoreLendContract as Address],
     });
     console.log('=======approveToken allowance=======', allowanceResult);
-    if (!allowanceResult || allowanceResult < BigInt(amount)) {
+    if (
+      !allowanceResult ||
+      ethers.BigNumber.from(allowanceResult.toString()).lt(ethers.utils.parseUnits(String(amount), lendToken.decimals))
+    ) {
       const tx = await sendTransactionAsync({
         to: address,
         account: account as Address,
@@ -153,7 +156,12 @@ export default function useTransaction() {
       functionName: 'balanceOf',
       args: [account as Address],
     });
-    return balance >= BigInt(amount);
+    return ethers.BigNumber.from(balance.toString()).gte(
+      ethers.utils.parseUnits(
+        String(amount),
+        token === 'usdt' ? lendToken.decimals : networkConfig.SCRContract.decimals,
+      ),
+    );
   };
 
   return { checkNetwork, handleTransaction, approveToken, handleEstimateGas, checkEnoughBalance };

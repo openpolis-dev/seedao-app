@@ -1,7 +1,7 @@
 export enum CreditRecordStatus {
   INUSE,
-  OVERDUE,
   CLEAR,
+  OVERDUE,
 }
 
 export interface RawCreditRecord {
