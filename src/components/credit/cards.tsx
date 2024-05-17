@@ -188,7 +188,7 @@ const MyBorrowing = ({ isLogin, onClickLogin }: BorrowCardProps) => {
         <MyCardTipLine2>
           <div>
             {t('Credit.LatestRepaymentDate')}
-            {isLogin ? '2024-02-02' : '*******'}
+            {isLogin ? (myInUseCount > 0 ? '2024-02-02' : ` ${t('Credit.NoDate')}`) : '*******'}
           </div>
           <div>
             <span>{t('Credit.MyBorrowTip2')}</span>
@@ -297,7 +297,9 @@ const VaultCard = () => {
           <span className="value">{total}</span>
         </div>
       </div>
-      <div className="tip">{t('Credit.DaoTip')}</div>
+      <a className="tip" href="https://app.seedao.xyz/proposal/thread/55" target="_blank" rel="noopener noreferrer">
+        {t('Credit.DaoTip')}
+      </a>
       <VaultCardColumnLine>
         <div>
           <div className="label">{t('Credit.TotalBorrow', { num: data.totalBorrowed })}</div>

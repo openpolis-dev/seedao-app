@@ -778,7 +778,8 @@
     "CurrentBorrowDays": "已借 {{day}} 日",
     "ShouldRepay": "合计应还",
     "ReturnForfeit": "退回质押物",
-    "Days": "{{days}}日"
+    "Days": "{{days}}日",
+    "NoDate": "暂无"
   },
   "Governance": {
     "GovernanceRule": "Governance Rules",
