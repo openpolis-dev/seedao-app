@@ -7,11 +7,12 @@ import publicJs from 'utils/publicJs';
 import { amoy } from 'utils/chain';
 
 interface IProps {
+  borrowName: string;
   data: ICreditRecord;
   handleClose: () => void;
 }
 
-export default function RecordDetailModal({ data, handleClose }: IProps) {
+export default function RecordDetailModal({ borrowName, data, handleClose }: IProps) {
   const { t } = useTranslation();
   return (
     <RecordDetailModalStyle handleClose={handleClose} closeColor="#343C6A">

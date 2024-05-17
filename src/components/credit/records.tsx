@@ -15,13 +15,15 @@ import useCheckLogin from 'hooks/useCheckLogin';
 import { IFilterParams, getBorrowList } from 'requests/credit';
 import publicJs from 'utils/publicJs';
 import { amoy } from 'utils/chain';
+import useQuerySNS from 'hooks/useQuerySNS';
 
 interface ITableProps {
+  formatSNS?: (wallet: string) => string;
   list: ICreditRecord[];
   openDetail: (data: ICreditRecord) => void;
 }
 
-const AllBorrowTable = ({ list, openDetail }: ITableProps) => {
+const AllBorrowTable = ({ list, openDetail, formatSNS }: ITableProps) => {
   const { t } = useTranslation();
 
   return (
@@ -46,7 +48,7 @@ const AllBorrowTable = ({ list, openDetail }: ITableProps) => {
                   <td>
                     <BlueText onClick={() => openDetail(item)}>{item.lendIdDisplay}</BlueText>
                   </td>
-                  <td>{publicJs.AddressToShow(item.debtor)}</td>
+                  <td>{formatSNS && formatSNS(item.debtor)}</td>
                   <td>
                     {item.borrowAmount.format()} <span className="unit">USDT</span>
                   </td>
@@ -162,14 +164,27 @@ export default function CreditRecords() {
   // filter
   const [selectValue, setSeletValue] = useState(filterOptions[0].value);
 
+  const [snsMap, setSnsMap] = useState<Map<string, string>>(new Map());
+
   const {
     state: { account },
     dispatch,
   } = useAuthContext();
 
-  const isLogin = useCheckLogin(account);
+  const { getMultiSNS } = useQuerySNS();
 
+  const isLogin = useCheckLogin(account);
   const loginStatus = isLogin && !!account;
+
+  const handleSNS = async (wallets: string[]) => {
+    const sns_map = await getMultiSNS(wallets);
+    setSnsMap(sns_map);
+  };
+
+  const formatSNS = (wallet: string, shorten = true) => {
+    const name = snsMap.get(wallet) || wallet;
+    return name?.endsWith('.seedao') ? name : shorten ? publicJs.AddressToShow(name, 4) : wallet;
+  };
 
   const getList = (page: number, tab: 'all' | 'mine') => {
     dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: true });
@@ -196,6 +211,9 @@ export default function CreditRecords() {
         console.log('r', r);
         setTotal(r.total);
         setList(r.data);
+
+        const _wallets = r.data.map((item) => item.debtor);
+        handleSNS(Array.from(_wallets));
       })
       .finally(() => {
         dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: false });
@@ -316,7 +334,7 @@ export default function CreditRecords() {
         </FilterBox>
       </TabbarBox>
       {currentTab === 'all' ? (
-        <AllBorrowTable list={list} openDetail={setDetailData} />
+        <AllBorrowTable list={list} openDetail={setDetailData} formatSNS={formatSNS} />
       ) : (
         <MyTable list={list} openDetail={setDetailData} />
       )}
@@ -330,7 +348,13 @@ export default function CreditRecords() {
           showGotopage={false}
         />
       )}
-      {detailData && <RecordDetailModal data={detailData} handleClose={() => setDetailData(undefined)} />}
+      {detailData && (
+        <RecordDetailModal
+          borrowName={formatSNS(detailData.debtor, false)}
+          data={detailData}
+          handleClose={() => setDetailData(undefined)}
+        />
+      )}
     </CreditRecordsStyle>
   );
 }
