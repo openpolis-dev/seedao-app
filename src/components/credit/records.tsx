@@ -16,6 +16,9 @@ import { IFilterParams, getBorrowList } from 'requests/credit';
 import publicJs from 'utils/publicJs';
 import { amoy } from 'utils/chain';
 import useQuerySNS from 'hooks/useQuerySNS';
+import { useCreditContext } from 'pages/credit/provider';
+import getConfig from 'utils/envCofnig';
+const lendToken = getConfig().NETWORK.lend.lendToken;
 
 interface ITableProps {
   formatSNS?: (wallet: string) => string;
@@ -76,8 +79,37 @@ const AllBorrowTable = ({ list, openDetail, formatSNS }: ITableProps) => {
   );
 };
 
+type InterestData = {
+  interestDays: number;
+  interestAmount: number;
+};
+
 const MyTable = ({ list, openDetail }: ITableProps) => {
   const { t } = useTranslation();
+
+  const {
+    state: { bondNFTContract },
+  } = useCreditContext();
+  const [intrest, setIntrest] = useState<Map<number, InterestData>>(new Map());
+
+  useEffect(() => {
+    const ids = list.filter((item) => !intrest.get(Number(item.lendId))).map((item) => Number(item.lendId));
+    if (!ids.length) {
+      return;
+    }
+    bondNFTContract
+      ?.calculateInterestBatch(ids)
+      .then((r: { interestAmounts: ethers.BigNumber[]; interestDays: ethers.BigNumber[] }) => {
+        const _intrest = new Map<number, InterestData>(intrest);
+        ids.forEach((id, idx) => {
+          _intrest.set(id, {
+            interestDays: r.interestDays[idx].toNumber(),
+            interestAmount: Number(ethers.utils.formatUnits(r.interestAmounts[idx], lendToken.decimals)),
+          });
+        });
+        setIntrest(_intrest);
+      });
+  }, [list, bondNFTContract]);
   return (
     <TableBox>
       {list.length ? (
@@ -118,9 +150,10 @@ const MyTable = ({ list, openDetail }: ITableProps) => {
                 </td>
                 <td>{item.borrowTime}</td>
                 <td>{item.rate}‰</td>
-                <td>{item.interestDays}日</td>
+                <td>{intrest.get(Number(item.lendId))?.interestDays}日</td>
                 <td>
-                  {item.interestAmount.format()} <span className="unit">USDT</span>
+                  {intrest.get(Number(item.lendId))?.interestAmount?.format(lendToken.decimals)}{' '}
+                  <span className="unit">USDT</span>
                 </td>
                 <td>{item.overdueTime}</td>
               </tr>
