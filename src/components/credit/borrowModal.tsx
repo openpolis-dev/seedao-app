@@ -10,7 +10,6 @@ import getConfig from 'utils/envCofnig';
 import useTransaction, { TX_ACTION } from './useTransaction';
 import { debounce } from 'utils';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
-import { useEthersProvider } from 'hooks/ethersNew';
 import useToast, { ToastType } from 'hooks/useToast';
 import parseError from './parseError';
 import { getShortDisplay } from 'utils/number';
@@ -29,9 +28,7 @@ export default function BorrowModal({ handleClose }: IProps) {
 
   const { showToast } = useToast();
 
-  const provider = useEthersProvider({});
-
-  const { handleTransaction, approveToken, handleEstimateGas, checkEnoughBalance } = useTransaction();
+  const { handleTransaction, approveToken, handleEstimateGas, checkNetwork } = useTransaction();
 
   const { dispatch } = useAuthContext();
   const {
@@ -59,13 +56,13 @@ export default function BorrowModal({ handleClose }: IProps) {
   };
 
   const checkBorrow = async () => {
-    // TODO check chain
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
 
     try {
+      await checkNetwork();
       const result = await handleEstimateGas(TX_ACTION.BORROW, inputNum!);
       console.log('====result', result);
-      await handleTransaction(provider, TX_ACTION.BORROW, Number(inputNum));
+      await handleTransaction(TX_ACTION.BORROW, Number(inputNum));
       setStep(2);
     } catch (error: any) {
       logError('[borrow]', error);

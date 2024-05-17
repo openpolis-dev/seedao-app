@@ -1,10 +1,12 @@
 import { ethers } from 'ethers';
-import { useAuthContext } from 'providers/authProvider';
-import { erc20ABI, useSendTransaction, Address } from 'wagmi';
+import { AppActionType, useAuthContext } from 'providers/authProvider';
+import { erc20ABI, useSendTransaction, Address, useSwitchNetwork, useNetwork } from 'wagmi';
 import { waitForTransaction } from 'wagmi/actions';
 import { prepareSendTransaction, readContract } from 'wagmi/actions';
 import { Hex } from 'viem';
 import ScoreLendABI from 'assets/abi/ScoreLend.json';
+import { amoy } from 'utils/chain';
+import { useEthersProvider } from 'hooks/ethersNew';
 
 import getConfig from 'utils/envCofnig';
 const networkConfig = getConfig().NETWORK;
@@ -61,9 +63,20 @@ export default function useTransaction() {
     state: { account },
   } = useAuthContext();
 
-  const { sendTransactionAsync } = useSendTransaction();
+  const { chain } = useNetwork();
+  const { switchNetworkAsync } = useSwitchNetwork();
 
-  const handleBorrow = async (provider: any, amount: number) => {
+  const checkNetwork = async () => {
+    if (chain && switchNetworkAsync && chain?.id !== amoy.id) {
+      await switchNetworkAsync(amoy.id);
+      return;
+    }
+  };
+
+  const { sendTransactionAsync } = useSendTransaction();
+  const provider = useEthersProvider({});
+
+  const handleBorrow = async (amount: number) => {
     const tx = await sendTransactionAsync({
       to: networkConfig.lend.scoreLendContract,
       account: account as Address,
@@ -72,7 +85,7 @@ export default function useTransaction() {
     });
     return checkTransaction(provider, tx?.hash);
   };
-  const handleRepay = async (provider: any, ids: number[]) => {
+  const handleRepay = async (ids: number[]) => {
     const tx = await sendTransactionAsync({
       to: networkConfig.lend.scoreLendContract,
       account: account as Address,
@@ -82,11 +95,11 @@ export default function useTransaction() {
     return checkTransaction(provider, tx?.hash);
   };
 
-  const handleTransaction = (provider: any, action: TX_ACTION, data: number | number[]) => {
+  const handleTransaction = (action: TX_ACTION, data: number | number[]) => {
     if (action === TX_ACTION.BORROW) {
-      return handleBorrow(provider, data as number);
+      return handleBorrow(data as number);
     } else if (action === TX_ACTION.REPAY) {
-      return handleRepay(provider, data as number[]);
+      return handleRepay(data as number[]);
     }
   };
   const handleEsitmateBorrow = (amount: number) => {
@@ -143,5 +156,5 @@ export default function useTransaction() {
     return balance >= BigInt(amount);
   };
 
-  return { handleTransaction, approveToken, handleEstimateGas, checkEnoughBalance };
+  return { checkNetwork, handleTransaction, approveToken, handleEstimateGas, checkEnoughBalance };
 }

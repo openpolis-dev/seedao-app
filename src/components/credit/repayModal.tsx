@@ -11,7 +11,6 @@ import { AppActionType, useAuthContext } from 'providers/authProvider';
 import useTransaction, { TX_ACTION } from './useTransaction';
 import parseError from './parseError';
 import useToast, { ToastType } from 'hooks/useToast';
-import { useEthersProvider } from 'hooks/ethersNew';
 
 interface IProps {
   handleClose: (openMine?: boolean) => void;
@@ -28,14 +27,13 @@ export default function RepayModal({ handleClose }: IProps) {
   const [step, setStep] = useState(0);
   const [list, setList] = useState<ListItem[]>([]);
   const [getting, setGetting] = useState(false);
-  const provider = useEthersProvider({});
 
   const {
     dispatch,
     state: { account },
   } = useAuthContext();
 
-  const { checkEnoughBalance, handleTransaction, approveToken, handleEstimateGas } = useTransaction();
+  const { checkEnoughBalance, handleTransaction, approveToken, handleEstimateGas, checkNetwork } = useTransaction();
 
   const { showToast } = useToast();
 
@@ -62,9 +60,9 @@ export default function RepayModal({ handleClose }: IProps) {
   );
 
   const checkApprove = async () => {
-    // TODO check network
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
+      await checkNetwork();
       const result = await checkEnoughBalance(account!, 'usdt', selectedTotalAmount);
       if (!result) {
         throw new Error('Insufficient balance');
@@ -82,9 +80,11 @@ export default function RepayModal({ handleClose }: IProps) {
   const checkRepay = async () => {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
-      const result = await handleEstimateGas(TX_ACTION.REPAY, selectedList.map((item) => Number(item.id)));
+      const result = await handleEstimateGas(
+        TX_ACTION.REPAY,
+        selectedList.map((item) => Number(item.id)),
+      );
       await handleTransaction(
-        provider,
         TX_ACTION.REPAY,
         selectedList.map((item) => Number(item.id)),
       );
