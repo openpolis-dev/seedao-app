@@ -77,11 +77,22 @@ export default function RepayModal({ handleClose }: IProps) {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
       await checkNetwork();
-      const result = await checkEnoughBalance(account!, 'usdt', selectedTotalAmount);
+      // add one more day interest
+      const totalApproveBN = selectedList.reduce(
+        (acc, item) =>
+          acc.add(
+            ethers.utils
+              .parseUnits(String(item.data.interestAmount), lendToken.decimals)
+              .div(ethers.BigNumber.from(item.data.interestDays)),
+          ),
+        ethers.utils.parseUnits(String(selectedTotalAmount), lendToken.decimals),
+      );
+      const totalApproveAmount = Number(ethers.utils.formatUnits(totalApproveBN, lendToken.decimals));
+      const result = await checkEnoughBalance(account!, 'usdt', totalApproveAmount);
       if (!result) {
         throw new Error('Insufficient balance');
       }
-      await approveToken('usdt', selectedTotalAmount);
+      await approveToken('usdt', totalApproveAmount);
       setStep(2);
     } catch (error: any) {
       console.error(error);
