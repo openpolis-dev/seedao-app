@@ -20,10 +20,19 @@ import { useCreditContext } from 'pages/credit/provider';
 import getConfig from 'utils/envCofnig';
 const lendToken = getConfig().NETWORK.lend.lendToken;
 
+type InterestData = {
+  interestDays: number;
+  interestAmount: number;
+};
+
 interface ITableProps {
   formatSNS?: (wallet: string) => string;
   list: ICreditRecord[];
-  openDetail: (data: ICreditRecord) => void;
+  openDetail?: (data: ICreditRecord) => void;
+}
+
+interface IMyTableProps extends ITableProps {
+  openMyDetail: (data: ICreditRecord, interest: InterestData) => void;
 }
 
 const AllBorrowTable = ({ list, openDetail, formatSNS }: ITableProps) => {
@@ -49,7 +58,7 @@ const AllBorrowTable = ({ list, openDetail, formatSNS }: ITableProps) => {
               {list.map((item, idx) => (
                 <tr key={idx}>
                   <td>
-                    <BlueText onClick={() => openDetail(item)}>{item.lendIdDisplay}</BlueText>
+                    <BlueText onClick={() => openDetail && openDetail(item)}>{item.lendIdDisplay}</BlueText>
                   </td>
                   <td>{formatSNS && formatSNS(item.debtor)}</td>
                   <td>
@@ -79,12 +88,7 @@ const AllBorrowTable = ({ list, openDetail, formatSNS }: ITableProps) => {
   );
 };
 
-type InterestData = {
-  interestDays: number;
-  interestAmount: number;
-};
-
-const MyTable = ({ list, openDetail }: ITableProps) => {
+const MyTable = ({ list, openMyDetail }: IMyTableProps) => {
   const { t } = useTranslation();
 
   const {
@@ -133,7 +137,9 @@ const MyTable = ({ list, openDetail }: ITableProps) => {
             {list.map((item, idx) => (
               <tr key={idx}>
                 <td>
-                  <BlueText onClick={() => openDetail(item)}>{item.lendIdDisplay}</BlueText>
+                  <BlueText onClick={() => openMyDetail(item, intrest.get(Number(item.lendId))!)}>
+                    {item.lendIdDisplay}
+                  </BlueText>
                 </td>
                 <td>
                   {item.borrowAmount.format()} <span className="unit">USDT</span>
@@ -303,6 +309,10 @@ export default function CreditRecords() {
     setTargetKeyword('');
   };
 
+  const showDetail = (data: ICreditRecord, interest: InterestData) => {
+    setDetailData({ ...data, interestAmount: interest?.interestAmount || 0, interestDays: interest.interestDays || 0 });
+  };
+
   const handlePageChange = (num: number) => {
     setPage(num + 1);
     getList(num + 1, currentTab);
@@ -379,7 +389,7 @@ export default function CreditRecords() {
       {currentTab === 'all' ? (
         <AllBorrowTable list={list} openDetail={setDetailData} formatSNS={formatSNS} />
       ) : (
-        <MyTable list={list} openDetail={setDetailData} />
+        <MyTable list={list} openMyDetail={showDetail} />
       )}
       {!!list.length && (
         <Pagination
