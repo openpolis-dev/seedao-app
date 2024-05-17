@@ -37,15 +37,18 @@ export default function BorrowModal({ handleClose }: IProps) {
   const [calculating, setCalculating] = useState(false);
 
   const checkApprove = async () => {
+    if (calculating) {
+      return;
+    }
     // check enough
     if (forfeitNum === 0 || myScore < forfeitNum) {
       showToast('Insufficient balance', ToastType.Danger);
       return;
     }
-    // TODO check chain
     // approve
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
+      await checkNetwork();
       await approveToken('scr', forfeitNum);
       setStep(1);
     } catch (error) {

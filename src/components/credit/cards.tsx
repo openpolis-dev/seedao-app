@@ -262,20 +262,28 @@ const VaultCard = () => {
     });
   }, [scoreLendContract]);
 
+  const getDataFromIndexer = () => {
+    getVaultData().then((r: VaultData) => {
+      r && setData(r);
+    });
+  };
+
   useEffect(() => {
     getData();
   }, [scoreLendContract, getData]);
 
   useEffect(() => {
-    getVaultData().then((r: VaultData) => {
-      r && setData(r);
-    });
+    getDataFromIndexer();
   }, []);
 
   useEffect(() => {
-    document.addEventListener('openMine', getData);
+    const eventHandler = () => {
+      getData();
+      getDataFromIndexer();
+    };
+    document.addEventListener('openMine', eventHandler);
     return () => {
-      document.removeEventListener('openMine', getData);
+      document.removeEventListener('openMine', eventHandler);
     };
   }, [getData]);
 

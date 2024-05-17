@@ -59,7 +59,7 @@ const AllBorrowTable = ({ list, openDetail, formatSNS }: ITableProps) => {
                   <td>{item.overdueTime}</td>
                   <td>
                     <BlueText
-                      onClick={() => window.open(`${amoy.blockExplorers.default.url}/tx/${item.borrowTx}`, '_blank')}
+                      onClick={() => window.open(`${amoy?.blockExplorers?.default.url}/tx/${item.borrowTx}`, '_blank')}
                     >
                       {publicJs.AddressToShow(item.borrowTx)}
                     </BlueText>
@@ -107,11 +107,11 @@ const MyTable = ({ list, openDetail }: ITableProps) => {
                   {item.borrowAmount.format()} <span className="unit">USDT</span>
                 </td>
                 <td>
-                  <StateTag state={CreditRecordStatus.CLEAR} />
+                  <StateTag state={item.status} />
                 </td>
                 <td>
                   <BlueText
-                    onClick={() => window.open(`${amoy.blockExplorers.default.url}/tx/${item.borrowTx}`, '_blank')}
+                    onClick={() => window.open(`${amoy?.blockExplorers?.default.url}/tx/${item.borrowTx}`, '_blank')}
                   >
                     {publicJs.AddressToShow(item.borrowTx)}
                   </BlueText>
@@ -187,7 +187,7 @@ export default function CreditRecords() {
   };
 
   const getList = (page: number, tab: 'all' | 'mine') => {
-    dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: true });
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
     const params: IFilterParams = {
       page,
       size: 10,
@@ -216,7 +216,7 @@ export default function CreditRecords() {
         handleSNS(Array.from(_wallets));
       })
       .finally(() => {
-        dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: false });
+        dispatch({ type: AppActionType.SET_LOADING, payload: false });
       });
   };
 
@@ -283,7 +283,7 @@ export default function CreditRecords() {
     return () => {
       document.removeEventListener('openMine', openMine);
     };
-  }, []);
+  });
   return (
     <CreditRecordsStyle>
       <NavBox>{t('Credit.Records')}</NavBox>

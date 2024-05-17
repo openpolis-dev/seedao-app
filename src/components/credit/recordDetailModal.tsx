@@ -39,7 +39,7 @@ export default function RecordDetailModal({ borrowName, data, handleClose }: IPr
             <dd>
               <a
                 className="hash"
-                href={`${amoy.blockExplorers.default.url}/tx/${data.borrowTx}`}
+                href={`${amoy?.blockExplorers?.default.url}/tx/${data.borrowTx}`}
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -94,7 +94,7 @@ export default function RecordDetailModal({ borrowName, data, handleClose }: IPr
                 <dd>
                   <a
                     className="hash"
-                    href={`${amoy.blockExplorers.default.url}/tx/${data.paybackTx}`}
+                    href={`${amoy?.blockExplorers?.default.url}/tx/${data.paybackTx}`}
                     target="_blank"
                     rel="noopener noreferrer"
                   >

@@ -1,5 +1,5 @@
 import { ethers } from 'ethers';
-import { AppActionType, useAuthContext } from 'providers/authProvider';
+import { useAuthContext } from 'providers/authProvider';
 import { erc20ABI, useSendTransaction, Address, useSwitchNetwork, useNetwork } from 'wagmi';
 import { waitForTransaction } from 'wagmi/actions';
 import { prepareSendTransaction, readContract } from 'wagmi/actions';
