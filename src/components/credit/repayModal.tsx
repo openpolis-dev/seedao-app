@@ -11,6 +11,10 @@ import { AppActionType, useAuthContext } from 'providers/authProvider';
 import useTransaction, { TX_ACTION } from './useTransaction';
 import parseError from './parseError';
 import useToast, { ToastType } from 'hooks/useToast';
+import { useCreditContext } from 'pages/credit/provider';
+import { ethers } from 'ethers';
+import getConfig from 'utils/envCofnig';
+const lendToken = getConfig().NETWORK.lend.lendToken;
 
 interface IProps {
   handleClose: (openMine?: boolean) => void;
@@ -20,6 +24,7 @@ type ListItem = {
   id: string;
   data: ICreditRecord;
   selected: boolean;
+  total: number;
 };
 
 export default function RepayModal({ handleClose }: IProps) {
@@ -32,6 +37,10 @@ export default function RepayModal({ handleClose }: IProps) {
     dispatch,
     state: { account },
   } = useAuthContext();
+
+  const {
+    state: { bondNFTContract },
+  } = useCreditContext();
 
   const { checkEnoughBalance, handleTransaction, approveToken, handleEstimateGas, checkNetwork } = useTransaction();
 
@@ -54,9 +63,14 @@ export default function RepayModal({ handleClose }: IProps) {
     setList(newList);
   };
 
-  const selectedTotalAmount = selectedList.reduce(
-    (acc, item) => acc + item.data.borrowAmount + item.data.interestAmount,
-    0,
+  const selectedTotalAmount = Number(
+    ethers.utils.formatUnits(
+      selectedList.reduce(
+        (acc, item) => acc.add(ethers.utils.parseUnits(String(item.total), lendToken.decimals)),
+        ethers.constants.Zero,
+      ),
+      lendToken.decimals,
+    ),
   );
 
   const checkApprove = async () => {
@@ -97,22 +111,46 @@ export default function RepayModal({ handleClose }: IProps) {
     }
   };
 
+  const getData = async () => {
+    try {
+      setGetting(true);
+      const r = await getBorrowList({
+        debtor: account,
+        sortField: 'borrowTimestamp',
+        sortOrder: 'desc',
+        page: 1,
+        size: 100,
+      });
+      const ids = r.data.map((d) => Number(d.lendId));
+      const _list = r.data.map((item) => ({ id: item.lendId, data: item, selected: false, total: 0 }));
+      const result = (await bondNFTContract?.calculateInterestBatch(ids)) as {
+        interestAmounts: ethers.BigNumber[];
+        interestDays: ethers.BigNumber[];
+      };
+      ids.forEach((id, idx) => {
+        _list[idx].data.interestAmount = Number(
+          ethers.utils.formatUnits(result.interestAmounts[idx], lendToken.decimals),
+        );
+        _list[idx].data.interestDays = result.interestDays[idx].toNumber();
+        _list[idx].total = Number(
+          ethers.utils.formatUnits(
+            result.interestAmounts[idx].add(
+              ethers.utils.parseUnits(String(_list[idx].data.borrowAmount), lendToken.decimals),
+            ),
+            lendToken.decimals,
+          ),
+        );
+      });
+      setList(_list);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setGetting(false);
+    }
+  };
+
   useEffect(() => {
-    setGetting(true);
-    getBorrowList({
-      debtor: account,
-      sortField: 'borrowTimestamp',
-      sortOrder: 'desc',
-      page: 1,
-      size: 100,
-    })
-      .then((r) => {
-        setList(r.data.map((item) => ({ id: item.lendId, data: item, selected: false })));
-      })
-      .catch((error) => {
-        console.error(error);
-      })
-      .finally(() => setGetting(false));
+    getData();
   }, []);
 
   const steps = [
@@ -140,7 +178,7 @@ export default function RepayModal({ handleClose }: IProps) {
   return (
     <RepayModalStyle handleClose={() => handleClose()} closeColor="#343C6A">
       <ModalTitle>{steps[step].title}</ModalTitle>
-      {step === 3 && <FinishContent>{selectedTotalAmount.format()} USDT</FinishContent>}
+      {step === 3 && <FinishContent>{selectedTotalAmount} USDT</FinishContent>}
       {step === 0 && (
         <RepayContent>
           {getting ? (
@@ -167,12 +205,12 @@ export default function RepayModal({ handleClose }: IProps) {
       {(step === 1 || step === 2) && (
         <RepayContent>
           <TotalRepay>
-            <div className="number">{selectedTotalAmount.format()} USDT</div>
+            <div className="number">{selectedTotalAmount} USDT</div>
             <div className="label">{t('Credit.ShouldRepay')}</div>
           </TotalRepay>
           <ListBox style={{ maxHeight: '352px', minHeight: 'unset' }}>
             {selectedList.map((item) => (
-              <SelectedRecord key={item.id} data={item.data} />
+              <SelectedRecord key={item.id} data={item.data} total={item.total} />
             ))}
           </ListBox>
         </RepayContent>
@@ -232,7 +270,7 @@ const RecordCheckbox = ({
   );
 };
 
-const SelectedRecord = ({ data }: { data: ICreditRecord }) => {
+const SelectedRecord = ({ data, total }: { data: ICreditRecord; total: number }) => {
   const { t } = useTranslation();
   return (
     <SelectRecordStyle>
@@ -260,7 +298,7 @@ const SelectedRecord = ({ data }: { data: ICreditRecord }) => {
             {t('Credit.Interest')} {data.interestAmount}
           </span>
           <span>
-            {t('Credit.ShouldRepay')} {(data.interestAmount + data.borrowAmount).format()} USDT
+            {t('Credit.ShouldRepay')} {total} USDT
           </span>
         </li>
         <li>
