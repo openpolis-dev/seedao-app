@@ -97,7 +97,9 @@ const MyTable = ({ list, openMyDetail }: IMyTableProps) => {
   const [intrest, setIntrest] = useState<Map<number, InterestData>>(new Map());
 
   useEffect(() => {
-    const ids = list.filter((item) => !intrest.get(Number(item.lendId))).map((item) => Number(item.lendId));
+    const ids = list
+      .filter((item) => item.status === CreditRecordStatus.INUSE && !intrest.get(Number(item.lendId)))
+      .map((item) => Number(item.lendId));
     if (!ids.length) {
       return;
     }
@@ -137,7 +139,17 @@ const MyTable = ({ list, openMyDetail }: IMyTableProps) => {
             {list.map((item, idx) => (
               <tr key={idx}>
                 <td>
-                  <BlueText onClick={() => openMyDetail(item, intrest.get(Number(item.lendId))!)}>
+                  <BlueText
+                    onClick={() =>
+                      openMyDetail(
+                        item,
+                        intrest.get(Number(item.lendId)) || {
+                          interestDays: item.interestDays,
+                          interestAmount: item.interestAmount,
+                        },
+                      )
+                    }
+                  >
                     {item.lendIdDisplay}
                   </BlueText>
                 </td>
@@ -156,9 +168,9 @@ const MyTable = ({ list, openMyDetail }: IMyTableProps) => {
                 </td>
                 <td>{item.borrowTime}</td>
                 <td>{item.rate}‰</td>
-                <td>{intrest.get(Number(item.lendId))?.interestDays}日</td>
+                <td>{intrest.get(Number(item.lendId))?.interestDays || item.interestDays}日</td>
                 <td>
-                  {intrest.get(Number(item.lendId))?.interestAmount?.format(lendToken.decimals)}{' '}
+                  {intrest.get(Number(item.lendId))?.interestAmount || item.interestAmount}{' '}
                   <span className="unit">USDT</span>
                 </td>
                 <td>{item.overdueTime}</td>
