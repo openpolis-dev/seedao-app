@@ -148,15 +148,17 @@ export default function RepayModal({ handleClose }: IProps) {
               <CalculateLoading />
             </LoadingBox>
           ) : list.length ? (
-            list.map((item) => (
-              <RecordCheckbox
-                key={item.id}
-                id={item.id}
-                data={item.data}
-                selected={item.selected}
-                onSelect={onSelect}
-              />
-            ))
+            <ListBox>
+              {list.map((item) => (
+                <RecordCheckbox
+                  key={item.id}
+                  id={item.id}
+                  data={item.data}
+                  selected={item.selected}
+                  onSelect={onSelect}
+                />
+              ))}
+            </ListBox>
           ) : (
             <NoItem />
           )}
@@ -168,9 +170,11 @@ export default function RepayModal({ handleClose }: IProps) {
             <div className="number">{selectedTotalAmount.format()} USDT</div>
             <div className="label">{t('Credit.ShouldRepay')}</div>
           </TotalRepay>
-          {selectedList.map((item) => (
-            <SelectedRecord key={item.id} data={item.data} />
-          ))}
+          <ListBox style={{ maxHeight: '352px', minHeight: 'unset' }}>
+            {selectedList.map((item) => (
+              <SelectedRecord key={item.id} data={item.data} />
+            ))}
+          </ListBox>
         </RepayContent>
       )}
       <ConfirmBox>
@@ -306,8 +310,6 @@ const FinishContent = styled.div`
 
 const RepayContent = styled.div`
   width: 443px;
-  max-height: 500px;
-  overflow-y: auto;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
@@ -449,4 +451,13 @@ const LoadingBox = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+`;
+
+const ListBox = styled.div`
+  max-height: 420px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 321px;
 `;
