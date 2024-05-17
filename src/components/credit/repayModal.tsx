@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import BasicModal from 'components/modals/basicModal';
 import { useTranslation } from 'react-i18next';
 import CreditButton from './button';
-import { ICreditRecord } from 'type/credit.type';
+import { CreditRecordStatus, ICreditRecord } from 'type/credit.type';
 import { getBorrowList } from 'requests/credit';
 import CalculateLoading from './calculateLoading';
 import NoItem from 'components/noItem';
@@ -127,6 +127,7 @@ export default function RepayModal({ handleClose }: IProps) {
       setGetting(true);
       const r = await getBorrowList({
         debtor: account,
+        lendStatus: CreditRecordStatus.INUSE,
         sortField: 'borrowTimestamp',
         sortOrder: 'desc',
         page: 1,
