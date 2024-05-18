@@ -276,6 +276,7 @@ const LineBox = styled.div`
     font-family: Inter-SemiBold;
     font-weight: 600;
     display: flex;
+    justify-content: space-between;
   }
   .right {
     font-size: 20px;
@@ -292,7 +293,7 @@ const LineBox = styled.div`
     font-family: Inter-SemiBold;
     font-weight: 600;
     color: #343c6a;
-    flex: 1;
+    width: 250px;
     &:focus-visible {
       outline: none;
     }
