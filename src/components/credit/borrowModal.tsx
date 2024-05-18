@@ -32,7 +32,7 @@ export default function BorrowModal({ handleClose }: IProps) {
 
   const { dispatch } = useAuthContext();
   const {
-    state: { scoreLendContract, myScore },
+    state: { scoreLendContract, myScore, myAvaliableQuota },
   } = useCreditContext();
   const [calculating, setCalculating] = useState(false);
 
@@ -147,13 +147,18 @@ export default function BorrowModal({ handleClose }: IProps) {
       if (numericValue < 100) {
         setInputNum('100.00');
         onChangeVal(100);
-      } else if (numericValue > networkConfig.lend.quotaPerUser) {
-        setInputNum(getShortDisplay(networkConfig.lend.quotaPerUser));
-        onChangeVal(networkConfig.lend.quotaPerUser);
+      } else if (numericValue > myAvaliableQuota) {
+        setInputNum(getShortDisplay(myAvaliableQuota));
+        onChangeVal(myAvaliableQuota);
       } else {
-        setInputNum(Number(numericValue).format());
+        setInputNum(getShortDisplay(numericValue));
       }
     }
+  };
+
+  const handleBorrowMax = () => {
+    setInputNum(String(myAvaliableQuota));
+    onChangeVal(myAvaliableQuota);
   };
 
   useEffect(() => {
@@ -186,7 +191,7 @@ export default function BorrowModal({ handleClose }: IProps) {
                 onChange={onChangeInput}
                 onBlur={handleBlur}
               />
-              <MaxButton>{t('Credit.MaxBorrow')}</MaxButton>
+              <MaxButton onClick={handleBorrowMax}>{t('Credit.MaxBorrow')}</MaxButton>
             </div>
             <span className="right">USDT</span>
           </LineBox>
