@@ -576,6 +576,37 @@ export default function ThreadPage() {
                   <div className="title">{componentName || t('Proposal.proposalComponents')}</div>
                 </ComponnentBox>
               )}
+              {
+                <DisplayBox>
+                  <div className="titl">当前可申请资产: 2500 SCR, 800 USDT</div>
+                  <div className="content">
+                    <dl>
+                      <dt>项目预算</dt>
+                      <dd> 2500 SCR, 800 USDT</dd>
+                    </dl>
+                    <dl>
+                      <dt>预付比例</dt>
+                      <dd> 2500 SCR, 800 USDT</dd>
+                    </dl>
+                    <dl>
+                      <dt>可预支数额</dt>
+                      <dd> 2500 SCR, 800 USDT</dd>
+                    </dl>
+                    <dl>
+                      <dt>当前已预支</dt>
+                      <dd> 2500 SCR, 800 USDT</dd>
+                    </dl>
+                    <dl>
+                      <dt>预算余额</dt>
+                      <dd> 2500 SCR, 800 USDT</dd>
+                    </dl>
+                    <dl>
+                      <dt>可预支余额</dt>
+                      <dd> 2500 SCR, 800 USDT</dd>
+                    </dl>
+                  </div>
+                </DisplayBox>
+              }
             </>
           }
           AfterComponent={
@@ -690,6 +721,38 @@ export default function ThreadPage() {
     </Page>
   );
 }
+
+const DisplayBox = styled.div`
+  background: var(--home-right);
+  margin: 10px 30px;
+  padding: 20px 20px 10px;
+  border-radius: 10px;
+  .titl {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--bs-body-color_active);
+    margin-bottom: 20px;
+  }
+  .content {
+    font-size: 14px;
+    color: var(--bs-body-color_active);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    dl {
+      width: 33.333%;
+      display: flex;
+
+      align-items: center;
+      margin-bottom: 10px;
+      dt {
+        min-width: 20%;
+        font-weight: normal;
+      }
+    }
+  }
+`;
 
 const FlexRht = styled.div`
   display: flex;

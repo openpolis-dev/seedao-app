@@ -192,6 +192,13 @@ export default function InfoPage() {
                     </FlexFirst>
                   </TopInfo>
                 </TopBoxLeft>
+                {detail?.status === 'closed' ? (
+                  <ClosedButton disabled>{t('Project.Edit')}</ClosedButton>
+                ) : canCreateProject || show ? (
+                  <BtnTop to={`/project/edit/${detail?.id}`} state={detail}>
+                    <Button>{t('Project.Edit')}</Button>
+                  </BtnTop>
+                ) : null}
               </TopBox>
               <LastLine>
                 {/*<LftBox>*/}
@@ -199,6 +206,150 @@ export default function InfoPage() {
                 {/*    <Members detail={detail} updateProject={onUpdate} />*/}
                 {/*  </InnerLft>*/}
                 {/*</LftBox>*/}
+
+                <NewContentBox>
+                  <ul className="lft">
+                    <dl>
+                      <dt>{t('Project.Moderator')}</dt>
+                      <dd className="first">
+                        <ModoratorBox>
+                          <div className="title">{t('Project.Moderator')}</div>
+                          {sponserList.map((item: any, index: number) => (
+                            <MemBox key={`avatar_${index}`}>
+                              <Avatar onClick={() => setProfileVisible(true)}>
+                                <img src={item?.sp?.avatar || item?.avatar || DefaultAvatar} alt="" />
+                              </Avatar>
+                              <span>
+                                {item?.sns?.endsWith('.seedao') ? item.sns : publicJs.AddressToShow(item?.wallet)}
+                              </span>
+                            </MemBox>
+                          ))}
+                        </ModoratorBox>
+                        <ModoratorBox>
+                          <div className="title">{t('Project.Contact')}</div>
+                          <div className="rhtContact">
+                            {detail?.ContantWay
+                              ? detail?.ContantWay
+                              : sponserList[0]?.sns?.endsWith('.seedao')
+                              ? sponserList[0]?.sns
+                              : ''}
+                          </div>
+                        </ModoratorBox>
+                      </dd>
+                    </dl>
+                    <dl>
+                      <dt>立项信息</dt>
+                      <dd>
+                        <table>
+                          <tr>
+                            <td>{t('Project.StartProjectLink')}</td>
+                            <td>
+                              {!!detail?.ApprovalLink && (
+                                <>
+                                  {/*<span>{formatLink(detail?.ApprovalLink)}</span>{' '}*/}
+                                  <Link to={formatLink(detail?.ApprovalLink)} target="_blank">
+                                    {/*<img src={LinkImg} alt="" />*/}
+                                    <span>{formatLink(detail?.ApprovalLink)}</span>
+                                  </Link>
+                                </>
+                              )}
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>{t('Project.Budget')}</td>
+                            <td>10000 SCR, 1000 USDT</td>
+                          </tr>
+                          <tr>
+                            <td>{t('Project.PlanFinishTime')}</td>
+                            <td>{formatDate(detail?.PlanTime)}</td>
+                          </tr>
+                          <tr>
+                            <td>{t('Project.Deliverables')}</td>
+                            <td>
+                              {!!detail?.Deliverable?.length && (
+                                <ReactQuill
+                                  theme="snow"
+                                  value={detail?.Deliverable}
+                                  modules={{ toolbar: false }}
+                                  readOnly={true}
+                                />
+                              )}
+                            </td>
+                          </tr>
+                        </table>
+                      </dd>
+                    </dl>
+                    <dl>
+                      <dt>项目预算使用情况</dt>
+                      <dd>
+                        <table>
+                          <tr>
+                            <td>项目预算</td>
+                            <td>10000 SCR, 1000 USDT</td>
+                          </tr>
+                          <tr>
+                            <td>预付比例</td>
+                            <td>50%</td>
+                          </tr>
+                          <tr>
+                            <td>可预支数额</td>
+                            <td>2500 SCR, 500 USDT</td>
+                          </tr>
+                          <tr>
+                            <td>当前已预支</td>
+                            <td>0 SCR, 300 USDT</td>
+                          </tr>
+                          <tr>
+                            <td>预算余额</td>
+                            <td>2500 SCR, 300 USDT</td>
+                          </tr>
+                          <tr>
+                            <td>可预支余额</td>
+                            <td>2500 SCR, 300 USDT</td>
+                          </tr>
+                        </table>
+                      </dd>
+                    </dl>
+                    <dl>
+                      <dt>结项信息</dt>
+                      <dd>
+                        <table>
+                          <tr>
+                            <td>{t('Project.EndProjectLink')}</td>
+                            <td>
+                              {!!detail?.OverLink && (
+                                <Link to={formatLink(detail?.OverLink)} target="_blank">
+                                  <img src={LinkImg} alt="" />
+                                </Link>
+                              )}
+                            </td>
+                          </tr>
+                        </table>
+                      </dd>
+                    </dl>
+                  </ul>
+                  <ul className="rht">
+                    <dl>
+                      <dt>{t('Project.ProjectIntro')}</dt>
+                      <dd>
+                        {!!detail?.desc && <Desc>{detail?.desc}</Desc>}
+                        {!detail?.desc && <span>该项目未填写项目简介～</span>}
+                      </dd>
+                    </dl>
+                    <dl>
+                      <dt>{t('Project.OfficialLink')}</dt>
+                      <dd>
+                        {!detail?.OfficialLink && <span>该项目未填写官方链接～</span>}
+                        {!!detail?.OfficialLink && (
+                          <a href={detail?.OfficialLink} target="_blank" rel="noreferrer">
+                            {detail?.OfficialLink}
+                          </a>
+                        )}
+                      </dd>
+                    </dl>
+                  </ul>
+                </NewContentBox>
+
                 <ContentBox>
                   {detail?.status === 'closed' ? (
                     <ClosedButton disabled>{t('Project.Edit')}</ClosedButton>
@@ -212,7 +363,9 @@ export default function InfoPage() {
                   <DlBox>
                     <dl>
                       <dt>{t('Project.ProjectIntro')}</dt>
-                      <dd><Desc>{detail?.desc}</Desc></dd>
+                      <dd>
+                        <Desc>{detail?.desc}</Desc>
+                      </dd>
                     </dl>
                     <dl>
                       <dt>{t('Project.StartProjectLink')}</dt>
@@ -324,6 +477,95 @@ export default function InfoPage() {
     </OuterBox>
   );
 }
+
+const NewContentBox = styled.div`
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: 32px;
+  width: 100%;
+  margin-bottom: 32px;
+  .lft,
+  .rht {
+    flex-grow: 1;
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+  }
+  .rht {
+    dl {
+      flex-grow: 1;
+    }
+  }
+  dl {
+    background: var(--bs-box--background);
+    box-shadow: var(--box-shadow);
+    border-radius: 16px;
+    padding: 22px 24px;
+    margin-top: 32px;
+  }
+  dt {
+    color: var(--bs-body-color_active);
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 18px;
+  }
+  dd {
+    font-size: 14px;
+  }
+
+  .first {
+    display: flex;
+  }
+  .title {
+    font-size: 14px;
+    color: var(--bs-body-color);
+  }
+
+  .rht {
+    color: var(--bs-body-color);
+  }
+  table {
+    width: 100%;
+  }
+  td {
+    color: var(--bs-body-color);
+    font-size: 14px;
+    padding-bottom: 10px;
+    vertical-align: top;
+
+    &:first-child {
+      padding-right: 20px;
+      white-space: nowrap;
+    }
+    &:nth-child(2) {
+      color: var(--bs-body-color_active);
+      word-break: break-all;
+      width: 100%;
+    }
+  }
+  .quill {
+    width: 100%;
+  }
+  .ql-container {
+    width: 100% !important;
+    border: 0;
+  }
+  .ql-editor {
+    padding: 0;
+  }
+
+  a {
+    color: var(--bs-primary);
+  }
+`;
+
+const ModoratorBox = styled.div`
+  flex-grow: 1;
+  .rhtContact {
+    color: var(--bs-body-color_active);
+  }
+`;
 
 const FlexBox = styled.div`
   display: flex;
@@ -460,9 +702,9 @@ const FlexLine = styled.div`
 `;
 
 const LastLine = styled.div`
-  display: flex;
-  align-items: stretch;
-  justify-content: space-between;
+  //display: flex;
+  //align-items: stretch;
+  //justify-content: space-between;
   margin-top: 15px;
   padding-bottom: 60px;
   flex-shrink: 0;
@@ -488,6 +730,7 @@ const TopBox = styled.div`
   box-shadow: var(--box-shadow);
   border-radius: 16px;
   padding: 22px 24px;
+  position: relative;
 `;
 
 const TopBoxLeft = styled.div`
@@ -542,6 +785,7 @@ const ContentBox = styled.div`
   //margin-left: 16px;
   color: var(--bs-body-color_active);
   position: relative;
+
   img {
     max-width: 100%;
   }
