@@ -50,6 +50,7 @@ export default function BorrowModal({ handleClose }: IProps) {
     try {
       await checkNetwork();
       await approveToken('scr', forfeitNum);
+      showToast('Approve successfully', ToastType.Success);
       setStep(1);
     } catch (error) {
       console.error(error);
@@ -70,8 +71,8 @@ export default function BorrowModal({ handleClose }: IProps) {
     } catch (error: any) {
       logError('[borrow]', error);
       let errorMsg = `${parseError(error)}`;
-      if (errorMsg === '') {
-        errorMsg = t('Credit.BorrowColddownMsg');
+      if (errorMsg === 'BorrowCooldownTimeTooShort') {
+        errorMsg = t('Credit.BorrowCooldownMsg');
       }
       showToast(errorMsg, ToastType.Danger);
     } finally {

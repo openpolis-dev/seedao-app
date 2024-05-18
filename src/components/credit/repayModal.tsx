@@ -93,6 +93,7 @@ export default function RepayModal({ handleClose }: IProps) {
         throw new Error('Insufficient balance');
       }
       await approveToken('usdt', totalApproveAmount);
+      showToast('Approve successfully', ToastType.Success);
       setStep(2);
     } catch (error: any) {
       console.error(error);
