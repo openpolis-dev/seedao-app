@@ -168,10 +168,22 @@ const MyTable = ({ list, openMyDetail }: IMyTableProps) => {
                 </td>
                 <td>{item.borrowTime}</td>
                 <td>{item.rate}‰</td>
-                <td>{intrest.get(Number(item.lendId))?.interestDays || item.interestDays}日</td>
                 <td>
-                  {intrest.get(Number(item.lendId))?.interestAmount || item.interestAmount}{' '}
-                  <span className="unit">USDT</span>
+                  {item.status === CreditRecordStatus.OVERDUE ? (
+                    <NoData>-</NoData>
+                  ) : (
+                    `${intrest.get(Number(item.lendId))?.interestDays || item.interestDays}日`
+                  )}
+                </td>
+                <td>
+                  {item.status === CreditRecordStatus.OVERDUE ? (
+                    <NoData>-</NoData>
+                  ) : (
+                    <>
+                      {intrest.get(Number(item.lendId))?.interestAmount || item.interestAmount}{' '}
+                      <span className="unit">USDT</span>
+                    </>
+                  )}
                 </td>
                 <td>{item.overdueTime}</td>
               </tr>
@@ -567,4 +579,8 @@ const SearchBox = styled.div`
 const FilterBox = styled.div`
   display: flex;
   gap: 30px;
+`;
+
+const NoData = styled.span`
+  color: red;
 `;

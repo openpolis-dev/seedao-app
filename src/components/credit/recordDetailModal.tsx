@@ -86,11 +86,19 @@ export default function RecordDetailModal({ borrowName, data, handleClose }: IPr
           </Line>
           <Line>
             <dt>{t('Credit.BorrowDuration')}</dt>
-            <dd>{t('Credit.Days', { days: fullData.interestDays })}</dd>
+            <dd>
+              {fullData.status === CreditRecordStatus.OVERDUE ? (
+                <NoData>-</NoData>
+              ) : (
+                t('Credit.Days', { days: fullData.interestDays })
+              )}
+            </dd>
           </Line>
           <Line>
             <dt>{t('Credit.TotalInterest')}</dt>
-            <dd>{fullData.interestAmount} USDT</dd>
+            <dd>
+              {fullData.status === CreditRecordStatus.OVERDUE ? <NoData>-</NoData> : `${fullData.interestAmount} USDT`}
+            </dd>
           </Line>
           <Line>
             <dt>{t('Credit.LastRepaymentTime')}</dt>
@@ -217,4 +225,8 @@ const ModalTitle = styled.div`
   font-family: Inter-SemiBold;
   font-weight: 600;
   margin-top: 14px;
+`;
+
+const NoData = styled.span`
+  color: red;
 `;
