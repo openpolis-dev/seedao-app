@@ -57,7 +57,7 @@ export default function RecordDetailModal({ borrowName, data, handleClose }: IPr
         <DetailLines>
           <Line>
             <dt>{t('Credit.BorrowName')}</dt>
-            <dd>{publicJs.AddressToShow(fullData.debtor)}</dd>
+            <dd>{borrowName}</dd>
           </Line>
           <Line>
             <dt>{t('Credit.Forfeit')}</dt>
