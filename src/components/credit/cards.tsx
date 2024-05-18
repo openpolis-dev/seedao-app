@@ -117,6 +117,7 @@ const MyBorrowingQuota = ({ isLogin, onClickLogin }: BorrowCardProps) => {
           )}
         </MyCardLine>
         <MyCardTipLine>{t('Credit.MyBorrowTip')}</MyCardTipLine>
+        <MyCardTipLine>{t('Credit.MyBorrowTip3')}</MyCardTipLine>
         <MyCardColomnLine>
           <div>
             <div className="label">{t('Credit.MySCR')}</div>

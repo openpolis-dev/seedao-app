@@ -699,6 +699,7 @@
     "MyBorrow": "My Loan",
     "MyBorrowTip": "日利率（单利）0.10‰，1 SCR 可借 0.01 USDT 最长可借 30 日",
     "MyBorrowTip2": "逾期未还，$SCR 将被罚没至社区金库",
+    "MyBorrowTip3": "最长可借 30 日",
     "LatestRepaymentDate": "Latest Repayment Date",
     "MySCR": "My SCR",
     "TotalQuota": "Total Quota",
