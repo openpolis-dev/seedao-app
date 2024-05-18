@@ -538,7 +538,7 @@ const MyCardTipLine = styled.div`
   font-size: 12px;
   font-weight: 400;
   color: #ff7193;
-  line-height: 15px;
+  line-height: 18px;
   width: calc(100% - 60px);
 `;
 
@@ -551,7 +551,7 @@ const MyCardTipLine2 = styled(MyCardTipLine)`
 `;
 
 const MyCardColomnLine = styled.div`
-  margin-top: 10px;
+  margin-top: 8px;
   display: flex;
   > div {
     flex: 1;
