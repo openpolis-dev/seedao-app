@@ -69,7 +69,11 @@ export default function BorrowModal({ handleClose }: IProps) {
       setStep(2);
     } catch (error: any) {
       logError('[borrow]', error);
-      showToast(parseError(error), ToastType.Danger);
+      let errorMsg = `${parseError(error)}`;
+      if (errorMsg === '') {
+        errorMsg = t('Credit.BorrowColddownMsg');
+      }
+      showToast(errorMsg, ToastType.Danger);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }

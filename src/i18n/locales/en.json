@@ -782,6 +782,7 @@
     "Days": "{{days}}日",
     "NoDate": "暂无",
     "MaxBorrow": "Max",
+    "BorrowCooldownMsg": "距离上次还款时间不足24小时，无法再次借款"
   },
   "Governance": {
     "GovernanceRule": "Governance Rules",
