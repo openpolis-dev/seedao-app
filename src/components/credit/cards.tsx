@@ -185,7 +185,7 @@ const MyBorrowing = ({ isLogin, onClickLogin }: BorrowCardProps) => {
     }).then((r) => {
       if (r.data.length) {
         const d = r.data[0] as ICreditRecord;
-        setEarlyDate(d.borrowTime.slice(0, 10));
+        setEarlyDate(d.overdueTime.slice(0, 10));
       }
     });
   };
