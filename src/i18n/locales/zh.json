@@ -706,7 +706,7 @@
     "CurrentBorrow": "当前在借 {{num}} 笔",
     "Overdue": "已逾期 {{num}} 笔",
     "DaoTotalQuota": "社区总借款额度",
-    "DaoTip": "计划总资金180000USDT，每月补充资金，详情 >>",
+    "DaoTip": "计划总资金 180,000 USDT，每月补充资金，详情 >>",
     "TotalBorrow": "已借出 {{num}} 笔",
     "TotalClear": "已结清 {{num}} 笔",
     "TotalOverdue": "逾期未还 {{num}} 笔",

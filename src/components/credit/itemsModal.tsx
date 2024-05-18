@@ -9,13 +9,14 @@ interface Iprops {
   confirmText: string;
   onConfirm: () => void;
   handleClose: () => void;
+  w: boolean;
 }
 
-function ItemsModal({ title, steps, confirmText, onConfirm, handleClose }: Iprops) {
+function ItemsModal({ title, steps, confirmText, onConfirm, handleClose, w }: Iprops) {
   return (
     <ItemsModalStyle closeColor="#343C6A" handleClose={handleClose}>
       <ModalTitle>{title}</ModalTitle>
-      <StepsBox>
+      <StepsBox style={{ width: w ? '350px' : '260px' }}>
         {steps.map((step, index) => (
           <li key={index}>
             <span className="number">{index + 1}</span>
@@ -31,7 +32,7 @@ function ItemsModal({ title, steps, confirmText, onConfirm, handleClose }: Iprop
 }
 
 export const BorrowItemsModal = ({ onConfirm, handleClose }: { onConfirm: () => void; handleClose: () => void }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   return (
     <ItemsModal
       title={t('Credit.BorrowStepTitle')}
@@ -39,12 +40,13 @@ export const BorrowItemsModal = ({ onConfirm, handleClose }: { onConfirm: () => 
       onConfirm={onConfirm}
       confirmText={t('Credit.BorrowStepConfirmButton')}
       handleClose={handleClose}
+      w={i18n.language === 'en'}
     />
   );
 };
 
 export const RepayItemsModal = ({ onConfirm, handleClose }: { onConfirm: () => void; handleClose: () => void }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   return (
     <ItemsModal
       title={t('Credit.RepayStepTitle')}
@@ -52,6 +54,7 @@ export const RepayItemsModal = ({ onConfirm, handleClose }: { onConfirm: () => v
       onConfirm={onConfirm}
       confirmText={t('Credit.RepayStepConfirmButton')}
       handleClose={handleClose}
+      w={i18n.language === 'en'}
     />
   );
 };
@@ -77,8 +80,6 @@ const ModalTitle = styled.div`
 const StepsBox = styled.ul`
   color: #343c6a;
   margin: 60px auto;
-
-  width: 260px;
 
   li {
     display: flex;
