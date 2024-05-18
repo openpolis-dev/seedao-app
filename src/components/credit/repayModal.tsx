@@ -230,7 +230,7 @@ export default function RepayModal({ handleClose }: IProps) {
       <ConfirmBox>
         {(step === 1 || step === 2) && <BorrowTip1>{t('Credit.BorrowTip2')}</BorrowTip1>}
         {steps[step].button}
-        {(step === 1 || step === 2) && <RepayTip>{t('Credit.RepayTip')}</RepayTip>}
+        {step === 1 && <RepayTip>{t('Credit.RepayTip')}</RepayTip>}
       </ConfirmBox>
     </RepayModalStyle>
   );
