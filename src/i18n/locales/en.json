@@ -148,7 +148,14 @@
     "ConfirmToCloseVote": "Confirmation of the early closing of the polls?",
     "ExecutionTip": "The current ballot has closed and there is a 24-hour waiting period during which the City Council may veto the results of the proposal, or if the City Council does not veto the proposal, the proposal closes in accordance with the results of the ballot.",
     "Create": "Create",
-    "ViewVoteRules": "View voting rules >>"
+    "ViewVoteRules": "View voting rules >>",
+    "currentApply": "Current applicable assets",
+    "projectBudget": "Project budge",
+    "prepay": "Prepayment ratio",
+    "prepayAmount": "Prepayment amount",
+    "prepaid": "Currently prepaid",
+    "budgetAmount": "Budget balance",
+    "availableBalance": "Available balance"
   },
   "Project": {
     "OfficialLink": "Official link",

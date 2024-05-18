@@ -641,30 +641,30 @@ export default function CreateStep({ onClick }: any) {
               )}
 
               <DisplayBox>
-                <div className="titl">当前可申请资产: 2500 SCR, 800 USDT</div>
+                <div className="titl">{t('Proposal.currentApply')}: 2500 SCR, 800 USDT</div>
                 <div className="content">
                   <dl>
-                    <dt>项目预算</dt>
+                    <dt>{t('Proposal.projectBudget')}</dt>
                     <dd> 2500 SCR, 800 USDT</dd>
                   </dl>
                   <dl>
-                    <dt>预付比例</dt>
+                    <dt>{t('Proposal.prepay')}</dt>
                     <dd> 2500 SCR, 800 USDT</dd>
                   </dl>
                   <dl>
-                    <dt>可预支数额</dt>
+                    <dt>{t('Proposal.prepayAmount')}</dt>
                     <dd> 2500 SCR, 800 USDT</dd>
                   </dl>
                   <dl>
-                    <dt>当前已预支</dt>
+                    <dt>{t('Proposal.prepaid')}</dt>
                     <dd> 2500 SCR, 800 USDT</dd>
                   </dl>
                   <dl>
-                    <dt>预算余额</dt>
+                    <dt>{t('Proposal.budgetAmount')}</dt>
                     <dd> 2500 SCR, 800 USDT</dd>
                   </dl>
                   <dl>
-                    <dt>可预支余额</dt>
+                    <dt>{t('Proposal.availableBalance')}</dt>
                     <dd> 2500 SCR, 800 USDT</dd>
                   </dl>
                 </div>
@@ -761,6 +761,7 @@ const DisplayBox = styled.div`
     font-weight: 600;
     color: var(--bs-body-color_active);
     margin-bottom: 20px;
+    text-transform: capitalize;
   }
   .content {
     font-size: 14px;
@@ -769,6 +770,7 @@ const DisplayBox = styled.div`
     align-items: center;
     justify-content: space-between;
     flex-wrap: wrap;
+    text-transform: capitalize;
     dl {
       width: 33.333%;
       display: flex;
@@ -776,7 +778,8 @@ const DisplayBox = styled.div`
       align-items: center;
       margin-bottom: 10px;
       dt {
-        min-width: 20%;
+        margin-right: 20px;
+        min-width: 70px;
         font-weight: normal;
       }
     }
