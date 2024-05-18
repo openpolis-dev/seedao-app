@@ -112,7 +112,7 @@ export default function RecordDetailModal({ borrowName, data, handleClose }: IPr
             <DetailLines>
               <Line>
                 <dt>{t('Credit.TotalRepay')}</dt>
-                <dd>{fullData.borrowAmount + fullData.interestAmount} USDT</dd>
+                <dd className='total'>{fullData.borrowAmount + fullData.interestAmount} USDT</dd>
               </Line>
               <Line>
                 <dt>{t('Credit.Principal')}</dt>
@@ -201,6 +201,11 @@ const Line = styled.dl`
   }
   .hash {
     color: #1814f3;
+  }
+  .total {
+    font-size: 16px;
+    font-weight: 600;
+    font-family: 'Inter-SemiBold';
   }
 `;
 
