@@ -5,6 +5,12 @@ import StateTag from './stateTag';
 import { CreditRecordStatus, ICreditRecord } from 'type/credit.type';
 import publicJs from 'utils/publicJs';
 import { amoy } from 'utils/chain';
+import { useCreditContext } from 'pages/credit/provider';
+import { useEffect, useState } from 'react';
+import { ethers } from 'ethers';
+import getConfig from 'utils/envCofnig';
+
+const lendToken = getConfig().NETWORK.lend.lendToken;
 
 interface IProps {
   borrowName: string;
@@ -14,6 +20,29 @@ interface IProps {
 
 export default function RecordDetailModal({ borrowName, data, handleClose }: IProps) {
   const { t } = useTranslation();
+
+  const [fullData, setFullData] = useState<ICreditRecord>(data);
+  const {
+    state: { bondNFTContract },
+  } = useCreditContext();
+
+  useEffect(() => {
+    if (data.interestDays === 0 && data.status === CreditRecordStatus.INUSE) {
+      bondNFTContract
+        ?.calculateInterest(Number(data.lendId))
+        .then((r: { interestDays: ethers.BigNumber; interestAmount: ethers.BigNumber }) => {
+          const newData: ICreditRecord = {
+            ...data,
+            interestDays: r.interestDays.toNumber(),
+            interestAmount: Number(ethers.utils.formatUnits(r.interestAmount, lendToken.decimals)),
+          };
+          setFullData(newData);
+        });
+    } else {
+      setFullData(data);
+    }
+  }, [data]);
+
   return (
     <RecordDetailModalStyle handleClose={handleClose} closeColor="#343C6A">
       <ModalTitle>{t('Credit.Records')}</ModalTitle>
@@ -22,89 +51,89 @@ export default function RecordDetailModal({ borrowName, data, handleClose }: IPr
           {t('Credit.BorrowID')}: {data.lendIdDisplay}
         </div>
         <TotalBox>
-          <div className="amount">{data.borrowAmount.format()} USDT</div>
-          <StateTag state={data.status} solid />
+          <div className="amount">{fullData.borrowAmount.format()} USDT</div>
+          <StateTag state={fullData.status} solid />
         </TotalBox>
         <DetailLines>
           <Line>
             <dt>{t('Credit.BorrowName')}</dt>
-            <dd>{publicJs.AddressToShow(data.debtor)}</dd>
+            <dd>{publicJs.AddressToShow(fullData.debtor)}</dd>
           </Line>
           <Line>
             <dt>{t('Credit.Forfeit')}</dt>
-            <dd>{data.mortgageSCRAmount.format()} SCR</dd>
+            <dd>{fullData.mortgageSCRAmount.format()} SCR</dd>
           </Line>
           <Line>
             <dt>{t('Credit.BorrowHash')}</dt>
             <dd>
               <a
                 className="hash"
-                href={`${amoy?.blockExplorers?.default.url}/tx/${data.borrowTx}`}
+                href={`${amoy?.blockExplorers?.default.url}/tx/${fullData.borrowTx}`}
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                {publicJs.AddressToShow(data.borrowTx)}
+                {publicJs.AddressToShow(fullData.borrowTx)}
               </a>
             </dd>
           </Line>
           <Line>
             <dt>{t('Credit.BorrowTime')}</dt>
-            <dd>{data.borrowTime}</dd>
+            <dd>{fullData.borrowTime}</dd>
           </Line>
           <Line>
             <dt>{t('Credit.Rate')}</dt>
-            <dd>{t('Credit.DayRate01', { rate: data.rate })}</dd>
+            <dd>{t('Credit.DayRate01', { rate: fullData.rate })}</dd>
           </Line>
           <Line>
             <dt>{t('Credit.BorrowDuration')}</dt>
-            <dd>{t('Credit.Days', { days: data.interestDays })}</dd>
+            <dd>{t('Credit.Days', { days: fullData.interestDays })}</dd>
           </Line>
           <Line>
             <dt>{t('Credit.TotalInterest')}</dt>
-            <dd>{data.interestAmount} USDT</dd>
+            <dd>{fullData.interestAmount} USDT</dd>
           </Line>
           <Line>
             <dt>{t('Credit.LastRepaymentTime')}</dt>
-            <dd>{data.overdueTime}</dd>
+            <dd>{fullData.overdueTime}</dd>
           </Line>
         </DetailLines>
-        {data.status === CreditRecordStatus.CLEAR && (
+        {fullData.status === CreditRecordStatus.CLEAR && (
           <>
             <Divider />
             <RepayTtile>{t('Credit.RepayRecord')}</RepayTtile>
             <DetailLines>
               <Line>
                 <dt>{t('Credit.TotalRepay')}</dt>
-                <dd>{(data.borrowAmount + data.interestAmount).format()} USDT</dd>
+                <dd>{fullData.borrowAmount + fullData.interestAmount} USDT</dd>
               </Line>
               <Line>
                 <dt>{t('Credit.Principal')}</dt>
-                <dd>{data.borrowAmount.format()} USDT</dd>
+                <dd>{fullData.borrowAmount.format()} USDT</dd>
               </Line>
               <Line>
                 <dt>{t('Credit.Interest')}</dt>
-                <dd>{data.interestAmount.format()} USDT</dd>
+                <dd>{fullData.interestAmount} USDT</dd>
               </Line>
               <Line>
                 <dt>{t('Credit.ForfeitRepay')}</dt>
-                <dd>{data.mortgageSCRAmount.format()} SCR</dd>
+                <dd>{fullData.mortgageSCRAmount.format()} SCR</dd>
               </Line>
               <Line>
                 <dt>{t('Credit.RepayHash')}</dt>
                 <dd>
                   <a
                     className="hash"
-                    href={`${amoy?.blockExplorers?.default.url}/tx/${data.paybackTx}`}
+                    href={`${amoy?.blockExplorers?.default.url}/tx/${fullData.paybackTx}`}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    {publicJs.AddressToShow(data.paybackTx)}
+                    {publicJs.AddressToShow(fullData.paybackTx)}
                   </a>
                 </dd>
               </Line>
               <Line>
                 <dt>{t('Credit.RepayTime')}</dt>
-                <dd>{data.paybackTime}</dd>
+                <dd>{fullData.paybackTime}</dd>
               </Line>
             </DetailLines>
           </>
