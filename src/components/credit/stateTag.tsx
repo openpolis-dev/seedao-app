@@ -37,7 +37,7 @@ export default function StateTag({ state, solid }: { state: CreditRecordStatus; 
   }
 
   return (
-    <StatusTagStyle $color={color} $bg={bg}>
+    <StatusTagStyle $color={color} $bg={bg} style={{ textAlign: solid ? 'center' : 'left' }}>
       {text}
     </StatusTagStyle>
   );
@@ -51,6 +51,5 @@ const StatusTagStyle = styled.div<{ $color: string; $bg: string }>`
   display: inline-block;
   height: 24px;
   line-height: 24px;
-  text-align: center;
   width: 60px;
 `;
