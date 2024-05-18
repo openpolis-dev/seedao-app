@@ -136,7 +136,7 @@ export default function BorrowModal({ handleClose }: IProps) {
   };
 
   const handleBlur = () => {
-    // 在输入框失去焦点时验证最小值
+    // 在输入框失去焦点时验证最小和最大值
     const numericValue = parseFloat(inputNum);
     if (!isNaN(numericValue)) {
       if (numericValue < 100) {
@@ -181,6 +181,7 @@ export default function BorrowModal({ handleClose }: IProps) {
                 onChange={onChangeInput}
                 onBlur={handleBlur}
               />
+              <MaxButton>{t('Credit.MaxBorrow')}</MaxButton>
             </div>
             <span className="right">USDT</span>
           </LineBox>
@@ -242,6 +243,13 @@ const LineLabel = styled.div`
   margin-bottom: 10px;
 `;
 
+const MaxButton = styled.span`
+  color: #1814f3;
+  font-size: 14px;
+  line-height: 50px;
+  cursor: pointer;
+`;
+
 const LineBox = styled.div`
   display: flex;
   align-items: center;
@@ -257,6 +265,7 @@ const LineBox = styled.div`
     font-size: 20px;
     font-family: Inter-SemiBold;
     font-weight: 600;
+    display: flex;
   }
   .right {
     font-size: 20px;
@@ -273,7 +282,7 @@ const LineBox = styled.div`
     font-family: Inter-SemiBold;
     font-weight: 600;
     color: #343c6a;
-    width: 100%;
+    flex: 1;
     &:focus-visible {
       outline: none;
     }

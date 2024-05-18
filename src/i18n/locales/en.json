@@ -780,7 +780,8 @@
     "ShouldRepay": "合计应还",
     "ReturnForfeit": "退回质押物",
     "Days": "{{days}}日",
-    "NoDate": "暂无"
+    "NoDate": "暂无",
+    "MaxBorrow": "Max",
   },
   "Governance": {
     "GovernanceRule": "Governance Rules",
