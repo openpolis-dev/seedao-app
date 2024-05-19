@@ -64,7 +64,7 @@ const MyBorrowingQuota = ({ isLogin, onClickLogin }: BorrowCardProps) => {
   } = useAuthContext();
   const {
     dispatch: dispatchCreditEvent,
-    state: { myAvaliableQuota, myScore },
+    state: { myAvaliableQuota, myScore, myInuseAmount, myOverdueAmount },
   } = useCreditContext();
 
   const onClickBottom = () => {
@@ -127,7 +127,7 @@ const MyBorrowingQuota = ({ isLogin, onClickLogin }: BorrowCardProps) => {
             <div className="label">{t('Credit.TotalQuota')} (USDT)</div>
             {isLogin ? (
               <ItemAmountBox>
-                <span className="value">{networkConfig.lend.quotaPerUser.format()}</span>
+                <span className="value">{Number(myInuseAmount + myAvaliableQuota + myOverdueAmount).format()}</span>
               </ItemAmountBox>
             ) : (
               <div className="secret">*********</div>
