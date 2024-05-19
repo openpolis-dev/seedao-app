@@ -21,22 +21,6 @@
     "type": "error"
   },
   {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "min",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "current",
-        "type": "uint256"
-      }
-    ],
-    "name": "BorrowCooldownTimeTooShort",
-    "type": "error"
-  },
-  {
     "inputs": [],
     "name": "InvalidInitialization",
     "type": "error"
@@ -119,6 +103,17 @@
       }
     ],
     "name": "UserAvailableAmountInsufficient",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "cooldownTimeLeft",
+        "type": "uint256"
+      }
+    ],
+    "name": "UserInBorrowCooldownPeriod",
     "type": "error"
   },
   {
@@ -719,6 +714,30 @@
       {
         "internalType": "uint256",
         "name": "availableAmount",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "debtor",
+        "type": "address"
+      }
+    ],
+    "name": "userIsInBorrowCooldownPeriod",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "isIn",
+        "type": "bool"
+      },
+      {
+        "internalType": "uint256",
+        "name": "cooldownTimeLeft",
         "type": "uint256"
       }
     ],

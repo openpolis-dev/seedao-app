@@ -22,6 +22,7 @@ import { erc20ABI } from 'wagmi';
 import { getBorrowList, getVaultData, VaultData } from 'requests/credit';
 import { CreditRecordStatus, ICreditRecord } from 'type/credit.type';
 import { formatDate } from 'utils/time';
+import useToast, { ToastType } from 'hooks/useToast';
 
 const networkConfig = getConfig().NETWORK;
 
@@ -60,20 +61,35 @@ const MyBorrowingQuota = ({ isLogin, onClickLogin }: BorrowCardProps) => {
   const [showBorrowModal, setShowBorrowModal] = useState(false);
   const [showBorrowItemsModal, setShowBorrowItemsModal] = useState(false);
   const {
+    dispatch,
     state: { account },
   } = useAuthContext();
   const {
     dispatch: dispatchCreditEvent,
-    state: { myAvaliableQuota, myScore, myInuseAmount, myOverdueAmount },
+    state: { myAvaliableQuota, myScore, myInuseAmount, myOverdueAmount, scoreLendContract },
   } = useCreditContext();
+
+  const { showToast } = useToast();
 
   const onClickBottom = () => {
     isLogin ? setShowBorrowItemsModal(true) : onClickLogin();
   };
 
   const go2Borrow = () => {
-    setShowBorrowItemsModal(false);
-    setShowBorrowModal(true);
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    scoreLendContract
+      .userIsInBorrowCooldownPeriod(account)
+      .then((r: { isIn: Boolean }) => {
+        if (r.isIn) {
+          showToast(t('Credit.BorrowCooldownMsg'), ToastType.Danger);
+        } else {
+          setShowBorrowItemsModal(false);
+          setShowBorrowModal(true);
+        }
+      })
+      .finally(() => {
+        dispatch({ type: AppActionType.SET_LOADING, payload: false });
+      });
   };
 
   const getData = () => {
