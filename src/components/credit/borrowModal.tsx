@@ -42,7 +42,7 @@ export default function BorrowModal({ handleClose }: IProps) {
     }
     // check enough
     if (forfeitNum === 0 || myScore < forfeitNum) {
-      showToast('Insufficient balance', ToastType.Danger);
+      showToast(t('Credit.InsufficientQuota'), ToastType.Danger);
       return;
     }
     // approve

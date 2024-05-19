@@ -90,7 +90,7 @@ export default function RepayModal({ handleClose }: IProps) {
       const totalApproveAmount = Number(ethers.utils.formatUnits(totalApproveBN, lendToken.decimals));
       const result = await checkEnoughBalance(account!, 'usdt', totalApproveAmount);
       if (!result) {
-        throw new Error('Insufficient balance');
+        throw new Error(t('Credit.InsufficientBalance'));
       }
       await approveToken('usdt', totalApproveAmount);
       showToast('Approve successfully', ToastType.Success);
