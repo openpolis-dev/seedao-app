@@ -171,6 +171,10 @@ const MyBorrowing = ({ isLogin, onClickLogin }: BorrowCardProps) => {
   const [showRepayItemsModal, setShowRepayItemsModal] = useState(false);
 
   const {
+    state: { account },
+  } = useAuthContext();
+
+  const {
     state: { myOverdueAmount, myInuseAmount, myOverdueCount, myInUseCount },
   } = useCreditContext();
 
@@ -194,6 +198,7 @@ const MyBorrowing = ({ isLogin, onClickLogin }: BorrowCardProps) => {
 
   const getMyData = () => {
     getBorrowList({
+      debtor: account!,
       lendStatus: CreditRecordStatus.INUSE,
       sortField: 'borrowTimestamp',
       sortOrder: 'asc',
