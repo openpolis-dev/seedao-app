@@ -225,6 +225,7 @@ export default function CreditRecords() {
     ];
   }, [t]);
   // filter
+  const [selectOption, setSelectOption] = useState(filterOptions[0]);
   const [selectValue, setSeletValue] = useState(filterOptions[0].value);
 
   const [snsMap, setSnsMap] = useState<Map<string, string>>(new Map());
@@ -285,14 +286,16 @@ export default function CreditRecords() {
 
   useEffect(() => {
     getList(page, currentTab);
-  }, [selectValue, searchTargetVal]);
+  }, [selectValue, searchTargetVal, page, currentTab]);
 
   const onChangeTab = (tab: 'all' | 'mine') => {
     setPage(1);
     setCurrentTab(tab);
-    getList(1, tab);
+    setTargetKeyword('');
+    setSearchTargetVal('');
+    setSeletValue(filterOptions[0].value);
+    setSelectOption(filterOptions[0]);
   };
-
   const openMine = () => {
     if (!loginStatus) {
       dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: true });
@@ -403,9 +406,10 @@ export default function CreditRecords() {
             menuPortalTarget={document.body}
             NotClear={true}
             options={filterOptions}
-            defaultValue={filterOptions[0]}
+            value={selectOption}
             onChange={(value: any) => {
               setSeletValue(value?.value);
+              setSelectOption(value);
             }}
           />
         </FilterBox>
