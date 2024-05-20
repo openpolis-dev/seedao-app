@@ -207,7 +207,7 @@ const MyBorrowing = ({ isLogin, onClickLogin }: BorrowCardProps) => {
     }).then((r) => {
       if (r.data.length) {
         const d = r.data[0] as ICreditRecord;
-        setEarlyDate(d.overdueTime.slice(0, 10));
+        setEarlyDate(d.overdueTime.slice(0, -5));
       }
     });
   };
@@ -237,8 +237,11 @@ const MyBorrowing = ({ isLogin, onClickLogin }: BorrowCardProps) => {
         </MyCardLine>
         <MyCardTipLine2>
           <div>
-            {t('Credit.LatestRepaymentDate')}
-            {isLogin ? (myInUseCount > 0 ? earlyDate : ` ${t('Credit.NoDate')}`) : '*******'}
+            {isLogin
+              ? myInUseCount > 0
+                ? t('Credit.LatestRepaymentDate', { date: earlyDate })
+                : ` ${t('Credit.NoDate')}`
+              : '*******'}
           </div>
           <div>
             <span>{t('Credit.MyBorrowTip2')}</span>
