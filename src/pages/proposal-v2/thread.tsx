@@ -102,6 +102,8 @@ export default function ThreadPage() {
   const { getUsers } = useQueryUser();
   const { showToast } = useToast();
 
+  const [detail, setDetail] = useState<any>(null);
+
   const replyRef = useRef<IReplyOutputProps>(null);
 
   const getProposalDetail = async (refreshIdx?: number) => {
@@ -126,6 +128,41 @@ export default function ThreadPage() {
         );
       }
       setData(res.data);
+
+      console.error('==res.data=', res.data);
+
+      const { associated_project_budgets: budgets } = res.data;
+
+      let data: any = {};
+
+      let total: string[] = [];
+      let ratio: string[] = [];
+      let paid: string[] = [];
+      let remainAmount: string[] = [];
+      let prepayTotal: string[] = [];
+      let prepayRemain: string[] = [];
+
+      budgets?.map((item: any) => {
+        total.push(`${item.total_amount} ${item.asset_name}`);
+        ratio.push(`${item.advance_ratio * 100}% ${item.asset_name}`);
+        paid.push(`${item.used_advance_amount} ${item.asset_name}`);
+        remainAmount.push(`${item.remain_amount} ${item.asset_name}`);
+        prepayTotal.push(`${item.total_advance_amount} ${item.asset_name}`);
+        prepayRemain.push(`${item.remain_advance_amount} ${item.asset_name}`);
+      });
+
+      data.total = total.join(',');
+      data.ratio = ratio.join(',');
+      data.paid = paid.join(',');
+      data.remainAmount = remainAmount.join(',');
+      data.prepayTotal = prepayTotal.join(',');
+      data.prepayRemain = prepayRemain.join(',');
+
+      console.error(budgets);
+      setDetail(data);
+
+      console.error('=====associated_project_budgets', budgets);
+
       const arr = res.data.content_blocks;
       const componentsIndex = arr.findIndex((i: any) => i.type === 'components');
 
@@ -578,31 +615,31 @@ export default function ThreadPage() {
               )}
               {!!dataSource?.length && componentName === '激励申请表' && dataSource[0].name === 'motivation' && (
                 <DisplayBox>
-                  <div className="titl">当前可申请资产: 2500 SCR, 800 USDT</div>
+                  <div className="titl">当前可申请资产: {detail?.prepayRemain}</div>
                   <div className="content">
                     <dl>
                       <dt>项目预算</dt>
-                      <dd> 2500 SCR, 800 USDT</dd>
+                      <dd> {detail?.total}</dd>
                     </dl>
                     <dl>
                       <dt>预付比例</dt>
-                      <dd> 2500 SCR, 800 USDT</dd>
+                      <dd>{detail?.ratio}</dd>
                     </dl>
                     <dl>
-                      <dt>可预支数额</dt>
-                      <dd> 2500 SCR, 800 USDT</dd>
+                      <dt>总可预支</dt>
+                      <dd> {detail?.prepayTotal}</dd>
                     </dl>
                     <dl>
                       <dt>当前已预支</dt>
-                      <dd> 2500 SCR, 800 USDT</dd>
+                      <dd>{detail?.paid}</dd>
                     </dl>
                     <dl>
                       <dt>预算余额</dt>
-                      <dd> 2500 SCR, 800 USDT</dd>
+                      <dd>{detail?.remainAmount}</dd>
                     </dl>
                     <dl>
                       <dt>可预支余额</dt>
-                      <dd> 2500 SCR, 800 USDT</dd>
+                      <dd>{detail?.prepayRemain}</dd>
                     </dl>
                   </div>
                 </DisplayBox>
