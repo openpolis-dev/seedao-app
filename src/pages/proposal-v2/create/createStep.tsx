@@ -159,6 +159,11 @@ const TipsBox = styled.div`
 
 const AfterBox = styled.div``;
 
+const WaringBox = styled.div`
+  padding: 20px 0 0 30px;
+  color: var(--bs-primary);
+`;
+
 export default function CreateStep({ onClick }: any) {
   const BASE_URL = getConfig().REACT_APP_BASE_ENDPOINT;
   const API_VERSION = process.env.REACT_APP_API_VERSION;
@@ -341,10 +346,7 @@ export default function CreateStep({ onClick }: any) {
     data.prepayTotal = prepayTotal.join(',');
     data.prepayRemain = prepayRemain.join(',');
 
-    console.error(budgets);
     setDetail(data);
-
-    console.error('=====associated_project_budgets', budgets);
 
     setPreview(comStr ?? []);
   };
@@ -637,6 +639,7 @@ export default function CreateStep({ onClick }: any) {
                 <InputBox>
                   <input type="text" value={title} onChange={handleInput} />
                 </InputBox>
+                <WaringBox>{t('Proposal.proposalWarnings')}</WaringBox>
               </ItemBox>
 
               {!!preview.length && (

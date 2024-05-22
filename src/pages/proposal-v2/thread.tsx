@@ -129,8 +129,6 @@ export default function ThreadPage() {
       }
       setData(res.data);
 
-      console.error('==res.data=', res.data);
-
       const { associated_project_budgets: budgets } = res.data;
 
       let data: any = {};
