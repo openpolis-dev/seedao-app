@@ -1,5 +1,11 @@
 import styled from 'styled-components';
-import { useAuthContext } from '../../providers/authProvider';
+import { AppActionType, useAuthContext } from '../../providers/authProvider';
+import React, { useEffect, useState } from 'react';
+import { getProjectById } from '../../requests/project';
+import DefaultLogo from '../../assets/Imgs/defaultLogo.png';
+import CategoryTag, { formatCategory } from '../proposalCom/categoryTag';
+import { useTranslation } from 'react-i18next';
+import { ProjectStatus } from '../../type/project.type';
 
 const Box = styled.div`
   background: var(--bs-box-background);
@@ -49,8 +55,9 @@ const FlexBox = styled.div`
     border: 1px solid #0085ff;
     text-align: center;
     color: #0085ff;
-    font-size: 14px;
     border-radius: 4px;
+    padding: 0 10px;
+    font-size: 12px;
   }
   .cat {
     color: var(--bs-body-color_active);
@@ -101,67 +108,104 @@ const TipsBox = styled.div`
   letter-spacing: 0.07px;
 `;
 
-export default function ProjectInfo() {
+const StatusBox = styled.div`
+  font-size: 12px;
+  color: #fff;
+  background: var(--bs-primary);
+  padding: 2px 12px;
+  border-radius: 4px;
+  line-height: 22px;
+  height: 26px;
+  &.pending_close {
+    background: #f9b617;
+  }
+  &.close {
+    background: rgb(163, 160, 160);
+  }
+  &.close-failed {
+    background: rgb(255, 51, 51);
+  }
+`;
+
+export default function ProjectInfo({ detail }: any) {
+  const { t } = useTranslation();
   const {
+    dispatch,
     state: { theme },
   } = useAuthContext();
 
+  const showStatusComponent = () => {
+    switch (detail?.status) {
+      case ProjectStatus.Closed:
+        return <StatusBox className="close">{t('Project.Closed')}</StatusBox>;
+      case ProjectStatus.Open:
+        return <StatusBox>{t('Project.Open')}</StatusBox>;
+      case ProjectStatus.Closing:
+        return <StatusBox>{t('Project.Closing')}</StatusBox>;
+      case ProjectStatus.CloseFailed:
+        return <StatusBox className="close-failed">{t('Project.CloseFailed')}</StatusBox>;
+    }
+  };
+
   return (
-    <Box>
-      <ImgBox>
-        <img src="" alt="" />
-      </ImgBox>
-      <MidBox>
-        <FlexBox>
-          <div className="title">香港Web3嘉年华参会&聚会提案</div>
-          <div className="rhtLine">
-            <div className="tag">SIP-111</div>
-            <div className="tag cat">P1 提案</div>
-            <div className="tag status">进行中</div>
-          </div>
-        </FlexBox>
-        <UlBox>
-          <li>
-            <div className="lft">
-              <div className="tit">项目预算</div>
-              <div className="tit">当前已预支</div>
-            </div>
-            <div className="rht">
-              {/*项目预算*/}
-              <div>5000 SCR，1000 USDT</div>
-              {/*当前已预支*/}
-              <div>0 SCR，200 USDT</div>
-            </div>
-          </li>
+    <>
+      {!!detail && (
+        <Box>
+          <ImgBox>
+            <img src={detail?.logo || DefaultLogo} alt="" />
+          </ImgBox>
+          <MidBox>
+            <FlexBox>
+              <div className="title">{detail?.name}</div>
+              <div className="rhtLine">
+                {detail?.SIP && <div className="tag">SIP - {detail?.SIP}</div>}
+                {detail?.Category && <div className="tag cat">{formatCategory(detail?.Category)} </div>}
+                {showStatusComponent()}
+              </div>
+            </FlexBox>
+            <UlBox>
+              <li>
+                <div className="lft">
+                  <div className="tit">{t('Project.projectBudget')}</div>
+                  <div className="tit">{t('Project.CurrentlyPrepaid')}</div>
+                </div>
+                <div className="rht">
+                  {/*项目预算*/}
+                  <div>{detail?.total}</div>
+                  {/*当前已预支*/}
+                  <div>{detail?.paid}</div>
+                </div>
+              </li>
+              <li>
+                <div className="lft">
+                  <div className="tit">{t('Project.PrepayRatio')}</div>
+                  <div className="tit">{t('Project.BudgetBalance')}</div>
+                </div>
+                <div className="rht">
+                  {/*预付比例*/}
+                  <div>{detail?.ratio}</div>
+                  {/*预算余额*/}
+                  <div>{detail?.remainAmount}</div>
+                </div>
+              </li>
 
-          <li>
-            <div className="lft">
-              <div className="tit">预付比例</div>
-              <div className="tit">预算余额</div>
-            </div>
-            <div className="rht">
-              {/*预付比例*/}
-              <div>50%</div>
-              {/*预算余额*/}
-              <div>2500 SCR，500 USDT</div>
-            </div>
-          </li>
-
-          <li>
-            <div className="lft">
-              <div className="tit">可预支数额</div>
-              <div className="tit">可预支余额</div>
-            </div>
-            <div className="rht">
-              {/*可预支数额*/}
-              <div>2500 SCR，500 USDT</div>
-              {/*可预支余额*/}
-              <div>2500 SCR，500 USDT</div>
-            </div>
-          </li>
-        </UlBox>
-        <TipsBox>预付比例之之外的预算不可预支，请通过提案结项申请</TipsBox>
-      </MidBox>
-    </Box>
+              <li>
+                <div className="lft">
+                  <div className="tit">{t('Project.AvailableAmount')}</div>
+                  <div className="tit">{t('Project.AvailableBalance')}</div>
+                </div>
+                <div className="rht">
+                  {/*总可预支*/}
+                  <div>{detail?.prepayTotal}</div>
+                  {/*可预支余额*/}
+                  <div>{detail?.prepayRemain}</div>
+                </div>
+              </li>
+            </UlBox>
+            <TipsBox>{t('Project.tips')}</TipsBox>
+          </MidBox>
+        </Box>
+      )}
+    </>
   );
 }

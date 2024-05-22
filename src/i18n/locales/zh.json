@@ -254,13 +254,14 @@
     "budgetUtil": "项目预算使用情况",
     "projectBudget": "项目预算",
     "PrepayRatio": "预付比例",
-    "AvailableAmount": "可预支数额",
+    "AvailableAmount": "总可预支",
     "CurrentlyPrepaid": "当前已预支",
     "BudgetBalance": "预算余额",
     "AvailableBalance": "可预支余额",
     "CompletionInformation": "结项信息",
     "introTips": "该项目未填写项目简介～",
-    "officialTips": "该项目未填写官方链接～"
+    "officialTips": "该项目未填写官方链接～",
+    "tips": "预付比例之之外的预算不可预支，请通过提案结项申请"
 
   },
   "Guild": {

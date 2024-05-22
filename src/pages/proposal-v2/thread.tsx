@@ -576,37 +576,37 @@ export default function ThreadPage() {
                   <div className="title">{componentName || t('Proposal.proposalComponents')}</div>
                 </ComponnentBox>
               )}
-              {
+              {!!dataSource?.length && componentName === '激励申请表' && dataSource[0].name === 'motivation' && (
                 <DisplayBox>
-                  <div className="titl">{t('Proposal.currentApply')}: 2500 SCR, 800 USDT</div>
+                  <div className="titl">当前可申请资产: 2500 SCR, 800 USDT</div>
                   <div className="content">
                     <dl>
-                      <dt>{t('Proposal.projectBudget')}</dt>
+                      <dt>项目预算</dt>
                       <dd> 2500 SCR, 800 USDT</dd>
                     </dl>
                     <dl>
-                      <dt>{t('Proposal.prepay')}</dt>
+                      <dt>预付比例</dt>
                       <dd> 2500 SCR, 800 USDT</dd>
                     </dl>
                     <dl>
-                      <dt>{t('Proposal.prepayAmount')}</dt>
+                      <dt>可预支数额</dt>
                       <dd> 2500 SCR, 800 USDT</dd>
                     </dl>
                     <dl>
-                      <dt>{t('Proposal.prepaid')}</dt>
+                      <dt>当前已预支</dt>
                       <dd> 2500 SCR, 800 USDT</dd>
                     </dl>
                     <dl>
-                      <dt>{t('Proposal.budgetAmount')}</dt>
+                      <dt>预算余额</dt>
                       <dd> 2500 SCR, 800 USDT</dd>
                     </dl>
                     <dl>
-                      <dt>{t('Proposal.availableBalance')}</dt>
+                      <dt>可预支余额</dt>
                       <dd> 2500 SCR, 800 USDT</dd>
                     </dl>
                   </div>
                 </DisplayBox>
-              }
+              )}
             </>
           }
           AfterComponent={

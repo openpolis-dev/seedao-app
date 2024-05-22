@@ -145,6 +145,7 @@ export interface IProposal extends ISimpleProposal {
   template_name?: string;
   execution_ts?: number;
   publicity_ts?: number;
+  associated_project_budgets?: any[];
 }
 
 export interface IActivity {

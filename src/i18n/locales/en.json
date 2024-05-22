@@ -253,13 +253,14 @@
     "budgetUtil": "Project Budget Utilization",
     "projectBudget": "Project Budget",
     "PrepayRatio": "Prepayment Ratio",
-    "AvailableAmount": "Available Prepayment Amount",
+    "AvailableAmount": "Total Available Prepayment",
     "CurrentlyPrepaid": "Currently Prepaid",
     "BudgetBalance": " Budget Balance",
     "AvailableBalance": "Available Prepayment Balance",
     "CompletionInformation": "Project Completion Information",
     "introTips": "The project has not filled in the project introduction～",
-    "officialTips": "The project has not filled in the official link～"
+    "officialTips": "The project has not filled in the official link～",
+    "tips": "he budget beyond the prepayment ratio is not available for prepayment. Please submit a proposal for project completion."
   },
   "Guild": {
     "OfficialLink": "Official link",

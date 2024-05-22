@@ -19,6 +19,7 @@ import TemplateTag from 'components/proposalCom/templateTag';
 import CategoryTag from 'components/proposalCom/categoryTag';
 import PlusImg from 'assets/Imgs/light/plus.svg';
 import MinusImg from 'assets/Imgs/light/minus.svg';
+import { getProjectById } from '../../../requests/project';
 
 const Box = styled.ul`
   position: relative;
@@ -194,6 +195,8 @@ export default function CreateStep({ onClick }: any) {
   const { changeStep, proposalType } = useCreateProposalContext();
   const { showToast } = useToast();
 
+  const [detail, setDetail] = useState<any>(null);
+
   const {
     state: { theme, tokenData },
     dispatch,
@@ -219,6 +222,7 @@ export default function CreateStep({ onClick }: any) {
       const previewArr = arr.filter((i: any) => i.type === 'preview');
       if (previewArr?.length && extraData?.id) {
         setPreviewTitle(previewArr[0]?.title);
+
         getPreview();
 
         getComponentsList();
@@ -264,6 +268,7 @@ export default function CreateStep({ onClick }: any) {
         }
         return item;
       });
+
       setComponents(components ? components : []);
     } else {
       setShowType('new');
@@ -308,6 +313,38 @@ export default function CreateStep({ onClick }: any) {
       return item;
     });
     comStr.unshift(titleComponents);
+
+    const { associated_project_budgets: budgets } = res.data;
+
+    let total: string[] = [];
+    let ratio: string[] = [];
+    let paid: string[] = [];
+    let remainAmount: string[] = [];
+    let prepayTotal: string[] = [];
+    let prepayRemain: string[] = [];
+
+    let data: any = {};
+
+    budgets?.map((item: any) => {
+      total.push(`${item.total_amount} ${item.asset_name}`);
+      ratio.push(`${item.advance_ratio * 100}% ${item.asset_name}`);
+      paid.push(`${item.used_advance_amount} ${item.asset_name}`);
+      remainAmount.push(`${item.remain_amount} ${item.asset_name}`);
+      prepayTotal.push(`${item.total_advance_amount} ${item.asset_name}`);
+      prepayRemain.push(`${item.remain_advance_amount} ${item.asset_name}`);
+    });
+
+    data.total = total.join(',');
+    data.ratio = ratio.join(',');
+    data.paid = paid.join(',');
+    data.remainAmount = remainAmount.join(',');
+    data.prepayTotal = prepayTotal.join(',');
+    data.prepayRemain = prepayRemain.join(',');
+
+    console.error(budgets);
+    setDetail(data);
+
+    console.error('=====associated_project_budgets', budgets);
 
     setPreview(comStr ?? []);
   };
@@ -437,11 +474,11 @@ export default function CreateStep({ onClick }: any) {
       const budgetData = data.filter((item: any) => item.name === 'budget') || [];
       if (budgetData.length) {
         budgetData[0].data.budgetList.map((item: any) => {
-          if (item.typeTest.name === 'USDT') {
+          if (item?.typeTest?.name === 'USDT') {
             if (Number(item.amount) > 1000) {
               err = true;
             }
-          } else if (item.typeTest.name === 'SCR') {
+          } else if (item?.typeTest?.name === 'SCR') {
             if (Number(item.amount) > 50000) {
               err = true;
             }
@@ -639,36 +676,37 @@ export default function CreateStep({ onClick }: any) {
                   {!!tips && <TipsBox>{tips}</TipsBox>}
                 </>
               )}
-
-              <DisplayBox>
-                <div className="titl">{t('Proposal.currentApply')}: 2500 SCR, 800 USDT</div>
-                <div className="content">
-                  <dl>
-                    <dt>{t('Proposal.projectBudget')}</dt>
-                    <dd> 2500 SCR, 800 USDT</dd>
-                  </dl>
-                  <dl>
-                    <dt>{t('Proposal.prepay')}</dt>
-                    <dd> 2500 SCR, 800 USDT</dd>
-                  </dl>
-                  <dl>
-                    <dt>{t('Proposal.prepayAmount')}</dt>
-                    <dd> 2500 SCR, 800 USDT</dd>
-                  </dl>
-                  <dl>
-                    <dt>{t('Proposal.prepaid')}</dt>
-                    <dd> 2500 SCR, 800 USDT</dd>
-                  </dl>
-                  <dl>
-                    <dt>{t('Proposal.budgetAmount')}</dt>
-                    <dd> 2500 SCR, 800 USDT</dd>
-                  </dl>
-                  <dl>
-                    <dt>{t('Proposal.availableBalance')}</dt>
-                    <dd> 2500 SCR, 800 USDT</dd>
-                  </dl>
-                </div>
-              </DisplayBox>
+              {componentName === '激励申请表' && (
+                <DisplayBox>
+                  <div className="titl">当前可申请资产: {detail?.prepayRemain}</div>
+                  <div className="content">
+                    <dl>
+                      <dt>项目预算</dt>
+                      <dd> {detail?.total}</dd>
+                    </dl>
+                    <dl>
+                      <dt>预付比例</dt>
+                      <dd>{detail?.ratio}</dd>
+                    </dl>
+                    <dl>
+                      <dt>总可预支</dt>
+                      <dd> {detail?.prepayTotal}</dd>
+                    </dl>
+                    <dl>
+                      <dt>当前已预支</dt>
+                      <dd>{detail?.paid}</dd>
+                    </dl>
+                    <dl>
+                      <dt>预算余额</dt>
+                      <dd>{detail?.remainAmount}</dd>
+                    </dl>
+                    <dl>
+                      <dt>可预支余额</dt>
+                      <dd>{detail?.prepayRemain}</dd>
+                    </dl>
+                  </div>
+                </DisplayBox>
+              )}
             </>
           }
           AfterComponent={
