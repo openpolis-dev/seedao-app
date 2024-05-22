@@ -148,7 +148,15 @@
     "ConfirmToCloseVote": "确认提前结束投票吗",
     "ExecutionTip": "当前投票已结束，进入 24 小时等待期，在此期间市政厅可对提案结果进行否决，如市政厅未否决，则提案按照投票结果结束。",
     "Create": "创建",
-    "ViewVoteRules": "查看投票规则 >>"
+    "ViewVoteRules": "查看投票规则 >>",
+    "currentApply": "当前可申请资产",
+    "projectBudget": "项目预算",
+    "prepay": "预付比例",
+    "prepayAmount": "可预支数额",
+    "prepaid": "当前已预支",
+    "budgetAmount": "预算余额",
+    "availableBalance": "可预支余额",
+    "proposalWarnings": "注意:提案进入投票阶段后会自动赋予SIP编号，无需在标题处填写SIP编号"
   },
   "Project": {
     "OfficialLink": "项目官方链接",
@@ -242,7 +250,20 @@
     "Credit": "积分",
     "Token": "Token",
     "Pending": "申请关闭中",
-    "MemberExist": "请不要重复添加成员"
+    "MemberExist": "请不要重复添加成员",
+    "projectproposalInfo": "立项信息",
+    "budgetUtil": "项目预算使用情况",
+    "projectBudget": "项目预算",
+    "PrepayRatio": "预付比例",
+    "AvailableAmount": "总可预支",
+    "CurrentlyPrepaid": "当前已预支",
+    "BudgetBalance": "预算余额",
+    "AvailableBalance": "可预支余额",
+    "CompletionInformation": "结项信息",
+    "introTips": "该项目未填写项目简介～",
+    "officialTips": "该项目未填写官方链接～",
+    "tips": "预付比例之之外的预算不可预支，请通过提案结项申请"
+
   },
   "Guild": {
     "OfficialLink": "公会官方链接",

@@ -17,6 +17,10 @@ import sns from '@seedao/sns-js';
 import { AssetName } from 'utils/constant';
 import { getAvailiableProjectsAndGuilds } from 'requests/applications';
 import BackerNav from 'components/common/backNav';
+import ProjectInfo from '../../components/assetsCom/projectInfo';
+import TotalImg from '../../assets/Imgs/light/total.svg';
+import TotalImgLt from '../../assets/Imgs/dark/total.svg';
+import { getProjectById } from '../../requests/project';
 
 type ErrorDataType = {
   line: number;
@@ -25,7 +29,10 @@ type ErrorDataType = {
 
 export default function Register() {
   const { t } = useTranslation();
-  const { dispatch } = useAuthContext();
+  const {
+    dispatch,
+    state: { theme },
+  } = useAuthContext();
   const { showToast } = useToast();
   const navigate = useNavigate();
 
@@ -35,6 +42,73 @@ export default function Register() {
   const [selectSource, setSelectSource] = useState<ISelectItem | null>(null);
 
   const [content, setContent] = useState('');
+  const [total, setTotal] = useState('');
+
+  const [detail, setDetail] = useState<any>(null);
+
+  useEffect(() => {
+    if (!selectSource?.value) return;
+    getDetail();
+  }, [selectSource?.value]);
+
+  const getDetail = async () => {
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    try {
+      const dt = await getProjectById(selectSource?.value.toString());
+      const { data } = dt;
+      const { budgets } = data;
+
+      let total: string[] = [];
+      let ratio: string[] = [];
+      let paid: string[] = [];
+      let remainAmount: string[] = [];
+      let prepayTotal: string[] = [];
+      let prepayRemain: string[] = [];
+
+      budgets?.map((item: any) => {
+        total.push(`${item.total_amount} ${item.asset_name}`);
+        ratio.push(`${item.advance_ratio * 100}% ${item.asset_name}`);
+        paid.push(`${item.used_advance_amount} ${item.asset_name}`);
+        remainAmount.push(`${item.remain_amount} ${item.asset_name}`);
+        prepayTotal.push(`${item.total_advance_amount} ${item.asset_name}`);
+        prepayRemain.push(`${item.remain_advance_amount} ${item.asset_name}`);
+      });
+
+      data.total = total.join(',');
+      data.ratio = ratio.join(',');
+      data.paid = paid.join(',');
+      data.remainAmount = remainAmount.join(',');
+      data.prepayTotal = prepayTotal.join(',');
+      data.prepayRemain = prepayRemain.join(',');
+
+      console.error(budgets);
+      setDetail(data);
+    } catch (error) {
+      logError(error);
+    } finally {
+      dispatch({ type: AppActionType.SET_LOADING, payload: null });
+    }
+  };
+
+  useEffect(() => {
+    if (!list?.length) return;
+
+    let totalObj: any = {};
+    list.map((item) => {
+      if (!totalObj[item.assetType] && !item.amount) return;
+      if (totalObj[item.assetType]) {
+        totalObj[item.assetType] += Number(item.amount);
+      } else {
+        totalObj[item.assetType] = Number(item.amount);
+      }
+    });
+
+    let arr = [];
+    for (let key in totalObj) {
+      arr.push(`${totalObj[key]} ${key}`);
+    }
+    setTotal(arr.join(','));
+  }, [list]);
 
   useEffect(() => {
     const getAllSources = async () => {
@@ -201,6 +275,25 @@ export default function Register() {
     }
   };
 
+  const returnDisable = () => {
+    console.log('returnDisable----', total, detail?.prepayRemain);
+    let totalArr = total.split(',');
+    const remainArr = detail?.prepayRemain.split(',');
+    console.log(totalArr, remainArr);
+
+    let checkAll = true;
+
+    if (totalArr?.length > remainArr?.length) {
+      checkAll = true;
+    } else {
+      remainArr?.map((item: any) => {
+        console.error(item);
+      });
+    }
+
+    return !list.length || !selectSource || !content || !content.trim() || checkAll;
+  };
+
   return (
     <OuterBox>
       <BackerNav to="/assets" title={t('Assets.Apply')} mb="0" />
@@ -216,10 +309,21 @@ export default function Register() {
           value={selectSource}
         />
       </SectionBlock>
+
+      <ProjectInfo detail={detail} />
       <SectionBlock>
         <div className="title lftTit">{t('Assets.RegisterList')}</div>
         <RegList list={list} setList={setList} />
       </SectionBlock>
+      {!!total && (
+        <TotalBox>
+          <img src={theme ? TotalImgLt : TotalImg} alt="" />
+          <div>
+            <span>{t('Assets.Total')}</span>
+            <span>{total}</span>
+          </div>
+        </TotalBox>
+      )}
 
       <SectionBlock>
         <div className="title">{t('Assets.RegisterIntro')}</div>
@@ -232,17 +336,27 @@ export default function Register() {
         />
       </SectionBlock>
       <ButtonSection>
-        <Button
-          variant="primary"
-          onClick={handleCreate}
-          disabled={!list.length || !selectSource || !content || !content.trim()}
-        >
+        <Button variant="primary" onClick={handleCreate} disabled={returnDisable()}>
           {t('Assets.RegisterSubmit')}
         </Button>
       </ButtonSection>
     </OuterBox>
   );
 }
+
+const TotalBox = styled.div`
+  margin-top: 35px;
+  color: var(--bs-body-color_active);
+  font-size: 14px;
+  margin-left: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  & > div {
+    display: flex;
+    gap: 10px;
+  }
+`;
 
 const OuterBox = styled.div`
   box-sizing: border-box;

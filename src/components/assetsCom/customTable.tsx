@@ -146,18 +146,18 @@ const CustomTable = ({ updateList }: IProps) => {
           <img src={AddIcon} alt="" /> {t('Assets.RegisterAdd')}
         </AddButton>
       </AddBox>
-      <TotalAsset>
-        <LeftAssets>
-          <VaultSVGIcon />
-          <span>{t('Assets.Total')}</span>
-          <span className="value">
-            {totalAssets[0]} {AssetName.Token}
-          </span>
-          <span className="value">
-            {totalAssets[1]} {AssetName.Credit}
-          </span>
-        </LeftAssets>
-      </TotalAsset>
+      {/*<TotalAsset>*/}
+      {/*  <LeftAssets>*/}
+      {/*    <VaultSVGIcon />*/}
+      {/*    <span>{t('Assets.Total')}</span>*/}
+      {/*    <span className="value">*/}
+      {/*      {totalAssets[0]} {AssetName.Token}*/}
+      {/*    </span>*/}
+      {/*    <span className="value">*/}
+      {/*      {totalAssets[1]} {AssetName.Credit}*/}
+      {/*    </span>*/}
+      {/*  </LeftAssets>*/}
+      {/*</TotalAsset>*/}
     </Box>
   );
 };

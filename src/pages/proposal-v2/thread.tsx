@@ -102,6 +102,8 @@ export default function ThreadPage() {
   const { getUsers } = useQueryUser();
   const { showToast } = useToast();
 
+  const [detail, setDetail] = useState<any>(null);
+
   const replyRef = useRef<IReplyOutputProps>(null);
 
   const getProposalDetail = async (refreshIdx?: number) => {
@@ -126,6 +128,39 @@ export default function ThreadPage() {
         );
       }
       setData(res.data);
+
+      const { associated_project_budgets: budgets } = res.data;
+
+      let data: any = {};
+
+      let total: string[] = [];
+      let ratio: string[] = [];
+      let paid: string[] = [];
+      let remainAmount: string[] = [];
+      let prepayTotal: string[] = [];
+      let prepayRemain: string[] = [];
+
+      budgets?.map((item: any) => {
+        total.push(`${item.total_amount} ${item.asset_name}`);
+        ratio.push(`${item.advance_ratio * 100}% ${item.asset_name}`);
+        paid.push(`${item.used_advance_amount} ${item.asset_name}`);
+        remainAmount.push(`${item.remain_amount} ${item.asset_name}`);
+        prepayTotal.push(`${item.total_advance_amount} ${item.asset_name}`);
+        prepayRemain.push(`${item.remain_advance_amount} ${item.asset_name}`);
+      });
+
+      data.total = total.join(',');
+      data.ratio = ratio.join(',');
+      data.paid = paid.join(',');
+      data.remainAmount = remainAmount.join(',');
+      data.prepayTotal = prepayTotal.join(',');
+      data.prepayRemain = prepayRemain.join(',');
+
+      console.error(budgets);
+      setDetail(data);
+
+      console.error('=====associated_project_budgets', budgets);
+
       const arr = res.data.content_blocks;
       const componentsIndex = arr.findIndex((i: any) => i.type === 'components');
 
@@ -576,6 +611,37 @@ export default function ThreadPage() {
                   <div className="title">{componentName || t('Proposal.proposalComponents')}</div>
                 </ComponnentBox>
               )}
+              {!!dataSource?.length && componentName === '激励申请表' && dataSource[0].name === 'motivation' && (
+                <DisplayBox>
+                  <div className="titl">当前可申请资产: {detail?.prepayRemain}</div>
+                  <div className="content">
+                    <dl>
+                      <dt>项目预算</dt>
+                      <dd> {detail?.total}</dd>
+                    </dl>
+                    <dl>
+                      <dt>预付比例</dt>
+                      <dd>{detail?.ratio}</dd>
+                    </dl>
+                    <dl>
+                      <dt>总可预支</dt>
+                      <dd> {detail?.prepayTotal}</dd>
+                    </dl>
+                    <dl>
+                      <dt>当前已预支</dt>
+                      <dd>{detail?.paid}</dd>
+                    </dl>
+                    <dl>
+                      <dt>预算余额</dt>
+                      <dd>{detail?.remainAmount}</dd>
+                    </dl>
+                    <dl>
+                      <dt>可预支余额</dt>
+                      <dd>{detail?.prepayRemain}</dd>
+                    </dl>
+                  </div>
+                </DisplayBox>
+              )}
             </>
           }
           AfterComponent={
@@ -690,6 +756,41 @@ export default function ThreadPage() {
     </Page>
   );
 }
+
+const DisplayBox = styled.div`
+  background: var(--home-right);
+  margin: 10px 30px;
+  padding: 20px 20px 10px;
+  border-radius: 10px;
+  .titl {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--bs-body-color_active);
+    margin-bottom: 20px;
+    text-transform: capitalize;
+  }
+  .content {
+    font-size: 14px;
+    color: var(--bs-body-color_active);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    text-transform: capitalize;
+    dl {
+      width: 33.333%;
+      display: flex;
+
+      align-items: center;
+      margin-bottom: 10px;
+      dt {
+        margin-right: 20px;
+        min-width: 70px;
+        font-weight: normal;
+      }
+    }
+  }
+`;
 
 const FlexRht = styled.div`
   display: flex;
