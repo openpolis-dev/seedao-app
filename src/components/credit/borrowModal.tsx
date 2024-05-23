@@ -37,7 +37,7 @@ export default function BorrowModal({ handleClose }: IProps) {
   const [calculating, setCalculating] = useState(false);
 
   const checkApprove = async () => {
-    if (calculating) {
+    if (calculating || Number(inputNum) < 100) {
       return;
     }
     // check enough
@@ -144,10 +144,7 @@ export default function BorrowModal({ handleClose }: IProps) {
     // 在输入框失去焦点时验证最小和最大值
     const numericValue = parseFloat(inputNum);
     if (!isNaN(numericValue)) {
-      if (numericValue < 100) {
-        setInputNum('100.00');
-        onChangeVal(100);
-      } else if (numericValue > myAvaliableQuota) {
+      if (numericValue > myAvaliableQuota) {
         setInputNum(getShortDisplay(myAvaliableQuota));
         onChangeVal(myAvaliableQuota);
       } else {
@@ -195,6 +192,7 @@ export default function BorrowModal({ handleClose }: IProps) {
             </div>
             <span className="right">USDT</span>
           </LineBox>
+          {Number(inputNum) < 100 && <MinTip>{t('Credit.MinBorrow')}</MinTip>}
           <LineTip>{t('Credit.RateAmount', { rate: 0.1, amount: dayIntrestAmount })}</LineTip>
           <LineLabel>{t('Credit.NeedForfeit')}</LineLabel>
           <LineBox>
@@ -206,12 +204,12 @@ export default function BorrowModal({ handleClose }: IProps) {
           <LineTip>{t('Credit.ForfeitTip')}</LineTip>
           <BorrowTips>
             <p>{t('Credit.BorrowTip1')}</p>
-            <p>{t('Credit.BorrowTip2')}</p>
+            <p style={{ color: '#1814f3' }}>{t('Credit.BorrowTip2')}</p>
           </BorrowTips>
         </BorrowContent>
       )}
       <ConfirmBox>
-        {step === 0 && <LineTip style={{ textAlign: 'center' }}>{t('Credit.BorrowTip3')}</LineTip>}
+        {step === 0 && <LineTip>{t('Credit.BorrowTip3')}</LineTip>}
         {steps[step].button}
       </ConfirmBox>
     </BorrowModalStyle>
@@ -300,13 +298,22 @@ const LineBox = styled.div`
   }
 `;
 
+const MinTip = styled.p`
+  color: #ff7193;
+  font-size: 14px;
+  margin-top: 4px;
+`;
+
 const LineTip = styled.div`
   color: #1814f3;
   font-size: 14px;
   margin-bottom: 16px;
+  color: #718ebf;
+  margin-top: 4px;
 `;
 
 const BorrowTips = styled.div`
+  color: #718ebf;
   font-size: 14px;
   margin-top: 26px;
   p {
