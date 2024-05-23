@@ -462,7 +462,8 @@
     "Total": "Total",
     "Export": "Export",
     "record": "Assets Distribution Records",
-    "Apply": "Assets Applications"
+    "Apply": "Assets Applications",
+    "tips": "Only those holding SNS can apply for asset distribution."
   },
   "My": {
     "MyProfile": "My Profile",

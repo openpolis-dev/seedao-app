@@ -206,9 +206,12 @@ export default function Register() {
       err_list.forEach((item) => msgs.push(`L${item.line}: ${item.errorKeys.join(', ')}`));
       return msgs.join('\n');
     }
+
     const err_sns_list: string[] = [];
     try {
       const sns_list = Array.from(sns_set);
+
+      console.log('sns_list', sns_list);
       const result = await sns.resolves(sns_list);
       result.forEach((item, i) => {
         if (!item || item === ethers.constants.AddressZero) {
@@ -228,18 +231,42 @@ export default function Register() {
     return wallet_map;
   };
 
+  const checkSNs = async () => {
+    try {
+      const arr = list.map((item) => sns.name(item.address));
+
+      let rtArr = await Promise.all(arr);
+
+      const isNoSns = rtArr.filter((item) => !item);
+      return !isNoSns?.length;
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   const handleCreate = async () => {
     if (!selectSource) {
       return;
     }
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+
+    let allSNS = await checkSNs();
+    if (!allSNS) {
+      showToast(t('Assets.tips'), ToastType.Danger);
+      dispatch({ type: AppActionType.SET_LOADING, payload: false });
+      return;
+    }
+
     let msg: string | undefined;
     msg = checkInvalidData();
     if (msg) {
       showToast(msg, ToastType.Danger, { autoClose: false });
+      dispatch({ type: AppActionType.SET_LOADING, payload: false });
       return;
     }
-    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+
     const result = await checkWallet();
+
     if (typeof result === 'string') {
       showToast(result, ToastType.Danger, { autoClose: false });
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
@@ -247,7 +274,7 @@ export default function Register() {
     }
 
     // check and convert sns
-    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    // dispatch({ type: AppActionType.SET_LOADING, payload: true });
 
     try {
       const data = {
@@ -276,10 +303,8 @@ export default function Register() {
   };
 
   const returnDisable = () => {
-    console.log('returnDisable----', total, detail?.prepayRemain);
     let totalArr = total.split(',');
     const remainArr = detail?.prepayRemain.split(',');
-    console.log(totalArr, remainArr);
 
     let checkAll = true;
 
@@ -289,6 +314,7 @@ export default function Register() {
       remainArr?.map((item: any) => {
         console.error(item);
       });
+      checkAll = false;
     }
 
     return !list.length || !selectSource || !content || !content.trim() || checkAll;
