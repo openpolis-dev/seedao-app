@@ -35,7 +35,7 @@ interface IMyTableProps extends ITableProps {
   openMyDetail: (data: ICreditRecord, interest: InterestData) => void;
 }
 
-const AllBorrowTable = ({ list, openDetail, formatSNS }: ITableProps) => {
+const AllBorrowTable = ({ list, openMyDetail, formatSNS }: IMyTableProps) => {
   const { t } = useTranslation();
 
   return (
@@ -58,7 +58,13 @@ const AllBorrowTable = ({ list, openDetail, formatSNS }: ITableProps) => {
               {list.map((item, idx) => (
                 <tr key={idx}>
                   <td>
-                    <BlueText onClick={() => openDetail && openDetail(item)}>{item.lendIdDisplay}</BlueText>
+                    <BlueText
+                      onClick={() =>
+                        openMyDetail(item, { interestAmount: item.interestAmount, interestDays: item.interestDays })
+                      }
+                    >
+                      {item.lendIdDisplay}
+                    </BlueText>
                   </td>
                   <td>{formatSNS && formatSNS(item.debtor)}</td>
                   <td>
@@ -116,6 +122,7 @@ const MyTable = ({ list, openMyDetail }: IMyTableProps) => {
         setIntrest(_intrest);
       });
   }, [list, bondNFTContract]);
+
   return (
     <TableBox>
       {list.length ? (
@@ -235,6 +242,10 @@ export default function CreditRecords() {
     dispatch,
   } = useAuthContext();
 
+  const {
+    state: { bondNFTContract },
+  } = useCreditContext();
+
   const { getMultiSNS } = useQuerySNS();
 
   const isLogin = useCheckLogin(account);
@@ -337,7 +348,31 @@ export default function CreditRecords() {
   };
 
   const showDetail = (data: ICreditRecord, interest: InterestData) => {
-    setDetailData({ ...data, interestAmount: interest?.interestAmount || 0, interestDays: interest.interestDays || 0 });
+    if (data.status === CreditRecordStatus.INUSE) {
+      dispatch({ type: AppActionType.SET_LOADING, payload: true });
+      bondNFTContract
+        ?.calculateInterest(Number(data.lendId))
+        .then((r: { interestDays: ethers.BigNumber; interestAmount: ethers.BigNumber }) => {
+          const newData: ICreditRecord = {
+            ...data,
+            interestDays: r.interestDays.toNumber(),
+            interestAmount: Number(ethers.utils.formatUnits(r.interestAmount, lendToken.decimals)),
+          };
+          setDetailData(newData);
+        })
+        .catch((e: any) => {
+          setDetailData(data);
+        })
+        .finally(() => {
+          dispatch({ type: AppActionType.SET_LOADING, payload: false });
+        });
+    } else {
+      setDetailData({
+        ...data,
+        interestAmount: interest?.interestAmount || 0,
+        interestDays: interest.interestDays || 0,
+      });
+    }
   };
 
   const handlePageChange = (num: number) => {
@@ -415,7 +450,7 @@ export default function CreditRecords() {
         </FilterBox>
       </TabbarBox>
       {currentTab === 'all' ? (
-        <AllBorrowTable list={list} openDetail={setDetailData} formatSNS={formatSNS} />
+        <AllBorrowTable list={list} openMyDetail={showDetail} formatSNS={formatSNS} />
       ) : (
         <MyTable list={list} openMyDetail={showDetail} />
       )}

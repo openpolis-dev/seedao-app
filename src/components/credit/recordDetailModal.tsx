@@ -21,27 +21,7 @@ interface IProps {
 export default function RecordDetailModal({ borrowName, data, handleClose }: IProps) {
   const { t } = useTranslation();
 
-  const [fullData, setFullData] = useState<ICreditRecord>(data);
-  const {
-    state: { bondNFTContract },
-  } = useCreditContext();
-
-  useEffect(() => {
-    if (data.interestDays === 0 && data.status === CreditRecordStatus.INUSE) {
-      bondNFTContract
-        ?.calculateInterest(Number(data.lendId))
-        .then((r: { interestDays: ethers.BigNumber; interestAmount: ethers.BigNumber }) => {
-          const newData: ICreditRecord = {
-            ...data,
-            interestDays: r.interestDays.toNumber(),
-            interestAmount: Number(ethers.utils.formatUnits(r.interestAmount, lendToken.decimals)),
-          };
-          setFullData(newData);
-        });
-    } else {
-      setFullData(data);
-    }
-  }, [data]);
+  const [fullData] = useState<ICreditRecord>(data);
 
   return (
     <RecordDetailModalStyle handleClose={handleClose} closeColor="#343C6A">
