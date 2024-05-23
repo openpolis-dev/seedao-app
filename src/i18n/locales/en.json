@@ -806,7 +806,8 @@
     "BorrowCooldownMsg": "Cannot borrow again if less than 24 hours have elapsed since last repayment",
     "InsufficientQuota": "Your loan quota is insufficient",
     "InsufficientBalance": "Insufficient balance",
-    "MinBorrow": "Borrow at least 100 USDT!"
+    "MinBorrow": "Borrow at least 100 USDT!",
+    "LoginAndCheck": "登录后查看借款"
   },
   "Governance": {
     "GovernanceRule": "Governance Rules",
