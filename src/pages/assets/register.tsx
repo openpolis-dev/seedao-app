@@ -211,7 +211,6 @@ export default function Register() {
     try {
       const sns_list = Array.from(sns_set);
 
-      console.log('sns_list', sns_list);
       const result = await sns.resolves(sns_list);
       result.forEach((item, i) => {
         if (!item || item === ethers.constants.AddressZero) {
@@ -311,11 +310,21 @@ export default function Register() {
     if (totalArr?.length > remainArr?.length) {
       checkAll = true;
     } else {
+      console.log(totalArr);
       remainArr?.map((item: any) => {
         console.error(item);
+        const remainArr = item.split(' ');
+        const finditemIndex = totalArr.findIndex((innerItem) => innerItem.indexOf(remainArr[1]));
+        const totalNum = totalArr[finditemIndex].split(' ')[0];
+        if (Number(totalNum) > Number(remainArr[0])) {
+          checkAll = true;
+        } else {
+          checkAll = false;
+        }
       });
-      checkAll = false;
     }
+
+    console.log('====checkAll=', checkAll);
 
     return !list.length || !selectSource || !content || !content.trim() || checkAll;
   };
