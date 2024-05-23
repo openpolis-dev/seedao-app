@@ -71,10 +71,11 @@ const MyBorrowingQuota = ({ isLogin, onClickLogin }: BorrowCardProps) => {
   const { showToast } = useToast();
 
   const onClickBottom = () => {
-    isLogin ? setShowBorrowItemsModal(true) : onClickLogin();
-  };
-
-  const go2Borrow = () => {
+    if (!isLogin) {
+      onClickLogin();
+      return;
+    }
+    // check
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     scoreLendContract
       .userIsInBorrowCooldownPeriod(account)
@@ -82,13 +83,17 @@ const MyBorrowingQuota = ({ isLogin, onClickLogin }: BorrowCardProps) => {
         if (r.isIn) {
           showToast(t('Credit.BorrowCooldownMsg'), ToastType.Danger);
         } else {
-          setShowBorrowItemsModal(false);
-          setShowBorrowModal(true);
+          setShowBorrowItemsModal(true);
         }
       })
       .finally(() => {
         dispatch({ type: AppActionType.SET_LOADING, payload: false });
       });
+  };
+
+  const go2Borrow = () => {
+    setShowBorrowItemsModal(false);
+    setShowBorrowModal(true);
   };
 
   const getData = () => {
