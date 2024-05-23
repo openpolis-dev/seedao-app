@@ -112,7 +112,7 @@ export default function RecordDetailModal({ borrowName, data, handleClose }: IPr
             <DetailLines>
               <Line>
                 <dt>{t('Credit.TotalRepay')}</dt>
-                <dd className='total'>{fullData.borrowAmount + fullData.interestAmount} USDT</dd>
+                <dd className="total">{fullData.borrowAmount + fullData.interestAmount} USDT</dd>
               </Line>
               <Line>
                 <dt>{t('Credit.Principal')}</dt>
@@ -146,6 +146,7 @@ export default function RecordDetailModal({ borrowName, data, handleClose }: IPr
             </DetailLines>
           </>
         )}
+        <InterestTip>{t('Credit.BorrowTip2')}</InterestTip>
       </Content>
     </RecordDetailModalStyle>
   );
@@ -234,4 +235,10 @@ const ModalTitle = styled.div`
 
 const NoData = styled.span`
   color: red;
+`;
+
+const InterestTip = styled.p`
+  color: #1814f3;
+  font-size: 14px;
+  margin-top: 22px;
 `;
