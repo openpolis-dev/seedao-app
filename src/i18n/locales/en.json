@@ -803,7 +803,7 @@
     "Days": "{{days}} day(s)",
     "NoDate": "Currently there are no loans",
     "MaxBorrow": "Max",
-    "BorrowCooldownMsg": "Cannot borrow again if less than 24 hours have elapsed since last repayment",
+    "BorrowCooldownMsg": "Cannot borrow again if less than 24 hours have elapsed since last repayment!",
     "InsufficientQuota": "Your loan quota is insufficient",
     "InsufficientBalance": "Insufficient balance",
     "MinBorrow": "Borrow at least 100 USDT!",

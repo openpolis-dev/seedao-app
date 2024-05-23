@@ -7,13 +7,14 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuthContext, AppActionType } from 'providers/authProvider';
 import { useCreditContext } from 'pages/credit/provider';
-import useToast, { ToastType } from 'hooks/useToast';
+import BasicModal from 'components/modals/basicModal';
 
 export default function BorrowAndRepay({ isLogin, onUpdate }: { isLogin: boolean; onUpdate: () => void }) {
   const { t } = useTranslation();
 
   const [showModal, setShowModal] = useState<'borrow' | 'repay' | ''>('');
   const [showItemsModal, setShowItemsModal] = useState<'borrow' | 'repay' | ''>('');
+  const [showAlert, setShowAlert] = useState(false);
 
   const {
     dispatch,
@@ -22,8 +23,6 @@ export default function BorrowAndRepay({ isLogin, onUpdate }: { isLogin: boolean
   const {
     state: { scoreLendContract },
   } = useCreditContext();
-
-  const { showToast } = useToast();
 
   const go2Borrow = () => {
     setShowItemsModal('');
@@ -45,7 +44,7 @@ export default function BorrowAndRepay({ isLogin, onUpdate }: { isLogin: boolean
       .userIsInBorrowCooldownPeriod(account)
       .then((r: { isIn: Boolean }) => {
         if (r.isIn) {
-          showToast(t('Credit.BorrowCooldownMsg'), ToastType.Danger);
+          setShowAlert(true);
         } else {
           setShowItemsModal('borrow');
         }
@@ -80,6 +79,11 @@ export default function BorrowAndRepay({ isLogin, onUpdate }: { isLogin: boolean
         <BorrowItemsModal onConfirm={go2Borrow} handleClose={() => setShowItemsModal('')} />
       )}
       {showItemsModal === 'repay' && <RepayItemsModal onConfirm={go2Repay} handleClose={() => setShowItemsModal('')} />}
+      {showAlert && (
+        <AlertModal closeColor="#343C6A">
+          <AlertContent>{t('Credit.BorrowCooldownMsg')}</AlertContent>
+        </AlertModal>
+      )}
     </BorrowAndRepayStyle>
   );
 }
@@ -92,4 +96,15 @@ const BorrowAndRepayStyle = styled.div`
     width: unset;
     min-width: 110px;
   }
+`;
+
+const AlertModal = styled(BasicModal)`
+  width: 670px;
+`;
+
+const AlertContent = styled.div`
+  color: #1814f3;
+  text-align: center;
+  font-size: 14px;
+  line-height: 200px;
 `;

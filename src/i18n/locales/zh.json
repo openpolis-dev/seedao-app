@@ -804,7 +804,7 @@
     "Days": "{{days}}日",
     "NoDate": "当前暂无借款",
     "MaxBorrow": "最大金额",
-    "BorrowCooldownMsg": "距离上次还款时间不足24小时，无法再次借款",
+    "BorrowCooldownMsg": "距离上次还款时间不足24小时，无法再次借款！",
     "InsufficientQuota": "您的借款额度不足",
     "InsufficientBalance": "您的余额不足",
     "MinBorrow": "至少借款 100 USDT！",
