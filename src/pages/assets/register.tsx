@@ -81,7 +81,6 @@ export default function Register() {
       data.prepayTotal = prepayTotal.join(',');
       data.prepayRemain = prepayRemain.join(',');
 
-      console.error(budgets);
       setDetail(data);
     } catch (error) {
       logError(error);
@@ -171,7 +170,6 @@ export default function Register() {
         err_list.push(err);
       }
     });
-    console.log(err_list);
     if (err_list.length) {
       let msgs: string[] = [];
       err_list.forEach((item) => msgs.push(`L${item.line}: ${item.errorKeys.join(', ')}`));
@@ -310,9 +308,7 @@ export default function Register() {
     if (totalArr?.length > remainArr?.length) {
       checkAll = true;
     } else {
-      console.log(totalArr);
       remainArr?.map((item: any) => {
-        console.error(item);
         const remainArr = item.split(' ');
         const finditemIndex = totalArr.findIndex((innerItem) => innerItem.indexOf(remainArr[1]));
         const totalNum = totalArr[finditemIndex].split(' ')[0];
@@ -323,8 +319,6 @@ export default function Register() {
         }
       });
     }
-
-    console.log('====checkAll=', checkAll);
 
     return !list.length || !selectSource || !content || !content.trim() || checkAll;
   };
