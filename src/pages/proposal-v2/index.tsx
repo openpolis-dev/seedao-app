@@ -7,7 +7,7 @@ import ClearSVGIcon from 'components/svgs/clear';
 import SearchSVGIcon from 'components/svgs/search';
 import { Button } from 'react-bootstrap';
 import SimpleProposalItem, { TabType } from 'components/proposalCom/simpleProposalItem';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import HistoryAction from 'components/proposalCom/historyAction';
 import requests from 'requests';
 import { useAuthContext, AppActionType } from 'providers/authProvider';
@@ -77,7 +77,26 @@ export default function ProposalIndexPage() {
   const { checkMetaforoLogin } = useCheckMetaforoLogin();
   const { getMultiSNS } = useQuerySNS();
 
+  const [searchParams, setSearchParams] = useSearchParams();
+
   const [snsMap, setSnsMap] = useState<Map<string, string>>(new Map());
+
+  const keyword_addr = searchParams.get('q');
+  const sort_field_addr = searchParams.get('sort_field');
+  const sip_addr = searchParams.get('sip');
+  const sort_order_addr = searchParams.get('sort_order');
+  const page_addr = searchParams.get('page');
+
+  useEffect(() => {
+    if (!searchParams.size) return;
+
+    setPage(Number(page_addr) ?? 1);
+    setIsFilterSIP(!!sip_addr);
+    const selectArr = TIME_OPTIONS.filter((item) => item.value === sort_order_addr);
+
+    setSelectTime(selectArr[0] ?? TIME_OPTIONS[0]);
+    setSearchKeyword(keyword_addr ?? '');
+  }, [keyword_addr, sort_field_addr, sip_addr, sort_order_addr, page_addr]);
 
   const handleSNS = async (wallets: string[]) => {
     const sns_map = await getMultiSNS(wallets);
@@ -115,7 +134,10 @@ export default function ProposalIndexPage() {
   useEffect(() => {
     if (!initPage) {
       getProposalList();
-      setPage(1);
+      // setPage(1);
+
+      // searchParams.set('page',"1");
+      // setSearchParams(searchParams)
     }
   }, [selectCategory, selectTime, selectStatus, searchKeyword, isFilterSIP]);
 
@@ -126,17 +148,24 @@ export default function ProposalIndexPage() {
 
   const onKeyUp = (e: any) => {
     if (e.keyCode === 13) {
-      setSearchKeyword(e.target.value);
+      // setSearchKeyword(e.target.value);
+      searchParams.set('q', e.target.value);
+      setSearchParams(searchParams);
     }
   };
   const clearSearch = () => {
     setInputKeyword('');
-    setSearchKeyword('');
+    // setSearchKeyword('');
+    searchParams.set('q', '');
+    setSearchParams(searchParams);
   };
 
   const go2page = (_page: number) => {
-    setPage(_page + 1);
+    // setPage(_page + 1);
     getProposalList(_page + 1);
+
+    searchParams.set('page', (_page + 1).toString());
+    setSearchParams(searchParams);
   };
 
   const handleClickHistory = async () => {
@@ -158,6 +187,13 @@ export default function ProposalIndexPage() {
     if (canCreate) {
       navigate('/proposal/create');
     }
+  };
+
+  const handleFilter = () => {
+    const newV = !isFilterSIP;
+    searchParams.set('sort_field', newV ? 'sip' : 'create_ts');
+    searchParams.set('sip', newV ? '1' : '');
+    setSearchParams(searchParams);
   };
 
   const showContent = () => {
@@ -189,7 +225,8 @@ export default function ProposalIndexPage() {
                   placeholder={t('Proposal.StatusSelectHint')}
                   onChange={(v: ISelectItem) => setSelectStatus(v)}
                 />
-                <SipButton $selected={isFilterSIP ? 1 : 0} onClick={() => setIsFilterSIP((prev) => !prev)}>
+                {/*<SipButton $selected={isFilterSIP ? 1 : 0} onClick={() => setIsFilterSIP((prev) => !prev)}>*/}
+                <SipButton $selected={isFilterSIP ? 1 : 0} onClick={() => handleFilter()}>
                   SIP
                 </SipButton>
 

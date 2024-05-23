@@ -155,11 +155,7 @@ export default function ThreadPage() {
       data.remainAmount = remainAmount.join(',');
       data.prepayTotal = prepayTotal.join(',');
       data.prepayRemain = prepayRemain.join(',');
-
-      console.error(budgets);
       setDetail(data);
-
-      console.error('=====associated_project_budgets', budgets);
 
       const arr = res.data.content_blocks;
       const componentsIndex = arr.findIndex((i: any) => i.type === 'components');
@@ -491,7 +487,14 @@ export default function ThreadPage() {
       ) : (
         <FixedBox>
           <FlexInner>
-            <BackerNav title={currentCategory || t('Proposal.ProposalDetail')} to={'/proposal'} state={state} mb="0" />
+            {/*<BackerNav title={currentCategory || t('Proposal.ProposalDetail')} to={'/proposal'} state={state} mb="0" />*/}
+            <BackerNav
+              title={currentCategory || t('Proposal.ProposalDetail')}
+              to=""
+              onClick={() => navigate(-1)}
+              state={state}
+              mb="0"
+            />
 
             <FlexRht>
               {!review && isCurrentApplicant && !!moreActions().length && (
