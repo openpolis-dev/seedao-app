@@ -53,6 +53,8 @@ import Wiki from './pages/notion/wiki';
 import getConfig from 'utils/envCofnig';
 import SeeSwap from 'pages/seeswap/swap';
 
+const isOnlyDev = !process.env.REACT_APP_ENV_VERSION || process.env.REACT_APP_ENV_VERSION === 'dev';
+
 export default function RouterLink() {
   return (
     <Router>
@@ -109,12 +111,9 @@ export default function RouterLink() {
           <Route path="/sns" element={<SNSEntrancePage />} />
           <Route path="/sns/register" element={<RegisterSNS />} />
           {/* <Route path="/sns/user" element={<UserSNS />} /> */}
-          {['dev', undefined].includes(process.env.REACT_APP_ENV_VERSION || '') && (
-            <Route path="/newcomer" element={<Newcomer />} />
-          )}
+          {isOnlyDev && <Route path="/newcomer" element={<Newcomer />} />}
           {/* See Swap */}
-          <Route path="/see-swap" element={<SeeSwap />} />
-
+          {isOnlyDev && <Route path="/see-swap" element={<SeeSwap />} />}
           <Route path="/notion/:id" element={<Wiki />} />
           <Route path="/wiki" element={<Wiki />} />
         </Routes>

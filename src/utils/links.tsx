@@ -355,7 +355,7 @@ const links = {
       desc: 'apps.EchoDesc',
     },
     {
-      id: ['preview', 'production'].includes(process.env.REACT_APP_ENV_VERSION as string)
+      id: ['preview', 'prod'].includes(process.env.REACT_APP_ENV_VERSION as string)
         ? 'coming-soon'
         : 'module-see',
       name: 'See Swap',
