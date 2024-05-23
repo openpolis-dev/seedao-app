@@ -471,7 +471,6 @@ const SelectRecordStyle = styled(RecordStyle)`
 const BorrowTip1 = styled.p`
   color: #1814f3;
   font-size: 14px;
-  text-align: center;
   margin-bottom: 22px;
 `;
 
