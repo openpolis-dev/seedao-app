@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { useAuthContext, AppActionType } from 'providers/authProvider';
 import { useCreditContext } from 'pages/credit/provider';
 import BasicModal from 'components/modals/basicModal';
+import { ethers } from 'ethers';
 
 export default function BorrowAndRepay({ isLogin, onUpdate }: { isLogin: boolean; onUpdate: () => void }) {
   const { t } = useTranslation();
@@ -41,9 +42,9 @@ export default function BorrowAndRepay({ isLogin, onUpdate }: { isLogin: boolean
     // check
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     scoreLendContract
-      .userIsInBorrowCooldownPeriod(account)
-      .then((r: { isIn: Boolean }) => {
-        if (r.isIn) {
+      .userBorrowCooldownEndTimestamp(account)
+      .then((endTime: ethers.BigNumber) => {
+        if (endTime && endTime.toNumber() * 1000 < Date.now()) {
           setShowAlert(true);
         } else {
           setShowItemsModal('borrow');

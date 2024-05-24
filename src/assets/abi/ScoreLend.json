@@ -21,8 +21,24 @@
     "type": "error"
   },
   {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "id",
+        "type": "uint256"
+      }
+    ],
+    "name": "HasOverdue",
+    "type": "error"
+  },
+  {
     "inputs": [],
     "name": "InvalidInitialization",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "NotInitializing",
     "type": "error"
   },
   {
@@ -31,19 +47,9 @@
         "internalType": "uint256",
         "name": "id",
         "type": "uint256"
-      },
-      {
-        "internalType": "address",
-        "name": "debtor",
-        "type": "address"
       }
     ],
-    "name": "NotDebtor",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "NotInitializing",
+    "name": "NotTheDebtor",
     "type": "error"
   },
   {
@@ -86,7 +92,7 @@
         "type": "uint256"
       }
     ],
-    "name": "TotalAvailableAmountInsufficient",
+    "name": "TotalAvailableBorrowAmountInsufficient",
     "type": "error"
   },
   {
@@ -102,14 +108,14 @@
         "type": "uint256"
       }
     ],
-    "name": "UserAvailableAmountInsufficient",
+    "name": "UserAvailableBorrowAmountInsufficient",
     "type": "error"
   },
   {
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "cooldownTimeLeft",
+        "name": "cooldownEndTimestamp",
         "type": "uint256"
       }
     ],
@@ -265,7 +271,7 @@
     "name": "bondNFT",
     "outputs": [
       {
-        "internalType": "contract IBondNFT",
+        "internalType": "address",
         "name": "",
         "type": "address"
       }
@@ -279,16 +285,6 @@
         "internalType": "uint256",
         "name": "borrowAmount",
         "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "timezoneOffsetSeconds",
-        "type": "uint256"
-      },
-      {
-        "internalType": "bool",
-        "name": "isTimezonePositive",
-        "type": "bool"
       }
     ],
     "name": "borrow",
@@ -550,7 +546,33 @@
   },
   {
     "inputs": [],
-    "name": "totalAvailableAmount",
+    "name": "timezoneIsPositive",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "timezoneOffsetSeconds",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "totalAvailableBorrowAmount",
     "outputs": [
       {
         "internalType": "uint256",
@@ -570,6 +592,19 @@
       }
     ],
     "name": "transferOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "bondNFT_",
+        "type": "address"
+      }
+    ],
+    "name": "updateBondNFT",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -681,6 +716,24 @@
   {
     "inputs": [
       {
+        "internalType": "uint256",
+        "name": "timezoneOffsetSeconds_",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bool",
+        "name": "timezoneIsPositive_",
+        "type": "bool"
+      }
+    ],
+    "name": "updateTimezone",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "address",
         "name": "usdt_",
         "type": "address"
@@ -699,7 +752,7 @@
         "type": "address"
       }
     ],
-    "name": "userAvailableAmount",
+    "name": "userAvailableBorrowAmount",
     "outputs": [
       {
         "internalType": "uint256",
@@ -728,16 +781,11 @@
         "type": "address"
       }
     ],
-    "name": "userIsInBorrowCooldownPeriod",
+    "name": "userBorrowCooldownEndTimestamp",
     "outputs": [
       {
-        "internalType": "bool",
-        "name": "isIn",
-        "type": "bool"
-      },
-      {
         "internalType": "uint256",
-        "name": "cooldownTimeLeft",
+        "name": "cooldownEndTimestamp",
         "type": "uint256"
       }
     ],

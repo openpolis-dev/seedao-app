@@ -217,7 +217,7 @@ const VaultCard = () => {
   });
 
   const getData = useCallback(() => {
-    scoreLendContract?.totalAvailableAmount().then((r: ethers.BigNumber) => {
+    scoreLendContract?.totalAvailableBorrowAmount().then((r: ethers.BigNumber) => {
       const value = ethers.utils.formatUnits(r, networkConfig.lend.lendToken.decimals);
       setTotal(Number(value).format());
     });
@@ -339,7 +339,7 @@ export default function CreditCards() {
         },
       });
     });
-    scoreLendContract?.userAvailableAmount(account).then((r: any) => {
+    scoreLendContract?.userAvailableBorrowAmount(account).then((r: any) => {
       dispatchCreditEvent({
         type: ACTIONS.SET_MY_QUOTA,
         payload: Number(ethers.utils.formatUnits(r.availableAmount, decimals)),
