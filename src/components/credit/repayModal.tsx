@@ -35,7 +35,7 @@ export default function RepayModal({ handleClose }: IProps) {
 
   const {
     dispatch,
-    state: { account },
+    state: { account, language },
   } = useAuthContext();
 
   const {
@@ -193,7 +193,7 @@ export default function RepayModal({ handleClose }: IProps) {
       <ModalTitle>{steps[step].title}</ModalTitle>
       {step === 3 && <FinishContent>{selectedTotalAmount} USDT</FinishContent>}
       {step === 0 && (
-        <RepayContent>
+        <RepayContent style={{ width: language === 'zh' ? '443px' : 'unset' }}>
           {getting ? (
             <LoadingBox>
               <CalculateLoading />
@@ -216,7 +216,7 @@ export default function RepayModal({ handleClose }: IProps) {
         </RepayContent>
       )}
       {(step === 1 || step === 2) && (
-        <RepayContent>
+        <RepayContent style={{ width: language === 'zh' ? '443px' : 'unset' }}>
           <TotalRepay>
             <div className="number">{selectedTotalAmount} USDT</div>
             <div className="label">{t('Credit.ShouldRepay')}</div>
@@ -228,7 +228,7 @@ export default function RepayModal({ handleClose }: IProps) {
           </ListBox>
         </RepayContent>
       )}
-      <ConfirmBox>
+      <ConfirmBox style={{ width: language === 'zh' ? '443px' : 'unset' }}>
         {(step === 1 || step === 2) && <BorrowTip1>{t('Credit.BorrowTip2')}</BorrowTip1>}
         {steps[step].button}
         {step === 1 && <RepayTip>{t('Credit.RepayTip')}</RepayTip>}
@@ -344,7 +344,7 @@ const ModalTitle = styled.div`
 `;
 
 const ConfirmBox = styled.div`
-  min-width: 443px;
+  width: 443px;
   margin: 0 auto;
   margin-top: 26px;
 `;
@@ -360,7 +360,7 @@ const FinishContent = styled.div`
 `;
 
 const RepayContent = styled.div`
-  min-width: 443px;
+  width: 443px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
