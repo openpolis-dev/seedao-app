@@ -310,7 +310,7 @@ export default function Register() {
     } else {
       remainArr?.map((item: any) => {
         const remainArr = item.split(' ');
-        const finditemIndex = totalArr.findIndex((innerItem) => innerItem.indexOf(remainArr[1]));
+        const finditemIndex = totalArr.findIndex((innerItem) => innerItem.indexOf(remainArr[1]) > -1);
         const totalNum = totalArr[finditemIndex].split(' ')[0];
         if (Number(totalNum) > Number(remainArr[0])) {
           checkAll = true;

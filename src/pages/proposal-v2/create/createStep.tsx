@@ -632,6 +632,7 @@ export default function CreateStep({ onClick }: any) {
           baseUrl={BASE_URL}
           version={API_VERSION}
           token={token}
+          movitationSum={detail?.prepayRemain}
           BeforeComponent={
             <>
               <ItemBox>
