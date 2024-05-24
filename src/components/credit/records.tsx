@@ -110,7 +110,7 @@ const MyTable = ({ list, openMyDetail }: IMyTableProps) => {
       return;
     }
     bondNFTContract
-      ?.calculateInterestBatch(ids)
+      ?.calculateLendsInterest(ids)
       .then((r: { interestAmounts: ethers.BigNumber[]; interestDays: ethers.BigNumber[] }) => {
         const _intrest = new Map<number, InterestData>(intrest);
         ids.forEach((id, idx) => {
@@ -351,7 +351,7 @@ export default function CreditRecords() {
     if (data.status === CreditRecordStatus.INUSE) {
       dispatch({ type: AppActionType.SET_LOADING, payload: true });
       bondNFTContract
-        ?.calculateInterest(Number(data.lendId))
+        ?.calculateLendInterest(Number(data.lendId))
         .then((r: { interestDays: ethers.BigNumber; interestAmount: ethers.BigNumber }) => {
           const newData: ICreditRecord = {
             ...data,

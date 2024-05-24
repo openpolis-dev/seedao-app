@@ -136,7 +136,7 @@ export default function RepayModal({ handleClose }: IProps) {
       });
       const ids = r.data.map((d) => Number(d.lendId));
       const _list = r.data.map((item) => ({ id: item.lendId, data: item, selected: false, total: 0 }));
-      const result = (await bondNFTContract?.calculateInterestBatch(ids)) as {
+      const result = (await bondNFTContract?.calculateLendsInterest(ids)) as {
         interestAmounts: ethers.BigNumber[];
         interestDays: ethers.BigNumber[];
       };
@@ -344,7 +344,7 @@ const ModalTitle = styled.div`
 `;
 
 const ConfirmBox = styled.div`
-  width: 443px;
+  min-width: 443px;
   margin: 0 auto;
   margin-top: 26px;
 `;
@@ -360,7 +360,7 @@ const FinishContent = styled.div`
 `;
 
 const RepayContent = styled.div`
-  width: 443px;
+  min-width: 443px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
@@ -368,7 +368,6 @@ const RepayContent = styled.div`
 `;
 
 const RecordStyle = styled.div`
-  height: 78px;
   border-radius: 8px;
   display: flex;
   gap: 16px;
