@@ -42,22 +42,34 @@ const AllBorrowTable = ({ list, openMyDetail, formatSNS }: IMyTableProps) => {
     <>
       <TableBox>
         {list.length ? (
-          <table className="table" cellPadding="0" cellSpacing="0">
-            <thead>
-              <tr>
-                <th>{t('Credit.BorrowID')}</th>
-                <th>{t('Credit.BorrowName')}</th>
-                <th>{t('Credit.BorrowAmount')}</th>
-                <th>{t('Credit.BorrowStatus')}</th>
-                <th>{t('Credit.BorrowTime')}</th>
-                <th>{t('Credit.LastRepaymentTime')}</th>
-                <th>{t('Credit.BorrowHash')}</th>
-              </tr>
-            </thead>
-            <tbody>
+          <ListBox>
+            <div className="head crow">
+              <div className="th" style={{ width: '100px' }}>
+                {t('Credit.BorrowID')}
+              </div>
+              <div className="th" style={{ width: '130px' }}>
+                {t('Credit.BorrowName')}
+              </div>
+              <div className="th" style={{ width: '130px' }}>
+                {t('Credit.BorrowAmount')}
+              </div>
+              <div className="th" style={{ width: '80px' }}>
+                {t('Credit.BorrowStatus')}
+              </div>
+              <div className="th" style={{ width: '200px' }}>
+                {t('Credit.BorrowTime')}
+              </div>
+              <div className="th" style={{ width: '200px' }}>
+                {t('Credit.LastRepaymentTime')}
+              </div>
+              <div className="th" style={{ width: '130px' }}>
+                {t('Credit.BorrowHash')}
+              </div>
+            </div>
+            <div className="rows">
               {list.map((item, idx) => (
-                <tr key={idx}>
-                  <td>
+                <div className="crow brow" key={idx}>
+                  <div style={{ width: '100px' }}>
                     <BlueText
                       onClick={() =>
                         openMyDetail(item, { interestAmount: item.interestAmount, interestDays: item.interestDays })
@@ -65,27 +77,27 @@ const AllBorrowTable = ({ list, openMyDetail, formatSNS }: IMyTableProps) => {
                     >
                       {item.lendIdDisplay}
                     </BlueText>
-                  </td>
-                  <td>{formatSNS && formatSNS(item.debtor)}</td>
-                  <td>
+                  </div>
+                  <div style={{ width: '130px' }}>{formatSNS && formatSNS(item.debtor)}</div>
+                  <div style={{ width: '130px' }}>
                     {item.borrowAmount.format()} <span className="unit">USDT</span>
-                  </td>
-                  <td>
+                  </div>
+                  <div style={{ width: '80px' }}>
                     <StateTag state={item.status} />
-                  </td>
-                  <td>{item.borrowTime}</td>
-                  <td>{item.overdueTime}</td>
-                  <td>
+                  </div>
+                  <div style={{ width: '200px' }}>{item.borrowTime}</div>
+                  <div style={{ width: '200px' }}>{item.overdueTime}</div>
+                  <div style={{ width: '130px' }}>
                     <BlueText
                       onClick={() => window.open(`${amoy?.blockExplorers?.default.url}/tx/${item.borrowTx}`, '_blank')}
                     >
                       {publicJs.AddressToShow(item.borrowTx)}
                     </BlueText>
-                  </td>
-                </tr>
+                  </div>
+                </div>
               ))}
-            </tbody>
-          </table>
+            </div>
+          </ListBox>
         ) : (
           <NoItem />
         )}
@@ -126,26 +138,42 @@ const MyTable = ({ list, openMyDetail }: IMyTableProps) => {
   return (
     <TableBox>
       {list.length ? (
-        <table className="table" cellPadding="0" cellSpacing="0">
-          <thead>
-            <tr>
-              <th>{t('Credit.BorrowID')}</th>
-              <th>{t('Credit.BorrowAmount')}</th>
-              <th>{t('Credit.BorrowStatus')}</th>
-              <th>{t('Credit.BorrowHash')}</th>
-              <th>{t('Credit.BorrowTime')}</th>
+        <ListBox>
+          <div className="head crow">
+            <div className="th" style={{ width: '100px' }}>
+              {t('Credit.BorrowID')}
+            </div>
+            <div className="th" style={{ width: '130px' }}>
+              {t('Credit.BorrowAmount')}
+            </div>
+            <div className="th" style={{ width: '80px' }}>
+              {t('Credit.BorrowStatus')}
+            </div>
+            <div className="th" style={{ width: '130px' }}>
+              {t('Credit.BorrowHash')}
+            </div>
+            <div className="th" style={{ width: '200px' }}>
+              {t('Credit.BorrowTime')}
+            </div>
 
-              <th>{t('Credit.DayRate')}</th>
-              <th>{t('Credit.BorrowDuration')}</th>
-              <th>{t('Credit.TotalInterest')}</th>
+            <div className="th" style={{ width: '70px' }}>
+              {t('Credit.DayRate')}
+            </div>
+            <div className="th" style={{ width: '100px' }}>
+              {t('Credit.BorrowDuration')}
+            </div>
+            <div className="th" style={{ width: '100px' }}>
+              {t('Credit.TotalInterest')}
+            </div>
 
-              <th>{t('Credit.LastRepaymentTime')}</th>
-            </tr>
-          </thead>
-          <tbody>
+            <div className="th" style={{ width: '200px' }}>
+              {t('Credit.LastRepaymentTime')}
+            </div>
+          </div>
+          <div>
             {list.map((item, idx) => (
-              <tr key={idx}>
-                <td>
+              <div key={idx} className="crow brow">
+                <div style={{ width: '100px' }}>
                   <BlueText
                     onClick={() =>
                       openMyDetail(
@@ -159,30 +187,30 @@ const MyTable = ({ list, openMyDetail }: IMyTableProps) => {
                   >
                     {item.lendIdDisplay}
                   </BlueText>
-                </td>
-                <td>
+                </div>
+                <div style={{ width: '130px' }}>
                   {item.borrowAmount.format()} <span className="unit">USDT</span>
-                </td>
-                <td>
+                </div>
+                <div style={{ width: '80px' }}>
                   <StateTag state={item.status} />
-                </td>
-                <td>
+                </div>
+                <div style={{ width: '130px' }}>
                   <BlueText
                     onClick={() => window.open(`${amoy?.blockExplorers?.default.url}/tx/${item.borrowTx}`, '_blank')}
                   >
                     {publicJs.AddressToShow(item.borrowTx)}
                   </BlueText>
-                </td>
-                <td>{item.borrowTime}</td>
-                <td>{item.rate}‰</td>
-                <td>
+                </div>
+                <div style={{ width: '200px' }}>{item.borrowTime}</div>
+                <div style={{ width: '70px' }}>{item.rate}‰</div>
+                <div style={{ width: '100px' }}>
                   {item.status === CreditRecordStatus.OVERDUE ? (
                     <NoData>-</NoData>
                   ) : (
                     `${intrest.get(Number(item.lendId))?.interestDays || item.interestDays}日`
                   )}
-                </td>
-                <td>
+                </div>
+                <div style={{ width: '100px' }}>
                   {item.status === CreditRecordStatus.OVERDUE ? (
                     <NoData>-</NoData>
                   ) : (
@@ -191,12 +219,12 @@ const MyTable = ({ list, openMyDetail }: IMyTableProps) => {
                       <span className="unit">USDT</span>
                     </>
                   )}
-                </td>
-                <td>{item.overdueTime}</td>
-              </tr>
+                </div>
+                <div style={{ width: '200px' }}>{item.overdueTime}</div>
+              </div>
             ))}
-          </tbody>
-        </table>
+          </div>
+        </ListBox>
       ) : (
         <NoItem />
       )}
@@ -553,29 +581,6 @@ const TableBox = styled.div`
   border-radius: 25px;
   background-color: #fff;
   padding: 24px 32px 32px;
-
-  .table {
-    th {
-      background: transparent;
-      color: #718ebf;
-      border-radius: 0;
-      border-bottom: 1px solid #f2f4f7;
-      padding: 0 0 6px !important;
-      font-weight: 400;
-    }
-    th:first-child {
-      padding-left: 0 !important;
-    }
-    td {
-      background: transparent;
-      border-top-color: #f2f4f7;
-      height: 54px;
-      padding: 0 !important;
-    }
-    tr td:first-child {
-      padding-left: 0 !important;
-    }
-  }
 `;
 
 const BlueText = styled.div`
@@ -622,4 +627,26 @@ const FilterBox = styled.div`
 
 const NoData = styled.span`
   color: red;
+`;
+
+const ListBox = styled.div`
+  color: #232323;
+  font-size: 14px;
+  .head {
+    border-bottom: 1px solid #e6eff5;
+    color: #718ebf;
+    font-family: 'Inter-Medium';
+    font-weight: 500;
+  }
+  .crow {
+    line-height: 54px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .brow {
+    border-bottom: 1px solid #f2f4f7;
+    &:last-child {
+      border-bottom: none;
+    }
+  }
 `;
