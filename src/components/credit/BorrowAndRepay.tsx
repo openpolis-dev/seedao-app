@@ -44,7 +44,7 @@ export default function BorrowAndRepay({ isLogin, onUpdate }: { isLogin: boolean
     scoreLendContract
       .userBorrowCooldownEndTimestamp(account)
       .then((endTime: ethers.BigNumber) => {
-        if (endTime && endTime.toNumber() * 1000 < Date.now()) {
+        if (endTime && endTime.toNumber() * 1000 > Date.now()) {
           setShowAlert(true);
         } else {
           setShowItemsModal('borrow');
@@ -81,7 +81,7 @@ export default function BorrowAndRepay({ isLogin, onUpdate }: { isLogin: boolean
       )}
       {showItemsModal === 'repay' && <RepayItemsModal onConfirm={go2Repay} handleClose={() => setShowItemsModal('')} />}
       {showAlert && (
-        <AlertModal closeColor="#343C6A">
+        <AlertModal closeColor="#343C6A" handleClose={() => setShowAlert(false)}>
           <AlertContent>{t('Credit.BorrowCooldownMsg')}</AlertContent>
         </AlertModal>
       )}
