@@ -141,7 +141,7 @@ const MyBorrowing = ({ isLogin }: BorrowCardProps) => {
   useEffect(() => {
     document.addEventListener('openMine', getMyData);
     return () => document.removeEventListener('openMine', getMyData);
-  }, []);
+  }, [account]);
 
   return (
     <CardStyle2>
