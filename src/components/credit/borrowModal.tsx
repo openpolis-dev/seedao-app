@@ -113,6 +113,7 @@ export default function BorrowModal({ handleClose }: IProps) {
   const computeAmount = (num: number) => {
     if (num === 0) {
       setForfeitNum(0);
+      setCalculating(false);
       return;
     }
     setCalculating(true);
@@ -121,6 +122,9 @@ export default function BorrowModal({ handleClose }: IProps) {
       ?.calculateMortgageSCRAmount(v)
       .then((r: ethers.BigNumber) => {
         setForfeitNum(Number(ethers.utils.formatUnits(r, networkConfig.SCRContract.decimals)));
+      })
+      .catch((err: any) => {
+        setForfeitNum(0);
       })
       .finally(() => {
         setCalculating(false);
@@ -133,7 +137,7 @@ export default function BorrowModal({ handleClose }: IProps) {
     const newValue = e.target.value;
     if (newValue === '') {
       setInputNum('');
-      onChangeVal(0);
+      computeAmount(0);
       return;
     }
     const numberRegex = /^\d*\.?\d{0,2}$/;
@@ -141,6 +145,7 @@ export default function BorrowModal({ handleClose }: IProps) {
       return;
     }
     setInputNum(newValue);
+    setCalculating(true);
     onChangeVal(Number(newValue));
   };
 
@@ -150,6 +155,7 @@ export default function BorrowModal({ handleClose }: IProps) {
     if (!isNaN(numericValue)) {
       if (numericValue > myAvaliableQuota) {
         setInputNum(getShortDisplay(myAvaliableQuota));
+        setCalculating(true);
         onChangeVal(myAvaliableQuota);
       } else {
         setInputNum(getShortDisplay(numericValue));
