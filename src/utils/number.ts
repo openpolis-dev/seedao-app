@@ -27,3 +27,12 @@ export const getShortDisplay = (v: any, num = 2) => {
 Number.prototype.format = function (n = 2) {
   return getShortDisplay(formatNumber(Number(this)), n);
 };
+
+Number.prototype.format2 = function (n = 2) {
+  const value = String(this).split('.');
+  if (value[1]) {
+    return String(this);
+  } else {
+    return `${value[0]}.${'0'.repeat(n)}`;
+  }
+};

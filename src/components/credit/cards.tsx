@@ -219,7 +219,7 @@ const VaultCard = () => {
   const getData = useCallback(() => {
     scoreLendContract?.totalAvailableBorrowAmount().then((r: ethers.BigNumber) => {
       const value = ethers.utils.formatUnits(r, networkConfig.lend.lendToken.decimals);
-      setTotal(Number(value).format());
+      setTotal(Number(value).format2());
     });
   }, [scoreLendContract]);
 
