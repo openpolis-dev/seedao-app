@@ -410,7 +410,7 @@ export default function CreditRecords() {
 
   useEffect(() => {
     const openMine = () => {
-      onChangeTab('mine');
+      currentTab === 'mine' ? getList(1, 'mine') : onChangeTab('mine');
     };
     document.addEventListener('openMine', openMine);
     return () => {
