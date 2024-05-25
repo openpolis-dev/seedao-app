@@ -325,7 +325,7 @@ export default function CreditRecords() {
 
   useEffect(() => {
     getList(page, currentTab);
-  }, [selectValue, searchTargetVal, page, currentTab]);
+  }, [selectValue, searchTargetVal, currentTab]);
 
   const onChangeTab = (tab: 'all' | 'mine') => {
     setPage(1);
@@ -410,7 +410,12 @@ export default function CreditRecords() {
 
   useEffect(() => {
     const openMine = () => {
-      currentTab === 'mine' ? getList(1, 'mine') : onChangeTab('mine');
+      if (currentTab === 'mine') {
+        getList(1, 'mine');
+        setPage(1);
+      } else {
+        onChangeTab('mine');
+      }
     };
     document.addEventListener('openMine', openMine);
     return () => {
