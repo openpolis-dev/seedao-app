@@ -31,7 +31,8 @@ Number.prototype.format = function (n = 2) {
 Number.prototype.format2 = function (n = 2) {
   const value = String(this).split('.');
   if (value[1]) {
-    return String(this);
+    console.log('???', formatNumber(Number(value[0])));
+    return `${formatNumber(Number(value[0]))}.${value[1]}`;
   } else {
     return `${value[0]}.${'0'.repeat(n)}`;
   }

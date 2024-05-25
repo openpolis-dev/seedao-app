@@ -725,7 +725,7 @@
     "LatestRepaymentDate": "你有一笔借款需在 {{date}} 前还款",
     "MySCR": "我的SCR",
     "TotalQuota": "总额度",
-    "CurrentBorrow": "当前在借 {{num}} 笔",
+    "CurrentBorrow": "使用中 {{num}} 笔",
     "Overdue": "已逾期 {{num}} 笔",
     "DaoTotalQuota": "社区总借款额度",
     "DaoTip": "计划总资金 180,000 USDT，每月补充资金，详情 >>",
