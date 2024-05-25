@@ -188,7 +188,7 @@ export default function BorrowModal({ handleClose }: IProps) {
                 onChange={onChangeInput}
                 onBlur={handleBlur}
               />
-              <MaxButton onClick={handleBorrowMax}>{t('Credit.MaxBorrow')}</MaxButton>
+              {step === 0 && <MaxButton onClick={handleBorrowMax}>{t('Credit.MaxBorrow')}</MaxButton>}
             </div>
             <span className="right">USDT</span>
           </LineBox>
