@@ -94,7 +94,11 @@ export default function BorrowModal({ handleClose }: IProps) {
   const steps = [
     {
       title: t('Credit.BorrowStepTitle1'),
-      button: <CreditButton onClick={checkApprove}>{t('Credit.BorrowStepButton1')}</CreditButton>,
+      button: (
+        <CreditButton onClick={checkApprove} disabled={calculating || Number(inputNum) < 100}>
+          {t('Credit.BorrowStepButton1')}
+        </CreditButton>
+      ),
     },
     {
       title: t('Credit.BorrowStepTitle2'),
@@ -123,7 +127,7 @@ export default function BorrowModal({ handleClose }: IProps) {
       });
   };
 
-  const onChangeVal = useCallback(debounce(computeAmount, 1500), [scoreLendContract]);
+  const onChangeVal = useCallback(debounce(computeAmount, 800), [scoreLendContract]);
 
   const onChangeInput = (e: any) => {
     const newValue = e.target.value;

@@ -28,6 +28,10 @@ const ButtonStyle = styled.button`
   ${BasicButtonStyle};
   background: #1814f3;
   color: #fff;
+  &:disabled {
+    background: #7c7c96;
+    cursor: not-allowed;
+  }
 `;
 
 const PlainButtonStyle = styled.button`
