@@ -29,7 +29,7 @@ const ButtonStyle = styled.button`
   background: #1814f3;
   color: #fff;
   &:disabled {
-    background: #7c7c96;
+    background: rgba(24, 20, 243, 0.7);
     cursor: not-allowed;
   }
 `;
