@@ -164,11 +164,15 @@ export default function BorrowModal({ handleClose }: IProps) {
   };
 
   const handleBorrowMax = () => {
+    if (myAvaliableQuota === Number(inputNum)) {
+      return;
+    }
     setInputNum(String(myAvaliableQuota));
     onChangeVal(myAvaliableQuota);
   };
 
   useEffect(() => {
+    setCalculating(true);
     onChangeVal(100);
   }, []);
 
