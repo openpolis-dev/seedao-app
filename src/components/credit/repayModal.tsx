@@ -168,7 +168,7 @@ export default function RepayModal({ handleClose }: IProps) {
 
   const steps = [
     {
-      title: t('Credit.RepayStepTitle1'),
+      title: t('Credit.RepayTitle'),
       button: (
         <CreditButton onClick={() => setStep(1)} disabled={!selectedList.length}>
           {t('Credit.RepayStepButton1', { num: selectedList.length })}
@@ -176,11 +176,11 @@ export default function RepayModal({ handleClose }: IProps) {
       ),
     },
     {
-      title: t('Credit.RepayStepTitle2'),
+      title: t('Credit.RepayTitle'),
       button: <CreditButton onClick={checkApprove}>{t('Credit.RepayStepButton2')}</CreditButton>,
     },
     {
-      title: t('Credit.RepayStepTitle3'),
+      title: t('Credit.RepayTitle'),
       button: <CreditButton onClick={checkRepay}>{t('Credit.RepayStepButton3')}</CreditButton>,
     },
     {
@@ -199,17 +199,20 @@ export default function RepayModal({ handleClose }: IProps) {
               <CalculateLoading />
             </LoadingBox>
           ) : list.length ? (
-            <ListBox>
-              {list.map((item) => (
-                <RecordCheckbox
-                  key={item.id}
-                  id={item.id}
-                  data={item.data}
-                  selected={item.selected}
-                  onSelect={onSelect}
-                />
-              ))}
-            </ListBox>
+            <div>
+              <SubTitle>{t('Credit.RepayStepTitle1')}</SubTitle>
+              <ListBox>
+                {list.map((item) => (
+                  <RecordCheckbox
+                    key={item.id}
+                    id={item.id}
+                    data={item.data}
+                    selected={item.selected}
+                    onSelect={onSelect}
+                  />
+                ))}
+              </ListBox>
+            </div>
           ) : (
             <NoItem />
           )}
@@ -217,6 +220,10 @@ export default function RepayModal({ handleClose }: IProps) {
       )}
       {(step === 1 || step === 2) && (
         <RepayContent style={{ width: language === 'zh' ? '443px' : 'unset' }}>
+          {step === 1 && <SubTitle>{t('Credit.RepayStepTitle2')}</SubTitle>}
+          {step === 2 && (
+            <SubTitle style={{ visibility: 'hidden', marginBottom: '-30px' }}>{t('Credit.RepayStepTitle2')}</SubTitle>
+          )}
           <TotalRepay>
             <div className="number">{selectedTotalAmount} USDT</div>
             <div className="label">{t('Credit.ShouldRepay')}</div>
@@ -480,7 +487,6 @@ const RepayTip = styled.p`
 `;
 
 const TotalRepay = styled.div`
-  margin-top: 20px;
   margin-bottom: 20px;
   text-align: center;
   .number {
@@ -509,4 +515,10 @@ const ListBox = styled.div`
   flex-direction: column;
   gap: 10px;
   min-height: 321px;
+`;
+
+const SubTitle = styled.div`
+  font-size: 14px;
+  color: #343c6a;
+  margin-bottom: 10px;
 `;

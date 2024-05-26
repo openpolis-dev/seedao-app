@@ -726,7 +726,7 @@
     "TotalQuota": "Total Quota",
     "CurrentBorrow": "Currently borrowing {{num}} pen(s)",
     "Overdue": "Overdue {{num}} pen(s)",
-    "DaoTotalQuota": "社区总借款额度",
+    "DaoTotalQuota": "Total vault quota",
     "DaoTip": "Total program funding 180,000 USDT with monthly replenishment, details >>",
     "TotalBorrow": "Loaned {{num}} pen(s)",
     "TotalClear": "Settled {{num}} pen(s)",
@@ -807,7 +807,9 @@
     "InsufficientQuota": "Your loan quota is insufficient",
     "InsufficientBalance": "Insufficient balance",
     "MinBorrow": "Borrow at least 100 USDT!",
-    "LoginAndCheck": "登录后查看借款"
+    "LoginAndCheck": "Login to view loans",
+    "BorrowTitle": "Borrow",
+    "RepayTitle": "Repay"
   },
   "Governance": {
     "GovernanceRule": "Governance Rules",

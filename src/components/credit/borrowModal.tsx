@@ -93,7 +93,7 @@ export default function BorrowModal({ handleClose }: IProps) {
 
   const steps = [
     {
-      title: t('Credit.BorrowStepTitle1'),
+      title: t('Credit.BorrowTitle'),
       button: (
         <CreditButton onClick={checkApprove} disabled={calculating || Number(inputNum) < 100}>
           {t('Credit.BorrowStepButton1')}
@@ -101,7 +101,7 @@ export default function BorrowModal({ handleClose }: IProps) {
       ),
     },
     {
-      title: t('Credit.BorrowStepTitle2'),
+      title: t('Credit.BorrowTitle'),
       button: <CreditButton onClick={checkBorrow}>{t('Credit.BorrowStepButton2')}</CreditButton>,
     },
     {

@@ -808,7 +808,9 @@
     "InsufficientQuota": "您的借款额度不足",
     "InsufficientBalance": "您的余额不足",
     "MinBorrow": "至少借款 100 USDT！",
-    "LoginAndCheck": "登录后查看借款"
+    "LoginAndCheck": "登录后查看借款",
+    "BorrowTitle": "借款",
+    "RepayTitle": "还款"
   },
   "Governance": {
     "GovernanceRule": "治理规则",
