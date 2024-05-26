@@ -80,7 +80,7 @@ const AllBorrowTable = ({ list, openMyDetail, formatSNS }: IMyTableProps) => {
                   </div>
                   <div style={{ width: '130px' }}>{formatSNS && formatSNS(item.debtor)}</div>
                   <div style={{ width: '130px' }}>
-                    {item.borrowAmount.format()} <span className="unit">USDT</span>
+                    {item.borrowAmount.format(4)} <span className="unit">USDT</span>
                   </div>
                   <div style={{ width: '80px' }}>
                     <StateTag state={item.status} />
@@ -189,7 +189,7 @@ const MyTable = ({ list, openMyDetail }: IMyTableProps) => {
                   </BlueText>
                 </div>
                 <div style={{ width: '130px' }}>
-                  {item.borrowAmount.format()} <span className="unit">USDT</span>
+                  {item.borrowAmount.format(4)} <span className="unit">USDT</span>
                 </div>
                 <div style={{ width: '80px' }}>
                   <StateTag state={item.status} />

@@ -67,7 +67,7 @@ const MyBorrowingQuota = ({ isLogin }: BorrowCardProps) => {
           <div className="label">{t('Credit.MyBorrowQuota')} (USDT)</div>
           {isLogin ? (
             <div className="value">
-              <span className="num">{myAvaliableQuota.format()}</span>
+              <span className="num">{myAvaliableQuota.format(4)}</span>
             </div>
           ) : (
             <div className="secret">*********</div>
@@ -83,7 +83,7 @@ const MyBorrowingQuota = ({ isLogin }: BorrowCardProps) => {
             <div className="label">{t('Credit.MySCR')}</div>
             {isLogin ? (
               <ItemAmountBox>
-                <div className="value">{myScore.format()}</div>
+                <div className="value">{myScore.format(4)}</div>
               </ItemAmountBox>
             ) : (
               <div className="secret">*********</div>
@@ -93,7 +93,7 @@ const MyBorrowingQuota = ({ isLogin }: BorrowCardProps) => {
             <div className="label">{t('Credit.TotalQuota')} (USDT)</div>
             {isLogin ? (
               <ItemAmountBox>
-                <span className="value">{Number(myInuseAmount + myAvaliableQuota + myOverdueAmount).format()}</span>
+                <span className="value">{Number(myInuseAmount + myAvaliableQuota + myOverdueAmount).format(4)}</span>
               </ItemAmountBox>
             ) : (
               <div className="secret">*********</div>
@@ -151,7 +151,7 @@ const MyBorrowing = ({ isLogin }: BorrowCardProps) => {
           <div className="label">{t('Credit.MyBorrow')} (USDT)</div>
           {isLogin ? (
             <div className="value">
-              <span className="num">{(myInuseAmount + myOverdueAmount).format()}</span>
+              <span className="num">{(myInuseAmount + myOverdueAmount).format(4)}</span>
             </div>
           ) : (
             <div className="secret">*********</div>
@@ -174,7 +174,7 @@ const MyBorrowing = ({ isLogin }: BorrowCardProps) => {
             <div className="label">{t('Credit.CurrentBorrow', { num: isLogin ? myInUseCount : '*' })}</div>
             {isLogin ? (
               <ItemAmountBox>
-                <span className="value">{myInuseAmount.format()}</span>
+                <span className="value">{myInuseAmount.format(4)}</span>
                 <span className="unit">USDT</span>
               </ItemAmountBox>
             ) : (
@@ -185,7 +185,7 @@ const MyBorrowing = ({ isLogin }: BorrowCardProps) => {
             <div className="label">{t('Credit.Overdue', { num: isLogin ? myOverdueCount : '*' })}</div>
             {isLogin ? (
               <ItemAmountBox>
-                <span className="value">{myOverdueAmount.format()}</span>
+                <span className="value">{myOverdueAmount.format(4)}</span>
                 <span className="unit">USDT</span>
               </ItemAmountBox>
             ) : (
@@ -203,7 +203,7 @@ const VaultCard = () => {
   const {
     state: { scoreLendContract },
   } = useCreditContext();
-  const [total, setTotal] = useState('0.00');
+  const [total, setTotal] = useState('0.0000');
   const [data, setData] = useState<VaultData>({
     totalBorrowed: 1,
     totalBorrowedAmount: 0,
@@ -219,7 +219,7 @@ const VaultCard = () => {
   const getData = useCallback(() => {
     scoreLendContract?.totalAvailableBorrowAmount().then((r: ethers.BigNumber) => {
       const value = ethers.utils.formatUnits(r, networkConfig.lend.lendToken.decimals);
-      setTotal(Number(value).format2());
+      setTotal(Number(value).format(4));
     });
   }, [scoreLendContract]);
 
@@ -263,14 +263,14 @@ const VaultCard = () => {
         <div>
           <div className="label">{t('Credit.TotalBorrow', { num: data.totalBorrowed })}</div>
           <div className="value">
-            <span>{Number(data.totalBorrowedAmount).format()}</span>
+            <span>{Number(data.totalBorrowedAmount).format(4)}</span>
             <span className="unit">USDT</span>
           </div>
         </div>
         <div>
           <div className="label">{t('Credit.TotalClear', { num: data.paybackCount })}</div>
           <div className="value">
-            <span>{Number(data.paybackAmount).format()}</span>
+            <span>{Number(data.paybackAmount).format(4)}</span>
             <span className="unit">USDT</span>
           </div>
         </div>
@@ -279,14 +279,14 @@ const VaultCard = () => {
         <div>
           <div className="label">{t('Credit.TotalOverdue', { num: data.overdueCount })}</div>
           <div className="value">
-            <span>{Number(data.overdueAmount).format()}</span>
+            <span>{Number(data.overdueAmount).format(4)}</span>
             <span className="unit">USDT</span>
           </div>
         </div>
         <div>
           <div className="label">{t('Credit.TotalForfeit', { num: data.overdueAmount })}</div>
           <div className="value">
-            <span>{Number(data.forfeitSCRAmount).format()}</span>
+            <span>{Number(data.forfeitSCRAmount).format(4)}</span>
             <span className="unit">SCR</span>
           </div>
         </div>

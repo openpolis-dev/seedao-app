@@ -23,7 +23,7 @@ interface IProps {
 export default function BorrowModal({ handleClose }: IProps) {
   const { t } = useTranslation();
   const [step, setStep] = useState(0);
-  const [inputNum, setInputNum] = useState<string>('100.00');
+  const [inputNum, setInputNum] = useState<string>('100');
   const [forfeitNum, setForfeitNum] = useState(0);
 
   const { showToast } = useToast();
@@ -81,7 +81,7 @@ export default function BorrowModal({ handleClose }: IProps) {
   };
 
   const clearModalData = () => {
-    setInputNum('100.00');
+    setInputNum('100');
     setForfeitNum(0);
     setStep(0);
   };
@@ -140,7 +140,7 @@ export default function BorrowModal({ handleClose }: IProps) {
       computeAmount(0);
       return;
     }
-    const numberRegex = /^\d*\.?\d{0,2}$/;
+    const numberRegex = /^\d*$/;
     if (!numberRegex.test(newValue)) {
       return;
     }
@@ -176,7 +176,7 @@ export default function BorrowModal({ handleClose }: IProps) {
     onChangeVal(100);
   }, []);
 
-  const dayIntrestAmount = inputNum ? getShortDisplay((Number(inputNum) * 10000 * Number(0.0001)) / 10000, 5) : 0;
+  const dayIntrestAmount = inputNum ? getShortDisplay((Number(inputNum) * 10000 * Number(0.0001)) / 10000, 4) : 0;
 
   return (
     <BorrowModalStyle
@@ -211,7 +211,7 @@ export default function BorrowModal({ handleClose }: IProps) {
           <LineLabel>{t('Credit.NeedForfeit')}</LineLabel>
           <LineBox>
             <div className="left">
-              {calculating ? <CalculateLoading style={{ margin: '20px' }} /> : forfeitNum.format()}
+              {calculating ? <CalculateLoading style={{ margin: '20px' }} /> : forfeitNum.format(0)}
             </div>
             <span className="right">SCR</span>
           </LineBox>

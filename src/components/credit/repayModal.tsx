@@ -191,7 +191,7 @@ export default function RepayModal({ handleClose }: IProps) {
   return (
     <RepayModalStyle handleClose={() => handleClose()} closeColor="#343C6A">
       <ModalTitle>{steps[step].title}</ModalTitle>
-      {step === 3 && <FinishContent>{selectedTotalAmount} USDT</FinishContent>}
+      {step === 3 && <FinishContent>{selectedTotalAmount.format(4)} USDT</FinishContent>}
       {step === 0 && (
         <RepayContent style={{ width: language === 'zh' ? '443px' : 'unset' }}>
           {getting ? (
@@ -225,7 +225,7 @@ export default function RepayModal({ handleClose }: IProps) {
             <SubTitle style={{ visibility: 'hidden', marginBottom: '-30px' }}>{t('Credit.RepayStepTitle2')}</SubTitle>
           )}
           <TotalRepay>
-            <div className="number">{selectedTotalAmount} USDT</div>
+            <div className="number">{selectedTotalAmount.format(4)} USDT</div>
             <div className="label">{t('Credit.ShouldRepay')}</div>
           </TotalRepay>
           <ListBox style={{ maxHeight: '352px', minHeight: 'unset' }}>
@@ -269,7 +269,7 @@ const RecordCheckbox = ({
           <span>
             {t('Credit.BorrowID')}: {data.lendIdDisplay}
           </span>
-          <span> {data.borrowAmount.format()} USDT</span>
+          <span> {data.borrowAmount.format(4)} USDT</span>
         </li>
         <li>
           <span>
@@ -282,7 +282,7 @@ const RecordCheckbox = ({
             {t('Credit.LastRepaymentTime')} {data.overdueTime}
           </span>
           <span>
-            {t('Credit.TotalInterest')} {data.interestAmount} USDT
+            {t('Credit.TotalInterest')} {data.interestAmount?.format(4)} USDT
           </span>
         </li>
       </RecordRight>
@@ -299,7 +299,7 @@ const SelectedRecord = ({ data, total }: { data: ICreditRecord; total: number })
           <span>
             {t('Credit.BorrowID')}: {data.lendIdDisplay}
           </span>
-          <span>{data.borrowAmount.format()} USDT</span>
+          <span>{data.borrowAmount.format(4)} USDT</span>
         </li>
         <li>
           <span>
@@ -309,21 +309,21 @@ const SelectedRecord = ({ data, total }: { data: ICreditRecord; total: number })
         </li>
         <li>
           <span>
-            {t('Credit.BorrowPrincipal')} {data.borrowAmount.format()} USDT
+            {t('Credit.BorrowPrincipal')} {data.borrowAmount.format(4)} USDT
           </span>
           <span>{t('Credit.DayRate01', { rate: data.rate })}</span>
         </li>
         <li>
           <span>
-            {t('Credit.Interest')} {data.interestAmount}
+            {t('Credit.Interest')} {data.interestAmount?.format(4)}
           </span>
           <span>
-            {t('Credit.ShouldRepay')} {total} USDT
+            {t('Credit.ShouldRepay')} {total.format(4)} USDT
           </span>
         </li>
         <li>
           <span>
-            {t('Credit.ReturnForfeit')} {data.mortgageSCRAmount.format()} SCR
+            {t('Credit.ReturnForfeit')} {data.mortgageSCRAmount.format(4)} SCR
           </span>
         </li>
       </RecordRight>
