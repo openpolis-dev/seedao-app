@@ -154,11 +154,11 @@ export default function BorrowModal({ handleClose }: IProps) {
     const numericValue = parseFloat(inputNum);
     if (!isNaN(numericValue)) {
       if (numericValue > myAvaliableQuota) {
-        setInputNum(getShortDisplay(myAvaliableQuota));
+        setInputNum(getShortDisplay(myAvaliableQuota, 0));
         setCalculating(true);
         onChangeVal(myAvaliableQuota);
       } else {
-        setInputNum(getShortDisplay(numericValue));
+        setInputNum(getShortDisplay(numericValue, 0));
       }
     }
   };
