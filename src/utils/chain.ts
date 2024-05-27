@@ -15,6 +15,6 @@ export const amoy = defineChain({
     },
   },
   blockExplorers: {
-    default: { name: 'Explorer', url: 'https://www.oklink.com/amoy' },
+    default: { name: 'Explorer', url: 'https://amoy.polygonscan.com/' },
   },
 });
