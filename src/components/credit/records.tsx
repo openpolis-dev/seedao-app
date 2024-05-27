@@ -202,7 +202,7 @@ const MyTable = ({ list, openMyDetail }: IMyTableProps) => {
                   </BlueText>
                 </div>
                 <div style={{ width: '200px' }}>{item.borrowTime}</div>
-                <div style={{ width: '70px' }}>{item.rate}‰</div>
+                <div style={{ width: '70px' }}>{item.rate}%</div>
                 <div style={{ width: '100px' }}>
                   {item.status === CreditRecordStatus.OVERDUE ? (
                     <NoData>-</NoData>
