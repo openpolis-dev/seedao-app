@@ -162,7 +162,7 @@ const MyTable = ({ list, openMyDetail }: IMyTableProps) => {
             <div className="th" style={{ width: '100px' }}>
               {t('Credit.BorrowDuration')}
             </div>
-            <div className="th" style={{ width: '100px' }}>
+            <div className="th" style={{ width: '120px' }}>
               {t('Credit.TotalInterest')}
             </div>
 
@@ -210,12 +210,12 @@ const MyTable = ({ list, openMyDetail }: IMyTableProps) => {
                     `${intrest.get(Number(item.lendId))?.interestDays || item.interestDays}日`
                   )}
                 </div>
-                <div style={{ width: '100px' }}>
+                <div style={{ width: '120px' }}>
                   {item.status === CreditRecordStatus.OVERDUE ? (
                     <NoData>-</NoData>
                   ) : (
                     <>
-                      {intrest.get(Number(item.lendId))?.interestAmount || item.interestAmount}{' '}
+                      {(intrest.get(Number(item.lendId))?.interestAmount || item.interestAmount).format(4)}{' '}
                       <span className="unit">USDT</span>
                     </>
                   )}
