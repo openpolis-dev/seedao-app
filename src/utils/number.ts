@@ -1,5 +1,8 @@
 export const formatNumber = (num: number) => {
-  return (num >= 0 ? '' : '-') + Math.abs(num).toLocaleString('en-US');
+  const prefix = num >= 0 ? '' : '-';
+  const numSplitStr = String(num).split('.');
+  const intNum = Math.abs(Number(numSplitStr[0])).toLocaleString('en-US');
+  return prefix + intNum + (numSplitStr.length > 1 ? `.${numSplitStr[1]}` : '');
 };
 
 // 展示num位小数，不足的补0，超出的截取
