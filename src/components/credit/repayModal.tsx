@@ -203,7 +203,7 @@ export default function RepayModal({ handleClose }: IProps) {
       <ModalTitle>{steps[step].title}</ModalTitle>
       {step === 3 && <FinishContent>{selectedTotalAmount.format(4)} USDT</FinishContent>}
       {step === 0 && (
-        <RepayContent style={{ width: language === 'zh' ? '443px' : 'unset' }}>
+        <RepayContent style={{ width: language === 'zh' ? '453px' : 'unset' }}>
           {getting ? (
             <LoadingBox>
               <CalculateLoading />
@@ -229,7 +229,7 @@ export default function RepayModal({ handleClose }: IProps) {
         </RepayContent>
       )}
       {(step === 1 || step === 2) && (
-        <RepayContent style={{ width: language === 'zh' ? '443px' : 'unset' }}>
+        <RepayContent style={{ width: language === 'zh' ? '453px' : 'unset' }}>
           {step === 1 && <SubTitle>{t('Credit.RepayStepTitle2')}</SubTitle>}
           {step === 2 && (
             <SubTitle style={{ visibility: 'hidden', marginBottom: '-30px' }}>{t('Credit.RepayStepTitle2')}</SubTitle>
@@ -245,7 +245,7 @@ export default function RepayModal({ handleClose }: IProps) {
           </ListBox>
         </RepayContent>
       )}
-      <ConfirmBox style={{ width: language === 'zh' ? '443px' : 'unset' }}>
+      <ConfirmBox style={{ width: language === 'zh' ? '453px' : 'unset' }}>
         {(step === 1 || step === 2) && <BorrowTip1>{t('Credit.BorrowTip2')}</BorrowTip1>}
         {steps[step].button}
         {step === 1 && <RepayTip>{t('Credit.RepayTip')}</RepayTip>}
@@ -361,7 +361,7 @@ const ModalTitle = styled.div`
 `;
 
 const ConfirmBox = styled.div`
-  width: 443px;
+  width: 453px;
   margin: 0 auto;
   margin-top: 26px;
 `;
@@ -377,7 +377,7 @@ const FinishContent = styled.div`
 `;
 
 const RepayContent = styled.div`
-  width: 443px;
+  width: 453px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
@@ -461,7 +461,7 @@ const RecordStyle = styled.div`
 `;
 
 const RecordRight = styled.ul`
-  font-size: 10px;
+  font-size: 12px;
   flex: 1;
   color: #718ebf;
   li {
@@ -480,7 +480,7 @@ const SelectRecordStyle = styled(RecordStyle)`
     margin-bottom: 4px;
   }
   li {
-    line-height: 16px;
+    line-height: 18px;
   }
 `;
 
