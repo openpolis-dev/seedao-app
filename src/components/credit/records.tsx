@@ -427,7 +427,6 @@ export default function CreditRecords() {
   });
   return (
     <CreditRecordsStyle>
-      <NavBox>{t('Credit.Records')}</NavBox>
       <TabbarBox>
         <TitBox>
           <div onClick={() => onChangeTab('all')}>
@@ -534,14 +533,6 @@ const CreditRecordsStyle = styled.div`
     }
   }
 `;
-
-const NavBox = styled.div`
-  font-size: 16px;
-  font-weight: 600;
-  margin-bottom: 20px;
-  color: #343c6a;
-`;
-
 const TabbarBox = styled.div`
   border-bottom: 1px solid #ebeef2;
   display: flex;
@@ -566,6 +557,7 @@ const TitBox = styled.div`
     padding-inline: 10px;
     .active {
       color: #1814f3;
+      font-family: 'Inter-SemiBold';
     }
     .line {
       width: 100%;
