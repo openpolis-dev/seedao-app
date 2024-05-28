@@ -96,7 +96,7 @@ export default function RecordDetailModal({ borrowName, data, handleClose }: IPr
             <DetailLines>
               <Line>
                 <dt>{t('Credit.TotalRepay')}</dt>
-                <dd className="total">{fullData.borrowAmount + fullData.interestAmount} USDT</dd>
+                <dd className="total">{(fullData.borrowAmount + fullData.interestAmount).format(4)} USDT</dd>
               </Line>
               <Line>
                 <dt>{t('Credit.Principal')}</dt>
