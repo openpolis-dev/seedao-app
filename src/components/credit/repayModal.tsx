@@ -17,7 +17,7 @@ import getConfig from 'utils/envCofnig';
 const lendToken = getConfig().NETWORK.lend.lendToken;
 
 interface IProps {
-  handleClose: (openMine?: boolean) => void;
+  handleClose: (refresh?: boolean, openMine?: boolean) => void;
 }
 
 type ListItem = {
@@ -53,7 +53,7 @@ export default function RepayModal({ handleClose }: IProps) {
 
   const checkMine = () => {
     clearModalData();
-    handleClose(true);
+    handleClose(true, true);
   };
 
   const selectedList = list.filter((l) => !!l.selected);
@@ -199,7 +199,7 @@ export default function RepayModal({ handleClose }: IProps) {
     },
   ];
   return (
-    <RepayModalStyle handleClose={() => handleClose()} closeColor="#343C6A">
+    <RepayModalStyle handleClose={() => handleClose(step === 3, false)} closeColor="#343C6A">
       <ModalTitle>{steps[step].title}</ModalTitle>
       {step === 3 && <FinishContent>{selectedTotalAmount.format(4)} USDT</FinishContent>}
       {step === 0 && (

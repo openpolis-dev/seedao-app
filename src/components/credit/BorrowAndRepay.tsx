@@ -61,11 +61,11 @@ export default function BorrowAndRepay({ isLogin, onUpdate }: { isLogin: boolean
     }
     setShowItemsModal('repay');
   };
-  const handleCloseModal = (openMine?: boolean) => {
+  const handleCloseModal = (refresh?: boolean, openMine?: boolean) => {
     setShowModal('');
-    if (openMine) {
+    if (refresh) {
       onUpdate();
-      const evt = new Event('openMine');
+      const evt = new CustomEvent('openMine', { detail: { openMine } });
       document.dispatchEvent(evt);
     }
   };

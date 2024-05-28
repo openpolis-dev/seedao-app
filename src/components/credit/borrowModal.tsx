@@ -17,7 +17,7 @@ import { getShortDisplay } from 'utils/number';
 const networkConfig = getConfig().NETWORK;
 
 interface IProps {
-  handleClose: (openMine?: boolean) => void;
+  handleClose: (refresh?: boolean, openMine?: boolean) => void;
 }
 
 export default function BorrowModal({ handleClose }: IProps) {
@@ -28,7 +28,7 @@ export default function BorrowModal({ handleClose }: IProps) {
 
   const { showToast } = useToast();
 
-  const { handleTransaction, approveToken, handleEstimateGas, checkNetwork } = useTransaction();
+  const { handleTransaction, approveToken, handleEstimateGas, checkNetwork, checkEnoughBalance } = useTransaction();
 
   const { dispatch } = useAuthContext();
   const {
@@ -88,7 +88,7 @@ export default function BorrowModal({ handleClose }: IProps) {
 
   const checkMine = () => {
     clearModalData();
-    handleClose(true);
+    handleClose(true, true);
   };
 
   const steps = [
@@ -183,7 +183,7 @@ export default function BorrowModal({ handleClose }: IProps) {
       closeColor="#343C6A"
       handleClose={() => {
         clearModalData();
-        handleClose();
+        handleClose(step === 2, false);
       }}
     >
       <ModalTitle>{steps[step].title}</ModalTitle>
