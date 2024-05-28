@@ -73,21 +73,26 @@ export default function RepayModal({ handleClose }: IProps) {
     ),
   );
 
+  const totalNeedsToRepay = () => {
+    // add one more day interest
+    const totalApproveBN = selectedList.reduce(
+      (acc, item) =>
+        acc.add(
+          ethers.utils
+            .parseUnits(String(item.data.interestAmount), lendToken.decimals)
+            .div(ethers.BigNumber.from(item.data.interestDays)),
+        ),
+      ethers.utils.parseUnits(String(selectedTotalAmount), lendToken.decimals),
+    );
+    const totalApproveAmount = Number(ethers.utils.formatUnits(totalApproveBN, lendToken.decimals));
+    return totalApproveAmount;
+  };
+
   const checkApprove = async () => {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
       await checkNetwork();
-      // add one more day interest
-      const totalApproveBN = selectedList.reduce(
-        (acc, item) =>
-          acc.add(
-            ethers.utils
-              .parseUnits(String(item.data.interestAmount), lendToken.decimals)
-              .div(ethers.BigNumber.from(item.data.interestDays)),
-          ),
-        ethers.utils.parseUnits(String(selectedTotalAmount), lendToken.decimals),
-      );
-      const totalApproveAmount = Number(ethers.utils.formatUnits(totalApproveBN, lendToken.decimals));
+      const totalApproveAmount = totalNeedsToRepay();
       const result = await checkEnoughBalance(account!, 'usdt', totalApproveAmount);
       if (!result) {
         throw new Error(t('Credit.InsufficientBalance'));
@@ -106,7 +111,12 @@ export default function RepayModal({ handleClose }: IProps) {
   const checkRepay = async () => {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
-      const result = await handleEstimateGas(
+      const totalApproveAmount = totalNeedsToRepay();
+      const result = await checkEnoughBalance(account!, 'usdt', totalApproveAmount);
+      if (!result) {
+        throw new Error(t('Credit.InsufficientBalance'));
+      }
+      await handleEstimateGas(
         TX_ACTION.REPAY,
         selectedList.map((item) => Number(item.id)),
       );
