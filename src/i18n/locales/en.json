@@ -716,12 +716,12 @@
     "CardLogin": "You are not logged in, please log in to view",
     "GoToBorrow": "Go to borrow",
     "GoToRepay": "Go to repay",
-    "MyBorrowQuota": "My loan quota",
+    "MyBorrowQuota": "Loan quota",
     "MyBorrow": "My Loan",
     "MyBorrowTip": "Daily interest rate (simple interest) 0.01%, 1 SCR can borrow 0.01 USDT for up to 30 days.",
     "MyBorrowTip2": "Overdue, SCR will be forfeited to the community treasury!",
     "MyBorrowTip3": "Up to 30 days",
-    "LatestRepaymentDate": "You have a loan that needs to be repaid by {{date}}",
+    "LatestRepaymentDate": "You need to be repay by {{date}}",
     "MySCR": "My SCR",
     "TotalQuota": "Total Quota",
     "CurrentBorrow": "Currently borrowing {{num}} pen(s)",
@@ -730,7 +730,7 @@
     "DaoTip": "Total program funding 180,000 USDT with monthly replenishment, details >>",
     "TotalBorrow": "Loaned {{num}} pen(s)",
     "TotalClear": "Settled {{num}} pen(s)",
-    "TotalOverdue": "Overdue {{num}} pen(s)",
+    "TotalOverdue": "Overdue",
     "TotalForfeit": "Pledges forfeited",
     "Records": "Borrowing records",
     "AllBorrow": "All loans",
@@ -810,7 +810,8 @@
     "LoginAndCheck": "Login to view loans",
     "BorrowTitle": "Borrow",
     "RepayTitle": "Repay",
-    "MaxBorrowAmount": "Max to borrow {{amount}} USDT"
+    "MaxBorrowAmount": "Max to borrow {{amount}} USDT",
+    "Borrowed": "Borrowed"
   },
   "Governance": {
     "GovernanceRule": "Governance Rules",

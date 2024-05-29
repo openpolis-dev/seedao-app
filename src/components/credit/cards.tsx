@@ -89,16 +89,6 @@ const MyBorrowingQuota = ({ isLogin }: BorrowCardProps) => {
               <div className="secret">*********</div>
             )}
           </div>
-          <div>
-            <div className="label">{t('Credit.TotalQuota')} (USDT)</div>
-            {isLogin ? (
-              <ItemAmountBox>
-                <span className="value">{Number(myInuseAmount + myAvaliableQuota + myOverdueAmount).format(4)}</span>
-              </ItemAmountBox>
-            ) : (
-              <div className="secret">*********</div>
-            )}
-          </div>
         </MyCardColomnLine>
       </MyCardTop>
     </CardStyle>
@@ -148,7 +138,7 @@ const MyBorrowing = ({ isLogin }: BorrowCardProps) => {
       <img src={CreditLogo2} alt="" className="logo" />
       <MyCardTop>
         <MyCardLine>
-          <div className="label">{t('Credit.MyBorrow')} (USDT)</div>
+          <div className="label">{t('Credit.Borrowed')} (USDT)</div>
           {isLogin ? (
             <div className="value">
               <span className="num">{(myInuseAmount + myOverdueAmount).format(4)}</span>
@@ -268,26 +258,26 @@ const VaultCard = () => {
           </div>
         </div>
         <div>
-          <div className="label">{t('Credit.TotalClear', { num: data.paybackCount })}</div>
+          <div className="label">{t('Credit.CurrentBorrow', { num: data.inUseCount })}</div>
           <div className="value">
-            <span>{Number(data.paybackAmount).format(4)}</span>
+            <span>{Number(data.inUseAmount).format(4)}</span>
             <span className="unit">USDT</span>
           </div>
         </div>
       </VaultCardColumnLine>
       <VaultCardColumnLine>
         <div>
-          <div className="label">{t('Credit.TotalOverdue', { num: data.overdueCount })}</div>
+          <div className="label">{t('Credit.TotalClear', { num: data.paybackCount })}</div>
           <div className="value">
-            <span>{Number(data.overdueAmount).format(4)}</span>
+            <span>{Number(data.paybackAmount).format(4)}</span>
             <span className="unit">USDT</span>
           </div>
         </div>
         <div>
-          <div className="label">{t('Credit.TotalForfeit', { num: data.overdueAmount })}</div>
+          <div className="label">{t('Credit.TotalOverdue')}</div>
           <div className="value">
-            <span>{Number(data.forfeitSCRAmount).format(4)}</span>
-            <span className="unit">SCR</span>
+            <span>{Number(data.overdueAmount).format(4)}</span>
+            <span className="unit">USDT</span>
           </div>
         </div>
       </VaultCardColumnLine>
