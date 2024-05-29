@@ -433,7 +433,7 @@ const RecordStyle = styled.div`
     width: calc(var(--borderWidth) * 3);
     height: var(--borderWidth);
     top: 50%;
-    left: 17%;
+    left: 18%;
     transform-origin: left center;
   }
   .checkbox-wrapper-40 input[type='checkbox']:before {
