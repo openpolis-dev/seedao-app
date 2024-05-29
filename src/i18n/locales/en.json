@@ -809,7 +809,8 @@
     "MinBorrow": "Borrow at least 100 USDT!",
     "LoginAndCheck": "Login to view loans",
     "BorrowTitle": "Borrow",
-    "RepayTitle": "Repay"
+    "RepayTitle": "Repay",
+    "MaxBorrowAmount": "Max to borrow {{amount}} USDT"
   },
   "Governance": {
     "GovernanceRule": "Governance Rules",

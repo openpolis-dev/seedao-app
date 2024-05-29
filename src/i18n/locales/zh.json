@@ -810,7 +810,8 @@
     "MinBorrow": "至少借款 100 USDT！",
     "LoginAndCheck": "登录后查看借款",
     "BorrowTitle": "借款",
-    "RepayTitle": "还款"
+    "RepayTitle": "还款",
+    "MaxBorrowAmount": "最多可借 {{amount}} USDT"
   },
   "Governance": {
     "GovernanceRule": "治理规则",

@@ -64,8 +64,7 @@ export default function BorrowModal({ handleClose }: IProps) {
 
     try {
       await checkNetwork();
-      const result = await handleEstimateGas(TX_ACTION.BORROW, inputNum!);
-      console.log('====result', result);
+      await handleEstimateGas(TX_ACTION.BORROW, inputNum!);
       await handleTransaction(TX_ACTION.BORROW, Number(inputNum));
       setStep(2);
     } catch (error: any) {
@@ -95,7 +94,10 @@ export default function BorrowModal({ handleClose }: IProps) {
     {
       title: t('Credit.BorrowTitle'),
       button: (
-        <CreditButton onClick={checkApprove} disabled={calculating || Number(inputNum) < 100}>
+        <CreditButton
+          onClick={checkApprove}
+          disabled={calculating || Number(inputNum) < 100 || Number(inputNum) > myAvaliableQuota}
+        >
           {t('Credit.BorrowStepButton1')}
         </CreditButton>
       ),
@@ -156,7 +158,7 @@ export default function BorrowModal({ handleClose }: IProps) {
       if (numericValue > myAvaliableQuota) {
         setInputNum(getShortDisplay(myAvaliableQuota, 0));
         setCalculating(true);
-        onChangeVal(myAvaliableQuota);
+        onChangeVal(Number(getShortDisplay(myAvaliableQuota, 0)));
       } else {
         setInputNum(getShortDisplay(numericValue, 0));
       }
@@ -206,6 +208,9 @@ export default function BorrowModal({ handleClose }: IProps) {
             </div>
             <span className="right">USDT</span>
           </LineBox>
+          {Number(inputNum) > myAvaliableQuota && (
+            <MinTip>{t('Credit.MaxBorrowAmount', { amount: myAvaliableQuota })}</MinTip>
+          )}
           {Number(inputNum) < 100 && <MinTip>{t('Credit.MinBorrow')}</MinTip>}
           <LineTip>{t('Credit.RateAmount', { rate: 0.1, amount: dayIntrestAmount })}</LineTip>
           <LineLabel>{t('Credit.NeedForfeit')}</LineLabel>
