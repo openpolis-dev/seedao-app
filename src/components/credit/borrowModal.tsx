@@ -171,6 +171,7 @@ export default function BorrowModal({ handleClose }: IProps) {
     }
     setInputNum(getShortDisplay(myAvaliableQuota, 0));
     onChangeVal(Number(getShortDisplay(myAvaliableQuota, 0)));
+    setCalculating(true);
   };
 
   useEffect(() => {
