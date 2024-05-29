@@ -125,6 +125,22 @@ export default function useTransaction() {
     }
   };
 
+  const getAllowanceEnough = async (token: 'usdt' | 'scr', amount: number) => {
+    const address = token === 'usdt' ? lendToken.address : networkConfig.SCRContract.address;
+    const decimals = token === 'usdt' ? lendToken.decimals : networkConfig.SCRContract.decimals;
+    const allowanceResult = await readContract({
+      address: address as Address,
+      abi: erc20ABI,
+      functionName: 'allowance',
+      args: [account as Address, networkConfig.lend.scoreLendContract as Address],
+    });
+    console.log('=======approveToken allowance=======', allowanceResult);
+    return (
+      allowanceResult &&
+      ethers.BigNumber.from(allowanceResult.toString()).gte(ethers.utils.parseUnits(String(amount), decimals))
+    );
+  };
+
   const approveToken = async (token: 'usdt' | 'scr', amount: number) => {
     const address = token === 'usdt' ? lendToken.address : networkConfig.SCRContract.address;
     const decimals = token === 'usdt' ? lendToken.decimals : networkConfig.SCRContract.decimals;
@@ -165,5 +181,5 @@ export default function useTransaction() {
     );
   };
 
-  return { checkNetwork, handleTransaction, approveToken, handleEstimateGas, checkEnoughBalance };
+  return { checkNetwork, handleTransaction, approveToken, handleEstimateGas, checkEnoughBalance, getAllowanceEnough };
 }

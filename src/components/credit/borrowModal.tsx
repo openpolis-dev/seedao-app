@@ -28,13 +28,29 @@ export default function BorrowModal({ handleClose }: IProps) {
 
   const { showToast } = useToast();
 
-  const { handleTransaction, approveToken, handleEstimateGas, checkNetwork, checkEnoughBalance } = useTransaction();
+  const { handleTransaction, approveToken, handleEstimateGas, checkNetwork, getAllowanceEnough } = useTransaction();
 
   const { dispatch } = useAuthContext();
   const {
     state: { scoreLendContract, myScore, myAvaliableQuota },
   } = useCreditContext();
   const [calculating, setCalculating] = useState(false);
+  const [allowanceEnough, setAllowanceEnough] = useState(false);
+
+  const scrEnough = Number(inputNum) < myAvaliableQuota;
+
+  const getButtonText = () => {
+    if (!scrEnough) {
+      return t('Credit.InsufficientQuota');
+    }
+    if (!allowanceEnough) {
+      return t('Credit.BorrowStepButton1');
+    }
+  };
+
+  useEffect(() => {
+    setStep(scrEnough && allowanceEnough ? 1 : 0);
+  }, [scrEnough, allowanceEnough]);
 
   const checkApprove = async () => {
     if (calculating || Number(inputNum) < 100) {
@@ -98,13 +114,20 @@ export default function BorrowModal({ handleClose }: IProps) {
           onClick={checkApprove}
           disabled={calculating || Number(inputNum) < 100 || Number(inputNum) > myAvaliableQuota}
         >
-          {t('Credit.BorrowStepButton1')}
+          {getButtonText()}
         </CreditButton>
       ),
     },
     {
       title: t('Credit.BorrowTitle'),
-      button: <CreditButton onClick={checkBorrow}>{t('Credit.BorrowStepButton2')}</CreditButton>,
+      button: (
+        <CreditButton
+          disabled={calculating || Number(inputNum) < 100 || Number(inputNum) > myAvaliableQuota}
+          onClick={checkBorrow}
+        >
+          {t('Credit.BorrowStepButton2')}
+        </CreditButton>
+      ),
     },
     {
       title: t('Credit.BorrowStepTitle3'),
@@ -123,12 +146,19 @@ export default function BorrowModal({ handleClose }: IProps) {
     scoreLendContract
       ?.calculateMortgageSCRAmount(v)
       .then((r: ethers.BigNumber) => {
-        setForfeitNum(Number(ethers.utils.formatUnits(r, networkConfig.SCRContract.decimals)));
+        const fval = Number(ethers.utils.formatUnits(r, networkConfig.SCRContract.decimals));
+        setForfeitNum(fval);
+        // check allowance
+        getAllowanceEnough('scr', fval)
+          .then((res) => {
+            setAllowanceEnough(!!res);
+          })
+          .finally(() => {
+            setCalculating(false);
+          });
       })
       .catch((err: any) => {
         setForfeitNum(0);
-      })
-      .finally(() => {
         setCalculating(false);
       });
   };
@@ -194,18 +224,14 @@ export default function BorrowModal({ handleClose }: IProps) {
         <FinishContent>{inputNum} USDT</FinishContent>
       ) : (
         <BorrowContent>
-          <LineLabel>{t('Credit.BorrowAmount')}</LineLabel>
+          <LineLabel>
+            <span>{t('Credit.BorrowAmount')}</span>
+            <span className="max">{t('Credit.MaxBorrowAmount', { amount: myAvaliableQuota.format(0) })}</span>
+          </LineLabel>
           <LineBox>
             <div className="left">
-              <input
-                type="number"
-                autoFocus
-                disabled={step === 1}
-                value={inputNum}
-                onChange={onChangeInput}
-                onBlur={handleBlur}
-              />
-              {step === 0 && <MaxButton onClick={handleBorrowMax}>{t('Credit.MaxBorrow')}</MaxButton>}
+              <input type="number" autoFocus value={inputNum} onChange={onChangeInput} onBlur={handleBlur} />
+              <MaxButton onClick={handleBorrowMax}>{t('Credit.MaxBorrow')}</MaxButton>
             </div>
             <span className="right">USDT</span>
           </LineBox>
@@ -252,6 +278,7 @@ const ModalTitle = styled.div`
   font-family: Inter-SemiBold;
   font-weight: 600;
   margin-top: 14px;
+  margin-bottom: 16px;
   line-height: 54px;
 `;
 
@@ -269,6 +296,12 @@ const BorrowContent = styled.div`
 const LineLabel = styled.div`
   font-size: 14px;
   margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  .max {
+    margin-right: 76px;
+    color: #1814f3;
+  }
 `;
 
 const MaxButton = styled.span`
