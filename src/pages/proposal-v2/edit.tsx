@@ -101,7 +101,32 @@ export default function EditProposal() {
         try {
           const res = await getProposalDetail(Number(id));
           setData(res.data);
-          console.error(res.data);
+          let total: string[] = [];
+          let ratio: string[] = [];
+          let paid: string[] = [];
+          let remainAmount: string[] = [];
+          let prepayTotal: string[] = [];
+          let prepayRemain: string[] = [];
+
+          let data: any = {};
+
+          res.data.associated_project_budgets?.map((item: any) => {
+            total.push(`${item.total_amount} ${item.asset_name}`);
+            ratio.push(`${item.advance_ratio * 100}% ${item.asset_name}`);
+            paid.push(`${item.used_advance_amount} ${item.asset_name}`);
+            remainAmount.push(`${item.remain_amount} ${item.asset_name}`);
+            prepayTotal.push(`${item.total_advance_amount} ${item.asset_name}`);
+            prepayRemain.push(`${item.remain_advance_amount} ${item.asset_name}`);
+          });
+
+          data.total = total.join(',');
+          data.ratio = ratio.join(',');
+          data.paid = paid.join(',');
+          data.remainAmount = remainAmount.join(',');
+          data.prepayTotal = prepayTotal.join(',');
+          data.prepayRemain = prepayRemain.join(',');
+
+          setDetail(data);
 
           setVoteList((res.data as any)?.os_vote_options ?? []);
           setVoteType(res.data?.vote_type);
