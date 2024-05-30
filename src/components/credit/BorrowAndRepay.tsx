@@ -6,24 +6,15 @@ import { BorrowItemsModal, RepayItemsModal } from './itemsModal';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuthContext, AppActionType } from 'providers/authProvider';
-import { useCreditContext } from 'pages/credit/provider';
 import BasicModal from 'components/modals/basicModal';
-import { ethers } from 'ethers';
 
 export default function BorrowAndRepay({ isLogin, onUpdate }: { isLogin: boolean; onUpdate: () => void }) {
   const { t } = useTranslation();
 
   const [showModal, setShowModal] = useState<'borrow' | 'repay' | ''>('');
   const [showItemsModal, setShowItemsModal] = useState<'borrow' | 'repay' | ''>('');
-  const [showAlert, setShowAlert] = useState(false);
 
-  const {
-    dispatch,
-    state: { account },
-  } = useAuthContext();
-  const {
-    state: { scoreLendContract },
-  } = useCreditContext();
+  const { dispatch } = useAuthContext();
 
   const go2Borrow = () => {
     setShowItemsModal('');
@@ -39,20 +30,7 @@ export default function BorrowAndRepay({ isLogin, onUpdate }: { isLogin: boolean
       dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: true });
       return;
     }
-    // check
-    dispatch({ type: AppActionType.SET_LOADING, payload: true });
-    scoreLendContract
-      .userBorrowCooldownEndTimestamp(account)
-      .then((endTime: ethers.BigNumber) => {
-        if (endTime && endTime.toNumber() * 1000 > Date.now()) {
-          setShowAlert(true);
-        } else {
-          setShowItemsModal('borrow');
-        }
-      })
-      .finally(() => {
-        dispatch({ type: AppActionType.SET_LOADING, payload: false });
-      });
+    setShowItemsModal('borrow');
   };
   const openRepay = () => {
     if (!isLogin) {
@@ -80,11 +58,6 @@ export default function BorrowAndRepay({ isLogin, onUpdate }: { isLogin: boolean
         <BorrowItemsModal onConfirm={go2Borrow} handleClose={() => setShowItemsModal('')} />
       )}
       {showItemsModal === 'repay' && <RepayItemsModal onConfirm={go2Repay} handleClose={() => setShowItemsModal('')} />}
-      {showAlert && (
-        <AlertModal closeColor="#343C6A" handleClose={() => setShowAlert(false)}>
-          <AlertContent>{t('Credit.BorrowCooldownMsg')}</AlertContent>
-        </AlertModal>
-      )}
     </BorrowAndRepayStyle>
   );
 }

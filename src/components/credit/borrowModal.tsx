@@ -13,6 +13,7 @@ import { AppActionType, useAuthContext } from 'providers/authProvider';
 import useToast, { ToastType } from 'hooks/useToast';
 import parseError from './parseError';
 import { getShortDisplay } from 'utils/number';
+import { formatDeltaDate } from 'utils/time';
 
 const networkConfig = getConfig().NETWORK;
 
@@ -30,16 +31,23 @@ export default function BorrowModal({ handleClose }: IProps) {
 
   const { handleTransaction, approveToken, handleEstimateGas, checkNetwork, getAllowanceEnough } = useTransaction();
 
-  const { dispatch } = useAuthContext();
+  const {
+    dispatch,
+    state: { account },
+  } = useAuthContext();
   const {
     state: { scoreLendContract, myScore, myAvaliableQuota },
   } = useCreditContext();
   const [calculating, setCalculating] = useState(false);
   const [allowanceEnough, setAllowanceEnough] = useState(false);
+  const [leftTime, setLeftTime] = useState('');
 
   const scrEnough = Number(inputNum) < myAvaliableQuota;
 
   const getButtonText = () => {
+    if (leftTime) {
+      return leftTime;
+    }
     if (!scrEnough) {
       return t('Credit.InsufficientQuota');
     }
@@ -68,6 +76,7 @@ export default function BorrowModal({ handleClose }: IProps) {
       await approveToken('scr', forfeitNum);
       showToast('Approve successfully', ToastType.Success);
       setStep(1);
+      setAllowanceEnough(true);
     } catch (error) {
       console.error(error);
     } finally {
@@ -112,7 +121,7 @@ export default function BorrowModal({ handleClose }: IProps) {
       button: (
         <CreditButton
           onClick={checkApprove}
-          disabled={calculating || Number(inputNum) < 100 || Number(inputNum) > myAvaliableQuota}
+          disabled={calculating || Number(inputNum) < 100 || Number(inputNum) > myAvaliableQuota || leftTime}
         >
           {getButtonText()}
         </CreditButton>
@@ -122,10 +131,10 @@ export default function BorrowModal({ handleClose }: IProps) {
       title: t('Credit.BorrowTitle'),
       button: (
         <CreditButton
-          disabled={calculating || Number(inputNum) < 100 || Number(inputNum) > myAvaliableQuota}
+          disabled={calculating || Number(inputNum) < 100 || Number(inputNum) > myAvaliableQuota || leftTime}
           onClick={checkBorrow}
         >
-          {t('Credit.BorrowStepButton2')}
+          {leftTime || t('Credit.BorrowStepButton2')}
         </CreditButton>
       ),
     },
@@ -208,6 +217,15 @@ export default function BorrowModal({ handleClose }: IProps) {
     setCalculating(true);
     onChangeVal(100);
   }, []);
+
+  useEffect(() => {
+    scoreLendContract?.userBorrowCooldownEndTimestamp(account).then((endTime: ethers.BigNumber) => {
+      if (endTime && endTime.toNumber() * 1000 > Date.now()) {
+        setLeftTime(t('Credit.TimeDisplay', { ...formatDeltaDate(endTime.toNumber() * 1000) }));
+        showToast(t('Credit.BorrowCooldownMsg'), ToastType.Danger);
+      }
+    });
+  }, [scoreLendContract]);
 
   const dayIntrestAmount = inputNum ? getShortDisplay((Number(inputNum) * 10000 * Number(0.0001)) / 10000, 4) : 0;
 
