@@ -811,7 +811,9 @@
     "BorrowTitle": "Borrow",
     "RepayTitle": "Repay",
     "MaxBorrowAmount": "Max to borrow {{amount}} USDT",
-    "Borrowed": "Borrowed"
+    "Borrowed": "Borrowed",
+    "TimeDisplay": "{{h}}小时{{m}}分后可借款",
+    "SelectAll": "Select all"
   },
   "Governance": {
     "GovernanceRule": "Governance Rules",

@@ -812,7 +812,9 @@
     "BorrowTitle": "借款",
     "RepayTitle": "还款",
     "MaxBorrowAmount": "最多可借 {{amount}} USDT",
-    "Borrowed": "已借款"
+    "Borrowed": "已借款",
+    "TimeDisplay": "{{h}}小时{{m}}分后可借款",
+    "SelectAll": "全选"
   },
   "Governance": {
     "GovernanceRule": "治理规则",
