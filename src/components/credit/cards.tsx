@@ -34,10 +34,11 @@ const MyBorrowingQuota = ({ isLogin }: BorrowCardProps) => {
   } = useAuthContext();
   const {
     dispatch: dispatchCreditEvent,
-    state: { myAvaliableQuota, myScore, myInuseAmount, myOverdueAmount },
+    state: { myAvaliableQuota, myScore, scoreLendContract },
   } = useCreditContext();
+  const [maxAmount, setMaxAmount] = useState(0);
 
-  const getData = () => {
+  const getData = (e?: any) => {
     const _provider = new ethers.providers.StaticJsonRpcProvider(amoy.rpcUrls.public.http[0], amoy.id);
     const scoreContract = new ethers.Contract(networkConfig.SCRContract.address, erc20ABI, _provider);
     scoreContract.balanceOf(account).then((r: ethers.BigNumber) => {
@@ -47,6 +48,14 @@ const MyBorrowingQuota = ({ isLogin }: BorrowCardProps) => {
       });
     });
   };
+
+  useEffect(() => {
+    scoreLendContract
+      ?.maxTotalBorrowAmount()
+      .then((r: ethers.BigNumber) =>
+        setMaxAmount(Number(ethers.utils.formatUnits(r, networkConfig.lend.lendToken.decimals))),
+      );
+  }, [scoreLendContract]);
 
   useEffect(() => {
     if (isLogin && account) {
@@ -75,7 +84,7 @@ const MyBorrowingQuota = ({ isLogin }: BorrowCardProps) => {
         </MyCardLine>
         <CardTips>
           <MyCardTipLine>{t('Credit.MyBorrowTip')}</MyCardTipLine>
-          <MyCardTipLine>{t('Credit.MyBorrowTip3')}</MyCardTipLine>
+          <MyCardTipLine>{t('Credit.MyBorrowTip3', { amount: maxAmount.format(4, true) })}</MyCardTipLine>
         </CardTips>
 
         <MyCardColomnLine>

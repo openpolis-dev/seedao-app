@@ -720,7 +720,7 @@
     "MyBorrow": "My Loan",
     "MyBorrowTip": "Daily interest rate (simple interest) 0.01%, 1 SCR can borrow 0.01 USDT for up to 30 days.",
     "MyBorrowTip2": "Overdue, SCR will be forfeited to the community treasury!",
-    "MyBorrowTip3": "Up to 30 days",
+    "MyBorrowTip3": "Up to 30 days, max to borrow {{amount}} USDT",
     "LatestRepaymentDate": "You need to be repay by {{date}}",
     "MySCR": "My SCR",
     "TotalQuota": "Total Quota",
