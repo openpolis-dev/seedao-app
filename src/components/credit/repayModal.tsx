@@ -32,6 +32,10 @@ export default function RepayModal({ handleClose }: IProps) {
   const [step, setStep] = useState(0);
   const [list, setList] = useState<ListItem[]>([]);
   const [getting, setGetting] = useState(false);
+  const [allowanceBN, setAllowanceBN] = useState(ethers.constants.Zero);
+  const [tokenBN, setTokenBN] = useState(ethers.constants.Zero);
+  const [allowanceGetting, setAllownceGetting] = useState(false);
+  const [tokenBalanceGetting, setTokenBalanceGetting] = useState(false);
 
   const {
     dispatch,
@@ -42,7 +46,15 @@ export default function RepayModal({ handleClose }: IProps) {
     state: { bondNFTContract },
   } = useCreditContext();
 
-  const { checkEnoughBalance, handleTransaction, approveToken, handleEstimateGas, checkNetwork } = useTransaction();
+  const {
+    checkEnoughBalance,
+    handleTransaction,
+    approveToken,
+    handleEstimateGas,
+    checkNetwork,
+    getTokenBalance,
+    getTokenAllowance,
+  } = useTransaction();
 
   const { showToast } = useToast();
 
@@ -63,36 +75,42 @@ export default function RepayModal({ handleClose }: IProps) {
     setList(newList);
   };
 
-  const selectedTotalAmount = Number(
-    ethers.utils.formatUnits(
-      selectedList.reduce(
-        (acc, item) => acc.add(ethers.utils.parseUnits(String(item.total), lendToken.decimals)),
-        ethers.constants.Zero,
-      ),
-      lendToken.decimals,
-    ),
+  const selectedTotalBN = selectedList.reduce(
+    (acc, item) => acc.add(ethers.utils.parseUnits(String(item.total), lendToken.decimals)),
+    ethers.constants.Zero,
   );
+  const selectedTotalAmount = Number(ethers.utils.formatUnits(selectedTotalBN, lendToken.decimals));
+  // add one more day interest
+  const totalApproveBN = selectedList.reduce(
+    (acc, item) =>
+      acc.add(
+        ethers.utils
+          .parseUnits(String(item.data.interestAmount), lendToken.decimals)
+          .div(ethers.BigNumber.from(item.data.interestDays)),
+      ),
+    ethers.utils.parseUnits(String(selectedTotalAmount), lendToken.decimals),
+  );
+  const totalApproveAmount = Number(ethers.utils.formatUnits(totalApproveBN, lendToken.decimals));
 
-  const totalNeedsToRepay = () => {
-    // add one more day interest
-    const totalApproveBN = selectedList.reduce(
-      (acc, item) =>
-        acc.add(
-          ethers.utils
-            .parseUnits(String(item.data.interestAmount), lendToken.decimals)
-            .div(ethers.BigNumber.from(item.data.interestDays)),
-        ),
-      ethers.utils.parseUnits(String(selectedTotalAmount), lendToken.decimals),
-    );
-    const totalApproveAmount = Number(ethers.utils.formatUnits(totalApproveBN, lendToken.decimals));
-    return totalApproveAmount;
+  const tokenEnough = tokenBN.gte(totalApproveBN);
+  const allowanceEnough = allowanceBN.gte(totalApproveBN);
+
+  const getButtonText = () => {
+    if (tokenBalanceGetting) {
+      return t('Credit.RepayStepButton2');
+    }
+    if (!tokenEnough) {
+      return t('Credit.InsufficientBalance');
+    }
+    if (!allowanceEnough) {
+      return t('Credit.RepayStepButton2');
+    }
   };
 
   const checkApprove = async () => {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
       await checkNetwork();
-      const totalApproveAmount = totalNeedsToRepay();
       const result = await checkEnoughBalance(account!, 'usdt', totalApproveAmount);
       if (!result) {
         throw new Error(t('Credit.InsufficientBalance'));
@@ -100,6 +118,7 @@ export default function RepayModal({ handleClose }: IProps) {
       await approveToken('usdt', totalApproveAmount);
       showToast('Approve successfully', ToastType.Success);
       setStep(2);
+      setAllowanceBN(totalApproveBN);
     } catch (error: any) {
       console.error(error);
       showToast(parseError(error), ToastType.Danger);
@@ -111,7 +130,6 @@ export default function RepayModal({ handleClose }: IProps) {
   const checkRepay = async () => {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
-      const totalApproveAmount = totalNeedsToRepay();
       const result = await checkEnoughBalance(account!, 'usdt', totalApproveAmount);
       if (!result) {
         throw new Error(t('Credit.InsufficientBalance'));
@@ -181,6 +199,42 @@ export default function RepayModal({ handleClose }: IProps) {
     setList(list.map((item) => ({ ...item, selected: !selectedAll })));
   };
 
+  useEffect(() => {
+    if (account && step > 0) {
+      setAllownceGetting(true);
+      getTokenAllowance('usdt')
+        .then((r) => {
+          setAllowanceBN(r);
+        })
+        .finally(() => {
+          setAllownceGetting(false);
+        });
+    }
+  }, [account, step]);
+
+  useEffect(() => {
+    if (account && step > 0) {
+      setTokenBalanceGetting(true);
+      getTokenBalance('usdt')
+        .then((r) => {
+          setTokenBN(r);
+        })
+        .finally(() => {
+          setTokenBalanceGetting(false);
+        });
+    }
+  }, [account, step]);
+
+  console.log('=> step', step);
+  console.log('=> usdt', tokenBalanceGetting, tokenBN.toString(), tokenEnough);
+  console.log('=> allowance', allowanceGetting, allowanceBN.toString(), allowanceEnough);
+
+  useEffect(() => {
+    if (step === 1 || step === 2) {
+      setStep(tokenEnough && allowanceEnough ? 2 : 1);
+    }
+  }, [tokenEnough, allowanceEnough]);
+
   const steps = [
     {
       title: t('Credit.RepayTitle'),
@@ -192,7 +246,11 @@ export default function RepayModal({ handleClose }: IProps) {
     },
     {
       title: t('Credit.RepayTitle'),
-      button: <CreditButton onClick={checkApprove}>{t('Credit.RepayStepButton2')}</CreditButton>,
+      button: (
+        <CreditButton onClick={checkApprove} disabled={!tokenEnough || tokenBalanceGetting || allowanceGetting}>
+          {getButtonText()}
+        </CreditButton>
+      ),
     },
     {
       title: t('Credit.RepayTitle'),
@@ -246,7 +304,7 @@ export default function RepayModal({ handleClose }: IProps) {
         <RepayContent style={{ width: language === 'zh' ? '453px' : 'unset' }}>
           <TotalRepay>
             <div className="number">{selectedTotalAmount.format(4)} USDT</div>
-            <div className="label">{t('Credit.ShouldRepay', { amount: totalNeedsToRepay().format(4) })}</div>
+            <div className="label">{t('Credit.ShouldRepayAll', { amount: totalApproveAmount.format(4) })}</div>
             <RepayTip>{t('Credit.RepayTip')}</RepayTip>
           </TotalRepay>
           <ListBox style={{ maxHeight: '352px', minHeight: 'unset' }}>

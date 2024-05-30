@@ -136,7 +136,7 @@ export default function useTransaction() {
     });
     console.log('=======approveToken allowance=======', allowanceResult);
     return (
-      allowanceResult &&
+      !!allowanceResult &&
       ethers.BigNumber.from(allowanceResult.toString()).gte(ethers.utils.parseUnits(String(amount), decimals))
     );
   };
@@ -181,5 +181,37 @@ export default function useTransaction() {
     );
   };
 
-  return { checkNetwork, handleTransaction, approveToken, handleEstimateGas, checkEnoughBalance, getAllowanceEnough };
+  const getTokenBalance = async (token: 'usdt' | 'scr') => {
+    const address = token === 'usdt' ? lendToken.address : networkConfig.SCRContract.address;
+    const balance = await readContract({
+      address: address as Address,
+      abi: erc20ABI,
+      functionName: 'balanceOf',
+      args: [account as Address],
+    });
+    return ethers.BigNumber.from(balance.toString());
+  };
+
+  const getTokenAllowance = async (token: 'usdt' | 'scr') => {
+    const address = token === 'usdt' ? lendToken.address : networkConfig.SCRContract.address;
+    const allowanceResult = await readContract({
+      address: address as Address,
+      abi: erc20ABI,
+      functionName: 'allowance',
+      args: [account as Address, networkConfig.lend.scoreLendContract as Address],
+    });
+    console.log('=======approveToken allowance=======', allowanceResult);
+    return ethers.BigNumber.from(allowanceResult.toString());
+  };
+
+  return {
+    checkNetwork,
+    handleTransaction,
+    approveToken,
+    handleEstimateGas,
+    checkEnoughBalance,
+    getAllowanceEnough,
+    getTokenBalance,
+    getTokenAllowance,
+  };
 }
