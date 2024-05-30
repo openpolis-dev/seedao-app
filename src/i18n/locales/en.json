@@ -798,7 +798,7 @@
     "DayRate01": "Daily interest rate (simple interest) 0.01%",
     "BorrowPrincipal": "Loan principal",
     "CurrentBorrowDays": "Borrowed {{day}} day(s)",
-    "ShouldRepay": "Total repayable",
+    "ShouldRepay": "Total should repay {{amount}}",
     "ReturnForfeit": "Return of pledges",
     "Days": "{{days}} day(s)",
     "NoDate": "Currently there are no loans",

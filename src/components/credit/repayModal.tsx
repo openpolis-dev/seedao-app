@@ -244,13 +244,10 @@ export default function RepayModal({ handleClose }: IProps) {
       )}
       {(step === 1 || step === 2) && (
         <RepayContent style={{ width: language === 'zh' ? '453px' : 'unset' }}>
-          {step === 1 && <SubTitle>{t('Credit.RepayStepTitle2')}</SubTitle>}
-          {step === 2 && (
-            <SubTitle style={{ visibility: 'hidden', marginBottom: '-30px' }}>{t('Credit.RepayStepTitle2')}</SubTitle>
-          )}
           <TotalRepay>
             <div className="number">{selectedTotalAmount.format(4)} USDT</div>
-            <div className="label">{t('Credit.ShouldRepay')}</div>
+            <div className="label">{t('Credit.ShouldRepay', { amount: totalNeedsToRepay().format(4) })}</div>
+            <RepayTip>{t('Credit.RepayTip')}</RepayTip>
           </TotalRepay>
           <ListBox style={{ maxHeight: '352px', minHeight: 'unset' }}>
             {selectedList.map((item) => (
@@ -262,7 +259,6 @@ export default function RepayModal({ handleClose }: IProps) {
       <ConfirmBox style={{ width: language === 'zh' ? '453px' : 'unset' }}>
         {(step === 1 || step === 2) && <BorrowTip1>{t('Credit.BorrowTip2')}</BorrowTip1>}
         {steps[step].button}
-        {step === 1 && <RepayTip>{t('Credit.RepayTip')}</RepayTip>}
       </ConfirmBox>
     </RepayModalStyle>
   );
@@ -508,9 +504,10 @@ const BorrowTip1 = styled.p`
 `;
 
 const RepayTip = styled.p`
-  color: #718ebf;
-  font-size: 12px;
-  margin-top: 18px;
+  color: #1814f3;
+  font-size: 14px;
+  margin-top: 10px;
+  text-align: left;
 `;
 
 const TotalRepay = styled.div`
