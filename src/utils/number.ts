@@ -29,7 +29,10 @@ export const getShortDisplay = (v: any, num = 2) => {
   return res;
 };
 
-Number.prototype.format = function (n = 2) {
+Number.prototype.format = function (n = 2, zeroClear = false) {
+  if (zeroClear && !this) {
+    return '0';
+  }
   return getShortDisplay(formatNumber(Number(this)), n);
 };
 
