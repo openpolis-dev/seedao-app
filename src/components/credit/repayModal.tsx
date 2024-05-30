@@ -100,7 +100,7 @@ export default function RepayModal({ handleClose }: IProps) {
       return t('Credit.RepayStepButton2');
     }
     if (!tokenEnough) {
-      return t('Credit.InsufficientBalance');
+      return t('Credit.InsufficientBalance', { token: 'USDT' });
     }
     if (!allowanceEnough) {
       return t('Credit.RepayStepButton2');
@@ -113,7 +113,7 @@ export default function RepayModal({ handleClose }: IProps) {
       await checkNetwork();
       const result = await checkEnoughBalance(account!, 'usdt', totalApproveAmount);
       if (!result) {
-        throw new Error(t('Credit.InsufficientBalance'));
+        throw new Error(t('Credit.InsufficientBalance', { token: 'USDT' }));
       }
       await approveToken('usdt', totalApproveAmount);
       showToast('Approve successfully', ToastType.Success);
@@ -132,7 +132,7 @@ export default function RepayModal({ handleClose }: IProps) {
     try {
       const result = await checkEnoughBalance(account!, 'usdt', totalApproveAmount);
       if (!result) {
-        throw new Error(t('Credit.InsufficientBalance'));
+        throw new Error(t('Credit.InsufficientBalance', { token: 'USDT' }));
       }
       await handleEstimateGas(
         TX_ACTION.REPAY,
@@ -303,8 +303,8 @@ export default function RepayModal({ handleClose }: IProps) {
       {(step === 1 || step === 2) && (
         <RepayContent style={{ width: language === 'zh' ? '453px' : 'unset' }}>
           <TotalRepay>
-            <div className="number">{selectedTotalAmount.format(4)} USDT</div>
-            <div className="label">{t('Credit.ShouldRepayAll', { amount: totalApproveAmount.format(4) })}</div>
+            <div className="number">{totalApproveAmount.format(4)} USDT</div>
+            <div className="label">{t('Credit.ShouldRepayAll', { amount: selectedTotalAmount.format(4) })}</div>
             <RepayTip>{t('Credit.RepayTip')}</RepayTip>
           </TotalRepay>
           <ListBox style={{ maxHeight: '352px', minHeight: 'unset' }}>

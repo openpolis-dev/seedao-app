@@ -806,7 +806,7 @@
     "MaxBorrow": "Max",
     "BorrowCooldownMsg": "Cannot borrow again if less than 24 hours have elapsed since last repayment!",
     "InsufficientQuota": "Your loan quota is insufficient",
-    "InsufficientBalance": "Insufficient balance",
+    "InsufficientBalance": "Insufficient {{token}} balance",
     "MinBorrow": "Borrow at least 100 USDT!",
     "LoginAndCheck": "Login to view loans",
     "BorrowTitle": "Borrow",
