@@ -13,6 +13,7 @@ import SeedIcon from '../assets/images/seed.png';
 import SeeUImg from '../assets/Imgs/home/seeuNetwork.jpg';
 import SNSImg from '../assets/Imgs/home/sns2.jpg';
 import EchoImg from '../assets/Imgs/home/echo.svg';
+import CreditImg from '../assets/Imgs/home/credit.jpg';
 
 import RImg1 from '../assets/Imgs/resources/1.png';
 import RImg2 from '../assets/Imgs/resources/2.png';
@@ -367,7 +368,7 @@ const links = {
       id: 'module-credit',
       name: 'apps.Credit',
       link: '/credit',
-      icon: '',
+      icon: CreditImg,
       desc: 'apps.CreditDesc',
     },
   ],

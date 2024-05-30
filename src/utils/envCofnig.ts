@@ -32,8 +32,8 @@ const Polygon_Network = {
   SCRContract: { address: '0xdC907cd32Bc3D6bb2c63Ede4E28c3fAcdd1d5189', decimals: 18 },
   lend: {
     quotaPerUser: 5000,
-    bondNFTContract: '0x055f79172d148cb256b10033b1489C8444C2264d',
-    scoreLendContract: '0x7A1F6A8126374c2552F9A6772DA3Cf3F2856837F',
+    bondNFTContract: '0x496EBfDe236617821BAc1A2486993204378eE6C8',
+    scoreLendContract: '0xa868415159Dc88506A9A55fe12E98B171491018d',
     lendToken: {
       address: '0xca152522f26811fF8FcAf967d4040F7C6BbF8eaA',
       decimals: 6,
