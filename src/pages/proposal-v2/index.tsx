@@ -22,6 +22,7 @@ import useCheckMetaforoLogin from 'hooks/useMetaforoLogin';
 import MyProposalsTab from 'components/proposalCom/myProposalsTab';
 
 const PAGE_SIZE = 10;
+let RESULT_ID = 0;
 
 export default function ProposalIndexPage() {
   const navigate = useNavigate();
@@ -118,6 +119,8 @@ export default function ProposalIndexPage() {
   };
 
   const getProposalList = async (_page: number = 1) => {
+    RESULT_ID++;
+    let rid = RESULT_ID;
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
       const resp = await requests.proposalV2.getProposalList({
@@ -130,6 +133,7 @@ export default function ProposalIndexPage() {
         q: searchKeyword,
         sip: isFilterSIP ? 1 : '',
       });
+      if (rid !== RESULT_ID) return;
       setProposalList(resp.data.rows);
       handleSNS(resp.data.rows.filter((d) => !!d.applicant).map((d) => d.applicant));
       setTotalCount(resp.data.total);
@@ -141,24 +145,8 @@ export default function ProposalIndexPage() {
   };
 
   useEffect(() => {
-    // searchParams.set('sort_order', selectTime.value);
-    // setSearchParams(searchParams);
-  }, [selectCategory]);
-
-  useEffect(() => {
-    if (!initPage) {
-      getProposalList();
-      // setPage(1);
-
-      // searchParams.set('page',"1");
-      // setSearchParams(searchParams)
-    }
-  }, [selectCategory, selectTime, selectStatus, searchKeyword, isFilterSIP]);
-
-  useEffect(() => {
-    initPage && getProposalList();
-    setInitPage(false);
-  }, [page]);
+    getProposalList();
+  }, [selectCategory, selectTime, selectStatus, searchKeyword, isFilterSIP, page]);
 
   const onKeyUp = (e: any) => {
     if (e.keyCode === 13) {
@@ -176,7 +164,7 @@ export default function ProposalIndexPage() {
 
   const go2page = (_page: number) => {
     // setPage(_page + 1);
-    getProposalList(_page + 1);
+    // getProposalList(_page + 1);
 
     searchParams.set('page', (_page + 1).toString());
     setSearchParams(searchParams);
