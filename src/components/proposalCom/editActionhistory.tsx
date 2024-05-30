@@ -59,7 +59,7 @@ export default function EditActionHistory({ data }: IProps) {
                 i18nKey={item.isCreate ? 'Proposal.HistoryCreate' : 'Proposal.HistoryEdit'}
                 values={{ title: item.title, time: item.time }}
                 components={{
-                  title: <TitleBlock />,
+                  title: <TitleBlock2 />,
                 }}
               />
             </div>
@@ -73,18 +73,16 @@ export default function EditActionHistory({ data }: IProps) {
 const ActionList = styled.ul``;
 
 const Aciton = styled.li`
-  padding-inline: 20px;
   display: flex;
   gap: 16px;
   align-items: center;
-  cursor: pointer;
+  //cursor: pointer;
   color: var(--bs-body-color_active);
-  &:hover {
-    background-color: var(--bs-menu-hover);
-  }
+  //&:hover {
+  //  background-color: var(--bs-menu-hover);
+  //}
   .action-content {
     flex: 1;
-    padding-top: 20px;
     padding-bottom: 10px;
     //border-bottom: 1px solid var(--bs-border-color);
     display: flex;
@@ -96,3 +94,5 @@ const Aciton = styled.li`
 const TitleBlock = styled.span`
   color: #2f8fff;
 `;
+
+const TitleBlock2 = styled.span``;

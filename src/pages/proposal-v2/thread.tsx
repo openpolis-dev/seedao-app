@@ -857,7 +857,7 @@ const ReplyAndHistoryBlock = styled.div``;
 const BlockTab = styled.ul`
   display: flex;
   font-size: 20px;
-  margin-bottom: 32px;
+  margin-bottom: 20px;
   color: var(--bs-body-color_active);
 
   li {
