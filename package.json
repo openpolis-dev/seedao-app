@@ -12,7 +12,7 @@
     "@seedao/sns-js": "^0.7.0",
     "@sentry/cli": "^2.23.1",
     "@sentry/react": "^7.91.0",
-    "@taoist-labs/components": "^0.2.3",
+    "@taoist-labs/components": "^0.2.6",
     "@types/xlsx": "^0.0.36",
     "@unipasswallet/popup-types": "^1.1.11",
     "@unipasswallet/wagmi-connector": "^1.2.1",
@@ -59,7 +59,7 @@
     "siwe": "^2.1.4",
     "styled-components": "^5.3.11",
     "swiper": "^11.0.5",
-    "typescript": "^4.9.5",
+    "typescript": "^5.4.5",
     "ua-parser-js": "^1.0.36",
     "uuid": "^9.0.1",
     "viem": "^1.21.4",
@@ -130,8 +130,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "overrides": {
-    "typescript": "^4.9.5"
   }
 }

@@ -45,5 +45,6 @@ declare interface ISelectItem {
 }
 
 declare interface Number {
-  format: (n?: number) => string;
+  format: (n?: number, zeroClear?: boolean) => string;
+  format2: (n?: number) => string;
 }

@@ -19,6 +19,7 @@ import TemplateTag from 'components/proposalCom/templateTag';
 import CategoryTag from 'components/proposalCom/categoryTag';
 import PlusImg from 'assets/Imgs/light/plus.svg';
 import MinusImg from 'assets/Imgs/light/minus.svg';
+import { getProjectById } from '../../../requests/project';
 
 const Box = styled.ul`
   position: relative;
@@ -158,6 +159,11 @@ const TipsBox = styled.div`
 
 const AfterBox = styled.div``;
 
+const WaringBox = styled.div`
+  padding: 20px 0 0 30px;
+  color: var(--bs-primary);
+`;
+
 export default function CreateStep({ onClick }: any) {
   const BASE_URL = getConfig().REACT_APP_BASE_ENDPOINT;
   const API_VERSION = process.env.REACT_APP_API_VERSION;
@@ -194,6 +200,8 @@ export default function CreateStep({ onClick }: any) {
   const { changeStep, proposalType } = useCreateProposalContext();
   const { showToast } = useToast();
 
+  const [detail, setDetail] = useState<any>(null);
+
   const {
     state: { theme, tokenData },
     dispatch,
@@ -219,6 +227,7 @@ export default function CreateStep({ onClick }: any) {
       const previewArr = arr.filter((i: any) => i.type === 'preview');
       if (previewArr?.length && extraData?.id) {
         setPreviewTitle(previewArr[0]?.title);
+
         getPreview();
 
         getComponentsList();
@@ -264,6 +273,7 @@ export default function CreateStep({ onClick }: any) {
         }
         return item;
       });
+
       setComponents(components ? components : []);
     } else {
       setShowType('new');
@@ -308,6 +318,35 @@ export default function CreateStep({ onClick }: any) {
       return item;
     });
     comStr.unshift(titleComponents);
+
+    const { associated_project_budgets: budgets } = res.data;
+
+    let total: string[] = [];
+    let ratio: string[] = [];
+    let paid: string[] = [];
+    let remainAmount: string[] = [];
+    let prepayTotal: string[] = [];
+    let prepayRemain: string[] = [];
+
+    let data: any = {};
+
+    budgets?.map((item: any) => {
+      total.push(`${item.total_amount} ${item.asset_name}`);
+      ratio.push(`${item.advance_ratio * 100}% ${item.asset_name}`);
+      paid.push(`${item.used_advance_amount} ${item.asset_name}`);
+      remainAmount.push(`${item.remain_amount} ${item.asset_name}`);
+      prepayTotal.push(`${item.total_advance_amount} ${item.asset_name}`);
+      prepayRemain.push(`${item.remain_advance_amount} ${item.asset_name}`);
+    });
+
+    data.total = total.join(',');
+    data.ratio = ratio.join(',');
+    data.paid = paid.join(',');
+    data.remainAmount = remainAmount.join(',');
+    data.prepayTotal = prepayTotal.join(',');
+    data.prepayRemain = prepayRemain.join(',');
+
+    setDetail(data);
 
     setPreview(comStr ?? []);
   };
@@ -437,11 +476,11 @@ export default function CreateStep({ onClick }: any) {
       const budgetData = data.filter((item: any) => item.name === 'budget') || [];
       if (budgetData.length) {
         budgetData[0].data.budgetList.map((item: any) => {
-          if (item.typeTest.name === 'USDT') {
+          if (item?.typeTest?.name === 'USDT') {
             if (Number(item.amount) > 1000) {
               err = true;
             }
-          } else if (item.typeTest.name === 'SCR') {
+          } else if (item?.typeTest?.name === 'SCR') {
             if (Number(item.amount) > 50000) {
               err = true;
             }
@@ -593,6 +632,7 @@ export default function CreateStep({ onClick }: any) {
           baseUrl={BASE_URL}
           version={API_VERSION}
           token={token}
+          movitationSum={detail?.prepayRemain}
           BeforeComponent={
             <>
               <ItemBox>
@@ -600,6 +640,7 @@ export default function CreateStep({ onClick }: any) {
                 <InputBox>
                   <input type="text" value={title} onChange={handleInput} />
                 </InputBox>
+                <WaringBox>{t('Proposal.proposalWarnings')}</WaringBox>
               </ItemBox>
 
               {!!preview.length && (
@@ -638,6 +679,37 @@ export default function CreateStep({ onClick }: any) {
                   </ComponnentBox>
                   {!!tips && <TipsBox>{tips}</TipsBox>}
                 </>
+              )}
+              {componentName === '激励申请表' && (
+                <DisplayBox>
+                  <div className="titl">当前可申请资产: {detail?.prepayRemain}</div>
+                  <div className="content">
+                    <dl>
+                      <dt>项目预算</dt>
+                      <dd> {detail?.total}</dd>
+                    </dl>
+                    <dl>
+                      <dt>预付比例</dt>
+                      <dd>{detail?.ratio}</dd>
+                    </dl>
+                    <dl>
+                      <dt>总可预支</dt>
+                      <dd> {detail?.prepayTotal}</dd>
+                    </dl>
+                    <dl>
+                      <dt>当前已预支</dt>
+                      <dd>{detail?.paid}</dd>
+                    </dl>
+                    <dl>
+                      <dt>预算余额</dt>
+                      <dd>{detail?.remainAmount}</dd>
+                    </dl>
+                    <dl>
+                      <dt>可预支余额</dt>
+                      <dd>{detail?.prepayRemain}</dd>
+                    </dl>
+                  </div>
+                </DisplayBox>
               )}
             </>
           }
@@ -720,6 +792,41 @@ export default function CreateStep({ onClick }: any) {
     </Box>
   );
 }
+
+const DisplayBox = styled.div`
+  background: var(--home-right);
+  margin: 10px 30px;
+  padding: 20px 20px 10px;
+  border-radius: 10px;
+  .titl {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--bs-body-color_active);
+    margin-bottom: 20px;
+    text-transform: capitalize;
+  }
+  .content {
+    font-size: 14px;
+    color: var(--bs-body-color_active);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    text-transform: capitalize;
+    dl {
+      width: 33.333%;
+      display: flex;
+
+      align-items: center;
+      margin-bottom: 10px;
+      dt {
+        margin-right: 20px;
+        min-width: 70px;
+        font-weight: normal;
+      }
+    }
+  }
+`;
 
 const VoteBox = styled.ul`
   padding: 0 32px;

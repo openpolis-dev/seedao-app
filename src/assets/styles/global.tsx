@@ -278,6 +278,19 @@ const GlobalStyle = createGlobalStyle`
   .Toastify__close-button svg path {
     fill: var(--bs-svg-color);
   }
+  .credit-select__menu {
+    border: 1px solid #718ebf !important;
+    box-shadow: unset !important;
+  }
+  .credit-select__menu-list {
+    padding-inline: 4px;
+  }
+  .credit-select__option {
+    height: 24px;
+    line-height: 24px;
+    padding-block: 0 !important;
+    border-radius: 4px;
+  }
 `;
 
 export default GlobalStyle;
