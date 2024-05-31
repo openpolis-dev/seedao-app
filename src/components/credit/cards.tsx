@@ -403,7 +403,6 @@ const CardStyle2 = styled(CardStyle)`
 
 const CardStyle3 = styled(CardStyle)`
   background: #f3eeff;
-  border: 1px solid #dfeaf2;
   padding: 26px;
   color: #343c6a;
   .value {
