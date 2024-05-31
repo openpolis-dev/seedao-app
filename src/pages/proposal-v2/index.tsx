@@ -145,7 +145,7 @@ export default function ProposalIndexPage() {
   };
 
   useEffect(() => {
-    getProposalList();
+    getProposalList(page);
   }, [selectCategory, selectTime, selectStatus, searchKeyword, isFilterSIP, page]);
 
   const onKeyUp = (e: any) => {
