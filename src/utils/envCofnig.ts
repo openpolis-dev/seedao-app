@@ -70,7 +70,8 @@ const LOCAL = {
   REACT_APP_APP_VERSION: `A ${VERSION}`,
   REACT_APP_THEME_ENABLE: true,
   DESCHOOL_BASE_API: 'https://deschool.app/goapiDevelopment',
-  JOY_ID_URL: 'https://app.joy.id',
+  // JOY_ID_URL: 'https://app.joy.id',
+  JOY_ID_URL: 'https://testnet.joyid.dev',
   NETWORK: Polygon_Network,
   INDEXER_ENDPOINT: 'https://test-spp-indexer.seedao.tech',
   SENTRY_DSN: '',
@@ -91,6 +92,7 @@ const PREVIEW = {
   REACT_APP_MOBILE_URL: 'https://preview-m.seedao.tech',
   Polygon_Network,
   SENTRY_DSN,
+  JOY_ID_URL: 'https://app.joy.id',
 };
 
 const PRODUCTION = {
@@ -102,7 +104,7 @@ const PRODUCTION = {
   REACT_APP_THEME_ENABLE: false,
   REACT_APP_ONESIGNAL_ID: '8ecd086b-3e15-4537-9f8b-c55c72a8dcf7',
   REACT_APP_MOBILE_URL: 'https://m.seedao.xyz',
-  // JOY_ID_URL: 'https://app.joy.id',
+  JOY_ID_URL: 'https://app.joy.id',
   // NETWORK: {
   //   // [TODO] when publish sns contract, change to mainnet
   //   name: 'Sepolia',
