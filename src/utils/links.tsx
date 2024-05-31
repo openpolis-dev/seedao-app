@@ -365,7 +365,9 @@ const links = {
       desc: 'Coming Soon',
     },
     {
-      id: 'module-credit',
+      id: ['preview', 'production'].includes(process.env.REACT_APP_ENV_VERSION as string)
+        ? 'coming-soon'
+        : 'module-credit',
       name: 'apps.Credit',
       link: '/credit',
       icon: CreditImg,
