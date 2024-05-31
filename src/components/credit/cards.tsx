@@ -283,7 +283,7 @@ const VaultCard = () => {
           </div>
         </div>
         <div>
-          <div className="label">{t('Credit.TotalOverdue')}</div>
+          <div className="label">{t('Credit.TotalOverdue', { num: data.overdueCount })}</div>
           <div className="value">
             <span>{Number(data.overdueAmount).format(4, true)}</span>
             <span className="unit">USDT</span>

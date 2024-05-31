@@ -730,7 +730,7 @@
     "DaoTip": "Total program funding 180,000 USDT with monthly replenishment, details >>",
     "TotalBorrow": "Loaned {{num}} pen(s)",
     "TotalClear": "Settled {{num}} pen(s)",
-    "TotalOverdue": "Overdue",
+    "TotalOverdue": "Overdue {{num}} pen(s)",
     "TotalForfeit": "Pledges forfeited",
     "Records": "Borrowing records",
     "AllBorrow": "All loans",

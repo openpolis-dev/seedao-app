@@ -731,7 +731,7 @@
     "DaoTip": "计划总资金 180,000 USDT，每月补充资金，详情 >>",
     "TotalBorrow": "已借出 {{num}} 笔",
     "TotalClear": "已结清 {{num}} 笔",
-    "TotalOverdue": "逾期未还",
+    "TotalOverdue": "逾期未还 {{num}} 笔",
     "TotalForfeit": "已罚没质押物",
     "Records": "借款记录",
     "AllBorrow": "所有借款",
