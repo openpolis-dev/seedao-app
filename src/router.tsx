@@ -52,6 +52,7 @@ import ProposalThreadV2 from 'pages/proposal-v2/thread';
 import Wiki from './pages/notion/wiki';
 import getConfig from 'utils/envCofnig';
 import SeeSwap from 'pages/seeswap/swap';
+import Credit from 'pages/credit';
 
 export default function RouterLink() {
   return (
@@ -117,6 +118,10 @@ export default function RouterLink() {
 
           <Route path="/notion/:id" element={<Wiki />} />
           <Route path="/wiki" element={<Wiki />} />
+          {/* Credit */}
+          {['dev', undefined].includes(process.env.REACT_APP_ENV_VERSION || '') && (
+            <Route path="/credit" element={<Credit />} />
+          )}
         </Routes>
       </Layout>
       <RouterChecker />

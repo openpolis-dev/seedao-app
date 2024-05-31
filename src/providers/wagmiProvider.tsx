@@ -4,6 +4,7 @@ import { publicProvider } from 'wagmi/providers/public';
 import { InjectedConnector } from 'wagmi/connectors/injected';
 import { UniPassConnector } from '@unipasswallet/wagmi-connector';
 import { JoyIdConnector } from '@joyid/wagmi';
+import { amoy } from 'utils/chain';
 
 import getConfig from 'utils/envCofnig';
 const networkConfig = getConfig().NETWORK;
@@ -12,7 +13,7 @@ const APP_NAME = 'SeeDAO';
 const APP_ICON = `${window.location.origin}/icon192.png`;
 
 export default function WagmiProvider(props: React.PropsWithChildren) {
-  let supportChains: Chain[] = [mainnet, polygon, goerli, sepolia];
+  let supportChains: Chain[] = [mainnet, polygon, goerli, sepolia, amoy];
   // switch (networkConfig.chainId) {
   //   case 1:
   //     supportChains = [mainnet, goerli];

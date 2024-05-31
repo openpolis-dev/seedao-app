@@ -118,7 +118,35 @@ export default function InfoPage() {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
       const dt = await getProjectById(id as string);
-      setDetail(dt.data);
+      const { data } = dt;
+      const { budgets } = data;
+
+      let total: string[] = [];
+      let ratio: string[] = [];
+      let paid: string[] = [];
+      let remainAmount: string[] = [];
+      let prepayTotal: string[] = [];
+      let prepayRemain: string[] = [];
+
+      budgets?.map((item: any) => {
+        console.log(item);
+        total.push(`${item.total_amount} ${item.asset_name}`);
+        ratio.push(`${item.advance_ratio * 100}% ${item.asset_name}`);
+        paid.push(`${item.used_advance_amount} ${item.asset_name}`);
+        remainAmount.push(`${item.remain_amount} ${item.asset_name}`);
+        prepayTotal.push(`${item.total_advance_amount} ${item.asset_name}`);
+        prepayRemain.push(`${item.remain_advance_amount} ${item.asset_name}`);
+      });
+
+      data.total = total.join(',');
+      data.ratio = ratio.join(',');
+      data.paid = paid.join(',');
+      data.remainAmount = remainAmount.join(',');
+      data.prepayTotal = prepayTotal.join(',');
+      data.prepayRemain = prepayRemain.join(',');
+
+      console.error(budgets);
+      setDetail(data);
     } catch (error) {
       logError(error);
     } finally {
@@ -192,6 +220,13 @@ export default function InfoPage() {
                     </FlexFirst>
                   </TopInfo>
                 </TopBoxLeft>
+                {detail?.status === 'closed' ? (
+                  <ClosedButton disabled>{t('Project.Edit')}</ClosedButton>
+                ) : canCreateProject || show ? (
+                  <BtnTop to={`/project/edit/${detail?.id}`} state={detail}>
+                    <Button>{t('Project.Edit')}</Button>
+                  </BtnTop>
+                ) : null}
               </TopBox>
               <LastLine>
                 {/*<LftBox>*/}
@@ -199,116 +234,262 @@ export default function InfoPage() {
                 {/*    <Members detail={detail} updateProject={onUpdate} />*/}
                 {/*  </InnerLft>*/}
                 {/*</LftBox>*/}
-                <ContentBox>
-                  {detail?.status === 'closed' ? (
-                    <ClosedButton disabled>{t('Project.Edit')}</ClosedButton>
-                  ) : canCreateProject || show ? (
-                    <BtnTop to={`/project/edit/${detail?.id}`} state={detail}>
-                      <Button>{t('Project.Edit')}</Button>
-                    </BtnTop>
-                  ) : null}
 
-                  {/*<TitleBox>{t('Project.ProjectIntro')}</TitleBox>*/}
-                  <DlBox>
-                    <dl>
-                      <dt>{t('Project.ProjectIntro')}</dt>
-                      <dd><Desc>{detail?.desc}</Desc></dd>
-                    </dl>
-                    <dl>
-                      <dt>{t('Project.StartProjectLink')}</dt>
-                      <dd>
-                        {!!detail?.ApprovalLink && (
-                          <>
-                            <span>{formatLink(detail?.ApprovalLink)}</span>{' '}
-                            <Link to={formatLink(detail?.ApprovalLink)} target="_blank">
-                              <img src={LinkImg} alt="" />
-                            </Link>
-                          </>
-                        )}
-                      </dd>
-                    </dl>
-                    <dl>
-                      <dt>{t('Project.EndProjectLink')}</dt>
-                      <dd>
-                        {!!detail?.OverLink && (
-                          <>
-                            <span>{formatLink(detail?.OverLink)}</span>{' '}
-                            <Link to={formatLink(detail?.OverLink)} target="_blank">
-                              <img src={LinkImg} alt="" />
-                            </Link>
-                          </>
-                        )}
-                      </dd>
-                    </dl>
+                <NewContentBox>
+                  <ul className="lft">
                     <dl>
                       <dt>{t('Project.Moderator')}</dt>
-                      <dd>
-                        {sponserList.map((item: any, index: number) => (
-                          <MemBox key={`avatar_${index}`}>
-                            <Avatar onClick={() => setProfileVisible(true)}>
-                              <img src={item?.sp?.avatar || item?.avatar || DefaultAvatar} alt="" />
-                            </Avatar>
-                            <span>
-                              {item?.sns?.endsWith('.seedao') ? item.sns : publicJs.AddressToShow(item?.wallet)}
-                            </span>
-                          </MemBox>
-                        ))}
+                      <dd className="first">
+                        <ModoratorBox>
+                          <div className="title">{t('Project.Moderator')}</div>
+                          {sponserList.map((item: any, index: number) => (
+                            <MemBox key={`avatar_${index}`}>
+                              <Avatar onClick={() => setProfileVisible(true)}>
+                                <img src={item?.sp?.avatar || item?.avatar || DefaultAvatar} alt="" />
+                              </Avatar>
+                              <span>
+                                {item?.sns?.endsWith('.seedao') ? item.sns : publicJs.AddressToShow(item?.wallet)}
+                              </span>
+                            </MemBox>
+                          ))}
+                        </ModoratorBox>
+                        <ModoratorBox>
+                          <div className="title">{t('Project.Contact')}</div>
+                          <div className="rhtContact">
+                            {detail?.ContantWay
+                              ? detail?.ContantWay
+                              : sponserList[0]?.sns?.endsWith('.seedao')
+                              ? sponserList[0]?.sns
+                              : ''}
+                          </div>
+                        </ModoratorBox>
                       </dd>
                     </dl>
                     <dl>
-                      <dt>{t('Project.Contact')}</dt>
+                      <dt>{t('Project.projectproposalInfo')}</dt>
                       <dd>
-                        {detail?.ContantWay
-                          ? detail?.ContantWay
-                          : sponserList[0]?.sns?.endsWith('.seedao')
-                          ? sponserList[0]?.sns
-                          : ''}
+                        <table>
+                          <tr>
+                            <td>{t('Project.StartProjectLink')}</td>
+                            <td>
+                              {!!detail?.ApprovalLink && (
+                                <>
+                                  {/*<span>{formatLink(detail?.ApprovalLink)}</span>{' '}*/}
+                                  <Link to={formatLink(detail?.ApprovalLink)} target="_blank">
+                                    {/*<img src={LinkImg} alt="" />*/}
+                                    <span>{formatLink(detail?.ApprovalLink)}</span>
+                                  </Link>
+                                </>
+                              )}
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>{t('Project.Budget')}</td>
+                            <td> {detail?.total}</td>
+                          </tr>
+                          <tr>
+                            <td>{t('Project.PlanFinishTime')}</td>
+                            <td>{formatDate(detail?.PlanTime)}</td>
+                          </tr>
+                          <tr>
+                            <td>{t('Project.Deliverables')}</td>
+                            <td>
+                              {!!detail?.Deliverable?.length && (
+                                <ReactQuill
+                                  theme="snow"
+                                  value={detail?.Deliverable}
+                                  modules={{ toolbar: false }}
+                                  readOnly={true}
+                                />
+                              )}
+                            </td>
+                          </tr>
+                        </table>
+                      </dd>
+                    </dl>
+                    <dl>
+                      <dt>{t('Project.budgetUtil')}</dt>
+                      <dd>
+                        <table>
+                          <tr>
+                            <td>{t('Project.projectBudget')}</td>
+                            <td> {detail?.total}</td>
+                          </tr>
+                          <tr>
+                            <td>{t('Project.PrepayRatio')}</td>
+                            <td>{detail?.ratio}</td>
+                          </tr>
+                          <tr>
+                            <td>{t('Project.AvailableAmount')}</td>
+                            <td>{detail?.prepayTotal}</td>
+                          </tr>
+                          <tr>
+                            <td>{t('Project.CurrentlyPrepaid')}</td>
+                            <td>{detail?.paid}</td>
+                          </tr>
+                          <tr>
+                            <td>{t('Project.BudgetBalance')}</td>
+                            <td>{detail?.remainAmount}</td>
+                          </tr>
+                          <tr>
+                            <td>{t('Project.AvailableBalance')}</td>
+                            <td>{detail?.prepayRemain}</td>
+                          </tr>
+                        </table>
+                      </dd>
+                    </dl>
+                    <dl>
+                      <dt>{t('Project.CompletionInformation')}</dt>
+                      <dd>
+                        <table>
+                          <tr>
+                            <td>{t('Project.EndProjectLink')}</td>
+                            <td>
+                              {!!detail?.OverLink && (
+                                <Link to={formatLink(detail?.OverLink)} target="_blank">
+                                  <img src={LinkImg} alt="" />
+                                </Link>
+                              )}
+                            </td>
+                          </tr>
+                        </table>
+                      </dd>
+                    </dl>
+                  </ul>
+                  <ul className="rht">
+                    <dl>
+                      <dt>{t('Project.ProjectIntro')}</dt>
+                      <dd>
+                        {!!detail?.desc && <Desc>{detail?.desc}</Desc>}
+                        {!detail?.desc && <span>{t('Project.introTips')}</span>}
                       </dd>
                     </dl>
                     <dl>
                       <dt>{t('Project.OfficialLink')}</dt>
                       <dd>
+                        {!detail?.OfficialLink && <span>{t('Project.officialTips')}</span>}
                         {!!detail?.OfficialLink && (
-                          <>
-                            <span>{detail?.OfficialLink}</span>
-                            <a href={detail?.OfficialLink} target="_blank" rel="noreferrer">
-                              <img src={LinkImg} alt="" />
-                            </a>
-                          </>
+                          <a href={detail?.OfficialLink} target="_blank" rel="noreferrer">
+                            {detail?.OfficialLink}
+                          </a>
                         )}
                       </dd>
                     </dl>
-                    <dl>
-                      <dt>{t('Project.Budget')}</dt>
-                      <dd>
-                        {formatBudget(detail?.Budgets)?.map((i, index) => (
-                          <FlexBox key={`budget_${index}`}>
-                            <span>{i.name}</span>
-                          </FlexBox>
-                        ))}
-                      </dd>
-                    </dl>
-                    <dl>
-                      <dt>{t('Project.Deliverables')}</dt>
-                      <dd>
-                        {!!detail?.Deliverable?.length && (
-                          <ReactQuill
-                            theme="snow"
-                            value={detail?.Deliverable}
-                            modules={{ toolbar: false }}
-                            readOnly={true}
-                          />
-                        )}
-                      </dd>
-                    </dl>
+                  </ul>
+                </NewContentBox>
 
-                    <dl>
-                      <dt>{t('Project.PlanFinishTime')}</dt>
-                      <dd>{formatDate(detail?.PlanTime)}</dd>
-                    </dl>
-                  </DlBox>
-                  {/*<MdPreview theme={theme ? 'dark' : 'light'} modelValue={detail?.intro || ''} />*/}
-                </ContentBox>
+                {/*<ContentBox>*/}
+                {/*  {detail?.status === 'closed' ? (*/}
+                {/*    <ClosedButton disabled>{t('Project.Edit')}</ClosedButton>*/}
+                {/*  ) : canCreateProject || show ? (*/}
+                {/*    <BtnTop to={`/project/edit/${detail?.id}`} state={detail}>*/}
+                {/*      <Button>{t('Project.Edit')}</Button>*/}
+                {/*    </BtnTop>*/}
+                {/*  ) : null}*/}
+
+                {/*  /!*<TitleBox>{t('Project.ProjectIntro')}</TitleBox>*!/*/}
+                {/*  <DlBox>*/}
+                {/*    <dl>*/}
+                {/*      <dt>{t('Project.ProjectIntro')}</dt>*/}
+                {/*      <dd>*/}
+                {/*        <Desc>{detail?.desc}</Desc>*/}
+                {/*      </dd>*/}
+                {/*    </dl>*/}
+                {/*    <dl>*/}
+                {/*      <dt>{t('Project.StartProjectLink')}</dt>*/}
+                {/*      <dd>*/}
+                {/*        {!!detail?.ApprovalLink && (*/}
+                {/*          <>*/}
+                {/*            <span>{formatLink(detail?.ApprovalLink)}</span>{' '}*/}
+                {/*            <Link to={formatLink(detail?.ApprovalLink)} target="_blank">*/}
+                {/*              <img src={LinkImg} alt="" />*/}
+                {/*            </Link>*/}
+                {/*          </>*/}
+                {/*        )}*/}
+                {/*      </dd>*/}
+                {/*    </dl>*/}
+                {/*    <dl>*/}
+                {/*      <dt>{t('Project.EndProjectLink')}</dt>*/}
+                {/*      <dd>*/}
+                {/*        {!!detail?.OverLink && (*/}
+                {/*          <>*/}
+                {/*            <span>{formatLink(detail?.OverLink)}</span>{' '}*/}
+                {/*            <Link to={formatLink(detail?.OverLink)} target="_blank">*/}
+                {/*              <img src={LinkImg} alt="" />*/}
+                {/*            </Link>*/}
+                {/*          </>*/}
+                {/*        )}*/}
+                {/*      </dd>*/}
+                {/*    </dl>*/}
+                {/*    <dl>*/}
+                {/*      <dt>{t('Project.Moderator')}</dt>*/}
+                {/*      <dd>*/}
+                {/*        {sponserList.map((item: any, index: number) => (*/}
+                {/*          <MemBox key={`avatar_${index}`}>*/}
+                {/*            <Avatar onClick={() => setProfileVisible(true)}>*/}
+                {/*              <img src={item?.sp?.avatar || item?.avatar || DefaultAvatar} alt="" />*/}
+                {/*            </Avatar>*/}
+                {/*            <span>*/}
+                {/*              {item?.sns?.endsWith('.seedao') ? item.sns : publicJs.AddressToShow(item?.wallet)}*/}
+                {/*            </span>*/}
+                {/*          </MemBox>*/}
+                {/*        ))}*/}
+                {/*      </dd>*/}
+                {/*    </dl>*/}
+                {/*    <dl>*/}
+                {/*      <dt>{t('Project.Contact')}</dt>*/}
+                {/*      <dd>*/}
+                {/*        {detail?.ContantWay*/}
+                {/*          ? detail?.ContantWay*/}
+                {/*          : sponserList[0]?.sns?.endsWith('.seedao')*/}
+                {/*          ? sponserList[0]?.sns*/}
+                {/*          : ''}*/}
+                {/*      </dd>*/}
+                {/*    </dl>*/}
+                {/*    <dl>*/}
+                {/*      <dt>{t('Project.OfficialLink')}</dt>*/}
+                {/*      <dd>*/}
+                {/*        {!!detail?.OfficialLink && (*/}
+                {/*          <>*/}
+                {/*            <span>{detail?.OfficialLink}</span>*/}
+                {/*            <a href={detail?.OfficialLink} target="_blank" rel="noreferrer">*/}
+                {/*              <img src={LinkImg} alt="" />*/}
+                {/*            </a>*/}
+                {/*          </>*/}
+                {/*        )}*/}
+                {/*      </dd>*/}
+                {/*    </dl>*/}
+                {/*    <dl>*/}
+                {/*      <dt>{t('Project.Budget')}</dt>*/}
+                {/*      <dd>*/}
+                {/*        {formatBudget(detail?.Budgets)?.map((i, index) => (*/}
+                {/*          <FlexBox key={`budget_${index}`}>*/}
+                {/*            <span>{i.name}</span>*/}
+                {/*          </FlexBox>*/}
+                {/*        ))}*/}
+                {/*      </dd>*/}
+                {/*    </dl>*/}
+                {/*    <dl>*/}
+                {/*      <dt>{t('Project.Deliverables')}</dt>*/}
+                {/*      <dd>*/}
+                {/*        {!!detail?.Deliverable?.length && (*/}
+                {/*          <ReactQuill*/}
+                {/*            theme="snow"*/}
+                {/*            value={detail?.Deliverable}*/}
+                {/*            modules={{ toolbar: false }}*/}
+                {/*            readOnly={true}*/}
+                {/*          />*/}
+                {/*        )}*/}
+                {/*      </dd>*/}
+                {/*    </dl>*/}
+
+                {/*    <dl>*/}
+                {/*      <dt>{t('Project.PlanFinishTime')}</dt>*/}
+                {/*      <dd>{formatDate(detail?.PlanTime)}</dd>*/}
+                {/*    </dl>*/}
+                {/*  </DlBox>*/}
+                {/*  /!*<MdPreview theme={theme ? 'dark' : 'light'} modelValue={detail?.intro || ''} />*!/*/}
+                {/*</ContentBox>*/}
               </LastLine>
             </AllBox>
           </FlexLine>
@@ -324,6 +505,98 @@ export default function InfoPage() {
     </OuterBox>
   );
 }
+
+const NewContentBox = styled.div`
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: 32px;
+  width: 100%;
+  margin-bottom: 32px;
+  .lft,
+  .rht {
+    flex-grow: 1;
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+  }
+  .rht {
+    dl {
+      flex-grow: 1;
+    }
+  }
+  dl {
+    background: var(--bs-box--background);
+    box-shadow: var(--box-shadow);
+    border-radius: 16px;
+    padding: 22px 24px;
+    margin-top: 32px;
+  }
+  dt {
+    color: var(--bs-body-color_active);
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 18px;
+  }
+  dd {
+    font-size: 14px;
+  }
+
+  .first {
+    display: flex;
+  }
+  .title {
+    font-size: 14px;
+    color: var(--bs-body-color);
+  }
+
+  .rht {
+    color: var(--bs-body-color);
+  }
+  table {
+    width: 100%;
+  }
+  td {
+    color: var(--bs-body-color);
+    font-size: 14px;
+    padding-bottom: 10px;
+    vertical-align: top;
+
+    &:first-child {
+      padding-right: 20px;
+      white-space: nowrap;
+    }
+    &:nth-child(2) {
+      color: var(--bs-body-color_active);
+      word-break: break-all;
+      width: 100%;
+    }
+  }
+  .quill {
+    width: 100%;
+  }
+  .ql-container {
+    width: 100% !important;
+    border: 0;
+  }
+  .ql-editor {
+    padding: 0;
+  }
+
+  a {
+    color: var(--bs-primary);
+  }
+`;
+
+const ModoratorBox = styled.div`
+  flex-grow: 1;
+  .rhtContact {
+    color: var(--bs-body-color_active);
+  }
+  .title {
+    padding-bottom: 10px;
+  }
+`;
 
 const FlexBox = styled.div`
   display: flex;
@@ -460,9 +733,9 @@ const FlexLine = styled.div`
 `;
 
 const LastLine = styled.div`
-  display: flex;
-  align-items: stretch;
-  justify-content: space-between;
+  //display: flex;
+  //align-items: stretch;
+  //justify-content: space-between;
   margin-top: 15px;
   padding-bottom: 60px;
   flex-shrink: 0;
@@ -488,6 +761,7 @@ const TopBox = styled.div`
   box-shadow: var(--box-shadow);
   border-radius: 16px;
   padding: 22px 24px;
+  position: relative;
 `;
 
 const TopBoxLeft = styled.div`
@@ -542,6 +816,7 @@ const ContentBox = styled.div`
   //margin-left: 16px;
   color: var(--bs-body-color_active);
   position: relative;
+
   img {
     max-width: 100%;
   }
