@@ -119,3 +119,5 @@ export default function getConfig() {
       return LOCAL;
   }
 }
+
+console.log('[REACT_APP_ENV_VERSION]', process.env.REACT_APP_ENV_VERSION);
