@@ -42,7 +42,7 @@ export default function BorrowModal({ handleClose }: IProps) {
   const [allowanceEnough, setAllowanceEnough] = useState(false);
   const [leftTime, setLeftTime] = useState('');
 
-  const scrEnough = Number(inputNum) < myAvaliableQuota;
+  const scrEnough = Number(inputNum) <= myAvaliableQuota;
 
   const getButtonText = () => {
     if (leftTime) {
