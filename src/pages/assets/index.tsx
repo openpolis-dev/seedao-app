@@ -86,7 +86,7 @@ const SAFE_CHAIN: { [k: string]: { short: string; name: string } } = {
   },
 };
 
-const SCR_CONTRACT = '0xc74dee15a4700d5df797bdd3982ee649a3bb8c6c';
+const SCR_CONTRACT = '0xE4825A1a31a76f72befa47f7160B132AA03813E0';
 const SCR_PRICE = 0.03;
 
 const getChainIcon = (chainId: number) => {
@@ -241,9 +241,7 @@ export default function Index() {
   };
 
   const getSCR = async () => {
-    const provider = new ethers.providers.StaticJsonRpcProvider(
-      'https://eth-mainnet.g.alchemy.com/v2/YuNeXto27ejHnOIGOwxl2N_cHCfyLyLE',
-    );
+    const provider = new ethers.providers.StaticJsonRpcProvider(getConfig().NETWORK.rpcs[0]);
     try {
       const contract = new ethers.Contract(
         SCR_CONTRACT,
