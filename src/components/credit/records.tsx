@@ -44,7 +44,7 @@ const AllBorrowTable = ({ list, openMyDetail, formatSNS }: IMyTableProps) => {
         {list.length ? (
           <ListBox>
             <div className="head crow">
-              <div className="th" style={{ width: '100px' }}>
+              <div className="th" style={{ width: '80px' }}>
                 {t('Credit.BorrowID')}
               </div>
               <div className="th" style={{ width: '130px' }}>
@@ -69,7 +69,7 @@ const AllBorrowTable = ({ list, openMyDetail, formatSNS }: IMyTableProps) => {
             <div className="rows">
               {list.map((item, idx) => (
                 <div className="crow brow" key={idx}>
-                  <div style={{ width: '100px' }}>
+                  <div style={{ width: '80px' }}>
                     <BlueText
                       onClick={() =>
                         openMyDetail(item, { interestAmount: item.interestAmount, interestDays: item.interestDays })
