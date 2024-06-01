@@ -1,6 +1,6 @@
 import getConfig from 'utils/envCofnig';
 import { CreditRecordStatus, ICreditRecord, RawCreditRecord } from 'type/credit.type';
-import { formatTime, getUTC } from 'utils/time';
+import { formatTimeWithUTC } from 'utils/time';
 
 const PATH_PREFIX = `${getConfig().INDEXER_ENDPOINT}/score_lend`;
 
@@ -47,14 +47,14 @@ export const getBorrowList = (data: IFilterParams): Promise<IListResponse> => {
           status: item.lendStatus,
           debtor: item.debtor,
           borrowAmount: Number(item.borrowAmount),
-          borrowTime: formatTime(item.borrowTimestamp * 1000) + ' ' + getUTC(),
+          borrowTime: formatTimeWithUTC(item.borrowTimestamp),
           borrowTx: item.borrowTx,
           rate: `${Number(item.interestRate) * 100}`,
           interestDays: item.interestDays,
           interestAmount: Number(item.interestAmount),
-          paybackTime: formatTime(item.paybackTimestamp * 1000) + ' ' + getUTC(),
+          paybackTime: formatTimeWithUTC(item.paybackTimestamp),
           paybackTx: item.paybackTx,
-          overdueTime: formatTime(item.overdueTimestamp * 1000) + ' ' + getUTC(),
+          overdueTime: formatTimeWithUTC(item.overdueTimestamp),
           mortgageSCRAmount: Number(item.mortgageSCRAmount),
         })),
       };
