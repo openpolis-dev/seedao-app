@@ -9,7 +9,7 @@ export const API_VERSION = process.env.REACT_APP_API_VERSION;
 
 const instance = axios.create({
   baseURL: `${BASE_URL}/${API_VERSION}`,
-  timeout: 15000,
+  timeout: 30000,
   headers: { 'content-type': 'application/json' },
 });
 
