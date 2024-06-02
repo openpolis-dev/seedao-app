@@ -740,7 +740,7 @@
     "BorrowName": "Borrower",
     "BorrowTime": "Borrow Time",
     "LastRepaymentTime": "Last Repayment Time",
-    "BorrowHash": "Borrow Transaction Hash",
+    "BorrowHash": "Borrow Tx Hash",
     "AddressHint": "Borrower Address/SNS",
     "FilterTimeLatest": "Time: Most Recent",
     "FilterTimeEarliest": "Time: Earliest",
