@@ -84,7 +84,7 @@ const MyBorrowingQuota = ({ isLogin }: BorrowCardProps) => {
         </MyCardLine>
         <CardTips>
           <MyCardTipLine>{t('Credit.MyBorrowTip')}</MyCardTipLine>
-          <MyCardTipLine>{t('Credit.MyBorrowTip3', { amount: maxAmount.format(4, true) })}</MyCardTipLine>
+          <MyCardTipLine>{t('Credit.MyBorrowTip3', { amount: maxAmount.format(0) })}</MyCardTipLine>
         </CardTips>
 
         <MyCardColomnLine>
