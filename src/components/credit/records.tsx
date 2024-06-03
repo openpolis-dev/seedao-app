@@ -447,7 +447,7 @@ export default function CreditRecords() {
               <svg fill="none" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
                 <g stroke="rgba(113, 142, 191, 0.54)" stroke-width="2">
                   <circle cx="10.3446" cy="11.3209" r="6.10797" />
-                  <path d="m15.1745 15.6406 3.6867 2.7891" stroke-linecap="round" />
+                  <path d="m15.1745 15.6406 3.6867 2.7891" strokeLinecap="round" />
                 </g>
               </svg>
               <input

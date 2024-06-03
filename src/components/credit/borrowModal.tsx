@@ -36,7 +36,7 @@ export default function BorrowModal({ handleClose }: IProps) {
     state: { account },
   } = useAuthContext();
   const {
-    state: { scoreLendContract, myScore, myAvaliableQuota, maxBorrowDays },
+    state: { scoreLendContract, myScore, myAvaliableQuota, maxBorrowDays, borrowRate },
   } = useCreditContext();
   const [calculating, setCalculating] = useState(false);
   const [allowanceEnough, setAllowanceEnough] = useState(false);
@@ -257,7 +257,7 @@ export default function BorrowModal({ handleClose }: IProps) {
             <MinTip>{t('Credit.MaxBorrowAmount', { amount: myAvaliableQuota.format(0) })}</MinTip>
           )}
           {Number(inputNum) < 100 && <MinTip>{t('Credit.MinBorrow')}</MinTip>}
-          <LineTip>{t('Credit.RateAmount', { rate: 0.1, amount: dayIntrestAmount })}</LineTip>
+          <LineTip>{t('Credit.RateAmount', { r: borrowRate, amount: dayIntrestAmount })}</LineTip>
           <LineLabel>{t('Credit.NeedForfeit')}</LineLabel>
           <LineBox>
             <div className="left">

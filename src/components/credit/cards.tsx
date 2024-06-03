@@ -5,9 +5,6 @@ import { AppActionType, useAuthContext } from 'providers/authProvider';
 import useCheckLogin from 'hooks/useCheckLogin';
 import { useTranslation } from 'react-i18next';
 import CreditLogo2 from 'assets/Imgs/light/creditLogo2.svg';
-import { BorrowItemsModal, RepayItemsModal } from './itemsModal';
-import BorrowModal from './borrowModal';
-import RepayModal from './repayModal';
 import { useNetwork, useSwitchNetwork } from 'wagmi';
 import { useEthersProvider } from 'hooks/ethersNew';
 import { amoy } from 'utils/chain';
@@ -34,7 +31,7 @@ const MyBorrowingQuota = ({ isLogin }: BorrowCardProps) => {
   } = useAuthContext();
   const {
     dispatch: dispatchCreditEvent,
-    state: { myAvaliableQuota, myScore, scoreLendContract, maxBorrowDays },
+    state: { myAvaliableQuota, myScore, scoreLendContract, maxBorrowDays, borrowRate },
   } = useCreditContext();
   const [maxAmount, setMaxAmount] = useState(0);
 
@@ -57,6 +54,9 @@ const MyBorrowingQuota = ({ isLogin }: BorrowCardProps) => {
       );
     scoreLendContract?.maxBorrowPeriod().then((r: ethers.BigNumber) => {
       dispatchCreditEvent({ type: ACTIONS.SET_MAX_BORROW_DAYS, payload: r.toNumber() / 86400 });
+    });
+    scoreLendContract?.borrowInterestRate().then((r: ethers.BigNumber) => {
+      dispatchCreditEvent({ type: ACTIONS.SET_BORROW_RATE, payload: r.toNumber() / 10000 });
     });
   }, [scoreLendContract]);
 
@@ -86,7 +86,7 @@ const MyBorrowingQuota = ({ isLogin }: BorrowCardProps) => {
           )}
         </MyCardLine>
         <CardTips>
-          <MyCardTipLine>{t('Credit.MyBorrowTip')}</MyCardTipLine>
+          <MyCardTipLine>{t('Credit.MyBorrowTip', { r: borrowRate })}</MyCardTipLine>
           <MyCardTipLine>{t('Credit.MyBorrowTip3', { amount: maxAmount.format(0), day: maxBorrowDays })}</MyCardTipLine>
         </CardTips>
 
