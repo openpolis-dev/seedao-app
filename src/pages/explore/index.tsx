@@ -72,6 +72,7 @@ export default function ExplorePage() {
       } finally {
         dispatch({ type: AppActionType.SET_LOADING, payload: false });
       }
+      setNameSearchVal('');
     } else if (ethers.utils.isAddress(inputSearchVal)) {
       // address
       setWalletSearchVal(inputSearchVal?.toLocaleLowerCase());
