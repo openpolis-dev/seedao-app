@@ -34,7 +34,7 @@ const MyBorrowingQuota = ({ isLogin }: BorrowCardProps) => {
   } = useAuthContext();
   const {
     dispatch: dispatchCreditEvent,
-    state: { myAvaliableQuota, myScore, scoreLendContract },
+    state: { myAvaliableQuota, myScore, scoreLendContract, maxBorrowDays },
   } = useCreditContext();
   const [maxAmount, setMaxAmount] = useState(0);
 
@@ -55,6 +55,9 @@ const MyBorrowingQuota = ({ isLogin }: BorrowCardProps) => {
       .then((r: ethers.BigNumber) =>
         setMaxAmount(Number(ethers.utils.formatUnits(r, networkConfig.lend.lendToken.decimals))),
       );
+    scoreLendContract?.maxBorrowPeriod().then((r: ethers.BigNumber) => {
+      dispatchCreditEvent({ type: ACTIONS.SET_MAX_BORROW_DAYS, payload: r.toNumber() / 86400 });
+    });
   }, [scoreLendContract]);
 
   useEffect(() => {
@@ -84,7 +87,7 @@ const MyBorrowingQuota = ({ isLogin }: BorrowCardProps) => {
         </MyCardLine>
         <CardTips>
           <MyCardTipLine>{t('Credit.MyBorrowTip')}</MyCardTipLine>
-          <MyCardTipLine>{t('Credit.MyBorrowTip3', { amount: maxAmount.format(0) })}</MyCardTipLine>
+          <MyCardTipLine>{t('Credit.MyBorrowTip3', { amount: maxAmount.format(0), day: maxBorrowDays })}</MyCardTipLine>
         </CardTips>
 
         <MyCardColomnLine>

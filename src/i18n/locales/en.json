@@ -673,7 +673,7 @@
     "SNSDesc": "SNS is your identity based on blockchain in SeeDAO.",
     "Echo": "Echo",
     "EchoDesc": "Echo is a social network that gives your echos to same habbies, passions or interests.",
-    "Credit": "积分信用贷",
+    "Credit": "SCR MBL",
     "CreditDesc": "test"
   },
   "SNS": {
@@ -712,7 +712,7 @@
     "InviteLinkCopied": "The invite link has been copied to your clipboard!"
   },
   "Credit": {
-    "NavTitle": "Credit Loan",
+    "NavTitle": "SCR MBL",
     "CardLogin": "You are not logged in, please log in to view",
     "GoToBorrow": "Go to borrow",
     "GoToRepay": "Go to repay",
@@ -720,7 +720,7 @@
     "MyBorrow": "My Loan",
     "MyBorrowTip": "Daily interest rate (simple interest) 0.01%, 1 SCR can borrow 0.01 USDT for up to 30 days.",
     "MyBorrowTip2": "Overdue, SCR will be forfeited to the community treasury!",
-    "MyBorrowTip3": "Up to 30 days, max to borrow {{amount}} USDT",
+    "MyBorrowTip3": "Up to {{day}} days, max to borrow {{amount}} USDT",
     "LatestRepaymentDate": "You need to be repay by {{date}}",
     "MySCR": "My SCR",
     "TotalQuota": "Total Quota",
@@ -791,7 +791,7 @@
     "NeedForfeit": "You need to pledge",
     "RateAmount": "Daily interest rate (simple interest) 0.01%, expected daily interest generated {{amount}} USDT",
     "ForfeitTip": "The pledged SCR will be deducted from your wallet",
-    "BorrowTip1": "The maximum loan term is 30 days, and you can repay at any time within 30 days. If you are overdue, your SCR will be forfeited to the community treasury!",
+    "BorrowTip1": "The maximum loan term is {{day}} days, and you can repay at any time within {{day}} days. If you are overdue, your SCR will be forfeited to the community treasury!",
     "BorrowTip2": "*Interest and loan term are calculated based on Beijing time (UTC+8) natural days",
     "BorrowTip3": "Before signing, you need to authorize the contract to use your SCR",
     "RepayTip": "Due to the uncertainty of the on-chain transaction time, in order to ensure the success of the repayment, we will default to an additional 1 day of interest when you Approve, and if it is not used in the end, the excess USDT will be returned to your wallet!",
