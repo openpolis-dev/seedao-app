@@ -350,6 +350,7 @@ export default function CreditRecords() {
       const w = await sns.resolve(keyword);
       if (w && w !== ethers.constants.AddressZero) {
         setSearchVal(w?.toLocaleLowerCase());
+        setPage(1);
       } else {
         showToast(t('Msg.SnsNotFound', { sns: keyword }), ToastType.Danger);
       }
@@ -357,10 +358,12 @@ export default function CreditRecords() {
     } else if (ethers.utils.isAddress(keyword)) {
       // address
       setSearchVal(keyword?.toLocaleLowerCase());
+      setPage(1);
     } else if (keyword) {
       showToast(t('Msg.InvalidAddress', { address: keyword }), ToastType.Danger);
     } else {
       setSearchVal('');
+      setPage(1);
     }
   };
 
@@ -480,6 +483,9 @@ export default function CreditRecords() {
             onChange={(value: any) => {
               setSeletValue(value?.value);
               setSelectOption(value);
+              if (selectValue !== value?.value) {
+                setPage(1);
+              }
             }}
           />
         </FilterBox>
