@@ -232,8 +232,7 @@ export default function Register() {
 
   const checkSNs = async () => {
     try {
-      const arr = list.map((item) => sns.name(item.address));
-
+      const arr = list.map(async (item) => item.address.endsWith('seedao') || sns.name(item.address));
       let rtArr = await Promise.all(arr);
 
       const isNoSns = rtArr.filter((item) => !item);
