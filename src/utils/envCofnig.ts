@@ -92,7 +92,16 @@ const PREVIEW = {
   REACT_APP_MOBILE_URL: 'https://preview-m.seedao.tech',
   Polygon_Network,
   SENTRY_DSN,
-  JOY_ID_URL: 'https://app.joy.id',
+  JOY_ID_URL: 'https://testnet.joyid.dev',
+  NETWORK: {
+    ...Polygon_Network,
+    lend: {
+      ...Polygon_Network.lend,
+      bondNFTContract: '0x5eC2dDFdEACB1a4bB4145908bB29D833Fd810712',
+      scoreLendContract: '0xcF5504045f74f6A51828B9D8766E4d96822311dE',
+    },
+  },
+  INDEXER_ENDPOINT: 'https://preview-spp-indexer.seedao.tech',
 };
 
 const PRODUCTION = {
