@@ -119,9 +119,7 @@ export default function RouterLink() {
           <Route path="/notion/:id" element={<Wiki />} />
           <Route path="/wiki" element={<Wiki />} />
           {/* Credit */}
-          {['dev', undefined].includes(process.env.REACT_APP_ENV_VERSION || '') && (
-            <Route path="/credit" element={<Credit />} />
-          )}
+          <Route path="/credit" element={<Credit />} />
         </Routes>
       </Layout>
       <RouterChecker />
