@@ -46,6 +46,7 @@ export default function Register() {
 
   const [detail, setDetail] = useState<any>(null);
   const [showInfo, setShowInfo] = useState<boolean>(false);
+  const [budgets, setBudgets] = useState([]);
 
   useEffect(() => {
     if (!selectSource?.value) return;
@@ -59,6 +60,7 @@ export default function Register() {
       const { data } = dt;
       const { budgets } = data;
       setShowInfo(!!budgets.length);
+      setBudgets(budgets);
 
       let total: string[] = [];
       let ratio: string[] = [];
@@ -302,20 +304,19 @@ export default function Register() {
 
   const returnDisable = () => {
     let totalArr = total.split(',');
-    const remainArr = detail?.prepayRemain.split(',');
 
     let checkAll = true;
 
-    if (totalArr?.length > remainArr?.length) {
+    if (totalArr?.length > budgets?.length) {
       checkAll = true;
     } else {
-      remainArr?.map((item: any) => {
-        const remainArr = item.split(' ');
-        const finditemIndex = totalArr.findIndex((innerItem) => innerItem.indexOf(remainArr[1]) > -1);
-        console.log(finditemIndex);
+      budgets?.map((item: any) => {
+        const canUse = Number(item.total_amount) - Number(item.used_advance_amount);
+
+        const finditemIndex = totalArr.findIndex((innerItem) => innerItem.indexOf(item.asset_name) > -1);
         if (finditemIndex === -1) return;
         const totalNum = totalArr[finditemIndex]?.split(' ')[0];
-        if (Number(totalNum) > Number(remainArr[0])) {
+        if (Number(totalNum) > canUse) {
           checkAll = true;
         } else {
           checkAll = false;
