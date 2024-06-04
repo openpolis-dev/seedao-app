@@ -379,7 +379,7 @@ export default function CreditRecords() {
   };
 
   const showDetail = (data: ICreditRecord, interest: InterestData) => {
-    if (data.status === CreditRecordStatus.INUSE) {
+    if (!interest.interestDays || data.status === CreditRecordStatus.INUSE) {
       dispatch({ type: AppActionType.SET_LOADING, payload: true });
       bondNFTContract
         ?.calculateLendInterest(Number(data.lendId))
@@ -392,7 +392,7 @@ export default function CreditRecords() {
           setDetailData(newData);
         })
         .catch((e: any) => {
-          setDetailData(data);
+          showToast('获取利息失败, 请重试', ToastType.Danger);
         })
         .finally(() => {
           dispatch({ type: AppActionType.SET_LOADING, payload: false });
