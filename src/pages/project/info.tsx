@@ -138,12 +138,12 @@ export default function InfoPage() {
         prepayRemain.push(`${item.remain_advance_amount} ${item.asset_name}`);
       });
 
-      data.total = total.join(',');
-      data.ratio = ratio.join(',');
-      data.paid = paid.join(',');
-      data.remainAmount = remainAmount.join(',');
-      data.prepayTotal = prepayTotal.join(',');
-      data.prepayRemain = prepayRemain.join(',');
+      data.total = total.join(' , ');
+      data.ratio = ratio.join(' , ');
+      data.paid = paid.join(' , ');
+      data.remainAmount = remainAmount.join(' , ');
+      data.prepayTotal = prepayTotal.join(' , ');
+      data.prepayRemain = prepayRemain.join(' , ');
 
       console.error(budgets);
       setDetail(data);

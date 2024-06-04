@@ -342,12 +342,12 @@ export default function CreateStep({ onClick }: any) {
       canUse.push(`${cU} ${item.asset_name}`);
     });
 
-    data.total = total.join(',');
-    data.ratio = ratio.join(',');
-    data.paid = paid.join(',');
-    data.remainAmount = remainAmount.join(',');
-    data.prepayTotal = prepayTotal.join(',');
-    data.prepayRemain = prepayRemain.join(',');
+    data.total = total.join(' , ');
+    data.ratio = ratio.join(' , ');
+    data.paid = paid.join(' , ');
+    data.remainAmount = remainAmount.join(' , ');
+    data.prepayTotal = prepayTotal.join(' , ');
+    data.prepayRemain = prepayRemain.join(' , ');
     data.canUse = canUse.join(',');
 
     setDetail(data);
