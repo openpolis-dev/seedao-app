@@ -99,6 +99,7 @@
     "stream-http": "^3.2.0"
   },
   "scripts": {
+    "test": "echo \"no test specified\"",
     "dev": "react-app-rewired start",
     "start": "npm run dev",
     "build:online": "react-app-rewired build",
