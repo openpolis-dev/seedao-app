@@ -45,6 +45,7 @@ export default function Register() {
   const [total, setTotal] = useState('');
 
   const [detail, setDetail] = useState<any>(null);
+  const [showInfo, setShowInfo] = useState<boolean>(false);
 
   useEffect(() => {
     if (!selectSource?.value) return;
@@ -57,6 +58,7 @@ export default function Register() {
       const dt = await getProjectById(selectSource?.value.toString());
       const { data } = dt;
       const { budgets } = data;
+      setShowInfo(!!budgets.length);
 
       let total: string[] = [];
       let ratio: string[] = [];
@@ -340,8 +342,8 @@ export default function Register() {
           value={selectSource}
         />
       </SectionBlock>
+      {showInfo && <ProjectInfo detail={detail} />}
 
-      <ProjectInfo detail={detail} />
       <SectionBlock>
         <div className="title lftTit">{t('Assets.RegisterList')}</div>
         <RegList list={list} setList={setList} />
