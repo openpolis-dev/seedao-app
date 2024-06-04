@@ -261,7 +261,8 @@
     "CompletionInformation": "Project Completion Information",
     "introTips": "The project has not filled in the project introduction～",
     "officialTips": "The project has not filled in the official link～",
-    "tips": "he budget beyond the prepayment ratio is not available for prepayment. Please submit a proposal for project completion."
+    "tips": "he budget beyond the prepayment ratio is not available for prepayment. Please submit a proposal for project completion.",
+    "notOff": "Not yet closed"
   },
   "Guild": {
     "OfficialLink": "Official link",

@@ -156,7 +156,7 @@
     "prepaid": "当前已预支",
     "budgetAmount": "预算余额",
     "availableBalance": "可预支余额",
-    "proposalWarnings": "注意:提案进入投票阶段后会自动赋予SIP编号，无需在标题处填写SIP编号"
+    "proposalWarnings": "注意：提案进入投票阶段后会自动赋予SIP编号，无需在标题处填写SIP编号"
   },
   "Project": {
     "OfficialLink": "项目官方链接",
@@ -262,8 +262,8 @@
     "CompletionInformation": "结项信息",
     "introTips": "该项目未填写项目简介～",
     "officialTips": "该项目未填写官方链接～",
-    "tips": "预付比例之之外的预算不可预支，请通过提案结项申请"
-
+    "tips": "预付比例之之外的预算不可预支，请通过提案结项申请",
+    "notOff": "暂未结项"
   },
   "Guild": {
     "OfficialLink": "公会官方链接",

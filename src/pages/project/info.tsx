@@ -350,6 +350,7 @@ export default function InfoPage() {
                                   <img src={LinkImg} alt="" />
                                 </Link>
                               )}
+                              {!detail?.OverLink && <div>{t('Project.notOff')}</div>}
                             </td>
                           </tr>
                         </table>
