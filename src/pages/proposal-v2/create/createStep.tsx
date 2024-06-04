@@ -327,6 +327,7 @@ export default function CreateStep({ onClick }: any) {
     let remainAmount: string[] = [];
     let prepayTotal: string[] = [];
     let prepayRemain: string[] = [];
+    let canUse: string[] = [];
 
     let data: any = {};
 
@@ -337,6 +338,8 @@ export default function CreateStep({ onClick }: any) {
       remainAmount.push(`${item.remain_amount} ${item.asset_name}`);
       prepayTotal.push(`${item.total_advance_amount} ${item.asset_name}`);
       prepayRemain.push(`${item.remain_advance_amount} ${item.asset_name}`);
+      let cU = Number(item.total_amount) - Number(item.used_advance_amount);
+      canUse.push(`${cU} ${item.asset_name}`);
     });
 
     data.total = total.join(',');
@@ -345,6 +348,7 @@ export default function CreateStep({ onClick }: any) {
     data.remainAmount = remainAmount.join(',');
     data.prepayTotal = prepayTotal.join(',');
     data.prepayRemain = prepayRemain.join(',');
+    data.canUse = canUse.join(',');
 
     setDetail(data);
 
@@ -632,7 +636,7 @@ export default function CreateStep({ onClick }: any) {
           baseUrl={BASE_URL}
           version={API_VERSION}
           token={token}
-          movitationSum={detail?.prepayRemain}
+          movitationSum={detail?.canUse}
           BeforeComponent={
             <>
               <ItemBox>

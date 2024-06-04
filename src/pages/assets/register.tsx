@@ -311,7 +311,7 @@ export default function Register() {
       checkAll = true;
     } else {
       budgets?.map((item: any) => {
-        const canUse = Number(item.total_amount) - Number(item.used_advance_amount);
+        const canUse = Number(item.total_advance_amount) - Number(item.used_advance_amount);
 
         const finditemIndex = totalArr.findIndex((innerItem) => innerItem.indexOf(item.asset_name) > -1);
         if (finditemIndex === -1) return;
