@@ -58,6 +58,9 @@ const MyBorrowingQuota = ({ isLogin }: BorrowCardProps) => {
     scoreLendContract?.borrowInterestRate().then((r: ethers.BigNumber) => {
       dispatchCreditEvent({ type: ACTIONS.SET_BORROW_RATE, payload: r.toNumber() / 10000 });
     });
+    scoreLendContract?.minBorrowCooldownPeriod().then((r: ethers.BigNumber) => {
+      dispatchCreditEvent({ type: ACTIONS.SET_MIN_BORROW_COOL_DOWN, payload: r.toNumber() });
+    });
   }, [scoreLendContract]);
 
   useEffect(() => {

@@ -8,6 +8,7 @@ export enum ACTIONS {
   SET_MY_QUOTA = 'SET_MY_QUOTA',
   SET_MAX_BORROW_DAYS = 'SET_MAX_BORROW_DAYS',
   SET_BORROW_RATE = 'SET_BORROW_RATE',
+  SET_MIN_BORROW_COOL_DOWN = 'SET_MIN_BORROW_COOL_DOWN',
 }
 
 interface IState {
@@ -21,6 +22,7 @@ interface IState {
   myInUseCount: number;
   maxBorrowDays: number;
   borrowRate: number;
+  minBorrowCoolDown: number;
 }
 interface IAction {
   type: ACTIONS;
@@ -38,6 +40,7 @@ const INIT_STATE: IState = {
   myInUseCount: 0,
   maxBorrowDays: 0,
   borrowRate: 0,
+  minBorrowCoolDown: 0,
 };
 
 const CreditContext = createContext<{
@@ -70,6 +73,8 @@ const reducer = (state: IState, action: IAction): IState => {
       return { ...state, maxBorrowDays: action.payload };
     case ACTIONS.SET_BORROW_RATE:
       return { ...state, borrowRate: action.payload };
+    case ACTIONS.SET_MIN_BORROW_COOL_DOWN:
+      return { ...state, minBorrowCoolDown: action.payload };
     default:
       throw new Error(`Unknown type: ${action.type}`);
   }

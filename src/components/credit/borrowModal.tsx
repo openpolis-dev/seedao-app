@@ -36,7 +36,7 @@ export default function BorrowModal({ handleClose }: IProps) {
     state: { account },
   } = useAuthContext();
   const {
-    state: { scoreLendContract, myScore, myAvaliableQuota, maxBorrowDays, borrowRate },
+    state: { scoreLendContract, myScore, myAvaliableQuota, maxBorrowDays, borrowRate, minBorrowCoolDown },
   } = useCreditContext();
   const [calculating, setCalculating] = useState(false);
   const [allowanceEnough, setAllowanceEnough] = useState(false);
@@ -222,7 +222,16 @@ export default function BorrowModal({ handleClose }: IProps) {
     scoreLendContract?.userBorrowCooldownEndTimestamp(account).then((endTime: ethers.BigNumber) => {
       if (endTime && endTime.toNumber() * 1000 > Date.now()) {
         setLeftTime(t('Credit.TimeDisplay', { ...formatDeltaDate(endTime.toNumber() * 1000) }));
-        showToast(t('Credit.BorrowCooldownMsg'), ToastType.Danger);
+        if (minBorrowCoolDown) {
+          const hours = Math.floor(minBorrowCoolDown / 3600);
+          const minutes = minBorrowCoolDown / 60;
+          showToast(
+            t('Credit.BorrowCooldownMsg', {
+              time: hours ? t('Credit.LeftTimeHour', { h: hours }) : t('Credit.LeftTimeMinute', { m: minutes }),
+            }),
+            ToastType.Danger,
+          );
+        }
       }
     });
   }, [scoreLendContract]);
