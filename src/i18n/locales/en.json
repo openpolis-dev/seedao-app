@@ -464,7 +464,8 @@
     "Export": "Export",
     "record": "Assets Distribution Records",
     "Apply": "Assets Applications",
-    "tips": "Only those holding SNS can apply for asset distribution."
+    "tips": "Only those holding SNS can apply for asset distribution.",
+    "p1Tips": "The P1 proposal budget cannot be paid in advance"
   },
   "My": {
     "MyProfile": "My Profile",

@@ -366,10 +366,6 @@ export default function Register() {
             <span>{t('Assets.Total')}</span>
             <span>{total}</span>
           </div>
-          {
-            showErrorTips && <div className="errorTips">申请总资产超过可用余额</div>
-          }
-
         </TotalBox>
       )}
 
@@ -385,8 +381,14 @@ export default function Register() {
       </SectionBlock>
       <ButtonSection>
         <Button variant="primary" onClick={handleCreate} disabled={returnDisable()}>
-          {t('Assets.RegisterSubmit')}
+          {
+            detail?.Category !== "P1提案" || !list.length  && t("Assets.RegisterSubmit")
+          }
+          {
+            showErrorTips && detail?.Category === "P1提案" &&  !!list.length && <div>P1提案项目预算不可预知</div>
+          }
         </Button>
+
       </ButtonSection>
     </OuterBox>
   );
@@ -404,9 +406,7 @@ const TotalBox = styled.div`
     display: flex;
     gap: 10px;
   }
-    .errorTips{
-        color: #FB4E4E;
-    }
+  
 `;
 
 const OuterBox = styled.div`
@@ -434,8 +434,11 @@ const SectionBlock = styled.section`
 `;
 
 const ButtonSection = styled(SectionBlock)`
+    display: flex;
+    align-items: center;
+    gap: 10px;
   button {
-    width: 120px;
+   min-width: 120px;
   }
 `;
 
