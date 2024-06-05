@@ -79,12 +79,12 @@ export default function Register() {
         prepayRemain.push(`${item.remain_advance_amount} ${item.asset_name}`);
       });
 
-      data.total = total.join(',');
-      data.ratio = ratio.join(',');
-      data.paid = paid.join(',');
-      data.remainAmount = remainAmount.join(',');
-      data.prepayTotal = prepayTotal.join(',');
-      data.prepayRemain = prepayRemain.join(',');
+      data.total = total.join(' , ');
+      data.ratio = ratio.join(' , ');
+      data.paid = paid.join(' , ');
+      data.remainAmount = remainAmount.join(' , ');
+      data.prepayTotal = prepayTotal.join(' , ');
+      data.prepayRemain = prepayRemain.join(' , ');
 
       setDetail(data);
     } catch (error) {
@@ -304,7 +304,7 @@ export default function Register() {
   };
 
   const checkSum = () =>{
-    let totalArr = total.split(',');
+    let totalArr = total.split(' , ');
 
     let checkAll = true;
 
@@ -380,13 +380,16 @@ export default function Register() {
         />
       </SectionBlock>
       <ButtonSection>
+
         <Button variant="primary" onClick={handleCreate} disabled={returnDisable()}>
           {
-            detail?.Category !== "P1提案" || !list.length  && t("Assets.RegisterSubmit")
+            ((detail?.Category !== "P1提案") || !showErrorTips || !list?.length) && t("Assets.RegisterSubmit")
           }
           {
-            showErrorTips && detail?.Category === "P1提案" &&  !!list.length && <div>P1提案项目预算不可预知</div>
+            detail?.Category === "P1提案" && showErrorTips &&  !!list?.length && t("Assets.p1Tips")
           }
+
+
         </Button>
 
       </ButtonSection>
