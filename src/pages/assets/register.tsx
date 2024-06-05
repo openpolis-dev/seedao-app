@@ -47,6 +47,7 @@ export default function Register() {
   const [detail, setDetail] = useState<any>(null);
   const [showInfo, setShowInfo] = useState<boolean>(false);
   const [budgets, setBudgets] = useState([]);
+  const [showErrorTips,setShowErrorTips] = useState<boolean>(false);
 
   useEffect(() => {
     if (!selectSource?.value) return;
@@ -302,7 +303,7 @@ export default function Register() {
     }
   };
 
-  const returnDisable = () => {
+  const checkSum = () =>{
     let totalArr = total.split(',');
 
     let checkAll = true;
@@ -323,8 +324,18 @@ export default function Register() {
         }
       });
     }
+    return checkAll;
 
-    return !list.length || !selectSource || !content || !content.trim() || checkAll;
+  }
+
+  useEffect(() => {
+    let rt = checkSum();
+    setShowErrorTips(rt)
+
+  }, [total,budgets]);
+
+  const returnDisable = () => {
+    return !list.length || !selectSource || !content || !content.trim() || checkSum();
   };
 
   return (
@@ -355,6 +366,10 @@ export default function Register() {
             <span>{t('Assets.Total')}</span>
             <span>{total}</span>
           </div>
+          {
+            showErrorTips && <div className="errorTips">申请总资产超过可用余额</div>
+          }
+
         </TotalBox>
       )}
 
@@ -389,6 +404,9 @@ const TotalBox = styled.div`
     display: flex;
     gap: 10px;
   }
+    .errorTips{
+        color: #FB4E4E;
+    }
 `;
 
 const OuterBox = styled.div`
