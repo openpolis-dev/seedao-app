@@ -206,6 +206,7 @@ const MyBorrowing = ({ isLogin }: BorrowCardProps) => {
 const VaultCard = () => {
   const { t } = useTranslation();
   const {
+    dispatch: dispatchCreditEvent,
     state: { scoreLendContract },
   } = useCreditContext();
   const [total, setTotal] = useState('0.0000');
@@ -223,8 +224,9 @@ const VaultCard = () => {
 
   const getData = useCallback(() => {
     scoreLendContract?.totalAvailableBorrowAmount().then((r: ethers.BigNumber) => {
-      const value = ethers.utils.formatUnits(r, networkConfig.lend.lendToken.decimals);
-      setTotal(Number(value).format(4, true));
+      const value = Number(ethers.utils.formatUnits(r, networkConfig.lend.lendToken.decimals));
+      setTotal(value.format(4, true));
+      dispatchCreditEvent({ type: ACTIONS.SET_TOTAL_AVAILABLE_BORROW_AMOUNT, payload: value });
     });
   }, [scoreLendContract]);
 
