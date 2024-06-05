@@ -616,7 +616,7 @@ export default function ThreadPage() {
               )}
               {!!dataSource?.length && componentName === '激励申请表' && dataSource[0].name === 'motivation' && (
                 <DisplayBox>
-                  <div className="titl">当前可申请资产: {detail?.prepayRemain}</div>
+                  <div className="titl">当前可申请资产: {detail?.remainAmount}</div>
                   <div className="content">
                     <dl>
                       <dt>项目预算</dt>
