@@ -39,6 +39,7 @@ export const getBorrowList = (data: IFilterParams): Promise<IListResponse> => {
   return fetch(`${PATH_PREFIX}/lends?${queryData.toString()}`)
     .then((res) => res.json())
     .then((res) => {
+      console.log('=== getBorrowList ===', queryData.toString(), res);
       return {
         ...res,
         data: res.data.map((item: RawCreditRecord) => ({

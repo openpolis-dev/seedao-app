@@ -38,7 +38,9 @@ const MyBorrowingQuota = ({ isLogin }: BorrowCardProps) => {
   const getData = (e?: any) => {
     const _provider = new ethers.providers.StaticJsonRpcProvider(amoy.rpcUrls.public.http[0], amoy.id);
     const scoreContract = new ethers.Contract(networkConfig.SCRContract.address, erc20ABI, _provider);
+    console.log('==== getting scr balance ====');
     scoreContract.balanceOf(account).then((r: ethers.BigNumber) => {
+      console.log('==== scr balance ====', ethers.utils.formatUnits(r, networkConfig.SCRContract.decimals));
       dispatchCreditEvent({
         type: ACTIONS.SET_MY_SCORE,
         payload: Number(ethers.utils.formatUnits(r, networkConfig.SCRContract.decimals)),

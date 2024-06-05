@@ -311,7 +311,6 @@ export default function CreditRecords() {
     }
     getBorrowList(params)
       .then((r) => {
-        console.log('r', r);
         setTotal(r.total);
         setList(r.data);
 
