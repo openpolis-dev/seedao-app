@@ -37,6 +37,8 @@ export default function RepayModal({ handleClose }: IProps) {
   const [allowanceGetting, setAllownceGetting] = useState(false);
   const [tokenBalanceGetting, setTokenBalanceGetting] = useState(false);
 
+  const [totalRepayAmount, setTotalRepayAmount] = useState('0');
+
   const {
     dispatch,
     state: { account, language },
@@ -261,6 +263,38 @@ export default function RepayModal({ handleClose }: IProps) {
       button: <CreditButton onClick={checkMine}>{t('Credit.RepayStepButton4')}</CreditButton>,
     },
   ];
+
+  const getRepayAmount = async (ids: number[], totalPrincipal: ethers.BigNumber) => {
+    setGetting(true);
+    bondNFTContract
+      ?.calculateLendsInterest(ids)
+      .then((result: { interestAmounts: ethers.BigNumber[] }) => {
+        const total = result.interestAmounts
+          .reduce((acc, item) => acc.add(item), ethers.constants.Zero)
+          .add(totalPrincipal);
+        setTotalRepayAmount(Number(ethers.utils.formatUnits(total, lendToken.decimals)).format(4));
+      })
+      .catch((e: any) => {
+        console.error(e);
+        showToast('获取实际还款额失败，请到详情中查看', ToastType.Danger);
+      })
+      .finally(() => {
+        setGetting(false);
+      });
+  };
+
+  useEffect(() => {
+    if (bondNFTContract && step === 3 && selectedList.length) {
+      const totalPrincipal = selectedList.reduce(
+        (acc, item) => acc.add(ethers.utils.parseUnits(String(item.total), lendToken.decimals)),
+        ethers.constants.Zero,
+      );
+      getRepayAmount(
+        selectedList.map((item) => Number(item.id)),
+        totalPrincipal,
+      );
+    }
+  }, [bondNFTContract, step]);
   return (
     <RepayModalStyle handleClose={() => handleClose(step === 3, false)} closeColor="#343C6A">
       <ModalTitle>{steps[step].title}</ModalTitle>
