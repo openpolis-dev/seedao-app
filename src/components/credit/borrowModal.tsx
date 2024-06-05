@@ -275,7 +275,7 @@ export default function BorrowModal({ handleClose }: IProps) {
           )}
           {Number(inputNum) < 100 && <MinTip>{t('Credit.MinBorrow')}</MinTip>}
           {Number(inputNum) > totalAvaliableBorrowAmount &&
-            Number(inputNum) > 100 &&
+            Number(inputNum) >= 100 &&
             Number(inputNum) <= myAvaliableQuota && (
               <MinTip>{t('Credit.RemainBorrowQuota', { amount: totalAvaliableBorrowAmount.format(0) })}</MinTip>
             )}
