@@ -343,7 +343,10 @@ export default function InfoPage() {
                       <dd>
                         <table>
                           <tr>
-                            <td>{t('Project.EndProjectLink')}</td>
+                            {
+                              !!detail?.OverLink && <td>{t("Project.EndProjectLink")}</td>
+                            }
+
                             <td>
                               {!!detail?.OverLink && (
                                 <Link to={formatLink(detail?.OverLink)} target="_blank">
