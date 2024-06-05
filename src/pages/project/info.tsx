@@ -350,7 +350,8 @@ export default function InfoPage() {
                             <td>
                               {!!detail?.OverLink && (
                                 <Link to={formatLink(detail?.OverLink)} target="_blank">
-                                  <img src={LinkImg} alt="" />
+                                  {/*<img src={LinkImg} alt="" />*/}
+                                  {formatLink(detail?.OverLink)}
                                 </Link>
                               )}
                               {!detail?.OverLink && <div>{t('Project.notOff')}</div>}
