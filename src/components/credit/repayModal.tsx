@@ -118,7 +118,7 @@ export default function RepayModal({ handleClose }: IProps) {
         throw new Error(t('Credit.InsufficientBalance', { token: 'USDT' }));
       }
       await approveToken('usdt', totalApproveAmount);
-      showToast('Approve successfully', ToastType.Success);
+      showToast(t('Credit.ApproveSuccessful'), ToastType.Success);
       setStep(2);
       setAllowanceBN(totalApproveBN);
     } catch (error: any) {

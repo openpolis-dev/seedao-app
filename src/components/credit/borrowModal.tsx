@@ -82,7 +82,7 @@ export default function BorrowModal({ handleClose }: IProps) {
     try {
       await checkNetwork();
       await approveToken('scr', forfeitNum);
-      showToast('Approve successfully', ToastType.Success);
+      showToast(t('Credit.ApproveSuccessful'), ToastType.Success);
       setStep(1);
       setAllowanceEnough(true);
     } catch (error) {

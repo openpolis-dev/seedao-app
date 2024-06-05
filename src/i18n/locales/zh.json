@@ -818,7 +818,8 @@
     "Borrowed": "已借款",
     "TimeDisplay": "{{h}}小时{{m}}分后可借款",
     "SelectAll": "全选",
-    "RemainBorrowQuota": "社区剩余可借资金 {{amount}} USDT"
+    "RemainBorrowQuota": "社区剩余可借资金 {{amount}} USDT",
+    "ApproveSuccessful": "授权成功"
   },
   "Governance": {
     "GovernanceRule": "治理规则",

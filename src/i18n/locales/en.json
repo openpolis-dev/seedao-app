@@ -818,7 +818,8 @@
     "Borrowed": "Borrowed",
     "TimeDisplay": "{{h}}小时{{m}}分后可借款",
     "SelectAll": "Select all",
-    "RemainBorrowQuota": "Community remains {{amount}} USDT"
+    "RemainBorrowQuota": "Community remains {{amount}} USDT",
+    "ApproveSuccessful": "Approve Successfully"
   },
   "Governance": {
     "GovernanceRule": "Governance Rules",
