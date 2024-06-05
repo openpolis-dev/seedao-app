@@ -686,7 +686,7 @@ export default function CreateStep({ onClick }: any) {
               )}
               {componentName === '激励申请表' && (
                 <DisplayBox>
-                  <div className="titl">当前可申请资产: {detail?.prepayRemain}</div>
+                  <div className="titl">当前可申请资产: {detail?.remainAmount}</div>
                   <div className="content">
                     <dl>
                       <dt>项目预算</dt>
