@@ -246,6 +246,20 @@ export default function BorrowModal({ handleClose }: IProps) {
 
   const dayIntrestAmount = inputNum ? getShortDisplay((Number(inputNum) * 10000 * Number(0.0001)) / 10000, 4) : 0;
 
+  const getErrorTip = () => {
+    const v = Number(inputNum);
+    if (v < 100) {
+      return <MinTip>{t('Credit.MinBorrow')}</MinTip>;
+    }
+    if (v > myAvaliableQuota) {
+      return <MinTip>{t('Credit.MaxBorrowAmount', { amount: myAvaliableQuota.format(0) })}</MinTip>;
+    }
+    if (v > totalAvaliableBorrowAmount) {
+      return <MinTip>{t('Credit.RemainBorrowQuota', { amount: totalAvaliableBorrowAmount.format(0) })}</MinTip>;
+    }
+    return null
+  };
+
   return (
     <BorrowModalStyle
       closeColor="#343C6A"
@@ -270,15 +284,7 @@ export default function BorrowModal({ handleClose }: IProps) {
             </div>
             <span className="right">USDT</span>
           </LineBox>
-          {Number(inputNum) > myAvaliableQuota && Number(inputNum) > 100 && (
-            <MinTip>{t('Credit.MaxBorrowAmount', { amount: myAvaliableQuota.format(0) })}</MinTip>
-          )}
-          {Number(inputNum) < 100 && <MinTip>{t('Credit.MinBorrow')}</MinTip>}
-          {Number(inputNum) > totalAvaliableBorrowAmount &&
-            Number(inputNum) >= 100 &&
-            Number(inputNum) <= myAvaliableQuota && (
-              <MinTip>{t('Credit.RemainBorrowQuota', { amount: totalAvaliableBorrowAmount.format(0) })}</MinTip>
-            )}
+          {getErrorTip()}
           <LineTip>{t('Credit.RateAmount', { r: borrowRate, amount: dayIntrestAmount })}</LineTip>
           <LineLabel>{t('Credit.NeedForfeit')}</LineLabel>
           <LineBox>
