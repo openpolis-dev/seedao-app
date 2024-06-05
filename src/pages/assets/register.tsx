@@ -17,6 +17,10 @@ import sns from '@seedao/sns-js';
 import { AssetName } from 'utils/constant';
 import { getAvailiableProjectsAndGuilds } from 'requests/applications';
 import BackerNav from 'components/common/backNav';
+import ProjectInfo from '../../components/assetsCom/projectInfo';
+import TotalImg from '../../assets/Imgs/light/total.svg';
+import TotalImgLt from '../../assets/Imgs/dark/total.svg';
+import { getProjectById } from '../../requests/project';
 
 type ErrorDataType = {
   line: number;
@@ -25,7 +29,10 @@ type ErrorDataType = {
 
 export default function Register() {
   const { t } = useTranslation();
-  const { dispatch } = useAuthContext();
+  const {
+    dispatch,
+    state: { theme },
+  } = useAuthContext();
   const { showToast } = useToast();
   const navigate = useNavigate();
 
@@ -35,6 +42,77 @@ export default function Register() {
   const [selectSource, setSelectSource] = useState<ISelectItem | null>(null);
 
   const [content, setContent] = useState('');
+  const [total, setTotal] = useState('');
+
+  const [detail, setDetail] = useState<any>(null);
+  const [showInfo, setShowInfo] = useState<boolean>(false);
+  const [budgets, setBudgets] = useState([]);
+  const [showErrorTips,setShowErrorTips] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (!selectSource?.value) return;
+    getDetail();
+  }, [selectSource?.value]);
+
+  const getDetail = async () => {
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    try {
+      const dt = await getProjectById(selectSource?.value.toString());
+      const { data } = dt;
+      const { budgets } = data;
+      setShowInfo(!!budgets.length);
+      setBudgets(budgets);
+
+      let total: string[] = [];
+      let ratio: string[] = [];
+      let paid: string[] = [];
+      let remainAmount: string[] = [];
+      let prepayTotal: string[] = [];
+      let prepayRemain: string[] = [];
+
+      budgets?.map((item: any) => {
+        total.push(`${item.total_amount} ${item.asset_name}`);
+        ratio.push(`${item.advance_ratio * 100}% ${item.asset_name}`);
+        paid.push(`${item.used_advance_amount} ${item.asset_name}`);
+        remainAmount.push(`${item.remain_amount} ${item.asset_name}`);
+        prepayTotal.push(`${item.total_advance_amount} ${item.asset_name}`);
+        prepayRemain.push(`${item.remain_advance_amount} ${item.asset_name}`);
+      });
+
+      data.total = total.join(' , ');
+      data.ratio = ratio.join(' , ');
+      data.paid = paid.join(' , ');
+      data.remainAmount = remainAmount.join(' , ');
+      data.prepayTotal = prepayTotal.join(' , ');
+      data.prepayRemain = prepayRemain.join(' , ');
+
+      setDetail(data);
+    } catch (error) {
+      logError(error);
+    } finally {
+      dispatch({ type: AppActionType.SET_LOADING, payload: null });
+    }
+  };
+
+  useEffect(() => {
+    if (!list?.length) return;
+
+    let totalObj: any = {};
+    list.map((item) => {
+      if (!totalObj[item.assetType] && !item.amount) return;
+      if (totalObj[item.assetType]) {
+        totalObj[item.assetType] += Number(item.amount);
+      } else {
+        totalObj[item.assetType] = Number(item.amount);
+      }
+    });
+
+    let arr = [];
+    for (let key in totalObj) {
+      arr.push(`${totalObj[key]} ${key}`);
+    }
+    setTotal(arr.join(','));
+  }, [list]);
 
   useEffect(() => {
     const getAllSources = async () => {
@@ -97,7 +175,6 @@ export default function Register() {
         err_list.push(err);
       }
     });
-    console.log(err_list);
     if (err_list.length) {
       let msgs: string[] = [];
       err_list.forEach((item) => msgs.push(`L${item.line}: ${item.errorKeys.join(', ')}`));
@@ -132,9 +209,11 @@ export default function Register() {
       err_list.forEach((item) => msgs.push(`L${item.line}: ${item.errorKeys.join(', ')}`));
       return msgs.join('\n');
     }
+
     const err_sns_list: string[] = [];
     try {
       const sns_list = Array.from(sns_set);
+
       const result = await sns.resolves(sns_list);
       result.forEach((item, i) => {
         if (!item || item === ethers.constants.AddressZero) {
@@ -154,18 +233,41 @@ export default function Register() {
     return wallet_map;
   };
 
+  const checkSNs = async () => {
+    try {
+      const arr = list.map(async (item) => item.address.endsWith('seedao') || sns.name(item.address));
+      let rtArr = await Promise.all(arr);
+
+      const isNoSns = rtArr.filter((item) => !item);
+      return !isNoSns?.length;
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   const handleCreate = async () => {
     if (!selectSource) {
       return;
     }
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+
+    let allSNS = await checkSNs();
+    if (!allSNS) {
+      showToast(t('Assets.tips'), ToastType.Danger);
+      dispatch({ type: AppActionType.SET_LOADING, payload: false });
+      return;
+    }
+
     let msg: string | undefined;
     msg = checkInvalidData();
     if (msg) {
       showToast(msg, ToastType.Danger, { autoClose: false });
+      dispatch({ type: AppActionType.SET_LOADING, payload: false });
       return;
     }
-    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+
     const result = await checkWallet();
+
     if (typeof result === 'string') {
       showToast(result, ToastType.Danger, { autoClose: false });
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
@@ -173,7 +275,7 @@ export default function Register() {
     }
 
     // check and convert sns
-    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    // dispatch({ type: AppActionType.SET_LOADING, payload: true });
 
     try {
       const data = {
@@ -201,6 +303,41 @@ export default function Register() {
     }
   };
 
+  const checkSum = () =>{
+    let totalArr = total.split(' , ');
+
+    let checkAll = true;
+
+    if (totalArr?.length > budgets?.length) {
+      checkAll = true;
+    } else {
+      budgets?.map((item: any) => {
+        const canUse = Number(item.total_advance_amount) - Number(item.used_advance_amount);
+
+        const finditemIndex = totalArr.findIndex((innerItem) => innerItem.indexOf(item.asset_name) > -1);
+        if (finditemIndex === -1) return;
+        const totalNum = totalArr[finditemIndex]?.split(' ')[0];
+        if (Number(totalNum) > canUse) {
+          checkAll = true;
+        } else {
+          checkAll = false;
+        }
+      });
+    }
+    return checkAll;
+
+  }
+
+  useEffect(() => {
+    let rt = checkSum();
+    setShowErrorTips(rt)
+
+  }, [total,budgets]);
+
+  const returnDisable = () => {
+    return !list.length || !selectSource || !content || !content.trim() || checkSum();
+  };
+
   return (
     <OuterBox>
       <BackerNav to="/assets" title={t('Assets.Apply')} mb="0" />
@@ -216,10 +353,21 @@ export default function Register() {
           value={selectSource}
         />
       </SectionBlock>
+      {showInfo && <ProjectInfo detail={detail} />}
+
       <SectionBlock>
         <div className="title lftTit">{t('Assets.RegisterList')}</div>
         <RegList list={list} setList={setList} />
       </SectionBlock>
+      {!!total && (
+        <TotalBox>
+          <img src={theme ? TotalImgLt : TotalImg} alt="" />
+          <div>
+            <span>{t('Assets.Total')}</span>
+            <span>{total}</span>
+          </div>
+        </TotalBox>
+      )}
 
       <SectionBlock>
         <div className="title">{t('Assets.RegisterIntro')}</div>
@@ -232,17 +380,37 @@ export default function Register() {
         />
       </SectionBlock>
       <ButtonSection>
-        <Button
-          variant="primary"
-          onClick={handleCreate}
-          disabled={!list.length || !selectSource || !content || !content.trim()}
-        >
-          {t('Assets.RegisterSubmit')}
+
+        <Button variant="primary" onClick={handleCreate} disabled={returnDisable()}>
+          {
+            ((detail?.Category !== "P1提案") || !showErrorTips || !list?.length) && t("Assets.RegisterSubmit")
+          }
+          {
+            detail?.Category === "P1提案" && showErrorTips &&  !!list?.length && t("Assets.p1Tips")
+          }
+
+
         </Button>
+
       </ButtonSection>
     </OuterBox>
   );
 }
+
+const TotalBox = styled.div`
+  margin-top: 35px;
+  color: var(--bs-body-color_active);
+  font-size: 14px;
+  margin-left: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  & > div {
+    display: flex;
+    gap: 10px;
+  }
+  
+`;
 
 const OuterBox = styled.div`
   box-sizing: border-box;
@@ -269,8 +437,11 @@ const SectionBlock = styled.section`
 `;
 
 const ButtonSection = styled(SectionBlock)`
+    display: flex;
+    align-items: center;
+    gap: 10px;
   button {
-    width: 120px;
+   min-width: 120px;
   }
 `;
 
