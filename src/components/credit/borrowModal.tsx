@@ -270,7 +270,7 @@ export default function BorrowModal({ handleClose }: IProps) {
             </div>
             <span className="right">USDT</span>
           </LineBox>
-          {Number(inputNum) > myAvaliableQuota && (
+          {Number(inputNum) > myAvaliableQuota && Number(inputNum) > 100 && (
             <MinTip>{t('Credit.MaxBorrowAmount', { amount: myAvaliableQuota.format(0) })}</MinTip>
           )}
           {Number(inputNum) < 100 && <MinTip>{t('Credit.MinBorrow')}</MinTip>}
