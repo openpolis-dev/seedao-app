@@ -97,7 +97,8 @@ export default function BorrowModal({ handleClose }: IProps) {
 
     try {
       await checkNetwork();
-      await handleEstimateGas(TX_ACTION.BORROW, inputNum!);
+      const r = await handleEstimateGas(TX_ACTION.BORROW, inputNum!);
+      console.log('estimategas result', r);
       await handleTransaction(TX_ACTION.BORROW, Number(inputNum));
       setStep(2);
     } catch (error: any) {
@@ -257,7 +258,7 @@ export default function BorrowModal({ handleClose }: IProps) {
     if (v > totalAvaliableBorrowAmount) {
       return <MinTip>{t('Credit.RemainBorrowQuota', { amount: totalAvaliableBorrowAmount.format(0) })}</MinTip>;
     }
-    return null
+    return null;
   };
 
   return (

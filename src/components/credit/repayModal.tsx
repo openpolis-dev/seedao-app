@@ -136,10 +136,11 @@ export default function RepayModal({ handleClose }: IProps) {
       if (!result) {
         throw new Error(t('Credit.InsufficientBalance', { token: 'USDT' }));
       }
-      await handleEstimateGas(
+      const r = await handleEstimateGas(
         TX_ACTION.REPAY,
         selectedList.map((item) => Number(item.id)),
       );
+      console.log('estimategas result', r);
       await handleTransaction(
         TX_ACTION.REPAY,
         selectedList.map((item) => Number(item.id)),
