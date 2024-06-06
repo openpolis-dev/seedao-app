@@ -25,7 +25,7 @@ const checkTransaction = (provider: any, hash: string | Hex) => {
         console.log('check tx result', r);
         if (r) {
           clearInterval(timer);
-          resolve(r);
+          r.status === 1 ? resolve(r) : reject(r);
         }
       });
     }, 5000);
