@@ -74,7 +74,7 @@ const MyBorrowingQuota = ({ isLogin }: BorrowCardProps) => {
   useEffect(() => {
     document.addEventListener('openMine', getData);
     return () => document.removeEventListener('openMine', getData);
-  }, []);
+  }, [account]);
 
   return (
     <CardStyle>
