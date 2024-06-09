@@ -124,14 +124,13 @@ export default function BorrowModal({ handleClose }: IProps) {
     handleClose(true, true);
   };
 
+  const btnDisabled = calculating || Number(inputNum) < 100 || Number(inputNum) > myAvaliableQuota || leftTime || Number(inputNum) > totalAvaliableBorrowAmount;
+
   const steps = [
     {
       title: t('Credit.BorrowTitle'),
       button: (
-        <CreditButton
-          onClick={checkApprove}
-          disabled={calculating || Number(inputNum) < 100 || Number(inputNum) > myAvaliableQuota || leftTime}
-        >
+        <CreditButton onClick={checkApprove} disabled={btnDisabled}>
           {getButtonText()}
         </CreditButton>
       ),
@@ -139,10 +138,7 @@ export default function BorrowModal({ handleClose }: IProps) {
     {
       title: t('Credit.BorrowTitle'),
       button: (
-        <CreditButton
-          disabled={calculating || Number(inputNum) < 100 || Number(inputNum) > myAvaliableQuota || leftTime}
-          onClick={checkBorrow}
-        >
+        <CreditButton disabled={btnDisabled} onClick={checkBorrow}>
           {leftTime || t('Credit.BorrowStepButton2')}
         </CreditButton>
       ),
