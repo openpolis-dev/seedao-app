@@ -19,6 +19,7 @@ import { CreditRecordStatus, ICreditRecord } from 'type/credit.type';
 import BorrowAndRepay from './BorrowAndRepay';
 
 const networkConfig = getConfig().NETWORK;
+const lendToken = networkConfig.lend.lendToken;
 
 type BorrowCardProps = {
   isLogin: boolean;
@@ -81,7 +82,9 @@ const MyBorrowingQuota = ({ isLogin }: BorrowCardProps) => {
       <img src={CreditLogo2} alt="" className="logo" />
       <MyCardTop>
         <MyCardLine>
-          <div className="label">{t('Credit.MyBorrowQuota')} (USDT)</div>
+          <div className="label">
+            {t('Credit.MyBorrowQuota')} ({lendToken.symbol})
+          </div>
           {isLogin ? (
             <div className="value">
               <span className="num">{myAvaliableQuota.format(4, true)}</span>
@@ -91,8 +94,10 @@ const MyBorrowingQuota = ({ isLogin }: BorrowCardProps) => {
           )}
         </MyCardLine>
         <CardTips>
-          <MyCardTipLine>{t('Credit.MyBorrowTip', { r: borrowRate })}</MyCardTipLine>
-          <MyCardTipLine>{t('Credit.MyBorrowTip3', { amount: maxAmount.format(0), day: maxBorrowDays })}</MyCardTipLine>
+          <MyCardTipLine>{t('Credit.MyBorrowTip', { r: borrowRate, token: lendToken.symbol })}</MyCardTipLine>
+          <MyCardTipLine>
+            {t('Credit.MyBorrowTip3', { amount: maxAmount.format(0), day: maxBorrowDays, token: lendToken.symbol })}
+          </MyCardTipLine>
         </CardTips>
 
         <MyCardColomnLine>
@@ -155,7 +160,9 @@ const MyBorrowing = ({ isLogin }: BorrowCardProps) => {
       <img src={CreditLogo2} alt="" className="logo" />
       <MyCardTop>
         <MyCardLine>
-          <div className="label">{t('Credit.Borrowed')} (USDT)</div>
+          <div className="label">
+            {t('Credit.Borrowed')} ({lendToken.symbol})
+          </div>
           {isLogin ? (
             <div className="value">
               <span className="num">{(myInuseAmount + myOverdueAmount).format(4, true)}</span>
@@ -182,7 +189,7 @@ const MyBorrowing = ({ isLogin }: BorrowCardProps) => {
             {isLogin ? (
               <ItemAmountBox>
                 <span className="value">{myInuseAmount.format(4, true)}</span>
-                <span className="unit">USDT</span>
+                <span className="unit">{lendToken.symbol}</span>
               </ItemAmountBox>
             ) : (
               <div className="secret">*********</div>
@@ -193,7 +200,7 @@ const MyBorrowing = ({ isLogin }: BorrowCardProps) => {
             {isLogin ? (
               <ItemAmountBox>
                 <span className="value">{myOverdueAmount.format(4, true)}</span>
-                <span className="unit">USDT</span>
+                <span className="unit">{lendToken.symbol}</span>
               </ItemAmountBox>
             ) : (
               <div className="secret">*********</div>
@@ -262,25 +269,27 @@ const VaultCard = () => {
       <img src={CreditLogo2} alt="" className="logo" />
 
       <div>
-        <div className="label">{t('Credit.DaoTotalQuota')} (USDT)</div>
+        <div className="label">
+          {t('Credit.DaoTotalQuota')} ({lendToken.symbol})
+        </div>
         <div className="value total-value">{total}</div>
       </div>
       <a className="tip" href="https://app.seedao.xyz/proposal/thread/55" target="_blank" rel="noopener noreferrer">
-        {t('Credit.DaoTip')}
+        {t('Credit.DaoTip', { token: lendToken.symbol })}
       </a>
       <VaultCardColumnLine>
         <div>
           <div className="label">{t('Credit.TotalBorrow', { num: data.totalBorrowed })}</div>
           <div className="value">
             <span>{Number(data.totalBorrowedAmount).format(4, true)}</span>
-            <span className="unit">USDT</span>
+            <span className="unit">{lendToken.symbol}</span>
           </div>
         </div>
         <div>
           <div className="label">{t('Credit.CurrentBorrow', { num: data.inUseCount })}</div>
           <div className="value">
             <span>{Number(data.inUseAmount).format(4, true)}</span>
-            <span className="unit">USDT</span>
+            <span className="unit">{lendToken.symbol}</span>
           </div>
         </div>
       </VaultCardColumnLine>
@@ -289,14 +298,14 @@ const VaultCard = () => {
           <div className="label">{t('Credit.TotalClear', { num: data.paybackCount })}</div>
           <div className="value">
             <span>{Number(data.paybackAmount).format(4, true)}</span>
-            <span className="unit">USDT</span>
+            <span className="unit">{lendToken.symbol}</span>
           </div>
         </div>
         <div>
           <div className="label">{t('Credit.TotalOverdue', { num: data.overdueCount })}</div>
           <div className="value">
             <span>{Number(data.overdueAmount).format(4, true)}</span>
-            <span className="unit">USDT</span>
+            <span className="unit">{lendToken.symbol}</span>
           </div>
         </div>
       </VaultCardColumnLine>

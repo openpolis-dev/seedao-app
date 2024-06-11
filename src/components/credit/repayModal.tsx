@@ -99,13 +99,13 @@ export default function RepayModal({ handleClose }: IProps) {
 
   const getButtonText = () => {
     if (tokenBalanceGetting) {
-      return t('Credit.RepayStepButton2');
+      return t('Credit.RepayStepButton2', { token: lendToken.symbol });
     }
     if (!tokenEnough) {
-      return t('Credit.InsufficientBalance', { token: 'USDT' });
+      return t('Credit.InsufficientBalance', { token: lendToken.symbol });
     }
     if (!allowanceEnough) {
-      return t('Credit.RepayStepButton2');
+      return t('Credit.RepayStepButton2', { token: lendToken.symbol });
     }
   };
 
@@ -113,11 +113,11 @@ export default function RepayModal({ handleClose }: IProps) {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
       await checkNetwork();
-      const result = await checkEnoughBalance(account!, 'usdt', totalApproveAmount);
+      const result = await checkEnoughBalance(account!, 'lend', totalApproveAmount);
       if (!result) {
-        throw new Error(t('Credit.InsufficientBalance', { token: 'USDT' }));
+        throw new Error(t('Credit.InsufficientBalance', { token: lendToken.symbol }));
       }
-      await approveToken('usdt', totalApproveAmount);
+      await approveToken('lend', totalApproveAmount);
       showToast(t('Credit.ApproveSuccessful'), ToastType.Success);
       setStep(2);
       setAllowanceBN(totalApproveBN);
@@ -132,9 +132,9 @@ export default function RepayModal({ handleClose }: IProps) {
   const checkRepay = async () => {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
-      const result = await checkEnoughBalance(account!, 'usdt', totalApproveAmount);
+      const result = await checkEnoughBalance(account!, 'lend', totalApproveAmount);
       if (!result) {
-        throw new Error(t('Credit.InsufficientBalance', { token: 'USDT' }));
+        throw new Error(t('Credit.InsufficientBalance', { token: lendToken.symbol }));
       }
       const r = await handleEstimateGas(
         TX_ACTION.REPAY,
@@ -205,7 +205,7 @@ export default function RepayModal({ handleClose }: IProps) {
   useEffect(() => {
     if (account && step > 0) {
       setAllownceGetting(true);
-      getTokenAllowance('usdt')
+      getTokenAllowance('lend')
         .then((r) => {
           setAllowanceBN(r);
         })
@@ -218,7 +218,7 @@ export default function RepayModal({ handleClose }: IProps) {
   useEffect(() => {
     if (account && step > 0) {
       setTokenBalanceGetting(true);
-      getTokenBalance('usdt')
+      getTokenBalance('lend')
         .then((r) => {
           setTokenBN(r);
         })
@@ -299,7 +299,11 @@ export default function RepayModal({ handleClose }: IProps) {
   return (
     <RepayModalStyle handleClose={() => handleClose(step === 3, false)} closeColor="#343C6A">
       <ModalTitle>{steps[step].title}</ModalTitle>
-      {step === 3 && <FinishContent>{selectedTotalAmount.format(4)} USDT</FinishContent>}
+      {step === 3 && (
+        <FinishContent>
+          {selectedTotalAmount.format(4)} {lendToken.symbol}
+        </FinishContent>
+      )}
       {step === 0 && (
         <RepayContent style={{ width: language === 'zh' ? '453px' : 'unset' }}>
           {getting ? (
@@ -338,8 +342,12 @@ export default function RepayModal({ handleClose }: IProps) {
       {(step === 1 || step === 2) && (
         <RepayContent style={{ width: language === 'zh' ? '453px' : 'unset' }}>
           <TotalRepay>
-            <div className="number">{totalApproveAmount.format(4)} USDT</div>
-            <div className="label">{t('Credit.ShouldRepayAll', { amount: selectedTotalAmount.format(4) })}</div>
+            <div className="number">
+              {totalApproveAmount.format(4)} {lendToken.symbol}
+            </div>
+            <div className="label">
+              {t('Credit.ShouldRepayAll', { amount: selectedTotalAmount.format(4), token: lendToken.symbol })}
+            </div>
             <RepayTip>{t('Credit.RepayTip')}</RepayTip>
           </TotalRepay>
           <ListBox style={{ maxHeight: '352px', minHeight: 'unset' }}>
@@ -382,7 +390,10 @@ const RecordCheckbox = ({
           <span>
             {t('Credit.BorrowID')}: {data.lendIdDisplay}
           </span>
-          <span> {data.borrowAmount.format(4)} USDT</span>
+          <span>
+            {' '}
+            {data.borrowAmount.format(4)} {lendToken.symbol}
+          </span>
         </li>
         <li>
           <span>
@@ -395,7 +406,7 @@ const RecordCheckbox = ({
             {t('Credit.LastRepaymentTime')} {data.overdueTime}
           </span>
           <span>
-            {t('Credit.TotalInterest')} {data.interestAmount?.format(4)} USDT
+            {t('Credit.TotalInterest')} {data.interestAmount?.format(4)} {lendToken.symbol}
           </span>
         </li>
       </RecordRight>
@@ -412,7 +423,9 @@ const SelectedRecord = ({ data, total }: { data: ICreditRecord; total: number })
           <span>
             {t('Credit.BorrowID')}: {data.lendIdDisplay}
           </span>
-          <span>{data.borrowAmount.format(4)} USDT</span>
+          <span>
+            {data.borrowAmount.format(4)} {lendToken.symbol}
+          </span>
         </li>
         <li>
           <span>
@@ -422,7 +435,7 @@ const SelectedRecord = ({ data, total }: { data: ICreditRecord; total: number })
         </li>
         <li>
           <span>
-            {t('Credit.BorrowPrincipal')} {data.borrowAmount.format(4)} USDT
+            {t('Credit.BorrowPrincipal')} {data.borrowAmount.format(4)} {lendToken.symbol}
           </span>
           <span>{t('Credit.DayRate01', { rate: data.rate })}</span>
         </li>
@@ -431,7 +444,7 @@ const SelectedRecord = ({ data, total }: { data: ICreditRecord; total: number })
             {t('Credit.Interest')} {data.interestAmount?.format(4)}
           </span>
           <span>
-            {t('Credit.ShouldRepay')} {total.format(4)} USDT
+            {t('Credit.ShouldRepay')} {total.format(4)} {lendToken.symbol}
           </span>
         </li>
         <li>

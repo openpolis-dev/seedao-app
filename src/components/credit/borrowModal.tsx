@@ -16,6 +16,7 @@ import { getShortDisplay } from 'utils/number';
 import { formatDeltaDate } from 'utils/time';
 
 const networkConfig = getConfig().NETWORK;
+const lendToken = networkConfig.lend.lendToken;
 
 interface IProps {
   handleClose: (refresh?: boolean, openMine?: boolean) => void;
@@ -124,7 +125,12 @@ export default function BorrowModal({ handleClose }: IProps) {
     handleClose(true, true);
   };
 
-  const btnDisabled = calculating || Number(inputNum) < 100 || Number(inputNum) > myAvaliableQuota || leftTime || Number(inputNum) > totalAvaliableBorrowAmount;
+  const btnDisabled =
+    calculating ||
+    Number(inputNum) < 100 ||
+    Number(inputNum) > myAvaliableQuota ||
+    leftTime ||
+    Number(inputNum) > totalAvaliableBorrowAmount;
 
   const steps = [
     {
@@ -246,13 +252,19 @@ export default function BorrowModal({ handleClose }: IProps) {
   const getErrorTip = () => {
     const v = Number(inputNum);
     if (v < 100) {
-      return <MinTip>{t('Credit.MinBorrow')}</MinTip>;
+      return <MinTip>{t('Credit.MinBorrow', { token: lendToken.symbol })}</MinTip>;
     }
     if (v > myAvaliableQuota) {
-      return <MinTip>{t('Credit.MaxBorrowAmount', { amount: myAvaliableQuota.format(0) })}</MinTip>;
+      return (
+        <MinTip>{t('Credit.MaxBorrowAmount', { amount: myAvaliableQuota.format(0), token: lendToken.symbol })}</MinTip>
+      );
     }
     if (v > totalAvaliableBorrowAmount) {
-      return <MinTip>{t('Credit.RemainBorrowQuota', { amount: totalAvaliableBorrowAmount.format(0) })}</MinTip>;
+      return (
+        <MinTip>
+          {t('Credit.RemainBorrowQuota', { amount: totalAvaliableBorrowAmount.format(0), token: lendToken.symbol })}
+        </MinTip>
+      );
     }
     return null;
   };
@@ -267,22 +279,28 @@ export default function BorrowModal({ handleClose }: IProps) {
     >
       <ModalTitle>{steps[step].title}</ModalTitle>
       {step === 2 ? (
-        <FinishContent>{inputNum} USDT</FinishContent>
+        <FinishContent>
+          {inputNum} {lendToken.symbol}
+        </FinishContent>
       ) : (
         <BorrowContent>
           <LineLabel>
             <span>{t('Credit.BorrowAmount')}</span>
-            <span className="max">{t('Credit.MaxBorrowAmount', { amount: myAvaliableQuota.format(0) })}</span>
+            <span className="max">
+              {t('Credit.MaxBorrowAmount', { amount: myAvaliableQuota.format(0), token: lendToken.symbol })}
+            </span>
           </LineLabel>
           <LineBox>
             <div className="left">
               <input type="number" autoFocus value={inputNum} onChange={onChangeInput} onBlur={handleBlur} />
               <MaxButton onClick={handleBorrowMax}>{t('Credit.MaxBorrow')}</MaxButton>
             </div>
-            <span className="right">USDT</span>
+            <span className="right">{lendToken.symbol}</span>
           </LineBox>
           {getErrorTip()}
-          <LineTip>{t('Credit.RateAmount', { r: borrowRate, amount: dayIntrestAmount })}</LineTip>
+          <LineTip>
+            {t('Credit.RateAmount', { r: borrowRate, amount: dayIntrestAmount, token: lendToken.symbol })}
+          </LineTip>
           <LineLabel>{t('Credit.NeedForfeit')}</LineLabel>
           <LineBox>
             <div className="left">
