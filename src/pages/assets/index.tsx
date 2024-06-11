@@ -213,7 +213,7 @@ export default function Index() {
       await requests.treasury.updateBudget(
         budget,
         showModifyModal,
-        showModifyModal === BudgetType.Token ? 'USDT' : 'SCR',
+        showModifyModal === BudgetType.Token ? 'USDC' : 'SCR',
       );
       getAssets();
       showToast('success', ToastType.Success);

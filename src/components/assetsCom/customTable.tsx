@@ -114,6 +114,7 @@ const CustomTable = ({ updateList }: IProps) => {
                   options={[
                     { value: AssetName.Credit, label: AssetName.Credit },
                     { value: AssetName.Token, label: AssetName.Token },
+                    { value: AssetName.ETH, label: AssetName.ETH },
                   ]}
                   placeholder=""
                   NotClear={true}

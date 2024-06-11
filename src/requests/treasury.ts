@@ -19,11 +19,11 @@ export const getTreasury = (): Promise<ResponseData<ITreasuryResponse>> => {
 
 export const updateTokenBudget = (amount: number) => {
   return request.post(`${PATH_PREFIX}/update_assets`, [
-    { total_amount: amount, asset_name: 'USDT', budget_type: BudgetType.Token },
+    { total_amount: amount, asset_name: 'USDC', budget_type: BudgetType.Token },
   ]);
 };
 
-export const updateBudget = (amount: number, type: BudgetType, asset_name: 'USDT' | 'SCR') => {
+export const updateBudget = (amount: number, type: BudgetType, asset_name: 'USDC' | 'SCR'|'ETH') => {
   return request.post(`${PATH_PREFIX}/update_assets`, [
     { total_amount: amount, asset_name: asset_name, budget_type: type },
   ]);

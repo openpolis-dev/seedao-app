@@ -53,7 +53,7 @@ export default function RegisterSNSStep1() {
 
   const {
     dispatch,
-    state: { account },
+    state: { account, sns: userSNS },
   } = useAuthContext();
 
   const {
@@ -338,7 +338,7 @@ export default function RegisterSNSStep1() {
           disabled={isPending || availableStatus !== AvailableStatus.OK}
           onClick={handleMint}
         >
-          {t('SNS.SpentMint', { money: `${PAY_NUMBER} USDT(${networkConfig.name})` })}
+          {t('SNS.SpentMint', { money: `${PAY_NUMBER} USDC(${networkConfig.name})` })}
         </MintButton>
       );
     }
@@ -369,7 +369,7 @@ export default function RegisterSNSStep1() {
         </SearchBox>
         <Tip>{t('SNS.InputTip')}</Tip>
         <OperateBox>{showButton()}</OperateBox>
-        <ShareButton onClick={getInviteLink}>{t('SNS.ShareInviteLink')}</ShareButton>
+        {userSNS && <ShareButton onClick={getInviteLink}>{t('SNS.ShareInviteLink')}</ShareButton>}
       </ContainerWrapper>
       {/* <UserEntrance onClick={handleGoUserSNS}>
         <UserSVGIcon />
