@@ -56,7 +56,8 @@ export const DefaultAvatar = '/icons/avatar.svg';
 
 export enum AssetName {
   Credit = 'SCR',
-  Token = 'USDT',
+  Token = 'USDC',
+  ETH = 'ETH',
 }
 
 // CONTRACTS

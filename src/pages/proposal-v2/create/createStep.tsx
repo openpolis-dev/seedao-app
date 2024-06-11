@@ -480,7 +480,7 @@ export default function CreateStep({ onClick }: any) {
       const budgetData = data.filter((item: any) => item.name === 'budget') || [];
       if (budgetData.length) {
         budgetData[0].data.budgetList.map((item: any) => {
-          if (item?.typeTest?.name === 'USDT') {
+          if (item?.typeTest?.name === 'USDC') {
             if (Number(item.amount) > 1000) {
               err = true;
             }

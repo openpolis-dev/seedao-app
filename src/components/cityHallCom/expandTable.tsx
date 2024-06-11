@@ -103,11 +103,13 @@ export default function ExpandTable({
   const totalAssets = useMemo(() => {
     let usdt_count = 0;
     let scr_count = 0;
+    let eth_count = 0;
     list.forEach((item) => {
       if (item.asset_name === AssetName.Credit) scr_count += Number(item.amount) || 0;
       if (item.asset_name === AssetName.Token) usdt_count += Number(item.amount) || 0;
+      if (item.asset_name === AssetName.ETH) eth_count += Number(item.amount) || 0;
     });
-    return [formatNumber(usdt_count), formatNumber(scr_count)];
+    return [formatNumber(usdt_count), formatNumber(scr_count),formatNumber(eth_count)];
   }, [list]);
 
   return (
