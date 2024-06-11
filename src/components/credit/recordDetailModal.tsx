@@ -31,7 +31,9 @@ export default function RecordDetailModal({ borrowName, data, handleClose }: IPr
           {t('Credit.BorrowID')}: {data.lendIdDisplay}
         </div>
         <TotalBox>
-          <div className="amount">{fullData.borrowAmount.format(4)} USDT</div>
+          <div className="amount">
+            {fullData.borrowAmount.format(4)} {lendToken.symbol}
+          </div>
           <StateTag state={fullData.status} solid />
         </TotalBox>
         <DetailLines>
@@ -80,7 +82,7 @@ export default function RecordDetailModal({ borrowName, data, handleClose }: IPr
               {fullData.status === CreditRecordStatus.OVERDUE ? (
                 <NoData>-</NoData>
               ) : (
-                `${fullData.interestAmount?.format(4)} USDT`
+                `${fullData.interestAmount?.format(4)} ${lendToken.symbol}`
               )}
             </dd>
           </Line>
@@ -96,15 +98,21 @@ export default function RecordDetailModal({ borrowName, data, handleClose }: IPr
             <DetailLines>
               <Line>
                 <dt>{t('Credit.TotalRepay')}</dt>
-                <dd className="total">{(fullData.borrowAmount + fullData.interestAmount).format(4)} USDT</dd>
+                <dd className="total">
+                  {(fullData.borrowAmount + fullData.interestAmount).format(4)} {lendToken.symbol}
+                </dd>
               </Line>
               <Line>
                 <dt>{t('Credit.Principal')}</dt>
-                <dd>{fullData.borrowAmount.format(4)} USDT</dd>
+                <dd>
+                  {fullData.borrowAmount.format(4)} {lendToken.symbol}
+                </dd>
               </Line>
               <Line>
                 <dt>{t('Credit.Interest')}</dt>
-                <dd>{fullData.interestAmount?.format(4)} USDT</dd>
+                <dd>
+                  {fullData.interestAmount?.format(4)} {lendToken.symbol}
+                </dd>
               </Line>
               <Line>
                 <dt>{t('Credit.ForfeitRepay')}</dt>

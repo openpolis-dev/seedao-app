@@ -2,6 +2,8 @@ import BasicModal from 'components/modals/basicModal';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import CreditButton from './button';
+import getConfig from 'utils/envCofnig';
+const lendToken = getConfig().NETWORK.lend.lendToken;
 
 interface Iprops {
   title: string;
@@ -50,7 +52,7 @@ export const RepayItemsModal = ({ onConfirm, handleClose }: { onConfirm: () => v
   return (
     <ItemsModal
       title={t('Credit.RepayStepTitle')}
-      steps={[t('Credit.RepayStep1'), t('Credit.RepayStep2'), t('Credit.RepayStep3')]}
+      steps={[t('Credit.RepayStep1'), t('Credit.RepayStep2', { token: lendToken.symbol }), t('Credit.RepayStep3')]}
       onConfirm={onConfirm}
       confirmText={t('Credit.RepayStepConfirmButton')}
       handleClose={handleClose}
