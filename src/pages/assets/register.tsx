@@ -163,7 +163,7 @@ export default function Register() {
       if (!item.address) {
         err.errorKeys.push(t('Msg.RequiredWallet'));
       }
-      if (!item.assetType || (item.assetType !== AssetName.Credit && item.assetType !== AssetName.Token)) {
+      if (!item.assetType || (item.assetType !== AssetName.Credit && item.assetType !== AssetName.Token && item.assetType !== AssetName.ETH)) {
         err.errorKeys.push(t('Msg.SelectAssetType'));
       }
       const _amount = Number(item.amount);
