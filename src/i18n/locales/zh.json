@@ -533,6 +533,7 @@
     "RequestFailed": "请求失败",
     "SelectSource": "请选择预算来源",
     "SelectAssetType": "资产类型错误",
+    "SelectAssetTypeError": "当前无法申请ETH!",
     "AssetAmountError": "资产数量错误",
     "RequiredWallet": "SNS/地址错误",
     "SNSError": "SNS错误",

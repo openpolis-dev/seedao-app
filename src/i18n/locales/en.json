@@ -533,6 +533,7 @@
     "RequestFailed": "Request failed",
     "SelectSource": "Required budget source",
     "SelectAssetType": "Required asset type",
+    "SelectAssetTypeError": "Unable to apply for ETH !",
     "AssetAmountError": "Asset amount error",
     "RequiredWallet": "Required SNS/address",
     "SNSError": "SNS error",
