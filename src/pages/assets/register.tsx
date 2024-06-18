@@ -372,6 +372,11 @@ export default function Register() {
             <span>{t('Assets.Total')}</span>
             <span>{total}</span>
           </div>
+
+          {
+            checkSum() && <div className="tips">{t('Msg.overAmount')}</div>
+          }
+
         </TotalBox>
       )}
 
@@ -415,7 +420,9 @@ const TotalBox = styled.div`
     display: flex;
     gap: 10px;
   }
-  
+  .tips{
+    color:var(--bs-primary);
+  }
 `;
 
 const OuterBox = styled.div`
