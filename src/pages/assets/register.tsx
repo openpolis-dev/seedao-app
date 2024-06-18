@@ -321,7 +321,10 @@ export default function Register() {
         const canUse = Number(item.total_advance_amount) - Number(item.used_advance_amount);
 
         const finditemIndex = totalArr.findIndex((innerItem) => innerItem.indexOf(item.asset_name) > -1);
-        if (finditemIndex === -1) return;
+        if (finditemIndex === -1) {
+          checkAll = true;
+          return;
+        }
         const totalNum = totalArr[finditemIndex]?.split(' ')[0];
         if (Number(totalNum) > canUse) {
           checkAll = true;
