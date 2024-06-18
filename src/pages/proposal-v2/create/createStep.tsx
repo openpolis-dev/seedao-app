@@ -475,7 +475,8 @@ export default function CreateStep({ onClick }: any) {
       if(item?.data?.budgetList){
         for (let j = 0; j < item?.data?.budgetList?.length ; j++) {
           let inner = item?.data?.budgetList[j];
-          if(inner?.typeTest?.name === "ETH" || inner?.assetInfo?.name === "ETH"){} {
+
+          if(inner?.typeTest?.name === "ETH" || inner?.assetInfo?.name === "ETH") {
             checkEth= true;
             break;
           }
