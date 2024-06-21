@@ -16,6 +16,7 @@ import { PermissionAction, PermissionObject } from 'utils/constant';
 import requests from '../../../requests';
 import { getCloseProposal } from '../../../requests/proposalV2';
 import sns from "@seedao/sns-js";
+import { useNavigate } from "react-router-dom";
 
 type ExtraType = { id: number; name: string };
 
@@ -80,6 +81,7 @@ export default function ChooseTypeStep() {
   const canUseCityhall = usePermission(PermissionAction.AuditApplication, PermissionObject.ProjectAndGuild);
 
   const [snsName,setSnsName] = useState<string>();
+  const navigate = useNavigate();
 
 
   const onChooseTemplate = (tp: ICategory, template: ITemplate) => {
@@ -108,7 +110,10 @@ export default function ChooseTypeStep() {
   };
 
   useEffect(() => {
-    if(!account)return;
+    if(!account){
+      navigate("/proposal")
+      return;
+    }
     getSnS()
   }, [account]);
 
