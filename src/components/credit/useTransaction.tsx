@@ -25,7 +25,7 @@ const checkTransaction = (provider: any, hash: string | Hex) => {
         console.log('check tx result', r);
         if (r) {
           clearInterval(timer);
-          resolve(r);
+          r.status === 1 ? resolve(r) : reject(r);
         }
       });
     }, 5000);
@@ -125,9 +125,9 @@ export default function useTransaction() {
     }
   };
 
-  const getAllowanceEnough = async (token: 'usdt' | 'scr', amount: number) => {
-    const address = token === 'usdt' ? lendToken.address : networkConfig.SCRContract.address;
-    const decimals = token === 'usdt' ? lendToken.decimals : networkConfig.SCRContract.decimals;
+  const getAllowanceEnough = async (token: 'lend' | 'scr', amount: number) => {
+    const address = token === 'lend' ? lendToken.address : networkConfig.SCRContract.address;
+    const decimals = token === 'lend' ? lendToken.decimals : networkConfig.SCRContract.decimals;
     const allowanceResult = await readContract({
       address: address as Address,
       abi: erc20ABI,
@@ -141,9 +141,9 @@ export default function useTransaction() {
     );
   };
 
-  const approveToken = async (token: 'usdt' | 'scr', amount: number) => {
-    const address = token === 'usdt' ? lendToken.address : networkConfig.SCRContract.address;
-    const decimals = token === 'usdt' ? lendToken.decimals : networkConfig.SCRContract.decimals;
+  const approveToken = async (token: 'lend' | 'scr', amount: number) => {
+    const address = token === 'lend' ? lendToken.address : networkConfig.SCRContract.address;
+    const decimals = token === 'lend' ? lendToken.decimals : networkConfig.SCRContract.decimals;
     const allowanceResult = await readContract({
       address: address as Address,
       abi: erc20ABI,
@@ -159,14 +159,14 @@ export default function useTransaction() {
         to: address,
         account: account as Address,
         value: BigInt(0),
-        data: token === 'usdt' ? (buildApproveLendTokenData(amount) as Hex) : (buildApproveScoreData(amount) as Hex),
+        data: token === 'lend' ? (buildApproveLendTokenData(amount) as Hex) : (buildApproveScoreData(amount) as Hex),
       });
       return await waitForTransaction({ hash: tx.hash });
     }
   };
 
-  const checkEnoughBalance = async (account: string, token: 'usdt' | 'scr', amount: number) => {
-    const address = token === 'usdt' ? lendToken.address : networkConfig.SCRContract.address;
+  const checkEnoughBalance = async (account: string, token: 'lend' | 'scr', amount: number) => {
+    const address = token === 'lend' ? lendToken.address : networkConfig.SCRContract.address;
     const balance = await readContract({
       address: address as Address,
       abi: erc20ABI,
@@ -176,13 +176,13 @@ export default function useTransaction() {
     return ethers.BigNumber.from(balance.toString()).gte(
       ethers.utils.parseUnits(
         String(amount),
-        token === 'usdt' ? lendToken.decimals : networkConfig.SCRContract.decimals,
+        token === 'lend' ? lendToken.decimals : networkConfig.SCRContract.decimals,
       ),
     );
   };
 
-  const getTokenBalance = async (token: 'usdt' | 'scr') => {
-    const address = token === 'usdt' ? lendToken.address : networkConfig.SCRContract.address;
+  const getTokenBalance = async (token: 'lend' | 'scr') => {
+    const address = token === 'lend' ? lendToken.address : networkConfig.SCRContract.address;
     const balance = await readContract({
       address: address as Address,
       abi: erc20ABI,
@@ -192,8 +192,8 @@ export default function useTransaction() {
     return ethers.BigNumber.from(balance.toString());
   };
 
-  const getTokenAllowance = async (token: 'usdt' | 'scr') => {
-    const address = token === 'usdt' ? lendToken.address : networkConfig.SCRContract.address;
+  const getTokenAllowance = async (token: 'lend' | 'scr') => {
+    const address = token === 'lend' ? lendToken.address : networkConfig.SCRContract.address;
     const allowanceResult = await readContract({
       address: address as Address,
       abi: erc20ABI,

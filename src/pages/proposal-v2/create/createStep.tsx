@@ -467,11 +467,35 @@ export default function CreateStep({ onClick }: any) {
   };
 
   const handleFormSubmit = async (success: boolean, data: any) => {
+
+  let checkEth = false;
+
+    for (let i = 0; i < data.length; i++) {
+      let item = data[i];
+      if(item?.data?.budgetList){
+        for (let j = 0; j < item?.data?.budgetList?.length ; j++) {
+          let inner = item?.data?.budgetList[j];
+
+          if(inner?.typeTest?.name === "ETH" || inner?.assetInfo?.name === "ETH") {
+            checkEth= true;
+            break;
+          }
+        }
+      }
+
+    }
+    if(checkEth ){
+      setLoading(false);
+      showToast(t('Msg.SelectAssetTypeError'), ToastType.Danger);
+      return;
+    }
+
     if (!success) {
       setLoading(false);
       setIsInstantVoteAlertVisible(false);
       return;
     }
+
 
     let budgetArr = template?.components?.filter((item) => item.name === 'budget') || [];
     if (template?.name === 'P2提案立项' && budgetArr?.length > 0) {
@@ -480,7 +504,7 @@ export default function CreateStep({ onClick }: any) {
       const budgetData = data.filter((item: any) => item.name === 'budget') || [];
       if (budgetData.length) {
         budgetData[0].data.budgetList.map((item: any) => {
-          if (item?.typeTest?.name === 'USDT') {
+          if (item?.typeTest?.name === 'USDC') {
             if (Number(item.amount) > 1000) {
               err = true;
             }

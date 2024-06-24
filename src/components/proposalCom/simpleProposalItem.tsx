@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { formatTime } from 'utils/time';
 import { ISimpleProposal } from 'type/proposalV2.type';
 import ProposalStateTag, { getRealState } from './stateTag';
@@ -26,20 +26,13 @@ export default function SimpleProposalItem({
   isReview?: boolean;
   currentTab: TabType[];
 }) {
-  const navigate = useNavigate();
-  const openProposal = () => {
-    navigate(`/proposal/thread/${data.id}${isReview ? '?review' : ''}`, {
-      state: {
-        currentTab,
-        data,
-      },
-    });
-  };
-
   const currentState = getRealState(data.state);
   return (
     <CardBox key={data.id}>
-      <div onClick={openProposal}>
+      <Link to={`/proposal/thread/${data.id}${isReview ? '?review' : ''}`} state={{
+        currentTab,
+        data,
+      }}>
         <CardHeaderStyled>
           <Title>
             {getProposalSIPSlug(data.sip)}
@@ -61,7 +54,7 @@ export default function SimpleProposalItem({
             <ProposalStateTag state={currentState} />
           </TagsBox>
         </CardBody>
-      </div>
+      </Link>
     </CardBox>
   );
 }

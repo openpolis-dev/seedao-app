@@ -163,7 +163,11 @@ export default function Register() {
       if (!item.address) {
         err.errorKeys.push(t('Msg.RequiredWallet'));
       }
-      if (!item.assetType || (item.assetType !== AssetName.Credit && item.assetType !== AssetName.Token)) {
+      if(detail.Category.indexOf("市政厅") === -1 && item.assetType === AssetName.ETH){
+        err.errorKeys.push(t('Msg.SelectAssetTypeError'));
+      }
+
+      if (!item.assetType || (item.assetType !== AssetName.Credit && item.assetType !== AssetName.Token && item.assetType !== AssetName.ETH)) {
         err.errorKeys.push(t('Msg.SelectAssetType'));
       }
       const _amount = Number(item.amount);
@@ -246,6 +250,8 @@ export default function Register() {
   };
 
   const handleCreate = async () => {
+
+
     if (!selectSource) {
       return;
     }
@@ -315,7 +321,10 @@ export default function Register() {
         const canUse = Number(item.total_advance_amount) - Number(item.used_advance_amount);
 
         const finditemIndex = totalArr.findIndex((innerItem) => innerItem.indexOf(item.asset_name) > -1);
-        if (finditemIndex === -1) return;
+        if (finditemIndex === -1) {
+          checkAll = true;
+          return;
+        }
         const totalNum = totalArr[finditemIndex]?.split(' ')[0];
         if (Number(totalNum) > canUse) {
           checkAll = true;
@@ -366,6 +375,11 @@ export default function Register() {
             <span>{t('Assets.Total')}</span>
             <span>{total}</span>
           </div>
+
+          {
+            checkSum() && <div className="tips">{t('Msg.overAmount')}</div>
+          }
+
         </TotalBox>
       )}
 
@@ -409,7 +423,9 @@ const TotalBox = styled.div`
     display: flex;
     gap: 10px;
   }
-  
+  .tips{
+    color:var(--bs-primary);
+  }
 `;
 
 const OuterBox = styled.div`

@@ -9,6 +9,7 @@ import AddIcon from 'assets/Imgs/dark/add.svg';
 import { AssetName } from 'utils/constant';
 import VaultSVGIcon from 'components/svgs/vault';
 import { PrimaryOutlinedButton } from 'components/common/button';
+import DisableNumberInputWheel from "../DisableInput";
 
 interface IProps {
   updateList: (data: IExcelObj[]) => void;
@@ -86,6 +87,7 @@ const CustomTable = ({ updateList }: IProps) => {
 
   return (
     <Box>
+      <DisableNumberInputWheel />
       <table className="table" cellPadding="0" cellSpacing="0">
         <thead>
           <tr>
@@ -114,6 +116,7 @@ const CustomTable = ({ updateList }: IProps) => {
                   options={[
                     { value: AssetName.Credit, label: AssetName.Credit },
                     { value: AssetName.Token, label: AssetName.Token },
+                    { value: AssetName.ETH, label: AssetName.ETH },
                   ]}
                   placeholder=""
                   NotClear={true}
