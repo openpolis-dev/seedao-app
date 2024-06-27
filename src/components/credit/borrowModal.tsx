@@ -95,7 +95,7 @@ export default function BorrowModal({ handleClose }: IProps) {
       setStep(1);
       setAllowanceEnough(true);
     } catch (error) {
-      showToast(t('Credit.ApproveFailed'), ToastType.Danger);
+      showToast(`${t('Credit.ApproveFailed')}: ${error}`, ToastType.Danger);
       console.error(error);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
