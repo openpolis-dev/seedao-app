@@ -1,7 +1,6 @@
 import { BigNumber, ethers } from 'ethers';
 import { useAuthContext } from 'providers/authProvider';
 import { erc20ABI, useSendTransaction, Address, useSwitchNetwork, useNetwork } from 'wagmi';
-import { waitForTransaction } from 'wagmi/actions';
 import { prepareSendTransaction, readContract } from 'wagmi/actions';
 import { Hex } from 'viem';
 import ScoreLendABI from 'assets/abi/ScoreLend.json';
@@ -169,7 +168,7 @@ export default function useTransaction() {
         value: BigInt(0),
         data: token === 'lend' ? (buildApproveLendTokenData(amount) as Hex) : (buildApproveScoreData(amount) as Hex),
       });
-      return await waitForTransaction({ hash: tx.hash });
+      return checkTransaction(provider, tx.hash);
     }
   };
 
