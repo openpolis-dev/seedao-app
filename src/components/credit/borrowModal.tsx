@@ -24,18 +24,6 @@ interface IProps {
 
 export default function BorrowModal({ handleClose }: IProps) {
   const { t } = useTranslation();
-  const [step, setStep] = useState(0);
-  const [inputNum, setInputNum] = useState<string>('100');
-  const [forfeitNum, setForfeitNum] = useState(0);
-
-  const { showToast } = useToast();
-
-  const { handleTransaction, approveToken, handleEstimateGas, checkNetwork, getAllowanceEnough } = useTransaction();
-
-  const {
-    dispatch,
-    state: { account },
-  } = useAuthContext();
   const {
     state: {
       scoreLendContract,
@@ -48,6 +36,19 @@ export default function BorrowModal({ handleClose }: IProps) {
       minBorrowAmount,
     },
   } = useCreditContext();
+  const [step, setStep] = useState(0);
+  const [inputNum, setInputNum] = useState<string>(String(minBorrowAmount));
+  const [forfeitNum, setForfeitNum] = useState(0);
+
+  const { showToast } = useToast();
+
+  const { handleTransaction, approveToken, handleEstimateGas, checkNetwork, getAllowanceEnough } = useTransaction();
+
+  const {
+    dispatch,
+    state: { account },
+  } = useAuthContext();
+  
   const [calculating, setCalculating] = useState(false);
   const [allowanceEnough, setAllowanceEnough] = useState(false);
   const [leftTime, setLeftTime] = useState('');
@@ -71,7 +72,7 @@ export default function BorrowModal({ handleClose }: IProps) {
   }, [scrEnough, allowanceEnough]);
 
   const checkApprove = async () => {
-    if (calculating || Number(inputNum) < 100) {
+    if (calculating || Number(inputNum) < minBorrowAmount) {
       return;
     }
     // check enough
@@ -125,7 +126,7 @@ export default function BorrowModal({ handleClose }: IProps) {
   };
 
   const clearModalData = () => {
-    setInputNum('100');
+    setInputNum(String(minBorrowAmount));
     setForfeitNum(0);
     setStep(0);
   };
@@ -137,7 +138,7 @@ export default function BorrowModal({ handleClose }: IProps) {
 
   const btnDisabled =
     calculating ||
-    Number(inputNum) < 100 ||
+    Number(inputNum) < minBorrowAmount ||
     Number(inputNum) > myAvaliableQuota ||
     leftTime ||
     Number(inputNum) > totalAvaliableBorrowAmount;
@@ -236,7 +237,7 @@ export default function BorrowModal({ handleClose }: IProps) {
 
   useEffect(() => {
     setCalculating(true);
-    onChangeVal(100);
+    onChangeVal(minBorrowAmount);
   }, []);
 
   useEffect(() => {
