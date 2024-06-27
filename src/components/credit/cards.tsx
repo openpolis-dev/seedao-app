@@ -364,6 +364,12 @@ export default function CreditCards() {
         payload: Number(ethers.utils.formatUnits(r.availableAmount, decimals)),
       });
     });
+    scoreLendContract?.minBorrowAmount().then((r: ethers.BigNumber) =>
+      dispatchCreditEvent({
+        type: ACTIONS.SET_MIN_BORROW_AMOUNT,
+        payload: Number(ethers.utils.formatUnits(r, decimals)),
+      }),
+    );
   }, [bondNFTContract, scoreLendContract, account, dispatchCreditEvent]);
 
   useEffect(() => {

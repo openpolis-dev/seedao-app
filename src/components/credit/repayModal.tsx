@@ -277,7 +277,7 @@ export default function RepayModal({ handleClose }: IProps) {
       })
       .catch((e: any) => {
         console.error(e);
-        showToast('获取实际还款额失败，请到详情中查看', ToastType.Danger);
+        showToast(t('Credit.GetRealRepayAmountFailed'), ToastType.Danger);
       })
       .finally(() => {
         setGetting(false);

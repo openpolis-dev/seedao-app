@@ -45,6 +45,7 @@ export default function BorrowModal({ handleClose }: IProps) {
       borrowRate,
       minBorrowCoolDown,
       totalAvaliableBorrowAmount,
+      minBorrowAmount,
     },
   } = useCreditContext();
   const [calculating, setCalculating] = useState(false);
@@ -82,11 +83,18 @@ export default function BorrowModal({ handleClose }: IProps) {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
       await checkNetwork();
+    } catch (error) {
+      showToast(t('Credit.NetworkNotReady'), ToastType.Danger);
+      dispatch({ type: AppActionType.SET_LOADING, payload: false });
+      return;
+    }
+    try {
       await approveToken('scr', forfeitNum);
       showToast(t('Credit.ApproveSuccessful'), ToastType.Success);
       setStep(1);
       setAllowanceEnough(true);
     } catch (error) {
+      showToast(t('Credit.ApproveFailed'), ToastType.Danger);
       console.error(error);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
@@ -107,6 +115,8 @@ export default function BorrowModal({ handleClose }: IProps) {
       let errorMsg = `${parseError(error)}`;
       if (errorMsg === 'BorrowCooldownTimeTooShort') {
         errorMsg = t('Credit.BorrowCooldownMsg');
+      } else if (errorMsg === 'TotalAvailableBorrowAmountInsufficient') {
+        errorMsg = t('Credit.RemainBorrowQuotaNotEnough');
       }
       showToast(errorMsg, ToastType.Danger);
     } finally {
@@ -171,7 +181,7 @@ export default function BorrowModal({ handleClose }: IProps) {
         // check allowance
         getAllowanceEnough('scr', fval)
           .then((res) => {
-            setAllowanceEnough(!!res);
+            setAllowanceEnough(res);
           })
           .finally(() => {
             setCalculating(false);
@@ -202,7 +212,7 @@ export default function BorrowModal({ handleClose }: IProps) {
   };
 
   const handleBlur = () => {
-    // 在输入框失去焦点时验证最小和最大值
+    // 在输入框失去焦点时验证最大值
     const numericValue = parseFloat(inputNum);
     if (!isNaN(numericValue)) {
       if (numericValue > myAvaliableQuota) {
@@ -247,12 +257,12 @@ export default function BorrowModal({ handleClose }: IProps) {
     });
   }, [scoreLendContract]);
 
-  const dayIntrestAmount = inputNum ? getShortDisplay((Number(inputNum) * 10000 * Number(0.0001)) / 10000, 4) : 0;
+  const dayIntrestAmount = inputNum ? getShortDisplay((Number(inputNum) * 10000 * borrowRate * 0.01) / 10000, 4) : 0;
 
   const getErrorTip = () => {
     const v = Number(inputNum);
-    if (v < 100) {
-      return <MinTip>{t('Credit.MinBorrow', { token: lendToken.symbol })}</MinTip>;
+    if (v < minBorrowAmount) {
+      return <MinTip>{t('Credit.MinBorrow', { token: lendToken.symbol, amount: minBorrowAmount })}</MinTip>;
     }
     if (v > myAvaliableQuota) {
       return (
