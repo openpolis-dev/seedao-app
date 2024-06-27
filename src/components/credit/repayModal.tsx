@@ -349,7 +349,7 @@ export default function RepayModal({ handleClose }: IProps) {
             <div className="label">
               {t('Credit.ShouldRepayAll', { amount: selectedTotalAmount.format(4), token: lendToken.symbol })}
             </div>
-            <RepayTip>{t('Credit.RepayTip')}</RepayTip>
+            <RepayTip>{t('Credit.RepayTip', { token: lendToken.symbol })}</RepayTip>
           </TotalRepay>
           <ListBox style={{ maxHeight: '352px', minHeight: 'unset' }}>
             {selectedList.map((item) => (
