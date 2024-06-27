@@ -5,13 +5,13 @@ import { waitForTransaction } from 'wagmi/actions';
 import { prepareSendTransaction, readContract } from 'wagmi/actions';
 import { Hex } from 'viem';
 import ScoreLendABI from 'assets/abi/ScoreLend.json';
-import { amoy } from 'utils/chain';
 import { useEthersProvider } from 'hooks/ethersNew';
 
 import getConfig from 'utils/envCofnig';
 const networkConfig = getConfig().NETWORK;
 
 const lendToken = networkConfig.lend.lendToken;
+const lendChain = networkConfig.lend.chain;
 
 export enum TX_ACTION {
   BORROW = 'borrow',
@@ -67,8 +67,8 @@ export default function useTransaction() {
   const { switchNetworkAsync } = useSwitchNetwork();
 
   const checkNetwork = async () => {
-    if (chain && switchNetworkAsync && chain?.id !== amoy.id) {
-      await switchNetworkAsync(amoy.id);
+    if (chain && switchNetworkAsync && chain?.id !== lendChain.id) {
+      await switchNetworkAsync(lendChain.id);
       return;
     }
   };

@@ -14,11 +14,11 @@ import RecordDetailModal from './recordDetailModal';
 import useCheckLogin from 'hooks/useCheckLogin';
 import { IFilterParams, getBorrowList } from 'requests/credit';
 import publicJs from 'utils/publicJs';
-import { amoy } from 'utils/chain';
 import useQuerySNS from 'hooks/useQuerySNS';
 import { useCreditContext } from 'pages/credit/provider';
 import getConfig from 'utils/envCofnig';
 const lendToken = getConfig().NETWORK.lend.lendToken;
+const lendChain = getConfig().NETWORK.lend.chain;
 
 type InterestData = {
   interestDays: number;
@@ -89,7 +89,7 @@ const AllBorrowTable = ({ list, openMyDetail, formatSNS }: IMyTableProps) => {
                   <div style={{ width: '200px' }}>{item.overdueTime}</div>
                   <div style={{ width: '130px' }}>
                     <BlueText
-                      onClick={() => window.open(`${amoy?.blockExplorers?.default.url}/tx/${item.borrowTx}`, '_blank')}
+                      onClick={() => window.open(`${lendChain?.blockExplorers?.default.url}/tx/${item.borrowTx}`, '_blank')}
                     >
                       {publicJs.AddressToShow(item.borrowTx)}
                     </BlueText>
@@ -196,7 +196,7 @@ const MyTable = ({ list, openMyDetail }: IMyTableProps) => {
                 </div>
                 <div style={{ width: '130px' }}>
                   <BlueText
-                    onClick={() => window.open(`${amoy?.blockExplorers?.default.url}/tx/${item.borrowTx}`, '_blank')}
+                    onClick={() => window.open(`${lendChain?.blockExplorers?.default.url}/tx/${item.borrowTx}`, '_blank')}
                   >
                     {publicJs.AddressToShow(item.borrowTx)}
                   </BlueText>

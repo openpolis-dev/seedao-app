@@ -4,13 +4,13 @@ import styled from 'styled-components';
 import StateTag from './stateTag';
 import { CreditRecordStatus, ICreditRecord } from 'type/credit.type';
 import publicJs from 'utils/publicJs';
-import { amoy } from 'utils/chain';
 import { useCreditContext } from 'pages/credit/provider';
 import { useEffect, useState } from 'react';
 import { ethers } from 'ethers';
 import getConfig from 'utils/envCofnig';
 
 const lendToken = getConfig().NETWORK.lend.lendToken;
+const lendChain = getConfig().NETWORK.lend.chain;
 
 interface IProps {
   borrowName: string;
@@ -50,7 +50,7 @@ export default function RecordDetailModal({ borrowName, data, handleClose }: IPr
             <dd>
               <a
                 className="hash"
-                href={`${amoy?.blockExplorers?.default.url}/tx/${fullData.borrowTx}`}
+                href={`${lendChain?.blockExplorers?.default.url}/tx/${fullData.borrowTx}`}
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -123,7 +123,7 @@ export default function RecordDetailModal({ borrowName, data, handleClose }: IPr
                 <dd>
                   <a
                     className="hash"
-                    href={`${amoy?.blockExplorers?.default.url}/tx/${fullData.paybackTx}`}
+                    href={`${lendChain?.blockExplorers?.default.url}/tx/${fullData.paybackTx}`}
                     target="_blank"
                     rel="noopener noreferrer"
                   >

@@ -1,5 +1,7 @@
 import EthereumIcon from 'assets/Imgs/network/ethereum.svg';
 import PolygonIcon from 'assets/Imgs/network/polygon.svg';
+import { amoy } from 'utils/chain';
+import { polygon } from 'viem/chains';
 
 const VERSION = '0.5.1';
 
@@ -31,6 +33,7 @@ const Polygon_Network = {
   whitelistId: 0,
   SCRContract: { address: '0xdC907cd32Bc3D6bb2c63Ede4E28c3fAcdd1d5189', decimals: 18 },
   lend: {
+    chain: amoy,
     quotaPerUser: 5000,
     bondNFTContract: '0x496EBfDe236617821BAc1A2486993204378eE6C8',
     scoreLendContract: '0xa868415159Dc88506A9A55fe12E98B171491018d',
@@ -125,6 +128,21 @@ const PRODUCTION = {
   //   // rpc: 'https://mainnet.infura.io/v3/',
   // },
   Polygon_Network,
+  NETWORK: {
+    ...Polygon_Network,
+    SCRContract: { address: '0xE4825A1a31a76f72befa47f7160B132AA03813E0', decimals: 18 },
+    lend: {
+      ...Polygon_Network.lend,
+      chain: polygon,
+      bondNFTContract: '',
+      scoreLendContract: '',
+      lendToken: {
+        address: '',
+        decimals: 6,
+        symbol: 'USDC',
+      },
+    },
+  },
   INDEXER_ENDPOINT: 'https://spp-indexer.seedao.tech',
   SENTRY_DSN,
 };

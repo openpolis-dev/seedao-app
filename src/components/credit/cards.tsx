@@ -7,7 +7,6 @@ import { useTranslation } from 'react-i18next';
 import CreditLogo2 from 'assets/Imgs/light/creditLogo2.svg';
 import { useNetwork, useSwitchNetwork } from 'wagmi';
 import { useEthersProvider } from 'hooks/ethersNew';
-import { amoy } from 'utils/chain';
 import { ethers } from 'ethers';
 import getConfig from 'utils/envCofnig';
 import BondNFTABI from 'assets/abi/BondNFT.json';
@@ -20,6 +19,8 @@ import BorrowAndRepay from './BorrowAndRepay';
 
 const networkConfig = getConfig().NETWORK;
 const lendToken = networkConfig.lend.lendToken;
+
+const lendChain = networkConfig.lend.chain;
 
 type BorrowCardProps = {
   isLogin: boolean;
@@ -37,7 +38,7 @@ const MyBorrowingQuota = ({ isLogin }: BorrowCardProps) => {
   const [maxAmount, setMaxAmount] = useState(0);
 
   const getData = (e?: any) => {
-    const _provider = new ethers.providers.StaticJsonRpcProvider(amoy.rpcUrls.public.http[0], amoy.id);
+    const _provider = new ethers.providers.StaticJsonRpcProvider(lendChain.rpcUrls.public.http[0], lendChain.id);
     const scoreContract = new ethers.Contract(networkConfig.SCRContract.address, erc20ABI, _provider);
     console.log('==== getting scr balance ====', account);
     scoreContract.balanceOf(account).then((r: ethers.BigNumber) => {
@@ -337,7 +338,7 @@ export default function CreditCards() {
   const provider = useEthersProvider({});
 
   useEffect(() => {
-    const _provider = new ethers.providers.StaticJsonRpcProvider(amoy.rpcUrls.public.http[0], amoy.id);
+    const _provider = new ethers.providers.StaticJsonRpcProvider(lendChain.rpcUrls.public.http[0], lendChain.id);
     const bondNFTContract = new ethers.Contract(networkConfig.lend.bondNFTContract, BondNFTABI, _provider);
     dispatchCreditEvent({ type: ACTIONS.SET_BOND_NFT_CONTRACT, payload: bondNFTContract });
     const scoreLendontract = new ethers.Contract(networkConfig.lend.scoreLendContract, ScoreLendABI, _provider);
@@ -374,8 +375,8 @@ export default function CreditCards() {
 
   useEffect(() => {
     // check network
-    if (loginStatus && chain && switchNetwork && chain?.id !== amoy.id) {
-      switchNetwork(amoy.id);
+    if (loginStatus && chain && switchNetwork && chain?.id !== lendChain.id) {
+      switchNetwork(lendChain.id);
     }
   }, [loginStatus, chain, provider?.network.chainId]);
 
