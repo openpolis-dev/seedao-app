@@ -76,30 +76,38 @@ export default function useTransaction() {
   const { sendTransactionAsync } = useSendTransaction();
   const provider = useEthersProvider({});
 
-  const handleBorrow = async (amount: number) => {
+  const handleBorrow = async (amount: number, gas: bigint | undefined) => {
+    if (gas) {
+      console.log('use gas:', Math.ceil(Number(gas) * 1.2));
+    }
     const tx = await sendTransactionAsync({
       to: networkConfig.lend.scoreLendContract,
       account: account as Address,
       value: BigInt(0),
       data: buildBorrowData(amount) as Hex,
+      gas: gas ? BigInt(Math.ceil(Number(gas) * 1.2)) : undefined,
     });
     return checkTransaction(provider, tx?.hash);
   };
-  const handleRepay = async (ids: number[]) => {
+  const handleRepay = async (ids: number[], gas: bigint | undefined) => {
+    if (gas) {
+      console.log('use gas:', Math.ceil(Number(gas) * 1.2));
+    }
     const tx = await sendTransactionAsync({
       to: networkConfig.lend.scoreLendContract,
       account: account as Address,
       value: BigInt(0),
       data: buildRepayData(ids) as Hex,
+      gas: gas ? BigInt(Math.ceil(Number(gas) * 1.2)) : undefined,
     });
     return checkTransaction(provider, tx?.hash);
   };
 
-  const handleTransaction = (action: TX_ACTION, data: number | number[]) => {
+  const handleTransaction = (action: TX_ACTION, data: number | number[], gas: bigint | undefined) => {
     if (action === TX_ACTION.BORROW) {
-      return handleBorrow(data as number);
+      return handleBorrow(data as number, gas);
     } else if (action === TX_ACTION.REPAY) {
-      return handleRepay(data as number[]);
+      return handleRepay(data as number[], gas);
     }
   };
   const handleEsitmateBorrow = (amount: number) => {

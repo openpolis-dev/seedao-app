@@ -108,7 +108,7 @@ export default function BorrowModal({ handleClose }: IProps) {
       await checkNetwork();
       const r = await handleEstimateGas(TX_ACTION.BORROW, inputNum!);
       console.log('estimategas result', r);
-      await handleTransaction(TX_ACTION.BORROW, Number(inputNum));
+      await handleTransaction(TX_ACTION.BORROW, Number(inputNum), r?.gas);
       setStep(2);
     } catch (error: any) {
       logError('[borrow]', error);

@@ -144,6 +144,7 @@ export default function RepayModal({ handleClose }: IProps) {
       await handleTransaction(
         TX_ACTION.REPAY,
         selectedList.map((item) => Number(item.id)),
+        r?.gas,
       );
       setStep(3);
     } catch (error: any) {
