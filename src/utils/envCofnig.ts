@@ -1,7 +1,9 @@
 import EthereumIcon from 'assets/Imgs/network/ethereum.svg';
 import PolygonIcon from 'assets/Imgs/network/polygon.svg';
+import { amoy } from 'utils/chain';
+import { polygon } from 'viem/chains';
 
-const VERSION = '0.4.16';
+const VERSION = '0.5.2';
 
 const SENTRY_DSN = 'https://b36d900b0a63b0466ff4e73d55e359b2@o4505590144106496.ingest.sentry.io/4506445116604416';
 
@@ -29,6 +31,18 @@ const Polygon_Network = {
     },
   ],
   whitelistId: 0,
+  SCRContract: { address: '0xdC907cd32Bc3D6bb2c63Ede4E28c3fAcdd1d5189', decimals: 18 },
+  lend: {
+    chain: amoy,
+    quotaPerUser: 5000,
+    bondNFTContract: '0x496EBfDe236617821BAc1A2486993204378eE6C8',
+    scoreLendContract: '0xa868415159Dc88506A9A55fe12E98B171491018d',
+    lendToken: {
+      address: '0xca152522f26811fF8FcAf967d4040F7C6BbF8eaA',
+      decimals: 6,
+      symbol: 'USDC',
+    },
+  },
 };
 
 const Sepolia_Network = {
@@ -59,7 +73,8 @@ const LOCAL = {
   REACT_APP_APP_VERSION: `A ${VERSION}`,
   REACT_APP_THEME_ENABLE: true,
   DESCHOOL_BASE_API: 'https://deschool.app/goapiDevelopment',
-  JOY_ID_URL: 'https://app.joy.id',
+  // JOY_ID_URL: 'https://app.joy.id',
+  JOY_ID_URL: 'https://testnet.joyid.dev',
   NETWORK: Polygon_Network,
   INDEXER_ENDPOINT: 'https://test-spp-indexer.seedao.tech',
   SENTRY_DSN: '',
@@ -80,6 +95,16 @@ const PREVIEW = {
   REACT_APP_MOBILE_URL: 'https://preview-m.seedao.tech',
   Polygon_Network,
   SENTRY_DSN,
+  JOY_ID_URL: 'https://testnet.joyid.dev',
+  NETWORK: {
+    ...Polygon_Network,
+    lend: {
+      ...Polygon_Network.lend,
+      bondNFTContract: '0x5eC2dDFdEACB1a4bB4145908bB29D833Fd810712',
+      scoreLendContract: '0xcF5504045f74f6A51828B9D8766E4d96822311dE',
+    },
+  },
+  INDEXER_ENDPOINT: 'https://preview-spp-indexer.seedao.tech',
 };
 
 const PRODUCTION = {
@@ -91,7 +116,7 @@ const PRODUCTION = {
   REACT_APP_THEME_ENABLE: false,
   REACT_APP_ONESIGNAL_ID: '8ecd086b-3e15-4537-9f8b-c55c72a8dcf7',
   REACT_APP_MOBILE_URL: 'https://m.seedao.xyz',
-  // JOY_ID_URL: 'https://app.joy.id',
+  JOY_ID_URL: 'https://app.joy.id',
   // NETWORK: {
   //   // [TODO] when publish sns contract, change to mainnet
   //   name: 'Sepolia',
@@ -103,6 +128,21 @@ const PRODUCTION = {
   //   // rpc: 'https://mainnet.infura.io/v3/',
   // },
   Polygon_Network,
+  NETWORK: {
+    ...Polygon_Network,
+    SCRContract: { address: '0xE4825A1a31a76f72befa47f7160B132AA03813E0', decimals: 18 },
+    lend: {
+      ...Polygon_Network.lend,
+      chain: polygon,
+      bondNFTContract: '0xC40EB71f46baE4d2395734C14af3bd86960F2c4c',
+      scoreLendContract: '0xaB9B36BC114c433182ebE840Fa966A5808883661',
+      lendToken: {
+        address: '0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359',
+        decimals: 6,
+        symbol: 'USDC',
+      },
+    },
+  },
   INDEXER_ENDPOINT: 'https://spp-indexer.seedao.tech',
   SENTRY_DSN,
 };

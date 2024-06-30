@@ -177,6 +177,7 @@ const reducer = (state: IState, action: IAction): IState => {
       return { ...state, metaforoToken: action.payload };
     case AppActionType.SET_THIRD_PARTY_TOKEN:
       localStorage.setItem(SEE_AUTH, JSON.stringify(action.payload));
+      localStorage.setItem(METAFORO_TOKEN,JSON.stringify(action.payload?.metaforo));
       return { ...state, deschoolToken: action.payload?.deschool, metaforoToken: action.payload?.metaforo };
     case AppActionType.SET_SHOW_METAFORO_LOGIN_MODAL:
       return { ...state, show_metaforo_login: action.payload };

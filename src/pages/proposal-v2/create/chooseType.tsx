@@ -6,7 +6,7 @@ import { ICategory, ITemplate } from 'type/proposalV2.type';
 import ArrowRht from '../../../assets/Imgs/proposal/chevron-down.svg';
 import ArrowRhtBlack from '../../../assets/Imgs/proposal/chevron-down-black.svg';
 import ArrowGray from 'assets/Imgs/proposal/chevron-gray.svg';
-import { useAuthContext } from '../../../providers/authProvider';
+import { AppActionType, useAuthContext } from "../../../providers/authProvider";
 import BasicModal, { Iprops as IBasicModalProps } from 'components/modals/basicModal';
 import SeeSelect from 'components/common/select';
 import { PlainButton } from 'components/common/button';
@@ -15,6 +15,8 @@ import usePermission from 'hooks/usePermission';
 import { PermissionAction, PermissionObject } from 'utils/constant';
 import requests from '../../../requests';
 import { getCloseProposal } from '../../../requests/proposalV2';
+import sns from "@seedao/sns-js";
+import { useNavigate } from "react-router-dom";
 
 type ExtraType = { id: number; name: string };
 
@@ -27,6 +29,7 @@ const CloseOutSelectModal = ({ id, handleConfirm, ...props }: ICloseOutSelectMod
   const { t } = useTranslation();
   const [proposalList, setProposalList] = useState<ISelectItem[]>([]);
   const [selectExtra, setSelectExtra] = useState<ISelectItem>();
+
 
   useEffect(() => {
     console.log(id);
@@ -67,7 +70,7 @@ const CloseOutSelectModal = ({ id, handleConfirm, ...props }: ICloseOutSelectMod
 
 export default function ChooseTypeStep() {
   const {
-    state: { categoryTemplates },
+    state: { categoryTemplates,theme, account },
   } = useAuthContext();
   const { t } = useTranslation();
   const { chooseTemplate } = useCreateProposalContext();
@@ -77,9 +80,9 @@ export default function ChooseTypeStep() {
 
   const canUseCityhall = usePermission(PermissionAction.AuditApplication, PermissionObject.ProjectAndGuild);
 
-  const {
-    state: { theme },
-  } = useAuthContext();
+  const [snsName,setSnsName] = useState<string>();
+  const navigate = useNavigate();
+
 
   const onChooseTemplate = (tp: ICategory, template: ITemplate) => {
     if (template.id === 0) {
@@ -105,6 +108,26 @@ export default function ChooseTypeStep() {
       chooseTemplate(selected?.tp, selected?.template);
     }
   };
+
+  useEffect(() => {
+    if(!account){
+      navigate("/proposal")
+      return;
+    }
+    getSnS()
+  }, [account]);
+
+  const getSnS = async() =>{
+    let rt = await sns.name(account!)
+    setSnsName(rt)
+  }
+
+  const checkSNS =   () =>{
+    if(selected?.tp?.category_name !== "P1提案") return false;
+    if(!account) return true;
+    return !snsName?.endsWith("seedao")
+
+  }
 
   return (
     <Container>
@@ -163,7 +186,7 @@ export default function ChooseTypeStep() {
               <Button variant="outline-primary" className="btnBtm" onClick={handleCloseTemplateRulesModal}>
                 {t('general.cancel')}
               </Button>
-              <Button onClick={goToCreateNext}> {t('Proposal.Create')}</Button>
+              <Button onClick={goToCreateNext} disabled={checkSNS()}> {t('Proposal.Create')}</Button>
             </CardFooter>
           )}
         </TemplateRulesModal>

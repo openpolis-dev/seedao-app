@@ -148,9 +148,10 @@ interface Props {
   handleToPage: (a: number) => void;
   handlePageSize?: (a: number) => void;
   dir?: 'left' | 'right';
+  showGotopage?: boolean;
 }
 
-const Page: FC<Props> = ({ itemsPerPage, total, handleToPage, current, dir }) => {
+const Page: FC<Props> = ({ itemsPerPage, total, handleToPage, current, dir, showGotopage = true }) => {
   const [pageCount, setPageCount] = useState(0);
   const [curr, setCurr] = useState(0);
   const [pageToGo, setPageToGo] = useState('');
@@ -219,17 +220,19 @@ const Page: FC<Props> = ({ itemsPerPage, total, handleToPage, current, dir }) =>
           activeClassName="active"
           forcePage={curr}
         />
-        <GoToBox>
-          <InputNumber
-            value={pageToGo}
-            onChange={handleInput}
-            placeholder="Page"
-            onWheel={(e) => (e.target as any).blur()}
-          />
-          <Button className="btn" onClick={() => handleToGo()}>
-            Go
-          </Button>
-        </GoToBox>
+        {showGotopage && (
+          <GoToBox>
+            <InputNumber
+              value={pageToGo}
+              onChange={handleInput}
+              placeholder="Page"
+              onWheel={(e) => (e.target as any).blur()}
+            />
+            <Button className="btn" onClick={() => handleToGo()}>
+              Go
+            </Button>
+          </GoToBox>
+        )}
       </RhtBox>
     </Box>
   );
