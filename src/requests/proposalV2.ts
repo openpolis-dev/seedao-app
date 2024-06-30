@@ -153,6 +153,7 @@ export const closeVote = (id: number, vote_id: number) => {
 export type VoterType = {
   wallet: string;
   os_avatar: string;
+  weight: number;
 };
 
 export const getVotersOfOption = (option_id: number, page: number): Promise<ResponseData<VoterType[]>> => {

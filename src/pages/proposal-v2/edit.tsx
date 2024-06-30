@@ -56,12 +56,40 @@ export default function EditProposal() {
   const [showErrorTips, setShowErrorTips] = useState(false);
   const { showToast } = useToast();
   const [voteList, setVoteList] = useState<any[]>([]);
+  const [detail, setDetail] = useState<any>(null);
 
   useEffect(() => {
     if (state) {
       setData(state);
       // setVoteList((state?.votes as any)?.options ?? []);
       setVoteList(state?.os_vote_options ?? []);
+
+      let total: string[] = [];
+      let ratio: string[] = [];
+      let paid: string[] = [];
+      let remainAmount: string[] = [];
+      let prepayTotal: string[] = [];
+      let prepayRemain: string[] = [];
+
+      let data: any = {};
+
+      state.associated_project_budgets?.map((item: any) => {
+        total.push(`${item.total_amount} ${item.asset_name}`);
+        ratio.push(`${item.advance_ratio * 100}% ${item.asset_name}`);
+        paid.push(`${item.used_advance_amount} ${item.asset_name}`);
+        remainAmount.push(`${item.remain_amount} ${item.asset_name}`);
+        prepayTotal.push(`${item.total_advance_amount} ${item.asset_name}`);
+        prepayRemain.push(`${item.remain_advance_amount} ${item.asset_name}`);
+      });
+
+      data.total = total.join(',');
+      data.ratio = ratio.join(',');
+      data.paid = paid.join(',');
+      data.remainAmount = remainAmount.join(',');
+      data.prepayTotal = prepayTotal.join(',');
+      data.prepayRemain = prepayRemain.join(',');
+
+      setDetail(data);
 
       setDataSource(state?.components ?? []);
       // setShowRht(!state?.is_based_on_custom_template);
@@ -73,6 +101,32 @@ export default function EditProposal() {
         try {
           const res = await getProposalDetail(Number(id));
           setData(res.data);
+          let total: string[] = [];
+          let ratio: string[] = [];
+          let paid: string[] = [];
+          let remainAmount: string[] = [];
+          let prepayTotal: string[] = [];
+          let prepayRemain: string[] = [];
+
+          let data: any = {};
+
+          res.data.associated_project_budgets?.map((item: any) => {
+            total.push(`${item.total_amount} ${item.asset_name}`);
+            ratio.push(`${item.advance_ratio * 100}% ${item.asset_name}`);
+            paid.push(`${item.used_advance_amount} ${item.asset_name}`);
+            remainAmount.push(`${item.remain_amount} ${item.asset_name}`);
+            prepayTotal.push(`${item.total_advance_amount} ${item.asset_name}`);
+            prepayRemain.push(`${item.remain_advance_amount} ${item.asset_name}`);
+          });
+
+          data.total = total.join(',');
+          data.ratio = ratio.join(',');
+          data.paid = paid.join(',');
+          data.remainAmount = remainAmount.join(',');
+          data.prepayTotal = prepayTotal.join(',');
+          data.prepayRemain = prepayRemain.join(',');
+
+          setDetail(data);
 
           setVoteList((res.data as any)?.os_vote_options ?? []);
           setVoteType(res.data?.vote_type);
@@ -84,7 +138,6 @@ export default function EditProposal() {
           dispatch({ type: AppActionType.SET_LOADING, payload: false });
         }
       };
-      getDetail();
     }
   }, [id, state]);
 
@@ -191,7 +244,7 @@ export default function EditProposal() {
       const budgetData = submitData.filter((item: any) => item.name === 'budget') || [];
       if (budgetData.length) {
         budgetData[0].data.budgetList.map((item: any) => {
-          if (item.typeTest.name === 'USDT') {
+          if (item.typeTest.name === 'USDC') {
             if (Number(item.amount) > 1000) {
               err = true;
             }
@@ -357,6 +410,7 @@ export default function EditProposal() {
             baseUrl={BASE_URL}
             version={API_VERSION}
             token={token}
+            movitationSum={detail?.prepayRemain}
             BeforeComponent={
               <>
                 <ItemBox>
@@ -406,6 +460,37 @@ export default function EditProposal() {
                   <ComponnentBox>
                     <span>{componentName || t('Proposal.proposalComponents')}</span>
                   </ComponnentBox>
+                )}
+                {componentName === '激励申请表' && (
+                  <DisplayBox>
+                    <div className="titl">当前可申请资产: {detail?.prepayRemain}</div>
+                    <div className="content">
+                      <dl>
+                        <dt>项目预算</dt>
+                        <dd> {detail?.total}</dd>
+                      </dl>
+                      <dl>
+                        <dt>预付比例</dt>
+                        <dd>{detail?.ratio}</dd>
+                      </dl>
+                      <dl>
+                        <dt>总可预支</dt>
+                        <dd> {detail?.prepayTotal}</dd>
+                      </dl>
+                      <dl>
+                        <dt>当前已预支</dt>
+                        <dd>{detail?.paid}</dd>
+                      </dl>
+                      <dl>
+                        <dt>预算余额</dt>
+                        <dd>{detail?.remainAmount}</dd>
+                      </dl>
+                      <dl>
+                        <dt>可预支余额</dt>
+                        <dd>{detail?.prepayRemain}</dd>
+                      </dl>
+                    </div>
+                  </DisplayBox>
                 )}
               </>
             }
@@ -477,6 +562,41 @@ const Page = styled.div`
   color: var(--bs-body-color_active);
   .cm-scroller {
     background: var(--home-right);
+  }
+`;
+
+const DisplayBox = styled.div`
+  background: var(--home-right);
+  margin: 10px 30px;
+  padding: 20px 20px 10px;
+  border-radius: 10px;
+  .titl {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--bs-body-color_active);
+    margin-bottom: 20px;
+    text-transform: capitalize;
+  }
+  .content {
+    font-size: 14px;
+    color: var(--bs-body-color_active);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    text-transform: capitalize;
+    dl {
+      width: 33.333%;
+      display: flex;
+
+      align-items: center;
+      margin-bottom: 10px;
+      dt {
+        margin-right: 20px;
+        min-width: 70px;
+        font-weight: normal;
+      }
+    }
   }
 `;
 

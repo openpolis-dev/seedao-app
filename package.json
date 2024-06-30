@@ -12,7 +12,7 @@
     "@seedao/sns-js": "^0.7.0",
     "@sentry/cli": "^2.23.1",
     "@sentry/react": "^7.91.0",
-    "@taoist-labs/components": "^0.2.3",
+    "@taoist-labs/components": "^0.2.8",
     "@types/xlsx": "^0.0.36",
     "@unipasswallet/popup-types": "^1.1.11",
     "@unipasswallet/wagmi-connector": "^1.2.1",
@@ -59,7 +59,7 @@
     "siwe": "^2.1.4",
     "styled-components": "^5.3.11",
     "swiper": "^11.0.5",
-    "typescript": "^4.9.5",
+    "typescript": "^5.4.5",
     "ua-parser-js": "^1.0.36",
     "uuid": "^9.0.1",
     "viem": "^1.21.4",
@@ -68,6 +68,8 @@
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
+    "@commitlint/cli": "^19.3.0",
+    "@commitlint/config-conventional": "^19.2.2",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -87,7 +89,7 @@
     "crypto-browserify": "^3.12.0",
     "customize-cra": "^1.0.0",
     "https-browserify": "^1.0.0",
-    "husky": "7.0.2",
+    "husky": "^7.0.2",
     "os-browserify": "^0.3.0",
     "path-browserify": "^1.0.1",
     "prettier": "2.3.2",
@@ -97,6 +99,7 @@
     "stream-http": "^3.2.0"
   },
   "scripts": {
+    "test": "echo \"no test specified\"",
     "dev": "react-app-rewired start",
     "start": "npm run dev",
     "build:online": "react-app-rewired build",
@@ -104,7 +107,8 @@
     "build:preview": "REACT_APP_ENV_VERSION=preview npm run build:online",
     "build:prod": "REACT_APP_ENV_VERSION=prod npm run build:online",
     "eject": "react-scripts eject",
-    "sentry:sourcemaps": "sentry-cli sourcemaps inject --org seedao --project seedao-web-app ./build && sentry-cli sourcemaps upload --org seedao --project seedao-web-app ./build"
+    "sentry:sourcemaps": "sentry-cli sourcemaps inject --org seedao --project seedao-web-app ./build && sentry-cli sourcemaps upload --org seedao --project seedao-web-app ./build",
+    "prepare": "husky"
   },
   "eslintConfig": {
     "extends": [
@@ -130,8 +134,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "overrides": {
-    "typescript": "^4.9.5"
   }
 }

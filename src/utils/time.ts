@@ -1,4 +1,8 @@
 import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 export const getUTC = () => {
   const offset = dayjs().utcOffset();
@@ -86,4 +90,8 @@ export const formatDeltaDate = (endTime: number, formatDay = true) => {
     minute += 1;
   }
   return formatDay ? { d: day, h: hour, m: minute } : { h: hour, m: minute };
+};
+
+export const formatTimeWithUTC = (timestamp: number, formatter = 'YYYY-MM-DD HH:mm') => {
+  return dayjs.unix(timestamp).utcOffset('+08:00').format(formatter) + ' UTC+8';
 };

@@ -43,15 +43,15 @@ export default function ExcelTable({ list }: IProps) {
           </tr>
         ))}
       </table>
-      <TotalAsset>
-        <LeftAssets>
-          <span>{t('Assets.Total')}</span>
-          <span className="value">{totalAssets[0]}</span>
-          <span>{AssetName.Token}</span>
-          <span className="value">{totalAssets[1]}</span>
-          <span>{AssetName.Credit}</span>
-        </LeftAssets>
-      </TotalAsset>
+      {/*<TotalAsset>*/}
+      {/*  <LeftAssets>*/}
+      {/*    <span>{t('Assets.Total')}</span>*/}
+      {/*    <span className="value">{totalAssets[0]}</span>*/}
+      {/*    <span>{AssetName.Token}</span>*/}
+      {/*    <span className="value">{totalAssets[1]}</span>*/}
+      {/*    <span>{AssetName.Credit}</span>*/}
+      {/*  </LeftAssets>*/}
+      {/*</TotalAsset>*/}
     </>
   );
 }
