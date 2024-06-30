@@ -716,7 +716,7 @@
     "InviteLinkCopied": "The invite link has been copied to your clipboard!"
   },
   "Credit": {
-    "NavTitle": "SCR MBL",
+    "NavTitle": "SCR Lending",
     "CardLogin": "You are not logged in, please log in to view",
     "GoToBorrow": "Go to borrow",
     "GoToRepay": "Go to repay",
@@ -730,7 +730,7 @@
     "TotalQuota": "Total Quota",
     "CurrentBorrow": "Currently borrowing {{num}} pen(s)",
     "Overdue": "Overdue {{num}} pen(s)",
-    "DaoTotalQuota": "Total vault quota",
+    "DaoTotalQuota": "Total SCR Lending quota",
     "DaoTip": "Total program funding 180,000 {{token}} with monthly replenishment, details >>",
     "TotalBorrow": "Loaned {{num}} pen(s)",
     "TotalClear": "Settled {{num}} pen(s)",
