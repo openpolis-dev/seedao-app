@@ -134,10 +134,10 @@ const PRODUCTION = {
     lend: {
       ...Polygon_Network.lend,
       chain: polygon,
-      bondNFTContract: '',
-      scoreLendContract: '',
+      bondNFTContract: '0xC40EB71f46baE4d2395734C14af3bd86960F2c4c',
+      scoreLendContract: '0xaB9B36BC114c433182ebE840Fa966A5808883661',
       lendToken: {
-        address: '',
+        address: '0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359',
         decimals: 6,
         symbol: 'USDC',
       },
