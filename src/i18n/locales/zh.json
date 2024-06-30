@@ -716,7 +716,7 @@
     "InviteLinkCopied": "邀请链接已复制"
   },
   "Credit": {
-    "NavTitle": "积分信用贷",
+    "NavTitle": "SCR借款",
     "CardLogin": "您未登录，请登录后查看",
     "GoToBorrow": "去借款",
     "GoToRepay": "去还款",
@@ -730,7 +730,7 @@
     "TotalQuota": "总额度",
     "CurrentBorrow": "使用中 {{num}} 笔",
     "Overdue": "已逾期 {{num}} 笔",
-    "DaoTotalQuota": "社区信用贷当前剩余资金",
+    "DaoTotalQuota": "社区SCR借款项目当前剩余资金",
     "DaoTip": "计划总资金 180,000 {{token}}，每月补充资金，详情 >>",
     "TotalBorrow": "已借出 {{num}} 笔",
     "TotalClear": "已结清 {{num}} 笔",
