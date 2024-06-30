@@ -24,8 +24,20 @@ interface IProps {
 
 export default function BorrowModal({ handleClose }: IProps) {
   const { t } = useTranslation();
+  const {
+    state: {
+      scoreLendContract,
+      myScore,
+      myAvaliableQuota,
+      maxBorrowDays,
+      borrowRate,
+      minBorrowCoolDown,
+      totalAvaliableBorrowAmount,
+      minBorrowAmount,
+    },
+  } = useCreditContext();
   const [step, setStep] = useState(0);
-  const [inputNum, setInputNum] = useState<string>('100');
+  const [inputNum, setInputNum] = useState<string>(String(minBorrowAmount));
   const [forfeitNum, setForfeitNum] = useState(0);
 
   const { showToast } = useToast();
@@ -36,17 +48,7 @@ export default function BorrowModal({ handleClose }: IProps) {
     dispatch,
     state: { account },
   } = useAuthContext();
-  const {
-    state: {
-      scoreLendContract,
-      myScore,
-      myAvaliableQuota,
-      maxBorrowDays,
-      borrowRate,
-      minBorrowCoolDown,
-      totalAvaliableBorrowAmount,
-    },
-  } = useCreditContext();
+  
   const [calculating, setCalculating] = useState(false);
   const [allowanceEnough, setAllowanceEnough] = useState(false);
   const [leftTime, setLeftTime] = useState('');
@@ -70,7 +72,7 @@ export default function BorrowModal({ handleClose }: IProps) {
   }, [scrEnough, allowanceEnough]);
 
   const checkApprove = async () => {
-    if (calculating || Number(inputNum) < 100) {
+    if (calculating || Number(inputNum) < minBorrowAmount) {
       return;
     }
     // check enough
@@ -82,11 +84,18 @@ export default function BorrowModal({ handleClose }: IProps) {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
       await checkNetwork();
+    } catch (error) {
+      showToast(t('Credit.NetworkNotReady'), ToastType.Danger);
+      dispatch({ type: AppActionType.SET_LOADING, payload: false });
+      return;
+    }
+    try {
       await approveToken('scr', forfeitNum);
       showToast(t('Credit.ApproveSuccessful'), ToastType.Success);
       setStep(1);
       setAllowanceEnough(true);
     } catch (error) {
+      showToast(`${t('Credit.ApproveFailed')}: ${error}`, ToastType.Danger);
       console.error(error);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
@@ -100,13 +109,15 @@ export default function BorrowModal({ handleClose }: IProps) {
       await checkNetwork();
       const r = await handleEstimateGas(TX_ACTION.BORROW, inputNum!);
       console.log('estimategas result', r);
-      await handleTransaction(TX_ACTION.BORROW, Number(inputNum));
+      await handleTransaction(TX_ACTION.BORROW, Number(inputNum), r?.gas);
       setStep(2);
     } catch (error: any) {
       logError('[borrow]', error);
       let errorMsg = `${parseError(error)}`;
       if (errorMsg === 'BorrowCooldownTimeTooShort') {
         errorMsg = t('Credit.BorrowCooldownMsg');
+      } else if (errorMsg === 'TotalAvailableBorrowAmountInsufficient') {
+        errorMsg = t('Credit.RemainBorrowQuotaNotEnough');
       }
       showToast(errorMsg, ToastType.Danger);
     } finally {
@@ -115,7 +126,7 @@ export default function BorrowModal({ handleClose }: IProps) {
   };
 
   const clearModalData = () => {
-    setInputNum('100');
+    setInputNum(String(minBorrowAmount));
     setForfeitNum(0);
     setStep(0);
   };
@@ -127,7 +138,7 @@ export default function BorrowModal({ handleClose }: IProps) {
 
   const btnDisabled =
     calculating ||
-    Number(inputNum) < 100 ||
+    Number(inputNum) < minBorrowAmount ||
     Number(inputNum) > myAvaliableQuota ||
     leftTime ||
     Number(inputNum) > totalAvaliableBorrowAmount;
@@ -171,7 +182,7 @@ export default function BorrowModal({ handleClose }: IProps) {
         // check allowance
         getAllowanceEnough('scr', fval)
           .then((res) => {
-            setAllowanceEnough(!!res);
+            setAllowanceEnough(res);
           })
           .finally(() => {
             setCalculating(false);
@@ -202,7 +213,7 @@ export default function BorrowModal({ handleClose }: IProps) {
   };
 
   const handleBlur = () => {
-    // 在输入框失去焦点时验证最小和最大值
+    // 在输入框失去焦点时验证最大值
     const numericValue = parseFloat(inputNum);
     if (!isNaN(numericValue)) {
       if (numericValue > myAvaliableQuota) {
@@ -226,7 +237,7 @@ export default function BorrowModal({ handleClose }: IProps) {
 
   useEffect(() => {
     setCalculating(true);
-    onChangeVal(100);
+    onChangeVal(minBorrowAmount);
   }, []);
 
   useEffect(() => {
@@ -247,12 +258,12 @@ export default function BorrowModal({ handleClose }: IProps) {
     });
   }, [scoreLendContract]);
 
-  const dayIntrestAmount = inputNum ? getShortDisplay((Number(inputNum) * 10000 * Number(0.0001)) / 10000, 4) : 0;
+  const dayIntrestAmount = inputNum ? getShortDisplay((Number(inputNum) * 10000 * borrowRate * 0.01) / 10000, 4) : 0;
 
   const getErrorTip = () => {
     const v = Number(inputNum);
-    if (v < 100) {
-      return <MinTip>{t('Credit.MinBorrow', { token: lendToken.symbol })}</MinTip>;
+    if (v < minBorrowAmount) {
+      return <MinTip>{t('Credit.MinBorrow', { token: lendToken.symbol, amount: minBorrowAmount })}</MinTip>;
     }
     if (v > myAvaliableQuota) {
       return (

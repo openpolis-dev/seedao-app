@@ -144,6 +144,7 @@ export default function RepayModal({ handleClose }: IProps) {
       await handleTransaction(
         TX_ACTION.REPAY,
         selectedList.map((item) => Number(item.id)),
+        r?.gas,
       );
       setStep(3);
     } catch (error: any) {
@@ -277,7 +278,7 @@ export default function RepayModal({ handleClose }: IProps) {
       })
       .catch((e: any) => {
         console.error(e);
-        showToast('获取实际还款额失败，请到详情中查看', ToastType.Danger);
+        showToast(t('Credit.GetRealRepayAmountFailed'), ToastType.Danger);
       })
       .finally(() => {
         setGetting(false);
@@ -348,7 +349,7 @@ export default function RepayModal({ handleClose }: IProps) {
             <div className="label">
               {t('Credit.ShouldRepayAll', { amount: selectedTotalAmount.format(4), token: lendToken.symbol })}
             </div>
-            <RepayTip>{t('Credit.RepayTip')}</RepayTip>
+            <RepayTip>{t('Credit.RepayTip', { token: lendToken.symbol })}</RepayTip>
           </TotalRepay>
           <ListBox style={{ maxHeight: '352px', minHeight: 'unset' }}>
             {selectedList.map((item) => (

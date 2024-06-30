@@ -677,8 +677,8 @@
     "SNSDesc": "SNS is your identity based on blockchain in SeeDAO.",
     "Echo": "Echo",
     "EchoDesc": "Echo is a social network that gives your echos to same habbies, passions or interests.",
-    "Credit": "积分信用贷",
-    "CreditDesc": "test"
+    "Credit": "SCR借款",
+    "CreditDesc": "社区积分新玩法"
   },
   "SNS": {
     "EntranceTitle": "获取你的 SNS，开始你的 SeeDAO 之旅",
@@ -810,9 +810,11 @@
     "LeftTimeHour": "{{h}}小时",
     "LeftTimeMinute": "{{m}}分钟",
     "BorrowCooldownMsg": "距离上次还款时间不足{{time}}，无法再次借款！",
+    "RemainBorrowQuotaNotEnough": "社区剩余可借资金不足",
     "InsufficientQuota": "您的借款额度不足",
     "InsufficientBalance": "{{token}} 余额不足",
-    "MinBorrow": "至少借款 100 {{token}}！",
+    "NetworkNotReady": "请切换您的钱包网络",
+    "MinBorrow": "至少借款 {{amount}} {{token}}！",
     "LoginAndCheck": "登录后查看借款",
     "BorrowTitle": "借款",
     "RepayTitle": "还款",
@@ -821,7 +823,9 @@
     "TimeDisplay": "{{h}}小时{{m}}分后可借款",
     "SelectAll": "全选",
     "RemainBorrowQuota": "社区剩余可借资金 {{amount}} {{token}}",
-    "ApproveSuccessful": "授权成功"
+    "ApproveSuccessful": "授权成功",
+    "ApproveFailed": "授权失败",
+    "GetRealRepayAmountFailed": "获取实际还款额失败，请到详情中查看"
   },
   "Governance": {
     "GovernanceRule": "治理规则",

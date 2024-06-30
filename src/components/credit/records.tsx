@@ -14,11 +14,11 @@ import RecordDetailModal from './recordDetailModal';
 import useCheckLogin from 'hooks/useCheckLogin';
 import { IFilterParams, getBorrowList } from 'requests/credit';
 import publicJs from 'utils/publicJs';
-import { amoy } from 'utils/chain';
 import useQuerySNS from 'hooks/useQuerySNS';
 import { useCreditContext } from 'pages/credit/provider';
 import getConfig from 'utils/envCofnig';
 const lendToken = getConfig().NETWORK.lend.lendToken;
+const lendChain = getConfig().NETWORK.lend.chain;
 
 type InterestData = {
   interestDays: number;
@@ -89,7 +89,9 @@ const AllBorrowTable = ({ list, openMyDetail, formatSNS }: IMyTableProps) => {
                   <div style={{ width: '200px' }}>{item.overdueTime}</div>
                   <div style={{ width: '130px' }}>
                     <BlueText
-                      onClick={() => window.open(`${amoy?.blockExplorers?.default.url}/tx/${item.borrowTx}`, '_blank')}
+                      onClick={() =>
+                        window.open(`${lendChain?.blockExplorers?.default.url}/tx/${item.borrowTx}`, '_blank')
+                      }
                     >
                       {publicJs.AddressToShow(item.borrowTx)}
                     </BlueText>
@@ -156,10 +158,10 @@ const MyTable = ({ list, openMyDetail }: IMyTableProps) => {
               {t('Credit.BorrowTime')}
             </div>
 
-            <div className="th" style={{ width: '70px' }}>
+            <div className="th short" style={{ width: '70px' }}>
               {t('Credit.DayRate')}
             </div>
-            <div className="th" style={{ width: '100px' }}>
+            <div className="th short" style={{ width: '100px' }}>
               {t('Credit.BorrowDuration')}
             </div>
             <div className="th" style={{ width: '120px' }}>
@@ -196,7 +198,9 @@ const MyTable = ({ list, openMyDetail }: IMyTableProps) => {
                 </div>
                 <div style={{ width: '130px' }}>
                   <BlueText
-                    onClick={() => window.open(`${amoy?.blockExplorers?.default.url}/tx/${item.borrowTx}`, '_blank')}
+                    onClick={() =>
+                      window.open(`${lendChain?.blockExplorers?.default.url}/tx/${item.borrowTx}`, '_blank')
+                    }
                   >
                     {publicJs.AddressToShow(item.borrowTx)}
                   </BlueText>
@@ -586,6 +590,11 @@ const TableBox = styled.div`
   border-radius: 25px;
   background-color: #fff;
   padding: 24px 32px 32px;
+  .short {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }
 `;
 
 const BlueText = styled.div`

@@ -1,17 +1,16 @@
 import { BigNumber, ethers } from 'ethers';
 import { useAuthContext } from 'providers/authProvider';
 import { erc20ABI, useSendTransaction, Address, useSwitchNetwork, useNetwork } from 'wagmi';
-import { waitForTransaction } from 'wagmi/actions';
 import { prepareSendTransaction, readContract } from 'wagmi/actions';
 import { Hex } from 'viem';
 import ScoreLendABI from 'assets/abi/ScoreLend.json';
-import { amoy } from 'utils/chain';
 import { useEthersProvider } from 'hooks/ethersNew';
 
 import getConfig from 'utils/envCofnig';
 const networkConfig = getConfig().NETWORK;
 
 const lendToken = networkConfig.lend.lendToken;
+const lendChain = networkConfig.lend.chain;
 
 export enum TX_ACTION {
   BORROW = 'borrow',
@@ -67,8 +66,8 @@ export default function useTransaction() {
   const { switchNetworkAsync } = useSwitchNetwork();
 
   const checkNetwork = async () => {
-    if (chain && switchNetworkAsync && chain?.id !== amoy.id) {
-      await switchNetworkAsync(amoy.id);
+    if (chain && switchNetworkAsync && chain?.id !== lendChain.id) {
+      await switchNetworkAsync(lendChain.id);
       return;
     }
   };
@@ -76,30 +75,38 @@ export default function useTransaction() {
   const { sendTransactionAsync } = useSendTransaction();
   const provider = useEthersProvider({});
 
-  const handleBorrow = async (amount: number) => {
+  const handleBorrow = async (amount: number, gas: bigint | undefined) => {
+    if (gas) {
+      console.log('use gas:', Math.ceil(Number(gas) * 1.2));
+    }
     const tx = await sendTransactionAsync({
       to: networkConfig.lend.scoreLendContract,
       account: account as Address,
       value: BigInt(0),
       data: buildBorrowData(amount) as Hex,
+      gas: gas ? BigInt(Math.ceil(Number(gas) * 1.2)) : undefined,
     });
     return checkTransaction(provider, tx?.hash);
   };
-  const handleRepay = async (ids: number[]) => {
+  const handleRepay = async (ids: number[], gas: bigint | undefined) => {
+    if (gas) {
+      console.log('use gas:', Math.ceil(Number(gas) * 1.2));
+    }
     const tx = await sendTransactionAsync({
       to: networkConfig.lend.scoreLendContract,
       account: account as Address,
       value: BigInt(0),
       data: buildRepayData(ids) as Hex,
+      gas: gas ? BigInt(Math.ceil(Number(gas) * 1.2)) : undefined,
     });
     return checkTransaction(provider, tx?.hash);
   };
 
-  const handleTransaction = (action: TX_ACTION, data: number | number[]) => {
+  const handleTransaction = (action: TX_ACTION, data: number | number[], gas: bigint | undefined) => {
     if (action === TX_ACTION.BORROW) {
-      return handleBorrow(data as number);
+      return handleBorrow(data as number, gas);
     } else if (action === TX_ACTION.REPAY) {
-      return handleRepay(data as number[]);
+      return handleRepay(data as number[], gas);
     }
   };
   const handleEsitmateBorrow = (amount: number) => {
@@ -161,7 +168,7 @@ export default function useTransaction() {
         value: BigInt(0),
         data: token === 'lend' ? (buildApproveLendTokenData(amount) as Hex) : (buildApproveScoreData(amount) as Hex),
       });
-      return await waitForTransaction({ hash: tx.hash });
+      return checkTransaction(provider, tx.hash);
     }
   };
 
