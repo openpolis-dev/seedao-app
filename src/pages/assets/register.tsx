@@ -313,6 +313,11 @@ export default function Register() {
     let totalArr = total.split(' , ');
 
     let checkAll = true;
+    if(    detail.Category.indexOf("市政厅") === -1)
+    {
+      return false
+    }
+
 
     if (totalArr?.length > budgets?.length) {
       checkAll = true;
@@ -362,7 +367,7 @@ export default function Register() {
           value={selectSource}
         />
       </SectionBlock>
-      {showInfo && <ProjectInfo detail={detail} />}
+      {showInfo && detail.Category.indexOf("市政厅") === -1 && <ProjectInfo detail={detail} />}
 
       <SectionBlock>
         <div className="title lftTit">{t('Assets.RegisterList')}</div>
