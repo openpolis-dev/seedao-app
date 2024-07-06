@@ -163,7 +163,8 @@ export default function Register() {
       if (!item.address) {
         err.errorKeys.push(t('Msg.RequiredWallet'));
       }
-      if(detail.Category.indexOf("市政厅") === -1 && item.assetType === AssetName.ETH){
+
+      if(detail?.Category?.indexOf("市政厅") === -1 && item.assetType === AssetName.ETH){
         err.errorKeys.push(t('Msg.SelectAssetTypeError'));
       }
 
@@ -313,7 +314,7 @@ export default function Register() {
     let totalArr = total.split(' , ');
 
     let checkAll = true;
-    if(    detail.Category.indexOf("市政厅") === -1)
+    if( detail?.Category.indexOf("市政厅") === -1)
     {
       return false
     }
@@ -367,7 +368,7 @@ export default function Register() {
           value={selectSource}
         />
       </SectionBlock>
-      {showInfo && detail.Category.indexOf("市政厅") === -1 && <ProjectInfo detail={detail} />}
+      {showInfo && detail?.Category.indexOf("市政厅") === -1 && <ProjectInfo detail={detail} />}
 
       <SectionBlock>
         <div className="title lftTit">{t('Assets.RegisterList')}</div>
