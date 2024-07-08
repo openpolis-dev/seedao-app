@@ -59,7 +59,6 @@ export default function Register() {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     setShowInfo(false)
     try {
-
       let data;
       let budgets;
       if(selectSource?.data === "project"){
@@ -337,17 +336,35 @@ export default function Register() {
     let totalArr = total.split(' , ');
 
     let checkAll = true;
-    if( selectSource?.data === "project" && detail?.Category?.indexOf("市政厅") === -1)
-    {
+    if( selectSource?.data === "project" && detail?.Category?.indexOf("市政厅") > -1) {
+      return false
+    }
+    if(selectSource?.data === "guild" && detail?.name?.indexOf("市政厅") > -1){
       return false
     }
 
 
     if (totalArr?.length > budgets?.length) {
       checkAll = true;
-    } else {
+    } else if(selectSource?.data === "project") {
       budgets?.map((item: any) => {
         const canUse = Number(item.total_advance_amount) - Number(item.used_advance_amount);
+
+        const finditemIndex = totalArr.findIndex((innerItem) => innerItem?.indexOf(item.asset_name) > -1);
+        if (finditemIndex === -1) {
+          checkAll = true;
+          return;
+        }
+        const totalNum = totalArr[finditemIndex]?.split(' ')[0];
+        if (Number(totalNum) > canUse) {
+          checkAll = true;
+        } else {
+          checkAll = false;
+        }
+      });
+    }else if(selectSource?.data === "guild"){
+      budgets?.map((item: any) => {
+        const canUse = Number(item.remain_amount);
 
         const finditemIndex = totalArr.findIndex((innerItem) => innerItem?.indexOf(item.asset_name) > -1);
         if (finditemIndex === -1) {
