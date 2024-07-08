@@ -255,6 +255,7 @@
     "budgetUtil": "项目预算使用情况",
     "projectBudget": "项目预算",
     "PrepayRatio": "预付比例",
+    "usedAmount": "已申请",
     "AvailableAmount": "总可预支",
     "CurrentlyPrepaid": "当前已预支",
     "BudgetBalance": "预算余额",

@@ -254,6 +254,7 @@
     "budgetUtil": "Project Budget Utilization",
     "projectBudget": "Project Budget",
     "PrepayRatio": "Prepayment Ratio",
+    "usedAmount": "Applied Amount",
     "AvailableAmount": "Total Available Prepayment",
     "CurrentlyPrepaid": "Currently Prepaid",
     "BudgetBalance": " Budget Balance",

@@ -20,7 +20,8 @@ import BackerNav from 'components/common/backNav';
 import ProjectInfo from '../../components/assetsCom/projectInfo';
 import TotalImg from '../../assets/Imgs/light/total.svg';
 import TotalImgLt from '../../assets/Imgs/dark/total.svg';
-import { getProjectById } from '../../requests/project';
+import { getGuildBudgets, getProjectById } from "../../requests/project";
+import { getProjectById as getGuildById } from "../../requests/guild";
 
 type ErrorDataType = {
   line: number;
@@ -56,12 +57,30 @@ export default function Register() {
 
   const getDetail = async () => {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    setShowInfo(false)
     try {
-      const dt = await getProjectById(selectSource?.value.toString());
-      const { data } = dt;
-      const { budgets } = data;
+
+      let data;
+      let budgets;
+      if(selectSource?.data === "project"){
+        const dt = await getProjectById(selectSource?.value.toString());
+
+        data = dt.data;
+        budgets =data.budgets
+
+      }else if(selectSource?.data === "guild"){
+        const dt = await getGuildById(selectSource?.value.toString());
+        const rt = await getGuildBudgets(selectSource?.value.toString());
+
+        data = dt.data
+        budgets =rt.data
+
+      }
+
       setShowInfo(!!budgets.length);
       setBudgets(budgets);
+
+
 
       let total: string[] = [];
       let ratio: string[] = [];
@@ -69,6 +88,7 @@ export default function Register() {
       let remainAmount: string[] = [];
       let prepayTotal: string[] = [];
       let prepayRemain: string[] = [];
+      let applied: string[] = [];
 
       budgets?.map((item: any) => {
         total.push(`${item.total_amount} ${item.asset_name}`);
@@ -77,6 +97,7 @@ export default function Register() {
         remainAmount.push(`${item.remain_amount} ${item.asset_name}`);
         prepayTotal.push(`${item.total_advance_amount} ${item.asset_name}`);
         prepayRemain.push(`${item.remain_advance_amount} ${item.asset_name}`);
+        applied.push(`${item.used_amount} ${item.asset_name}`);
       });
 
       data.total = total.join(' , ');
@@ -85,6 +106,8 @@ export default function Register() {
       data.remainAmount = remainAmount.join(' , ');
       data.prepayTotal = prepayTotal.join(' , ');
       data.prepayRemain = prepayRemain.join(' , ');
+      data.applied = applied.join(' , ');
+
 
       setDetail(data);
     } catch (error) {
@@ -164,7 +187,7 @@ export default function Register() {
         err.errorKeys.push(t('Msg.RequiredWallet'));
       }
 
-      if(detail?.Category?.indexOf("市政厅") === -1 && item.assetType === AssetName.ETH){
+      if(selectSource?.data === "project" && detail?.Category?.indexOf("市政厅") === -1 && item.assetType === AssetName.ETH){
         err.errorKeys.push(t('Msg.SelectAssetTypeError'));
       }
 
@@ -314,7 +337,7 @@ export default function Register() {
     let totalArr = total.split(' , ');
 
     let checkAll = true;
-    if( detail?.Category.indexOf("市政厅") === -1)
+    if( selectSource?.data === "project" && detail?.Category?.indexOf("市政厅") === -1)
     {
       return false
     }
@@ -326,7 +349,7 @@ export default function Register() {
       budgets?.map((item: any) => {
         const canUse = Number(item.total_advance_amount) - Number(item.used_advance_amount);
 
-        const finditemIndex = totalArr.findIndex((innerItem) => innerItem.indexOf(item.asset_name) > -1);
+        const finditemIndex = totalArr.findIndex((innerItem) => innerItem?.indexOf(item.asset_name) > -1);
         if (finditemIndex === -1) {
           checkAll = true;
           return;
@@ -362,13 +385,13 @@ export default function Register() {
           options={allSource}
           placeholder={t('Assets.SearchSourcePlaceholder')}
           onChange={(value: any) => {
-            console.log(value, selectSource);
             setSelectSource(value);
           }}
           value={selectSource}
         />
       </SectionBlock>
-      {showInfo && detail?.Category.indexOf("市政厅") === -1 && <ProjectInfo detail={detail} />}
+      {}
+      {showInfo && (!detail?.Category || detail?.Category?.indexOf("市政厅") === -1) && <ProjectInfo detail={detail} type={selectSource?.data} />}
 
       <SectionBlock>
         <div className="title lftTit">{t('Assets.RegisterList')}</div>
