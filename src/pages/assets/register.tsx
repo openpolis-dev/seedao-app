@@ -186,7 +186,7 @@ export default function Register() {
         err.errorKeys.push(t('Msg.RequiredWallet'));
       }
 
-      if(selectSource?.data === "project" && detail?.Category?.indexOf("市政厅") === -1 && item.assetType === AssetName.ETH){
+      if(selectSource?.data === "project"&& (detail?.name?.indexOf("市政厅") === -1 && detail?.Category?.indexOf("市政厅") === -1 )&& item.assetType === AssetName.ETH){
         err.errorKeys.push(t('Msg.SelectAssetTypeError'));
       }
 
@@ -339,7 +339,7 @@ export default function Register() {
     if( selectSource?.data === "project" && detail?.Category?.indexOf("市政厅") > -1) {
       return false
     }
-    if(selectSource?.data === "guild" && detail?.name?.indexOf("市政厅") > -1){
+    if(!!selectSource?.data  && detail?.name?.indexOf("市政厅") > -1){
       return false
     }
 
