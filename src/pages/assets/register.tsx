@@ -335,13 +335,17 @@ export default function Register() {
   const checkSum = () =>{
     let totalArr = total.split(' , ');
 
-    let checkAll = true;
+    let checkAll = false;
     if( selectSource?.data === "project" && detail?.Category?.indexOf("市政厅") > -1) {
       return false
     }
     if(!!selectSource?.data  && detail?.name?.indexOf("市政厅") > -1){
       return false
     }
+    if(!budgets?.length) {
+      return false;
+    }
+
 
 
     if (totalArr?.length > budgets?.length) {
