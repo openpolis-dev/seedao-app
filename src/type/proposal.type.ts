@@ -34,6 +34,7 @@ type VoteOption = {
   percent: number;
   voters: number;
   id: number;
+  weights?:number;
 };
 
 export interface Poll {
