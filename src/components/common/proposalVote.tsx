@@ -41,7 +41,7 @@ export default function ProposalVoteProgress({ poll }: { poll: Poll }) {
                 <div className="inner"></div>
               </ProgressBar>
               <span>{option.percent}%</span>
-              <span className="voters">({option.voters})</span>
+              <span className="voters">({option.weights||option.voters})</span>
             </VoteOptionBottom>
           </VoteOption>
         ))}
