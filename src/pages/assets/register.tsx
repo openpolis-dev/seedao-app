@@ -346,20 +346,25 @@ export default function Register() {
       return false;
     }
 
+
+
+
     if (totalArr?.length > budgets?.length) {
       checkAll = true;
     } else if(selectSource?.data === "project") {
 
-      for (let i = 0; i < budgets?.length; i++) {
-        let item:any = budgets[i];
-        const canUse = Number(item.total_advance_amount) - Number(item.used_advance_amount);
-        
-        const finditemIndex = totalArr.findIndex((innerItem) => innerItem?.indexOf(item.asset_name) > -1);
+      for (let i = 0; i < totalArr?.length; i++) {
+        let item:any = totalArr[i];
+        const assetName = item.split(" ")[1]
+
+        const finditemIndex = budgets.findIndex((innerItem:any) => innerItem?.asset_name.indexOf(assetName) > -1);
         if (finditemIndex === -1) {
-          // checkAll = true;
-          continue;
+          checkAll = true;
+          break;
         }
-        const totalNum = totalArr[finditemIndex]?.split(' ')[0];
+
+        const canUse = Number((budgets[finditemIndex] as any).total_advance_amount) - Number((budgets[finditemIndex] as any).used_advance_amount);
+        const totalNum = item.split(' ')[0];
         if (Number(totalNum) > canUse) {
           checkAll = true;
           break;
@@ -369,17 +374,18 @@ export default function Register() {
       }
     }else if(selectSource?.data === "guild"){
 
-      for (let i = 0; i < budgets?.length; i++) {
-        let item:any = budgets[i];
-        const canUse = Number(item.remain_amount);
+      for (let i = 0; i < totalArr?.length; i++) {
+        let item:any = totalArr[i];
 
-        const finditemIndex = totalArr.findIndex((innerItem) => innerItem?.indexOf(item.asset_name) > -1);
-
+        const assetName = item.split(" ")[1]
+        const finditemIndex = budgets.findIndex((innerItem:any) => innerItem?.asset_name.indexOf(assetName) > -1);
         if (finditemIndex === -1) {
-          // checkAll = true;
-          continue;
+          checkAll = true;
+          break;
         }
-        const totalNum = totalArr[finditemIndex]?.split(' ')[0];
+
+        const canUse = Number((budgets[finditemIndex] as any).remain_amount);
+        const totalNum = item.split(' ')[0];
         if (Number(totalNum) > canUse) {
           checkAll = true;
           break;
