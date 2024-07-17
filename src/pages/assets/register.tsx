@@ -333,7 +333,7 @@ export default function Register() {
   };
 
   const checkSum = () =>{
-    let totalArr = total.split(' , ');
+    let totalArr = total.split(',');
 
     let checkAll = false;
     if( selectSource?.data === "project" && detail?.Category?.indexOf("市政厅") > -1) {
@@ -346,42 +346,47 @@ export default function Register() {
       return false;
     }
 
-
-
     if (totalArr?.length > budgets?.length) {
       checkAll = true;
     } else if(selectSource?.data === "project") {
-      budgets?.map((item: any) => {
-        const canUse = Number(item.total_advance_amount) - Number(item.used_advance_amount);
 
+      for (let i = 0; i < budgets?.length; i++) {
+        let item:any = budgets[i];
+        const canUse = Number(item.total_advance_amount) - Number(item.used_advance_amount);
+        
         const finditemIndex = totalArr.findIndex((innerItem) => innerItem?.indexOf(item.asset_name) > -1);
         if (finditemIndex === -1) {
-          checkAll = true;
-          return;
+          // checkAll = true;
+          continue;
         }
         const totalNum = totalArr[finditemIndex]?.split(' ')[0];
         if (Number(totalNum) > canUse) {
           checkAll = true;
+          break;
         } else {
           checkAll = false;
         }
-      });
+      }
     }else if(selectSource?.data === "guild"){
-      budgets?.map((item: any) => {
+
+      for (let i = 0; i < budgets?.length; i++) {
+        let item:any = budgets[i];
         const canUse = Number(item.remain_amount);
 
         const finditemIndex = totalArr.findIndex((innerItem) => innerItem?.indexOf(item.asset_name) > -1);
+
         if (finditemIndex === -1) {
-          checkAll = true;
-          return;
+          // checkAll = true;
+          continue;
         }
         const totalNum = totalArr[finditemIndex]?.split(' ')[0];
         if (Number(totalNum) > canUse) {
           checkAll = true;
+          break;
         } else {
           checkAll = false;
         }
-      });
+      }
     }
     return checkAll;
 
@@ -418,7 +423,7 @@ export default function Register() {
         <div className="title lftTit">{t('Assets.RegisterList')}</div>
         <RegList list={list} setList={setList} />
       </SectionBlock>
-      {!!total && (
+      {!!total && !!list?.length && (
         <TotalBox>
           <img src={theme ? TotalImgLt : TotalImg} alt="" />
           <div>
