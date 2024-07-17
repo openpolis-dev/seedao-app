@@ -241,7 +241,7 @@ export default function EditProposal() {
     const newTime = new Date().valueOf();
     const publicity_ts = (data?.publicity_ts ?? 0) * 1000
     
-    if(publicity_ts >= newTime){
+    if(publicity_ts < newTime){
       showToast(t("Proposal.reviewTips"), ToastType.Danger, {
         hideProgressBar: true,
       });
