@@ -20,6 +20,7 @@ import { formatCategory } from 'components/proposalCom/categoryTag';
 
 const LinkPrefix = `${window.location.origin}/proposal/thread/`;
 
+
 export default function CreateProject() {
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -38,6 +39,7 @@ export default function CreateProject() {
   const [startLink, setStartLink] = useState('');
 
   const [budget, setBudget] = useState('');
+  const [budgetU, setBudgetU] = useState('');
   const [deliverables, setDeliverables] = useState('');
   const [endTime, setEndTime] = useState<Date | null>();
 
@@ -99,7 +101,9 @@ export default function CreateProject() {
       SIP: "",
       ApprovalLink: startLink,
       OverLink: "",
-      budgets: [{ name: budget, total_amount: 0 }],
+      // budgets: [{ name: budget, total_amount: 0 }],
+      scr_budget: budget,
+      usdc_budget: budgetU,
       Deliverable: deliverables,
       Category: selectCategory!.label,
       PlanTime: String(_endTime),
@@ -136,7 +140,7 @@ export default function CreateProject() {
     navigate('/explore?tab=project');
   };
 
-  const submitDisabled = [proName, desc, selectCategory, startLink, budget, leader, link, contact].some(
+  const submitDisabled = [proName, desc, selectCategory, startLink, budget,budgetU, leader, link, contact].some(
     (item) => !item || (typeof item === 'string' && !item.trim()),
   );
 
@@ -212,9 +216,19 @@ export default function CreateProject() {
               </li>
               <li>
                 <div className="title">{t('Project.Budget')}</div>
-                <InputBox>
-                  <Form.Control type="string" value={budget} onChange={(e) => setBudget(e.target.value)} />
-                </InputBox>
+                <FlexBoxLine>
+                  <InputBox>
+                    <Form.Control type="string" value={budget} onChange={(e) => setBudget(e.target.value)} />
+                    <span>   SCR</span>
+
+                  </InputBox>
+                  <InputBox>
+                    <Form.Control type="string" value={budgetU} onChange={(e) => setBudgetU(e.target.value)} /><span>USDC</span>
+                  </InputBox>
+
+                </FlexBoxLine>
+
+
               </li>
               <li>
                 <div className="title">{t('Project.Deliverables')}</div>
@@ -469,3 +483,14 @@ const RoleSelect = styled(SeeSelect)`
     border-bottom-left-radius: 0;
   }
 `;
+
+const FlexBoxLine = styled.div`
+  display: flex;
+    align-items: center;
+    gap: 20px;
+    span{
+        line-height: 40px;
+        padding-left: 10px;
+        color:var(--bs-body-color_active);
+    }
+`
