@@ -17,6 +17,7 @@ import { compressionFile, fileToDataURL } from 'utils/image';
 import DatePickerStyle from 'components/datePicker';
 import useProposalCategories from 'hooks/useProposalCategories';
 import { formatCategory } from 'components/proposalCom/categoryTag';
+import DisableNumberInputWheel from "../../components/DisableInput";
 
 const LinkPrefix = `${window.location.origin}/proposal/thread/`;
 
@@ -146,6 +147,7 @@ export default function CreateProject() {
 
   return (
     <OuterBox>
+      <DisableNumberInputWheel />
       <BackerNav title={t('Project.create')} to="/explore" />
       <FlexBox>
         <CardBody>
@@ -218,12 +220,24 @@ export default function CreateProject() {
                 <div className="title">{t('Project.Budget')}</div>
                 <FlexBoxLine>
                   <InputBox>
-                    <Form.Control type="string" value={budget} onChange={(e) => setBudget(e.target.value)} />
+                    <Form.Control type="number" min={0} step={1}  value={budget} onChange={(e) => {
+                      const inputValue = e.target.value;
+                      if (/^\d*\.?\d*$/.test(inputValue)) {
+                        setBudget(inputValue);
+                      }
+
+                    }} />
                     <span>   SCR</span>
 
                   </InputBox>
                   <InputBox>
-                    <Form.Control type="string" value={budgetU} onChange={(e) => setBudgetU(e.target.value)} /><span>USDC</span>
+                    <Form.Control type="number" min={0} step={1} value={budgetU} onChange={(e) => {
+                      const inputValue = e.target.value;
+                      if (/^\d*\.?\d*$/.test(inputValue)) {
+                        setBudgetU(e.target.value);
+                      }
+
+                    }} /><span>USDC</span>
                   </InputBox>
 
                 </FlexBoxLine>
