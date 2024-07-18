@@ -156,7 +156,8 @@
     "prepaid": "当前已预支",
     "budgetAmount": "预算余额",
     "availableBalance": "可预支余额",
-    "proposalWarnings": "注意：提案进入投票阶段后会自动赋予SIP编号，无需在标题处填写SIP编号"
+    "proposalWarnings": "注意：提案进入投票阶段后会自动赋予SIP编号，无需在标题处填写SIP编号",
+    "reviewTips": "该提案公示期已过，请发起新的提案"
   },
   "Project": {
     "OfficialLink": "项目官方链接",
@@ -255,6 +256,7 @@
     "budgetUtil": "项目预算使用情况",
     "projectBudget": "项目预算",
     "PrepayRatio": "预付比例",
+    "usedAmount": "已申请",
     "AvailableAmount": "总可预支",
     "CurrentlyPrepaid": "当前已预支",
     "BudgetBalance": "预算余额",

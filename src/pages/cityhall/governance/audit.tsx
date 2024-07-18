@@ -195,7 +195,9 @@ export default function Register() {
           r.target_user_wallet && _wallets.add(r.target_user_wallet?.toLocaleLowerCase());
         });
       });
-      handleSNS(Array.from(_wallets));
+      const arr = Array.from(_wallets).filter((item) => item);
+
+      handleSNS(arr);
       setList(
         res.data.rows.map((item) => ({
           ...item,
@@ -228,7 +230,7 @@ export default function Register() {
   }, [selectState, searchApplicantVal, selectSource, selectSeason, page, pageSize]);
 
   const formatSNS = (wallet: string) => {
-    const name = snsMap.get(wallet) || wallet;
+    const name = snsMap.get(wallet.toLowerCase()) || wallet;
     return name?.endsWith('.seedao') ? name : publicJs.AddressToShow(name, 6);
   };
 

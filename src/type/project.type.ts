@@ -61,7 +61,9 @@ export interface IProject {
   PlanTime: string;
   SIP: string;
   sponsors: string[];
-  budgets: [{ name: string; total_amount: number }];
+  budgets?: [{ name: string; total_amount: number }];
+  scr_budget?:string|number;
+  usdc_budget?:string|number;
 }
 
 export interface IProjectDisplay extends IProject {

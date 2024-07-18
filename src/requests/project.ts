@@ -76,3 +76,7 @@ export interface IUpdateStaffsParams {
 export const updateStaffs = (projectId: string, data: IUpdateStaffsParams) => {
   return request.post(`${PATH_PREFIX}${projectId}/update_staffs`, data);
 };
+
+export const getGuildBudgets = (id:string) =>{
+  return request.get(`guilds/${id}/budgets`);
+}
