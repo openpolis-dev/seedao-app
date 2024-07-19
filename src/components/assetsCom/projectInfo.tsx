@@ -127,7 +127,7 @@ const StatusBox = styled.div`
   }
 `;
 
-export default function ProjectInfo({ detail }: any) {
+export default function ProjectInfo({ detail,type }: any) {
   const { t } = useTranslation();
   const {
     dispatch,
@@ -149,7 +149,48 @@ export default function ProjectInfo({ detail }: any) {
 
   return (
     <>
-      {!!detail && (
+      {!!detail && type === "guild" && (
+        <Box>
+          <ImgBox>
+            <img src={detail?.logo || DefaultLogo} alt="" />
+          </ImgBox>
+          <MidBox>
+            <FlexBox>
+              <div className="title">{detail?.name}</div>
+            </FlexBox>
+            <UlBox>
+              <li>
+                <div className="lft">
+                  <div className="tit">{t('Project.projectBudget')}</div>
+
+                </div>
+                <div className="rht">
+                  <div>{detail?.total}</div>
+                </div>
+              </li>
+              <li>
+                <div className="lft">
+                  <div className="tit">{t('Project.usedAmount')}</div>
+
+                </div>
+                <div className="rht">
+                  <div>{detail?.applied}</div>
+                </div>
+              </li>
+
+              <li>
+              <div className="lft">
+                  <div className="tit">{t("Project.BudgetBalance")}</div>
+                </div>
+                <div className="rht">
+                  <div>{detail?.remainAmount}</div>
+                </div>
+              </li>
+            </UlBox>
+          </MidBox>
+        </Box>
+      )}
+      {!!detail && type === "project" && (
         <Box>
           <ImgBox>
             <img src={detail?.logo || DefaultLogo} alt="" />

@@ -17,8 +17,10 @@ import { compressionFile, fileToDataURL } from 'utils/image';
 import DatePickerStyle from 'components/datePicker';
 import useProposalCategories from 'hooks/useProposalCategories';
 import { formatCategory } from 'components/proposalCom/categoryTag';
+import DisableNumberInputWheel from "../../components/DisableInput";
 
 const LinkPrefix = `${window.location.origin}/proposal/thread/`;
+
 
 export default function CreateProject() {
   const navigate = useNavigate();
@@ -38,6 +40,7 @@ export default function CreateProject() {
   const [startLink, setStartLink] = useState('');
 
   const [budget, setBudget] = useState('');
+  const [budgetU, setBudgetU] = useState('');
   const [deliverables, setDeliverables] = useState('');
   const [endTime, setEndTime] = useState<Date | null>();
 
@@ -99,7 +102,9 @@ export default function CreateProject() {
       SIP: "",
       ApprovalLink: startLink,
       OverLink: "",
-      budgets: [{ name: budget, total_amount: 0 }],
+      // budgets: [{ name: budget, total_amount: 0 }],
+      scr_budget: budget,
+      usdc_budget: budgetU,
       Deliverable: deliverables,
       Category: selectCategory!.label,
       PlanTime: String(_endTime),
@@ -136,12 +141,13 @@ export default function CreateProject() {
     navigate('/explore?tab=project');
   };
 
-  const submitDisabled = [proName, desc, selectCategory, startLink, budget, leader, link, contact].some(
+  const submitDisabled = [proName, desc, selectCategory, startLink, budget,budgetU, leader, link, contact].some(
     (item) => !item || (typeof item === 'string' && !item.trim()),
   );
 
   return (
     <OuterBox>
+      <DisableNumberInputWheel />
       <BackerNav title={t('Project.create')} to="/explore" />
       <FlexBox>
         <CardBody>
@@ -212,9 +218,31 @@ export default function CreateProject() {
               </li>
               <li>
                 <div className="title">{t('Project.Budget')}</div>
-                <InputBox>
-                  <Form.Control type="string" value={budget} onChange={(e) => setBudget(e.target.value)} />
-                </InputBox>
+                <FlexBoxLine>
+                  <InputBox>
+                    <Form.Control type="number" min={0} step={1}  value={budget} onChange={(e) => {
+                      const inputValue = e.target.value;
+                      if (/^\d*\.?\d*$/.test(inputValue)) {
+                        setBudget(inputValue);
+                      }
+
+                    }} />
+                    <span>   SCR</span>
+
+                  </InputBox>
+                  <InputBox>
+                    <Form.Control type="number" min={0} step={1} value={budgetU} onChange={(e) => {
+                      const inputValue = e.target.value;
+                      if (/^\d*\.?\d*$/.test(inputValue)) {
+                        setBudgetU(e.target.value);
+                      }
+
+                    }} /><span>USDC</span>
+                  </InputBox>
+
+                </FlexBoxLine>
+
+
               </li>
               <li>
                 <div className="title">{t('Project.Deliverables')}</div>
@@ -469,3 +497,14 @@ const RoleSelect = styled(SeeSelect)`
     border-bottom-left-radius: 0;
   }
 `;
+
+const FlexBoxLine = styled.div`
+  display: flex;
+    align-items: center;
+    gap: 20px;
+    span{
+        line-height: 40px;
+        padding-left: 10px;
+        color:var(--bs-body-color_active);
+    }
+`
