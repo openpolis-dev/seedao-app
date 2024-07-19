@@ -20,7 +20,8 @@ import BackerNav from 'components/common/backNav';
 import ProjectInfo from '../../components/assetsCom/projectInfo';
 import TotalImg from '../../assets/Imgs/light/total.svg';
 import TotalImgLt from '../../assets/Imgs/dark/total.svg';
-import { getProjectById } from '../../requests/project';
+import { getGuildBudgets, getProjectById } from "../../requests/project";
+import { getProjectById as getGuildById } from "../../requests/guild";
 
 type ErrorDataType = {
   line: number;
@@ -56,12 +57,29 @@ export default function Register() {
 
   const getDetail = async () => {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    setShowInfo(false)
     try {
-      const dt = await getProjectById(selectSource?.value.toString());
-      const { data } = dt;
-      const { budgets } = data;
+      let data;
+      let budgets;
+      if(selectSource?.data === "project"){
+        const dt = await getProjectById(selectSource?.value.toString());
+
+        data = dt.data;
+        budgets =data.budgets
+
+      }else if(selectSource?.data === "guild"){
+        const dt = await getGuildById(selectSource?.value.toString());
+        const rt = await getGuildBudgets(selectSource?.value.toString());
+
+        data = dt.data
+        budgets =rt.data
+
+      }
+
       setShowInfo(!!budgets.length);
       setBudgets(budgets);
+
+
 
       let total: string[] = [];
       let ratio: string[] = [];
@@ -69,6 +87,7 @@ export default function Register() {
       let remainAmount: string[] = [];
       let prepayTotal: string[] = [];
       let prepayRemain: string[] = [];
+      let applied: string[] = [];
 
       budgets?.map((item: any) => {
         total.push(`${item.total_amount} ${item.asset_name}`);
@@ -77,6 +96,7 @@ export default function Register() {
         remainAmount.push(`${item.remain_amount} ${item.asset_name}`);
         prepayTotal.push(`${item.total_advance_amount} ${item.asset_name}`);
         prepayRemain.push(`${item.remain_advance_amount} ${item.asset_name}`);
+        applied.push(`${item.used_amount} ${item.asset_name}`);
       });
 
       data.total = total.join(' , ');
@@ -85,6 +105,8 @@ export default function Register() {
       data.remainAmount = remainAmount.join(' , ');
       data.prepayTotal = prepayTotal.join(' , ');
       data.prepayRemain = prepayRemain.join(' , ');
+      data.applied = applied.join(' , ');
+
 
       setDetail(data);
     } catch (error) {
@@ -163,7 +185,8 @@ export default function Register() {
       if (!item.address) {
         err.errorKeys.push(t('Msg.RequiredWallet'));
       }
-      if(detail.Category.indexOf("市政厅") === -1 && item.assetType === AssetName.ETH){
+
+      if(selectSource?.data === "project"&& (detail?.name?.indexOf("市政厅") === -1 && detail?.Category?.indexOf("市政厅") === -1 )&& item.assetType === AssetName.ETH){
         err.errorKeys.push(t('Msg.SelectAssetTypeError'));
       }
 
@@ -310,28 +333,66 @@ export default function Register() {
   };
 
   const checkSum = () =>{
-    let totalArr = total.split(' , ');
+    let totalArr = total.split(',');
 
-    let checkAll = true;
+    let checkAll = false;
+    if( selectSource?.data === "project" && detail?.Category?.indexOf("市政厅") > -1) {
+      return false
+    }
+    if(!!selectSource?.data  && detail?.name?.indexOf("市政厅") > -1){
+      return false
+    }
+    if(!budgets?.length) {
+      return false;
+    }
+
+
+
 
     if (totalArr?.length > budgets?.length) {
       checkAll = true;
-    } else {
-      budgets?.map((item: any) => {
-        const canUse = Number(item.total_advance_amount) - Number(item.used_advance_amount);
+    } else if(selectSource?.data === "project") {
 
-        const finditemIndex = totalArr.findIndex((innerItem) => innerItem.indexOf(item.asset_name) > -1);
+      for (let i = 0; i < totalArr?.length; i++) {
+        let item:any = totalArr[i];
+        const assetName = item.split(" ")[1]
+
+        const finditemIndex = budgets.findIndex((innerItem:any) => innerItem?.asset_name.indexOf(assetName) > -1);
         if (finditemIndex === -1) {
           checkAll = true;
-          return;
+          break;
         }
-        const totalNum = totalArr[finditemIndex]?.split(' ')[0];
+
+        const canUse = Number((budgets[finditemIndex] as any).total_advance_amount) - Number((budgets[finditemIndex] as any).used_advance_amount);
+        const totalNum = item.split(' ')[0];
         if (Number(totalNum) > canUse) {
           checkAll = true;
+          break;
         } else {
           checkAll = false;
         }
-      });
+      }
+    }else if(selectSource?.data === "guild"){
+
+      for (let i = 0; i < totalArr?.length; i++) {
+        let item:any = totalArr[i];
+
+        const assetName = item.split(" ")[1]
+        const finditemIndex = budgets.findIndex((innerItem:any) => innerItem?.asset_name.indexOf(assetName) > -1);
+        if (finditemIndex === -1) {
+          checkAll = true;
+          break;
+        }
+
+        const canUse = Number((budgets[finditemIndex] as any).remain_amount);
+        const totalNum = item.split(' ')[0];
+        if (Number(totalNum) > canUse) {
+          checkAll = true;
+          break;
+        } else {
+          checkAll = false;
+        }
+      }
     }
     return checkAll;
 
@@ -356,19 +417,19 @@ export default function Register() {
           options={allSource}
           placeholder={t('Assets.SearchSourcePlaceholder')}
           onChange={(value: any) => {
-            console.log(value, selectSource);
             setSelectSource(value);
           }}
           value={selectSource}
         />
       </SectionBlock>
-      {showInfo && <ProjectInfo detail={detail} />}
+      {}
+      {showInfo && (!detail?.Category || detail?.Category?.indexOf("市政厅") === -1) && <ProjectInfo detail={detail} type={selectSource?.data} />}
 
       <SectionBlock>
         <div className="title lftTit">{t('Assets.RegisterList')}</div>
         <RegList list={list} setList={setList} />
       </SectionBlock>
-      {!!total && (
+      {!!total && !!list?.length && (
         <TotalBox>
           <img src={theme ? TotalImgLt : TotalImg} alt="" />
           <div>

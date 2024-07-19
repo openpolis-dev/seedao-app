@@ -19,6 +19,7 @@ import useProposalCategories from 'hooks/useProposalCategories';
 import PlusImg from '../../assets/Imgs/light/plus.svg';
 import MinusImg from '../../assets/Imgs/light/minus.svg';
 import ConfirmModal from '../../components/modals/confirmModal';
+import dayjs from "dayjs";
 
 export default function EditProposal() {
   const { t, i18n } = useTranslation();
@@ -237,6 +238,18 @@ export default function EditProposal() {
     if (!data || !success) {
       return;
     }
+    const newTime = new Date().valueOf();
+    const publicity_ts = (data?.publicity_ts ?? 0) * 1000
+    
+    if(publicity_ts < newTime){
+      showToast(t("Proposal.reviewTips"), ToastType.Danger, {
+        hideProgressBar: true,
+      });
+      return;
+    }
+
+
+
     let budgetArr = data?.components?.filter((item: any) => item.name === 'budget') || [];
     if (data?.template_name === 'P2提案立项' && budgetArr?.length > 0) {
       let err = false;
