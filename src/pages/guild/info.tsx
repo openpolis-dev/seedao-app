@@ -139,7 +139,7 @@ export default function Index() {
                   <TopInfo>
                     <TitleBox>{detail?.name}</TitleBox>
                     {
-                      detail?.name === "翻译公会" && <ViewBox onClick={()=>toGo()}>查看详情</ViewBox>
+                      detail?.name === "翻译公会" && <ViewBox onClick={()=>toGo()}>工会Notion详情{">>>"}</ViewBox>
 
                     }
 
