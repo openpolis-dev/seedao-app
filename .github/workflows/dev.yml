@@ -9,6 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       NEXT_PUBLIC_COMMIT_HASH: ${{ github.sha }}
+      CI: false
       
     steps:
      - name: Checkout
@@ -22,7 +23,7 @@ jobs:
      - name: Insall dependencies
        run: npm install --force
 
-     - name: Compile 
+     - name: Compile
        run: |
          echo "$NEXT_PUBLIC_COMMIT_HASH";
          npm run build;
