@@ -1,0 +1,45 @@
+name: Build Action | Dev Branch
+
+on:
+  push:
+    branches: [ dev ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      NEXT_PUBLIC_COMMIT_HASH: ${{ github.sha }}
+      
+    steps:
+     - name: Checkout
+       uses: actions/checkout@v3
+
+     - name: Setup Node
+       uses: actions/setup-node@v2
+       with:
+         node-version: '16.17.0'
+         
+     - name: Insall dependencies
+       run: npm install --force
+
+     - name: Compile 
+       run: |
+         echo "$NEXT_PUBLIC_COMMIT_HASH";
+         npm run build;
+
+#      - name: Export
+#        run: npm run export
+
+#      - name: Pushes to another repository
+#        run: |
+#          git clone --single-branch --branch "main" "https://xrdavies:${{ secrets.PERSONAL_TOKEN }}@github.com/TheSeed-Labs/os-frontend-preview.git";
+#          cd os-frontend-preview;
+#          git config --global user.name bot;
+#          git config --global user.email bot@theseedlabs.io;
+#          cp -R ../out/* .;
+#          touch .nojekyll
+#          git add .;
+#          git status;
+#          git commit -m "deploy";
+#          git status;
+#          git push "https://xrdavies:${{ secrets.PERSONAL_TOKEN }}@github.com/TheSeed-Labs/os-frontend-preview.git" --set-upstream main
