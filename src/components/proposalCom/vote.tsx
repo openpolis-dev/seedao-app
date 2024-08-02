@@ -69,6 +69,7 @@ export default function ProposalVote({
   const { checkMetaforoLogin } = useCheckMetaforoLogin();
   const canUseCityhall = usePermission(PermissionAction.AuditApplication, PermissionObject.ProjectAndGuild);
 
+
   const pollStatus = getPollStatus(poll.poll_start_at, poll.close_at);
   const renderExecutionTip = (props: any) => (
     <Tooltip {...props}>
@@ -180,19 +181,25 @@ export default function ProposalVote({
                     {!!option.is_vote && <HasVote>({t('Proposal.HasVote')})</HasVote>}
                   </OptionContent>
                 </td>
-                <td>
-                  <ProgressBar percent={option.percent}>
-                    <div className="inner"></div>
-                  </ProgressBar>
-                </td>
-                <td>
-                  <VoteNumber
-                    onClick={() => !!option.voters && setOpenVoteItem({ count: option.voters, optionId: option.id })}
-                  >
-                    <span className={!!option.is_vote ? 'active' : ''}>{option.voters}</span>
-                    <span className="voters"> ({option.percent}%)</span>
-                  </VoteNumber>
-                </td>
+
+                {
+                  (poll.show_type === 1 || pollStatus === VoteType.Closed) && <td>
+                    <ProgressBar percent={option.percent}>
+                      <div className="inner"></div>
+                    </ProgressBar>
+                  </td>
+                }
+                {
+                  (poll.show_type === 1 || pollStatus === VoteType.Closed) && <td>
+                    <VoteNumber
+                      onClick={() => !!option.voters && setOpenVoteItem({ count: option.voters, optionId: option.id })}
+                    >
+                      <span className={!!option.is_vote ? "active" : ""}>{option.voters}</span>
+                      <span className="voters"> ({option.percent}%)</span>
+                    </VoteNumber>
+                  </td>
+                }
+
               </tr>
             ))}
           </tbody>
@@ -225,7 +232,7 @@ export default function ProposalVote({
   return (
     <CardStyle id="vote-block">
       <div className="innerBox">
-        <VoteHead>
+        <VoteHead  justify={poll.show_type === 1 || pollStatus === VoteType.Closed}>
           <span>
             {t('Proposal.TotalVotes')}: {poll.totalVotes}
           </span>
@@ -288,14 +295,16 @@ const CardStyle = styled.div`
   }
 `;
 
-const VoteHead = styled.div`
+const VoteHead = styled.div<{ justify: boolean }>`
   display: flex;
-  justify-content: space-between;
+  //justify-content: space-between;
+  justify-content: ${props => props.justify?"space-between":"flex-start"};
   color: var(--bs-body-color_active);
   font-size: 16px;
   font-style: normal;
   font-weight: 600;
   margin-bottom: 24px;
+    gap: 10px;
 `;
 
 const VoteHeadLeft = styled.div``;
