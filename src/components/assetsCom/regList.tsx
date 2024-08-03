@@ -57,7 +57,7 @@ export default function RegList({ list, setList }: IProps) {
               if (index > 0) {
                 const [address, assetType, amount, content, note] = vals;
                 data.push({
-                  address,
+                  address:address.trim(),
                   assetType,
                   amount,
                   content,
