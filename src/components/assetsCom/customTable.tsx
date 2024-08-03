@@ -35,7 +35,7 @@ const CustomTable = ({ updateList }: IProps) => {
         _list[index].amount = value;
         break;
       case 'address':
-        _list[index].address = value;
+        _list[index].address = value.trim();
         break;
       case 'content':
         _list[index].content = value;
