@@ -440,6 +440,7 @@ export default function CreateStep({ onClick }: any) {
         proposal_category_id: proposalType?.category_id,
         vote_type: voteType,
         vote_options: voteType === 99 || voteType === 98 ? voteList : null,
+        is_multiple_vote:template!.multiple_vote_type === "multiple",
         content_blocks: arr,
         components: data,
         template_id: template?.id,

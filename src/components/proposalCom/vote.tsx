@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { ChangeEvent, FormEvent, useEffect, useMemo, useState } from "react";
 import { Button, Form } from 'react-bootstrap';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
@@ -26,6 +26,7 @@ interface IProps {
   execution_ts?: number;
   voteOptionType: VoteOptionType;
   updateStatus: () => void;
+  showMultiple?:boolean
 }
 
 type VoteOptionItem = {
@@ -54,6 +55,7 @@ export default function ProposalVote({
   isOverrideProposal,
   voteOptionType,
   updateStatus,
+ showMultiple
 }: IProps) {
   const { t } = useTranslation();
   const [selectOption, setSelectOption] = useState<VoteOption>();
@@ -62,6 +64,9 @@ export default function ProposalVote({
   const [showConfirmClose, setShowConfirmClose] = useState(false);
   const [hasPermission, setHasPermission] = useState(false);
   const [hasClosed, setHasClosed] = useState(false);
+  //
+  // const [showMultiple, setShowMultiple] = useState(true);
+  const [multiArr,setMultiArr,] = useState<number[]>([]);
 
   const { dispatch } = useAuthContext();
   const { showToast } = useToast();
@@ -115,7 +120,15 @@ export default function ProposalVote({
 
   const onConfirmVote = () => {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
-    castVote(id, poll.id, selectOption?.id!)
+
+    let selectArr:number[]=[];
+    if(showMultiple){
+      selectArr=[...multiArr]
+    }else{
+      selectArr=[selectOption?.id!]
+    }
+
+    castVote(id, poll.id, selectArr)
       .then(() => {
         setShowConfirmVote(false);
         updateStatus();
@@ -165,6 +178,22 @@ export default function ProposalVote({
     }
   }, [poll, pollStatus, onlyShowVoteOption]);
 
+
+  const handleMultiSelect = (e:ChangeEvent) =>{
+
+    const {value} = e.target as HTMLSelectElement;
+
+    let arr = [...multiArr];
+
+    const findIndex = arr.findIndex((item) => item === Number(value))
+    if(findIndex === -1) {
+      arr.push(Number(value));
+    }else{
+      arr.splice(findIndex!,1)
+    }
+    setMultiArr([...arr])
+  }
+
   const showVoteContent = () => {
     if (
       !onlyShowVoteOption &&
@@ -194,7 +223,7 @@ export default function ProposalVote({
                     <VoteNumber
                       onClick={() => !!option.voters && setOpenVoteItem({ count: option.voters, optionId: option.id })}
                     >
-                      <span className={!!option.is_vote ? "active" : ""}>{option.voters}</span>
+                      <span className={!!option.is_vote ? "active" : ""}>{option.weights||option.voters}</span>
                       <span className="voters"> ({option.percent}%)</span>
                     </VoteNumber>
                   </td>
@@ -210,17 +239,31 @@ export default function ProposalVote({
         <>
           {poll.options.map((option, index) => (
             <VoteOptionSelect key={index}>
-              <Check
-                type="radio"
-                checked={selectOption?.id === option.id}
-                onChange={(e) => setSelectOption(e.target.checked ? option : undefined)}
-                disabled={!hasPermission}
-              />
+
+              {
+                !showMultiple && <Check
+                  type="radio"
+                  checked={selectOption?.id === option.id}
+                  onChange={(e) => setSelectOption(e.target.checked ? option : undefined)}
+                  disabled={!hasPermission}
+                />
+              }
+
+              {
+                showMultiple && <Check
+                  type="checkbox"
+                  value={option.id}
+                  // checked={selectOption?.id === option.id}
+                  onChange={(e) => handleMultiSelect(e)}
+                  disabled={!hasPermission}
+                />
+              }
+
               <OptionContentPure>{option.html}</OptionContentPure>
             </VoteOptionSelect>
           ))}
           {hasPermission && (
-            <VoteButton onClick={goVote} disabled={selectOption === void 0}>
+            <VoteButton onClick={goVote} disabled={selectOption === void 0 && multiArr.length === 0}>
               {t('Proposal.Vote')}
             </VoteButton>
           )}

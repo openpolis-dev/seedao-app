@@ -64,6 +64,7 @@ export type VoteOption = {
   html: string;
   percent: number;
   voters: number;
+  weights?: number;
   id: number;
   is_vote: 0 | 1; // 0: not voted, 1: voted
 };
@@ -146,6 +147,7 @@ export interface IProposal extends ISimpleProposal {
   template_name?: string;
   execution_ts?: number;
   publicity_ts?: number;
+  is_multiple_vote?:boolean;
   associated_project_budgets?: any[];
 }
 
@@ -170,4 +172,5 @@ export interface ITemplate {
   is_instant_vote?: boolean;
   is_closing_project?: boolean;
   display_index?: number;
+  multiple_vote_type?: string | undefined;
 }
