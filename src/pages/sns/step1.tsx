@@ -338,7 +338,7 @@ export default function RegisterSNSStep1() {
           disabled={isPending || availableStatus !== AvailableStatus.OK}
           onClick={handleMint}
         >
-          {t('SNS.SpentMint', { money: `${PAY_NUMBER} USDC(${networkConfig.name})` })}
+          {t('SNS.SpentMint', { money: `${PAY_NUMBER} USDT(${networkConfig.name})` })}
         </MintButton>
       );
     }
