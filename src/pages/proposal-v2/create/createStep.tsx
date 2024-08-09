@@ -411,7 +411,6 @@ export default function CreateStep({ onClick }: any) {
       return;
     }
 
-    return;
     setLoading(true);
     // let dataFormat: any = {};
     //
@@ -523,7 +522,7 @@ export default function CreateStep({ onClick }: any) {
         }
 
     }
-      
+
     let budgetArr = template?.components?.filter((item) => item.name === 'budget') || [];
     if (template?.name === 'P2提案立项' && budgetArr?.length > 0) {
       let err = false;
