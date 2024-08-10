@@ -229,6 +229,7 @@ export default function ProposalVote({
                   </td>
                 }
 
+
               </tr>
             ))}
           </tbody>

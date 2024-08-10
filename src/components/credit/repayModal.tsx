@@ -45,7 +45,7 @@ export default function RepayModal({ handleClose }: IProps) {
   } = useAuthContext();
 
   const {
-    state: { bondNFTContract },
+    state: { bondNFTContract, scoreLendContract },
   } = useCreditContext();
 
   const {
@@ -268,12 +268,15 @@ export default function RepayModal({ handleClose }: IProps) {
 
   const getRepayAmount = async (ids: number[], totalPrincipal: ethers.BigNumber) => {
     setGetting(true);
-    bondNFTContract
-      ?.calculateLendsInterest(ids)
-      .then((result: { interestAmounts: ethers.BigNumber[] }) => {
-        const total = result.interestAmounts
-          .reduce((acc, item) => acc.add(item), ethers.constants.Zero)
-          .add(totalPrincipal);
+    scoreLendContract
+      .queryFilter('Payback')
+      .then((r: any) => {
+        const events = r.filter((item: any) => ids.includes(item.args.id.toNumber()));
+        const interestAmount = events.reduce(
+          (acc: ethers.BigNumber, item: any) => acc.add(item.args.interestAmount),
+          ethers.constants.Zero,
+        );
+        const total = totalPrincipal.add(interestAmount);
         setTotalRepayAmount(Number(ethers.utils.formatUnits(total, lendToken.decimals)).format(4));
       })
       .catch((e: any) => {
@@ -288,7 +291,7 @@ export default function RepayModal({ handleClose }: IProps) {
   useEffect(() => {
     if (bondNFTContract && step === 3 && selectedList.length) {
       const totalPrincipal = selectedList.reduce(
-        (acc, item) => acc.add(ethers.utils.parseUnits(String(item.total), lendToken.decimals)),
+        (acc, item) => acc.add(ethers.utils.parseUnits(String(item.data.borrowAmount), lendToken.decimals)),
         ethers.constants.Zero,
       );
       getRepayAmount(
