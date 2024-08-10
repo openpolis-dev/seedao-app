@@ -116,6 +116,7 @@ export default function RouterLink() {
           {/* See Swap */}
           {isOnlyDev && <Route path="/see-swap" element={<SeeSwap />} />}
           <Route path="/notion/:id" element={<Wiki />} />
+          <Route path="/guild_detail/:id" element={<Wiki />} />
           <Route path="/wiki" element={<Wiki />} />
           {/* Credit */}
           <Route path="/credit" element={<Credit />} />

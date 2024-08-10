@@ -659,8 +659,8 @@
   "apps": {
     "OnlineEvent": "SeeDAO Calendar",
     "OnlineEventDesc": "View Schedule",
-    "wiki": "Wiki",
-    "WikiDesc": "SeeDAO Wiki",
+    "wiki": "SeeDAO Wiki",
+    "WikiDesc": "Everything about SeeDAO",
     "hub": "SeeDAO Hub",
     "hubDesc": "Receive rewards by completing tasks",
     "Event": "SeeDAO Events",

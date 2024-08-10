@@ -258,6 +258,20 @@ const links = {
       desc: 'apps.OnlineEventDesc',
     },
     {
+      id: 'module-sns',
+      name: 'apps.SNS',
+      link: '/sns/register',
+      icon: SNSImg,
+      desc: 'apps.SNSDesc',
+    },
+    {
+      id: 'module-credit',
+      name: 'apps.Credit',
+      link: '/credit',
+      icon: CreditImg,
+      desc: 'apps.CreditDesc',
+    },
+    {
       id: 'module-wiki',
       name: 'apps.wiki',
       link: '/wiki',
@@ -342,13 +356,6 @@ const links = {
       desc: 'apps.SeeUDesc',
     },
     {
-      id: 'module-sns',
-      name: 'apps.SNS',
-      link: '/sns/register',
-      icon: SNSImg,
-      desc: 'apps.SNSDesc',
-    },
-    {
       id: 'echo',
       app: 'apps.Echo',
       link: 'https://echo3.world/',
@@ -364,13 +371,7 @@ const links = {
       icon: 'https://avatars.githubusercontent.com/u/36115574?s=200&v=4',
       desc: 'Coming Soon',
     },
-    {
-      id: 'module-credit',
-      name: 'apps.Credit',
-      link: '/credit',
-      icon: CreditImg,
-      desc: 'apps.CreditDesc',
-    },
+    
   ],
   publicity: [
     {

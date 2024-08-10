@@ -698,6 +698,7 @@ export default function ThreadPage() {
                 voteGate={data?.vote_gate}
                 poll={data!.votes[0]}
                 id={Number(id)}
+                showMultiple={data!.is_multiple_vote}
                 updateStatus={getProposalDetail}
                 isOverrideProposal={data!.template_name === '否决提案'}
                 voteOptionType={data!.vote_type as VoteOptionType}

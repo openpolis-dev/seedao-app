@@ -1,16 +1,15 @@
-name: Deploy to another repo
+name: Build Action | Dev Branch
 
 on:
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+    branches: [ dev ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     env:
       NEXT_PUBLIC_COMMIT_HASH: ${{ github.sha }}
+      CI: false
       
     steps:
      - name: Checkout
@@ -23,10 +22,12 @@ jobs:
          
      - name: Insall dependencies
        run: npm install --force
-     # - name: Compile 
-     #   run: |
-     #     echo "$NEXT_PUBLIC_COMMIT_HASH";
-     #     npm run build;  
+
+     - name: Compile
+       run: |
+         echo "$NEXT_PUBLIC_COMMIT_HASH";
+         npm run build;
+
 #      - name: Export
 #        run: npm run export
 

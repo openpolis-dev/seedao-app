@@ -10,13 +10,14 @@ import { AppActionType, useAuthContext } from "../../../providers/authProvider";
 import BasicModal, { Iprops as IBasicModalProps } from 'components/modals/basicModal';
 import SeeSelect from 'components/common/select';
 import { PlainButton } from 'components/common/button';
-import { Button, ModalFooter } from 'react-bootstrap';
+import { Button, Form, ModalFooter } from "react-bootstrap";
 import usePermission from 'hooks/usePermission';
 import { PermissionAction, PermissionObject } from 'utils/constant';
 import requests from '../../../requests';
 import { getCloseProposal } from '../../../requests/proposalV2';
 import sns from "@seedao/sns-js";
 import { useNavigate } from "react-router-dom";
+const { Check } = Form;
 
 type ExtraType = { id: number; name: string };
 
@@ -36,6 +37,8 @@ const CloseOutSelectModal = ({ id, handleConfirm, ...props }: ICloseOutSelectMod
     if (!id) return;
     getSelectDetail(id);
   }, [id]);
+
+
 
   const getSelectDetail = async (id: any) => {
     const res = await requests.proposalV2.getCloseProposal(Number(id));
@@ -82,7 +85,7 @@ export default function ChooseTypeStep() {
 
   const [snsName,setSnsName] = useState<string>();
   const navigate = useNavigate();
-
+  const [radioValue, setRadioValue] = useState('single');
 
   const onChooseTemplate = (tp: ICategory, template: ITemplate) => {
     if (template.id === 0) {
@@ -91,8 +94,10 @@ export default function ChooseTypeStep() {
     }
 
     setTemplateRulesVisible(true);
+
     setSelected({ tp, template });
   };
+
 
   const handleCloseTemplateRulesModal = () => {
     setTemplateRulesVisible(false);
@@ -100,6 +105,13 @@ export default function ChooseTypeStep() {
 
   const goToCreateNext = () => {
     handleCloseTemplateRulesModal();
+
+
+
+    selected!.template.multiple_vote_type = radioValue;
+    // setSelected(newSelected);
+
+
     if (selected?.template?.has_perm_to_use) {
       if (selected?.template.is_closing_project) {
         setCloseoutVisibleId(selected.tp.category_id);
@@ -128,6 +140,7 @@ export default function ChooseTypeStep() {
     return !snsName?.endsWith("seedao")
 
   }
+
 
   return (
     <Container>
@@ -181,6 +194,41 @@ export default function ChooseTypeStep() {
           }
         >
           {selected?.template?.rule_description}
+
+          <div> {selected?.tp.category_name}</div>
+
+          {
+            (selected?.template.name ==="市政厅联席会议特殊提案" || selected?.template.name ==="节点共识大会特别提案"|| selected?.template.name ==="特殊P3提案") &&
+            <ChooseBox>
+              <div className="tipsTYpe">选择提案的投票类型</div>
+              {/*{selected?.tp.category_name}*/}
+              <li>
+                <Check
+                  id="chooseTypeRadio1"
+                  type="radio"
+                  name="chooseTypeRadio"
+                  value="single"
+                  checked={radioValue === "single"}
+                  onChange={(e) => setRadioValue("single")}
+                />
+                <label htmlFor="chooseTypeRadio1">单选投票</label>
+              </li>
+              <li>
+                <Check
+                  id="chooseTypeRadio2"
+                  type="radio"
+                  name="chooseTypeRadio"
+                  value="multiple"
+                  checked={radioValue === "multiple"}
+                  onChange={(e) => setRadioValue("multiple")}
+                />
+                <label htmlFor="chooseTypeRadio2">多选投票</label>
+
+              </li>
+            </ChooseBox>
+          }
+
+
           {selected?.template?.has_perm_to_use && (
             <CardFooter>
               <Button variant="outline-primary" className="btnBtm" onClick={handleCloseTemplateRulesModal}>
@@ -312,3 +360,23 @@ const CardFooter = styled.div`
     width: 110px;
   }
 `;
+
+
+const ChooseBox = styled.ul`
+  margin-top: 20px;
+    .tipsTYpe{
+        margin-bottom: 10px;
+        font-weight: bold;
+    }
+    li{
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 14px;
+        margin-bottom: 10px;
+        
+    }
+    label{
+        margin-bottom: -5px;
+    }
+`
