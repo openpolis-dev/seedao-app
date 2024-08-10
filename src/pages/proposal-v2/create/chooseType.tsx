@@ -195,8 +195,6 @@ export default function ChooseTypeStep() {
         >
           {selected?.template?.rule_description}
 
-          <div> {selected?.tp.category_name}</div>
-
           {
             (selected?.template.name ==="市政厅联席会议特殊提案" || selected?.template.name ==="节点共识大会特别提案"|| selected?.template.name ==="特殊P3提案") &&
             <ChooseBox>
