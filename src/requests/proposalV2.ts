@@ -80,6 +80,7 @@ export const getCloseProposal = (
 
 type CreateProposalParamsType = {
   title: string;
+  is_multiple_vote?:boolean;
   proposal_category_id: number | undefined;
   vote_type?: number | undefined;
   create_project_proposal_id?: any;
@@ -135,10 +136,10 @@ export const checkCanVote = (id: number): Promise<ResponseData<boolean>> => {
   return request.post(`${PATH_PREFIX}can_vote/${id}`);
 };
 
-export const castVote = (id: number, vote_id: number, option: number) => {
+export const castVote = (id: number, vote_id: number, option: number[]) => {
   return request.post(`${PATH_PREFIX}vote/${id}`, {
     vote_id,
-    options: [option],
+    options: option,
     metaforo_access_token: getMetaforoData()?.token,
   });
 };

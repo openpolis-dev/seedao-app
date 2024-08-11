@@ -659,8 +659,8 @@
   "apps": {
     "OnlineEvent": "城邦日历",
     "OnlineEventDesc": "查看日程安排",
-    "wiki": "Wiki",
-    "WikiDesc": "SeeDAO Wiki",
+    "wiki": "SeeDAO百科",
+    "WikiDesc": "SeeDAO的全面介绍",
     "hub": "悬赏酒馆",
     "hubDesc": "领取任务获得激励",
     "Event": "城邦活动",
