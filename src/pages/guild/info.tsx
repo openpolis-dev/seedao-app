@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { getProjectById } from 'requests/guild';
 import { ProjectStatus, ReTurnProject } from 'type/project.type';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { ContainerPadding } from 'assets/styles/global';
 import { useTranslation } from 'react-i18next';
 import Members from 'components/guild/members';
@@ -25,6 +25,7 @@ import ReactQuill from 'react-quill';
 import DefaultAvatar from 'assets/Imgs/defaultAvatarT.png';
 import ProfileComponent from 'profile-components/profile';
 
+
 type UserMap = { [w: string]: IUser };
 
 export default function Index() {
@@ -35,6 +36,7 @@ export default function Index() {
   } = useAuthContext();
 
   const { id } = useParams();
+  const navigate = useNavigate();
   const { getMultiSNS } = useQuerySNS();
   const [detail, setDetail] = useState<any>();
   const [snsMap, setSnsMap] = useState<any>({});
@@ -117,6 +119,11 @@ export default function Index() {
     }
   };
 
+  const toGo = () =>{
+
+    navigate("/guild_detail/d498b5e6919d4f2295bb76f80c83c4bf")
+  }
+
   return (
     <OuterBox>
       <Box>
@@ -131,6 +138,11 @@ export default function Index() {
                   </TopImg>
                   <TopInfo>
                     <TitleBox>{detail?.name}</TitleBox>
+                    {
+                      detail?.name === "翻译公会" && <ViewBox onClick={()=>toGo()}>工会Notion详情{">>>"}</ViewBox>
+
+                    }
+
 
                     {/*<FlexFirst>*/}
                     {/*  /!*<ProposalBox>*!/*/}
@@ -144,6 +156,7 @@ export default function Index() {
                     {/*  {showStatusComponent()}*/}
                     {/*</FlexFirst>*/}
                   </TopInfo>
+
                 </TopBoxLeft>
 
                 {/*{showStatusComponent()}*/}
@@ -440,3 +453,9 @@ const ClosedButton = styled(Button)`
 const Desc = styled.div`
   white-space: pre-wrap;
 `;
+
+const ViewBox = styled.div`
+  font-size: 14px;
+    margin-top: 5px;
+    cursor: pointer;
+`

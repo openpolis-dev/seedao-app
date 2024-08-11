@@ -1,7 +1,7 @@
 import Notion from './notion';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import styled from 'styled-components';
 import { AppActionType, useAuthContext } from '../../providers/authProvider';
 import BackerNav from '../../components/common/backNav';
@@ -24,10 +24,12 @@ export default function Wiki() {
 
   const { dispatch } = useAuthContext();
 
+  const navigate = useNavigate();
+
   useEffect(() => {
-    if (pathname?.indexOf('notion') > -1) {
+    if (pathname?.indexOf('notion') > -1 || pathname?.indexOf('guild_detail') > -1) {
       setArticleId(id);
-    } else {
+    }else {
       setArticleId('0bad66817c464f04962b797b47056241');
     }
   }, [pathname]);
@@ -60,12 +62,22 @@ export default function Wiki() {
     }
   }, [list]);
 
+  const toBack = () =>{
+    navigate(-1)
+  }
+
   return (
     <OuterBox>
       <TopBox>
-        <BackerNav title={t('apps.wiki')} to={`/apps`} mb="20px" />
+        {
+          pathname?.indexOf('guild_detail') > -1 &&     <BackerNav title={t('menus.Guild')} onClick={()=>toBack()} to="" mb="20px" />
+        }
+        {
+          pathname?.indexOf('guild_detail') === -1 &&     <BackerNav title={t('apps.wiki')} to={`/apps`} mb="20px" />
+        }
       </TopBox>
       {list && <Notion recordMap={list} />}
     </OuterBox>
   );
 }
+

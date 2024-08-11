@@ -20,6 +20,7 @@ import CategoryTag from 'components/proposalCom/categoryTag';
 import PlusImg from 'assets/Imgs/light/plus.svg';
 import MinusImg from 'assets/Imgs/light/minus.svg';
 import { getProjectById } from '../../../requests/project';
+import useQuerySNS from "../../../hooks/useQuerySNS";
 
 const Box = styled.ul`
   position: relative;
@@ -201,6 +202,8 @@ export default function CreateStep({ onClick }: any) {
   const { showToast } = useToast();
 
   const [detail, setDetail] = useState<any>(null);
+
+  const { getMultiSNS } = useQuerySNS();
 
   const {
     state: { theme, tokenData },
@@ -407,6 +410,7 @@ export default function CreateStep({ onClick }: any) {
     if (!proposalType) {
       return;
     }
+
     setLoading(true);
     // let dataFormat: any = {};
     //
@@ -416,6 +420,8 @@ export default function CreateStep({ onClick }: any) {
     //     data: data[dataKey],
     //   };
     // }
+
+
 
     const canSubmit = await checkMetaforoLogin();
     if (canSubmit) {
@@ -440,6 +446,7 @@ export default function CreateStep({ onClick }: any) {
         proposal_category_id: proposalType?.category_id,
         vote_type: voteType,
         vote_options: voteType === 99 || voteType === 98 ? voteList : null,
+        is_multiple_vote:template!.multiple_vote_type === "multiple",
         content_blocks: arr,
         components: data,
         template_id: template?.id,
@@ -496,6 +503,25 @@ export default function CreateStep({ onClick }: any) {
       return;
     }
 
+    let motivationArr = template?.components?.filter((item) => item.name === "motivation") || [];
+
+      if ((template?.name === 'P2提案结项' || template?.name === 'P3提案结项' ) && motivationArr?.length > 0) {
+        const motivationData = data.filter((item: any) => item.name === "motivation") || [];
+        const addrArr:string[] = []
+        motivationData[0].data.budgetList.map((item: any) => {
+          addrArr.push(item.address)
+        })
+        const sns_map = await getMultiSNS(addrArr);
+        const snsArr = Array.from(sns_map.values())
+
+        const noSns = snsArr.find((inner:string)=>inner.indexOf(".seedao") === -1);
+
+        if(noSns?.length){
+          showToast(t('Assets.tips'), ToastType.Danger);
+          return;
+        }
+
+    }
 
     let budgetArr = template?.components?.filter((item) => item.name === 'budget') || [];
     if (template?.name === 'P2提案立项' && budgetArr?.length > 0) {
@@ -504,6 +530,7 @@ export default function CreateStep({ onClick }: any) {
       const budgetData = data.filter((item: any) => item.name === 'budget') || [];
       if (budgetData.length) {
         budgetData[0].data.budgetList.map((item: any) => {
+
           if (item?.typeTest?.name === 'USDC') {
             if (Number(item.amount) > 1000) {
               err = true;

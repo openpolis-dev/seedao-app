@@ -109,6 +109,12 @@ const InfoBox = styled.div`
     font-size: 12px;
     line-height: 16px;
   }
+  .wallet {
+    margin: 6px 0 8px 0;
+    color: var(--bs-body-color);
+    font-size: 12px;
+    line-height: 16px;
+  }
 `;
 
 const BioBox = styled.section`
@@ -498,6 +504,7 @@ export default function ProfileComponent({ userData, theme, sns, handleClose, ad
                   <LevelBox>LV{detail?.level?.current_lv}</LevelBox>
                 </div>
                 <div className="sns">{snsStr}</div>
+                <div className='wallet'>{wallet}</div>
                 <BioBox>
                   <div>{bio || '-'}</div>
                 </BioBox>
