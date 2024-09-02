@@ -26,6 +26,7 @@ interface IProps {
   execution_ts?: number;
   voteOptionType: VoteOptionType;
   updateStatus: () => void;
+  currentState?:string;
   showMultiple?:boolean
 }
 
@@ -55,6 +56,7 @@ export default function ProposalVote({
   isOverrideProposal,
   voteOptionType,
   updateStatus,
+ currentState,
  showMultiple
 }: IProps) {
   const { t } = useTranslation();
@@ -111,7 +113,13 @@ export default function ProposalVote({
       return <OpenTag>{t('Proposal.VoteNotStart')}</OpenTag>;
     }
     if (proposalState === ProposalState.Executed || hasClosed || pollStatus === VoteType.Closed) {
-      return <CloseTag><span>{t('Proposal.VoteClose')}</span><span className="options">{t('Proposal.option')}"{formatResult(poll.options)}"{t('Proposal.win')}</span></CloseTag>;
+      return <CloseTag>
+        <span>{t('Proposal.VoteClose')}</span>
+        {
+          ((currentState === ProposalState.VotingPassed || currentState === ProposalState.Executed) &&  (voteOptionType === 99 || voteOptionType === 98)) && <>
+            <span className="options">{t("Proposal.option")}"{formatResult(poll.options)}"{t("Proposal.win")}</span></>
+        }
+      </CloseTag>;
     } else if (pollStatus === VoteType.Open) {
       return (
         <>
@@ -224,7 +232,11 @@ export default function ProposalVote({
               <tr key={index}>
                 <td>
                   <OptionContent $highlight={option.is_vote}>
-                    <span className="red">{t('Proposal.custom')} {String.fromCharCode(65+ index)}</span> {option.html}
+                    {
+                      (voteOptionType === 99 || voteOptionType === 98) &&
+                      <span className="purple">{t("Proposal.custom")} {String.fromCharCode(65 + index)}</span>
+                    }
+                    {option.html}
                     {!!option.is_vote && <HasVote>({t('Proposal.HasVote')})</HasVote>}
                   </OptionContent>
                 </td>
@@ -460,8 +472,8 @@ const OptionContent = styled.div<{ $highlight?: number }>`
   margin-right: 20px;
   line-height: 20px;
   margin-bottom: 16px;
-    .red{
-        color: red;
+    .purple{
+        color: var(--bs-primary);
         margin-right: 10px;
     }
 `;
