@@ -157,7 +157,10 @@
     "budgetAmount": "Budget balance",
     "availableBalance": "Available balance",
     "proposalWarnings": "Note: Once the proposal enters the voting stage, it will be automatically assigned an SIP number, so there is no need to fill in the SIP number in the title.",
-    "reviewTips": "The review period has expired. Please initiate a new proposal."
+    "reviewTips": "The review period has expired. Please initiate a new proposal.",
+    "custom": "Custom",
+    "option": "Option",
+    "win": "Win"
   },
   "Project": {
     "OfficialLink": "Official link",

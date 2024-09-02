@@ -26,6 +26,7 @@ interface IProps {
   execution_ts?: number;
   voteOptionType: VoteOptionType;
   updateStatus: () => void;
+  currentState?:string;
   showMultiple?:boolean
 }
 
@@ -55,6 +56,7 @@ export default function ProposalVote({
   isOverrideProposal,
   voteOptionType,
   updateStatus,
+ currentState,
  showMultiple
 }: IProps) {
   const { t } = useTranslation();
@@ -88,12 +90,36 @@ export default function ProposalVote({
       proposalState,
     );
 
+  const formatResult = (arr:any[]) =>{
+
+    if (arr.length === 0) {
+      return null;
+    }
+
+    let maxWeightObj = arr[0];
+
+    for (let i = 1; i < arr.length; i++) {
+      if (arr[i].weights > maxWeightObj.weights) {
+        maxWeightObj = arr[i];
+      }
+    }
+
+    return maxWeightObj.html;
+
+  }
+
   const voteStatusTag = useMemo(() => {
     if (onlyShowVoteOption) {
       return <OpenTag>{t('Proposal.VoteNotStart')}</OpenTag>;
     }
     if (proposalState === ProposalState.Executed || hasClosed || pollStatus === VoteType.Closed) {
-      return <CloseTag>{t('Proposal.VoteClose')}</CloseTag>;
+      return <CloseTag>
+        <span>{t('Proposal.VoteClose')}</span>
+        {
+          ((currentState === ProposalState.VotingPassed || currentState === ProposalState.Executed) &&  (voteOptionType === 99 || voteOptionType === 98)) && <>
+            <span className="options">{t("Proposal.option")}"{formatResult(poll.options)}"{t("Proposal.win")}</span></>
+        }
+      </CloseTag>;
     } else if (pollStatus === VoteType.Open) {
       return (
         <>
@@ -206,6 +232,10 @@ export default function ProposalVote({
               <tr key={index}>
                 <td>
                   <OptionContent $highlight={option.is_vote}>
+                    {
+                      (voteOptionType === 99 || voteOptionType === 98) &&
+                      <span className="purple">{t("Proposal.custom")} {String.fromCharCode(65 + index)}</span>
+                    }
                     {option.html}
                     {!!option.is_vote && <HasVote>({t('Proposal.HasVote')})</HasVote>}
                   </OptionContent>
@@ -375,6 +405,13 @@ const TotalVoters = styled.div`
 
 const CloseTag = styled.span`
   color: red;
+    gap: 10px;
+    display: flex;
+    .options{
+        color: #14b1fc;
+        font-weight: normal;
+        font-size: 14px;
+    }
 `;
 const OpenTag = styled.span`
   color: var(--bs-primary);
@@ -435,6 +472,10 @@ const OptionContent = styled.div<{ $highlight?: number }>`
   margin-right: 20px;
   line-height: 20px;
   margin-bottom: 16px;
+    .purple{
+        color: var(--bs-primary);
+        margin-right: 10px;
+    }
 `;
 
 const VoteButton = styled(Button)`
