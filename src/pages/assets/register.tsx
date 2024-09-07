@@ -223,7 +223,7 @@ export default function Register() {
       if (item.address.endsWith('.seedao')) {
         sns_set.add(item.address);
       } else if (!item.address.startsWith('0x')) {
-        err.errorKeys.push(t('Msg.SNSError'));
+        err.errorKeys.push(t('Msg.RequiredWallet'));
       } else if (!ethers.utils.isAddress(item.address)) {
         err.errorKeys.push(t('Msg.RequiredWallet'));
       }
@@ -254,7 +254,7 @@ export default function Register() {
       return 'parse sns error, please try again';
     }
     if (err_sns_list.length) {
-      return `${t('Msg.SNSError')}: ${err_sns_list.join(', ')}`;
+      return `${t('Msg.RequiredWallet')}: ${err_sns_list.join(', ')}`;
     }
     // check SNS
     return wallet_map;
