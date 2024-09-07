@@ -260,17 +260,17 @@ export default function Register() {
     return wallet_map;
   };
 
-  const checkSNs = async () => {
-    try {
-      const arr = list.map(async (item) => item.address.endsWith('seedao') || sns.name(item.address));
-      let rtArr = await Promise.all(arr);
-
-      const isNoSns = rtArr.filter((item) => !item);
-      return !isNoSns?.length;
-    } catch (e) {
-      console.error(e);
-    }
-  };
+  // const checkSNs = async () => {
+  //   try {
+  //     const arr = list.map(async (item) => item.address.endsWith('seedao') || sns.name(item.address));
+  //     let rtArr = await Promise.all(arr);
+  //
+  //     const isNoSns = rtArr.filter((item) => !item);
+  //     return !isNoSns?.length;
+  //   } catch (e) {
+  //     console.error(e);
+  //   }
+  // };
 
   const handleCreate = async () => {
 
@@ -280,12 +280,12 @@ export default function Register() {
     }
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
 
-    let allSNS = await checkSNs();
-    if (!allSNS) {
-      showToast(t('Assets.tips'), ToastType.Danger);
-      dispatch({ type: AppActionType.SET_LOADING, payload: false });
-      return;
-    }
+    // let allSNS = await checkSNs();
+    // if (!allSNS) {
+    //   showToast(t('Assets.tips'), ToastType.Danger);
+    //   dispatch({ type: AppActionType.SET_LOADING, payload: false });
+    //   return;
+    // }
 
     let msg: string | undefined;
     msg = checkInvalidData();
