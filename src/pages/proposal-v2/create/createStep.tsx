@@ -511,15 +511,15 @@ export default function CreateStep({ onClick }: any) {
         motivationData[0].data.budgetList.map((item: any) => {
           addrArr.push(item.address)
         })
-        const sns_map = await getMultiSNS(addrArr);
-        const snsArr = Array.from(sns_map.values())
+        // const sns_map = await getMultiSNS(addrArr);
+        // const snsArr = Array.from(sns_map.values())
 
-        const noSns = snsArr.find((inner:string)=>inner.indexOf(".seedao") === -1);
-
-        if(noSns?.length){
-          showToast(t('Assets.tips'), ToastType.Danger);
-          return;
-        }
+        // const noSns = snsArr.find((inner:string)=>inner.indexOf(".seedao") === -1);
+        //
+        // if(noSns?.length){
+        //   showToast(t('Assets.tips'), ToastType.Danger);
+        //   return;
+        // }
 
     }
 
