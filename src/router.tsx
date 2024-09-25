@@ -54,6 +54,8 @@ import getConfig from 'utils/envCofnig';
 import SeeSwap from 'pages/seeswap/swap';
 import Credit from 'pages/credit';
 import SnsQuery from "./pages/sns-query";
+import Assistant from "./pages/assistant";
+import Node from "./components/node/members";
 
 const isOnlyDev = !process.env.REACT_APP_ENV_VERSION || process.env.REACT_APP_ENV_VERSION === 'dev';
 
@@ -115,6 +117,8 @@ export default function RouterLink() {
 
 
           <Route path="/sns-query" element={<SnsQuery />} />
+          <Route path="/assistant" element={<Assistant />} />
+          <Route path="/node" element={<Node />} />
 
 
           {/* <Route path="/sns/user" element={<UserSNS />} /> */}
