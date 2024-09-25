@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import { Button } from 'react-bootstrap';
 import { ethers } from "ethers";
+import useToast, { ToastType } from "../../hooks/useToast";
 
 const { TextArea } = Input;
 
@@ -130,7 +131,7 @@ export default function SnsQuery(){
   const [resultList, setResultList] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [type,setType] = useState("sns");
-
+  const { showToast } = useToast();
 
   const AddressZero = "0x0000000000000000000000000000000000000000";
 
@@ -145,7 +146,8 @@ export default function SnsQuery(){
       }
     });
     if (!to_be_parsed.length) {
-      console.log("No SNS found in the input area");
+      // console.log("No SNS found in the input area");
+      showToast("No SNS found in the input area", ToastType.Danger);
       return;
     }
     setLoading(true);
@@ -154,13 +156,11 @@ export default function SnsQuery(){
     sns
       .resolves(unique_list)
       .then((result) => {
-        console.log("result", result);
         result.forEach((r, i) => {
           r_list.push([unique_list[i], r === AddressZero ? "" : r]);
         });
-        console.table(r_list)
         setResultList(r_list);
-        console.table(r_list)
+
       })
       .catch((e) => {
         console.error(e);
@@ -184,6 +184,7 @@ export default function SnsQuery(){
     });
     if (!to_be_address.length) {
       console.log("No Address found in the input area");
+      showToast("No Address found in the input area", ToastType.Danger);
       return;
     }
     setLoading(true);
@@ -195,9 +196,9 @@ export default function SnsQuery(){
         result.forEach((r, i) => {
           r_list.push([unique_list[i], r === AddressZero ? "" : r]);
         });
-        console.table(r_list)
+
         setResultList(r_list);
-        console.table(r_list)
+
       })
       .catch((e) => {
         console.error(e);
