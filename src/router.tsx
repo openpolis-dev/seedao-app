@@ -53,6 +53,7 @@ import Wiki from './pages/notion/wiki';
 import getConfig from 'utils/envCofnig';
 import SeeSwap from 'pages/seeswap/swap';
 import Credit from 'pages/credit';
+import SnsQuery from "./pages/sns-query";
 
 const isOnlyDev = !process.env.REACT_APP_ENV_VERSION || process.env.REACT_APP_ENV_VERSION === 'dev';
 
@@ -111,6 +112,11 @@ export default function RouterLink() {
           {/* SNS */}
           <Route path="/sns" element={<SNSEntrancePage />} />
           <Route path="/sns/register" element={<RegisterSNS />} />
+
+
+          <Route path="/sns-query" element={<SnsQuery />} />
+
+
           {/* <Route path="/sns/user" element={<UserSNS />} /> */}
           {isOnlyDev && <Route path="/newcomer" element={<Newcomer />} />}
           {/* See Swap */}
