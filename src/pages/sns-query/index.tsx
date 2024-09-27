@@ -17,7 +17,7 @@ const Container = styled.div`
   min-height: 100%;
 `;
 const StepContainer = styled.div`
-  height: calc(100% - 30px);
+    margin-top: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -59,6 +59,7 @@ const TxBox = styled(TextArea)`
   box-sizing: border-box;
   border: 1px solid var(--table-border);
   margin: 0 auto;
+    background: var(--bs-body-bg);
   border-radius: 8px;
   padding-left: 13px;
   padding-right: 10px;
@@ -86,13 +87,13 @@ const TableBox = styled.div`
     }
     th {
         text-align: center;
-        padding: 10px 20px;
+        padding: 20px 20px;
     }
     td {
         vertical-align: middle;
         border-top: 1px solid var(--bs-border-color);
         border-bottom: 0;
-        padding: 10px 20px;
+        padding: 15px 20px;
         font-size: 12px;
     }
     tbody tr {
@@ -100,17 +101,9 @@ const TableBox = styled.div`
     }
     tr:hover {
         td {
-            border-top: 0;
+            //border-top: 0;
+            background: var(--bs-menu-hover);
         }
-        & + tr {
-            td {
-                border-top: 0;
-            }
-        }
-
-        //td {
-        //  border-bottom: 1px solid #fff !important;
-        //}
     }
 `;
 

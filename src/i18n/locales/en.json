@@ -396,7 +396,8 @@
     "BrandGroup": "Branding Group",
     "TechGroup": "Tech Group",
     "ReviewProposal": "Review Proposal",
-    "ReviewProposalDesc": "Review the draft proposals"
+    "ReviewProposalDesc": "Review the draft proposals",
+    "nodeMembers": "Node Members"
   },
   "GovernanceNodeResult": {
     "SearchTip": "SNS",

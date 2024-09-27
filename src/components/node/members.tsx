@@ -127,7 +127,7 @@ export default function Node() {
 
 
       <ItemBox>
-        <Grouptitle>{t('city-hall.TechGroup')}</Grouptitle>
+        <Grouptitle>{t('city-hall.nodeMembers')}</Grouptitle>
         <Row>
           {techMembers.map((item, index) => (
             <UserCard

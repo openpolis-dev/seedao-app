@@ -546,6 +546,8 @@ export default function ThreadPage() {
           {!data?.is_based_on_custom_template && <TemplateTag>{data?.template_name}</TemplateTag>}
           {currentState && <ProposalStateTag state={currentState} />}
           {getTimeTagDisplay()}
+
+          <VotedBox>{t('Proposal.HasVote')}</VotedBox>
         </FlexLine>
         {showModal && <ProfileComponent address={applicant} theme={theme} handleClose={handleClose} />}
         <InfoBox>
@@ -1083,3 +1085,14 @@ const TimeTag = styled.span`
   color: var(--bs-primary);
   font-size: 12px;
 `;
+const VotedBox = styled.div`
+    display: inline-block;
+    border-radius: 4px;
+    border: 1px solid #08D0EA30;
+    color: #08b0c5;
+    font-size: 12px;
+    background: #08D0EA30;
+    padding: 0 16px;
+    line-height: 24px;
+    text-align: center;
+`
