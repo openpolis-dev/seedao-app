@@ -379,6 +379,7 @@
     "management": "管理",
     "create": "创建",
     "GovernanceNodeResult": "节点资质试算",
+    "sns": "SNS 验证",
     "GovernanceNodeResultDesc": "计算治理节点资质结果",
     "CloseProjectAudit": "关闭项目审核",
     "CloseProjectAuditDesc": "审核关闭项目的申请",
@@ -684,7 +685,9 @@
     "Echo": "Echo",
     "EchoDesc": "Echo is a social network that gives your echos to same habbies, passions or interests.",
     "Credit": "SCR借款",
-    "CreditDesc": "社区积分新玩法"
+    "CreditDesc": "社区积分新玩法",
+    "assistant": "贡献者帮助手册",
+    "assistantDes": "根据贡献者等级在指引手册中看到不同的帮助信息"
   },
   "SNS": {
     "EntranceTitle": "获取你的 SNS，开始你的 SeeDAO 之旅",
@@ -719,7 +722,8 @@
     "NotEnoughBalance": "{{token}}余额不足",
     "CommitmentTooOld": "您的提交的{{sns}}已过有效期，请点击“取消注册”后重新开始注册",
     "ShareInviteLink": "分享我的邀请链接",
-    "InviteLinkCopied": "邀请链接已复制"
+    "InviteLinkCopied": "邀请链接已复制",
+    "searchTitle": "搜索SNS"
   },
   "Credit": {
     "NavTitle": "SCR借款",

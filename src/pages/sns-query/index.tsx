@@ -204,11 +204,11 @@ export default function SnsQuery(){
 
   return <Container>
 
-    <BackerNav to="/sns/register" title="SNS Query" mb="0"  />
+    <BackerNav to="/city-hall/governance" title={t('city-hall.sns')} mb="0"  />
     <StepContainer>
       <div>
         <Box>
-          <StepTitle>SNS Query</StepTitle>
+          <StepTitle>{t('city-hall.sns')}</StepTitle>
           <TxBox
             value={areaValue}
             onChange={(e) => setAreaValue(e.target.value)}

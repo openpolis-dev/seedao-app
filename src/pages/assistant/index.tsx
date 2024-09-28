@@ -71,10 +71,10 @@ export default function Assistant() {
     <OuterBox>
       <TopBox>
         {
-          pathname?.indexOf('assistant') > -1 &&     <BackerNav title="帮助信息" onClick={()=>toBack()} to="" mb="20px" />
+          pathname?.indexOf('assistant') > -1 &&     <BackerNav title={t('apps.assistant')} onClick={()=>toBack()} to="" mb="20px" />
         }
         {
-          pathname?.indexOf('assistant') === -1 &&     <BackerNav title="帮助信息" to={`/apps`} mb="20px" />
+          pathname?.indexOf('assistant') === -1 &&     <BackerNav title={t('apps.assistant')} to={`/apps`} mb="20px" />
         }
       </TopBox>
       {list && <Notion recordMap={list} />}

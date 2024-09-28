@@ -1,10 +1,13 @@
 import BackerNav from "../../components/common/backNav";
 import styled from "styled-components";
 import { ContainerPadding } from "../../assets/styles/global";
-
+import sns from '@seedao/sns-js';
 import { Input } from 'antd';
 import { useTranslation } from "react-i18next";
 import { Button } from "react-bootstrap";
+import ProfileComponent from "../../profile-components/profile";
+import React, { useState } from "react";
+import { useAuthContext } from "../../providers/authProvider";
 
 const Container = styled.div`
   ${ContainerPadding};
@@ -51,26 +54,64 @@ const Content = styled.div`
         margin: 30px 0;
     }
 `
-
-
+const StepDesc = styled.div`
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 24px;
+  margin-top: 10px;
+  margin-bottom: 43px;
+  color: var(--sns-font-color);
+`;
+const FlexBox = styled.div`
+  display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 90%;
+    input{
+        flex-grow: 1;
+    }
+`
 
 export default function SearchProfile(){
   const { t } = useTranslation();
+  const [showModal, setShowModal] = useState(false);
+  const [snsName,setSnsName] = useState("");
+  const [address,setAddress] = useState("");
+
+  const {
+    state: { theme },
+  } = useAuthContext();
+
+  const handleClose = () => {
+    setShowModal(false);
+  };
+
+  const handleSubmit = async () =>{
+    const address = await sns.resolve(`${snsName}.seedao`)
+    setAddress(address)
 
 
+    setShowModal(true);
+  }
 
   return <Container>
-
+    {showModal && <ProfileComponent theme={theme} address={address} handleClose={handleClose} />}
     <BackerNav to="/sns/register" title="SNS Query" mb="0"  />
     <StepContainer>
       <div>
         <Box>
-          <StepTitle>Search</StepTitle>
+          <StepTitle>{t('SNS.searchTitle')}</StepTitle>
+          <StepDesc>{t('SNS.Step1Desc')}</StepDesc>
           <Content>
-            <Input />
-            <Button
+            <FlexBox>
+              <Input value={snsName} onChange={(e) => setSnsName(e.target.value)} />
+              <span>.seedao</span>
+            </FlexBox>
 
+            <Button
+              onClick={() => handleSubmit()}
               className="submitBtn"
+              disabled={!snsName.length}
             >
               Submit
               {/*{loading ? <Loading /> : <span>Parse</span>}*/}

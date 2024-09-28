@@ -379,6 +379,7 @@
     "management": "Management",
     "create": "Create",
     "GovernanceNodeResult": "SeeDAO Node Qualification",
+    "sns": "SNS Verification",
     "GovernanceNodeResultDesc": "SeeDAO Node qualification calculation result.",
     "CloseProjectAudit": "Audit Close Project",
     "CloseProjectAuditDesc": "Review the request of closing project.",
@@ -684,7 +685,9 @@
     "Echo": "Echo",
     "EchoDesc": "Echo is a social network that gives your echos to same habbies, passions or interests.",
     "Credit": "SCR Lending",
-    "CreditDesc": "Community Cooperative Finance"
+    "CreditDesc": "Community Cooperative Finance",
+    "assistant": "Contributor Assistant",
+    "assistantDes": "View different help information in the guide manual based on contributor levels."
   },
   "SNS": {
     "EntranceTitle": "INVOLVED IN SEEDAO IN YOUR NAME",
@@ -719,7 +722,8 @@
     "NotEnoughBalance": "{{token}} not enough",
     "CommitmentTooOld": "Your {{sns}} submission has expired, please click \"Cancel registration\" to restart your registration.",
     "ShareInviteLink": "Share invite link",
-    "InviteLinkCopied": "The invite link has been copied to your clipboard!"
+    "InviteLinkCopied": "The invite link has been copied to your clipboard!",
+    "searchTitle": "Search SNS"
   },
   "Credit": {
     "NavTitle": "SCR Lending",

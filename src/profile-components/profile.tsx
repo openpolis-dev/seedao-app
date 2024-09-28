@@ -503,7 +503,7 @@ export default function ProfileComponent({ userData, theme, sns, handleClose, ad
                   <div className="userName">{userName}</div>
                   <LevelBox>LV{detail?.level?.current_lv}</LevelBox>
                 </div>
-                <div className="sns">{snsStr}</div>
+                <a href={`https://${snsStr}.id/`} target="_blank" className="sns">{snsStr}</a>
                 <div className='wallet'>{wallet}</div>
                 <BioBox>
                   <div>{bio || '-'}</div>

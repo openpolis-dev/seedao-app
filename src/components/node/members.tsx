@@ -13,6 +13,7 @@ import publicJs from 'utils/publicJs';
 
 import ProfileComponent from '../../profile-components/profile';
 import { ContainerPadding } from "../../assets/styles/global";
+import BackerNav from "../common/backNav";
 
 type UserMap = { [w: string]: IUser };
 
@@ -124,8 +125,7 @@ export default function Node() {
   return (
     <Box>
       {!showDel && showModal && <ProfileComponent userData={user} theme={theme} sns={sns} handleClose={handleClose} />}
-
-
+      <BackerNav to="/city-hall/governance" title={t('city-hall.nodeMembers')} mb="0"  />
       <ItemBox>
         <Grouptitle>{t('city-hall.nodeMembers')}</Grouptitle>
         <Row>
@@ -158,6 +158,7 @@ const Box = styled.div`
 const ItemBox = styled.div`
   display: flex;
   flex-direction: column;
+    margin-top: 40px;
 `;
 
 

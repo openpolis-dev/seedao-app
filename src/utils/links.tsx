@@ -34,7 +34,7 @@ import DistributeImg from '../assets/Imgs/governance/distribute.png';
 import NodeImg from '../assets/Imgs/governance/node.png';
 import PodcastImg from '../assets/Imgs/podcast.jpeg';
 import getConfig from './envCofnig';
-
+import AssistantImg from "../assets/Imgs/governance/assistant.png";
 /**
  * NOTE:
  * if id starts with "module-", means its path is our app's router path, otherwise is outer link
@@ -209,6 +209,20 @@ const links = {
       icon: NodeImg,
       desc: 'city-hall.GovernanceNodeResultDesc',
     },
+    {
+      name: 'city-hall.sns',
+      link: '/sns-query',
+      id: 'module-governance-node-result',
+      icon: CreateImg,
+      desc: 'city-hall.GovernanceNodeResultDesc',
+    },
+    {
+      name: 'city-hall.nodeMembers',
+      link: '/node',
+      id: 'module-governance-node-result',
+      icon: GuildImg,
+      desc: 'city-hall.GovernanceNodeResultDesc',
+    },
   ],
   brand: [
     // {
@@ -263,6 +277,13 @@ const links = {
       link: '/sns/register',
       icon: SNSImg,
       desc: 'apps.SNSDesc',
+    },
+    {
+      id: 'module-assistant',
+      name: 'apps.assistant',
+      link: '/assistant',
+      icon: AssistantImg,
+      desc: 'apps.assistantDes',
     },
     {
       id: 'module-credit',
@@ -371,7 +392,8 @@ const links = {
       icon: 'https://avatars.githubusercontent.com/u/36115574?s=200&v=4',
       desc: 'Coming Soon',
     },
-    
+
+
   ],
   publicity: [
     {
