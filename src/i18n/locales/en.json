@@ -723,7 +723,13 @@
     "CommitmentTooOld": "Your {{sns}} submission has expired, please click \"Cancel registration\" to restart your registration.",
     "ShareInviteLink": "Share invite link",
     "InviteLinkCopied": "The invite link has been copied to your clipboard!",
-    "searchTitle": "Search SNS"
+    "searchTitle": "Search SNS",
+    "inputSNS": "input SNS\ninput SNS\ninput SNS\n",
+    "inputAddress": "input Address\ninput Address\ninput Address\n",
+    "snsTab": "SNS to Addresss",
+    "addressTab": "Address to SNS",
+    "notSNS": "SNS not found",
+    "notAddress": "Address not found"
   },
   "Credit": {
     "NavTitle": "SCR Lending",

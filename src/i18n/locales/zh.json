@@ -723,7 +723,13 @@
     "CommitmentTooOld": "您的提交的{{sns}}已过有效期，请点击“取消注册”后重新开始注册",
     "ShareInviteLink": "分享我的邀请链接",
     "InviteLinkCopied": "邀请链接已复制",
-    "searchTitle": "搜索SNS"
+    "searchTitle": "搜索SNS",
+    "inputSNS": "请输入 SNS\n请输入 SNS\n请输入 SNS\n",
+    "inputAddress": "请输入地址\n请输入地址\n请输入地址\n",
+    "snsTab": "SNS转地址",
+    "addressTab": "地址转SNS",
+    "notSNS": "未找到SNS",
+    "notAddress": "未找到地址"
   },
   "Credit": {
     "NavTitle": "SCR借款",
