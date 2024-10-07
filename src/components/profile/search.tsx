@@ -8,6 +8,7 @@ import { Button } from "react-bootstrap";
 import ProfileComponent from "../../profile-components/profile";
 import React, { useState } from "react";
 import { useAuthContext } from "../../providers/authProvider";
+import useToast, { ToastType } from "../../hooks/useToast";
 
 const Container = styled.div`
   ${ContainerPadding};
@@ -38,7 +39,7 @@ const StepTitle = styled.div`
   font-weight: 500;
   line-height: 28px;
   color: var(--bs-body-color_active);
-    padding: 40px 0;
+    padding: 40px 0 5px;
 `;
 
 const Content = styled.div`
@@ -58,8 +59,7 @@ const StepDesc = styled.div`
   font-size: 14px;
   font-weight: 400;
   line-height: 24px;
-  margin-top: 10px;
-  margin-bottom: 43px;
+  margin-bottom: 33px;
   color: var(--sns-font-color);
 `;
 const FlexBox = styled.div`
@@ -77,10 +77,11 @@ export default function SearchProfile(){
   const [showModal, setShowModal] = useState(false);
   const [snsName,setSnsName] = useState("");
   const [address,setAddress] = useState("");
-
+  const AddressZero = "0x0000000000000000000000000000000000000000";
   const {
     state: { theme },
   } = useAuthContext();
+  const { showToast } = useToast();
 
   const handleClose = () => {
     setShowModal(false);
@@ -88,20 +89,23 @@ export default function SearchProfile(){
 
   const handleSubmit = async () =>{
     const address = await sns.resolve(`${snsName}.seedao`)
-    setAddress(address)
+    if(address === AddressZero){
+      showToast(t('SNS.snsError'), ToastType.Danger);
+    }else{
+      setAddress(address)
+      setShowModal(true);
+    }
 
-
-    setShowModal(true);
   }
 
   return <Container>
     {showModal && <ProfileComponent theme={theme} address={address} handleClose={handleClose} />}
-    <BackerNav to="/sns/register" title="SNS Query" mb="0"  />
+    <BackerNav to="/sns/register" title={t('apps.snsQuery')} mb="0"  />
     <StepContainer>
       <div>
         <Box>
-          <StepTitle>{t('SNS.searchTitle')}</StepTitle>
-          <StepDesc>{t('SNS.Step1Desc')}</StepDesc>
+          <StepTitle>{t('apps.snsQuery')}</StepTitle>
+          <StepDesc>{t('apps.SNSQueryDesc')}</StepDesc>
           <Content>
             <FlexBox>
               <Input value={snsName} onChange={(e) => setSnsName(e.target.value)} />

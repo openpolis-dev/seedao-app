@@ -105,7 +105,8 @@ const InfoBox = styled.div`
     line-height: 23px;
   }
   .sns {
-    color: var(--bs-body-color);
+    color: var(--bs-primary);
+      text-decoration: underline;
     font-size: 12px;
     line-height: 16px;
   }
@@ -503,7 +504,7 @@ export default function ProfileComponent({ userData, theme, sns, handleClose, ad
                   <div className="userName">{userName}</div>
                   <LevelBox>LV{detail?.level?.current_lv}</LevelBox>
                 </div>
-                <a href={`https://${snsStr}.id/`} target="_blank" className="sns">{snsStr}</a>
+                <a href={`https://${snsStr}.id/`} target="_blank" className="sns">{snsStr} &gt;&gt;</a>
                 <div className='wallet'>{wallet}</div>
                 <BioBox>
                   <div>{bio || '-'}</div>

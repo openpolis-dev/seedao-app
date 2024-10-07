@@ -210,7 +210,7 @@ export default function SnsQuery(){
       }
     });
     if (!to_be_parsed.length) {
-      showToast("No SNS found in the input area", ToastType.Danger);
+      showToast(t('SNS.noSNSINput'), ToastType.Danger);
       return;
     }
     setLoading(true);
@@ -247,7 +247,7 @@ export default function SnsQuery(){
       }
     });
     if (!to_be_address.length) {
-      showToast("No Address found in the input area", ToastType.Danger);
+      showToast(t('SNS.noAddressINput'), ToastType.Danger);
       return;
     }
     setLoading(true);

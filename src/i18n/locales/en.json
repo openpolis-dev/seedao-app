@@ -687,7 +687,9 @@
     "Credit": "SCR Lending",
     "CreditDesc": "Community Cooperative Finance",
     "assistant": "Contributor Assistant",
-    "assistantDes": "View different help information in the guide manual based on contributor levels."
+    "assistantDes": "View different help information in the guide manual based on contributor levels.",
+    "snsQuery": "SNS Search",
+    "SNSQueryDesc": "Query personal information through SNS."
   },
   "SNS": {
     "EntranceTitle": "INVOLVED IN SEEDAO IN YOUR NAME",
@@ -723,13 +725,16 @@
     "CommitmentTooOld": "Your {{sns}} submission has expired, please click \"Cancel registration\" to restart your registration.",
     "ShareInviteLink": "Share invite link",
     "InviteLinkCopied": "The invite link has been copied to your clipboard!",
-    "searchTitle": "Search SNS",
+    "searchTitle": "SNS Search ",
     "inputSNS": "input SNS\ninput SNS\ninput SNS\n",
     "inputAddress": "input Address\ninput Address\ninput Address\n",
     "snsTab": "SNS to Addresss",
     "addressTab": "Address to SNS",
     "notSNS": "SNS not found",
-    "notAddress": "Address not found"
+    "notAddress": "Address not found",
+    "noSNSINput":"No SNS found in the input area",
+    "noAddressINput":"No Address found in the input area",
+    "snsError": "SNS Error"
   },
   "Credit": {
     "NavTitle": "SCR Lending",
