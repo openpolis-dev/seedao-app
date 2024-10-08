@@ -6,6 +6,8 @@ import styled from 'styled-components';
 import { AppActionType, useAuthContext } from '../../providers/authProvider';
 import BackerNav from '../../components/common/backNav';
 import { useTranslation } from 'react-i18next';
+import requests from "../../requests";
+import { getUserLevel } from "../../requests/user";
 
 const OuterBox = styled.div`
   min-height: 100%;
@@ -18,13 +20,26 @@ const TopBox = styled.div`
 export default function Assistant() {
   const [list, setList] = useState(null);
   const [articleId, setArticleId] = useState<string | undefined>('');
+  const [level, setLevel] = useState<string>("0");
   // const { id } = useParams();
   const { pathname } = useLocation();
   const { t } = useTranslation();
 
   const { dispatch } = useAuthContext();
-
   const navigate = useNavigate();
+
+
+
+  useEffect(() => {
+    getLevel()
+  }, []);
+
+  const getLevel = async() =>{
+    const res = await requests.user.getUserLevel();
+    const current_lv = res.data?.current_lv;
+    setLevel(current_lv);
+    console.log("getUserLevel",res);
+  }
 
   useEffect(() => {
     //TODO

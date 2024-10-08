@@ -54,6 +54,11 @@ export const updateUser = (data: IUserInfo) => {
   return request.put(`${PATH_PREFIX}/me`, data);
 };
 
+export const getUserLevel = () => {
+  return request.get(`${PATH_PREFIX}/level`);
+};
+
+
 export const getUsers = (wallets: string[]): Promise<ResponseData<IUser[]>> => {
   const data: string[] = [];
   wallets.forEach((item) => {
