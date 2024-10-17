@@ -7,7 +7,7 @@ import { IUser } from 'type/user.type';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 
 import UserCard from 'components/userCard';
-import { getCityHallDetail, MemberGroupType } from 'requests/cityHall';
+import { getCityHallDetail, getCityHallNode, MemberGroupType } from "requests/cityHall";
 import useQuerySNS from 'hooks/useQuerySNS';
 import publicJs from 'utils/publicJs';
 
@@ -24,21 +24,21 @@ export default function Node() {
     state: { snsMap, theme },
   } = useAuthContext();
 
-  const [id, setId] = useState<number>();
-  const [membersGroupMap, setMembersGroupMap] = useState<{ [w: string]: string[] }>({});
 
-  const [showDel, setShowDel] = useState(false);
   const [showModal, setShowModal] = useState(false);
 
-  const [userMap, setUserMap] = useState<UserMap>({});
+  const [userMap, setUserMap] = useState<UserMap|null>(null);
   const [user, setUser] = useState<any>();
   const [sns, setSns] = useState<string>('');
+  const [techMembers, setTechMembers] = useState<any[]>([]);
+  const [walletList, setWalletList] = useState<string[]>([]);
 
   const { getMultiSNS } = useQuerySNS();
 
   const handleMembers = (members: string[]) => {
     return members.map((w) => {
-      const user = userMap[w.toLowerCase()];
+      const user = userMap![w.toLowerCase()];
+      console.log("handleMembers",user,w,snsMap)
       if (user) {
         return {
           ...user,
@@ -64,27 +64,22 @@ export default function Node() {
     });
   };
 
-  const [ techMembers] = useMemo(() => {
-    return [
-      handleMembers(membersGroupMap.G_TECH || []),
-    ];
-  }, [membersGroupMap, userMap, snsMap]);
+  useEffect(() => {
+    if(!userMap || !snsMap)return;
+    let rt =  handleMembers(walletList);
+    console.error(rt)
+    setTechMembers(rt)
+  }, [userMap,snsMap]);
 
   const getDetail = async () => {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
-      const dt = await getCityHallDetail();
-      setMembersGroupMap(dt.data.grouped_sponsors);
-      setId(dt.data.id);
-      const _wallets: string[] = [];
-      Object.keys(dt.data.grouped_sponsors).forEach((key) => {
-        if (dt.data.grouped_sponsors[key]) {
-          _wallets.push(...dt.data.grouped_sponsors[key]);
-        }
-      });
-      const wallets = Array.from(new Set(_wallets));
-      getUsersInfo(wallets);
-      getMultiSNS(wallets);
+      const dt = await getCityHallNode();
+      const wallets = dt.data;
+      setWalletList(wallets)
+      await getUsersInfo(wallets);
+      await getMultiSNS(wallets);
+
     } catch (error) {
       logError(error);
     } finally {
@@ -124,7 +119,7 @@ export default function Node() {
 
   return (
     <Box>
-      {!showDel && showModal && <ProfileComponent userData={user} theme={theme} sns={sns} handleClose={handleClose} />}
+      {showModal && <ProfileComponent userData={user} theme={theme} sns={sns} handleClose={handleClose} />}
       <BackerNav to="/city-hall/governance" title={t('city-hall.nodeMembers')} mb="0"  />
       <ItemBox>
         <Grouptitle>{t('city-hall.nodeMembers')}</Grouptitle>

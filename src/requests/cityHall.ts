@@ -17,6 +17,9 @@ interface ICityHallResponse {
 export const getCityHallDetail = (): Promise<ResponseData<ICityHallResponse>> => {
   return request.get(`${PATH_PREFIX}/info`);
 };
+export const getCityHallNode = (): Promise<ResponseData> => {
+  return request.get(`${PATH_PREFIX}/cs_node`);
+};
 
 interface IUpdateMemberParams {
   add?: string[];
