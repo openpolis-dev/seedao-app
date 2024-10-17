@@ -100,7 +100,7 @@ export default function SearchProfile(){
 
   return <Container>
     {showModal && <ProfileComponent theme={theme} address={address} handleClose={handleClose} />}
-    <BackerNav to="/sns/register" title={t('apps.snsQuery')} mb="0"  />
+    <BackerNav to="/apps" title={t('apps.snsQuery')} mb="0"  />
     <StepContainer>
       <div>
         <Box>
