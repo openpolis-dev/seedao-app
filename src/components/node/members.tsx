@@ -38,7 +38,6 @@ export default function Node() {
   const handleMembers = (members: string[]) => {
     return members.map((w) => {
       const user = userMap![w.toLowerCase()];
-      console.log("handleMembers",user,w,snsMap)
       if (user) {
         return {
           ...user,
@@ -67,7 +66,6 @@ export default function Node() {
   useEffect(() => {
     if(!userMap || !snsMap)return;
     let rt =  handleMembers(walletList);
-    console.error(rt)
     setTechMembers(rt)
   }, [userMap,snsMap]);
 
