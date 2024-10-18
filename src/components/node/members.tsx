@@ -118,7 +118,7 @@ export default function Node() {
   return (
     <Box>
       {showModal && <ProfileComponent userData={user} theme={theme} sns={sns} handleClose={handleClose} />}
-      <BackerNav to="/city-hall/governance" title={t('city-hall.nodeMembers')} mb="0"  />
+      <BackerNav to="/city-hall" title={t('city-hall.nodeMembers')} mb="0"  />
       <ItemBox>
         <Grouptitle>{t('city-hall.nodeMembers')}</Grouptitle>
         <Row>

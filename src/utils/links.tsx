@@ -217,13 +217,6 @@ const links = {
       icon: CreateImg,
       desc: 'city-hall.GovernanceNodeResultDesc',
     },
-    {
-      name: 'city-hall.nodeMembers',
-      link: '/node',
-      id: 'module-governance-node-result',
-      icon: GuildImg,
-      desc: 'city-hall.GovernanceNodeResultDesc',
-    },
   ],
   brand: [
     // {
@@ -265,6 +258,13 @@ const links = {
     // },
   ],
   apps: [
+    {
+      id: 'podcast',
+      name: 'Home.podcast',
+      link: 'https://seedao.notion.site/f57031667089473faa7ea3560d05960c',
+      icon: PodcastImg,
+      desc: 'resources.podcastDesc',
+    },
     {
       id: 'module-calendar',
       name: 'apps.OnlineEvent',
@@ -404,6 +404,12 @@ const links = {
 
   ],
   publicity: [
+    {
+      id: '',
+      name: ' 节点公示',
+      time: '2023-11-22 22:27',
+      link: '/node',
+    },
     {
       id: '',
       name: 'S5 节点共识大会积分公示',
