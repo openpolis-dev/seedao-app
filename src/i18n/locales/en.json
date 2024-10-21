@@ -877,6 +877,11 @@
     "Apply": "Apply SBT",
     "Audit": "Audit SBT",
     "Grant": "Grant SBT",
-    "history": "SBT History"
+    "history": "SBT History",
+    "sbtName": "SBT名称",
+    "Metadata": "Metadata",
+    "selectContract": "选择合约",
+    "type": "type",
+    "sns": "SNS"
   }
 }

@@ -877,7 +877,12 @@
     "Apply": "申请SBT",
     "Audit": "审核SBT",
     "Grant": "发放SBT",
-    "history": "SBT发放记录"
+    "history": "SBT发放记录",
+    "sbtName": "SBT名称",
+    "Metadata": "Metadata",
+    "selectContract": "选择合约",
+    "type": "类型",
+    "sns": "SNS"
 
   }
 }

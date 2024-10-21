@@ -4,8 +4,9 @@ import styled from "styled-components";
 import { ContainerPadding } from "../../assets/styles/global";
 import { Button } from "react-bootstrap";
 import ApplicationStatusTagNew from "../../components/common/applicationStatusTagNew";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { PlainButton } from "../../components/common/button";
+import BackerNav from "../../components/common/backNav";
 
 const Box = styled.div`
   position: relative;
@@ -41,22 +42,43 @@ export default function SbtList(){
   const { t } = useTranslation();
   const[list,setList]=useState([]);
   const navigate = useNavigate();
+  const {type} = useParams();
 
   const handleGoto = (url:string) =>{
     navigate(url);
   }
 
+  const switchType = () =>{
+    let str
+    switch (type){
+      case "audit":
+       str = t('sbt.Audit');
+        break;
+      case "grant":
+       str = t('sbt.Grant');
+        break;
+      case "history":
+       str = t('sbt.history');
+        break;
+      default:
+        str = "";
+        break;
+    }
+    return str;
+  }
+
   return <Box>
-    <TopLine>
-      <li>
-        <Button onClick={() => handleGoto("/sbt/create")} className="btn-com">
-          {t("city-hall.SendCompleted")}
-        </Button>
-      </li>
-      <li>
-        <ExportButton onClick={() => handleGoto("/sbt/apply")}>{t("Project.Export")}</ExportButton>
-      </li>
-    </TopLine>
+    {/*<TopLine>*/}
+    {/*  <li>*/}
+    {/*    <Button onClick={() => handleGoto("/sbt/create")} className="btn-com">*/}
+    {/*      {t("city-hall.SendCompleted")}*/}
+    {/*    </Button>*/}
+    {/*  </li>*/}
+    {/*  <li>*/}
+    {/*    <ExportButton onClick={() => handleGoto("/sbt/apply")}>{t("Project.Export")}</ExportButton>*/}
+    {/*  </li>*/}
+    {/*</TopLine>*/}
+    <BackerNav title={switchType()} to="/city-hall/governance" />
     <table className="table" cellPadding="0" cellSpacing="0">
       <thead>
       <tr>

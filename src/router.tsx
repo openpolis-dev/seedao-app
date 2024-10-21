@@ -124,7 +124,7 @@ export default function RouterLink() {
           <Route path="/assistant" element={<Assistant />} />
           <Route path="/node" element={<Node />} />
           <Route path="/search-profile" element={<SearchProfile />} />
-          <Route path="/sbt/list" element={<SbtList />} />
+          <Route path="/sbt/list/:type" element={<SbtList />} />
           <Route path="/sbt/create" element={<SbtCreate />} />
           <Route path="/sbt/apply" element={<SbtApply />} />
 

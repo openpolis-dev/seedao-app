@@ -1,22 +1,17 @@
 import { InputGroup, Button, Form } from 'react-bootstrap';
 import styled from 'styled-components';
-import React, { ChangeEvent, useEffect, useState, FormEvent } from 'react';
-import requests from 'requests';
-import { useAuthContext, AppActionType } from 'providers/authProvider';
+import React, { ChangeEvent, useState, FormEvent } from 'react';
+import { useAuthContext } from 'providers/authProvider';
 import { useTranslation } from 'react-i18next';
-import useToast, { ToastType } from 'hooks/useToast';
+import useToast from 'hooks/useToast';
 import { X } from 'react-bootstrap-icons';
 import { ContainerPadding } from 'assets/styles/global';
 import UploadImg from '../../assets/Imgs/profile/upload.svg';
-import userImg from '../../assets/Imgs/profile/name.svg';
-import EmailImg from '../../assets/Imgs/profile/email.svg';
-import TwitterImg from '../../assets/Imgs/profile/twitterIcon.svg';
-import MirrorImg from '../../assets/Imgs/profile/mirrorIcon.svg';
-import DescImg from '../../assets/Imgs/profile/desc.svg';
-import GithubImg from '../../assets/Imgs/profile/github.svg';
+
 import { useNavigate } from 'react-router-dom';
 import BackerNav from '../../components/common/backNav';
 import { compressionFile, fileToDataURL } from 'utils/image';
+import SeeSelect from "../../components/common/select";
 
 const OuterBox = styled.div`
   ${ContainerPadding};
@@ -41,7 +36,7 @@ const AvatarBox = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 100%;
+  border-radius: 4px;
   overflow: hidden;
   label {
     margin-top: 0;
@@ -119,10 +114,10 @@ export default function SbtCreate() {
   } = useAuthContext();
   const { t } = useTranslation();
   const { Toast, showToast } = useToast();
-  const [userName, setUserName] = useState<string | undefined>('');
-  const [email, setEmail] = useState('');
+  const [sbtName, setSbtName] = useState<string | undefined>('');
+  const [metadata, setMetadata] = useState('');
 
-  const [twitter, setTwitter] = useState('');
+  const [contract, setContract] = useState('');
 
   const [github, setGithub] = useState('');
   const [mirror, setMirror] = useState('');
@@ -133,25 +128,15 @@ export default function SbtCreate() {
   const handleInput = (e: ChangeEvent, type: string) => {
     const { value } = e.target as HTMLInputElement;
     switch (type) {
-      case 'userName':
-        setUserName(value);
+      case 'sbtName':
+        setSbtName(value);
         break;
-      case 'email':
-        setEmail(value);
+      case 'metadata':
+        setMetadata(value);
         break;
+      case 'contract':
+        setContract(value);
         break;
-      case 'twitter':
-        setTwitter(value);
-        break;
-        break;
-      case 'mirror':
-        setMirror(value);
-        break;
-      case 'github':
-        setGithub(value);
-        break;
-      case 'bio':
-        setBio(value);
     }
   };
   const saveProfile = async () => {
@@ -176,7 +161,7 @@ export default function SbtCreate() {
     <OuterBox>
       {Toast}
       <CardBox>
-        <BackerNav title={t('My.MyProfile')} to={`/sbt/list`} mb="40px" />
+        <BackerNav title={t('sbt.sbtName')} to={`/city-hall/tech`} mb="40px" />
         {/*<TitleBox>{t('My.MyProfile')}</TitleBox>*/}
         <HeadBox>
           <AvatarBox>
@@ -202,115 +187,47 @@ export default function SbtCreate() {
           <UlBox>
             <li>
               <div className="title">
-                <div className="icon">
-                  <img src={userImg} alt="" />
-                </div>
-                {t('My.Name')}
+                {t('sbt.sbtName')}
               </div>
               <InputBox>
                 <Form.Control
                   type="text"
                   placeholder=""
-                  value={userName}
-                  onChange={(e) => handleInput(e, 'userName')}
+                  value={sbtName}
+                  onChange={(e) => handleInput(e, 'sbtName')}
                 />
               </InputBox>
             </li>
             <li>
               <div className="title">
-                <div className="icon">
-                  <img src={DescImg} alt="" />
-                </div>
-                {t('My.Bio')}
+               {t('sbt.Metadata')}
               </div>
               <InputBox>
                 <Form.Control
                   placeholder=""
                   as="textarea"
                   rows={5}
-                  value={bio}
-                  onChange={(e) => handleInput(e, 'bio')}
+                  value={metadata}
+                  onChange={(e) => handleInput(e, 'metadata')}
                 />
               </InputBox>
             </li>
             <li>
               <div className="title">
-                <div className="icon">
-                  <img src={EmailImg} alt="" />
-                </div>
-                {t('My.Email')}
+                {t('sbt.selectContract')}
               </div>
               <InputBox>
-                <Form.Control type="text" placeholder="" value={email} onChange={(e) => handleInput(e, 'email')} />
-              </InputBox>
-            </li>
-            {/*<li>*/}
-            {/*  <div className="title">*/}
-            {/*    <div className="icon">*/}
-            {/*      <img src={DiscordImg} alt="" />*/}
-            {/*    </div>*/}
-            {/*    {t('My.Discord')}*/}
-            {/*  </div>*/}
-            {/*  <InputBox>*/}
-            {/*    <Form.Control type="text" placeholder="" value={discord} onChange={(e) => handleInput(e, 'discord')} />*/}
-            {/*  </InputBox>*/}
-            {/*</li>*/}
-            <li>
-              <div className="title">
-                <div className="icon">
-                  <img src={TwitterImg} alt="" />
-                </div>
-                {t('My.Twitter')}
-              </div>
-              <InputBox>
-                <Form.Control
-                  type="text"
-                  placeholder="https://twitter.com/..."
-                  value={twitter}
-                  onChange={(e) => handleInput(e, 'twitter')}
-                />
-              </InputBox>
-            </li>
-            {/*<li>*/}
-            {/*  <div className="title">*/}
-            {/*    <div className="icon">*/}
-            {/*      <img src={WechatImg} alt="" />*/}
-            {/*    </div>*/}
-            {/*    {t('My.WeChat')}*/}
-            {/*  </div>*/}
-            {/*  <InputBox>*/}
-            {/*    <Form.Control type="text" placeholder="" value={wechat} onChange={(e) => handleInput(e, 'wechat')} />*/}
-            {/*  </InputBox>*/}
-            {/*</li>*/}
-            <li>
-              <div className="title">
-                <div className="icon">
-                  <img src={MirrorImg} alt="" />
-                </div>
-                {t('My.Mirror')}
-              </div>
-              <InputBox>
-                <Form.Control
-                  type="text"
-                  placeholder="https://mirror.xyz/..."
-                  value={mirror}
-                  onChange={(e) => handleInput(e, 'mirror')}
-                />
-              </InputBox>
-            </li>
-            <li>
-              <div className="title">
-                <div className="icon">
-                  <img src={GithubImg} alt="" />
-                </div>
-                {t('My.Github')}
-              </div>
-              <InputBox>
-                <Form.Control
-                  type="text"
-                  placeholder="https://github.com/..."
-                  value={github}
-                  onChange={(e) => handleInput(e, 'github')}
+                <SeeSelect
+                  width="100%"
+                  // options={TIME_OPTIONS}
+                  value={contract}
+                  isClearable={false}
+                  isSearchable={false}
+                  onChange={(v: ISelectItem) => {
+                    // setSelectTime(v);
+                    // searchParams.set('sort_order', v?.value ?? '');
+                    // setSearchParams(searchParams);
+                  }}
                 />
               </InputBox>
             </li>
@@ -338,9 +255,8 @@ const RhtLi = styled.div`
 const UploadBox = styled.label`
   background: var(--bs-box--background);
   box-shadow: var(--box-shadow);
-  height: 80px;
-  width: 80px;
-  border-radius: 50%;
+  height: 150px;
+  width: 150px;
   display: flex;
   align-items: center;
   justify-content: center;
