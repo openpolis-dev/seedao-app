@@ -57,6 +57,9 @@ import SnsQuery from "./pages/sns-query";
 import Assistant from "./pages/assistant";
 import Node from "./components/node/members";
 import SearchProfile from "./components/profile/search";
+import SbtCreate from "./pages/sbt/sbtCreate";
+import SbtList from "./pages/sbt/sbtList";
+import SbtApply from "./pages/sbt/sbtApply";
 
 const isOnlyDev = !process.env.REACT_APP_ENV_VERSION || process.env.REACT_APP_ENV_VERSION === 'dev';
 
@@ -121,6 +124,9 @@ export default function RouterLink() {
           <Route path="/assistant" element={<Assistant />} />
           <Route path="/node" element={<Node />} />
           <Route path="/search-profile" element={<SearchProfile />} />
+          <Route path="/sbt/list" element={<SbtList />} />
+          <Route path="/sbt/create" element={<SbtCreate />} />
+          <Route path="/sbt/apply" element={<SbtApply />} />
 
 
           {/* <Route path="/sns/user" element={<UserSNS />} /> */}

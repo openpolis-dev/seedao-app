@@ -36,6 +36,10 @@ import NodeImg from '../assets/Imgs/governance/node.png';
 import PodcastImg from '../assets/Imgs/podcast.jpeg';
 import getConfig from './envCofnig';
 import AssistantImg from "../assets/Imgs/governance/assistant.png";
+
+import { baselineSquare,featherText,lunchBox,textSquare } from '@lucide/lab';
+
+
 /**
  * NOTE:
  * if id starts with "module-", means its path is our app's router path, otherwise is outer link
@@ -217,6 +221,38 @@ const links = {
       icon: CreateImg,
       desc: 'city-hall.GovernanceNodeResultDesc',
     },
+    {
+      name: 'sbt.Apply',
+      link: '/sbt/apply',
+      id: 'module-governance-node-result',
+      type:"icon",
+      icon: baselineSquare,
+      desc: 'sbt.Apply',
+    },
+    {
+      name: 'sbt.Audit',
+      link: '/sbt/list',
+      id: 'module-governance-node-result',
+      type:"icon",
+      icon: featherText,
+      desc: 'sbt.Audit',
+    },
+    {
+      name: 'sbt.Grant',
+      link: '/sbt/list',
+      id: 'module-governance-node-result',
+      type:"icon",
+      icon: lunchBox,
+      desc: 'sbt.Grant',
+    },
+    {
+      name: 'sbt.history',
+      link: '/sbt/list',
+      id: 'module-governance-node-result',
+      type:"icon",
+      icon: textSquare,
+      desc: 'sbt.history',
+    },
   ],
   brand: [
     // {
@@ -248,6 +284,14 @@ const links = {
       id: 'app',
       icon: RImg12,
       desc: 'city-hall.AppReviewDesc',
+    },
+    {
+      name: 'sbt.create',
+      link: '/sbt/create',
+      id: 'module-sbt',
+      icon: RImg6,
+      desc: 'sbt.createDesc',
+      Nolink: true,
     },
     // {
     //   name: 'city-hall.SeedReview',

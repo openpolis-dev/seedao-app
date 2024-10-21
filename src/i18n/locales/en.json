@@ -870,5 +870,13 @@
     "NewcomerReward": "Newcomer Reward",
     "JoinCommunity": "Join Community",
     "FinalExamination": "Final Examination"
+  },
+  "sbt": {
+    "create": "Create SBT",
+    "createDesc": "Create SBT",
+    "Apply": "Apply SBT",
+    "Audit": "Audit SBT",
+    "Grant": "Grant SBT",
+    "history": "SBT History"
   }
 }

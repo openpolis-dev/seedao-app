@@ -870,5 +870,14 @@
     "NewcomerReward": "新手悬赏",
     "JoinCommunity": "加入社群",
     "FinalExamination": "毕业考试"
+  },
+  "sbt": {
+    "create": "创建SBT",
+    "createDesc": "创建SBT",
+    "Apply": "申请SBT",
+    "Audit": "审核SBT",
+    "Grant": "发放SBT",
+    "history": "SBT发放记录"
+
   }
 }
