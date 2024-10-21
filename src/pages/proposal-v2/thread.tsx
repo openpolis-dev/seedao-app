@@ -367,6 +367,14 @@ export default function ThreadPage() {
     return true;
   };
 
+  const showVotedTag = () =>{
+    if (!data?.votes?.[0]) {
+      return false;
+    }
+    const votedItem = data?.votes?.[0].options.filter((item)=>item.is_vote);
+    return !!votedItem?.length
+  }
+
   const isCurrentApplicant = data?.applicant?.toLocaleLowerCase() === account?.toLocaleLowerCase();
 
   const moreActions = () => {
@@ -544,10 +552,12 @@ export default function ThreadPage() {
         <FlexLine>
           {currentCategory && <CategoryTag>{currentCategory}</CategoryTag>}
           {!data?.is_based_on_custom_template && <TemplateTag>{data?.template_name}</TemplateTag>}
+          {showVotedTag() &&  <VotedBox>{t('Proposal.HasVote')}</VotedBox>}
           {currentState && <ProposalStateTag state={currentState} />}
+
           {getTimeTagDisplay()}
 
-          <VotedBox>{t('Proposal.HasVote')}</VotedBox>
+
         </FlexLine>
         {showModal && <ProfileComponent address={applicant} theme={theme} handleClose={handleClose} />}
         <InfoBox>
