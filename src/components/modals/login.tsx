@@ -18,7 +18,14 @@ import MetamaskIcon from 'assets/Imgs/home/METAmask.svg';
 import JoyIdImg from 'assets/Imgs/home/JOYID.png';
 import UnipassIcon from 'assets/Imgs/home/UniPass.svg';
 import { useEffect, useState } from 'react';
-import { getNonce, loginWithSeeAuth, readPermissionUrl, loginToMetafo, loginToDeschool } from 'requests/user';
+import {
+  getNonce,
+  loginWithSeeAuth,
+  readPermissionUrl,
+  loginToMetafo,
+  loginToDeschool,
+  loginToSBT
+} from "requests/user";
 import { WalletType, Wallet } from 'wallet/wallet';
 import { createSiweMessage } from 'utils/sign';
 import { SELECT_WALLET, SEEDAO_USER_DATA, METAFORO_TOKEN } from 'utils/constant';
@@ -144,10 +151,31 @@ const LoginModalContent = () => {
                 },
               });
             }
-            
+
           } catch (error) {
             console.error('3rd party login error', error);
           }
+
+
+
+          try {
+            console.error("==loginToSBT==")
+            const loginResp:any = await loginToSBT(res.data.see_auth);
+            console.error("==loginToSBT==",loginResp)
+
+            if (loginResp.data) {
+
+              dispatch({
+                type: AppActionType.SET_SBT_TOKEN,
+                payload: loginResp.data.data.token,
+              });
+            }
+
+          } catch (error) {
+            console.error('SBT login error', error);
+          }
+
+
 
           // set context data
           const now = Date.now();

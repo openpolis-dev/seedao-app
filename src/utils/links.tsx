@@ -231,7 +231,7 @@ const links = {
     },
     {
       name: 'sbt.Audit',
-      link: '/sbt/list/audit',
+      link: '/sbt/list/pending',
       id: 'module-governance-node-result',
       type:"icon",
       icon: featherText,
@@ -239,7 +239,7 @@ const links = {
     },
     {
       name: 'sbt.Grant',
-      link: '/sbt/list/grant',
+      link: '/sbt/list/approved',
       id: 'module-governance-node-result',
       type:"icon",
       icon: lunchBox,
@@ -247,7 +247,7 @@ const links = {
     },
     {
       name: 'sbt.history',
-      link: '/sbt/list/history',
+      link: '/sbt/list/minted',
       id: 'module-governance-node-result',
       type:"icon",
       icon: textSquare,

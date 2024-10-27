@@ -74,6 +74,7 @@ const LiBox = styled(Col)`
   justify-content: center;
   margin-right: 20px;
   cursor: pointer;
+    margin-bottom: 20px;
   .name {
     font-size: 16px;
     font-weight: 600;

@@ -1,5 +1,7 @@
-import request, { ResponseData } from './http';
+import request, { BASE_URL, ResponseData } from "./http";
 import { ISeason } from 'type/application.type';
+import axios from "axios";
+import { SBT_BASEURL } from "../utils/constant";
 
 const PATH_PREFIX = '/cityhall';
 
@@ -61,3 +63,59 @@ export const requestApproveMintReward = () => {
 export const getCurrentSeason = (): Promise<ResponseData<ISeason>> => {
   return request.get(`/seasons/current`);
 };
+
+
+const organization_id = 1
+
+export const getSBTlist = async(token:string) => {
+  let rt:any= await axios.get(`${SBT_BASEURL}organization/${organization_id}/nfts`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
+  return rt.data
+};
+interface ISBT {
+  token:string;
+  organization_id:any;
+  nft_id:any;
+  receivers:string;
+  organization_contract_id:any
+}
+
+export const applySBT = async(obj:ISBT) => {
+  const{token,organization_id,nft_id,receivers,organization_contract_id} = obj
+  let rt:any= await axios.post(`${SBT_BASEURL}organization/${organization_id}/mint`, {
+    organization_contract_id,
+    nft_id,
+    receivers
+  },{
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'content-type': 'application/json'
+    }
+  });
+  return rt.data
+};
+
+export const getAuditList = async(token:string,page:number,size:number,type:string) => {
+  let rt:any= await axios.get(`${SBT_BASEURL}organization/${organization_id}/mints?page=${page}&size=${size}&sort_field=created_at&sort_order=desc&status=${type}`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
+  return rt.data
+};
+
+
+export const operateAudit = async(token:string,id:number,type:string) => {
+  console.log("====",token,id,type)
+  let rt:any= await axios.put(`${SBT_BASEURL}organization/${organization_id}/mint/${type}/${id}`,null, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
+  return rt.data
+};
+
+

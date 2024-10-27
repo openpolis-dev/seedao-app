@@ -1,17 +1,16 @@
 import { InputGroup, Button, Form } from 'react-bootstrap';
 import styled from 'styled-components';
-import React, { ChangeEvent, useState, FormEvent } from 'react';
-import { useAuthContext } from 'providers/authProvider';
+import React, { ChangeEvent, useState, useEffect } from "react";
+import { AppActionType, useAuthContext } from "providers/authProvider";
 import { useTranslation } from 'react-i18next';
-import useToast from 'hooks/useToast';
-import { X } from 'react-bootstrap-icons';
+import useToast, { ToastType } from "hooks/useToast";
 import { ContainerPadding } from 'assets/styles/global';
-import UploadImg from '../../assets/Imgs/profile/upload.svg';
 
 import { useNavigate } from 'react-router-dom';
 import BackerNav from '../../components/common/backNav';
-import { compressionFile, fileToDataURL } from 'utils/image';
-import SeeSelect from "../../components/common/select";
+import { applySBT, getSBTlist } from "../../requests/cityHall";
+import publicJs from 'utils/publicJs';
+import sns from "@seedao/sns-js";
 
 const OuterBox = styled.div`
   ${ContainerPadding};
@@ -30,7 +29,6 @@ const CardBox = styled.div`
 
 
 const UlBox = styled.ul`
-  width: 600px;
   li {
     display: flex;
     align-items: flex-start;
@@ -86,35 +84,126 @@ const MidBox = styled.div`
   padding-bottom: 40px;
 `;
 
+const ImgUl = styled.div`
+  display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    dl{
+        width: 150px;
+        background: var(--bs-box-background);
+        box-shadow: var(--box-shadow);
+        border-radius: 8px;
+        overflow: hidden;
+        border: 2px solid var(--bs-box-background);
+        cursor: pointer;
+        img{
+            width: 100%;
+        }
+        &.active,&:hover{
+            border: 2px solid var(--bs-primary);
+        }
+    }
+    dd{
+        font-size: 14px;
+        padding: 10px;
+    }
+`
 
 export default function SbtApply() {
   const {
+    state:{
+      sbtToken
+    },
     dispatch,
   } = useAuthContext();
   const { t } = useTranslation();
   const { Toast, showToast } = useToast();
-  const [type, setType] = useState<string | undefined>('');
-  const [metadata, setMetadata] = useState('');
 
-  const [sns, setSns] = useState('');
+  const [snsStr, setSnsStr] = useState('');
+
+  const [current,setCurrent] = useState<number|null>(null);
+  const [list,setList] = useState<any[] >([]);
 
 
   const navigate = useNavigate();
 
-  const handleInput = (e: ChangeEvent, type: string) => {
-    const { value } = e.target as HTMLInputElement;
-    switch (type) {
-      case 'type':
-        setType(value);
-        break;
-      case 'sns':
-        setSns(value);
-        break;
+  useEffect(() => {
+    if(!sbtToken)return;
+    getNftList()
+  }, [sbtToken]);
+
+  const getNftList = async () =>{
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    try {
+      const rt = await getSBTlist(sbtToken)
+      let arr = [];
+
+      for (let i = 0; i < rt.data.length; i++) {
+        let item = rt.data[i];
+        const imageUrl = await publicJs.getImage(item.nft_image);
+        item.image = imageUrl;
+        arr.push(item)
+      }
+      setList(rt.data);
+    }catch(error){
+      console.log(error);
+    }finally {
+      dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }
+  }
+
+  const AddressZero = "0x0000000000000000000000000000000000000000";
+
+  const handleInput = (e: ChangeEvent) => {
+    const { value } = e.target as HTMLInputElement;
+    setSnsStr(value);
   };
-  const saveProfile = async () => {
+
+  const handleSubmit = async () => {
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    const to_be_parsed:any[] = [];
+    snsStr.split("\n").forEach((item) => {
+      const str = item.trim();
+      if (str && str.endsWith(".seedao")) {
+        to_be_parsed.push(str);
+      }
+    });
+    if (!to_be_parsed.length) {
+      showToast(t('SNS.noSNSINput'), ToastType.Danger);
+      return;
+    }
+    const unique_list = Array.from(new Set(to_be_parsed));
+
+    try {
+      let result = await sns.resolves(unique_list)
+      if(result.includes(AddressZero)){
+        showToast(t('sbt.snsError'), ToastType.Danger);
+      }else{
+        let obj ={
+          token:sbtToken,
+          organization_id:list[current!].organization_id,
+          nft_id:list[current!].nft_id,
+          receivers:result.join(","),
+          organization_contract_id:list[current!].organization_contract_id
+        }
+        let rt = await applySBT(obj)
+        console.log(rt)
+
+        showToast(t('sbt.ApplySuccess'), ToastType.Success);
+      }
+    }catch(error){
+      console.error(error);
+    }finally {
+      dispatch({ type: AppActionType.SET_LOADING, payload: false });
+    }
+
 
   };
+
+  const handleSelect = (e:number) => {
+    setCurrent(e)
+  }
 
 
 
@@ -122,7 +211,7 @@ export default function SbtApply() {
     <OuterBox>
       {Toast}
       <CardBox>
-        <BackerNav title={t('sbt.sbtName')} to={`/city-hall/tech`} mb="40px" />
+        <BackerNav title={t('sbt.Apply')} to={`/city-hall/governance`} mb="40px" />
         {/*<TitleBox>{t('My.MyProfile')}</TitleBox>*/}
 
         <MidBox>
@@ -131,20 +220,17 @@ export default function SbtApply() {
               <div className="title">
                 {t("sbt.type")}
               </div>
-              <InputBox>
-                <SeeSelect
-                  width="100%"
-                  // options={TIME_OPTIONS}
-                  value={type}
-                  isClearable={false}
-                  isSearchable={false}
-                  onChange={(v: ISelectItem) => {
-                    // setSelectTime(v);
-                    // searchParams.set('sort_order', v?.value ?? '');
-                    // setSearchParams(searchParams);
-                  }}
-                />
-              </InputBox>
+              <ImgUl>
+
+                {
+                  list.map((item, i) => (<dl key={i} onClick={() => handleSelect(i)} className={current===i?"active":""}>
+                    <dt>
+                      <img src={item.image} alt="" />
+                    </dt>
+                    <dd>{item?.nft_name}</dd>
+                  </dl>))
+                }
+              </ImgUl>
             </li>
             <li>
               <div className="title">
@@ -155,14 +241,15 @@ export default function SbtApply() {
                   placeholder=""
                   as="textarea"
                   rows={5}
-                  value={sns}
-                  onChange={(e) => handleInput(e, "sns")}
+                  value={snsStr}
+                  onChange={(e) => handleInput(e)}
                 />
               </InputBox>
             </li>
 
             <RhtLi>
-              <Button onClick={() => saveProfile()}>{t("general.confirm")}</Button>
+              <Button onClick={() => handleSubmit()} disabled={!snsStr.length || current == null}>{t("general.confirm")}
+              </Button>
             </RhtLi>
           </UlBox>
         </MidBox>

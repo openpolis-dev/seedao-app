@@ -878,10 +878,25 @@
     "Audit": "Audit SBT",
     "Grant": "Grant SBT",
     "history": "SBT History",
-    "sbtName": "SBT名称",
+    "sbtName": "SBT Name",
     "Metadata": "Metadata",
-    "selectContract": "选择合约",
+    "selectContract": "select Contract",
     "type": "type",
-    "sns": "SNS"
+    "sns": "SNS",
+    "ApplySuccess": "Apply SBT Successfully",
+    "snsError": "Enter the correct SNS",
+    "createAt": "Create At",
+    "applicant": "Applicant",
+    "Auditor": "Auditor",
+    "receivers": "Receivers",
+    "status": "Status",
+    "pending": "Pending",
+    "approved": "Approved",
+    "rejected": "Rejected",
+    "minted": "Minted",
+    "approve": "Approve",
+    "reject": "Reject",
+    "approveSBT": "Are you sure to apply SBT?",
+    "rejectSBT": "Are you sure to reject SBT?"
   }
 }

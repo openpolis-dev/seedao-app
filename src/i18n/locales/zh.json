@@ -882,7 +882,22 @@
     "Metadata": "Metadata",
     "selectContract": "选择合约",
     "type": "类型",
-    "sns": "SNS"
+    "sns": "SNS",
+    "ApplySuccess": "申请SBT成功",
+    "snsError": "请输入正确的SNS",
+    "createAt": "创建时间",
+    "applicant": "申请人",
+    "Auditor": "审核人",
+    "receivers": "接收人",
+    "status": "状态",
+    "pending": "待审核",
+    "approved": "已通过",
+    "rejected": "已拒绝",
+    "minted": "已发放",
+    "approve": "通过",
+    "reject": "拒绝",
+    "approveSBT": "确定通过SBT申请吗?",
+    "rejectSBT": "确定拒绝SBT申请吗?"
 
   }
 }
