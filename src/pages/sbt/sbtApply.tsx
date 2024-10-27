@@ -191,6 +191,9 @@ export default function SbtApply() {
         console.log(rt)
 
         showToast(t('sbt.ApplySuccess'), ToastType.Success);
+        setTimeout(()=>{
+          navigate("/sbt/list/pending")
+        },1500)
       }
     }catch(error){
       console.error(error);

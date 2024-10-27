@@ -1,17 +1,20 @@
 import { InputGroup, Button, Form } from 'react-bootstrap';
 import styled from 'styled-components';
-import React, { ChangeEvent, useState, FormEvent } from 'react';
-import { useAuthContext } from 'providers/authProvider';
+import React, { ChangeEvent, useState, FormEvent, useEffect } from "react";
+import { AppActionType, useAuthContext } from "providers/authProvider";
 import { useTranslation } from 'react-i18next';
-import useToast from 'hooks/useToast';
+import useToast, { ToastType } from "hooks/useToast";
 import { X } from 'react-bootstrap-icons';
 import { ContainerPadding } from 'assets/styles/global';
 import UploadImg from '../../assets/Imgs/profile/upload.svg';
 
 import { useNavigate } from 'react-router-dom';
 import BackerNav from '../../components/common/backNav';
-import { compressionFile, fileToDataURL } from 'utils/image';
 import SeeSelect from "../../components/common/select";
+import { createSBT, getContracts, uploadFile } from "../../requests/cityHall";
+import publicJs from "../../utils/publicJs";
+import { ethers } from "ethers";
+import SBTabi from "../../assets/abi/SBT.json";
 
 const OuterBox = styled.div`
   ${ContainerPadding};
@@ -110,21 +113,36 @@ const TitleBox = styled.div`
 
 export default function SbtCreate() {
   const {
+    state:{
+      sbtToken
+    },
     dispatch,
   } = useAuthContext();
   const { t } = useTranslation();
   const { Toast, showToast } = useToast();
   const [sbtName, setSbtName] = useState<string | undefined>('');
   const [metadata, setMetadata] = useState('');
-
   const [contract, setContract] = useState('');
-
-  const [github, setGithub] = useState('');
-  const [mirror, setMirror] = useState('');
+  const [ipfsHash, setIpfsHash] = useState("");
   const [avatar, setAvatar] = useState('');
-  const [bio, setBio] = useState('');
+  const [list, setList] = useState<any[]>([]);
+
+  useEffect(() => {
+    getList()
+  }, []);
+
+  const getList = async() =>{
+    let rt = await getContracts(sbtToken);
+    rt.data.map((item:any)=>{
+      item.label = item.name;
+      item.value = item.contract_address;
+    })
+    setList(rt.data)
+  }
+
 
   const navigate = useNavigate();
+
   const handleInput = (e: ChangeEvent, type: string) => {
     const { value } = e.target as HTMLInputElement;
     switch (type) {
@@ -134,23 +152,83 @@ export default function SbtCreate() {
       case 'metadata':
         setMetadata(value);
         break;
-      case 'contract':
-        setContract(value);
-        break;
     }
   };
-  const saveProfile = async () => {
+
+
+
+  const saveSBT = async () => {
+    let newMeta = null;
+    try{
+      newMeta = JSON.parse(metadata);
+      newMeta.image = ipfsHash;
+
+    }catch(e){
+      showToast(t('sbt.metadataError'), ToastType.Danger);
+      return;
+    }
+
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    let obj = {
+      "organization_contract_id": (contract as any).ID,
+      "nft_name": sbtName,
+      "nft_metadata": JSON.stringify(newMeta),
+    }
+
+    try{
+
+      let result =  await createSBT(sbtToken,obj)
+
+      const {nft_id,nft_uri} = result.data;
+      const web3Provider = new ethers.providers.Web3Provider((window as any).ethereum);
+
+      const signer = web3Provider.getSigner()
+      const contractInit = new ethers.Contract((contract as any).contract_address, SBTabi, signer);
+
+      const rt = await contractInit.setURI(nft_id,nft_uri);
+
+      const receipt = await rt.wait()
+      console.log(receipt)
+
+      showToast(t('Msg.ApproveSuccess'), ToastType.Success);
+
+      setTimeout(()=>{
+        navigate("/sbt/list/pending")
+      },1500)
+
+    }catch(e){
+      showToast(t('Msg.ApproveFailed'), ToastType.Danger);
+    }finally {
+      dispatch({ type: AppActionType.SET_LOADING, payload: false });
+    }
+
+
 
   };
-
 
 
   const updateLogo = async (e: FormEvent) => {
-    const { files } = e.target as any;
-    const file = files[0];
-    const new_file = await compressionFile(file, file.type);
-    const base64 = await fileToDataURL(new_file);
-    setAvatar(base64);
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    try{
+
+      const { files } = e.target as any;
+      const file = files[0];
+      const formData = new FormData();
+      formData.append('file', file);
+      const result = await uploadFile(sbtToken,formData);
+      setIpfsHash(result.data.ipfs_hash)
+      let rt = await publicJs.getImage(result.data.ipfs_hash);
+      setAvatar(rt as string);
+      showToast(t('sbt.uploadSuccess'), ToastType.Success);
+    }catch(e){
+      console.log(e);
+      setAvatar("")
+      setIpfsHash("")
+      showToast(t('sbt.uploadFailed'), ToastType.Danger);
+    }finally {
+      dispatch({ type: AppActionType.SET_LOADING, payload: false });
+    }
+
   };
 
   const removeUrl = () => {
@@ -161,7 +239,7 @@ export default function SbtCreate() {
     <OuterBox>
       {Toast}
       <CardBox>
-        <BackerNav title={t('sbt.sbtName')} to={`/city-hall/tech`} mb="40px" />
+        <BackerNav title={t('sbt.create')} to={`/city-hall/tech`} mb="40px" />
         {/*<TitleBox>{t('My.MyProfile')}</TitleBox>*/}
         <HeadBox>
           <AvatarBox>
@@ -219,20 +297,18 @@ export default function SbtCreate() {
               <InputBox>
                 <SeeSelect
                   width="100%"
-                  // options={TIME_OPTIONS}
+                  options={list}
                   value={contract}
                   isClearable={false}
                   isSearchable={false}
-                  onChange={(v: ISelectItem) => {
-                    // setSelectTime(v);
-                    // searchParams.set('sort_order', v?.value ?? '');
-                    // setSearchParams(searchParams);
+                  onChange={(v: any) => {
+                    setContract(v);
                   }}
                 />
               </InputBox>
             </li>
             <RhtLi>
-              <Button onClick={() => saveProfile()}>{t('general.confirm')}</Button>
+              <Button onClick={() => saveSBT()} disabled={!ipfsHash || !sbtName || !metadata || !contract}>{t('general.confirm')}</Button>
             </RhtLi>
           </UlBox>
         </MidBox>

@@ -897,6 +897,10 @@
     "approve": "Approve",
     "reject": "Reject",
     "approveSBT": "Are you sure to apply SBT?",
-    "rejectSBT": "Are you sure to reject SBT?"
+    "rejectSBT": "Are you sure to reject SBT?",
+    "distributeSBT": "Are you sure to distribute SBT?",
+    "uploadSuccess": "upload Success",
+    "uploadFailed": "upload Failed",
+    "metadataError": "Metadata Error,Please Enter the correct JSON"
   }
 }

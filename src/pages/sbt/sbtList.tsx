@@ -9,11 +9,13 @@ import Page from "../../components/pagination";
 
 import { formatTime } from "../../utils/time";
 import { AppActionType, useAuthContext } from "../../providers/authProvider";
-import { getAuditList, getSBTlist, operateAudit } from "../../requests/cityHall";
+import { distribute, getAuditList, getSBTlist, operateAudit } from "../../requests/cityHall";
 import publicJs from "../../utils/publicJs";
 import SbtModal from "./sbtModal";
 import ConfirmModal from "../../components/modals/confirmModal";
 import useToast, { ToastType } from "../../hooks/useToast";
+import { ethers } from "ethers";
+import SBTabi from "../../assets/abi/SBT.json";
 
 const Box = styled.div`
   position: relative;
@@ -69,7 +71,7 @@ const DistributeBox = styled.div`
     display: flex;
     align-items: center;
     gap: 10px;
-    .approve,.reject{
+    &>div{
         color: #fff;
         padding: 3px 10px;
         font-size: 12px;
@@ -81,6 +83,9 @@ const DistributeBox = styled.div`
     .reject{
         background: #FF7193;
   
+    }
+    .success{
+        background: #1f9e14;
     }
 `
 
@@ -117,13 +122,13 @@ export default function SbtList(){
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
      let rt = await getAuditList(sbtToken,page,pageSize,type!)
+
       const {page:pageNum,size,rows,total} = rt.data;
+      console.log("getRecords",rt.data)
       setList(rows);
       setPage(pageNum);
       setTotal(total);
       setPageSize(size);
-
-      console.log(rt.data);
     } catch (error) {
       logError('getCloseProjectApplications failed:', error);
     } finally {
@@ -149,7 +154,6 @@ export default function SbtList(){
         item.image = imageUrl;
         arr.push(item)
       }
-      console.error(arr);
       setSbtList(arr);
     }catch(error){
       console.log(error);
@@ -213,14 +217,30 @@ export default function SbtList(){
 
   const handleOperate = async() =>{
     if(!sbtToken || !operateType || !currentItem)return;
-    console.log(currentItem.ID);
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try{
 
-      let rt = await operateAudit(sbtToken,currentItem.ID,operateType)
-      console.log(rt);
+      if(operateType === "approve" || operateType === "reject" ){
+        await operateAudit(sbtToken,currentItem.ID,operateType)
+      }else if(operateType === "distribute"){
+        const web3Provider = new ethers.providers.Web3Provider((window as any).ethereum);
 
+        const signer = web3Provider.getSigner()
+        const contract = new ethers.Contract(currentItem.nft_contract_address, SBTabi, signer);
+        const {receivers,nft_id} = currentItem;
+        const receiversArr = receivers.split(",");
+        const result = await contract.mintToBatchAddress(receiversArr,nft_id,1,"0x");
+
+        const receipt = await result.wait();
+
+        console.log("receipt",receipt);
+        await distribute(sbtToken,currentItem.ID,result.hash)
+      }
       showToast(t('Msg.ApproveSuccess'), ToastType.Success);
+
+      setTimeout(()=>{
+        window.location.reload();
+      },1500)
 
     }catch(error){
       console.error(error);
@@ -236,6 +256,23 @@ export default function SbtList(){
     setOperateType(typeStr)
     setShowConfirm(true)
     setCurrentItem(item)
+  }
+
+  const returnTips = () =>{
+    let str =""
+     switch(operateType){
+       case "approve":
+         str= t('sbt.approveSBT')
+         break;
+       case "reject":
+         str= t('sbt.rejectSBT')
+         break;
+       case "distribute":
+         str= t('sbt.distributeSBT')
+           break;
+     }
+
+     return str
   }
 
 
@@ -256,7 +293,7 @@ export default function SbtList(){
     }
     {
       showConfirm &&     <ConfirmModal
-        msg={operateType === "approve"?t('sbt.approveSBT'):t('sbt.rejectSBT')}
+        msg={returnTips()}
         onClose={() => setShowConfirm(false)}
         onConfirm={handleOperate}
       />
@@ -292,6 +329,12 @@ export default function SbtList(){
                 <div className="approve" onClick={()=>handleShowModal("approve",item)}>{t("sbt.approve")}</div>
                 <div className="reject" onClick={()=>handleShowModal("reject",item)}>{t("sbt.reject")}</div>
 
+                </DistributeBox>
+              }
+
+              {
+                type === "approved" && <DistributeBox>
+                  <div className="success" onClick={()=>handleShowModal("distribute",item)}>发放</div>
                 </DistributeBox>
               }
             </td>

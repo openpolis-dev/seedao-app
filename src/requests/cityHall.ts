@@ -109,7 +109,6 @@ export const getAuditList = async(token:string,page:number,size:number,type:stri
 
 
 export const operateAudit = async(token:string,id:number,type:string) => {
-  console.log("====",token,id,type)
   let rt:any= await axios.put(`${SBT_BASEURL}organization/${organization_id}/mint/${type}/${id}`,null, {
     headers: {
       Authorization: `Bearer ${token}`
@@ -118,4 +117,40 @@ export const operateAudit = async(token:string,id:number,type:string) => {
   return rt.data
 };
 
+export const uploadFile = async(token:string,file:any)=>{
+  let rt:any= await axios.post(`${SBT_BASEURL}upload/file`,file, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'content-type': 'multipart/form-data;boundary=boundary'
+    }
+  });
+  return rt.data
+};
 
+export const getContracts = async(token:string) => {
+  let rt:any= await axios.get(`${SBT_BASEURL}organization/${organization_id}/contracts`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
+  return rt.data
+};
+
+export const createSBT = async(token:string,obj:any)=>{
+  let rt:any= await axios.post(`${SBT_BASEURL}organization/${organization_id}/nft`,obj, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'content-type': 'application/json'
+    }
+  });
+  return rt.data
+};
+
+export const distribute = async(token:string,id:number,mint_tx_hash:string) => {
+  let rt:any= await axios.put(`${SBT_BASEURL}organization/${organization_id}/mint/minted/${id}/${mint_tx_hash}`,null, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
+  return rt.data
+};

@@ -897,7 +897,12 @@
     "approve": "通过",
     "reject": "拒绝",
     "approveSBT": "确定通过SBT申请吗?",
-    "rejectSBT": "确定拒绝SBT申请吗?"
+    "rejectSBT": "确定拒绝SBT申请吗?",
+    "distributeSBT": "确定发放SBT吗?",
+    "uploadSuccess": "上传成功",
+    "uploadFailed": "上传失败",
+    "metadataError": "Metadata错误，请输入正确的JSON"
+
 
   }
 }
