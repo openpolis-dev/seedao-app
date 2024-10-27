@@ -57,7 +57,8 @@ export const requestSnapshotSeed = () => {
 };
 // send reward
 export const requestApproveMintReward = () => {
-  return request.post('rewards/approve_mint_reward');
+  // return request.post('rewards/approve_mint_reward');
+  return request.post('rewards/approve_mint_snap_seed');
 };
 
 export const getCurrentSeason = (): Promise<ResponseData<ISeason>> => {
