@@ -6,6 +6,7 @@ import ApplicationStatusTagNew from "./applicationStatusTagNew";
 import { useNavigate, useParams } from "react-router-dom";
 import BackerNav from "../../components/common/backNav";
 import Page from "../../components/pagination";
+import { Button } from 'react-bootstrap';
 
 import { formatTime } from "../../utils/time";
 import { AppActionType, useAuthContext } from "../../providers/authProvider";
@@ -16,12 +17,19 @@ import ConfirmModal from "../../components/modals/confirmModal";
 import useToast, { ToastType } from "../../hooks/useToast";
 import { ethers } from "ethers";
 import SBTabi from "../../assets/abi/SBT.json";
+import {BookmarkCheck,BookmarkX} from "lucide-react"
 
 const Box = styled.div`
   position: relative;
   box-sizing: border-box;
   min-height: 100%;
   ${ContainerPadding};
+    button{
+        padding: 5px 20px;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
 `;
 
 
@@ -179,6 +187,9 @@ export default function SbtList(){
       case "minted":
        str = t('sbt.history');
         break;
+        case "rejected":
+       str = t('sbt.rejected');
+        break;
       default:
         str = "";
         break;
@@ -277,22 +288,31 @@ export default function SbtList(){
 
 
   return <Box>
-    {/*<TopLine>*/}
-    {/*  <li>*/}
-    {/*    <Button onClick={() => handleGoto("/sbt/create")} className="btn-com">*/}
-    {/*      {t("city-hall.SendCompleted")}*/}
-    {/*    </Button>*/}
-    {/*  </li>*/}
-    {/*  <li>*/}
-    {/*    <ExportButton onClick={() => handleGoto("/sbt/apply")}>{t("Project.Export")}</ExportButton>*/}
-    {/*  </li>*/}
-    {/*</TopLine>*/}
+
     <BackerNav title={switchType()} to="/city-hall/governance" />
+
     {
-      show &&    <SbtModal handleClose={handleClose} detail={detailDisplay}  />
+      (type === "rejected" || type === "minted") &&  <TopLine>
+        <li>
+          <Button variant="primary" onClick={() => handleGoto("/sbt/list/minted")} className="btn-com">
+            <BookmarkCheck size={17} />
+            {t("sbt.minted")}
+          </Button>
+        </li>
+        <li>
+          <Button variant="outline-primary"  onClick={() => handleGoto("/sbt/list/rejected")} className="btn-com">
+            <BookmarkX size={17} />
+            {t("sbt.rejected")}
+          </Button>
+        </li>
+      </TopLine>
+    }
+
+    {
+      show && <SbtModal handleClose={handleClose} detail={detailDisplay} />
     }
     {
-      showConfirm &&     <ConfirmModal
+      showConfirm && <ConfirmModal
         msg={returnTips()}
         onClose={() => setShowConfirm(false)}
         onConfirm={handleOperate}
