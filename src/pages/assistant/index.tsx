@@ -38,17 +38,39 @@ export default function Assistant() {
     const res = await requests.user.getUserLevel();
     const current_lv = res.data?.current_lv;
     setLevel(current_lv);
-    console.log("getUserLevel",res);
+    console.error("getUserLevel",current_lv,typeof current_lv);
   }
 
   useEffect(() => {
-    //TODO
-    if (pathname?.indexOf('notion') > -1 || pathname?.indexOf('assistant') > -1) {
-      setArticleId("d498b5e6919d4f2295bb76f80c83c4bf");
-    }else {
-      setArticleId('0bad66817c464f04962b797b47056241');
+    // if (pathname?.indexOf('notion') > -1 || pathname?.indexOf('assistant') > -1) {
+    //   setArticleId("d498b5e6919d4f2295bb76f80c83c4bf");
+    // }else {
+    //   setArticleId('0bad66817c464f04962b797b47056241');
+    // }
+    switch (level){
+      case "2":
+        setArticleId("19e87f9a7afc40ba9aa9beccded3dd61");
+        break;
+      case "3":
+        setArticleId("2b78fc5a90584b5399bb0acb4404fd79");
+        break;
+      case "4":
+        setArticleId("c7e2c42b05d24d529757b115455d5644");
+        break;
+      case "5":
+        setArticleId("58272ec5de7d44ad9b665a11b1006ffb");
+        break;
+      case "6":
+        setArticleId("566965755bd74c94944695f689e21101");
+        break;
+      case "1":
+      default:
+        setArticleId("cd2edf1da63f4b7188c81509deadabee");
+        break;
     }
-  }, [pathname]);
+
+
+  }, [level]);
   const getData = async () => {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
