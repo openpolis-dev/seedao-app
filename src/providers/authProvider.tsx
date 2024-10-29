@@ -38,6 +38,7 @@ interface IState {
   show_metaforo_login?: boolean;
   deschoolToken?: string;
   userMap: Map<string, any>;
+  sbtToken:string;
 }
 
 export enum AppActionType {
@@ -65,6 +66,7 @@ export enum AppActionType {
   SET_SHOW_METAFORO_LOGIN_MODAL = 'set_show_metaforo_login_modal',
   SET_THIRD_PARTY_TOKEN = 'set_third_party_token',
   SET_USER_MAP = 'set_user_map',
+  SET_SBT_TOKEN = 'set_sbt_token',
 }
 
 interface IAction {
@@ -99,6 +101,7 @@ const INIT_STATE: IState = {
   snsMap: new Map(),
   currentSeason: '',
   userMap: new Map(),
+  sbtToken:localStorage.getItem("SBT_TOKEN") || ""
 };
 
 const AuthContext = createContext<{
@@ -183,6 +186,10 @@ const reducer = (state: IState, action: IAction): IState => {
       return { ...state, show_metaforo_login: action.payload };
     case AppActionType.SET_USER_MAP:
       return { ...state, userMap: action.payload };
+
+    case AppActionType.SET_SBT_TOKEN:
+      localStorage.setItem("SBT_TOKEN",action.payload);
+      return { ...state, sbtToken: action.payload };
     default:
       throw new Error(`Unknown type: ${action.type}`);
   }

@@ -379,6 +379,7 @@
     "management": "Management",
     "create": "Create",
     "GovernanceNodeResult": "SeeDAO Node Qualification",
+    "sns": "SNS Verification",
     "GovernanceNodeResultDesc": "SeeDAO Node qualification calculation result.",
     "CloseProjectAudit": "Audit Close Project",
     "CloseProjectAuditDesc": "Review the request of closing project.",
@@ -396,7 +397,8 @@
     "BrandGroup": "Branding Group",
     "TechGroup": "Tech Group",
     "ReviewProposal": "Review Proposal",
-    "ReviewProposalDesc": "Review the draft proposals"
+    "ReviewProposalDesc": "Review the draft proposals",
+    "nodeMembers": "Node Members"
   },
   "GovernanceNodeResult": {
     "SearchTip": "SNS",
@@ -683,7 +685,11 @@
     "Echo": "Echo",
     "EchoDesc": "Echo is a social network that gives your echos to same habbies, passions or interests.",
     "Credit": "SCR Lending",
-    "CreditDesc": "Community Cooperative Finance"
+    "CreditDesc": "Community Cooperative Finance",
+    "assistant": "Contributor Assistant",
+    "assistantDes": "View different help information in the guide manual based on contributor levels.",
+    "snsQuery": "SNS Search",
+    "SNSQueryDesc": "Query personal information through SNS."
   },
   "SNS": {
     "EntranceTitle": "INVOLVED IN SEEDAO IN YOUR NAME",
@@ -718,7 +724,17 @@
     "NotEnoughBalance": "{{token}} not enough",
     "CommitmentTooOld": "Your {{sns}} submission has expired, please click \"Cancel registration\" to restart your registration.",
     "ShareInviteLink": "Share invite link",
-    "InviteLinkCopied": "The invite link has been copied to your clipboard!"
+    "InviteLinkCopied": "The invite link has been copied to your clipboard!",
+    "searchTitle": "SNS Search ",
+    "inputSNS": "input SNS\ninput SNS\ninput SNS\n",
+    "inputAddress": "input Address\ninput Address\ninput Address\n",
+    "snsTab": "SNS to Addresss",
+    "addressTab": "Address to SNS",
+    "notSNS": "SNS not found",
+    "notAddress": "Address not found",
+    "noSNSINput":"No SNS found in the input area",
+    "noAddressINput":"No Address found in the input area",
+    "snsError": "SNS Error"
   },
   "Credit": {
     "NavTitle": "SCR Lending",
@@ -854,5 +870,37 @@
     "NewcomerReward": "Newcomer Reward",
     "JoinCommunity": "Join Community",
     "FinalExamination": "Final Examination"
+  },
+  "sbt": {
+    "create": "Create SBT",
+    "createDesc": "Create SBT",
+    "Apply": "Apply SBT",
+    "Audit": "Audit SBT",
+    "Grant": "Grant SBT",
+    "history": "SBT History",
+    "sbtName": "SBT Name",
+    "Metadata": "Metadata",
+    "selectContract": "select Contract",
+    "type": "type",
+    "sns": "SNS",
+    "ApplySuccess": "Apply SBT Successfully",
+    "snsError": "Enter the correct SNS",
+    "createAt": "Create At",
+    "applicant": "Applicant",
+    "Auditor": "Auditor",
+    "receivers": "Receivers",
+    "status": "Status",
+    "pending": "Pending",
+    "approved": "Approved",
+    "rejected": "Rejected",
+    "minted": "Minted",
+    "approve": "Approve",
+    "reject": "Reject",
+    "approveSBT": "Are you sure to apply SBT?",
+    "rejectSBT": "Are you sure to reject SBT?",
+    "distributeSBT": "Are you sure to distribute SBT?",
+    "uploadSuccess": "upload Success",
+    "uploadFailed": "upload Failed",
+    "metadataError": "Metadata Error,Please Enter the correct JSON"
   }
 }

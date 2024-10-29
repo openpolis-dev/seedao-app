@@ -53,6 +53,13 @@ import Wiki from './pages/notion/wiki';
 import getConfig from 'utils/envCofnig';
 import SeeSwap from 'pages/seeswap/swap';
 import Credit from 'pages/credit';
+import SnsQuery from "./pages/sns-query";
+import Assistant from "./pages/assistant";
+import Node from "./components/node/members";
+import SearchProfile from "./components/profile/search";
+import SbtCreate from "./pages/sbt/sbtCreate";
+import SbtList from "./pages/sbt/sbtList";
+import SbtApply from "./pages/sbt/sbtApply";
 
 const isOnlyDev = !process.env.REACT_APP_ENV_VERSION || process.env.REACT_APP_ENV_VERSION === 'dev';
 
@@ -111,6 +118,17 @@ export default function RouterLink() {
           {/* SNS */}
           <Route path="/sns" element={<SNSEntrancePage />} />
           <Route path="/sns/register" element={<RegisterSNS />} />
+
+
+          <Route path="/sns-query" element={<SnsQuery />} />
+          <Route path="/assistant" element={<Assistant />} />
+          <Route path="/node" element={<Node />} />
+          <Route path="/search-profile" element={<SearchProfile />} />
+          <Route path="/sbt/list/:type" element={<SbtList />} />
+          <Route path="/sbt/create" element={<SbtCreate />} />
+          <Route path="/sbt/apply" element={<SbtApply />} />
+
+
           {/* <Route path="/sns/user" element={<UserSNS />} /> */}
           {isOnlyDev && <Route path="/newcomer" element={<Newcomer />} />}
           {/* See Swap */}

@@ -379,6 +379,7 @@
     "management": "管理",
     "create": "创建",
     "GovernanceNodeResult": "节点资质试算",
+    "sns": "SNS 验证",
     "GovernanceNodeResultDesc": "计算治理节点资质结果",
     "CloseProjectAudit": "关闭项目审核",
     "CloseProjectAuditDesc": "审核关闭项目的申请",
@@ -396,7 +397,8 @@
     "BrandGroup": "品牌小组",
     "TechGroup": "技术小组",
     "ReviewProposal": "提案审核",
-    "ReviewProposalDesc": "审核提案的申请"
+    "ReviewProposalDesc": "审核提案的申请",
+    "nodeMembers": "节点成员"
   },
   "GovernanceNodeResult": {
     "SearchTip": "SNS",
@@ -683,7 +685,11 @@
     "Echo": "Echo",
     "EchoDesc": "Echo is a social network that gives your echos to same habbies, passions or interests.",
     "Credit": "SCR借款",
-    "CreditDesc": "社区积分新玩法"
+    "CreditDesc": "社区积分新玩法",
+    "assistant": "贡献者帮助手册",
+    "assistantDes": "根据贡献者等级在指引手册中看到不同的帮助信息",
+    "snsQuery": "SNS搜索",
+    "SNSQueryDesc": "通过sns查询个人信息"
   },
   "SNS": {
     "EntranceTitle": "获取你的 SNS，开始你的 SeeDAO 之旅",
@@ -718,7 +724,17 @@
     "NotEnoughBalance": "{{token}}余额不足",
     "CommitmentTooOld": "您的提交的{{sns}}已过有效期，请点击“取消注册”后重新开始注册",
     "ShareInviteLink": "分享我的邀请链接",
-    "InviteLinkCopied": "邀请链接已复制"
+    "InviteLinkCopied": "邀请链接已复制",
+    "searchTitle": "搜索SNS",
+    "inputSNS": "请输入 SNS\n请输入 SNS\n请输入 SNS\n",
+    "inputAddress": "请输入地址\n请输入地址\n请输入地址\n",
+    "snsTab": "SNS转地址",
+    "addressTab": "地址转SNS",
+    "notSNS": "未找到SNS",
+    "notAddress": "未找到地址",
+    "noSNSINput":"尚未输入sns",
+    "noAddressINput":"尚未输入地址",
+    "snsError": "SNS错误"
   },
   "Credit": {
     "NavTitle": "SCR借款",
@@ -854,5 +870,39 @@
     "NewcomerReward": "新手悬赏",
     "JoinCommunity": "加入社群",
     "FinalExamination": "毕业考试"
+  },
+  "sbt": {
+    "create": "创建SBT",
+    "createDesc": "创建SBT",
+    "Apply": "申请SBT",
+    "Audit": "审核SBT",
+    "Grant": "发放SBT",
+    "history": "SBT发放记录",
+    "sbtName": "SBT名称",
+    "Metadata": "Metadata",
+    "selectContract": "选择合约",
+    "type": "类型",
+    "sns": "SNS",
+    "ApplySuccess": "申请SBT成功",
+    "snsError": "请输入正确的SNS",
+    "createAt": "创建时间",
+    "applicant": "申请人",
+    "Auditor": "审核人",
+    "receivers": "接收人",
+    "status": "状态",
+    "pending": "待审核",
+    "approved": "已通过",
+    "rejected": "已拒绝",
+    "minted": "已发放",
+    "approve": "通过",
+    "reject": "拒绝",
+    "approveSBT": "确定通过SBT申请吗?",
+    "rejectSBT": "确定拒绝SBT申请吗?",
+    "distributeSBT": "确定发放SBT吗?",
+    "uploadSuccess": "上传成功",
+    "uploadFailed": "上传失败",
+    "metadataError": "Metadata错误，请输入正确的JSON"
+
+
   }
 }

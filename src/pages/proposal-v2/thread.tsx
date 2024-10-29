@@ -367,6 +367,14 @@ export default function ThreadPage() {
     return true;
   };
 
+  const showVotedTag = () =>{
+    if (!data?.votes?.[0]) {
+      return false;
+    }
+    const votedItem = data?.votes?.[0].options.filter((item)=>item.is_vote);
+    return !!votedItem?.length
+  }
+
   const isCurrentApplicant = data?.applicant?.toLocaleLowerCase() === account?.toLocaleLowerCase();
 
   const moreActions = () => {
@@ -544,8 +552,12 @@ export default function ThreadPage() {
         <FlexLine>
           {currentCategory && <CategoryTag>{currentCategory}</CategoryTag>}
           {!data?.is_based_on_custom_template && <TemplateTag>{data?.template_name}</TemplateTag>}
+          {showVotedTag() &&  <VotedBox>{t('Proposal.HasVote')}</VotedBox>}
           {currentState && <ProposalStateTag state={currentState} />}
+
           {getTimeTagDisplay()}
+
+
         </FlexLine>
         {showModal && <ProfileComponent address={applicant} theme={theme} handleClose={handleClose} />}
         <InfoBox>
@@ -1083,3 +1095,14 @@ const TimeTag = styled.span`
   color: var(--bs-primary);
   font-size: 12px;
 `;
+const VotedBox = styled.div`
+    display: inline-block;
+    border-radius: 4px;
+    border: 1px solid #08D0EA30;
+    color: #08b0c5;
+    font-size: 12px;
+    background: #08D0EA30;
+    padding: 0 16px;
+    line-height: 24px;
+    text-align: center;
+`

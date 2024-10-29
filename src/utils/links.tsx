@@ -14,6 +14,7 @@ import SeeUImg from '../assets/Imgs/home/seeuNetwork.jpg';
 import SNSImg from '../assets/Imgs/home/sns2.jpg';
 import EchoImg from '../assets/Imgs/home/echo.svg';
 import CreditImg from '../assets/Imgs/home/credit.jpg';
+import SNSQueryImg from "../assets/Imgs/snsquery.png"
 
 import RImg1 from '../assets/Imgs/resources/1.png';
 import RImg2 from '../assets/Imgs/resources/2.png';
@@ -34,6 +35,10 @@ import DistributeImg from '../assets/Imgs/governance/distribute.png';
 import NodeImg from '../assets/Imgs/governance/node.png';
 import PodcastImg from '../assets/Imgs/podcast.jpeg';
 import getConfig from './envCofnig';
+import AssistantImg from "../assets/Imgs/governance/assistant.png";
+
+import { baselineSquare,featherText,lunchBox,textSquare } from '@lucide/lab';
+
 
 /**
  * NOTE:
@@ -209,6 +214,45 @@ const links = {
       icon: NodeImg,
       desc: 'city-hall.GovernanceNodeResultDesc',
     },
+    {
+      name: 'city-hall.sns',
+      link: '/sns-query',
+      id: 'module-governance-node-result',
+      icon: CreateImg,
+      desc: 'city-hall.GovernanceNodeResultDesc',
+    },
+    {
+      name: 'sbt.Apply',
+      link: '/sbt/apply',
+      id: 'module-governance-node-result',
+      type:"icon",
+      icon: baselineSquare,
+      desc: 'sbt.Apply',
+    },
+    {
+      name: 'sbt.Audit',
+      link: '/sbt/list/pending',
+      id: 'module-governance-node-result',
+      type:"icon",
+      icon: featherText,
+      desc: 'sbt.Audit',
+    },
+    {
+      name: 'sbt.Grant',
+      link: '/sbt/list/approved',
+      id: 'module-governance-node-result',
+      type:"icon",
+      icon: lunchBox,
+      desc: 'sbt.Grant',
+    },
+    {
+      name: 'sbt.history',
+      link: '/sbt/list/minted',
+      id: 'module-governance-node-result',
+      type:"icon",
+      icon: textSquare,
+      desc: 'sbt.history',
+    },
   ],
   brand: [
     // {
@@ -241,6 +285,14 @@ const links = {
       icon: RImg12,
       desc: 'city-hall.AppReviewDesc',
     },
+    {
+      name: 'sbt.create',
+      link: '/sbt/create',
+      id: 'module-sbt',
+      icon: RImg6,
+      desc: 'sbt.createDesc',
+      Nolink: true,
+    },
     // {
     //   name: 'city-hall.SeedReview',
     //   link: '',
@@ -250,6 +302,13 @@ const links = {
     // },
   ],
   apps: [
+    {
+      id: 'podcast',
+      name: 'Home.podcast',
+      link: 'https://seedao.notion.site/f57031667089473faa7ea3560d05960c',
+      icon: PodcastImg,
+      desc: 'resources.podcastDesc',
+    },
     {
       id: 'module-calendar',
       name: 'apps.OnlineEvent',
@@ -263,6 +322,20 @@ const links = {
       link: '/sns/register',
       icon: SNSImg,
       desc: 'apps.SNSDesc',
+    },
+    {
+      id: 'module-sns',
+      name: 'apps.snsQuery',
+      link: '/search-profile',
+      icon: SNSQueryImg,
+      desc: 'apps.SNSQueryDesc',
+    },
+    {
+      id: 'module-assistant',
+      name: 'apps.assistant',
+      link: '/assistant',
+      icon: AssistantImg,
+      desc: 'apps.assistantDes',
     },
     {
       id: 'module-credit',
@@ -371,9 +444,16 @@ const links = {
       icon: 'https://avatars.githubusercontent.com/u/36115574?s=200&v=4',
       desc: 'Coming Soon',
     },
-    
+
+
   ],
   publicity: [
+    {
+      id: '',
+      name: ' 节点公示',
+      time: '2023-11-22 22:27',
+      link: '/node',
+    },
     {
       id: '',
       name: 'S5 节点共识大会积分公示',

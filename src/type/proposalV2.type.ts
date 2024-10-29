@@ -40,6 +40,7 @@ export interface ISimpleProposal {
   state: ProposalState;
   create_ts: number;
   sip?: number;
+  is_voted?:boolean;
 }
 
 export interface IContentBlock {

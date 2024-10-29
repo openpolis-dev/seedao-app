@@ -6,6 +6,7 @@ import ProposalStateTag, { getRealState } from './stateTag';
 import DefaultAvatarIcon from 'assets/Imgs/defaultAvatar.png';
 import CategoryTag from './categoryTag';
 import { getProposalSIPSlug } from 'utils';
+import { useTranslation } from "react-i18next";
 
 export enum TabType {
   All = 1,
@@ -27,6 +28,7 @@ export default function SimpleProposalItem({
   currentTab: TabType[];
 }) {
   const currentState = getRealState(data.state);
+  const { t } = useTranslation();
   return (
     <CardBox key={data.id}>
       <Link to={`/proposal/thread/${data.id}${isReview ? '?review' : ''}`} state={{
@@ -52,6 +54,10 @@ export default function SimpleProposalItem({
           <TagsBox>
             <CategoryTag>{data.category_name}</CategoryTag>
             <ProposalStateTag state={currentState} />
+            {
+              data.is_voted &&  <VotedBox>{t('Proposal.HasVote')}</VotedBox>
+            }
+
           </TagsBox>
         </CardBody>
       </Link>
@@ -131,3 +137,15 @@ const TagsBox = styled.div`
   align-items: center;
   gap: 12px;
 `;
+
+const VotedBox = styled.div`
+    display: inline-block;
+    border-radius: 4px;
+    border: 1px solid #08D0EA30;
+    color: #08b0c5;
+    font-size: 12px;
+    background: #08D0EA30;
+    padding: 0 16px;
+    line-height: 24px;
+    text-align: center;
+`

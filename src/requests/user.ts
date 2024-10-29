@@ -3,6 +3,7 @@ import axios from 'axios';
 import request, { API_VERSION, BASE_URL, ResponseData } from './http';
 import { IUser, IUserInfo } from 'type/user.type';
 import { SeeAuth } from '@seedao/see-auth';
+import { SBT_BASEURL } from "../utils/constant";
 
 const PATH_PREFIX = '/user';
 
@@ -54,6 +55,11 @@ export const updateUser = (data: IUserInfo) => {
   return request.put(`${PATH_PREFIX}/me`, data);
 };
 
+export const getUserLevel = () => {
+  return request.get(`${PATH_PREFIX}/level`);
+};
+
+
 export const getUsers = (wallets: string[]): Promise<ResponseData<IUser[]>> => {
   const data: string[] = [];
   wallets.forEach((item) => {
@@ -81,4 +87,9 @@ interface IDeschoolResponse {
 
 export const loginToDeschool = (data: SeeAuth): Promise<{ data: IDeschoolResponse }> => {
   return axios.post('https://deschool.app/api/login?app=seedao', data);
+};
+
+
+export const loginToSBT = (data: SeeAuth): Promise<{ data: IMetaforoResponse }> => {
+  return axios.post(`${SBT_BASEURL}user/seeAuth`, data);
 };

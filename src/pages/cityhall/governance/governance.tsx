@@ -6,6 +6,8 @@ import Links from 'utils/links';
 import AppCard, { EmptyAppCard } from 'components/common/appCard';
 import { useAuthContext } from 'providers/authProvider';
 import { useNavigate } from 'react-router-dom';
+import { Icon } from 'lucide-react';
+
 
 const AppBox = styled(Row)`
   div[class^='col'] {
@@ -35,6 +37,7 @@ const AppBox = styled(Row)`
       height: 24px;
       border-radius: 8px;
     }
+
   }
 `;
 
@@ -51,6 +54,11 @@ const BtmBox = styled.div`
   border-top: 1px solid var(--bs-border-color);
   padding-top: 40px;
   margin-left: 12px;
+
+    .iconBox{
+        margin-bottom: 18px;
+        color: var(--bs-primary);
+    }
 `;
 
 const LiBox = styled(Col)`
@@ -66,6 +74,7 @@ const LiBox = styled(Col)`
   justify-content: center;
   margin-right: 20px;
   cursor: pointer;
+    margin-bottom: 20px;
   .name {
     font-size: 16px;
     font-weight: 600;
@@ -121,7 +130,13 @@ export default function GovernancePage() {
           {BList.map((item, index) => (
             <LiBox md={2} key={`gBtm_${index}`} onClick={() => ToGo(item.link)}>
               <div>
-                <img src={item.icon} alt="" />
+                {
+                  item.type !== "icon" && <img src={item.icon as string} alt="" />
+                }
+                {
+                  item.type === "icon" &&    <Icon iconNode={item.icon} size={28} className="iconBox" />
+                }
+
               </div>
               <div className="name">{item.name}</div>
             </LiBox>
