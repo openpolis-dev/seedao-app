@@ -161,7 +161,7 @@ export default function SbtApply() {
   };
 
   const handleSubmit = async () => {
-    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+
     const to_be_parsed:any[] = [];
     snsStr.split("\n").forEach((item) => {
       const str = item.trim();
@@ -174,7 +174,7 @@ export default function SbtApply() {
       return;
     }
     const unique_list = Array.from(new Set(to_be_parsed));
-
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
       let result = await sns.resolves(unique_list)
       if(result.includes(AddressZero)){
