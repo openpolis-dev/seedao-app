@@ -292,7 +292,9 @@ export default function SbtCreate() {
               </div>
               <InputBox>
                 <Form.Control
-                  placeholder=""
+                  placeholder={JSON.stringify({
+                    "name": "第x届市政厅成员"
+                  },null,4)}
                   as="textarea"
                   rows={5}
                   value={metadata}
