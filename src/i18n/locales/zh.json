@@ -879,6 +879,7 @@
     "Grant": "发放SBT",
     "history": "SBT发放记录",
     "sbtName": "SBT名称",
+    "sbtImg": "SBT图片",
     "Metadata": "Metadata",
     "selectContract": "选择合约",
     "type": "类型",

@@ -25,9 +25,16 @@ const OuterBox = styled.div`
 
 const HeadBox = styled.div`
   display: flex;
-  gap: 30px;
   align-items: center;
   margin-bottom: 40px;
+    .title{
+        margin-top: 8px;
+        min-width: 90px;
+        display: flex;
+        font-size: 14px;
+        margin-right: 16px;
+        color: var(--bs-body-color_active);
+    }
 `;
 const CardBox = styled.div`
   min-height: 100%;
@@ -242,6 +249,9 @@ export default function SbtCreate() {
         <BackerNav title={t('sbt.create')} to={`/city-hall/tech`} mb="40px" />
         {/*<TitleBox>{t('My.MyProfile')}</TitleBox>*/}
         <HeadBox>
+          <div className="title">
+            {t('sbt.sbtImg')}
+          </div>
           <AvatarBox>
             <UploadBox htmlFor="fileUpload" onChange={(e) => updateLogo(e)}>
               {!avatar && (

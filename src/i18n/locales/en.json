@@ -879,6 +879,7 @@
     "Grant": "Grant SBT",
     "history": "SBT History",
     "sbtName": "SBT Name",
+    "sbtImg": "SBT Image",
     "Metadata": "Metadata",
     "selectContract": "select Contract",
     "type": "type",
