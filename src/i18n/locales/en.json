@@ -734,7 +734,8 @@
     "notAddress": "Address not found",
     "noSNSINput":"No SNS found in the input area",
     "noAddressINput":"No Address found in the input area",
-    "snsError": "SNS Error"
+    "snsError": "SNS Error",
+    "search": "检索"
   },
   "Credit": {
     "NavTitle": "SCR Lending",

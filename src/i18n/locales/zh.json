@@ -734,7 +734,8 @@
     "notAddress": "未找到地址",
     "noSNSINput":"尚未输入sns",
     "noAddressINput":"尚未输入地址",
-    "snsError": "SNS错误"
+    "snsError": "SNS错误",
+    "search": "检索"
   },
   "Credit": {
     "NavTitle": "SCR借款",

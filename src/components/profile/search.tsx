@@ -121,7 +121,7 @@ export default function SearchProfile(){
               className="submitBtn"
               disabled={!snsName.length}
             >
-              Submit
+              {t('SNS.search')}
               {/*{loading ? <Loading /> : <span>Parse</span>}*/}
             </Button>
           </Content>
