@@ -293,14 +293,15 @@ export default function SbtList(){
 
     {
       (type === "rejected" || type === "minted") &&  <TopLine>
+
         <li>
-          <Button variant="primary" onClick={() => handleGoto("/sbt/list/minted")} className="btn-com">
+          <Button variant={type === "minted"?"primary":"outline-primary"} onClick={() => handleGoto("/sbt/list/minted")} className="btn-com">
             <BookmarkCheck size={17} />
             {t("sbt.minted")}
           </Button>
         </li>
         <li>
-          <Button variant="outline-primary"  onClick={() => handleGoto("/sbt/list/rejected")} className="btn-com">
+          <Button variant={type === "rejected"?"primary":"outline-primary"}  onClick={() => handleGoto("/sbt/list/rejected")} className="btn-com">
             <BookmarkX size={17} />
             {t("sbt.rejected")}
           </Button>
