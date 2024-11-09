@@ -14,6 +14,7 @@ import publicJs from 'utils/publicJs';
 import ProfileComponent from '../../profile-components/profile';
 import { ContainerPadding } from "../../assets/styles/global";
 import BackerNav from "../common/backNav";
+import { useNavigate } from "react-router-dom";
 
 type UserMap = { [w: string]: IUser };
 
@@ -24,7 +25,7 @@ export default function Node() {
     state: { snsMap, theme },
   } = useAuthContext();
 
-
+  const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
 
   const [userMap, setUserMap] = useState<UserMap|null>(null);
@@ -115,10 +116,14 @@ export default function Node() {
     setShowModal(false);
   };
 
+  const toBack = () =>{
+    navigate(-1)
+  }
+
   return (
     <Box>
       {showModal && <ProfileComponent userData={user} theme={theme} sns={sns} handleClose={handleClose} />}
-      <BackerNav to="/city-hall" title={t('city-hall.nodeMembers')} mb="0"  />
+      <BackerNav to="" onClick={()=>toBack()} title={t('city-hall.nodeMembers')} mb="0"  />
       <ItemBox>
         <Grouptitle>{t('city-hall.nodeMembers')}</Grouptitle>
         <Row>

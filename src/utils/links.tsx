@@ -449,8 +449,8 @@ const links = {
   ],
   publicity: [
     {
-      id: '',
-      name: ' 节点公示',
+      id: 'module-node',
+      name: '当季节点公示',
       time: '2023-11-22 22:27',
       link: '/node',
     },

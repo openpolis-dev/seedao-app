@@ -398,7 +398,7 @@
     "TechGroup": "技术小组",
     "ReviewProposal": "提案审核",
     "ReviewProposalDesc": "审核提案的申请",
-    "nodeMembers": "节点成员"
+    "nodeMembers": "当季节点公示"
   },
   "GovernanceNodeResult": {
     "SearchTip": "SNS",
