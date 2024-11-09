@@ -13,6 +13,10 @@ import useToast, { ToastType } from "../../hooks/useToast";
 const Container = styled.div`
   ${ContainerPadding};
   min-height: 100%;
+    .rhtIpt{
+        padding: 0 30px;
+        text-align: right;
+    }
 `;
 const StepContainer = styled.div`
   height: calc(100% - 30px);
@@ -26,7 +30,7 @@ const StepContainer = styled.div`
 
 const Box = styled.div`
     background-color: var(--bs-box-background);
-    width: 600px;
+    width: 400px;
     box-shadow: 2px 4px 4px 0px var(--box-shadow);
     border-radius: 16px;
     text-align: center;
@@ -108,7 +112,7 @@ export default function SearchProfile(){
           <StepDesc>{t('apps.SNSQueryDesc')}</StepDesc>
           <Content>
             <FlexBox>
-              <Input value={snsName} onChange={(e) => setSnsName(e.target.value)} />
+              <Input value={snsName} onChange={(e) => setSnsName(e.target.value)} className="rhtIpt"  />
               <span>.seedao</span>
             </FlexBox>
 

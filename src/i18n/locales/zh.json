@@ -689,7 +689,7 @@
     "assistant": "贡献者帮助手册",
     "assistantDes": "根据贡献者等级在指引手册中看到不同的帮助信息",
     "snsQuery": "SNS搜索",
-    "SNSQueryDesc": "通过sns查询个人信息"
+    "SNSQueryDesc": "通过SNS查询个人信息"
   },
   "SNS": {
     "EntranceTitle": "获取你的 SNS，开始你的 SeeDAO 之旅",
