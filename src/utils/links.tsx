@@ -305,7 +305,7 @@ const links = {
     {
       id: 'podcast',
       name: 'Home.podcast',
-      link: 'https://seedao.notion.site/f57031667089473faa7ea3560d05960c',
+      link: 'https://www.xiaoyuzhoufm.com/podcast/64a27b216d90c5786108abbc',
       icon: PodcastImg,
       desc: 'resources.podcastDesc',
     },
