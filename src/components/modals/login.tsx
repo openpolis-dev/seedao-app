@@ -154,6 +154,14 @@ const LoginModalContent = () => {
 
           } catch (error) {
             console.error('3rd party login error', error);
+
+            dispatch({
+              type: AppActionType.SET_THIRD_PARTY_TOKEN,
+              payload: {
+                metaforo: null,
+                // deschool: loginResp[1].data.jwtToken,
+              },
+            });
           }
 
 
