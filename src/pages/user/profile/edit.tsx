@@ -334,12 +334,12 @@ export default function Profile() {
                 <div className="icon">
                   <img src={TwitterImg} alt="" />
                 </div>
-                {t('My.Twitter')}
+            X
               </div>
               <InputBox>
                 <Form.Control
                   type="text"
-                  placeholder="https://twitter.com/..."
+                  placeholder="https://x.com/..."
                   value={twitter}
                   onChange={(e) => handleInput(e, 'twitter')}
                 />
