@@ -11,7 +11,7 @@ import UploadImg from '../../../assets/Imgs/profile/upload.svg';
 import userImg from '../../../assets/Imgs/profile/name.svg';
 import EmailImg from '../../../assets/Imgs/profile/email.svg';
 import DiscordImg from '../../../assets/Imgs/profile/discordIcon.svg';
-import TwitterImg from '../../../assets/Imgs/profile/twitterIcon.svg';
+import TwitterImg from '../../../assets/Imgs/profile/xIcon.png';
 import WechatImg from '../../../assets/Imgs/profile/wechatIcon.svg';
 import MirrorImg from '../../../assets/Imgs/profile/mirrorIcon.svg';
 import DescImg from '../../../assets/Imgs/profile/desc.svg';

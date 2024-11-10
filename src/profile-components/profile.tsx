@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import useToast from '../hooks/useToast';
 import PublicJs from '../utils/publicJs';
 
-import TwitterIcon from 'assets/Imgs/social/twitter.png';
+import TwitterIcon from 'assets/Imgs/profile/xIcon.png';
 import MirrorImg from 'assets/Imgs/social/mirror.png';
 import MirrorImgDark from 'assets/Imgs/social/mirror_dark.png';
 import EmailIcon from 'assets/Imgs/social/email.png';

@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import TwitterIcon from 'assets/Imgs/social/twitter.png';
+import TwitterIcon from 'assets/Imgs/profile/xIcon.png';
 import MirrorIcon from 'assets/Imgs/social/mirror.png';
 import MirrorIconDark from 'assets/Imgs/social/mirror_dark.png';
 import EmailIcon from 'assets/Imgs/social/email.png';
