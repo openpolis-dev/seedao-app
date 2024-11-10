@@ -367,12 +367,13 @@ export default function ThreadPage() {
     return true;
   };
 
-  const showVotedTag = () =>{
+  const showVotedTag = (currentState:ProposalState | undefined) =>{
     if (!data?.votes?.[0]) {
       return false;
     }
     const votedItem = data?.votes?.[0].options.filter((item)=>item.is_vote);
-    return !!votedItem?.length
+
+    return (!!votedItem?.length &&  currentState === "voting")
   }
 
   const isCurrentApplicant = data?.applicant?.toLocaleLowerCase() === account?.toLocaleLowerCase();
@@ -552,7 +553,7 @@ export default function ThreadPage() {
         <FlexLine>
           {currentCategory && <CategoryTag>{currentCategory}</CategoryTag>}
           {!data?.is_based_on_custom_template && <TemplateTag>{data?.template_name}</TemplateTag>}
-          {showVotedTag() &&  <VotedBox>{t('Proposal.HasVote')}</VotedBox>}
+          {showVotedTag(currentState) &&  <VotedBox>{t('Proposal.HasVote')}</VotedBox>}
           {currentState && <ProposalStateTag state={currentState} />}
 
           {getTimeTagDisplay()}

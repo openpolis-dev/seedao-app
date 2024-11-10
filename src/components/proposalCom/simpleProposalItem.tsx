@@ -55,7 +55,7 @@ export default function SimpleProposalItem({
             <CategoryTag>{data.category_name}</CategoryTag>
             <ProposalStateTag state={currentState} />
             {
-              data.is_voted &&  <VotedBox>{t('Proposal.HasVote')}</VotedBox>
+              data.is_voted && currentState === "voting" &&  <VotedBox>{t('Proposal.HasVote')}</VotedBox>
             }
 
           </TagsBox>
