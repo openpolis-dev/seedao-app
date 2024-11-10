@@ -335,7 +335,7 @@ export default function GoveranceNodeResult() {
         </SearchBox>
         <ButtonGroup>
           <Button variant="primary" onClick={onClickSnapshot} disabled={hasSnapshot}>
-            {t('GovernanceNodeResult.SeedSnapshot')}
+            {t('GovernanceNodeResult.rewardStart')}
           </Button>
           <PrimaryOutlinedButton
             onClick={onClickSendReward}

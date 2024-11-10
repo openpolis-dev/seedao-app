@@ -417,6 +417,7 @@
     "TotalSentSCR": "{{season}} Sent SCR ",
     "TotalMinerReward": "{{season}} Miner Reward (SCR)",
     "SeedSnapshot": "SEED Snapshot",
+    "rewardStart": "Reward Calculation",
     "SendReward": "Apply Reward",
     "StartFilter": "Start Filter",
     "FilterNodesModalTitle": "{{season}} Nodes",
