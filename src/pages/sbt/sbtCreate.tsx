@@ -15,12 +15,37 @@ import { createSBT, getContracts, uploadFile } from "../../requests/cityHall";
 import publicJs from "../../utils/publicJs";
 import { ethers } from "ethers";
 import SBTabi from "../../assets/abi/SBT.json";
+import { Steps } from 'antd';
+import { IExcelObj } from "../../type/project.type";
+import {Input} from "antd"
+const { TextArea } = Input;
 
 const OuterBox = styled.div`
   ${ContainerPadding};
   input {
     min-height: 40px;
+      background: transparent!important;
+      color: var(--bs-body-color_active);
+      &:disabled{
+          color: var(--bs-body-color_active);
+      }
   }
+    textarea{
+        background: transparent!important;
+        color: var(--bs-body-color_active);
+        &:disabled{
+            color: var(--bs-body-color_active);
+        }
+        &::placeholder{
+            color:var(--bs-border-color_opacity);
+        }
+    }
+   .ant-steps-item-finish>.ant-steps-item-container>.ant-steps-item-content>.ant-steps-item-title{
+        color: var(--bs-body-color_active)!important;
+    }
+     .ant-steps-item:last-child .ant-steps-item-title{
+         color: var(--bs-body-color_active)!important;
+    }
 `;
 
 const HeadBox = styled.div`
@@ -133,6 +158,9 @@ export default function SbtCreate() {
   const [ipfsHash, setIpfsHash] = useState("");
   const [avatar, setAvatar] = useState('');
   const [list, setList] = useState<any[]>([]);
+  const [result,setResult] = useState<any>(null);
+
+  const[current,setCurrent] = useState(0);
 
   useEffect(() => {
     getList()
@@ -185,7 +213,22 @@ export default function SbtCreate() {
     try{
 
       let result =  await createSBT(sbtToken,obj)
+      setResult(result)
+      setCurrent(1)
 
+    }catch(e){
+      showToast(t('Msg.ApproveFailed'), ToastType.Danger);
+    }finally {
+      dispatch({ type: AppActionType.SET_LOADING, payload: false });
+    }
+
+
+
+  };
+
+  const handleWeb3 = async() =>{
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    try{
       const {nft_id,nft_uri} = result.data;
       const web3Provider = new ethers.providers.Web3Provider((window as any).ethereum);
 
@@ -209,9 +252,7 @@ export default function SbtCreate() {
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }
 
-
-
-  };
+  }
 
 
   const updateLogo = async (e: FormEvent) => {
@@ -239,6 +280,7 @@ export default function SbtCreate() {
   };
 
   const removeUrl = () => {
+    if(current) return;
     setAvatar('');
   };
 
@@ -248,86 +290,118 @@ export default function SbtCreate() {
       <CardBox>
         <BackerNav title={t('sbt.create')} to={`/city-hall/tech`} mb="40px" />
         {/*<TitleBox>{t('My.MyProfile')}</TitleBox>*/}
-        <HeadBox>
-          <div className="title">
-            {t('sbt.sbtImg')}
-          </div>
-          <AvatarBox>
-            <UploadBox htmlFor="fileUpload" onChange={(e) => updateLogo(e)}>
-              {!avatar && (
-                <div>
-                  <input id="fileUpload" type="file" hidden accept=".jpg, .jpeg, .png" />
-                  {<img src={UploadImg} />}
-                </div>
-              )}
-              {!!avatar && (
-                <ImgBox onClick={() => removeUrl()}>
-                  <div className="del">
-                    <X className="iconTop" />
+        <StepBox >
+          <Steps
+            size="small"
+            current={current}
+            items={[
+              {
+                title:t('sbt.step1'),
+              },
+              {
+                title: t('sbt.step2'),
+              },
+            ]}
+          />
+        </StepBox>
+
+            <HeadBox>
+              <div className="title">
+                {t('sbt.sbtImg')}
+              </div>
+              <AvatarBox>
+                <UploadBox htmlFor="fileUpload" onChange={(e) => updateLogo(e)} aria-readOnly={current === 0}>
+                  {!avatar && (
+                    <div>
+                      <input id="fileUpload" type="file" hidden accept=".jpg, .jpeg, .png" />
+                      {<img src={UploadImg} />}
+                    </div>
+                  )}
+                  {!!avatar && (
+                    <ImgBox onClick={() => removeUrl()}>
+                      <div className="del">
+                        <X className="iconTop" />
+                      </div>
+                      <img src={avatar} alt="" />
+                    </ImgBox>
+                  )}
+                </UploadBox>
+              </AvatarBox>
+            </HeadBox>
+            <MidBox>
+              <UlBox>
+                <li>
+                  <div className="title">
+                    {t('sbt.sbtName')}
                   </div>
-                  <img src={avatar} alt="" />
-                </ImgBox>
-              )}
-            </UploadBox>
-          </AvatarBox>
-        </HeadBox>
-        <MidBox>
-          <UlBox>
-            <li>
-              <div className="title">
-                {t('sbt.sbtName')}
-              </div>
-              <InputBox>
-                <Form.Control
-                  type="text"
-                  placeholder=""
-                  value={sbtName}
-                  onChange={(e) => handleInput(e, 'sbtName')}
-                />
-              </InputBox>
-            </li>
-            <li>
-              <div className="title">
-               {t('sbt.Metadata')}
-              </div>
-              <InputBox>
-                <Form.Control
-                  placeholder={JSON.stringify({
-                    "name": "第x届市政厅成员"
-                  },null,4)}
-                  as="textarea"
-                  rows={5}
-                  value={metadata}
-                  onChange={(e) => handleInput(e, 'metadata')}
-                />
-              </InputBox>
-            </li>
-            <li>
-              <div className="title">
-                {t('sbt.selectContract')}
-              </div>
-              <InputBox>
-                <SeeSelect
-                  width="100%"
-                  options={list}
-                  value={contract}
-                  isClearable={false}
-                  isSearchable={false}
-                  onChange={(v: any) => {
-                    setContract(v);
-                  }}
-                />
-              </InputBox>
-            </li>
-            <RhtLi>
-              <Button onClick={() => saveSBT()} disabled={!ipfsHash || !sbtName || !metadata || !contract}>{t('general.confirm')}</Button>
-            </RhtLi>
-          </UlBox>
-        </MidBox>
+                  <InputBox>
+                    <Input
+                      type="text"
+                      placeholder=""
+                      value={sbtName}
+                      onChange={(e) => handleInput(e, 'sbtName')}
+                      disabled={current === 1}
+                    />
+                  </InputBox>
+                </li>
+                <li>
+                  <div className="title">
+                    {t('sbt.Metadata')}
+                  </div>
+                  <InputBox>
+                    <TextArea
+                      placeholder={JSON.stringify({
+                        "name": "第x届市政厅成员"
+                      },null,4)}
+                      rows={5}
+                      value={metadata}
+                      onChange={(e) => handleInput(e, 'metadata')}
+                      readOnly={current === 1}
+                    />
+                  </InputBox>
+                </li>
+                <li>
+                  <div className="title">
+                    {t('sbt.selectContract')}
+                  </div>
+                  <InputBox>
+                    <SeeSelect
+                      width="100%"
+                      options={list}
+                      value={contract}
+                      isClearable={false}
+                      isSearchable={false}
+                      onChange={(v: any) => {
+                        setContract(v);
+                      }}
+                      isDisabled={current === 1}
+                    />
+                  </InputBox>
+                </li>
+                <RhtLi>
+                  {
+                    current === 0 &&   <Button onClick={() => saveSBT()} disabled={!ipfsHash || !sbtName || !metadata || !contract}>{t('general.confirm')}</Button>
+                  }
+                  {
+                    current === 1 &&   <Button onClick={() => handleWeb3()} disabled={!ipfsHash || !sbtName || !metadata || !contract}>设置URI</Button>
+                  }
+
+                </RhtLi>
+              </UlBox>
+            </MidBox>
+
+
+
+
       </CardBox>
     </OuterBox>
   );
 }
+
+const StepBox = styled.div`
+  width: 400px;
+    margin-bottom: 40px;
+`
 
 const RhtLi = styled.div`
   width: 600px;
@@ -371,6 +445,11 @@ const ImgBox = styled.div`
   align-items: center;
   justify-content: center;
   position: relative;
+    .imgMax{
+        height: 150px;
+        width: 150px;
+        object-fit: cover;
+    }
   .del {
     display: none;
     position: absolute;
@@ -389,6 +468,7 @@ const ImgBox = styled.div`
     .iconTop {
       font-size: 40px;
     }
+
   }
   &:hover {
     .del {

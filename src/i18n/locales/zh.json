@@ -160,7 +160,8 @@
     "reviewTips": "该提案公示期已过，请发起新的提案",
     "custom": "自定义",
     "option": "选项",
-    "win": "胜出"
+    "win": "胜出",
+    "invalidAddress": "地址错误"
   },
   "Project": {
     "OfficialLink": "项目官方链接",
@@ -904,8 +905,9 @@
     "distributeSBT": "确定发放SBT吗?",
     "uploadSuccess": "上传成功",
     "uploadFailed": "上传失败",
-    "metadataError": "Metadata错误，请输入正确的JSON"
-
+    "metadataError": "Metadata错误，请输入正确的JSON",
+    "step1": "上传信息",
+    "step2": "设置NFT URI"
 
   }
 }

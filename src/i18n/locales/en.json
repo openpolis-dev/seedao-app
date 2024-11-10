@@ -160,7 +160,8 @@
     "reviewTips": "The review period has expired. Please initiate a new proposal.",
     "custom": "Custom",
     "option": "Option",
-    "win": "Win"
+    "win": "Win",
+    "invalidAddress": "地址错误"
   },
   "Project": {
     "OfficialLink": "Official link",
@@ -904,6 +905,8 @@
     "distributeSBT": "Are you sure to distribute SBT?",
     "uploadSuccess": "upload Success",
     "uploadFailed": "upload Failed",
-    "metadataError": "Metadata Error,Please Enter the correct JSON"
+    "metadataError": "Metadata Error,Please Enter the correct JSON",
+    "step1": "Upload Information",
+    "step2": "Set NFT URI"
   }
 }
