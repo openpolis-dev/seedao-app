@@ -334,16 +334,17 @@ export default function GoveranceNodeResult() {
           />
         </SearchBox>
         <ButtonGroup>
-          <Button variant="primary" onClick={onClickSnapshot} disabled={hasSnapshot}>
+          {/*<Button variant="primary" onClick={onClickSnapshot} disabled={hasSnapshot}>*/}
+          <Button variant="primary" onClick={onClickSendReward} >
             {t('GovernanceNodeResult.rewardStart')}
           </Button>
-          <PrimaryOutlinedButton
-            onClick={onClickSendReward}
-            disabled={hasSentFlag}
-            style={{ height: '40px', lineHeight: '40px' }}
-          >
-            {t('GovernanceNodeResult.SendReward')}
-          </PrimaryOutlinedButton>
+          {/*<PrimaryOutlinedButton*/}
+          {/*  onClick={onClickSendReward}*/}
+          {/*  disabled={hasSentFlag}*/}
+          {/*  style={{ height: '40px', lineHeight: '40px' }}*/}
+          {/*>*/}
+          {/*  {t('GovernanceNodeResult.SendReward')}*/}
+          {/*</PrimaryOutlinedButton>*/}
           <Button className="export" variant="outline-secondary" onClick={handleExport}>
             {t('GovernanceNodeResult.Export')}
           </Button>
