@@ -192,7 +192,8 @@ export default function SbtApply() {
 
         showToast(t('sbt.ApplySuccess'), ToastType.Success);
         setTimeout(()=>{
-          navigate("/sbt/list/pending")
+          // navigate("/sbt/list/pending")
+          window.location.reload();
         },1500)
       }
     }catch(error){
