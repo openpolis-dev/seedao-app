@@ -240,7 +240,7 @@ const links = {
     {
       name: 'sbt.Grant',
       link: '/sbt/list/approved',
-      id: 'module-governance-node-result',
+      id: 'module-sbt',
       type:"icon",
       icon: lunchBox,
       desc: 'sbt.Grant',

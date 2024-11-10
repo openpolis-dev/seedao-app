@@ -1,12 +1,13 @@
 import styled from 'styled-components';
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from "react";
 import { Row, Col } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import Links from 'utils/links';
 import AppCard, { EmptyAppCard } from 'components/common/appCard';
-import { useAuthContext } from 'providers/authProvider';
+import { AppActionType, useAuthContext } from "providers/authProvider";
 import { useNavigate } from 'react-router-dom';
 import { Icon } from 'lucide-react';
+import { getCityHallDetail } from "../../../requests/cityHall";
 
 
 const AppBox = styled(Row)`
@@ -89,12 +90,20 @@ const LiBox = styled(Col)`
     object-position: center;
     margin-bottom: 18px;
   }
+    &.disabled{
+        opacity: 0.5!important;
+        cursor: not-allowed;
+    }
 `;
 
 export default function GovernancePage() {
   const { t } = useTranslation();
+
+  const [disabled,setDisabled] = useState<boolean>(false);
+
   const {
-    state: { theme },
+    state: { theme,account },
+    dispatch
   } = useAuthContext();
 
   const navigate = useNavigate();
@@ -106,12 +115,33 @@ export default function GovernancePage() {
 
   const BList = useMemo(() => {
     // @ts-ignore
-    return Links.governanceBtm.map((item) => ({ ...item, name: t(item.name) as string, desc: t(item.desc) as string }));
-  }, [t]);
+    return Links.governanceBtm.map((item) => ({ ...item, name: t(item.name) as string, desc: t(item.desc) as string,disabled }));
+  }, [t,disabled]);
 
   const ToGo = (url: string) => {
     navigate(url);
   };
+
+
+  const getDetail = async () => {
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    try {
+      const dt = await getCityHallDetail();
+      const members = dt.data.grouped_sponsors.G_GOVERNANCE;
+
+      const disabledArr = members.filter((item) => item.toLowerCase() === account!.toLowerCase());
+      setDisabled(!disabledArr?.length)
+    } catch (error) {
+      logError(error);
+    } finally {
+      dispatch({ type: AppActionType.SET_LOADING, payload: null });
+    }
+  };
+
+  useEffect(() => {
+    if(!account)return;
+    getDetail();
+  }, [account]);
 
   return (
     <div>
@@ -128,7 +158,7 @@ export default function GovernancePage() {
       <BtmBox>
         <Row>
           {BList.map((item, index) => (
-            <LiBox md={2} key={`gBtm_${index}`} onClick={() => ToGo(item.link)}>
+            <LiBox md={2} key={`gBtm_${index}`}  onClick={() => ToGo(item.link)} className={item.disabled && item.id==='module-sbt'?"disabled":""}>
               <div>
                 {
                   item.type !== "icon" && <img src={item.icon as string} alt="" />
