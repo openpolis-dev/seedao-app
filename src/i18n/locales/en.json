@@ -132,6 +132,7 @@
     "TotalVoteCount": "{{count}} voted",
     "proposalComponents": "Automation Components",
     "HasVote": "Voted",
+    "notVote": "Not voted",
     "LoginTip": "Login to Metaforo to use the full functionality.",
     "LoginButton": "Login to Metaforo",
     "WriteReplyHint": "write a reply",

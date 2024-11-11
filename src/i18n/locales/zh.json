@@ -132,6 +132,7 @@
     "TotalVoteCount": "共{{count}}票",
     "proposalComponents": "自动执行组件",
     "HasVote": "已投",
+    "notVote": "未投",
     "LoginTip": "使用完整功能，请先登录Metaforo",
     "LoginButton": "登录 Metaforo",
     "WriteReplyHint": "发表评论",

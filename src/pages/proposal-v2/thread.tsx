@@ -376,6 +376,15 @@ export default function ThreadPage() {
     return (!!votedItem?.length &&  currentState === "voting")
   }
 
+  const showVotedNot = (currentState:ProposalState | undefined) =>{
+    if (!data?.votes?.[0]) {
+      return false;
+    }
+    const votedItem = data?.votes?.[0].options.filter((item)=>item.is_vote);
+
+    return (!votedItem?.length &&  currentState === "voting")
+  }
+
   const isCurrentApplicant = data?.applicant?.toLocaleLowerCase() === account?.toLocaleLowerCase();
 
   const moreActions = () => {
@@ -554,6 +563,7 @@ export default function ThreadPage() {
           {currentCategory && <CategoryTag>{currentCategory}</CategoryTag>}
           {!data?.is_based_on_custom_template && <TemplateTag>{data?.template_name}</TemplateTag>}
           {showVotedTag(currentState) &&  <VotedBox>{t('Proposal.HasVote')}</VotedBox>}
+          {showVotedNot(currentState) &&  <VotedBox2>{t('Proposal.notVote')}</VotedBox2>}
           {currentState && <ProposalStateTag state={currentState} />}
 
           {getTimeTagDisplay()}
@@ -1106,4 +1116,13 @@ const VotedBox = styled.div`
     padding: 0 16px;
     line-height: 24px;
     text-align: center;
+`
+
+const VotedBox2 = styled(VotedBox)`
+
+    border: 1px solid rgba(255, 81, 209,0.2);
+    color: rgba(255, 81, 209,1);
+
+    background: rgba(255, 81, 209,0.2);
+
 `

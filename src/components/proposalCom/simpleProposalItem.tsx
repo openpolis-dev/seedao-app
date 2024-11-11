@@ -57,7 +57,9 @@ export default function SimpleProposalItem({
             {
               data.is_voted && currentState === "voting" &&  <VotedBox>{t('Proposal.HasVote')}</VotedBox>
             }
-
+            {
+              !data.is_voted && currentState === "voting" &&  <VotedBox2>{t('Proposal.notVote')}</VotedBox2>
+            }
           </TagsBox>
         </CardBody>
       </Link>
@@ -148,4 +150,13 @@ const VotedBox = styled.div`
     padding: 0 16px;
     line-height: 24px;
     text-align: center;
+`
+
+const VotedBox2 = styled(VotedBox)`
+
+    border: 1px solid rgba(255, 81, 209,0.2);
+    color: rgba(255, 81, 209,1);
+
+    background: rgba(255, 81, 209,0.2);
+
 `
