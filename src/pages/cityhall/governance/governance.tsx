@@ -118,8 +118,9 @@ export default function GovernancePage() {
     return Links.governanceBtm.map((item) => ({ ...item, name: t(item.name) as string, desc: t(item.desc) as string,disabled }));
   }, [t,disabled]);
 
-  const ToGo = (url: string,disabled:boolean) => {
-    if(disabled)return;
+  const ToGo = (url: string,disabled:boolean,item:any) => {
+    if(disabled && item.id ==="module-sbt")return;
+
     navigate(url);
   };
 
@@ -159,7 +160,7 @@ export default function GovernancePage() {
       <BtmBox>
         <Row>
           {BList.map((item, index) => (
-            <LiBox md={2} key={`gBtm_${index}`}  onClick={() => ToGo(item.link,item.disabled)} className={item.disabled && item.id==='module-sbt'?"disabled":""}>
+            <LiBox md={2} key={`gBtm_${index}`}  onClick={() => ToGo(item.link,item.disabled,item)} className={item.disabled && item.id==='module-sbt'?"disabled":""}>
               <div>
                 {
                   item.type !== "icon" && <img src={item.icon as string} alt="" />
