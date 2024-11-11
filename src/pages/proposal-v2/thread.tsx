@@ -560,10 +560,11 @@ export default function ThreadPage() {
           {data?.title}
         </div>
         <FlexLine>
-          {currentCategory && <CategoryTag>{currentCategory}</CategoryTag>}
-          {!data?.is_based_on_custom_template && <TemplateTag>{data?.template_name}</TemplateTag>}
           {showVotedTag(currentState) &&  <VotedBox>{t('Proposal.HasVote')}</VotedBox>}
           {showVotedNot(currentState) &&  <VotedBox2>{t('Proposal.notVote')}</VotedBox2>}
+          {currentCategory && <CategoryTag>{currentCategory}</CategoryTag>}
+          {!data?.is_based_on_custom_template && <TemplateTag>{data?.template_name}</TemplateTag>}
+
           {currentState && <ProposalStateTag state={currentState} />}
 
           {getTimeTagDisplay()}

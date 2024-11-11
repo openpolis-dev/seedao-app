@@ -52,14 +52,15 @@ export default function SimpleProposalItem({
             </div>
           </AvaBox>
           <TagsBox>
-            <CategoryTag>{data.category_name}</CategoryTag>
-            <ProposalStateTag state={currentState} />
             {
               data.is_voted && currentState === "voting" &&  <VotedBox>{t('Proposal.HasVote')}</VotedBox>
             }
             {
               !data.is_voted && currentState === "voting" &&  <VotedBox2>{t('Proposal.notVote')}</VotedBox2>
             }
+            <CategoryTag>{data.category_name}</CategoryTag>
+            <ProposalStateTag state={currentState} />
+
           </TagsBox>
         </CardBody>
       </Link>
