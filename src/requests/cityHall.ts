@@ -72,7 +72,7 @@ export const getCurrentSeason = (): Promise<ResponseData<ISeason>> => {
 const organization_id = 1
 
 export const getSBTlist = async(token:string) => {
-  let rt:any= await axios.get(`${SBT_BASEURL}organization/${organization_id}/nfts`, {
+  let rt:any= await axios.get(`${SBT_BASEURL}/organization/${organization_id}/nfts`, {
     headers: {
       Authorization: `Bearer ${token}`
     }
