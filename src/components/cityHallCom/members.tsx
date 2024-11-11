@@ -57,6 +57,11 @@ export default function Members() {
         name: t('Governance.NodesConferenceRule'),
         link: 'https://seedao.notion.site/SIP-20-720aa499e0124838974dfcb44d4bcb44',
       },
+      {
+        name: t('city-hall.nodeMembers'),
+        type:"inner",
+        link: '/node',
+      },
     ];
   }, [t]);
 
@@ -206,7 +211,7 @@ export default function Members() {
         <UlBox border={borderStyle}>
           {books.map((item, index) => (
             <Col sm={12} md={6} lg={4} xl={3} key={`book_${index}`}>
-              <a href={item.link} target="_blank" rel="noreferrer">
+              <a href={item.link} target={item.type?"":"_blank"}rel="noreferrer">
                 <div className="boxAll">
                   <div>
                     <img src={BookImg} alt="" />

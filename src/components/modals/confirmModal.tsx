@@ -43,6 +43,9 @@ const CardText = styled.div`
 const CardFooter = styled.div`
   text-align: center;
   margin-top: 40px;
+    display: flex;
+    justify-content: center;
+    align-items:center ;
   button {
     width: 110px;
   }

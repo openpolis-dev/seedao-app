@@ -367,6 +367,24 @@ export default function ThreadPage() {
     return true;
   };
 
+  const showVotedTag = (currentState:ProposalState | undefined) =>{
+    if (!data?.votes?.[0]) {
+      return false;
+    }
+    const votedItem = data?.votes?.[0].options.filter((item)=>item.is_vote);
+
+    return (!!votedItem?.length &&  currentState === "voting")
+  }
+
+  const showVotedNot = (currentState:ProposalState | undefined) =>{
+    if (!data?.votes?.[0]) {
+      return false;
+    }
+    const votedItem = data?.votes?.[0].options.filter((item)=>item.is_vote);
+
+    return (!votedItem?.length &&  currentState === "voting")
+  }
+
   const isCurrentApplicant = data?.applicant?.toLocaleLowerCase() === account?.toLocaleLowerCase();
 
   const moreActions = () => {
@@ -542,10 +560,16 @@ export default function ThreadPage() {
           {data?.title}
         </div>
         <FlexLine>
+          {showVotedTag(currentState) &&  <VotedBox>{t('Proposal.HasVote')}</VotedBox>}
+          {showVotedNot(currentState) &&  <VotedBox2>{t('Proposal.notVote')}</VotedBox2>}
           {currentCategory && <CategoryTag>{currentCategory}</CategoryTag>}
           {!data?.is_based_on_custom_template && <TemplateTag>{data?.template_name}</TemplateTag>}
+
           {currentState && <ProposalStateTag state={currentState} />}
+
           {getTimeTagDisplay()}
+
+
         </FlexLine>
         {showModal && <ProfileComponent address={applicant} theme={theme} handleClose={handleClose} />}
         <InfoBox>
@@ -1083,3 +1107,23 @@ const TimeTag = styled.span`
   color: var(--bs-primary);
   font-size: 12px;
 `;
+const VotedBox = styled.div`
+    display: inline-block;
+    border-radius: 4px;
+    border: 1px solid #08D0EA30;
+    color: #08b0c5;
+    font-size: 12px;
+    background: #08D0EA30;
+    padding: 0 16px;
+    line-height: 24px;
+    text-align: center;
+`
+
+const VotedBox2 = styled(VotedBox)`
+
+    border: 1px solid rgba(255, 81, 209,0.2);
+    color: rgba(255, 81, 209,1);
+
+    background: rgba(255, 81, 209,0.2);
+
+`
