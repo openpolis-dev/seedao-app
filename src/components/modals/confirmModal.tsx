@@ -48,5 +48,7 @@ const CardFooter = styled.div`
     align-items:center ;
   button {
     width: 110px;
+      text-align: center;
+      justify-content: center;
   }
 `;
