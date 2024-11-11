@@ -243,7 +243,8 @@ export default function SbtCreate() {
       showToast(t('Msg.ApproveSuccess'), ToastType.Success);
 
       setTimeout(()=>{
-        navigate("/sbt/list/pending")
+        // navigate("/sbt/list/pending")
+        window.location.reload();
       },1500)
 
     }catch(e){
