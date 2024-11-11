@@ -36,7 +36,7 @@ interface IRowData {
   metaforo_vote_count: string;
 }
 
-const ColGroup = ({ seasons }: { seasons: number[] }) => {
+const ColGroup = ({ seasons,hasSentFlag,show }: { seasons: number[],hasSentFlag:boolean,show:boolean }) => {
   return (
     <colgroup>
       {/* sns */}
@@ -48,7 +48,10 @@ const ColGroup = ({ seasons }: { seasons: number[] }) => {
       {/* vote */}
       <col style={{ width: '100px' }} />
       {/* season reward */}
-      <col style={{ width: '120px' }} />
+      {
+        ((!hasSentFlag && show) || hasSentFlag) && <col style={{ width: "120px" }} />
+      }
+
       {/* total */}
       <col style={{ width: '120px' }} />
       {/* active */}
@@ -88,6 +91,7 @@ export default function GoveranceNodeResult() {
 
   const [filterActiveNum, setFilterActiveNum] = useState('');
   const [filterEffectiveNum, setFilterEffectiveNum] = useState('');
+  const [show,setShow]=useState(false);
 
   const { getMultiSNS } = useQuerySNS();
 
@@ -102,8 +106,6 @@ export default function GoveranceNodeResult() {
       return [];
     }
   }, [currentSeasonNumber]);
-  console.log('allSeasons', allSeasons);
-
   useEffect(() => {
     const getList = () => {
       dispatch({ type: AppActionType.SET_LOADING, payload: true });
@@ -247,6 +249,10 @@ export default function GoveranceNodeResult() {
     );
   };
 
+  const onClickShow = () =>{
+    setShow(true);
+  }
+
   return (
     <OuterBox>
       {showModal && (
@@ -335,16 +341,16 @@ export default function GoveranceNodeResult() {
         </SearchBox>
         <ButtonGroup>
           {/*<Button variant="primary" onClick={onClickSnapshot} disabled={hasSnapshot}>*/}
-          <Button variant="primary" onClick={onClickSendReward} >
+          <Button variant="primary" onClick={onClickShow}   disabled={hasSentFlag} >
             {t('GovernanceNodeResult.rewardStart')}
           </Button>
-          {/*<PrimaryOutlinedButton*/}
-          {/*  onClick={onClickSendReward}*/}
-          {/*  disabled={hasSentFlag}*/}
-          {/*  style={{ height: '40px', lineHeight: '40px' }}*/}
-          {/*>*/}
-          {/*  {t('GovernanceNodeResult.SendReward')}*/}
-          {/*</PrimaryOutlinedButton>*/}
+          <PrimaryOutlinedButton
+            onClick={onClickSendReward}
+            disabled={hasSentFlag}
+            style={{ height: '40px', lineHeight: '40px' }}
+          >
+            {t('GovernanceNodeResult.SendReward')}
+          </PrimaryOutlinedButton>
           <Button className="export" variant="outline-secondary" onClick={handleExport}>
             {t('GovernanceNodeResult.Export')}
           </Button>
@@ -352,7 +358,7 @@ export default function GoveranceNodeResult() {
       </OperateBox>
       <TableBox>
         <Table id="head-table">
-          <ColGroup seasons={allSeasons} />
+          <ColGroup seasons={allSeasons} hasSentFlag={hasSentFlag} show={show} />
           <thead>
             <th>SNS</th>
             {allSeasons.map((s, i) => {
@@ -365,15 +371,19 @@ export default function GoveranceNodeResult() {
               );
             })}
             <th className="center">{t('GovernanceNodeResult.VoteCount', { season: currentSeason })}</th>
-            <th className="right">{t('GovernanceNodeResult.MinerReward', { season: currentSeason })}(SCR)</th>
-            <th className="right">{t('GovernanceNodeResult.Total')}(SCR)</th>
+
+            {
+              ((!hasSentFlag && show) || hasSentFlag ) && <th className="right">{t("GovernanceNodeResult.MinerReward", { season: currentSeason })}(SCR)</th>
+            }
+
+            <th className="right">{t("GovernanceNodeResult.Total")}(SCR)</th>
             <th className="right">{t('GovernanceNodeResult.ActiveSCR')}</th>
             <th className="right">{t('GovernanceNodeResult.EffectiveSCR')}</th>
             <th className="center">{t('GovernanceNodeResult.SeedCount')}</th>
           </thead>
         </Table>
         <Table id="body-table">
-          <ColGroup seasons={allSeasons} />
+          <ColGroup seasons={allSeasons} hasSentFlag={hasSentFlag} show={show} />
           <tbody>
             {displayList.map((item, index) => (
               <tr key={item.wallet}>
@@ -385,7 +395,10 @@ export default function GoveranceNodeResult() {
                 ))}
 
                 <td className="center">{Number(item.metaforo_vote_count).format()}</td>
-                <td className="right">{Number(item.metaforo_credit).format()}</td>
+                {
+                  ((!hasSentFlag && show) || hasSentFlag ) && <td className="right">{Number(item.metaforo_credit).format()}</td>
+                }
+
                 <td className="right">{Number(item.season_total_credit).format()}</td>
                 <td className="right">{Number(item.activity_credit).format()}</td>
                 <td className="right">{Number(item.effective_credit).format()}</td>
