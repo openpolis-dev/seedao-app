@@ -19,7 +19,6 @@ const TopBox = styled.div`
 `;
 export default function Assistant() {
   const [list, setList] = useState(null);
-  const [articleId, setArticleId] = useState<string | undefined>('');
   const [level, setLevel] = useState<string>("0");
   // const { id } = useParams();
   const { pathname } = useLocation();
@@ -47,31 +46,33 @@ export default function Assistant() {
     // }else {
     //   setArticleId('0bad66817c464f04962b797b47056241');
     // }
+
+    let artId
     switch (level){
       case "2":
-        setArticleId("19e87f9a7afc40ba9aa9beccded3dd61");
+        artId = ("19e87f9a7afc40ba9aa9beccded3dd61");
         break;
       case "3":
-        setArticleId("2b78fc5a90584b5399bb0acb4404fd79");
+        artId = ("2b78fc5a90584b5399bb0acb4404fd79");
         break;
       case "4":
-        setArticleId("c7e2c42b05d24d529757b115455d5644");
+        artId = ("c7e2c42b05d24d529757b115455d5644");
         break;
       case "5":
-        setArticleId("58272ec5de7d44ad9b665a11b1006ffb");
+        artId = ("58272ec5de7d44ad9b665a11b1006ffb");
         break;
       case "6":
-        setArticleId("566965755bd74c94944695f689e21101");
+        artId = ("566965755bd74c94944695f689e21101");
         break;
       case "1":
       default:
-        setArticleId("cd2edf1da63f4b7188c81509deadabee");
+        artId = ("cd2edf1da63f4b7188c81509deadabee");
         break;
     }
-
+    getData(artId);
 
   }, [level]);
-  const getData = async () => {
+  const getData = async (articleId:string) => {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
       let result = await axios.get(`https://kind-emu-97.deno.dev/page/${articleId}`);
@@ -82,11 +83,6 @@ export default function Assistant() {
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }
   };
-
-  useEffect(() => {
-    if (!articleId) return;
-    getData();
-  }, [articleId]);
 
   useEffect(() => {
     if (!list) return;

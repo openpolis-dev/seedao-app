@@ -4,7 +4,6 @@ import axios from "axios";
 import getConfig from "../utils/envCofnig";
 const envConfig = getConfig();
 const  SBT_BASEURL= envConfig.SBT_BASEURL;
-console.error("==SBT_BASEURL==",envConfig)
 
 const PATH_PREFIX = '/cityhall';
 
