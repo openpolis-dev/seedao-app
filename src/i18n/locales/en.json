@@ -611,9 +611,7 @@
     "externalResources": "Partnership Application",
     "externalResourcesDesc": "Apply to join partnership network",
     "brandApply": "Brand Logo Usage Application",
-    "brandApplyDesc": "Apply to use brand logo",
-    "podcastTitle": "SeeTalk",
-    "podcastDesc": "SeeTalk is a Web3 podcast collaboratively created by members of the SeeDAO community, showcasing the emerging collaborations within the community and highlighting SeeDAO's ongoing important work and plans."
+    "brandApplyDesc": "Apply to use brand logo"
   },
   "application": {
     "Register": "Register",
@@ -666,7 +664,7 @@
   },
   "apps": {
     "OnlineEvent": "SeeDAO Calendar",
-    "OnlineEventDesc": "View Schedule",
+    "OnlineEventDesc": "View the schedules of SeeDAO events",
     "wiki": "SeeDAO Wiki",
     "WikiDesc": "Everything about SeeDAO",
     "hub": "SeeDAO Hub",
@@ -683,16 +681,19 @@
     "PubDesc": "The events hub for SeeDAO community.",
     "SeeU": "SeeU Network",
     "SeeUDesc": "SeeU Network is a decentralized social network that allows users to create and manage their own communities.",
-    "SNS": "SNS",
+    "SNS": "SNS DID",
     "SNSDesc": "SNS is your identity based on blockchain in SeeDAO.",
     "Echo": "Echo",
     "EchoDesc": "Echo is a social network that gives your echos to same habbies, passions or interests.",
     "Credit": "SCR Lending",
     "CreditDesc": "Community Cooperative Finance",
-    "assistant": "Contributor Assistant",
+    "assistant": "Contributor Handbook",
     "assistantDes": "View different help information in the guide manual based on contributor levels.",
     "snsQuery": "SNS Search",
-    "SNSQueryDesc": "Query personal information through SNS."
+    "SNSQueryDesc": "Query personal information by SNS.",
+    "podcastTitle": "SeeTalk Podcast",
+    "podcastDesc": "SeeTalk is a Web3 podcast collaboratively created by members of the SeeDAO community, showcasing the emerging collaborations within the community and highlighting SeeDAO's ongoing important work and plans."
+ 
   },
   "SNS": {
     "EntranceTitle": "INVOLVED IN SEEDAO IN YOUR NAME",

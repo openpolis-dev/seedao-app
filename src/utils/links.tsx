@@ -38,6 +38,7 @@ import getConfig from './envCofnig';
 import AssistantImg from "../assets/Imgs/governance/assistant.png";
 
 import { baselineSquare,featherText,lunchBox,textSquare } from '@lucide/lab';
+import { id } from 'ethers/lib/utils';
 
 
 /**
@@ -304,10 +305,10 @@ const links = {
   apps: [
     {
       id: 'podcast',
-      name: 'Home.podcast',
+      name: 'apps.podcastTitle',
       link: 'https://www.xiaoyuzhoufm.com/podcast/64a27b216d90c5786108abbc',
       icon: PodcastImg,
-      desc: 'resources.podcastDesc',
+      desc: 'apps.podcastDesc',
     },
     {
       id: 'module-calendar',
@@ -450,16 +451,16 @@ const links = {
   publicity: [
     {
       id: 'module-node',
-      name: '当季节点公示',
+      name: '当季SeeDAO治理节点名单',
       time: '2023-11-22 22:27',
       link: '/node',
     },
-    {
-      id: '',
-      name: 'S5 节点共识大会积分公示',
-      time: '2023-11-22 22:27',
-      link: 'https://seedao.notion.site/S5-6022ae9607f64019a10fd383db682706?pvs=4',
-    },
+    // {
+    //   id: '',
+    //   name: 'S5 节点共识大会积分公示',
+    //   time: '2023-11-22 22:27',
+    //   link: 'https://seedao.notion.site/S5-6022ae9607f64019a10fd383db682706?pvs=4',
+    // },
     {
       id: 'module-scr-rank',
       name: 'SeeDAO 积分总榜',
@@ -467,29 +468,35 @@ const links = {
       link: '/ranking',
     },
     {
-      id: '',
-      name: 'SeeDAO两周年生态发布会！十二月中相约清迈',
-      time: '2023-11-01 23:07',
-      link: 'https://mp.weixin.qq.com/s/YVpeaHSRCfUj5EKlHdmsyA',
-    },
-    {
-      id: '',
-      name: 'SeeDAO APP 正式版 V 0.0.1 开始发布！（含测试奖励)',
-      time: '2023-10-23 18:54',
-      link: 'https://mp.weixin.qq.com/s/ahB4q1oF0C7KmfEb52vH8w',
-    },
-    {
-      id: '',
-      name: 'SeeDAO | Our Polis 发布会调整通知',
-      time: '2023-10-23 18:54',
-      link: 'https://mp.weixin.qq.com/s/s8ATHFdKhaMQ5SHkPjPAZQ',
-    },
+      id: 'module-archive',
+      name: 'SeeDAO 档案馆',
+      time: '2023-11-13 20:00',
+      link: 'https://seedao.notion.site/SeeDAO-f57031667089473faa7ea3560d05960c',
+    }
+    // {
+    //   id: '',
+    //   name: 'SeeDAO两周年生态发布会！十二月中相约清迈',
+    //   time: '2023-11-01 23:07',
+    //   link: 'https://mp.weixin.qq.com/s/YVpeaHSRCfUj5EKlHdmsyA',
+    // },
+    // {
+    //   id: '',
+    //   name: 'SeeDAO APP 正式版 V 0.0.1 开始发布！（含测试奖励)',
+    //   time: '2023-10-23 18:54',
+    //   link: 'https://mp.weixin.qq.com/s/ahB4q1oF0C7KmfEb52vH8w',
+    // },
+    // {
+    //   id: '',
+    //   name: 'SeeDAO | Our Polis 发布会调整通知',
+    //   time: '2023-10-23 18:54',
+    //   link: 'https://mp.weixin.qq.com/s/s8ATHFdKhaMQ5SHkPjPAZQ',
+    // },
   ],
   podcast: {
-    name: 'resources.podcastTitle',
+    name: 'apps.podcastTitle',
     link: 'https://www.xiaoyuzhoufm.com/podcast/64a27b216d90c5786108abbc',
     img: PodcastImg,
-    desc: 'resources.podcastDesc',
+    desc: 'apps.podcastDesc',
   },
 };
 

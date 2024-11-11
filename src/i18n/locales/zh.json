@@ -400,7 +400,7 @@
     "TechGroup": "技术小组",
     "ReviewProposal": "提案审核",
     "ReviewProposalDesc": "审核提案的申请",
-    "nodeMembers": "当季节点公示"
+    "nodeMembers": "当季SeeDAO社区治理节点名单"
   },
   "GovernanceNodeResult": {
     "SearchTip": "SNS",
@@ -611,9 +611,7 @@
     "externalResources": "外联合作申请",
     "externalResourcesDesc": "申请加入外联网络",
     "brandApply": "品牌Logo使用申请",
-    "brandApplyDesc": "申请使用品牌Logo",
-    "podcastTitle": "SeeTalk",
-    "podcastDesc": "SeeTalk是一档由SeeDAO社区成员共创Web3节目，传递着社区成员的共创涌现和SeeDAO当前正在做的重要工作与规划"
+    "brandApplyDesc": "申请使用品牌Logo"
   },
   "application": {
     "Register": "登记",
@@ -666,7 +664,7 @@
   },
   "apps": {
     "OnlineEvent": "城邦日历",
-    "OnlineEventDesc": "查看日程安排",
+    "OnlineEventDesc": "查看社区中各公共活动、会议等日程安排",
     "wiki": "SeeDAO百科",
     "WikiDesc": "SeeDAO的全面介绍",
     "hub": "悬赏酒馆",
@@ -683,16 +681,18 @@
     "PubDesc": "The events hub for SeeDAO community.",
     "SeeU": "SeeU Network",
     "SeeUDesc": "SeeU Network is a decentralized social network that allows users to create and manage their own communities.",
-    "SNS": "SNS",
-    "SNSDesc": "SNS is your identity based on blockchain in SeeDAO.",
+    "SNS": "SNS去中心化身份",
+    "SNSDesc": "SNS是SeeDAO社区里的去中心化身份服务，使用SNS可以在SeeDAO社区里进行身份验证。",
     "Echo": "Echo",
     "EchoDesc": "Echo is a social network that gives your echos to same habbies, passions or interests.",
-    "Credit": "SCR借款",
+    "Credit": "SCR社区互助借款",
     "CreditDesc": "社区积分新玩法",
-    "assistant": "贡献者帮助手册",
+    "assistant": "贡献者手册",
     "assistantDes": "根据贡献者等级在指引手册中看到不同的帮助信息",
-    "snsQuery": "SNS搜索",
-    "SNSQueryDesc": "通过SNS查询个人信息"
+    "snsQuery": "SNS检索",
+    "SNSQueryDesc": "通过SNS查询社区成员在社区里的公开信息",
+    "podcastTitle": "SeeTalk播客",
+    "podcastDesc": "SeeTalk是一档由SeeDAO社区成员共创Web3节目，传递着社区成员的共创涌现和SeeDAO当前正在做的重要工作与规划"
   },
   "SNS": {
     "EntranceTitle": "获取你的 SNS，开始你的 SeeDAO 之旅",
@@ -741,7 +741,7 @@
     "search": "检索"
   },
   "Credit": {
-    "NavTitle": "SCR借款",
+    "NavTitle": "SCR社区互助借款",
     "CardLogin": "您未登录，请登录后查看",
     "GoToBorrow": "去借款",
     "GoToRepay": "去还款",
