@@ -167,9 +167,7 @@ const LoginModalContent = () => {
 
 
           try {
-            console.error("==loginToSBT==")
             const loginResp:any = await loginToSBT(res.data.see_auth);
-            console.error("==loginToSBT==",loginResp)
 
             if (loginResp.data) {
 
