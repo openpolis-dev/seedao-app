@@ -78,6 +78,7 @@ const LOCAL = {
   NETWORK: Polygon_Network,
   INDEXER_ENDPOINT: 'https://test-spp-indexer.seedao.tech',
   SENTRY_DSN: '',
+  SBT_BASEURL:"https://test-sbt-api.seedao.tech"
 };
 const DEVELOPMENT = {
   ...LOCAL,
@@ -85,6 +86,7 @@ const DEVELOPMENT = {
   REACT_APP_ONESIGNAL_ID: 'd3bf95e4-40e3-455d-95ab-e01ef35d6732',
   REACT_APP_MOBILE_URL: 'https://dev-m.seedao.tech',
   SENTRY_DSN,
+  SBT_BASEURL:"https://test-sbt-api.seedao.tech"
 };
 
 const PREVIEW = {
@@ -105,6 +107,7 @@ const PREVIEW = {
     },
   },
   INDEXER_ENDPOINT: 'https://preview-spp-indexer.seedao.tech',
+  SBT_BASEURL:"https://preview-sbt-api.seedao.tech"
 };
 
 const PRODUCTION = {
@@ -145,6 +148,7 @@ const PRODUCTION = {
   },
   INDEXER_ENDPOINT: 'https://spp-indexer.seedao.tech',
   SENTRY_DSN,
+  SBT_BASEURL:"https://sbt-api.seedao.tech"
 };
 
 export default function getConfig() {

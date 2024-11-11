@@ -1,7 +1,10 @@
 import request, { BASE_URL, ResponseData } from "./http";
 import { ISeason } from 'type/application.type';
 import axios from "axios";
-import { SBT_BASEURL } from "../utils/constant";
+import getConfig from "../utils/envCofnig";
+const envConfig = getConfig();
+const  SBT_BASEURL= envConfig.SBT_BASEURL;
+console.error("==SBT_BASEURL==",envConfig)
 
 const PATH_PREFIX = '/cityhall';
 
@@ -86,7 +89,7 @@ interface ISBT {
 
 export const applySBT = async(obj:ISBT) => {
   const{token,organization_id,nft_id,receivers,organization_contract_id} = obj
-  let rt:any= await axios.post(`${SBT_BASEURL}organization/${organization_id}/mint`, {
+  let rt:any= await axios.post(`${SBT_BASEURL}/organization/${organization_id}/mint`, {
     organization_contract_id,
     nft_id,
     receivers
@@ -100,7 +103,7 @@ export const applySBT = async(obj:ISBT) => {
 };
 
 export const getAuditList = async(token:string,page:number,size:number,type:string) => {
-  let rt:any= await axios.get(`${SBT_BASEURL}organization/${organization_id}/mints?page=${page}&size=${size}&sort_field=created_at&sort_order=desc&status=${type}`, {
+  let rt:any= await axios.get(`${SBT_BASEURL}/organization/${organization_id}/mints?page=${page}&size=${size}&sort_field=created_at&sort_order=desc&status=${type}`, {
     headers: {
       Authorization: `Bearer ${token}`
     }
@@ -110,7 +113,7 @@ export const getAuditList = async(token:string,page:number,size:number,type:stri
 
 
 export const operateAudit = async(token:string,id:number,type:string) => {
-  let rt:any= await axios.put(`${SBT_BASEURL}organization/${organization_id}/mint/${type}/${id}`,null, {
+  let rt:any= await axios.put(`${SBT_BASEURL}/organization/${organization_id}/mint/${type}/${id}`,null, {
     headers: {
       Authorization: `Bearer ${token}`
     }
@@ -119,7 +122,7 @@ export const operateAudit = async(token:string,id:number,type:string) => {
 };
 
 export const uploadFile = async(token:string,file:any)=>{
-  let rt:any= await axios.post(`${SBT_BASEURL}upload/file`,file, {
+  let rt:any= await axios.post(`${SBT_BASEURL}/upload/file`,file, {
     headers: {
       Authorization: `Bearer ${token}`,
       'content-type': 'multipart/form-data;boundary=boundary'
@@ -129,7 +132,7 @@ export const uploadFile = async(token:string,file:any)=>{
 };
 
 export const getContracts = async(token:string) => {
-  let rt:any= await axios.get(`${SBT_BASEURL}organization/${organization_id}/contracts`, {
+  let rt:any= await axios.get(`${SBT_BASEURL}/organization/${organization_id}/contracts`, {
     headers: {
       Authorization: `Bearer ${token}`
     }
@@ -138,7 +141,7 @@ export const getContracts = async(token:string) => {
 };
 
 export const createSBT = async(token:string,obj:any)=>{
-  let rt:any= await axios.post(`${SBT_BASEURL}organization/${organization_id}/nft`,obj, {
+  let rt:any= await axios.post(`${SBT_BASEURL}/organization/${organization_id}/nft`,obj, {
     headers: {
       Authorization: `Bearer ${token}`,
       'content-type': 'application/json'
@@ -148,7 +151,7 @@ export const createSBT = async(token:string,obj:any)=>{
 };
 
 export const distribute = async(token:string,id:number,mint_tx_hash:string) => {
-  let rt:any= await axios.put(`${SBT_BASEURL}organization/${organization_id}/mint/minted/${id}/${mint_tx_hash}`,null, {
+  let rt:any= await axios.put(`${SBT_BASEURL}/organization/${organization_id}/mint/minted/${id}/${mint_tx_hash}`,null, {
     headers: {
       Authorization: `Bearer ${token}`
     }
