@@ -238,7 +238,7 @@ export default function SbtList(){
         const contract = new ethers.Contract(currentItem.nft_contract_address, SBTabi, signer);
         const {receivers,nft_id} = currentItem;
         const receiversArr = receivers.split(",");
-        const result = await contract.mintToBatchAddress(receiversArr,nft_id,1,"0x");
+        const result = await contract.mintToBatchAddress(receiversArr,nft_id,1,"0x", {});
 
         const receipt = await result.wait();
 
