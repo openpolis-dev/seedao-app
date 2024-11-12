@@ -130,9 +130,7 @@ export default function SbtList(){
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
      let rt = await getAuditList(sbtToken,page,pageSize,type!)
-
       const {page:pageNum,size,rows,total} = rt.data;
-      console.log("getRecords",rt.data)
       setList(rows);
       setPage(pageNum);
       setTotal(total);
@@ -250,7 +248,7 @@ export default function SbtList(){
       showToast(t('Msg.ApproveSuccess'), ToastType.Success);
 
       setTimeout(()=>{
-        window.location.reload();
+        getRecords()
       },1500)
 
     }catch(error){
