@@ -71,6 +71,9 @@ const TxBox = styled(TextArea)`
   align-items: center;
   color: var(--bs-body-color_active);
     resize: none!important;
+    &::placeholder{
+        color: var(--bs-body-color);
+    }
 `;
 
 const TableBox = styled.div`
