@@ -324,9 +324,15 @@ export default function Register() {
       await requests.application.createApplicationBundles(data);
       Clear();
       showToast(t('Guild.SubmitSuccess'), ToastType.Success);
-    } catch (error) {
+    } catch (error:any) {
       logError('createBudgetApplications failed:', error);
-      showToast(t('Guild.SubmitFailed'), ToastType.Danger);
+
+      if((error?.data?.msg || error?.code || error).indexOf("invalid target user wallet") > -1  ) {
+        showToast(t('Proposal.invalidAddress'), ToastType.Danger);
+      }else{
+        showToast(t('Guild.SubmitFailed'), ToastType.Danger);
+      }
+
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }

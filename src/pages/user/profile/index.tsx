@@ -7,7 +7,7 @@ import useToast, { ToastType } from 'hooks/useToast';
 import { ContainerPadding } from 'assets/styles/global';
 import CopyBox from 'components/copy';
 import GithubImg from '../../../assets/Imgs/profile/Github2.svg';
-import TwitterIcon from '../../../assets/Imgs/profile/Twitter.svg';
+import TwitterIcon from '../../../assets/Imgs/profile/x.png';
 import DiscordIcon from '../../../assets/Imgs/profile/discord.svg';
 import WechatIcon from '../../../assets/Imgs/profile/wechat.svg';
 import MirrorImg from '../../../assets/Imgs/profile/mirror.svg';
@@ -506,6 +506,10 @@ const LinkBox = styled.ul`
   .copy-content {
     display: inline-block;
   }
+    img{
+        width: 32px;
+        height: 32px;
+    }
 `;
 
 const ProgressOuter = styled.div`

@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import useToast from '../hooks/useToast';
 import PublicJs from '../utils/publicJs';
 
-import TwitterIcon from 'assets/Imgs/social/twitter.png';
+import TwitterIcon from 'assets/Imgs/profile/xIcon.png';
 import MirrorImg from 'assets/Imgs/social/mirror.png';
 import MirrorImgDark from 'assets/Imgs/social/mirror_dark.png';
 import EmailIcon from 'assets/Imgs/social/email.png';
@@ -105,7 +105,8 @@ const InfoBox = styled.div`
     line-height: 23px;
   }
   .sns {
-    color: var(--bs-body-color);
+    color: var(--bs-primary);
+      text-decoration: underline;
     font-size: 12px;
     line-height: 16px;
   }
@@ -503,7 +504,7 @@ export default function ProfileComponent({ userData, theme, sns, handleClose, ad
                   <div className="userName">{userName}</div>
                   <LevelBox>LV{detail?.level?.current_lv}</LevelBox>
                 </div>
-                <div className="sns">{snsStr}</div>
+                <a href={`https://${snsStr}.id/`} target="_blank" className="sns">{snsStr} &gt;&gt;</a>
                 <div className='wallet'>{wallet}</div>
                 <BioBox>
                   <div>{bio || '-'}</div>

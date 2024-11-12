@@ -132,6 +132,7 @@
     "TotalVoteCount": "{{count}} voted",
     "proposalComponents": "Automation Components",
     "HasVote": "Voted",
+    "notVote": "Not voted",
     "LoginTip": "Login to Metaforo to use the full functionality.",
     "LoginButton": "Login to Metaforo",
     "WriteReplyHint": "write a reply",
@@ -160,7 +161,8 @@
     "reviewTips": "The review period has expired. Please initiate a new proposal.",
     "custom": "Custom",
     "option": "Option",
-    "win": "Win"
+    "win": "Win",
+    "invalidAddress": "地址错误"
   },
   "Project": {
     "OfficialLink": "Official link",
@@ -379,6 +381,7 @@
     "management": "Management",
     "create": "Create",
     "GovernanceNodeResult": "SeeDAO Node Qualification",
+    "sns": "SNS Verification",
     "GovernanceNodeResultDesc": "SeeDAO Node qualification calculation result.",
     "CloseProjectAudit": "Audit Close Project",
     "CloseProjectAuditDesc": "Review the request of closing project.",
@@ -396,7 +399,8 @@
     "BrandGroup": "Branding Group",
     "TechGroup": "Tech Group",
     "ReviewProposal": "Review Proposal",
-    "ReviewProposalDesc": "Review the draft proposals"
+    "ReviewProposalDesc": "Review the draft proposals",
+    "nodeMembers": "Current season announcement"
   },
   "GovernanceNodeResult": {
     "SearchTip": "SNS",
@@ -415,6 +419,7 @@
     "TotalSentSCR": "{{season}} Sent SCR ",
     "TotalMinerReward": "{{season}} Miner Reward (SCR)",
     "SeedSnapshot": "SEED Snapshot",
+    "rewardStart": "Reward Calculation",
     "SendReward": "Apply Reward",
     "StartFilter": "Start Filter",
     "FilterNodesModalTitle": "{{season}} Nodes",
@@ -606,9 +611,7 @@
     "externalResources": "Partnership Application",
     "externalResourcesDesc": "Apply to join partnership network",
     "brandApply": "Brand Logo Usage Application",
-    "brandApplyDesc": "Apply to use brand logo",
-    "podcastTitle": "SeeTalk",
-    "podcastDesc": "SeeTalk is a Web3 podcast collaboratively created by members of the SeeDAO community, showcasing the emerging collaborations within the community and highlighting SeeDAO's ongoing important work and plans."
+    "brandApplyDesc": "Apply to use brand logo"
   },
   "application": {
     "Register": "Register",
@@ -661,7 +664,7 @@
   },
   "apps": {
     "OnlineEvent": "SeeDAO Calendar",
-    "OnlineEventDesc": "View Schedule",
+    "OnlineEventDesc": "View the schedules of SeeDAO events",
     "wiki": "SeeDAO Wiki",
     "WikiDesc": "Everything about SeeDAO",
     "hub": "SeeDAO Hub",
@@ -678,12 +681,19 @@
     "PubDesc": "The events hub for SeeDAO community.",
     "SeeU": "SeeU Network",
     "SeeUDesc": "SeeU Network is a decentralized social network that allows users to create and manage their own communities.",
-    "SNS": "SNS",
+    "SNS": "SNS DID",
     "SNSDesc": "SNS is your identity based on blockchain in SeeDAO.",
     "Echo": "Echo",
     "EchoDesc": "Echo is a social network that gives your echos to same habbies, passions or interests.",
     "Credit": "SCR Lending",
-    "CreditDesc": "Community Cooperative Finance"
+    "CreditDesc": "Community Cooperative Finance",
+    "assistant": "Contributor Handbook",
+    "assistantDes": "View different help information in the guide manual based on contributor levels.",
+    "snsQuery": "SNS Search",
+    "SNSQueryDesc": "Query personal information by SNS.",
+    "podcastTitle": "SeeTalk Podcast",
+    "podcastDesc": "SeeTalk is a Web3 podcast collaboratively created by members of the SeeDAO community, showcasing the emerging collaborations within the community and highlighting SeeDAO's ongoing important work and plans."
+
   },
   "SNS": {
     "EntranceTitle": "INVOLVED IN SEEDAO IN YOUR NAME",
@@ -718,7 +728,18 @@
     "NotEnoughBalance": "{{token}} not enough",
     "CommitmentTooOld": "Your {{sns}} submission has expired, please click \"Cancel registration\" to restart your registration.",
     "ShareInviteLink": "Share invite link",
-    "InviteLinkCopied": "The invite link has been copied to your clipboard!"
+    "InviteLinkCopied": "The invite link has been copied to your clipboard!",
+    "searchTitle": "SNS Search ",
+    "inputSNS": "input SNS\ninput SNS\ninput SNS\n",
+    "inputAddress": "input Address\ninput Address\ninput Address\n",
+    "snsTab": "SNS to Addresss",
+    "addressTab": "Address to SNS",
+    "notSNS": "SNS not found",
+    "notAddress": "Address not found",
+    "noSNSINput":"No SNS found in the input area",
+    "noAddressINput":"No Address found in the input area",
+    "snsError": "SNS Error",
+    "search": "Search"
   },
   "Credit": {
     "NavTitle": "SCR Lending",
@@ -854,5 +875,40 @@
     "NewcomerReward": "Newcomer Reward",
     "JoinCommunity": "Join Community",
     "FinalExamination": "Final Examination"
+  },
+  "sbt": {
+    "create": "Create SBT",
+    "createDesc": "Create SBT",
+    "Apply": "Apply SBT",
+    "Audit": "Audit SBT",
+    "Grant": "Grant SBT",
+    "history": "SBT History",
+    "sbtName": "SBT Name",
+    "sbtImg": "SBT Image",
+    "Metadata": "Metadata",
+    "selectContract": "select Contract",
+    "type": "type",
+    "sns": "SNS",
+    "ApplySuccess": "Apply SBT Successfully",
+    "snsError": "Enter the correct SNS",
+    "createAt": "Create At",
+    "applicant": "Applicant",
+    "Auditor": "Auditor",
+    "receivers": "Receivers",
+    "status": "Status",
+    "pending": "Pending",
+    "approved": "To Be Issued",
+    "rejected": "Rejected",
+    "minted": "Minted",
+    "approve": "Approve",
+    "reject": "Reject",
+    "approveSBT": "Are you sure to apply SBT?",
+    "rejectSBT": "Are you sure to reject SBT?",
+    "distributeSBT": "Are you sure to distribute SBT?",
+    "uploadSuccess": "upload Success",
+    "uploadFailed": "upload Failed",
+    "metadataError": "Metadata Error,Please Enter the correct JSON",
+    "step1": "Upload Information",
+    "step2": "Set NFT URI"
   }
 }
