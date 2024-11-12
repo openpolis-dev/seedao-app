@@ -169,7 +169,7 @@ export default function SbtCreate() {
   const getList = async() =>{
     let rt = await getContracts(sbtToken);
     rt.data.map((item:any)=>{
-      item.label = item.name;
+      item.label =`${item.name}(${item.contract_address})`;
       item.value = item.contract_address;
     })
     setList(rt.data)
