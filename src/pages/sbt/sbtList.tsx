@@ -251,9 +251,9 @@ export default function SbtList(){
         getRecords()
       },1500)
 
-    }catch(error){
+    }catch(error:any){
       console.error(error);
-      showToast(t('Msg.ApproveFailed'), ToastType.Danger);
+      showToast(error.response.data.msg || t('Msg.ApproveFailed'), ToastType.Danger);
     }finally {
       setShowConfirm(false);
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
