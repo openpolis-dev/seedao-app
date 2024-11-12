@@ -428,30 +428,30 @@ export default function Home() {
           </ActiveBox>
         </Col>
         <Col md={4}>
-          <CityBox>
-            <a href="https://seedao.notion.site/f57031667089473faa7ea3560d05960c" target="_blank" rel="noreferrer">
-              <TitBox>
-                <span>{t('Home.podcast')}</span>
-              </TitBox>
-            </a>
+          {/*<CityBox>*/}
+          {/*  <a href="https://seedao.notion.site/f57031667089473faa7ea3560d05960c" target="_blank" rel="noreferrer">*/}
+          {/*    <TitBox>*/}
+          {/*      <span>{t('Home.podcast')}</span>*/}
+          {/*    </TitBox>*/}
+          {/*  </a>*/}
 
-            <LinkBox>
-              <Col>
-                <a href={Links.podcast.link} target="_blank" rel="noreferrer">
-                  <BtmBox>
-                    <FlexPod>
-                      <img src={Links.podcast.img} alt="" />
-                      <div>
-                        <div className="tit">{t(Links.podcast.name as any)}</div>
-                        <div className="desc">{t(Links.podcast.desc as any)}</div>
-                      </div>
-                    </FlexPod>
-                    <div className="linkRht">{/*<img src={PlayImg} alt="" />*/}</div>
-                  </BtmBox>
-                </a>
-              </Col>
-            </LinkBox>
-          </CityBox>
+          {/*  <LinkBox>*/}
+          {/*    <Col>*/}
+          {/*      <a href={Links.podcast.link} target="_blank" rel="noreferrer">*/}
+          {/*        <BtmBox>*/}
+          {/*          <FlexPod>*/}
+          {/*            <img src={Links.podcast.img} alt="" />*/}
+          {/*            <div>*/}
+          {/*              <div className="tit">{t(Links.podcast.name as any)}</div>*/}
+          {/*              <div className="desc">{t(Links.podcast.desc as any)}</div>*/}
+          {/*            </div>*/}
+          {/*          </FlexPod>*/}
+          {/*          <div className="linkRht">/!*<img src={PlayImg} alt="" />*!/</div>*/}
+          {/*        </BtmBox>*/}
+          {/*      </a>*/}
+          {/*    </Col>*/}
+          {/*  </LinkBox>*/}
+          {/*</CityBox>*/}
           <CityBox>
             <a href="https://seedao.notion.site/f57031667089473faa7ea3560d05960c" target="_blank" rel="noreferrer">
               <TitBox2>
@@ -500,14 +500,14 @@ export default function Home() {
               {/*  </div>*/}
               {/*</Col>*/}
 
-              {Publicitys.slice(0, 3).map((item: any, index) => {
+              {Publicitys.slice(0, 5).map((item: any, index) => {
                 return item.id.startsWith('module') ? (
                   <Col key={index}>
                     <Link to={item.link}>
                       <BtmBox>
                         <div>
                           <div className="tit">{item.name}</div>
-                          <div className="desc">{item.time}</div>
+                          {/*<div className="desc">{item.time}</div>*/}
                         </div>
                         <div className="link">
                           <img src={LinkImg} alt="" />
@@ -521,7 +521,7 @@ export default function Home() {
                       <BtmBox>
                         <div>
                           <div className="tit">{item.name}</div>
-                          <div className="desc">{item.time}</div>
+                          {/*<div className="desc">{item.time}</div>*/}
                         </div>
                         <div className="link">
                           <img src={LinkImg} alt="" />

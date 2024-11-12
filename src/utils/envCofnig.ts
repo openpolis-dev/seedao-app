@@ -3,7 +3,7 @@ import PolygonIcon from 'assets/Imgs/network/polygon.svg';
 import { amoy } from 'utils/chain';
 import { polygon } from 'viem/chains';
 
-const VERSION = '0.6.0';
+const VERSION = '0.7.0';
 
 const SENTRY_DSN = 'https://b36d900b0a63b0466ff4e73d55e359b2@o4505590144106496.ingest.sentry.io/4506445116604416';
 
@@ -78,6 +78,7 @@ const LOCAL = {
   NETWORK: Polygon_Network,
   INDEXER_ENDPOINT: 'https://test-spp-indexer.seedao.tech',
   SENTRY_DSN: '',
+  SBT_BASEURL:"https://test-sbt-api.seedao.tech"
 };
 const DEVELOPMENT = {
   ...LOCAL,
@@ -85,6 +86,7 @@ const DEVELOPMENT = {
   REACT_APP_ONESIGNAL_ID: 'd3bf95e4-40e3-455d-95ab-e01ef35d6732',
   REACT_APP_MOBILE_URL: 'https://dev-m.seedao.tech',
   SENTRY_DSN,
+  SBT_BASEURL:"https://test-sbt-api.seedao.tech"
 };
 
 const PREVIEW = {
@@ -105,6 +107,7 @@ const PREVIEW = {
     },
   },
   INDEXER_ENDPOINT: 'https://preview-spp-indexer.seedao.tech',
+  SBT_BASEURL:"https://preview-sbt-api.seedao.tech"
 };
 
 const PRODUCTION = {
@@ -145,6 +148,7 @@ const PRODUCTION = {
   },
   INDEXER_ENDPOINT: 'https://spp-indexer.seedao.tech',
   SENTRY_DSN,
+  SBT_BASEURL:"https://sbt-api.seedao.tech"
 };
 
 export default function getConfig() {

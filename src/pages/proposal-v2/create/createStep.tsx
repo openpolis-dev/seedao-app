@@ -462,7 +462,12 @@ export default function CreateStep({ onClick }: any) {
         })
         .catch((error: any) => {
           logError('saveOrSubmitProposal failed', error);
-          showToast(error?.data?.msg || error?.code || error, ToastType.Danger);
+          if((error?.data?.msg || error?.code || error).indexOf("component data validation error") > -1 || (error?.data?.msg || error?.code || error).indexOf("invalid address")>-1 ) {
+            showToast(t('Proposal.invalidAddress'), ToastType.Danger);
+          }else{
+            showToast(error?.data?.msg || error?.code || error, ToastType.Danger);
+          }
+
         })
         .finally(() => {
           dispatch({ type: AppActionType.SET_LOADING, payload: false });

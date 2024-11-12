@@ -1,10 +1,12 @@
 import styled from 'styled-components';
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from "react";
 import { Row, Col } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import Links from 'utils/links';
 import AppCard, { EmptyAppCard } from 'components/common/appCard';
-import { useAuthContext } from '../../providers/authProvider';
+import { AppActionType, useAuthContext } from "../../providers/authProvider";
+import { getCityHallDetail } from "../../requests/cityHall";
+import publicJs from "../../utils/publicJs";
 
 const AppBox = styled(Row)`
   div[class^='col'] {
@@ -41,13 +43,37 @@ export default function TechPanel() {
   const { t } = useTranslation();
 
   const {
-    state: { theme },
+    state: { theme,account },
+    dispatch
   } = useAuthContext();
+
+  const [disabled,setDisabled] = useState<boolean>(false);
 
   const lst = useMemo(() => {
     // @ts-ignore
-    return Links.tech.map((item) => ({ ...item, name: t(item.name) as string, desc: t(item.desc) as string }));
-  }, [t]);
+    return Links.tech.map((item) => ({ ...item, name: t(item.name) as string, desc: t(item.desc) as string,disabled }));
+  }, [t,disabled]);
+
+
+  const getDetail = async () => {
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    try {
+      const dt = await getCityHallDetail();
+      const members = dt.data.grouped_sponsors.G_GOVERNANCE;
+
+      const disabledArr = members.filter((item) => item.toLowerCase() === account!.toLowerCase());
+      setDisabled(!disabledArr?.length)
+    } catch (error) {
+      logError(error);
+    } finally {
+      dispatch({ type: AppActionType.SET_LOADING, payload: null });
+    }
+  };
+
+  useEffect(() => {
+    if(!account)return;
+    getDetail();
+  }, [account]);
   return (
     <div>
       <AppBox>

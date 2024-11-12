@@ -19,6 +19,7 @@ const AppCard = ({
   desc,
   hiddenFields,
   handleShow,
+ disabled
 }: {
   icon?: any;
   name: string;
@@ -26,6 +27,7 @@ const AppCard = ({
   id: string;
   Nolink?: boolean;
   desc?: string;
+  disabled?: boolean;
   hiddenFields?: string[];
   handleShow?: (arg0: string) => void;
 }) => {
@@ -35,7 +37,7 @@ const AppCard = ({
     dispatch,
   } = useAuthContext();
   const handleClickEvent = () => {
-    if (id === 'coming-soon') {
+    if (id === 'coming-soon' || (disabled && id==='module-sbt')) {
       return;
     } else if (id.startsWith('module-')) {
       navigate(link);
@@ -52,7 +54,7 @@ const AppCard = ({
     }
   };
   return (
-    <AppCardStyle className="boxApp" onClick={handleClickEvent} Nolink={Nolink?.toString()}>
+    <AppCardStyle className={disabled && id==='module-sbt'?"disabled boxApp":"boxApp"} onClick={handleClickEvent} Nolink={Nolink?.toString()}>
       <div className="iconBox">
         <img src={icon ? icon : theme ? DefaultImg : DefaultImgLight} alt="" />
         <div className="inner" />
@@ -174,6 +176,10 @@ const AppCardStyle = styled.div<Iprops>`
     margin-top: 8px;
     color: var(--bs-body-color_active);
   }
+    &.disabled{
+        opacity: 0.5!important;
+        cursor: not-allowed;
+    }
 
   @media (max-width: 1024px) {
     padding-block: 10px;
