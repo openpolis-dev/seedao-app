@@ -251,9 +251,9 @@ export default function SbtList(){
         getRecords()
       },1500)
 
-    }catch(error){
-      console.error(error);
-      showToast(t('Msg.ApproveFailed'), ToastType.Danger);
+    }catch(error:any){
+      let e = JSON.parse(JSON.stringify(error))
+      showToast(error?.response?.data?.msg || e?.message || e?.reason || t('Msg.ApproveFailed'), ToastType.Danger);
     }finally {
       setShowConfirm(false);
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
