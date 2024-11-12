@@ -693,7 +693,7 @@
     "SNSQueryDesc": "Query personal information by SNS.",
     "podcastTitle": "SeeTalk Podcast",
     "podcastDesc": "SeeTalk is a Web3 podcast collaboratively created by members of the SeeDAO community, showcasing the emerging collaborations within the community and highlighting SeeDAO's ongoing important work and plans."
- 
+
   },
   "SNS": {
     "EntranceTitle": "INVOLVED IN SEEDAO IN YOUR NAME",
@@ -897,7 +897,7 @@
     "receivers": "Receivers",
     "status": "Status",
     "pending": "Pending",
-    "approved": "Approved",
+    "approved": "To Be Issued",
     "rejected": "Rejected",
     "minted": "Minted",
     "approve": "Approve",
