@@ -896,7 +896,7 @@
     "receivers": "接收人",
     "status": "状态",
     "pending": "待审核",
-    "approved": "已通过",
+    "approved": "待发放",
     "rejected": "已驳回",
     "minted": "已发放",
     "approve": "通过",
