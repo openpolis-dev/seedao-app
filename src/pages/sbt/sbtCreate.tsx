@@ -37,7 +37,7 @@ const OuterBox = styled.div`
             color: var(--bs-body-color_active);
         }
         &::placeholder{
-            color:var(--bs-border-color_opacity);
+            color: var(--bs-body-color);
         }
     }
    .ant-steps-item-finish>.ant-steps-item-container>.ant-steps-item-content>.ant-steps-item-title{
