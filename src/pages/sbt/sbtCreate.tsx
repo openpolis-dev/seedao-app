@@ -18,6 +18,8 @@ import SBTabi from "../../assets/abi/SBT.json";
 import { Steps } from 'antd';
 import { IExcelObj } from "../../type/project.type";
 import {Input} from "antd"
+import CopyBox from "../../components/copy";
+import CopyIconSVG from "../../assets/Imgs/copy.svg";
 const { TextArea } = Input;
 
 const OuterBox = styled.div`
@@ -102,6 +104,11 @@ const UlBox = styled.ul`
       }
     }
   }
+    .flex{
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
   @media (max-width: 750px) {
     li {
       flex-direction: column;
@@ -365,19 +372,29 @@ export default function SbtCreate() {
                   <div className="title">
                     {t('sbt.selectContract')}
                   </div>
-                  <InputBox>
-                    <SeeSelect
-                      width="100%"
-                      options={list}
-                      value={contract}
-                      isClearable={false}
-                      isSearchable={false}
-                      onChange={(v: any) => {
-                        setContract(v);
-                      }}
-                      isDisabled={current === 1}
-                    />
-                  </InputBox>
+                  <div className="flex">
+                    <InputBox>
+                      <SeeSelect
+                        width="100%"
+                        options={list}
+                        value={contract}
+                        isClearable={false}
+                        isSearchable={false}
+                        onChange={(v: any) => {
+                          setContract(v);
+                        }}
+                        isDisabled={current === 1}
+                      />
+                    </InputBox>
+                    {
+                      !!(contract as any)?.value && <CopyBox text={(contract as any)?.value}>
+                      <img src={CopyIconSVG} alt="" />
+                      </CopyBox>
+                    }
+
+
+                  </div>
+
                 </li>
                 <RhtLi>
                   {
