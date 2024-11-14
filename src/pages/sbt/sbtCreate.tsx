@@ -392,9 +392,7 @@ export default function SbtCreate() {
                       </CopyBox>
                     }
 
-
                   </div>
-
                 </li>
                 <RhtLi>
                   {
