@@ -37,7 +37,6 @@ export default function Assistant() {
     const res = await requests.user.getUserLevel();
     const current_lv = res.data?.current_lv;
     setLevel(current_lv);
-    console.error("getUserLevel",current_lv,typeof current_lv);
   }
 
   useEffect(() => {
