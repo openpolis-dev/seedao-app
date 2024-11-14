@@ -14,6 +14,8 @@ import sns from "@seedao/sns-js";
 import SeeSelect from "../../components/common/select";
 import CopyBox from "../../components/copy";
 import CopyIconSVG from "../../assets/Imgs/copy.svg";
+import EmptyDarkIcon from "../../assets/Imgs/dark/empty.svg";
+import EmptyLightIcon from "../../assets/Imgs/light/empty.svg";
 
 const OuterBox = styled.div`
   ${ContainerPadding};
@@ -114,12 +116,28 @@ const ImgUl = styled.div`
         font-size: 14px;
         padding: 10px;
     }
+    .inner{
+        width: 150px;
+        height: 150px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        &:hover{
+            border: 0;
+            cursor: not-allowed;
+        }
+        img{
+            width: 75px;
+        }
+    }
 `
 
 export default function SbtApply() {
   const {
     state:{
-      sbtToken
+      sbtToken,
+      theme
     },
     dispatch,
   } = useAuthContext();
@@ -141,7 +159,6 @@ export default function SbtApply() {
 
   const getList = async() =>{
     let rt = await getContracts(sbtToken);
-    console.error(rt.data)
     rt.data.map((item:any)=>{
       item.label =`${item.name}(${item.contract_address})`;
       item.value = item.contract_address;
@@ -268,7 +285,7 @@ export default function SbtApply() {
               </div>
             </li>
             {
-              !!(contract as any)?.value &&  <li>
+              !!(contract as any)?.value && !!list?.length &&  <li>
                 <div className="title">
                   {t("sbt.type")}
                 </div>
@@ -286,6 +303,22 @@ export default function SbtApply() {
                 </ImgUl>
               </li>
             }
+
+          {
+           !list?.length &&  <li>
+              <div className="title">
+                {t("sbt.type")}
+              </div>
+              <ImgUl>
+                    <dl className="inner">
+                      <dt>
+                        <img src={theme ? EmptyDarkIcon : EmptyLightIcon} alt="" />
+                      </dt>
+                      <dd> -- </dd>
+                    </dl>
+              </ImgUl>
+            </li>
+          }
 
             <li>
               <div className="title">
