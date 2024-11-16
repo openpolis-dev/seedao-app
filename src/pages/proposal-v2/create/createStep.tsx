@@ -479,10 +479,9 @@ export default function CreateStep({ onClick }: any) {
   };
 
   const handleFormSubmit = async (success: boolean, data: any) => {
-
   let checkEth = false;
 
-    for (let i = 0; i < data.length; i++) {
+    for (let i = 0; i < data?.length; i++) {
       let item = data[i];
       if(item?.data?.budgetList){
         for (let j = 0; j < item?.data?.budgetList?.length ; j++) {
@@ -497,7 +496,6 @@ export default function CreateStep({ onClick }: any) {
 
     }
 
-    console.log(data,success)
     if(checkEth ){
       setLoading(false);
       showToast(t('Msg.SelectAssetTypeError'), ToastType.Danger);
@@ -510,11 +508,13 @@ export default function CreateStep({ onClick }: any) {
       return;
     }
 
+
+
     let motivationArr = template?.components?.filter((item) => item.name === "motivation") || [];
 
       if ((template?.name === 'P2提案结项' || template?.name === 'P3提案结项' ) && motivationArr?.length > 0) {
 
-        if(!data.length){
+        if(!data?.length){
           setLoading(false);
           setIsInstantVoteAlertVisible(false);
           showToast(t('Msg.motivationError'), ToastType.Danger);
@@ -527,6 +527,8 @@ export default function CreateStep({ onClick }: any) {
         })
 
     }
+
+
 
 
     let budgetArr = template?.components?.filter((item) => item.name === 'budget') || [];
