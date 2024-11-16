@@ -544,6 +544,7 @@
     "SelectSource": "Required budget source",
     "SelectAssetType": "Required asset type",
     "SelectAssetTypeError": "Unable to apply for ETH !",
+    "motivationError": "The form cannot be empty.",
     "overAmount": "Insufficient Available Balance",
     "AssetAmountError": "Asset amount error",
     "RequiredWallet": "Required SNS/address",

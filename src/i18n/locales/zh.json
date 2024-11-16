@@ -544,6 +544,7 @@
     "SelectSource": "请选择预算来源",
     "SelectAssetType": "资产类型错误",
     "SelectAssetTypeError": "无法申请ETH!",
+    "motivationError": "激励申请明细不能为空",
     "overAmount": "可预支余额不足",
     "AssetAmountError": "资产数量错误",
     "RequiredWallet": "SNS/地址错误",

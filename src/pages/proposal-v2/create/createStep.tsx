@@ -496,6 +496,8 @@ export default function CreateStep({ onClick }: any) {
       }
 
     }
+
+    console.log(data,success)
     if(checkEth ){
       setLoading(false);
       showToast(t('Msg.SelectAssetTypeError'), ToastType.Danger);
@@ -511,30 +513,29 @@ export default function CreateStep({ onClick }: any) {
     let motivationArr = template?.components?.filter((item) => item.name === "motivation") || [];
 
       if ((template?.name === 'P2提案结项' || template?.name === 'P3提案结项' ) && motivationArr?.length > 0) {
+
+        if(!data.length){
+          setLoading(false);
+          setIsInstantVoteAlertVisible(false);
+          showToast(t('Msg.motivationError'), ToastType.Danger);
+          return;
+        }
         const motivationData = data.filter((item: any) => item.name === "motivation") || [];
         const addrArr:string[] = []
-        motivationData[0].data.budgetList.map((item: any) => {
+        motivationData[0]?.data?.budgetList.map((item: any) => {
           addrArr.push(item.address)
         })
-        // const sns_map = await getMultiSNS(addrArr);
-        // const snsArr = Array.from(sns_map.values())
-
-        // const noSns = snsArr.find((inner:string)=>inner.indexOf(".seedao") === -1);
-        //
-        // if(noSns?.length){
-        //   showToast(t('Assets.tips'), ToastType.Danger);
-        //   return;
-        // }
 
     }
+
 
     let budgetArr = template?.components?.filter((item) => item.name === 'budget') || [];
     if (template?.name === 'P2提案立项' && budgetArr?.length > 0) {
       let err = false;
 
       const budgetData = data.filter((item: any) => item.name === 'budget') || [];
-      if (budgetData.length) {
-        budgetData[0].data.budgetList.map((item: any) => {
+      if (budgetData?.length) {
+        budgetData[0]?.data?.budgetList.map((item: any) => {
 
           if (item?.typeTest?.name === 'USDC') {
             if (Number(item.amount) > 1000) {

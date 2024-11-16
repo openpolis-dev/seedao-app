@@ -249,6 +249,17 @@ export default function EditProposal() {
     }
 
 
+    let motivationArr = data?.components?.filter((itemInner:any) => itemInner.name === "motivation") || [];
+
+    if (((data as any)?.name === 'P2提案结项' || (data as any)?.name === 'P3提案结项' ) && motivationArr?.length > 0) {
+
+      if(!submitData.length){
+        showToast(t('Msg.motivationError'), ToastType.Danger);
+        return;
+      }
+
+    }
+
 
     let budgetArr = data?.components?.filter((item: any) => item.name === 'budget') || [];
     if (data?.template_name === 'P2提案立项' && budgetArr?.length > 0) {
@@ -413,6 +424,7 @@ export default function EditProposal() {
       </FixedBox>
       <BoxBg showRht={showRht?.toString()}>
         <TemplateBox>
+
           <Template
             DataSource={dataSource}
             operate="edit"
