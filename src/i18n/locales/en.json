@@ -910,6 +910,7 @@
     "uploadFailed": "upload Failed",
     "metadataError": "Metadata Error,Please Enter the correct JSON",
     "step1": "Upload Information",
-    "step2": "Set NFT URI"
+    "step2": "Set NFT URI",
+    "selectSBT": "Select SBT"
   }
 }

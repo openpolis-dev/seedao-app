@@ -909,7 +909,8 @@
     "uploadFailed": "上传失败",
     "metadataError": "Metadata错误，请输入正确的JSON",
     "step1": "上传信息",
-    "step2": "设置NFT URI"
+    "step2": "设置NFT URI",
+    "selectSBT": "选择SBT"
 
   }
 }

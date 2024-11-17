@@ -307,7 +307,7 @@ export default function SbtApply() {
           {
            !list?.length &&  <li>
               <div className="title">
-                {t("sbt.type")}
+                {t("sbt.selectSBT")}
               </div>
               <ImgUl>
                     <dl className="inner">
