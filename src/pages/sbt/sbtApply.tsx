@@ -22,6 +22,12 @@ const OuterBox = styled.div`
   input {
     min-height: 40px;
   }
+    .flex{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+    }
 `;
 
 
@@ -282,12 +288,17 @@ export default function SbtApply() {
                     }}
                   />
                 </InputBox>
+                {
+                  !!(contract as any)?.value && <CopyBox text={(contract as any)?.value}>
+                    <img src={CopyIconSVG} alt="" />
+                  </CopyBox>
+                }
               </div>
             </li>
             {
               !!(contract as any)?.value && !!list?.length &&  <li>
                 <div className="title">
-                  {t("sbt.type")}
+                  {t("sbt.selectSBT")}
                 </div>
                 <ImgUl>
 

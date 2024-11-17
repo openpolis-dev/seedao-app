@@ -108,6 +108,7 @@ const UlBox = styled.ul`
         display: flex;
         align-items: center;
         gap: 10px;
+        width: 100%;
     }
   @media (max-width: 750px) {
     li {
