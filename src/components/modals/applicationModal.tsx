@@ -13,6 +13,16 @@ interface Iprops {
 
 export default function ApplicationModal({ application, handleClose, snsMap }: Iprops) {
   const { t } = useTranslation();
+
+  const formatScan = () =>{
+    let str
+    if(application.asset_name === "SCR"){
+       str = "polygonscan.com"
+    }else if(application.asset_name === "USDC"){
+      str = "etherscan.io"
+    }
+    return str;
+  }
   return (
     <ApplicationModalWrapper handleClose={handleClose} title={t('application.DetailModalHeader')}>
       <Content>
@@ -82,7 +92,7 @@ export default function ApplicationModal({ application, handleClose, snsMap }: I
             <BlockRight>
               {application.transactions?.map((item, index) => {
                 return item ? (
-                  <TransactionTx key={index} href={`https://etherscan.io/tx/${item}`} target="_blank">
+                  <TransactionTx key={index} href={`https://${formatScan()}/tx/${item}`} target="_blank">
                     {publicJs.AddressToShow(item, 8)}
                   </TransactionTx>
                 ) : (
