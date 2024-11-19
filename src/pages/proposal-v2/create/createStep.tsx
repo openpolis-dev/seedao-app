@@ -692,6 +692,7 @@ export default function CreateStep({ onClick }: any) {
           showRight={showRht}
           initialItems={components}
           theme={theme}
+          rpc={getConfig().NETWORK.rpcs[0]}
           baseUrl={BASE_URL}
           version={API_VERSION}
           token={token}
@@ -711,7 +712,7 @@ export default function CreateStep({ onClick }: any) {
                   <ItemBox className="preview">
                     <TitleBox>{previewTitle}</TitleBox>
                   </ItemBox>
-                  <Preview DataSource={preview} language={i18n.language} initialItems={initList} theme={theme} />
+                  <Preview DataSource={preview} language={i18n.language} rpc={getConfig().NETWORK.rpcs[0]} initialItems={initList} theme={theme} />
                 </>
               )}
 

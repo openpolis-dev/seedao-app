@@ -432,6 +432,7 @@ export default function EditProposal() {
             language={i18n.language}
             showRight={showRht}
             theme={theme}
+            rpc={getConfig().NETWORK.rpcs[0]}
             baseUrl={BASE_URL}
             version={API_VERSION}
             token={token}
@@ -455,6 +456,7 @@ export default function EditProposal() {
                       <div>
                         <Preview
                           DataSource={preview}
+                          rpc={getConfig().NETWORK.rpcs[0]}
                           language={i18n.language}
                           initialItems={components}
                           theme={theme}
