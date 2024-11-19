@@ -7,6 +7,7 @@ import StateTag from './stateTag';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import useToast, { ToastType } from 'hooks/useToast';
 import sns from '@seedao/sns-js';
+
 import { ethers } from 'ethers';
 import Select from './select';
 import { CreditRecordStatus, ICreditRecord } from 'type/credit.type';
@@ -350,7 +351,7 @@ export default function CreditRecords() {
     if (keyword.endsWith('.seedao')) {
       // sns
       dispatch({ type: AppActionType.SET_LOADING, payload: true });
-      const w = await sns.resolve(keyword);
+      const w = await sns.resolve(keyword,getConfig().NETWORK.rpcs[0]);
       if (w && w !== ethers.constants.AddressZero) {
         setSearchVal(w?.toLocaleLowerCase());
         setPage(1);

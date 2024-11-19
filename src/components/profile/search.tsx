@@ -2,6 +2,7 @@ import BackerNav from "../../components/common/backNav";
 import styled from "styled-components";
 import { ContainerPadding } from "../../assets/styles/global";
 import sns from '@seedao/sns-js';
+
 import { Input } from 'antd';
 import { useTranslation } from "react-i18next";
 import { Button } from "react-bootstrap";
@@ -9,6 +10,7 @@ import ProfileComponent from "../../profile-components/profile";
 import React, { useState } from "react";
 import { useAuthContext } from "../../providers/authProvider";
 import useToast, { ToastType } from "../../hooks/useToast";
+import getConfig from "../../utils/envCofnig";
 
 const Container = styled.div`
   ${ContainerPadding};
@@ -92,7 +94,7 @@ export default function SearchProfile(){
   };
 
   const handleSubmit = async () =>{
-    const address = await sns.resolve(`${snsName}.seedao`)
+    const address = await sns.resolve(`${snsName}.seedao`,getConfig().NETWORK.rpcs[0])
     if(address === AddressZero){
       showToast(t('SNS.snsError'), ToastType.Danger);
     }else{

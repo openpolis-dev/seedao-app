@@ -14,9 +14,11 @@ import { useAuthContext, AppActionType } from 'providers/authProvider';
 import SearchWhite from 'assets/Imgs/light/search.svg';
 import SearchImg from 'assets/Imgs/light/search.svg';
 import sns from '@seedao/sns-js';
+
 import { ethers } from 'ethers';
 import useToast, { ToastType } from 'hooks/useToast';
 import ClearSVGIcon from 'components/svgs/clear';
+import getConfig from "../../utils/envCofnig";
 
 export default function ExplorePage() {
   const [search] = useSearchParams();
@@ -60,7 +62,7 @@ export default function ExplorePage() {
       // sns
       dispatch({ type: AppActionType.SET_LOADING, payload: true });
       try {
-        const w = await sns.resolve(inputSearchVal);
+        const w = await sns.resolve(inputSearchVal,getConfig().NETWORK.rpcs[0]);
         if (w && w !== ethers.constants.AddressZero) {
           setWalletSearchVal(w?.toLocaleLowerCase());
         } else {

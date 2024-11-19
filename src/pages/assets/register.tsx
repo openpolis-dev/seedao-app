@@ -14,6 +14,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
 import { ethers } from 'ethers';
 import sns from '@seedao/sns-js';
+
 import { AssetName } from 'utils/constant';
 import { getAvailiableProjectsAndGuilds } from 'requests/applications';
 import BackerNav from 'components/common/backNav';
@@ -22,6 +23,7 @@ import TotalImg from '../../assets/Imgs/light/total.svg';
 import TotalImgLt from '../../assets/Imgs/dark/total.svg';
 import { getGuildBudgets, getProjectById } from "../../requests/project";
 import { getProjectById as getGuildById } from "../../requests/guild";
+import getConfig from "../../utils/envCofnig";
 
 type ErrorDataType = {
   line: number;
@@ -241,7 +243,7 @@ export default function Register() {
     try {
       const sns_list = Array.from(sns_set);
 
-      const result = await sns.resolves(sns_list);
+      const result = await sns.resolves(sns_list,getConfig().NETWORK.rpcs[0]);
       result.forEach((item, i) => {
         if (!item || item === ethers.constants.AddressZero) {
           err_sns_list.push(sns_list[i]);

@@ -11,11 +11,13 @@ import BackerNav from '../../components/common/backNav';
 import { applySBT, getContracts, getSBTlist } from "../../requests/cityHall";
 import publicJs from 'utils/publicJs';
 import sns from "@seedao/sns-js";
+
 import SeeSelect from "../../components/common/select";
 import CopyBox from "../../components/copy";
 import CopyIconSVG from "../../assets/Imgs/copy.svg";
 import EmptyDarkIcon from "../../assets/Imgs/dark/empty.svg";
 import EmptyLightIcon from "../../assets/Imgs/light/empty.svg";
+import getConfig from "../../utils/envCofnig";
 
 const OuterBox = styled.div`
   ${ContainerPadding};
@@ -227,7 +229,7 @@ export default function SbtApply() {
     const unique_list = Array.from(new Set(to_be_parsed));
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
-      let result = await sns.resolves(unique_list)
+      let result = await sns.resolves(unique_list,getConfig().NETWORK.rpcs[0])
       if(result.includes(AddressZero)){
         showToast(t('sbt.snsError'), ToastType.Danger);
       }else{

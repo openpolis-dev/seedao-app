@@ -1,6 +1,8 @@
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import sns from '@seedao/sns-js';
+
 import { ethers } from 'ethers';
+import getConfig from "../utils/envCofnig";
 
 export default function useQuerySNS() {
   const {
@@ -10,7 +12,7 @@ export default function useQuerySNS() {
 
   const querySNS = async (wallet: string) => {
     try {
-      const data = await sns.name(wallet);
+      const data = await sns.name(wallet,getConfig().NETWORK.rpcs[0]);
       return data;
     } catch (error) {
       return '';
@@ -40,7 +42,7 @@ export default function useQuerySNS() {
     const _snsMap = new Map(snsMap);
     if (_to_be_queried.length) {
       try {
-        const data = await sns.names(_to_be_queried, rpc);
+        const data = await sns.names(_to_be_queried, getConfig().NETWORK.rpcs[0]);
         data.forEach((d, idx) => {
           _snsMap.set(_to_be_queried[idx], d || ethers.utils.getAddress(_to_be_queried[idx]));
         });
