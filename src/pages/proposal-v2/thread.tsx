@@ -48,6 +48,7 @@ import { formatDeltaDate } from 'utils/time';
 import { getProposalSIPSlug } from 'utils';
 import useQueryUser from 'hooks/useQueryUser';
 import defaultImg from '../../assets/Imgs/defaultAvatar.png';
+import getConfig from "../../utils/envCofnig";
 
 enum BlockContentType {
   Reply = 1,
@@ -598,6 +599,7 @@ export default function ThreadPage() {
 
       <ContentOuter>
         <Preview
+          rpc={getConfig().NETWORK.rpcs[0]}
           DataSource={JSON.parse(JSON.stringify(dataSource || []))}
           language={i18n.language}
           initialItems={components}

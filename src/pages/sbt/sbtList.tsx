@@ -18,6 +18,10 @@ import useToast, { ToastType } from "../../hooks/useToast";
 import { ethers } from "ethers";
 import SBTabi from "../../assets/abi/SBT.json";
 import {BookmarkCheck,BookmarkX} from "lucide-react"
+import { IUser } from "../../type/user.type";
+import useQuerySNS from "../../hooks/useQuerySNS";
+
+type UserMap = { [w: string]: IUser };
 
 const Box = styled.div`
   position: relative;
@@ -114,7 +118,9 @@ export default function SbtList(){
   const [operateType, setOperateType] = useState<string>("");
   const [currentItem,setCurrentItem] = useState<any>(null);
   const { showToast } = useToast();
-
+  const [userMap, setUserMap] = useState<UserMap>({});
+  const { getMultiSNS } = useQuerySNS();
+  const [snsMap,setSnsMap] = useState<any>(null);
 
   const {
     state:{
@@ -126,11 +132,41 @@ export default function SbtList(){
   const handleGoto = (url:string) =>{
     navigate(url);
   }
+
+
+  useEffect(() => {
+    getSns()
+  }, [userMap,list]);
+
+  const getSns = async ()=>{
+
+    const _wallets: string[] = [];
+    Object.keys(userMap).forEach((key) => {
+      if (userMap[key]) {
+        _wallets.push(key);
+      }
+    });
+    const wallets = Array.from(new Set(_wallets));
+
+    let snsMap = await getMultiSNS(wallets);
+    setSnsMap(snsMap)
+
+
+  }
   const getRecords = async () => {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
      let rt = await getAuditList(sbtToken,page,pageSize,type!)
       const {page:pageNum,size,rows,total} = rt.data;
+      const userData: UserMap = {};
+
+      rows.forEach((r:any) => {
+        userData[(r.applicant || '').toLowerCase()] = r;
+        userData[(r.approver || '').toLowerCase()] = r;
+      });
+
+      setUserMap(userData);
+
       setList(rows);
       setPage(pageNum);
       setTotal(total);
@@ -284,6 +320,15 @@ export default function SbtList(){
      return str
   }
 
+  const returnSns = (str:string) =>{
+    if( snsMap?.get(str?.toLowerCase())?.endsWith(".seedao")){
+      return  snsMap?.get(str?.toLowerCase())
+    }else{
+      return  publicJs.AddressToShow(str,5)
+    }
+
+  }
+
 
   return <Box>
 
@@ -338,8 +383,8 @@ export default function SbtList(){
               {returnImg(item)}
             </td>
             <td>{formatTime(item.CreatedAt)}</td>
-            <td>{publicJs.AddressToShow(item.applicant,5)}</td>
-            <td>{publicJs.AddressToShow(item.approver,5)}</td>
+            <td>{returnSns(item?.applicant)}</td>
+            <td>{returnSns(item?.approver)}</td>
             <td > <MoreButton onClick={() => handleDetail(item)}>{t('application.Detail')}</MoreButton></td>
             <td ><ApplicationStatusTagNew status={item.status} /></td>
             <td >

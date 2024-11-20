@@ -8,15 +8,28 @@ import { ContainerPadding } from 'assets/styles/global';
 
 import { useNavigate } from 'react-router-dom';
 import BackerNav from '../../components/common/backNav';
-import { applySBT, getSBTlist } from "../../requests/cityHall";
+import { applySBT, getContracts, getSBTlist } from "../../requests/cityHall";
 import publicJs from 'utils/publicJs';
 import sns from "@seedao/sns-js";
+
+import SeeSelect from "../../components/common/select";
+import CopyBox from "../../components/copy";
+import CopyIconSVG from "../../assets/Imgs/copy.svg";
+import EmptyDarkIcon from "../../assets/Imgs/dark/empty.svg";
+import EmptyLightIcon from "../../assets/Imgs/light/empty.svg";
+import getConfig from "../../utils/envCofnig";
 
 const OuterBox = styled.div`
   ${ContainerPadding};
   input {
     min-height: 40px;
   }
+    .flex{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+    }
 `;
 
 
@@ -51,6 +64,9 @@ const UlBox = styled.ul`
       }
     }
   }
+    .flex{
+        width: 100%;
+    }
   @media (max-width: 750px) {
     li {
       flex-direction: column;
@@ -108,12 +124,28 @@ const ImgUl = styled.div`
         font-size: 14px;
         padding: 10px;
     }
+    .inner{
+        width: 150px;
+        height: 150px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        &:hover{
+            border: 0;
+            cursor: not-allowed;
+        }
+        img{
+            width: 75px;
+        }
+    }
 `
 
 export default function SbtApply() {
   const {
     state:{
-      sbtToken
+      sbtToken,
+      theme
     },
     dispatch,
   } = useAuthContext();
@@ -124,14 +156,28 @@ export default function SbtApply() {
 
   const [current,setCurrent] = useState<number|null>(null);
   const [list,setList] = useState<any[] >([]);
+  const [contractList,setContractList] = useState<any[] >([]);
+  const [contract, setContract] = useState('');
 
 
-  const navigate = useNavigate();
 
   useEffect(() => {
-    if(!sbtToken)return;
+    getList()
+  }, []);
+
+  const getList = async() =>{
+    let rt = await getContracts(sbtToken);
+    rt.data.map((item:any)=>{
+      item.label =`${item.name}(${item.contract_address})`;
+      item.value = item.contract_address;
+    })
+    setContractList(rt.data)
+  }
+
+  useEffect(() => {
+    if(!sbtToken || !contract)return;
     getNftList()
-  }, [sbtToken]);
+  }, [sbtToken,contract]);
 
   const getNftList = async () =>{
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
@@ -145,7 +191,14 @@ export default function SbtApply() {
         item.image = imageUrl;
         arr.push(item)
       }
-      setList(rt.data);
+      let arrItem:any[] = []
+      rt.data.map((item:any)=>{
+          if(item?.nft_contract_address?.toLowerCase() === (contract as any)?.value?.toLowerCase()){
+            arrItem.push(item)
+          }
+      })
+
+      setList(arrItem);
     }catch(error){
       console.log(error);
     }finally {
@@ -176,7 +229,7 @@ export default function SbtApply() {
     const unique_list = Array.from(new Set(to_be_parsed));
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
-      let result = await sns.resolves(unique_list)
+      let result = await sns.resolves(unique_list,getConfig().NETWORK.rpcs[0])
       if(result.includes(AddressZero)){
         showToast(t('sbt.snsError'), ToastType.Danger);
       }else{
@@ -222,20 +275,64 @@ export default function SbtApply() {
           <UlBox>
             <li>
               <div className="title">
-                {t("sbt.type")}
+                {t("sbt.selectContract")}
+              </div>
+              <div className="flex">
+                <InputBox>
+                  <SeeSelect
+                    width="100%"
+                    options={contractList}
+                    value={contract}
+                    isClearable={false}
+                    isSearchable={false}
+                    onChange={(v: any) => {
+                      setContract(v);
+                    }}
+                  />
+                </InputBox>
+                {
+                  !!(contract as any)?.value && <CopyBox text={(contract as any)?.value}>
+                    <img src={CopyIconSVG} alt="" />
+                  </CopyBox>
+                }
+              </div>
+            </li>
+            {
+              !!(contract as any)?.value && !!list?.length &&  <li>
+                <div className="title">
+                  {t("sbt.selectSBT")}
+                </div>
+                <ImgUl>
+
+                  {
+                    list.map((item, i) => (
+                      <dl key={i} onClick={() => handleSelect(i)} className={current === i ? "active" : ""}>
+                        <dt>
+                          <img src={item.image} alt="" />
+                        </dt>
+                        <dd>{item?.nft_name}</dd>
+                      </dl>))
+                  }
+                </ImgUl>
+              </li>
+            }
+
+          {
+           !list?.length &&  <li>
+              <div className="title">
+                {t("sbt.selectSBT")}
               </div>
               <ImgUl>
-
-                {
-                  list.map((item, i) => (<dl key={i} onClick={() => handleSelect(i)} className={current===i?"active":""}>
-                    <dt>
-                      <img src={item.image} alt="" />
-                    </dt>
-                    <dd>{item?.nft_name}</dd>
-                  </dl>))
-                }
+                    <dl className="inner">
+                      <dt>
+                        <img src={theme ? EmptyDarkIcon : EmptyLightIcon} alt="" />
+                      </dt>
+                      <dd> -- </dd>
+                    </dl>
               </ImgUl>
             </li>
+          }
+
             <li>
               <div className="title">
                 {t("sbt.sns")}
@@ -297,19 +394,20 @@ const UploadBox = styled.label`
         height: 100%;
         object-fit: cover;
         object-position: center;
-  }
+    }
 `;
 
 const ImgBox = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  .del {
-    display: none;
-    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+
+    .del {
+        display: none;
+        position: absolute;
     left: 0;
     top: 0;
     width: 100%;

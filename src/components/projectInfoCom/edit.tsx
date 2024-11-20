@@ -9,10 +9,12 @@ import CameraIconSVG from 'components/svgs/camera';
 import { useNavigate } from 'react-router-dom';
 import { compressionFile, fileToDataURL } from 'utils/image';
 import sns from '@seedao/sns-js';
+
 import { ethers } from 'ethers';
 import { UpdateProjectParamsType, updateProjectInfo } from 'requests/project';
 import usePermission from 'hooks/usePermission';
 import { PermissionObject, PermissionAction } from 'utils/constant';
+import getConfig from "../../utils/envCofnig";
 
 const LinkPrefix = `${window.location.origin}/proposal/thread/`;
 
@@ -38,7 +40,7 @@ export default function EditProject({ detail }: { detail: IProjectDisplay | unde
 
   const handleLeaderSNS = (address: string) => {
     setLeader(address);
-    sns.name(address).then((res) => {
+    sns.name(address,getConfig().NETWORK.rpcs[0]).then((res) => {
       setLeader(res || address);
     });
   };
@@ -72,7 +74,7 @@ export default function EditProject({ detail }: { detail: IProjectDisplay | unde
       }
       try {
         dispatch({ type: AppActionType.SET_LOADING, payload: true });
-        const res = await sns.resolves([leader]);
+        const res = await sns.resolves([leader],getConfig().NETWORK.rpcs[0]);
         if (ethers.constants.AddressZero === res[0]) {
           showToast(t('Msg.IncorrectAddress', { content: leader }), ToastType.Danger);
           return;

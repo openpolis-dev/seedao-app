@@ -28,11 +28,13 @@ import ApplicationStatusTag from 'components/common/applicationStatusTagNew';
 import useApplicants from 'hooks/useApplicants';
 import { formatApplicationStatus } from 'utils';
 import sns from '@seedao/sns-js';
+
 import { ethers } from 'ethers';
 
 import SearchImg from 'assets/Imgs/light/search.svg';
 import SearchWhite from 'assets/Imgs/light/search.svg';
 import ClearSVGIcon from 'components/svgs/clear';
+import getConfig from "../../../utils/envCofnig";
 
 const Box = styled.div`
   position: relative;
@@ -253,7 +255,7 @@ export default function Register() {
     if (keyword.endsWith('.seedao')) {
       // sns
       dispatch({ type: AppActionType.SET_LOADING, payload: true });
-      const w = await sns.resolve(keyword);
+      const w = await sns.resolve(keyword,getConfig().NETWORK.rpcs[0]);
       if (w && w !== ethers.constants.AddressZero) {
         setSearchVal(w?.toLocaleLowerCase());
       } else {

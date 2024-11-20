@@ -16,7 +16,9 @@ import { PermissionAction, PermissionObject } from 'utils/constant';
 import requests from '../../../requests';
 import { getCloseProposal } from '../../../requests/proposalV2';
 import sns from "@seedao/sns-js";
+
 import { useNavigate } from "react-router-dom";
+import getConfig from "../../../utils/envCofnig";
 const { Check } = Form;
 
 type ExtraType = { id: number; name: string };
@@ -130,7 +132,7 @@ export default function ChooseTypeStep() {
   }, [account]);
 
   const getSnS = async() =>{
-    let rt = await sns.name(account!)
+    let rt = await sns.name(account!,getConfig().NETWORK.rpcs[0])
     setSnsName(rt)
   }
 

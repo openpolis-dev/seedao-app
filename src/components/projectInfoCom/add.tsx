@@ -8,8 +8,10 @@ import { ethers } from 'ethers';
 import useToast, { ToastType } from 'hooks/useToast';
 import Select from 'components/common/select';
 import sns from '@seedao/sns-js';
+
 import BasicModal from 'components/modals/basicModal';
 import PlusMinusButton from 'components/common/plusAndMinusButton';
+import getConfig from "../../utils/envCofnig";
 
 enum UserRole {
   None = 0,
@@ -79,7 +81,7 @@ export default function Add(props: Iprops) {
     if (checkSNSlst.length) {
       try {
         const notOkList: string[] = [];
-        const res = await sns.resolves(checkSNSlst);
+        const res = await sns.resolves(checkSNSlst,getConfig().NETWORK.rpcs[0]);
         for (let i = 0; i < res.length; i++) {
           const wallet = res[i];
           if (!wallet || ethers.constants.AddressZero === wallet) {

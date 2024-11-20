@@ -17,8 +17,10 @@ import SeeSelect from 'components/common/select';
 import { UserRole } from 'type/user.type';
 import { ethers } from 'ethers';
 import sns from '@seedao/sns-js';
+
 import { BlackButton } from 'components/common/button';
 import { compressionFile, fileToDataURL } from 'utils/image';
+import getConfig from "../../utils/envCofnig";
 
 export default function CreateProject() {
   const navigate = useNavigate();
@@ -131,7 +133,7 @@ export default function CreateProject() {
     if (checkSNSlst.length) {
       try {
         const notOkList: string[] = [];
-        const res = await sns.resolves(checkSNSlst);
+        const res = await sns.resolves(checkSNSlst,getConfig().NETWORK.rpcs[0]);
         for (let i = 0; i < res.length; i++) {
           const wallet = res[i];
           if (!wallet || ethers.constants.AddressZero === wallet) {

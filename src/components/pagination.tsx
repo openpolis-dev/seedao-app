@@ -127,7 +127,8 @@ const GoToBox = styled.div`
   .btn {
     width: 32px;
     height: 32px;
-    text-align: center;
+      text-align: center;
+      justify-content: center;
     padding: 0;
     border-radius: 0;
     font-size: 14px;
@@ -228,7 +229,7 @@ const Page: FC<Props> = ({ itemsPerPage, total, handleToPage, current, dir, show
               placeholder="Page"
               onWheel={(e) => (e.target as any).blur()}
             />
-            <Button className="btn" onClick={() => handleToGo()}>
+            <Button className="btn " onClick={() => handleToGo()}>
               Go
             </Button>
           </GoToBox>
