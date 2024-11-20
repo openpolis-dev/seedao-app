@@ -7,6 +7,7 @@ import { useAccount, useSwitchNetwork } from 'wagmi';
 import { readContract } from 'wagmi/actions';
 import LoadingImg from 'assets/Imgs/loading.png';
 import sns from '@seedao/sns-js';
+
 import useToast, { ToastType } from 'hooks/useToast';
 import { Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
@@ -14,6 +15,7 @@ import { Link } from 'react-router-dom';
 import { ethers } from 'ethers';
 import publicJs from 'utils/publicJs';
 import { useAuthContext } from 'providers/authProvider';
+import getConfig from "../../utils/envCofnig";
 
 const CHAIN_ID = 5;
 const SEE_TOKEN_ADDRESS = '0xF0f214BE4Af4625F5B9EA8A3CE2cCf6d8f35F9f4';
@@ -121,7 +123,7 @@ export default function SeeSwap() {
 
   useEffect(() => {
     if (address) {
-      sns.name(address).then((name) => {
+      sns.name(address,getConfig().NETWORK.rpcs[0]).then((name) => {
         setHasSNS(name ? 1 : 2);
       });
       handleWhitelist();

@@ -5,10 +5,12 @@ import { useTranslation } from 'react-i18next';
 import { useEffect } from 'react';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import sns from '@seedao/sns-js';
+
 import { Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { DeSchoolProvider, CourseContextProvider } from '@deschool-protocol/react';
 import '@deschool-protocol/react/dist/styles/index.css';
+import getConfig from "../../utils/envCofnig";
 
 export default function Newcomer() {
   const { t } = useTranslation();
@@ -24,7 +26,7 @@ export default function Newcomer() {
       dispatch({ type: AppActionType.SET_LOADING, payload: true });
       account &&
         sns
-          ?.name(account)
+          ?.name(account,getConfig().NETWORK.rpcs[0])
           .then((r) => {
             if (r) {
               dispatch({ type: AppActionType.SET_SNS, payload: r });

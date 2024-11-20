@@ -6,8 +6,10 @@ import React, { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import { ToastType } from "../../hooks/useToast";
 import sns from "@seedao/sns-js";
+
 import { AppActionType, useAuthContext } from "../../providers/authProvider";
 import LoadingImg from "../../assets/Imgs/loading.png";
+import getConfig from "../../utils/envCofnig";
 
 
 const ContentBox = styled.ul`
@@ -79,7 +81,7 @@ export default function SbtModal({handleClose,detail}:Iprops){
     setLoading(true)
     try{
       const unique_list = Array.from(new Set(to_be_address));
-      let result = await sns.names(unique_list)
+      let result = await sns.names(unique_list,getConfig().NETWORK.rpcs[0])
       const arr = (result as any).filter((item:any)=>item.indexOf("seedao")>-1)
       setAddress(arr);
     }catch(error){
