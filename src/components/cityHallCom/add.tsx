@@ -8,8 +8,10 @@ import useToast, { ToastType } from 'hooks/useToast';
 import { updateMembers, MemberGroupType } from 'requests/cityHall';
 import BasicModal from 'components/modals/basicModal';
 import sns from '@seedao/sns-js';
+
 import PlusMinusButton from 'components/common/plusAndMinusButton';
 import SeeSelect from 'components/common/select';
+import getConfig from "../../utils/envCofnig";
 
 const CardBody = styled.div``;
 const CardFooter = styled.div`
@@ -104,7 +106,7 @@ export default function Add(props: Iprops) {
     if (checkSNSlst.length) {
       try {
         const notOkList: string[] = [];
-        const res = await sns.resolves(checkSNSlst);
+        const res = await sns.resolves(checkSNSlst,getConfig().NETWORK.rpcs[0]);
         for (let i = 0; i < res.length; i++) {
           const wallet = res[i];
           if (!wallet || ethers.constants.AddressZero === wallet) {

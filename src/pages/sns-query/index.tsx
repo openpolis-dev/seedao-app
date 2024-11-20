@@ -2,6 +2,7 @@ import BackerNav from "../../components/common/backNav";
 import styled from "styled-components";
 import { ContainerPadding } from "../../assets/styles/global";
 import sns from "@seedao/sns-js";
+
 import { Input } from 'antd';
 import { useTranslation } from "react-i18next";
 import React, { useState } from "react";
@@ -9,6 +10,7 @@ import { Button } from 'react-bootstrap';
 import { ethers } from "ethers";
 import useToast, { ToastType } from "../../hooks/useToast";
 import SubTabbar, { ITabItem } from "../../components/common/subTabbar";
+import getConfig from "../../utils/envCofnig";
 
 const { TextArea } = Input;
 
@@ -220,7 +222,7 @@ export default function SnsQuery(){
     const r_list:any[] = [];
     const unique_list = Array.from(new Set(to_be_parsed));
     sns
-      .resolves(unique_list)
+      .resolves(unique_list,getConfig().NETWORK.rpcs[0])
       .then((result) => {
         result.forEach((r, i) => {
           // r_list.push([unique_list[i], r === AddressZero ? "<div class='TipsBox'>  未找到地址</div>" : r]);
@@ -257,7 +259,7 @@ export default function SnsQuery(){
     const r_list:any[] = [];
     const unique_list = Array.from(new Set(to_be_address));
     sns
-      .names(unique_list)
+      .names(unique_list,getConfig().NETWORK.rpcs[0])
       .then((result) => {
         result.forEach((r, i) => {
           r_list.push([unique_list[i], r === AddressZero ? "" : r]);

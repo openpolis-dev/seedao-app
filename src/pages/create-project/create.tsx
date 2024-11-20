@@ -13,11 +13,13 @@ import BackerNav from 'components/common/backNav';
 import SeeSelect from 'components/common/select';
 import { ethers } from 'ethers';
 import sns from '@seedao/sns-js';
+
 import { compressionFile, fileToDataURL } from 'utils/image';
 import DatePickerStyle from 'components/datePicker';
 import useProposalCategories from 'hooks/useProposalCategories';
 import { formatCategory } from 'components/proposalCom/categoryTag';
 import DisableNumberInputWheel from "../../components/DisableInput";
+import getConfig from "../../utils/envCofnig";
 
 const LinkPrefix = `${window.location.origin}/proposal/thread/`;
 
@@ -81,7 +83,7 @@ export default function CreateProject() {
       }
       try {
         dispatch({ type: AppActionType.SET_LOADING, payload: true });
-        const res = await sns.resolves([leader]);
+        const res = await sns.resolves([leader],getConfig().NETWORK.rpcs[0]);
         if (ethers.constants.AddressZero === res[0]) {
           showToast(t('Msg.IncorrectAddress', { content: leader }), ToastType.Danger);
           return;

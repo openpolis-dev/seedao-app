@@ -11,7 +11,9 @@ import { useNavigate } from 'react-router-dom';
 import { compressionFile, fileToDataURL } from 'utils/image';
 import { ethers } from 'ethers';
 import sns from '@seedao/sns-js';
+
 import ConfirmModal from 'components/modals/confirmModal';
+import getConfig from "../../utils/envCofnig";
 
 export default function EditGuild({ detail }: { detail?: IGuildDisplay }) {
   const { t } = useTranslation();
@@ -34,7 +36,7 @@ export default function EditGuild({ detail }: { detail?: IGuildDisplay }) {
   const handleLeaderSNS = (address: string) => {
     setLeader(address);
     sns
-      .name(address)
+      .name(address,getConfig().NETWORK.rpcs[0])
       .then((res) => {
         setLeader(res || address);
       })
@@ -64,7 +66,7 @@ export default function EditGuild({ detail }: { detail?: IGuildDisplay }) {
       }
       try {
         dispatch({ type: AppActionType.SET_LOADING, payload: true });
-        const res = await sns.resolves([leader]);
+        const res = await sns.resolves([leader],getConfig().NETWORK.rpcs[0]);
         if (ethers.constants.AddressZero === res[0]) {
           showToast(t('Msg.IncorrectAddress', { content: leader }), ToastType.Danger);
           return;

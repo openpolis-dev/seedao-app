@@ -34,6 +34,7 @@ import RankWhite from 'assets/Imgs/dark/rank.svg';
 import SearchWhite from 'assets/Imgs/light/search.svg';
 import useToast, { ToastType } from 'hooks/useToast';
 import sns from '@seedao/sns-js';
+
 import { ethers } from 'ethers';
 import { PlainButton } from 'components/common/button';
 import ClearSVGIcon from 'components/svgs/clear';
@@ -246,7 +247,7 @@ export default function AssetList() {
     if (keyword.endsWith('.seedao')) {
       // sns
       dispatch({ type: AppActionType.SET_LOADING, payload: true });
-      const w = await sns.resolve(keyword);
+      const w = await sns.resolve(keyword,getConfig().NETWORK.rpcs[0]);
       if (w && w !== ethers.constants.AddressZero) {
         setSearchVal(w?.toLocaleLowerCase());
       } else {

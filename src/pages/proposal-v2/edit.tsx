@@ -108,6 +108,7 @@ export default function EditProposal() {
           let remainAmount: string[] = [];
           let prepayTotal: string[] = [];
           let prepayRemain: string[] = [];
+          let canUse: string[] = [];
 
           let data: any = {};
 
@@ -118,6 +119,9 @@ export default function EditProposal() {
             remainAmount.push(`${item.remain_amount} ${item.asset_name}`);
             prepayTotal.push(`${item.total_advance_amount} ${item.asset_name}`);
             prepayRemain.push(`${item.remain_advance_amount} ${item.asset_name}`);
+
+            let cU = Number(item.total_amount) - Number(item.used_advance_amount);
+            canUse.push(`${cU} ${item.asset_name}`);
           });
 
           data.total = total.join(',');
@@ -126,6 +130,7 @@ export default function EditProposal() {
           data.remainAmount = remainAmount.join(',');
           data.prepayTotal = prepayTotal.join(',');
           data.prepayRemain = prepayRemain.join(',');
+          data.canUse = canUse.join(',');
 
           setDetail(data);
 
@@ -248,6 +253,17 @@ export default function EditProposal() {
       return;
     }
 
+
+    let motivationArr = data?.components?.filter((itemInner:any) => itemInner.name === "motivation") || [];
+
+    if (((data as any)?.name === 'P2提案结项' || (data as any)?.name === 'P3提案结项' ) && motivationArr?.length > 0) {
+
+      if(!submitData.length){
+        showToast(t('Msg.motivationError'), ToastType.Danger);
+        return;
+      }
+
+    }
 
 
     let budgetArr = data?.components?.filter((item: any) => item.name === 'budget') || [];
@@ -413,6 +429,7 @@ export default function EditProposal() {
       </FixedBox>
       <BoxBg showRht={showRht?.toString()}>
         <TemplateBox>
+
           <Template
             DataSource={dataSource}
             operate="edit"
@@ -420,10 +437,11 @@ export default function EditProposal() {
             language={i18n.language}
             showRight={showRht}
             theme={theme}
+            rpc={getConfig().NETWORK.rpcs[0]}
             baseUrl={BASE_URL}
             version={API_VERSION}
             token={token}
-            movitationSum={detail?.prepayRemain}
+            movitationSum={detail?.canUse}
             BeforeComponent={
               <>
                 <ItemBox>
@@ -443,6 +461,7 @@ export default function EditProposal() {
                       <div>
                         <Preview
                           DataSource={preview}
+                          rpc={getConfig().NETWORK.rpcs[0]}
                           language={i18n.language}
                           initialItems={components}
                           theme={theme}
@@ -476,7 +495,7 @@ export default function EditProposal() {
                 )}
                 {componentName === '激励申请表' && (
                   <DisplayBox>
-                    <div className="titl">当前可申请资产: {detail?.prepayRemain}</div>
+                    <div className="titl">当前可申请资产: {detail?.remainAmount}</div>
                     <div className="content">
                       <dl>
                         <dt>项目预算</dt>

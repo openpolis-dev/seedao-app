@@ -4,6 +4,7 @@ import { ethers } from 'ethers';
 import axios from 'axios';
 import { useTranslation } from 'react-i18next';
 import { useAuthContext } from '../../../providers/authProvider';
+import getConfig from "../../../utils/envCofnig";
 
 const getNftsByContract = (account: string, contract: string, chain: number) => {
   let base = '';
@@ -93,7 +94,7 @@ export default function SBTCard() {
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    const _polygon_provider = new ethers.providers.StaticJsonRpcProvider('https://poly-rpc.gateway.pokt.network');
+    const _polygon_provider = new ethers.providers.StaticJsonRpcProvider(getConfig().NETWORK.rpcs[0]);
     setPolygonProvider(_polygon_provider);
   }, []);
 
