@@ -243,6 +243,7 @@ export default function EditProposal() {
     if (!data || !success) {
       return;
     }
+    console.log(success,data);
     const newTime = new Date().valueOf();
     const publicity_ts = (data?.publicity_ts ?? 0) * 1000
 
@@ -254,11 +255,9 @@ export default function EditProposal() {
     }
 
 
-    let motivationArr = data?.components?.filter((itemInner:any) => itemInner.name === "motivation") || [];
+    if (((data as any)?.template_name === 'P2提案结项' || (data as any)?.template_name === 'P3提案结项' )) {
 
-    if (((data as any)?.name === 'P2提案结项' || (data as any)?.name === 'P3提案结项' ) && motivationArr?.length > 0) {
-
-      if(!submitData.length){
+      if(!submitData.length && submitType === 'submit'){
         showToast(t('Msg.motivationError'), ToastType.Danger);
         return;
       }
@@ -315,9 +314,9 @@ export default function EditProposal() {
 
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
 
-    updateProposal(Number(data.id), {
+    updateProposal(Number(data!.id), {
       title,
-      proposal_category_id: data.proposal_category_id,
+      proposal_category_id: data!.proposal_category_id,
       content_blocks: arr,
       vote_type: voteType,
       vote_options: voteType === 99 || voteType === 98 ? newVoteList : null,
