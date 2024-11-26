@@ -371,63 +371,8 @@ export default function ProfileComponent({ userData, theme, sns, handleClose, ad
       case 'SGN_HOLDER':
         str = t('roles.SGN_HOLDER');
         break;
-      // case 'NODE_S1':
-      //   str = t('roles.NODE_S1');
-      //   break;
-      // case 'NODE_S2':
-      //   str = t('roles.NODE_S2');
-      //   break;
-      // case 'NODE_S3':
-      //   str = t('roles.NODE_S3');
-      //   break;
-      // case 'NODE_S4':
-      //   str = t('roles.NODE_S4');
-      //   break;
-      // case 'NODE_S5':
-      //   str = t('roles.NODE_S5');
-      //   break;
-      case 'CITYHALL_S1':
-        str = t('roles.CITYHALL_S1');
-        break;
-      case 'CITYHALL_S2':
-        str = t('roles.CITYHALL_S2');
-        break;
-      case 'CITYHALL_S3':
-        str = t('roles.CITYHALL_S3');
-        break;
-      case 'CITYHALL_S4':
-        str = t('roles.CITYHALL_S4');
-        break;
-      case 'CITYHALL_S5':
-        str = t('roles.CITYHALL_S5');
-        break;
-      case 'CONTRIBUTOR_L1':
-        str = t('roles.CONTRIBUTOR_L1');
-        break;
-      case 'CONTRIBUTOR_L2':
-        str = t('roles.CONTRIBUTOR_L2');
-        break;
-      case 'CONTRIBUTOR_L3':
-        str = t('roles.CONTRIBUTOR_L3');
-        break;
-      case 'CONTRIBUTOR_L4':
-        str = t('roles.CONTRIBUTOR_L4');
-        break;
-      case 'CONTRIBUTOR_L5':
-        str = t('roles.CONTRIBUTOR_L5');
-        break;
-      case 'CONTRIBUTOR_L6':
-        str = t('roles.CONTRIBUTOR_L6');
-        break;
-      case 'CONTRIBUTOR_L7':
-        str = t('roles.CONTRIBUTOR_L7');
-        break;
-      case 'CONTRIBUTOR_L8':
-        str = t('roles.CONTRIBUTOR_L8');
-        break;
-      case 'CONTRIBUTOR_L9':
-        str = t('roles.CONTRIBUTOR_L9');
-        break;
+
+
       case 'SEEDAO_MEMBER':
         str = t('roles.SEEDAO_MEMBER');
         break;
@@ -437,6 +382,16 @@ export default function ProfileComponent({ userData, theme, sns, handleClose, ad
       default:
         str = role;
         break;
+    }
+
+    if(role.indexOf('CONTRIBUTOR_') > -1){
+      const level = role.split("_")[1]
+      str = t('roles.CONTRIBUTOR', { level });
+    }
+
+    if(role.indexOf('CITYHALL_') > -1){
+      const period = role.split("_")[1]
+      str = t('roles.CITYHALL', { period });
     }
     if (role.indexOf('NODE_S') > -1) {
       let num = role.split('NODE_S')[1];
