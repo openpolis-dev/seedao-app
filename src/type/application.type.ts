@@ -107,6 +107,6 @@ export interface IApplicantBundleDisplay extends IApplicantBundle {
 export interface ISeason {
   id: number;
   name: string;
-  start_date: string;
+  start_at: string;
   end_at: string;
 }
