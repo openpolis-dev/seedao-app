@@ -20,6 +20,7 @@ import ExpandTable from '../../../components/cityHallCom/expandTable';
 import ArrowIconSVG from 'components/svgs/back';
 import useQuerySNS from 'hooks/useQuerySNS';
 import useSeasons from 'hooks/useSeasons';
+import useCurSeason from 'hooks/useCurSeason';
 import useBudgetSource from 'hooks/useBudgetSource';
 import BackerNav from 'components/common/backNav';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
@@ -116,8 +117,7 @@ export default function Register() {
   }, [t]);
   const [selectState, setSelectState] = useState<ApplicationStatus>();
   // season
-  const seasons = useSeasons();
-  const selectSeason = seasons.length ? seasons[seasons.length - 1].value : undefined;
+  const selectSeason = useCurSeason();
   // process flag
   const [isProcessing, setIsProcessing] = useState(true);
 
@@ -172,7 +172,7 @@ export default function Register() {
       queryData.entity = selectSource.type;
     }
     if (selectSeason) {
-      queryData.season_id = selectSeason;
+      queryData.season_id = selectSeason.value;
     }
     if (selectState) {
       queryData.state = selectState;
