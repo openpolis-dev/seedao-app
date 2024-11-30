@@ -18,8 +18,8 @@ const Polygon_Network = {
   // ],
   rpcs: [
     // 'https://polygon-mainnet.g.alchemy.com/v2/-MLinGy2l91vLVZWXmRfNYf9DavMxaEA',
-    'https://polygon-pokt.nodies.app',
-    // 'https://polygon.llamarpc.com',
+    // 'https://polygon-pokt.nodies.app',
+    'https://polygon.llamarpc.com',
   ],
   icon: PolygonIcon,
   tokens: [
