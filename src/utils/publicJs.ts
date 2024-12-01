@@ -168,17 +168,10 @@ const splitWallets = async(wallets:string[]) =>{
     result.push(chunk);
   }
 
-
-
   for await (const chunk of result) {
-
     const data = await sns.names(chunk, getConfig().NETWORK.rpcs[0]);
     resultArr.push(...data);
   }
-
-  console.log(resultArr);
-
-
   return resultArr;
 }
 

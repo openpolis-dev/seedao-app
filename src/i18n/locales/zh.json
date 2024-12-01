@@ -893,7 +893,8 @@
     "metadataError": "Metadata错误，请输入正确的JSON",
     "step1": "上传信息",
     "step2": "设置NFT URI",
-    "selectSBT": "选择SBT"
+    "selectSBT": "选择SBT",
+    "tips": "审核人和申请人不能相同"
 
   }
 }
