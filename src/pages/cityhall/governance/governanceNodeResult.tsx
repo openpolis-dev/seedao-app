@@ -367,7 +367,7 @@ export default function GoveranceNodeResult() {
             <th>SNS</th>
             {allSeasons.map((s, i) => {
               return i === allSeasons.length - 1 ? (
-                <th className="right">
+                <th className="right" key={i}>
                   <CurrentSeason>{currentSeason}</CurrentSeason>(SCR)
                 </th>
               ) : (
