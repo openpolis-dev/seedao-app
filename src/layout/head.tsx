@@ -231,6 +231,7 @@ export default function Header() {
     dispatch({ type: AppActionType.SET_AUTHORIZER, payload: null });
     dispatch({ type: AppActionType.SET_WALLET_TYPE, payload: null });
     dispatch({ type: AppActionType.SET_ACCOUNT, payload: null });
+    dispatch({ type: AppActionType.SET_METAFORO_TOKEN, payload: null });
     try {
       await OneSignal.logout();
     } catch (error) {
