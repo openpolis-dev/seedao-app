@@ -30,7 +30,11 @@ instance.interceptors.request.use(
     ) {
       return config;
     }
-    if (['/user/login', '/user/refresh_nonce', '/seeauth/login'].includes(config.url)) {
+    let urls = ['/user/login', '/user/refresh_nonce', '/seeauth/login',"/user/users"];
+
+    const isValid = urls.some(prefix => config.url.startsWith(prefix));
+
+    if (isValid) {
       return config;
     }
 
@@ -40,6 +44,7 @@ instance.interceptors.request.use(
     }
     const tokenData = parseToken(tokenstr);
     if (!checkTokenValid(tokenData?.token, tokenData?.token_exp)) {
+
       clearStorage();
       return Promise.reject('token is expired!');
     }

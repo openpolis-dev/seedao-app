@@ -3,6 +3,7 @@ import sns from '@seedao/sns-js';
 
 import { ethers } from 'ethers';
 import getConfig from "../utils/envCofnig";
+import PublicJs from "../utils/publicJs";
 
 export default function useQuerySNS() {
   const {
@@ -42,7 +43,9 @@ export default function useQuerySNS() {
     const _snsMap = new Map(snsMap);
     if (_to_be_queried.length) {
       try {
-        const data = await sns.names(_to_be_queried, getConfig().NETWORK.rpcs[0]);
+        // const data = await sns.names(_to_be_queried, getConfig().NETWORK.rpcs[0]);
+        const data = await PublicJs.splitWallets(_to_be_queried);
+
         data.forEach((d, idx) => {
           _snsMap.set(_to_be_queried[idx], d || ethers.utils.getAddress(_to_be_queried[idx]));
         });

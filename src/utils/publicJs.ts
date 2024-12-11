@@ -1,5 +1,7 @@
 import axios from 'axios';
 import { ethers } from 'ethers';
+import sns from "@seedao/sns-js";
+import getConfig from "./envCofnig";
 
 const AddressToShow = (address: string, num?: number) => {
   if (!address) return '';
@@ -155,4 +157,22 @@ function typedData(address: string, chainId: number) {
   };
 }
 
-export default { AddressToShow, getImage, filterTags, checkRPCavailable, getSeedUrl, typedData };
+
+const splitWallets = async(wallets:string[]) =>{
+  const chunkSize = 300;
+  const result = [];
+  const resultArr = [];
+
+  for (let i = 0; i < wallets.length; i += chunkSize) {
+    const chunk = wallets.slice(i, i + chunkSize);
+    result.push(chunk);
+  }
+
+  for await (const chunk of result) {
+    const data = await sns.names(chunk, getConfig().NETWORK.rpcs[0]);
+    resultArr.push(...data);
+  }
+  return resultArr;
+}
+
+export default { AddressToShow, getImage, filterTags, checkRPCavailable, getSeedUrl, typedData,splitWallets };
