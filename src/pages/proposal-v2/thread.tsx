@@ -49,6 +49,7 @@ import { getProposalSIPSlug } from 'utils';
 import useQueryUser from 'hooks/useQueryUser';
 import defaultImg from '../../assets/Imgs/defaultAvatar.png';
 import getConfig from "../../utils/envCofnig";
+import { useNetwork } from "wagmi";
 
 enum BlockContentType {
   Reply = 1,
@@ -63,7 +64,7 @@ export default function ThreadPage() {
   const { t, i18n } = useTranslation();
   const {
     dispatch,
-    state: { theme, account },
+    state: { theme, metaforoToken,account, userData },
   } = useAuthContext();
   const proposalCategories = useProposalCategories();
   const { checkMetaforoLogin } = useCheckMetaforoLogin();
@@ -106,6 +107,15 @@ export default function ThreadPage() {
   const [detail, setDetail] = useState<any>(null);
 
   const replyRef = useRef<IReplyOutputProps>(null);
+
+  const { chain } = useNetwork();
+  useEffect(() => {
+    if(metaforoToken || !account || !userData || !chain)return;
+    getMetaforo()
+  }, [metaforoToken,account,userData,chain]);
+  const getMetaforo = async()=>{
+    await checkMetaforoLogin();
+  }
 
   const getProposalDetail = async (refreshIdx?: number) => {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
@@ -374,7 +384,7 @@ export default function ThreadPage() {
     }
     const votedItem = data?.votes?.[0].options.filter((item)=>item.is_vote);
 
-    return (!!votedItem?.length &&  currentState === "voting")
+    return (!!votedItem?.length &&  currentState === "voting" && !!metaforoToken)
   }
 
   const showVotedNot = (currentState:ProposalState | undefined) =>{
@@ -383,7 +393,7 @@ export default function ThreadPage() {
     }
     const votedItem = data?.votes?.[0].options.filter((item)=>item.is_vote);
 
-    return (!votedItem?.length &&  currentState === "voting")
+    return (!votedItem?.length &&  currentState === "voting"&& !!metaforoToken)
   }
 
   const isCurrentApplicant = data?.applicant?.toLocaleLowerCase() === account?.toLocaleLowerCase();

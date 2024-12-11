@@ -127,12 +127,16 @@ export default function GoveranceNodeResult() {
           setSnapshot(data.seed_snapshoted);
 
           const _wallets = new Set<string>();
+
           data.records.forEach((item: IRowData) => {
             _wallets.add(item.wallet);
           });
           getMultiSNS(Array.from(_wallets)).then((_dataMap) => {
             setDataMap(_dataMap);
           });
+          // getMultiSNS(Array.from(_wallets)).then((_dataMap) => {
+          //   setDataMap(_dataMap);
+          // });
         })
         .catch((err) => {
           logError(err);
@@ -363,7 +367,7 @@ export default function GoveranceNodeResult() {
             <th>SNS</th>
             {allSeasons.map((s, i) => {
               return i === allSeasons.length - 1 ? (
-                <th className="right">
+                <th className="right" key={i}>
                   <CurrentSeason>{currentSeason}</CurrentSeason>(SCR)
                 </th>
               ) : (

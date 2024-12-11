@@ -20,6 +20,7 @@ import SearchImg from '../../assets/Imgs/proposal/search.svg';
 import AddImg from '../../assets/Imgs/proposal/add-square.svg';
 import useCheckMetaforoLogin from 'hooks/useMetaforoLogin';
 import MyProposalsTab from 'components/proposalCom/myProposalsTab';
+import { useNetwork } from "wagmi";
 
 const PAGE_SIZE = 10;
 let RESULT_ID = 0;
@@ -29,7 +30,7 @@ export default function ProposalIndexPage() {
   const { state } = useLocation();
   const { t } = useTranslation();
   const {
-    state: { loading },
+    state: { loading,metaforoToken,account, userData },
     dispatch,
   } = useAuthContext();
   const proposalCategories = useProposalCategories();
@@ -74,6 +75,7 @@ export default function ProposalIndexPage() {
   const secondTab = state?.currentTab?.[1];
 
   const { checkMetaforoLogin } = useCheckMetaforoLogin();
+  const { chain } = useNetwork();
   const { getMultiSNS } = useQuerySNS();
 
   const [searchParams, setSearchParams] = useSearchParams();
@@ -87,6 +89,14 @@ export default function ProposalIndexPage() {
   const page_addr = searchParams.get('page');
   const category_id = searchParams.get('category_id');
   const status_addr = searchParams.get('status');
+
+  useEffect(() => {
+    if(metaforoToken || !account || !userData || !chain)return;
+    getMetaforo()
+  }, [metaforoToken,account,userData,chain]);
+  const getMetaforo = async()=>{
+    await checkMetaforoLogin();
+  }
 
   useEffect(() => {
     if (!searchParams.size) return;
@@ -146,7 +156,7 @@ export default function ProposalIndexPage() {
 
   useEffect(() => {
     getProposalList(page);
-  }, [selectCategory, selectTime, selectStatus, searchKeyword, isFilterSIP, page]);
+  }, [selectCategory, selectTime, selectStatus, searchKeyword, isFilterSIP, page,metaforoToken]);
 
   const onKeyUp = (e: any) => {
     if (e.keyCode === 13) {
@@ -265,6 +275,7 @@ export default function ProposalIndexPage() {
               <SimpleProposalItem
                 key={p.id}
                 data={p}
+                metaforoToken={metaforoToken}
                 sns={formatSNS(p.applicant?.toLocaleLowerCase())}
                 currentTab={[currentTab]}
               />

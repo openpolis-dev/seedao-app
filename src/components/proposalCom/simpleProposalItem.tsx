@@ -21,10 +21,12 @@ export default function SimpleProposalItem({
   isReview,
   sns,
   currentTab,
+  metaforoToken
 }: {
   sns: string;
   data: ISimpleProposal;
   isReview?: boolean;
+  metaforoToken?: string;
   currentTab: TabType[];
 }) {
   const currentState = getRealState(data.state);
@@ -53,10 +55,10 @@ export default function SimpleProposalItem({
           </AvaBox>
           <TagsBox>
             {
-              data.is_voted && currentState === "voting" &&  <VotedBox>{t('Proposal.HasVote')}</VotedBox>
+              data.is_voted && !!metaforoToken && currentState === "voting" &&  <VotedBox>{t('Proposal.HasVote')}</VotedBox>
             }
             {
-              !data.is_voted && currentState === "voting" &&  <VotedBox2>{t('Proposal.notVote')}</VotedBox2>
+              !data.is_voted && !!metaforoToken && currentState === "voting" &&  <VotedBox2>{t('Proposal.notVote')}</VotedBox2>
             }
             <CategoryTag>{data.category_name}</CategoryTag>
             <ProposalStateTag state={currentState} />

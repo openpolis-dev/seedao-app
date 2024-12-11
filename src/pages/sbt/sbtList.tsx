@@ -122,9 +122,11 @@ export default function SbtList(){
   const { getMultiSNS } = useQuerySNS();
   const [snsMap,setSnsMap] = useState<any>(null);
 
+
+
   const {
     state:{
-      sbtToken
+      sbtToken,account
     },
     dispatch,
   } = useAuthContext();
@@ -266,6 +268,11 @@ export default function SbtList(){
     try{
 
       if(operateType === "approve" || operateType === "reject" ){
+        if(currentItem.applicant.toLowerCase() === account!.toLowerCase()){
+          showToast(t('sbt.tips'), ToastType.Danger);
+          return;
+        }
+
         await operateAudit(sbtToken,currentItem.ID,operateType)
       }else if(operateType === "distribute"){
         const web3Provider = new ethers.providers.Web3Provider((window as any).ethereum);
