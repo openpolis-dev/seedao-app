@@ -10,6 +10,7 @@ import sns from "@seedao/sns-js";
 import { AppActionType, useAuthContext } from "../../providers/authProvider";
 import LoadingImg from "../../assets/Imgs/loading.png";
 import getConfig from "../../utils/envCofnig";
+import PublicJs from "../../utils/publicJs";
 
 
 const ContentBox = styled.ul`
@@ -81,7 +82,9 @@ export default function SbtModal({handleClose,detail}:Iprops){
     setLoading(true)
     try{
       const unique_list = Array.from(new Set(to_be_address));
-      let result = await sns.names(unique_list,getConfig().NETWORK.rpcs[0])
+
+      // let result = await sns.names(unique_list,getConfig().NETWORK.rpcs[0])
+      const result = await PublicJs.splitWallets(unique_list);
       const arr = (result as any).filter((item:any)=>item.indexOf("seedao")>-1)
       setAddress(arr);
     }catch(error){
