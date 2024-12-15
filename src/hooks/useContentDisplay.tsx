@@ -20,9 +20,9 @@ export const parseContent = async (content: string) => {
       // for text
     } else if (delta[i] && delta[i].insert && typeof delta[i].insert === 'string') {
       // if we already have 6 lines or 200 characters. that's enough for preview
-      if (text.length >= 6 || totalTextLength > 200) {
-        continue;
-      }
+      // if (text.length >= 6 || totalTextLength > 200) {
+      //   continue;
+      // }
 
       // it's just newline and space.
       if (delta[i].insert.match(/^[\n\s]+$/)) {
@@ -37,6 +37,7 @@ export const parseContent = async (content: string) => {
           delta[i].insert = delta[i].insert.replace(/\n+$/, '\n');
         }
         text.push(delta[i]);
+
         totalTextLength = totalTextLength + delta[i].insert.length;
       }
     }
