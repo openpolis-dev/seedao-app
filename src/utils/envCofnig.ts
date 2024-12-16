@@ -9,7 +9,7 @@ const SENTRY_DSN = 'https://b36d900b0a63b0466ff4e73d55e359b2@o4505590144106496.i
 
 const Polygon_Network = {
   name: 'Polygon',
-  nativeToken: 'Matic',
+  nativeToken: 'POL',
   chainId: 137,
   // rpcs: [
   //   "https://eth-goerli.g.alchemy.com/v2/MATWeLJN1bEGTjSmtyLedn0i34o1ISLD",

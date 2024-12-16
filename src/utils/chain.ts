@@ -3,8 +3,8 @@ import { defineChain } from 'viem';
 export const amoy = defineChain({
   id: 80002,
   name: 'amoy',
-  network: 'matic',
-  nativeCurrency: { name: 'MATIC', symbol: 'MATIC', decimals: 18 },
+  network: 'POL',
+  nativeCurrency: { name: 'POL', symbol: 'POL', decimals: 18 },
   rpcUrls: {
     public: {
       http: ['https://rpc-amoy.polygon.technology'],
