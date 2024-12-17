@@ -81,7 +81,7 @@ const SAFE_CHAIN: { [k: string]: { short: string; name: string } } = {
     name: 'Ethereum',
   },
   '137': {
-    short: 'matic',
+    short: 'POL',
     name: 'Polygon',
   },
 };
