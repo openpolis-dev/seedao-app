@@ -19,6 +19,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import getConfig from 'utils/envCofnig';
 import PlayImg from '../../assets/Imgs/podcast.png';
 import { types } from 'sass';
+import {BookMarked} from "lucide-react";
 
 const Box = styled.div`
   background: var(--bs-background);
@@ -428,8 +429,9 @@ export default function Home() {
           </ActiveBox>
         </Col>
         <Col md={4}>
+
           {/*<CityBox>*/}
-          {/*  <a href="https://seedao.notion.site/f57031667089473faa7ea3560d05960c" target="_blank" rel="noreferrer">*/}
+          {/*  <a href="https://seedao.xyz/SeeDAO-WhitePaper.pdf" target="_blank" rel="noreferrer">*/}
           {/*    <TitBox>*/}
           {/*      <span>{t('Home.podcast')}</span>*/}
           {/*    </TitBox>*/}
@@ -452,6 +454,31 @@ export default function Home() {
           {/*    </Col>*/}
           {/*  </LinkBox>*/}
           {/*</CityBox>*/}
+          <CityBox>
+            <a href="https://seedao.xyz/SeeDAO-WhitePaper.pdf" target="_blank" rel="noreferrer">
+              <TitBox>
+                <span>{t(Links.whitePaper.name as any)}</span>
+              </TitBox>
+            </a>
+
+            <LinkBox>
+              <Col>
+                <a href={Links.whitePaper.link} target="_blank" rel="noreferrer">
+                  <BtmBox>
+                    <FlexPod>
+                      {/*<img src={Links.podcast.img} alt="" />*/}
+                      <BookMarked color="#6014FF" />
+                      <div>
+                        <div className="tit">{t(Links.whitePaper.name as any)}</div>
+                        {/*<div className="desc">{t(Links.podcast.desc as any)}</div>*/}
+                      </div>
+                    </FlexPod>
+                    <div className="linkRht">{/*<img src={PlayImg} alt="" />*/}</div>
+                  </BtmBox>
+                </a>
+              </Col>
+            </LinkBox>
+          </CityBox>
           <CityBox>
             <a href="https://seedao.notion.site/f57031667089473faa7ea3560d05960c" target="_blank" rel="noreferrer">
               <TitBox2>

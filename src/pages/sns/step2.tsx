@@ -258,6 +258,7 @@ export default function RegisterSNSStep2() {
         </FinishButton>
         <CancelButton onClick={() => setShowCancelModal(true)}>{t('SNS.CancelRegister')}</CancelButton>
       </ContainerWrapper>
+
       {showCancelModal && <CancelModal handleClose={() => setShowCancelModal(false)} handleCancel={handleCancel} />}
     </Container>
   );

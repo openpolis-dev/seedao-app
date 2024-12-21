@@ -61,6 +61,8 @@ import SbtCreate from "./pages/sbt/sbtCreate";
 import SbtList from "./pages/sbt/sbtList";
 import SbtApply from "./pages/sbt/sbtApply";
 
+
+
 const isOnlyDev = !process.env.REACT_APP_ENV_VERSION || process.env.REACT_APP_ENV_VERSION === 'dev';
 
 export default function RouterLink() {
@@ -110,6 +112,8 @@ export default function RouterLink() {
           <Route path="/city-hall/governance/issue" element={<Issue />} />
           <Route path="/city-hall/governance/review-proposal" element={<ProposalReview />} />
           <Route path="/city-hall/governance/review-proposal/:id" element={<ProposalThreadV2 />} />
+
+
           {['dev', undefined].includes(process.env.REACT_APP_ENV_VERSION || '') && (
             <Route path="/chat" element={<Chat />} />
           )}

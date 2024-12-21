@@ -400,7 +400,11 @@
     "TechGroup": "Tech Group",
     "ReviewProposal": "Review Proposal",
     "ReviewProposalDesc": "Review the draft proposals",
-    "nodeMembers": "Current season announcement"
+    "nodeMembers": "Current season announcement",
+    "Publicity": "Publicity",
+    "externalLink": "External Link",
+    "link": "Link",
+    "ConfirmDelete": "Confirm to delete it?"
   },
   "GovernanceNodeResult": {
     "SearchTip": "SNS",
@@ -680,8 +684,8 @@
     "snsQuery": "SNS Search",
     "SNSQueryDesc": "Query personal information by SNS.",
     "podcastTitle": "SeeTalk Podcast",
-    "podcastDesc": "SeeTalk is a Web3 podcast collaboratively created by members of the SeeDAO community, showcasing the emerging collaborations within the community and highlighting SeeDAO's ongoing important work and plans."
-
+    "podcastDesc": "SeeTalk is a Web3 podcast collaboratively created by members of the SeeDAO community, showcasing the emerging collaborations within the community and highlighting SeeDAO's ongoing important work and plans.",
+    "whitePaper": "whitePaper"
   },
   "SNS": {
     "EntranceTitle": "INVOLVED IN SEEDAO IN YOUR NAME",

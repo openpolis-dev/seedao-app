@@ -12,6 +12,8 @@ import Tabbar from 'components/common/tabbar';
 import { Route, Routes, useNavigate, Navigate, useLocation } from 'react-router-dom';
 import { useMemo } from 'react';
 import useCurrentSeason from 'hooks/useCurrentSeason';
+import Publicity from "../publicity";
+import CreatePublicity from "../publicity/create";
 
 const Box = styled.div`
   min-height: 100%;
@@ -39,6 +41,7 @@ enum SubPage {
   Brand = 'brand',
   Tech = 'tech',
   Push = 'notification',
+  Publicity = 'publicity',
 }
 
 export default function Index() {
@@ -57,6 +60,7 @@ export default function Index() {
           { key: SubPage.Brand, title: t('city-hall.Brand'), path: 'brand' },
           { key: SubPage.Tech, title: t('city-hall.Tech'), path: 'tech' },
           { key: SubPage.Push, title: t('city-hall.Push'), path: 'notification' },
+          { key: SubPage.Publicity, title: t('city-hall.Publicity'), path: 'publicity/list' },
         ]
       : [{ key: SubPage.Members, title: `${currentSeason} ${t('city-hall.Cityhall')}`, path: 'members' }];
   }, [canUseCityhall, t, currentSeason]);
@@ -85,6 +89,10 @@ export default function Index() {
             <Route path="brand" element={<BrandPanel />} />
             <Route path="tech" element={<TechPanel />} />
             <Route path="notification" element={<PushPanel />} />
+            <Route path="publicity" element={<Navigate to="publicity/list" />} />
+            <Route path="publicity/list" element={<Publicity />} />
+            <Route path="publicity/create" element={<CreatePublicity />} />
+            <Route path="publicity/edit/:id" element={<CreatePublicity />} />
           </Routes>
         </Content>
       </TopBox>

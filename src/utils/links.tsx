@@ -492,6 +492,10 @@ const links = {
     //   link: 'https://mp.weixin.qq.com/s/s8ATHFdKhaMQ5SHkPjPAZQ',
     // },
   ],
+  whitePaper:{
+    name:'apps.whitePaper',
+    link:"https://seedao.xyz/SeeDAO-WhitePaper.pdf"
+  },
   podcast: {
     name: 'apps.podcastTitle',
     link: 'https://www.xiaoyuzhoufm.com/podcast/64a27b216d90c5786108abbc',

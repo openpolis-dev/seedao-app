@@ -30,7 +30,7 @@ export default function Tabbar({ defaultActiveKey, tabs, onSelect }: IProps) {
   return (
     <TabbarStyle>
       {tabs.map((item) => (
-        <li key={item.key} onClick={() => handleSelect(item.key)} className={item.key === currentKey ? 'selected' : ''}>
+        <li key={item.key} onClick={() => handleSelect(item.key)} className={currentKey.toString().indexOf(item.key.toString()) > -1 ? 'selected' : ''}>
           {item.title}
         </li>
       ))}
