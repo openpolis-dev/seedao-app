@@ -171,7 +171,7 @@ export default function Profile() {
       showToast(t('My.IncorrectMirror'), ToastType.Danger);
       return;
     }
-    if (twitter && !twitter.startsWith('https://twitter.com/')) {
+    if (twitter && !twitter.startsWith('https://x.com/')) {
       showToast(t('My.IncorrectLink', { media: 'Twitter' }), ToastType.Danger);
       return;
     }
