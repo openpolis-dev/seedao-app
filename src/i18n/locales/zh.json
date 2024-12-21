@@ -475,7 +475,10 @@
     "record": "资产发放记录",
     "Apply": "申请资产发放",
     "tips": "持有SNS才可以申请资产发放",
-    "p1Tips": "P1提案项目预算不可预支"
+    "p1Tips": "P1提案项目预算不可预支",
+    "ToBeIssuedSeason": "当季待发放",
+    "SentSeason": "当季已发放",
+    "ReviewedSeason": "当季待审核"
   },
   "My": {
     "MyProfile": "我的信息",
@@ -508,6 +511,7 @@
     "DefaultBio": "TA很神秘哦，并没有介绍自己",
     "InviteInfo": "已通过邀请注册 SNS 获得 {{amount}} SCR（含未上链）",
     "ViewDetails": "查看详情 >>"
+
   },
   "roles": {
     "SGN_HOLDER": "SEED持有者",

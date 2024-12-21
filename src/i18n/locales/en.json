@@ -475,7 +475,10 @@
     "record": "Assets Distribution Records",
     "Apply": "Assets Applications",
     "tips": "Only those holding SNS can apply for asset distribution.",
-    "p1Tips": "The P1 proposal budget cannot be paid in advance"
+    "p1Tips": "The P1 proposal budget cannot be paid in advance",
+    "ToBeIssuedSeason": "Season To Be Issued",
+    "SentSeason": "Season Sent",
+    "ReviewedSeason": "Season Reviewed"
   },
   "My": {
     "MyProfile": "My Profile",
@@ -508,6 +511,7 @@
     "DefaultBio": "No Bio",
     "InviteInfo": "{{amount}} SCR (including offchain) has been earned through invitation to register for SNS. ",
     "ViewDetails": "view details >>"
+
   },
   "roles": {
     "SGN_HOLDER": "SEED Holder",
