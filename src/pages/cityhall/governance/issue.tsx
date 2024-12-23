@@ -9,7 +9,7 @@ import requests from 'requests';
 import { formatDate, formatTime } from 'utils/time';
 import publicJs from 'utils/publicJs';
 import NoItem from 'components/noItem';
-import { IQueryApplicationsParams } from 'requests/applications';
+import { getStatistics, IQueryApplicationsParams } from "requests/applications";
 import { useTranslation } from 'react-i18next';
 import { formatApplicationStatus } from 'utils/index';
 import useToast, { ToastType } from 'hooks/useToast';
@@ -60,6 +60,7 @@ export default function Issued() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [detailDisplay, setDetailDisplay] = useState<IApplicationDisplay>();
   const [snsMap, setSnsMap] = useState<Map<string, string>>(new Map());
+  const [statistics,setStatistics] = useState<any>({});
 
   const { getMultiSNS } = useQuerySNS();
 
@@ -173,7 +174,13 @@ export default function Issued() {
 
   useEffect(() => {
     handleStatus();
+    getST();
   }, []);
+
+  const getST = async() =>{
+    let rt = await getStatistics();
+    setStatistics(rt.data)
+  }
 
   useEffect(() => {
     selectStatus && getRecords();
@@ -228,42 +235,42 @@ export default function Issued() {
           <LiHead>
             <LiTitle>{t("Assets.ToBeIssuedSeason")}(USD)</LiTitle>
           </LiHead>
-          <div className="num">000</div>
+          <div className="num">{statistics?.wait_for_grant_usd ?? 0}</div>
           <BorderDecoration color="#FF86CB" />
         </li>
         <li>
           <LiHead>
             <LiTitle>{t("Assets.ToBeIssuedSeason")}(SCR)</LiTitle>
           </LiHead>
-          <div className="num">000</div>
+          <div className="num">{statistics?.wait_for_grant_scr ?? 0}</div>
           <BorderDecoration color="#FFB842" />
         </li>
         <li>
           <LiHead>
             <LiTitle>{t("Assets.SentSeason")}(USD)</LiTitle>
           </LiHead>
-          <div className="num">000</div>
+          <div className="num">{statistics?.granted_usd ?? 0}</div>
           <BorderDecoration color="#03DACD" />
         </li>
         <li>
           <LiHead>
             <LiTitle>{t("Assets.SentSeason")}(SCR)</LiTitle>
           </LiHead>
-          <div className="num">000</div>
+          <div className="num">{statistics?.granted_scr ?? 0}</div>
           <BorderDecoration color="#4378FF" />
         </li>
         <li>
           <LiHead>
             <LiTitle>{t("Assets.ReviewedSeason")}(USD)</LiTitle>
           </LiHead>
-          <div className="num">000</div>
+          <div className="num">{statistics?.checking_usd ?? 0}</div>
           <BorderDecoration color="#9E2A2F" />
         </li>
         <li>
           <LiHead>
             <LiTitle>{t("Assets.ReviewedSeason")}(SCR)</LiTitle>
           </LiHead>
-          <div className="num">000</div>
+          <div className="num">{statistics?.checking_scr ?? 0}</div>
           <BorderDecoration color="#8BC34A" />
         </li>
       </FirstLine>
@@ -454,6 +461,7 @@ const FirstLine = styled.ul<{ border: string }>`
     font-family: Poppins-Medium, Poppins;
     font-weight: 500;
     margin-bottom: 25px;
+      color: var(--bs-body-color_active);
   }
   @media (max-width: 1100px) {
     .num {
@@ -478,4 +486,5 @@ const LiHead = styled.div`
 const LiTitle = styled.div`
   color: var(--bs-body-color);
   line-height: 18px;
+    font-size: 14px;
 `;
