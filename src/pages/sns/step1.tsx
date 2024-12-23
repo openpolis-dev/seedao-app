@@ -350,9 +350,16 @@ export default function RegisterSNSStep1() {
     }
     navigate('/sns/user');
   };
+  const getLink = () =>{
+    const  {NETWORK} = getConfig();
+    console.error( builtin.SEEDAO_REGISTRAR_CONTROLLER_ADDR);
+    return `${NETWORK.explorer}/address/${builtin.SEEDAO_REGISTRAR_CONTROLLER_ADDR}`
+  }
   return (
     <Container>
       <ContainerWrapper>
+        <HistoryBox href={getLink()} target="_blank" rel="noreferrer">查看SNS获取记录</HistoryBox>
+
         <StepTitle>{t('SNS.Step1Title')}</StepTitle>
         <StepDesc>{t('SNS.Step1Desc')}</StepDesc>
         <SearchBox>
@@ -392,7 +399,16 @@ const Container = styled.div`
 const ContainerWrapper = styled.div`
   max-width: 74%;
   display: inline-block;
+    position: relative;
 `;
+
+const HistoryBox = styled.a`
+    position: absolute;
+    right: -20px;
+    top:20px;
+    color: var(--bs-primary);
+    cursor: pointer;
+`
 
 const StepTitle = styled.div`
   font-family: 'Poppins-Medium';

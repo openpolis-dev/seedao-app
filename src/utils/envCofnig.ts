@@ -23,6 +23,7 @@ const Polygon_Network = {
     // 'https://polygon.llamarpc.com',
   ],
   icon: PolygonIcon,
+  explorer:"https://polygonscan.com",
   tokens: [
     {
       address: '0xc2132D05D31c914a87C6611C10748AEb04B58e8F',
