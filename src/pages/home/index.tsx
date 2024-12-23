@@ -124,7 +124,7 @@ const LineBox = styled.div`
 `;
 
 const CityBox = styled.div`
-  margin: 0;
+  margin: 0 0 20px;
 `;
 
 const LinkBox = styled(Row)`
@@ -132,6 +132,7 @@ const LinkBox = styled(Row)`
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
+
   .inn {
     border-radius: 10px;
     overflow: hidden;
@@ -224,13 +225,13 @@ const BtmBox = styled.div`
   background-color: var(--bs-box--background);
   border: 1px solid var(--bs-border-color_opacity);
   box-shadow: var(--box-shadow);
-
+    min-height: 55px;
   padding: 14px;
   box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 24px;
+  margin-bottom: 10px;
   .tit {
     font-size: 14px;
     font-family: Poppins-SemiBold;
@@ -430,55 +431,6 @@ export default function Home() {
         </Col>
         <Col md={4}>
 
-          {/*<CityBox>*/}
-          {/*  <a href="https://seedao.xyz/SeeDAO-WhitePaper.pdf" target="_blank" rel="noreferrer">*/}
-          {/*    <TitBox>*/}
-          {/*      <span>{t('Home.podcast')}</span>*/}
-          {/*    </TitBox>*/}
-          {/*  </a>*/}
-
-          {/*  <LinkBox>*/}
-          {/*    <Col>*/}
-          {/*      <a href={Links.podcast.link} target="_blank" rel="noreferrer">*/}
-          {/*        <BtmBox>*/}
-          {/*          <FlexPod>*/}
-          {/*            <img src={Links.podcast.img} alt="" />*/}
-          {/*            <div>*/}
-          {/*              <div className="tit">{t(Links.podcast.name as any)}</div>*/}
-          {/*              <div className="desc">{t(Links.podcast.desc as any)}</div>*/}
-          {/*            </div>*/}
-          {/*          </FlexPod>*/}
-          {/*          <div className="linkRht">/!*<img src={PlayImg} alt="" />*!/</div>*/}
-          {/*        </BtmBox>*/}
-          {/*      </a>*/}
-          {/*    </Col>*/}
-          {/*  </LinkBox>*/}
-          {/*</CityBox>*/}
-          <CityBox>
-            <a href="https://seedao.xyz/SeeDAO-WhitePaper.pdf" target="_blank" rel="noreferrer">
-              <TitBox>
-                <span>{t(Links.whitePaper.name as any)}</span>
-              </TitBox>
-            </a>
-
-            <LinkBox>
-              <Col>
-                <a href={Links.whitePaper.link} target="_blank" rel="noreferrer">
-                  <BtmBox>
-                    <FlexPod>
-                      {/*<img src={Links.podcast.img} alt="" />*/}
-                      <BookMarked color="#6014FF" />
-                      <div>
-                        <div className="tit">{t(Links.whitePaper.name as any)}</div>
-                        {/*<div className="desc">{t(Links.podcast.desc as any)}</div>*/}
-                      </div>
-                    </FlexPod>
-                    <div className="linkRht">{/*<img src={PlayImg} alt="" />*/}</div>
-                  </BtmBox>
-                </a>
-              </Col>
-            </LinkBox>
-          </CityBox>
           <CityBox>
             <a href="https://seedao.notion.site/f57031667089473faa7ea3560d05960c" target="_blank" rel="noreferrer">
               <TitBox2>
@@ -491,42 +443,6 @@ export default function Home() {
             </a>
 
             <LinkBox>
-              {/*<Col onClick={() => window.open(CITY_HALL, '_blank')}>*/}
-              {/*  <div className="inn fst">*/}
-              {/*     <div className="lft">*/}
-              {/*       <img src={CityHallImg} alt="" />*/}
-              {/*       <div className="tit">{t('Home.CityHall')}</div>*/}
-              {/*     </div>*/}
-
-              {/*    <div className="link">*/}
-              {/*      <img src={LinkImg} alt="" />*/}
-              {/*    </div>*/}
-              {/*  </div>*/}
-
-              {/*</Col>*/}
-              {/*<Col onClick={() => window.open(CITY_HALL_MEMBERS, '_blank')}>*/}
-              {/*  <div className="inn snd">*/}
-              {/*    <div className="lft">*/}
-              {/*      <img src={MembersImg} alt="" />*/}
-              {/*      <div className="tit">{t('Home.CityHallMembers')}</div>*/}
-              {/*    </div>*/}
-              {/*    <div className="link">*/}
-              {/*      <img src={LinkImg} alt="" />*/}
-              {/*    </div>*/}
-              {/*  </div>*/}
-              {/*</Col>*/}
-              {/*<Col onClick={() => window.open(CITY_HALL_MEMBERS, '_blank')}>*/}
-              {/*  <div className="inn snd">*/}
-              {/*    <div className="lft">*/}
-              {/*      <img src={ProposalImg} alt="" />*/}
-              {/*      <div className="tit">{t('Home.proposal')}</div>*/}
-              {/*    </div>*/}
-              {/*    <div className="link">*/}
-              {/*      <img src={LinkImg} alt="" />*/}
-              {/*    </div>*/}
-              {/*  </div>*/}
-              {/*</Col>*/}
-
               {Publicitys.slice(0, 5).map((item: any, index) => {
                 return item.id.startsWith('module') ? (
                   <Col key={index}>
@@ -558,6 +474,37 @@ export default function Home() {
                   </Col>
                 );
               })}
+            </LinkBox>
+          </CityBox>
+          <CityBox>
+            <a href="#" target="_blank" rel="noreferrer">
+              <TitBox2>
+                <span>{t('Home.information')}</span>
+                <div className="toGo">
+                  {t('Home.viewAll')}
+                  <img src={ArrowImg} alt="" />
+                </div>
+              </TitBox2>
+            </a>
+
+            <LinkBox>
+              {[...Array(3)].map((item: any, index) => (<Col key={index}>
+                  <Link to="/">
+                    <BtmBox>
+                      <div>
+                        <div className="tit">信息</div>
+                        {/*<div className="desc">{item.time}</div>*/}
+                      </div>
+                      <div className="link">
+                        <img src={LinkImg} alt="" />
+                      </div>
+                    </BtmBox>
+                  </Link>
+                </Col>)
+
+
+
+              )}
             </LinkBox>
           </CityBox>
         </Col>
