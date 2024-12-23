@@ -123,6 +123,47 @@ const ImgUl = styled.div`
     dd{
         font-size: 14px;
         padding: 10px;
+
+        & > div{
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: normal;
+            text-align: center;
+        }
+        
+    }
+    .nftId{
+        font-size: 10px;
+    }
+
+    .photo{
+
+        display: flex !important;
+        overflow: hidden;
+        .aspect {
+            padding-bottom: 100%;
+            height: 0;
+            flex-grow: 1 !important;
+        }
+        .content {
+            width: 100%;
+            margin-left: -100% !important;
+            max-width: 100% !important;
+            flex-grow: 1 !important;
+            position: relative;
+        }
+        .innerImg{
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            img{
+                width: 100%;
+                height: 100%;
+            }
+        }
     }
     .inner{
         width: 150px;
@@ -184,6 +225,7 @@ export default function SbtApply() {
     try {
       const rt = await getSBTlist(sbtToken)
       let arr = [];
+
 
       for (let i = 0; i < rt.data.length; i++) {
         let item = rt.data[i];
@@ -308,9 +350,21 @@ export default function SbtApply() {
                     list.map((item, i) => (
                       <dl key={i} onClick={() => handleSelect(i)} className={current === i ? "active" : ""}>
                         <dt>
-                          <img src={item.image} alt="" />
+
+                          <div className="photo">
+                            <div className="aspect" />
+                            <div className="content">
+                              <div className="innerImg">
+                                <img src={item.image} alt="" />
+                              </div>
+                            </div>
+                          </div>
+
                         </dt>
-                        <dd>{item?.nft_name}</dd>
+                        <dd>
+                          <div>{item?.nft_name}</div>
+                          <div className="nftId">#{item?.nft_id}</div>
+                        </dd>
                       </dl>))
                   }
                 </ImgUl>
