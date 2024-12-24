@@ -2,16 +2,17 @@ import styled, { css } from "styled-components";
 import Form from 'react-bootstrap/Form';
 import { useTranslation } from "react-i18next";
 import Button from "react-bootstrap/Button";
-import { useEffect, useState } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { MdEditor } from "md-editor-rt";
+import { AppActionType, useAuthContext } from "../../providers/authProvider";
+import { UploadPictures } from "../../requests/proposalV2";
+import { createPublicity, getPublicityDetail, updatePublicity } from "../../requests/publicity";
+import useToast, { ToastType } from "../../hooks/useToast";
 
 const { Check } = Form;
 
 const CreateBox = styled.div`
-    width: 576px;
-    @media (max-width: 860px) {
-        width: 480px;
-    }
 `;
 
 const FormGroup = styled(Form.Group)`
@@ -24,6 +25,9 @@ const FormGroup = styled(Form.Group)`
     align-items: center;
     gap: 8px;
   }
+    .inputLine{
+        width: 50%;
+    }
 `;
 
 const FormLabel = styled(Form.Label)`
@@ -61,8 +65,34 @@ export default function CreatePublicity(){
   const [href, setHref] = useState('');
   const [type, setType] = useState('create');
 
+  const { showToast } = useToast();
+  const navigate = useNavigate();
+
+  const {
+    state: { theme },
+    dispatch,
+  } = useAuthContext();
+
   const { pathname } = useLocation();
   const { id } = useParams();
+
+
+  useEffect(() => {
+    if(!id || type ==="create")return;
+    getEdit()
+  }, [id,type]);
+
+  const getEdit = async()=>{
+    try{
+      let rt = await getPublicityDetail(id!);
+      const {data:{title,content}} = rt;
+      setTitle(title)
+      setContent(content);
+    }catch(error){
+      console.error(error)
+    }
+
+  }
 
   useEffect(() => {
     if(pathname.indexOf("edit")>-1){
@@ -73,8 +103,77 @@ export default function CreatePublicity(){
 
   }, [pathname]);
 
-  const handleValueChange = () => {
-    setRadioValue(!radioValue)
+
+  const handleText = (value: any) => {
+    setContent(value)
+  };
+
+
+  // const handleValueChange = () => {
+  //   setRadioValue(!radioValue)
+  // }
+
+
+  const uploadPic = async (files: any[], callback: any) => {
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    try {
+      const urlObjArr = await UploadPictures(files[0]);
+      callback([urlObjArr]);
+    } catch (e) {
+      console.error('uploadPic', e);
+    } finally {
+      dispatch({ type: AppActionType.SET_LOADING, payload: null });
+    }
+  };
+
+  const handleSubmit = () =>{
+    if(type === 'create'){
+      handleCreate()
+    }else{
+      id && handleUpdate()
+    }
+  }
+
+
+  const handleUpdate = async() => {
+    let obj={
+      title,
+      content,
+      id:Number(id)!
+    }
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    try{
+      let rt = await updatePublicity(obj)
+      showToast(t('Project.createSuccess'), ToastType.Success);
+      navigate(`/city-hall/publicity/list`);
+      console.error(rt)
+    }catch(error:any){
+      showToast(error?.response?.data?.message || error, ToastType.Danger);
+      console.error(error)
+    }finally {
+
+      dispatch({ type: AppActionType.SET_LOADING, payload: false });
+    }
+  }
+
+  const handleCreate = async() => {
+    let obj={
+      title,
+      content
+    }
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    try{
+      let rt = await createPublicity(obj)
+      showToast(t('Project.createSuccess'), ToastType.Success);
+      navigate(`/city-hall/publicity/list`);
+      console.error(rt)
+    }catch(error:any){
+      showToast(error?.response?.data?.message || error, ToastType.Danger);
+      console.error(error)
+    }finally {
+
+      dispatch({ type: AppActionType.SET_LOADING, payload: false });
+    }
   }
 
   return <CreateBox>
@@ -85,52 +184,63 @@ export default function CreatePublicity(){
         </FormLabel>
         <FormInput
           type="text"
+          className="inputLine"
           value={title} onChange={(e: any) => setTitle(e.target.value)}
         />
       </FormGroup>
 
-      <FlexLine>
-        <Check
-          id="chooseTypeRadio1"
-          type="radio"
-          name="chooseTypeRadio"
-          checked={radioValue}
-          onChange={() => handleValueChange()}
-          onClick={(e) => handleValueChange()}
+      {/*<FlexLine>*/}
+      {/*  <Check*/}
+      {/*    id="chooseTypeRadio1"*/}
+      {/*    type="radio"*/}
+      {/*    name="chooseTypeRadio"*/}
+      {/*    checked={radioValue}*/}
+      {/*    onChange={() => handleValueChange()}*/}
+      {/*    onClick={(e) => handleValueChange()}*/}
 
+      {/*  />*/}
+      {/*  <label htmlFor="chooseTypeRadio1"> {t('city-hall.externalLink')}</label>*/}
+      {/*</FlexLine>*/}
+
+      {/*{*/}
+      {/*  radioValue &&   <FormGroup>*/}
+      {/*    <FormLabel>*/}
+      {/*      {t('Push.Href')}*/}
+      {/*    </FormLabel>*/}
+      {/*    <FormInput*/}
+      {/*      type="text"*/}
+      {/*      placeholder="https://..."*/}
+      {/*      value={href}*/}
+      {/*      onChange={(e: any) => setHref(e.target.value)}*/}
+      {/*    />*/}
+      {/*  </FormGroup>*/}
+      {/*}*/}
+      <FormGroup>
+          <FormLabel>{t("city-hall.content")}</FormLabel>
+          {/*<FormInput*/}
+          {/*  className="form-control"*/}
+          {/*  as="textarea"*/}
+          {/*  rows={5}*/}
+          {/*  value={content}*/}
+          {/*  onChange={(e: any) => setContent(e.target.value)}*/}
+          {/*/>*/}
+
+        <MdEditor
+          toolbarsExclude={['github', 'save']}
+          modelValue={content}
+          editorId={`publicity_editor`}
+          onUploadImg={(files, callBack) => uploadPic(files, callBack)}
+          onChange={(val) => handleText(val)}
+          theme={theme ? 'dark' : 'light'}
+          // placeholder={}
         />
-        <label htmlFor="chooseTypeRadio1"> {t('city-hall.externalLink')}</label>
-      </FlexLine>
+        </FormGroup>
 
-      {
-        radioValue &&   <FormGroup>
-          <FormLabel>
-            {t('Push.Href')}
-          </FormLabel>
-          <FormInput
-            type="text"
-            placeholder="https://..."
-            value={href}
-            onChange={(e: any) => setHref(e.target.value)}
-          />
-        </FormGroup>
-      }
-      {
-        !radioValue &&<FormGroup>
-          <FormLabel>{t("city-hall.link")}</FormLabel>
-          <FormInput
-            className="form-control"
-            as="textarea"
-            rows={5}
-            value={content}
-            onChange={(e: any) => setContent(e.target.value)}
-          />
-        </FormGroup>
-      }
 
 
       <SubmitBox>
-        <Button variant="primary" type="submit" disabled={!title || (!radioValue && !content) || (radioValue && !href)} >
+        {/*<Button variant="primary" type="submit" disabled={!title || (!radioValue && !content) || (radioValue && !href)} onClick={()=>handleSubmit()} >*/}
+        <Button variant="primary" disabled={!title || !content} onClick={()=>handleSubmit()} >
           {t('city-hall.create')}
         </Button>
       </SubmitBox>

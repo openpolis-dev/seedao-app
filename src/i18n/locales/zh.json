@@ -405,7 +405,8 @@
     "Publicity": "公示",
     "externalLink": "外链",
     "link": "链接",
-    "ConfirmDelete": "确定要删除吗？"
+    "ConfirmDelete": "确定要删除吗？",
+    "content": "内容"
   },
   "GovernanceNodeResult": {
     "SearchTip": "SNS",

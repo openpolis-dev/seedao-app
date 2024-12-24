@@ -129,7 +129,7 @@ const put = function (url: string, data: any): Promise<ResponseData> {
   });
 };
 
-const rdelete = function (url: string, params: any): Promise<ResponseData> {
+const rdelete = function (url: string, params?: any): Promise<ResponseData> {
   return new Promise((resolve, reject) => {
     instance
       .delete(url, {

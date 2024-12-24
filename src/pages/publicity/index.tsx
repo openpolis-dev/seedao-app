@@ -1,14 +1,21 @@
 import styled from "styled-components";
 import LinkImg from "../../assets/Imgs/link.svg";
-import React, { useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Button, Form } from 'react-bootstrap';
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Button } from 'react-bootstrap';
 import DefaultAvatarIcon from "../../assets/Imgs/defaultAvatar.png";
 import { formatTime } from "../../utils/time";
 import {Trash2, Pencil} from "lucide-react";
 import ConfirmModal from "../../components/modals/confirmModal";
 import { useTranslation } from "react-i18next";
 import DetailModal from "./detail";
+import { deletePublicity, getPublicity } from "../../requests/publicity";
+import Pagination from "../../components/pagination";
+import NoItem from "../../components/noItem";
+import publicJs from "../../utils/publicJs";
+import useQuerySNS from "../../hooks/useQuerySNS";
+import useToast, { ToastType } from "../../hooks/useToast";
+import { AppActionType, useAuthContext } from "../../providers/authProvider";
 
 const Box = styled.div`
 `
@@ -129,30 +136,83 @@ const TagsBox = styled.div`
 `;
 
 export default function Publicity(){
-
+  const { getMultiSNS } = useQuerySNS();
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [toBeDeleteId, setTobeDeletedId] = useState<number>();
   const [show,setShow] = useState<boolean>(false);
+  const [page,setPage] = useState<number>(1);
+  const [size] = useState<number>(10);
+  const [total,setTotal] = useState<number>(10);
+  const [list,setList] = useState([]);
+  const [detailId, setDetailId] = useState<number>();
+
+  const { dispatch} = useAuthContext();
+  const { showToast } = useToast();
+
+  const [snsMap, setSnsMap] = useState<Map<string, string>>(new Map());
   const handleCreate = () =>{
     navigate("/city-hall/publicity/create")
   }
 
-  const onDelete = (id: number) => {
-    setTobeDeletedId(id);
+  const handleSNS = async (wallets: string[]) => {
+    const sns_map = await getMultiSNS(wallets);
+    setSnsMap(sns_map);
   };
 
-  const handleDeletePost = () =>{
+  useEffect(() => {
+    getList()
+  }, [page]);
 
+  const go2page = (_page: number) => {
+    setPage(_page + 1);
+  };
+
+  const getList = async() =>{
+    let rt = await getPublicity(page,size)
+    const {data:{page:pg,rows,total}} = rt;
+    setPage(pg)
+    setTotal(total)
+    setList(rows)
+
+    handleSNS(rows.filter((d:any) => !!d.creator).map((d:any) => d.creator));
   }
 
-  const handleDetail = () =>{
+  const onDelete = (id: number) => {
+    setTobeDeletedId(Number(id));
+  };
+
+  const handleDeletePost = async() =>{
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    try{
+
+      let rt = await deletePublicity(toBeDeleteId!)
+    }catch(error:any){
+      showToast(error?.response?.data?.message || error, ToastType.Danger);
+      console.error(error)
+    }finally {
+      setShow(false)
+      dispatch({ type: AppActionType.SET_LOADING, payload: false });
+      setTimeout(()=>{
+        window.location.reload();
+      },2000)
+    }
+  }
+
+  const handleDetail = (id:number) =>{
     setShow(true)
+    setDetailId(Number(id));
   }
 
   const closeDetail = ()  =>{
     setShow(false)
   }
+
+  const formatSNS = (wl: string) => {
+    const wallet = wl.toLowerCase();
+    const name = snsMap.get(wallet) || wallet;
+    return name?.endsWith('.seedao') ? name : publicJs.AddressToShow(name, 4);
+  };
 
   return <Box>
     <TopLine>
@@ -161,7 +221,7 @@ export default function Publicity(){
       </li>
     </TopLine>
     {
-      show &&<DetailModal handleClose={closeDetail}/>
+      show &&<DetailModal handleClose={closeDetail} id={detailId!}/>
     }
     {toBeDeleteId && (
       <ConfirmModal
@@ -174,31 +234,34 @@ export default function Publicity(){
       />
     )}
     {
-      [...Array(20)].map((item, index) => (
-        <LinkBox>
+      !list?.length && <NoItem />
+    }
+    {
+     !!list?.length &&  list.map((item:any, index) => (
+        <LinkBox key={index}>
           <CardBox>
           <CardHeaderStyled>
-              <Title>当季SeeDAO社区治理节点名单</Title>
+              <Title>{item?.title}</Title>
             </CardHeaderStyled>
             <CardBody>
               <AvaBox>
-                <div className="left">
-                  <UserAvatar src={DefaultAvatarIcon} alt="" />
-                </div>
+                {/*<div className="left">*/}
+                {/*  <UserAvatar src={DefaultAvatarIcon} alt="" />*/}
+                {/*</div>*/}
                 <div className="right">
-                  <div className="name">wendychaung.seedao</div>
-                  <div className="date">{formatTime(1734704930000)}</div>
+                  <div className="name">{formatSNS(item.creator)}</div>
+                  <div className="date">{formatTime(item?.createAt * 1000)}</div>
                 </div>
               </AvaBox>
               <TagsBox>
-                <Link to="/city-hall/publicity/edit/123">
+                <Link to={`/city-hall/publicity/edit/${item?.id}`}>
                   <Pencil size={16} />
                 </Link>
-                <div onClick={() => onDelete(1)}>
+                <div onClick={() => onDelete(item?.id)}>
                   <Trash2 size={16} color="#eb5757" />
                 </div>
 
-                <div onClick={() => handleDetail()}>
+                <div onClick={() => handleDetail(item?.id)}>
                   <img src={LinkImg} alt="" />
                 </div>
               </TagsBox>
@@ -209,5 +272,13 @@ export default function Publicity(){
 
       ))
     }
+
+    {
+      list.length > 1 && <div>
+        <Pagination itemsPerPage={size} total={total} current={page - 1} handleToPage={go2page} />
+      </div>
+    }
+
+
   </Box>
 }

@@ -405,7 +405,8 @@
     "Publicity": "Publicity",
     "externalLink": "External Link",
     "link": "Link",
-    "ConfirmDelete": "Confirm to delete it?"
+    "ConfirmDelete": "Confirm to delete it?",
+    "content": "Content"
   },
   "GovernanceNodeResult": {
     "SearchTip": "SNS",
