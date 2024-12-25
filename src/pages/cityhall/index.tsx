@@ -14,6 +14,7 @@ import { useMemo } from 'react';
 import useCurrentSeason from 'hooks/useCurrentSeason';
 import Publicity from "../publicity";
 import CreatePublicity from "../publicity/create";
+import DetailPublicity from "../publicity/detail";
 
 const Box = styled.div`
   min-height: 100%;
@@ -92,6 +93,7 @@ export default function Index() {
             <Route path="publicity" element={<Navigate to="publicity/list" />} />
             <Route path="publicity/list" element={<Publicity />} />
             <Route path="publicity/create" element={<CreatePublicity />} />
+
             <Route path="publicity/edit/:id" element={<CreatePublicity />} />
           </Routes>
         </Content>

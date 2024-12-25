@@ -139,13 +139,12 @@ export default function Publicity(){
   const { getMultiSNS } = useQuerySNS();
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const [toBeDeleteId, setTobeDeletedId] = useState<number>();
-  const [show,setShow] = useState<boolean>(false);
+  const [toBeDeleteId, setTobeDeletedId] = useState<number|undefined>();
   const [page,setPage] = useState<number>(1);
   const [size] = useState<number>(10);
   const [total,setTotal] = useState<number>(10);
   const [list,setList] = useState([]);
-  const [detailId, setDetailId] = useState<number>();
+  // const [detailId, setDetailId] = useState<number>();
 
   const { dispatch} = useAuthContext();
   const { showToast } = useToast();
@@ -191,7 +190,7 @@ export default function Publicity(){
       showToast(error?.response?.data?.message || error, ToastType.Danger);
       console.error(error)
     }finally {
-      setShow(false)
+      setTobeDeletedId(undefined)
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
       setTimeout(()=>{
         window.location.reload();
@@ -200,13 +199,11 @@ export default function Publicity(){
   }
 
   const handleDetail = (id:number) =>{
-    setShow(true)
-    setDetailId(Number(id));
+
+    // setDetailId(Number(id));
+    navigate("/city-hall/publicity/detail/"+id);
   }
 
-  const closeDetail = ()  =>{
-    setShow(false)
-  }
 
   const formatSNS = (wl: string) => {
     const wallet = wl.toLowerCase();
@@ -220,9 +217,7 @@ export default function Publicity(){
         <ExportButton onClick={()=>handleCreate()}>创建</ExportButton>
       </li>
     </TopLine>
-    {
-      show &&<DetailModal handleClose={closeDetail} id={detailId!}/>
-    }
+
     {toBeDeleteId && (
       <ConfirmModal
         msg={t('city-hall.ConfirmDelete')}

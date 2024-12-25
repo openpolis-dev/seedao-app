@@ -60,6 +60,7 @@ import SearchProfile from "./components/profile/search";
 import SbtCreate from "./pages/sbt/sbtCreate";
 import SbtList from "./pages/sbt/sbtList";
 import SbtApply from "./pages/sbt/sbtApply";
+import DetailPublicity from "./pages/publicity/detail";
 
 
 
@@ -112,6 +113,7 @@ export default function RouterLink() {
           <Route path="/city-hall/governance/issue" element={<Issue />} />
           <Route path="/city-hall/governance/review-proposal" element={<ProposalReview />} />
           <Route path="/city-hall/governance/review-proposal/:id" element={<ProposalThreadV2 />} />
+          <Route path="/city-hall/publicity/detail/:id" element={<DetailPublicity />} />
 
 
           {['dev', undefined].includes(process.env.REACT_APP_ENV_VERSION || '') && (

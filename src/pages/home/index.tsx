@@ -20,6 +20,7 @@ import getConfig from 'utils/envCofnig';
 import PlayImg from '../../assets/Imgs/podcast.png';
 import { types } from 'sass';
 import {BookMarked} from "lucide-react";
+import { getPublicity } from "../../requests/publicity";
 
 const Box = styled.div`
   background: var(--bs-background);
@@ -272,6 +273,7 @@ export default function Home() {
   const [governNodes, setGovernNodes] = useState(0);
   const [onboardingHolders, setOnboardingHolders] = useState(0);
   const [onNewHolders, setNewHolders] = useState(0);
+  const [list,setList] = useState([]);
 
   const navigate = useNavigate();
 
@@ -320,6 +322,7 @@ export default function Home() {
         });
     };
     handleGovNodes();
+    getList()
   }, []);
 
   const sbtHolders = useMemo(() => {
@@ -359,6 +362,15 @@ export default function Home() {
   const togo = (url: string) => {
     navigate(url);
   };
+
+  const getList = async() =>{
+    let rt = await getPublicity(1,3)
+    const {data:{rows}} = rt;
+    console.log(rows)
+    setList(rows)
+
+  }
+
 
   return (
     <Box>
@@ -477,7 +489,7 @@ export default function Home() {
             </LinkBox>
           </CityBox>
           <CityBox>
-            <a href="#" target="_blank" rel="noreferrer">
+            <Link to="/city-hall/publicity/list">
               <TitBox2>
                 <span>{t('Home.information')}</span>
                 <div className="toGo">
@@ -485,14 +497,14 @@ export default function Home() {
                   <img src={ArrowImg} alt="" />
                 </div>
               </TitBox2>
-            </a>
+            </Link>
 
             <LinkBox>
-              {[...Array(3)].map((item: any, index) => (<Col key={index}>
-                  <Link to="/">
+              {list.map((item: any, index) => (<Col key={index}>
+                  <Link to={`/city-hall/publicity/detail/${item?.id}`}>
                     <BtmBox>
                       <div>
-                        <div className="tit">信息</div>
+                        <div className="tit">{item?.title}</div>
                         {/*<div className="desc">{item.time}</div>*/}
                       </div>
                       <div className="link">
