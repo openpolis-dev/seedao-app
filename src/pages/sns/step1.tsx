@@ -358,7 +358,7 @@ export default function RegisterSNSStep1() {
   return (
     <Container>
       <ContainerWrapper>
-        <HistoryBox href={getLink()} target="_blank" rel="noreferrer">查看SNS获取记录</HistoryBox>
+        <HistoryBox href={getLink()} target="_blank" rel="noreferrer">{t('SNS.view')}</HistoryBox>
 
         <StepTitle>{t('SNS.Step1Title')}</StepTitle>
         <StepDesc>{t('SNS.Step1Desc')}</StepDesc>

@@ -733,7 +733,8 @@
     "noSNSINput":"尚未输入sns",
     "noAddressINput":"尚未输入地址",
     "snsError": "SNS错误",
-    "search": "检索"
+    "search": "检索",
+    "view": "查看SNS获取记录"
   },
   "Credit": {
     "NavTitle": "SCR社区互助借款",

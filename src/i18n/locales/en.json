@@ -733,7 +733,8 @@
     "noSNSINput":"No SNS found in the input area",
     "noAddressINput":"No Address found in the input area",
     "snsError": "SNS Error",
-    "search": "Search"
+    "search": "Search",
+    "view": "View SNS Records"
   },
   "Credit": {
     "NavTitle": "SCR Lending",
