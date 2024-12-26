@@ -26,7 +26,8 @@ instance.interceptors.request.use(
       !config.url.includes('app_bundles') &&
       !config.url.includes('list_with_perm') &&
       !config.url.includes('creating_project_proposals')&&
-      !config.url.includes('proposals/list')
+      !config.url.includes('proposals/list') &&
+      !config.url.includes('applications/assets/statistics')
     ) {
       return config;
     }
@@ -128,7 +129,7 @@ const put = function (url: string, data: any): Promise<ResponseData> {
   });
 };
 
-const rdelete = function (url: string, params: any): Promise<ResponseData> {
+const rdelete = function (url: string, params?: any): Promise<ResponseData> {
   return new Promise((resolve, reject) => {
     instance
       .delete(url, {

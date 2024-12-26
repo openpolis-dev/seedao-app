@@ -59,6 +59,8 @@ export default function EditProposal() {
   const [voteList, setVoteList] = useState<any[]>([]);
   const [detail, setDetail] = useState<any>(null);
 
+  const [initList, setInitList] = useState<any[]>([]);
+
   useEffect(() => {
     if (state) {
       setData(state);
@@ -148,6 +150,31 @@ export default function EditProposal() {
   }, [id, state]);
 
   useEffect(() => {
+
+    if(holder.length){
+      let arr = JSON.parse((holder[0] as any)?.name)
+      if(typeof arr == "string"){
+        arr = JSON.parse(arr);
+      }
+      if(!arr.length){
+        setInitList([])
+        return;
+      }
+      let newArr: any[] = []
+      arr?.map((com:string)=>{
+        const hasArr = components.filter((item)=> item.schema.type === com || item.name == com )
+        newArr = [...newArr,...hasArr]
+      })
+      setInitList([...newArr])
+
+    }else{
+      setInitList([])
+    }
+
+
+  }, [holder,components]);
+
+  useEffect(() => {
     if (data) {
       setTitle(data.title);
 
@@ -157,14 +184,17 @@ export default function EditProposal() {
       const beforeComponents = arr.filter(
         (item: any) => item.type !== 'components' && item.type !== 'preview' && arr.indexOf(item) < componentsIndex,
       );
+
       let componentsList = arr.filter((item: any) => item.type === 'components') || [];
       const afterComponents = arr.filter(
         (item: any) => item.type !== 'components' && item.type !== 'preview' && arr.indexOf(item) > componentsIndex,
       );
 
+
       const preview = arr.filter((i: any) => i.type === 'preview');
       setPreviewOrg(preview);
       const preArr = JSON.parse(preview[0].content);
+
 
       setPreview(preArr);
       setPreviewTitle(preview[0].title);
@@ -212,6 +242,7 @@ export default function EditProposal() {
         }
         return item;
       });
+
       setComponents(components);
     } catch (error) {
       logError('getAllProposals failed', error);
@@ -243,7 +274,6 @@ export default function EditProposal() {
     if (!data || !success) {
       return;
     }
-    console.log(success,data);
     const newTime = new Date().valueOf();
     const publicity_ts = (data?.publicity_ts ?? 0) * 1000
 
@@ -299,6 +329,7 @@ export default function EditProposal() {
     await checkMetaforoLogin();
 
     let holderNew = [...holder];
+
 
     if (holder?.length) {
       holderNew[0].name = JSON.stringify(holder[0]?.name);
@@ -432,7 +463,7 @@ export default function EditProposal() {
           <Template
             DataSource={dataSource}
             operate="edit"
-            initialItems={components}
+            initialItems={initList}
             language={i18n.language}
             showRight={showRht}
             theme={theme}

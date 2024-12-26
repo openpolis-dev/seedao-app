@@ -450,6 +450,13 @@ const links = {
   ],
   publicity: [
     {
+      id: 'module-pdf',
+      name: '白皮书',
+      time: '2023-11-22 22:27',
+      link: 'https://seedao.xyz/SeeDAO-WhitePaper.pdf',
+    },
+
+    {
       id: 'module-node',
       name: '当季SeeDAO治理节点名单',
       time: '2023-11-22 22:27',
@@ -492,12 +499,6 @@ const links = {
     //   link: 'https://mp.weixin.qq.com/s/s8ATHFdKhaMQ5SHkPjPAZQ',
     // },
   ],
-  podcast: {
-    name: 'apps.podcastTitle',
-    link: 'https://www.xiaoyuzhoufm.com/podcast/64a27b216d90c5786108abbc',
-    img: PodcastImg,
-    desc: 'apps.podcastDesc',
-  },
 };
 
 export default links;

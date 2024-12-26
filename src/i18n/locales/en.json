@@ -53,7 +53,8 @@
     "Pub": "Hub",
     "OfflineEvent": "Offline Events",
     "proposal": "Proposals",
-    "podcast": "Podcast"
+    "podcast": "Podcast",
+    "information": "Bulletin Board"
   },
   "Proposal": {
     "AllCategories": "All Categories",
@@ -400,7 +401,12 @@
     "TechGroup": "Tech Group",
     "ReviewProposal": "Review Proposal",
     "ReviewProposalDesc": "Review the draft proposals",
-    "nodeMembers": "Current season announcement"
+    "nodeMembers": "Current season announcement",
+    "Publicity": "Publicity",
+    "externalLink": "External Link",
+    "link": "Link",
+    "ConfirmDelete": "Confirm to delete it?",
+    "content": "Content"
   },
   "GovernanceNodeResult": {
     "SearchTip": "SNS",
@@ -475,7 +481,10 @@
     "record": "Assets Distribution Records",
     "Apply": "Assets Applications",
     "tips": "Only those holding SNS can apply for asset distribution.",
-    "p1Tips": "The P1 proposal budget cannot be paid in advance"
+    "p1Tips": "The P1 proposal budget cannot be paid in advance",
+    "ToBeIssuedSeason": "Season To Be Issued",
+    "SentSeason": "Season Sent",
+    "ReviewedSeason": "Season Reviewed"
   },
   "My": {
     "MyProfile": "My Profile",
@@ -508,6 +517,7 @@
     "DefaultBio": "No Bio",
     "InviteInfo": "{{amount}} SCR (including offchain) has been earned through invitation to register for SNS. ",
     "ViewDetails": "view details >>"
+
   },
   "roles": {
     "SGN_HOLDER": "SEED Holder",
@@ -676,8 +686,8 @@
     "snsQuery": "SNS Search",
     "SNSQueryDesc": "Query personal information by SNS.",
     "podcastTitle": "SeeTalk Podcast",
-    "podcastDesc": "SeeTalk is a Web3 podcast collaboratively created by members of the SeeDAO community, showcasing the emerging collaborations within the community and highlighting SeeDAO's ongoing important work and plans."
-
+    "podcastDesc": "SeeTalk is a Web3 podcast collaboratively created by members of the SeeDAO community, showcasing the emerging collaborations within the community and highlighting SeeDAO's ongoing important work and plans.",
+    "whitePaper": "whitePaper"
   },
   "SNS": {
     "EntranceTitle": "INVOLVED IN SEEDAO IN YOUR NAME",
@@ -723,7 +733,8 @@
     "noSNSINput":"No SNS found in the input area",
     "noAddressINput":"No Address found in the input area",
     "snsError": "SNS Error",
-    "search": "Search"
+    "search": "Search",
+    "view": "View SNS Records"
   },
   "Credit": {
     "NavTitle": "SCR Lending",

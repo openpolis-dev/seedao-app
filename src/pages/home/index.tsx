@@ -19,6 +19,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import getConfig from 'utils/envCofnig';
 import PlayImg from '../../assets/Imgs/podcast.png';
 import { types } from 'sass';
+import {BookMarked} from "lucide-react";
+import { getPublicity } from "../../requests/publicity";
 
 const Box = styled.div`
   background: var(--bs-background);
@@ -123,7 +125,7 @@ const LineBox = styled.div`
 `;
 
 const CityBox = styled.div`
-  margin: 0;
+  margin: 0 0 20px;
 `;
 
 const LinkBox = styled(Row)`
@@ -131,6 +133,7 @@ const LinkBox = styled(Row)`
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
+
   .inn {
     border-radius: 10px;
     overflow: hidden;
@@ -223,13 +226,13 @@ const BtmBox = styled.div`
   background-color: var(--bs-box--background);
   border: 1px solid var(--bs-border-color_opacity);
   box-shadow: var(--box-shadow);
-
+    min-height: 55px;
   padding: 14px;
   box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 24px;
+  margin-bottom: 10px;
   .tit {
     font-size: 14px;
     font-family: Poppins-SemiBold;
@@ -270,6 +273,7 @@ export default function Home() {
   const [governNodes, setGovernNodes] = useState(0);
   const [onboardingHolders, setOnboardingHolders] = useState(0);
   const [onNewHolders, setNewHolders] = useState(0);
+  const [list,setList] = useState([]);
 
   const navigate = useNavigate();
 
@@ -318,6 +322,7 @@ export default function Home() {
         });
     };
     handleGovNodes();
+    getList()
   }, []);
 
   const sbtHolders = useMemo(() => {
@@ -357,6 +362,15 @@ export default function Home() {
   const togo = (url: string) => {
     navigate(url);
   };
+
+  const getList = async() =>{
+    let rt = await getPublicity(1,3)
+    const {data:{rows}} = rt;
+    console.log(rows)
+    setList(rows)
+
+  }
+
 
   return (
     <Box>
@@ -428,30 +442,7 @@ export default function Home() {
           </ActiveBox>
         </Col>
         <Col md={4}>
-          {/*<CityBox>*/}
-          {/*  <a href="https://seedao.notion.site/f57031667089473faa7ea3560d05960c" target="_blank" rel="noreferrer">*/}
-          {/*    <TitBox>*/}
-          {/*      <span>{t('Home.podcast')}</span>*/}
-          {/*    </TitBox>*/}
-          {/*  </a>*/}
 
-          {/*  <LinkBox>*/}
-          {/*    <Col>*/}
-          {/*      <a href={Links.podcast.link} target="_blank" rel="noreferrer">*/}
-          {/*        <BtmBox>*/}
-          {/*          <FlexPod>*/}
-          {/*            <img src={Links.podcast.img} alt="" />*/}
-          {/*            <div>*/}
-          {/*              <div className="tit">{t(Links.podcast.name as any)}</div>*/}
-          {/*              <div className="desc">{t(Links.podcast.desc as any)}</div>*/}
-          {/*            </div>*/}
-          {/*          </FlexPod>*/}
-          {/*          <div className="linkRht">/!*<img src={PlayImg} alt="" />*!/</div>*/}
-          {/*        </BtmBox>*/}
-          {/*      </a>*/}
-          {/*    </Col>*/}
-          {/*  </LinkBox>*/}
-          {/*</CityBox>*/}
           <CityBox>
             <a href="https://seedao.notion.site/f57031667089473faa7ea3560d05960c" target="_blank" rel="noreferrer">
               <TitBox2>
@@ -464,42 +455,6 @@ export default function Home() {
             </a>
 
             <LinkBox>
-              {/*<Col onClick={() => window.open(CITY_HALL, '_blank')}>*/}
-              {/*  <div className="inn fst">*/}
-              {/*     <div className="lft">*/}
-              {/*       <img src={CityHallImg} alt="" />*/}
-              {/*       <div className="tit">{t('Home.CityHall')}</div>*/}
-              {/*     </div>*/}
-
-              {/*    <div className="link">*/}
-              {/*      <img src={LinkImg} alt="" />*/}
-              {/*    </div>*/}
-              {/*  </div>*/}
-
-              {/*</Col>*/}
-              {/*<Col onClick={() => window.open(CITY_HALL_MEMBERS, '_blank')}>*/}
-              {/*  <div className="inn snd">*/}
-              {/*    <div className="lft">*/}
-              {/*      <img src={MembersImg} alt="" />*/}
-              {/*      <div className="tit">{t('Home.CityHallMembers')}</div>*/}
-              {/*    </div>*/}
-              {/*    <div className="link">*/}
-              {/*      <img src={LinkImg} alt="" />*/}
-              {/*    </div>*/}
-              {/*  </div>*/}
-              {/*</Col>*/}
-              {/*<Col onClick={() => window.open(CITY_HALL_MEMBERS, '_blank')}>*/}
-              {/*  <div className="inn snd">*/}
-              {/*    <div className="lft">*/}
-              {/*      <img src={ProposalImg} alt="" />*/}
-              {/*      <div className="tit">{t('Home.proposal')}</div>*/}
-              {/*    </div>*/}
-              {/*    <div className="link">*/}
-              {/*      <img src={LinkImg} alt="" />*/}
-              {/*    </div>*/}
-              {/*  </div>*/}
-              {/*</Col>*/}
-
               {Publicitys.slice(0, 5).map((item: any, index) => {
                 return item.id.startsWith('module') ? (
                   <Col key={index}>
@@ -531,6 +486,37 @@ export default function Home() {
                   </Col>
                 );
               })}
+            </LinkBox>
+          </CityBox>
+          <CityBox>
+            <Link to="/city-hall/publicity/list">
+              <TitBox2>
+                <span>{t('Home.information')}</span>
+                <div className="toGo">
+                  {t('Home.viewAll')}
+                  <img src={ArrowImg} alt="" />
+                </div>
+              </TitBox2>
+            </Link>
+
+            <LinkBox>
+              {list.map((item: any, index) => (<Col key={index}>
+                  <Link to={`/city-hall/publicity/detail/${item?.id}`}>
+                    <BtmBox>
+                      <div>
+                        <div className="tit">{item?.title}</div>
+                        {/*<div className="desc">{item.time}</div>*/}
+                      </div>
+                      <div className="link">
+                        <img src={LinkImg} alt="" />
+                      </div>
+                    </BtmBox>
+                  </Link>
+                </Col>)
+
+
+
+              )}
             </LinkBox>
           </CityBox>
         </Col>

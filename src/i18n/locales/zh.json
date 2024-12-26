@@ -53,7 +53,8 @@
     "Pub": "酒馆",
     "OfflineEvent": "线下活动",
     "proposal": "提案",
-    "podcast": "播客"
+    "podcast": "播客",
+    "information": "社区公告板"
   },
   "Proposal": {
     "AllCategories": "分类",
@@ -400,7 +401,12 @@
     "TechGroup": "技术小组",
     "ReviewProposal": "提案审核",
     "ReviewProposalDesc": "审核提案的申请",
-    "nodeMembers": "当季SeeDAO社区治理节点名单"
+    "nodeMembers": "当季SeeDAO社区治理节点名单",
+    "Publicity": "公示",
+    "externalLink": "外链",
+    "link": "链接",
+    "ConfirmDelete": "确定要删除吗？",
+    "content": "内容"
   },
   "GovernanceNodeResult": {
     "SearchTip": "SNS",
@@ -475,7 +481,10 @@
     "record": "资产发放记录",
     "Apply": "申请资产发放",
     "tips": "持有SNS才可以申请资产发放",
-    "p1Tips": "P1提案项目预算不可预支"
+    "p1Tips": "P1提案项目预算不可预支",
+    "ToBeIssuedSeason": "当季待发放",
+    "SentSeason": "当季已发放",
+    "ReviewedSeason": "当季待审核"
   },
   "My": {
     "MyProfile": "我的信息",
@@ -508,6 +517,7 @@
     "DefaultBio": "TA很神秘哦，并没有介绍自己",
     "InviteInfo": "已通过邀请注册 SNS 获得 {{amount}} SCR（含未上链）",
     "ViewDetails": "查看详情 >>"
+
   },
   "roles": {
     "SGN_HOLDER": "SEED持有者",
@@ -676,7 +686,8 @@
     "snsQuery": "SNS检索",
     "SNSQueryDesc": "通过SNS查询社区成员在社区里的公开信息",
     "podcastTitle": "SeeTalk播客",
-    "podcastDesc": "SeeTalk是一档由SeeDAO社区成员共创Web3节目，传递着社区成员的共创涌现和SeeDAO当前正在做的重要工作与规划"
+    "podcastDesc": "SeeTalk是一档由SeeDAO社区成员共创Web3节目，传递着社区成员的共创涌现和SeeDAO当前正在做的重要工作与规划",
+    "whitePaper": "白皮书"
   },
   "SNS": {
     "EntranceTitle": "获取你的 SNS，开始你的 SeeDAO 之旅",
@@ -722,7 +733,8 @@
     "noSNSINput":"尚未输入sns",
     "noAddressINput":"尚未输入地址",
     "snsError": "SNS错误",
-    "search": "检索"
+    "search": "检索",
+    "view": "查看SNS获取记录"
   },
   "Credit": {
     "NavTitle": "SCR社区互助借款",
