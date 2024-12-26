@@ -364,11 +364,13 @@ export default function Home() {
   };
 
   const getList = async() =>{
-    let rt = await getPublicity(1,3)
-    const {data:{rows}} = rt;
-    console.log(rows)
-    setList(rows)
-
+    try {
+      let rt = await getPublicity(1,3)
+      const {data:{rows}} = rt;
+      setList(rows)
+    }catch(error){
+      console.error(error)
+    }
   }
 
 

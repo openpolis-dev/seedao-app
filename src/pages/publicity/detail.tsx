@@ -195,7 +195,6 @@ export default function DetailPublicity(){
          <MdPreview theme={theme ? 'dark' : 'light'} modelValue={detail.content || ''} />
        </PushItemContent>
      </ContentOuter>
-=
 
    </Page>;
 }
