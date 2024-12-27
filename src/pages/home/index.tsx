@@ -21,6 +21,7 @@ import PlayImg from '../../assets/Imgs/podcast.png';
 import { types } from 'sass';
 import {BookMarked} from "lucide-react";
 import { getPublicity } from "../../requests/publicity";
+import { formatTime } from "../../utils/time";
 
 const Box = styled.div`
   background: var(--bs-background);
@@ -364,11 +365,13 @@ export default function Home() {
   };
 
   const getList = async() =>{
-    let rt = await getPublicity(1,3)
-    const {data:{rows}} = rt;
-    console.log(rows)
-    setList(rows)
-
+    try {
+      let rt = await getPublicity(1,3,"list")
+      const {data:{rows}} = rt;
+      setList(rows)
+    }catch(error){
+      console.error(error)
+    }
   }
 
 
@@ -489,7 +492,7 @@ export default function Home() {
             </LinkBox>
           </CityBox>
           <CityBox>
-            <Link to="/city-hall/publicity/list">
+            <Link to="/publicity">
               <TitBox2>
                 <span>{t('Home.information')}</span>
                 <div className="toGo">
@@ -501,11 +504,11 @@ export default function Home() {
 
             <LinkBox>
               {list.map((item: any, index) => (<Col key={index}>
-                  <Link to={`/city-hall/publicity/detail/${item?.id}`}>
+                  <Link to={`/publicity/detail/${item?.id}`}>
                     <BtmBox>
                       <div>
                         <div className="tit">{item?.title}</div>
-                        {/*<div className="desc">{item.time}</div>*/}
+                        <div className="desc">{formatTime(item?.updateAt * 1000)}</div>
                       </div>
                       <div className="link">
                         <img src={LinkImg} alt="" />

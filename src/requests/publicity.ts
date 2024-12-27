@@ -1,10 +1,10 @@
-import request, { ResponseData, getBaseURL } from './http';
+import request  from './http';
 
 const PATH_PREFIX = '/publicity/';
 
 
-export const getPublicity = (page:number|string,size:number) =>{
-  return request.get(`${PATH_PREFIX}list?page=${page}&size=${size}`);
+export const getPublicity = (page:number|string,size:number,type?:string) =>{
+  return request.get(`${PATH_PREFIX}list?page=${page}&size=${size}&type=${type}`);
 }
 
 
