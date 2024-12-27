@@ -406,7 +406,13 @@
     "externalLink": "External Link",
     "link": "Link",
     "ConfirmDelete": "Confirm to delete it?",
-    "content": "Content"
+    "content": "Content",
+    "HistoryCreate": "submitted <title>{{title}}</title> at {{time}}",
+    "HistoryEdit": "edited  <title>{{title}} at {{time}}",
+    "save": "Save Draft",
+    "publish": "Publish",
+    "draft": "Draft",
+    "CityHallMembers": "City Hall Members"
   },
   "GovernanceNodeResult": {
     "SearchTip": "SNS",

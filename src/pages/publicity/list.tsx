@@ -1,28 +1,30 @@
 import styled from "styled-components";
-import LinkImg from "../../assets/Imgs/link.svg";
+
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Button } from 'react-bootstrap';
-import DefaultAvatarIcon from "../../assets/Imgs/defaultAvatar.png";
+
 import { formatTime } from "../../utils/time";
-import {Trash2, Pencil} from "lucide-react";
-import ConfirmModal from "../../components/modals/confirmModal";
+
 import { useTranslation } from "react-i18next";
-import DetailModal from "./detail";
-import { deletePublicity, getPublicity } from "../../requests/publicity";
+
+import { getPublicity } from "../../requests/publicity";
 import Pagination from "../../components/pagination";
 import NoItem from "../../components/noItem";
 import publicJs from "../../utils/publicJs";
 import useQuerySNS from "../../hooks/useQuerySNS";
-import useToast, { ToastType } from "../../hooks/useToast";
-import { AppActionType, useAuthContext } from "../../providers/authProvider";
+
+import { ContainerPadding } from "../../assets/styles/global";
+import Tabbar from "../../components/common/tabbar";
 import defaultImg from "../../assets/Imgs/defaultAvatar.png";
-import SubTabbar from "../../components/common/subTabbar";
-import { ReTurnProject } from "../../type/project.type";
 
-const Box = styled.div`
+const Page = styled.div`
+    ${ContainerPadding};
+`;
+
+const TopLine = styled.div`
+  padding-bottom: 20px;
 `
-
 
 const CardBox = styled.div`
   box-shadow: var(--proposal-box-shadow);
@@ -73,21 +75,8 @@ const LinkBox = styled.div`
     }
 `
 
-const TopLine = styled.ul`
-  display: flex;
-  justify-content: space-between;
-  gap: 16px;
-    margin-top: -20px;
-    button{
-        margin-top: -5px;
-    }
-`;
 
-const ExportButton = styled(Button)`
-  font-size: 14px;
-  font-family: Poppins-Regular;
-    min-width: 120px;
-`;
+
 
 const CardBody = styled.div`
   display: flex;
@@ -131,14 +120,8 @@ const TagsBox = styled.div`
     }
 `;
 
-const FlexLine = styled.div`
-  margin-top: 10px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-`
-
 const InnerBox = styled.div`
+  margin-top: 10px;
     font-size: 14px;
     background: rgb(36, 175, 255);
     color: #fff;
@@ -147,60 +130,18 @@ const InnerBox = styled.div`
     border-radius: 4px;
 `
 
-const InnerTag = styled(InnerBox)`
-    background: rgb(255, 81, 209)
-`
-
-const SubTabbarStyle = styled(SubTabbar)`
-  margin-top: 12px;
-  margin-bottom: 24px;
-`;
-
-
-
-export default function Publicity(){
+export default function PublicityList(){
   const { getMultiSNS } = useQuerySNS();
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const [toBeDeleteId, setTobeDeletedId] = useState<number|undefined>();
+
   const [page,setPage] = useState<number>(1);
   const [size] = useState<number>(10);
   const [total,setTotal] = useState<number>(10);
   const [list,setList] = useState([]);
-  const [current, setCurrent] = useState<number>(0);
-  const [type, setType] = useState("");
-  // const [detailId, setDetailId] = useState<number>();
 
-  const [tabsArr] = useState([
-    {
-      title: "所有",
-      type:"",
-      key: 0,
-    },
-    {
-      title: "已发布",
-      type:"list",
-      key: 1,
-    },
-    {
-      title: "未发布",
-      type:"unlist",
-      key: 2,
-    },
-    {
-      title: "已删除",
-      type:"del",
-      key: 3,
-    },
-  ]);
-
-  const { dispatch} = useAuthContext();
-  const { showToast } = useToast();
 
   const [snsMap, setSnsMap] = useState<Map<string, string>>(new Map());
-  const handleCreate = () =>{
-    navigate("/city-hall/publicity/create")
-  }
 
   const handleSNS = async (wallets: string[]) => {
     const sns_map = await getMultiSNS(wallets);
@@ -209,14 +150,14 @@ export default function Publicity(){
 
   useEffect(() => {
     getList()
-  }, [page,current]);
+  }, [page]);
 
   const go2page = (_page: number) => {
     setPage(_page + 1);
   };
 
   const getList = async() =>{
-    let rt = await getPublicity(page,size,tabsArr[current]?.type)
+    let rt = await getPublicity(page,size,"list")
     const {data:{page:pg,rows,total}} = rt;
     setPage(pg)
     setTotal(total)
@@ -225,26 +166,7 @@ export default function Publicity(){
     handleSNS(rows.filter((d:any) => !!d.creator).map((d:any) => d.creator));
   }
 
-  const onDelete = (id: number) => {
-    setTobeDeletedId(Number(id));
-  };
 
-  const handleDeletePost = async() =>{
-    dispatch({ type: AppActionType.SET_LOADING, payload: true });
-    try{
-
-      let rt = await deletePublicity(toBeDeleteId!)
-    }catch(error:any){
-      showToast(error?.response?.data?.message || error, ToastType.Danger);
-      console.error(error)
-    }finally {
-      setTobeDeletedId(undefined)
-      dispatch({ type: AppActionType.SET_LOADING, payload: false });
-      // setTimeout(()=>{
-      //   window.location.reload();
-      // },2000)
-    }
-  }
 
   const handleDetail = (id:number) =>{
 
@@ -259,65 +181,51 @@ export default function Publicity(){
     return name?.endsWith('.seedao') ? name : publicJs.AddressToShow(name, 4);
   };
 
-  const handleType = (num:number) =>{
-    setCurrent(num)
-    navigate(`/city-hall/publicity/list?type=${tabsArr[num]?.type}`)
-  }
-
-  return <Box>
+  return <Page>
     <TopLine>
-      <SubTabbarStyle defaultActiveKey={0} tabs={tabsArr} onSelect={(v: string | number) => handleType(v as number)} />
-      <ExportButton onClick={()=>handleCreate()}>创建</ExportButton>
+      <Tabbar
+        tabs={[
+          { key: 0, title: t('Home.information') },
+        ]}
+        defaultActiveKey={0}
+      />
     </TopLine>
 
-    {toBeDeleteId && (
-      <ConfirmModal
-        msg={t('city-hall.ConfirmDelete')}
-        onClose={() => {
-          setTobeDeletedId(undefined);
-          // setCurrentBindIdx(undefined);
-        }}
-        onConfirm={handleDeletePost}
-      />
-    )}
+
     {
       !list?.length && <NoItem />
     }
     {
-     !!list?.length &&  list.map((item:any, index) => (
-        <LinkBox key={index}>
+      !!list?.length &&  list.map((item:any, index) => (
+        <LinkBox key={index} onClick={()=>handleDetail(item?.id)}>
           <CardBox>
             <CardHeaderStyled>
               <Title>{item?.title}</Title>
             </CardHeaderStyled>
-            <FlexLine>
-              <InnerBox>S{item?.season}{t("city-hall.CityHallMembers")}</InnerBox>
-              {
-                !!item.isDraft &&  <InnerTag>{t("city-hall.draft")}</InnerTag>
-              }
-            </FlexLine>
             <CardBody>
               <AvaBox>
                 <div className="left">
-                  <UserAvatar src={item.avatar || defaultImg} alt="" />
+                  <UserAvatar src={defaultImg} alt="" />
                 </div>
                 <div className="right">
                   <div className="name">{formatSNS(item.creator)}</div>
                   <div className="date">{formatTime(item?.updateAt * 1000)}</div>
                 </div>
-
               </AvaBox>
               <TagsBox>
-                <Link to={`/city-hall/publicity/edit/${item?.id}`}>
-                  <Pencil size={16} />
-                </Link>
-                <div onClick={() => onDelete(item?.id)}>
-                  <Trash2 size={16} color="#eb5757" />
-                </div>
+                <InnerBox>
+                  {t("city-hall.CityHallMembers")}
+                </InnerBox>
+              {/*  <Link to={`/city-hall/publicity/edit/${item?.id}`}>*/}
+              {/*    <Pencil size={16} />*/}
+              {/*  </Link>*/}
+              {/*  <div onClick={() => onDelete(item?.id)}>*/}
+              {/*    <Trash2 size={16} color="#eb5757" />*/}
+              {/*  </div>*/}
 
-                <div onClick={() => handleDetail(item?.id)}>
-                  <img src={LinkImg} alt="" />
-                </div>
+              {/*  <div onClick={() => handleDetail(item?.id)}>*/}
+              {/*    <img src={LinkImg} alt="" />*/}
+              {/*  </div>*/}
               </TagsBox>
             </CardBody>
 
@@ -334,5 +242,5 @@ export default function Publicity(){
     }
 
 
-  </Box>
+  </Page>
 }

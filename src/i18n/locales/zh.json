@@ -406,7 +406,13 @@
     "externalLink": "外链",
     "link": "链接",
     "ConfirmDelete": "确定要删除吗？",
-    "content": "内容"
+    "content": "内容",
+    "HistoryCreate": "在 {{time}} 创建了 <title>{{title}}</title>",
+    "HistoryEdit": "在 {{time}} 编辑了 <title>{{title}}</title>",
+    "save": "保存草稿",
+    "publish": "发布",
+    "draft": "草稿",
+    "CityHallMembers": "市政厅成员"
   },
   "GovernanceNodeResult": {
     "SearchTip": "SNS",

@@ -44,6 +44,9 @@ const FormInput = styled(Form.Control)`
 
 const SubmitBox = styled.div`
   margin-top: 30px;
+    gap: 20px;
+    display: flex;
+    align-items: center;
   button {
     min-width: 120px;
   }
@@ -64,6 +67,7 @@ export default function CreatePublicity(){
   const [content, setContent] = useState('');
   const [href, setHref] = useState('');
   const [type, setType] = useState('create');
+  const [isDraft, setIsDraft] = useState(true);
 
   const { showToast } = useToast();
   const navigate = useNavigate();
@@ -85,9 +89,16 @@ export default function CreatePublicity(){
   const getEdit = async()=>{
     try{
       let rt = await getPublicityDetail(id!);
-      const {data:{title,content}} = rt;
+      const {data:{
+        Detail:{
+          title,
+          content,
+          isDraft
+        }
+      }} = rt;
       setTitle(title)
       setContent(content);
+      setIsDraft(isDraft)
     }catch(error){
       console.error(error)
     }
@@ -126,11 +137,19 @@ export default function CreatePublicity(){
     }
   };
 
-  const handleSubmit = () =>{
-    if(type === 'create'){
-      handleCreate()
+  const handleSubmit = (isSaveDraft:boolean) =>{
+
+
+    if(isSaveDraft){
+      if(type === "create" ||(type === "edit" && !!isDraft)){
+        handleCreate(true)
+      }
     }else{
-      id && handleUpdate()
+      if(type === "create" ||(type === "edit" && !!isDraft)){
+        handleCreate(false)
+      }else{
+        id && handleUpdate()
+      }
     }
   }
 
@@ -156,10 +175,12 @@ export default function CreatePublicity(){
     }
   }
 
-  const handleCreate = async() => {
+  const handleCreate = async(draft:boolean) => {
     let obj={
       title,
-      content
+      content,
+      isSaveDraft:draft,
+      id:Number(id) || 0
     }
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try{
@@ -239,9 +260,15 @@ export default function CreatePublicity(){
 
 
       <SubmitBox>
-        {/*<Button variant="primary" type="submit" disabled={!title || (!radioValue && !content) || (radioValue && !href)} onClick={()=>handleSubmit()} >*/}
-        <Button variant="primary" disabled={!title || !content} onClick={()=>handleSubmit()} >
-          {t('city-hall.create')}
+        {
+          (type=== "create" || (type === "edit" && !!isDraft)) &&<Button variant="outline-primary" disabled={!title || !content} onClick={()=>handleSubmit(true)} >
+            {t('city-hall.save')}
+          </Button>
+        }
+
+
+        <Button variant="primary" disabled={!title || !content} onClick={()=>handleSubmit(false)} >
+          {t('city-hall.publish')}
         </Button>
       </SubmitBox>
     </Form>
