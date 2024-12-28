@@ -130,6 +130,14 @@ const InnerBox = styled.div`
     border-radius: 4px;
 `
 
+const FlexLine = styled.div`
+  margin-top: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+`
+
+
 export default function PublicityList(){
   const { getMultiSNS } = useQuerySNS();
   const navigate = useNavigate();
@@ -202,10 +210,15 @@ export default function PublicityList(){
             <CardHeaderStyled>
               <Title>{item?.title}</Title>
             </CardHeaderStyled>
+            <FlexLine>
+              <InnerBox>
+                {t("city-hall.CityHallMembers")}
+              </InnerBox>
+            </FlexLine>
             <CardBody>
               <AvaBox>
                 <div className="left">
-                  <UserAvatar src={defaultImg} alt="" />
+                  <UserAvatar src={item.avatar || defaultImg} alt="" />
                 </div>
                 <div className="right">
                   <div className="name">{formatSNS(item.creator)}</div>
@@ -213,9 +226,7 @@ export default function PublicityList(){
                 </div>
               </AvaBox>
               <TagsBox>
-                <InnerBox>
-                  {t("city-hall.CityHallMembers")}
-                </InnerBox>
+
               {/*  <Link to={`/city-hall/publicity/edit/${item?.id}`}>*/}
               {/*    <Pencil size={16} />*/}
               {/*  </Link>*/}
