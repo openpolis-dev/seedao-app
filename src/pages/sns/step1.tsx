@@ -352,7 +352,6 @@ export default function RegisterSNSStep1() {
   };
   const getLink = () =>{
     const  {NETWORK} = getConfig();
-    console.error( builtin.SEEDAO_REGISTRAR_CONTROLLER_ADDR);
     return `${NETWORK.explorer}/address/${builtin.SEEDAO_REGISTRAR_CONTROLLER_ADDR}`
   }
   return (

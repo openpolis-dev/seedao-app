@@ -450,8 +450,8 @@ const links = {
   ],
   publicity: [
     {
-      id: 'module-pdf',
-      name: '白皮书',
+      id: 'pdf',
+      name: 'SeeDAO白皮书',
       time: '2023-11-22 22:27',
       link: 'https://seedao.xyz/SeeDAO-WhitePaper.pdf',
     },
