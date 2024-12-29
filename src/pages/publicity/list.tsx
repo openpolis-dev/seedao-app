@@ -212,7 +212,7 @@ export default function PublicityList(){
             </CardHeaderStyled>
             <FlexLine>
               <InnerBox>
-                {t("city-hall.CityHallMembers")}
+                S{item?.season}{t("city-hall.CityHallMembers")}
               </InnerBox>
             </FlexLine>
             <CardBody>
