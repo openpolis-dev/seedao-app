@@ -412,7 +412,11 @@
     "save": "Save Draft",
     "publish": "Publish",
     "draft": "Draft",
-    "CityHallMembers": "City Hall Members"
+    "CityHallMembers": "City Hall Members",
+    "deleted": "Deleted",
+    "all": "All",
+    "Published": "Published",
+    "Unpublished": "Unpublished"
   },
   "GovernanceNodeResult": {
     "SearchTip": "SNS",

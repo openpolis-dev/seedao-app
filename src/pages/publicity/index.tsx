@@ -151,6 +151,10 @@ const InnerTag = styled(InnerBox)`
     background: rgb(255, 81, 209)
 `
 
+const InnerTag2 = styled(InnerBox)`
+  background: rgb(255, 51, 51);
+`
+
 const SubTabbarStyle = styled(SubTabbar)`
   margin-top: 12px;
   margin-bottom: 24px;
@@ -168,27 +172,27 @@ export default function Publicity(){
   const [total,setTotal] = useState<number>(10);
   const [list,setList] = useState([]);
   const [current, setCurrent] = useState<number>(0);
-  const [type, setType] = useState("");
+
   // const [detailId, setDetailId] = useState<number>();
 
   const [tabsArr] = useState([
     {
-      title: "所有",
+      title: t('city-hall.all'),
       type:"",
       key: 0,
     },
     {
-      title: "已发布",
+      title: t('city-hall.Published'),
       type:"list",
       key: 1,
     },
     {
-      title: "未发布",
+      title: t('city-hall.Unpublished'),
       type:"unlist",
       key: 2,
     },
     {
-      title: "已删除",
+      title: t('city-hall.deleted'),
       type:"del",
       key: 3,
     },
@@ -295,6 +299,9 @@ export default function Publicity(){
               {
                 !!item.isDraft &&  <InnerTag>{t("city-hall.draft")}</InnerTag>
               }
+              {
+                tabsArr[current]?.type === "del" &&<InnerTag2>{t("city-hall.deleted")}</InnerTag2>
+              }
             </FlexLine>
             <CardBody>
               <AvaBox>
@@ -307,18 +314,22 @@ export default function Publicity(){
                 </div>
 
               </AvaBox>
-              <TagsBox>
-                <Link to={`/city-hall/publicity/edit/${item?.id}`}>
-                  <Pencil size={16} />
-                </Link>
-                <div onClick={() => onDelete(item?.id)}>
-                  <Trash2 size={16} color="#eb5757" />
-                </div>
 
-                <div onClick={() => handleDetail(item?.id)}>
-                  <img src={LinkImg} alt="" />
-                </div>
-              </TagsBox>
+              {
+                tabsArr[current]?.type !== "del" &&    <TagsBox>
+                  <Link to={`/city-hall/publicity/edit/${item?.id}`}>
+                    <Pencil size={16} />
+                  </Link>
+                  <div onClick={() => onDelete(item?.id)}>
+                    <Trash2 size={16} color="#eb5757" />
+                  </div>
+
+                  <div onClick={() => handleDetail(item?.id)}>
+                    <img src={LinkImg} alt="" />
+                  </div>
+                </TagsBox>
+              }
+
             </CardBody>
 
           </CardBox>

@@ -412,7 +412,13 @@
     "save": "保存草稿",
     "publish": "发布",
     "draft": "草稿",
-    "CityHallMembers": "市政厅成员"
+    "CityHallMembers": "市政厅成员",
+    "deleted": "已删除",
+    "all": "所有",
+    "Published": "已发布",
+    "Unpublished": "未发布"
+
+
   },
   "GovernanceNodeResult": {
     "SearchTip": "SNS",
