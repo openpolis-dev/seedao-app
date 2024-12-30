@@ -56,7 +56,8 @@ export default function SeeuNetwork() {
       setTotal(resp.data.total);
       setLst(resp.data.data);
     } catch (error: any) {
-      showToast(error, ToastType.Danger);
+      // showToast(error, ToastType.Danger);
+      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: null });
     }

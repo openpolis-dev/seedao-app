@@ -22,6 +22,7 @@ import { types } from 'sass';
 import {BookMarked} from "lucide-react";
 import { getPublicity } from "../../requests/publicity";
 import { formatTime } from "../../utils/time";
+import useToast, { ToastType } from "../../hooks/useToast";
 
 const Box = styled.div`
   background: var(--bs-background);
@@ -275,7 +276,7 @@ export default function Home() {
   const [onboardingHolders, setOnboardingHolders] = useState(0);
   const [onNewHolders, setNewHolders] = useState(0);
   const [list,setList] = useState([]);
-
+  const { showToast } = useToast();
   const navigate = useNavigate();
 
   const {
@@ -302,6 +303,7 @@ export default function Home() {
         })
         .catch((error: any) => {
           logError('[SBT] get sgn owners failed', error);
+          showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
         });
     };
     handleSEEDHolders();
@@ -319,6 +321,7 @@ export default function Home() {
           setGovernNodes(Number(r.totalSupply));
         })
         .catch((error: any) => {
+          showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
           logError('[SBT] get gov nodes failed', error);
         });
     };
@@ -343,6 +346,7 @@ export default function Home() {
           setOnboardingHolders(Number(r.totalSupply));
         })
         .catch((error: any) => {
+          showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
           logError('[SBT] get onboarding-sbt holders failed', error);
         });
     };
@@ -353,6 +357,7 @@ export default function Home() {
           setNewHolders(Number(r.totalSupply));
         })
         .catch((error: any) => {
+          showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
           logError('[SBT] get new-sbt holders failed', error);
         });
     };
@@ -369,7 +374,8 @@ export default function Home() {
       let rt = await getPublicity(1,3,"list")
       const {data:{rows}} = rt;
       setList(rows)
-    }catch(error){
+    }catch(error:any){
+      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
       console.error(error)
     }
   }

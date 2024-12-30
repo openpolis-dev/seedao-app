@@ -137,7 +137,8 @@ export default function RegisterSNSStep2() {
         } catch (error: any) {
           closeLoading();
           logError('[step-2] estimate white-mint failed', error);
-          handleError(parseError(error));
+          showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
+          // handleError(parseError(error));
           return;
         }
         txHash = (await handleTransaction(TX_ACTION.WHITE_MINT, params)) as string;
@@ -167,7 +168,8 @@ export default function RegisterSNSStep2() {
         } catch (error: any) {
           closeLoading();
           logError('[step-2] estimate pay-mint failed', error);
-          handleError(parseError(error));
+          // handleError(parseError(error));
+          showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
           return;
         }
 
@@ -186,7 +188,8 @@ export default function RegisterSNSStep2() {
     } catch (error: any) {
       closeLoading();
       logError('register failed', error);
-      handleError(parseError(error));
+      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
+      // handleError(parseError(error));
     } finally {
     }
   };
@@ -218,6 +221,7 @@ export default function RegisterSNSStep2() {
           dispatchSNS({ type: ACTIONS.CLOSE_LOADING });
         } else if (r && r.status === 'reverted') {
           logError(`tx failed: ${hash}`);
+
           _d[account].stepStatus = 'failed';
           dispatchSNS({ type: ACTIONS.SET_STORAGE, payload: JSON.stringify(_d) });
           dispatchSNS({ type: ACTIONS.CLOSE_LOADING });

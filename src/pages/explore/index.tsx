@@ -68,9 +68,10 @@ export default function ExplorePage() {
         } else {
           showToast(t('Msg.SnsNotFound', { sns: inputSearchVal }), ToastType.Danger);
         }
-      } catch (error) {
+      } catch (error:any) {
         console.error(error);
-        showToast('parse SNS error', ToastType.Danger);
+        showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
+        // showToast('parse SNS error', ToastType.Danger);
       } finally {
         dispatch({ type: AppActionType.SET_LOADING, payload: false });
       }

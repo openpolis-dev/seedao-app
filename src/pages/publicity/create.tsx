@@ -99,8 +99,9 @@ export default function CreatePublicity(){
       setTitle(title)
       setContent(content);
       setIsDraft(isDraft)
-    }catch(error){
+    }catch(error:any){
       console.error(error)
+      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
     }
 
   }

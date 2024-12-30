@@ -140,8 +140,9 @@ export default function EditProposal() {
           setVoteType(res.data?.vote_type);
           setDataSource(res.data?.components ?? []);
           setShowRht(!res.data?.is_based_on_custom_template);
-        } catch (error) {
+        } catch (error:any) {
           logError('get proposal detail error:', error);
+          showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
         } finally {
           dispatch({ type: AppActionType.SET_LOADING, payload: false });
         }
@@ -244,8 +245,9 @@ export default function EditProposal() {
       });
 
       setComponents(components);
-    } catch (error) {
+    } catch (error:any) {
       logError('getAllProposals failed', error);
+      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }
@@ -414,8 +416,9 @@ export default function EditProposal() {
     try {
       const urlObjArr = await UploadPictures(files[0]);
       callback([urlObjArr]);
-    } catch (e) {
-      console.error('uploadPic', e);
+    } catch (error:any) {
+      console.error('uploadPic', error);
+      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: null });
     }

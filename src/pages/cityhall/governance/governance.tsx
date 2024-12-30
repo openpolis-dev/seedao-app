@@ -8,6 +8,7 @@ import { AppActionType, useAuthContext } from "providers/authProvider";
 import { useNavigate } from 'react-router-dom';
 import { Icon } from 'lucide-react';
 import { getCityHallDetail } from "../../../requests/cityHall";
+import useToast, { ToastType } from "../../../hooks/useToast";
 
 
 const AppBox = styled(Row)`
@@ -98,7 +99,7 @@ const LiBox = styled(Col)`
 
 export default function GovernancePage() {
   const { t } = useTranslation();
-
+  const { showToast } = useToast();
   const [disabled,setDisabled] = useState<boolean>(false);
 
   const {
@@ -133,8 +134,9 @@ export default function GovernancePage() {
 
       const disabledArr = members.filter((item) => item.toLowerCase() === account!.toLowerCase());
       setDisabled(!disabledArr?.length)
-    } catch (error) {
+    } catch (error:any) {
       logError(error);
+      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: null });
     }

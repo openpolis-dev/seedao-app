@@ -114,6 +114,7 @@ export default function ThreadPage() {
     getMetaforo()
   }, [metaforoToken,account,userData,chain]);
   const getMetaforo = async()=>{
+
     await checkMetaforoLogin();
   }
 
@@ -282,8 +283,9 @@ export default function ThreadPage() {
       });
 
       setComponents(resp.data);
-    } catch (error) {
+    } catch (error:any) {
       logError('getAllProposals failed', error);
+      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
     } finally {
       // dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }

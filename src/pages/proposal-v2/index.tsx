@@ -21,6 +21,7 @@ import AddImg from '../../assets/Imgs/proposal/add-square.svg';
 import useCheckMetaforoLogin from 'hooks/useMetaforoLogin';
 import MyProposalsTab from 'components/proposalCom/myProposalsTab';
 import { useNetwork } from "wagmi";
+import useToast, { ToastType } from "../../hooks/useToast";
 
 const PAGE_SIZE = 10;
 let RESULT_ID = 0;
@@ -28,6 +29,7 @@ let RESULT_ID = 0;
 export default function ProposalIndexPage() {
   const navigate = useNavigate();
   const { state } = useLocation();
+  const { showToast } = useToast();
   const { t } = useTranslation();
   const {
     state: { loading,metaforoToken,account, userData },
@@ -147,8 +149,9 @@ export default function ProposalIndexPage() {
       setProposalList(resp.data.rows);
       handleSNS(resp.data.rows.filter((d) => !!d.applicant).map((d) => d.applicant));
       setTotalCount(resp.data.total);
-    } catch (error) {
+    } catch (error:any) {
       logError('getAllProposals failed', error);
+      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }

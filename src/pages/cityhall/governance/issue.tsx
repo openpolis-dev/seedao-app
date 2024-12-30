@@ -115,8 +115,9 @@ export default function Issued() {
       }));
       setTotal(res.data.total);
       setList(_list);
-    } catch (error) {
+    } catch (error:any) {
       logError('getProjectApplications failed', error);
+      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }
@@ -133,8 +134,9 @@ export default function Issued() {
       showToast(t('city-hall.SendSuccess'), ToastType.Success);
     } catch (error: any) {
       logError('compeleteApplications failed', error);
-      let msg = error?.data?.msg || t('Msg.ApproveFailed');
-      showToast(msg, ToastType.Danger);
+      // let msg = error?.data?.msg || t('Msg.ApproveFailed');
+      // showToast(msg, ToastType.Danger);
+      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }
@@ -149,27 +151,33 @@ export default function Issued() {
       showToast(t('Msg.ApproveSuccess'), ToastType.Success);
     } catch (error: any) {
       logError('processApplications failed', error);
-      let msg = error?.data?.msg || t('Msg.ApproveFailed');
-      showToast(msg, ToastType.Danger);
+      // let msg = error?.data?.msg || t('Msg.ApproveFailed');
+      // showToast(msg, ToastType.Danger);
+      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }
   };
 
   const handleStatus = async () => {
-    const res = await requests.application.getProjectApplications(
-      {
-        page: 1,
-        size: 1,
-        sort_field: 'create_ts',
-        sort_order: 'desc',
-      },
-      {
-        state: ApplicationStatus.Processing,
-      },
-    );
-    setIsProcessing(!!res.data.rows.length);
-    setSelectStatus(res.data.rows.length ? ApplicationStatus.Processing : ApplicationStatus.Approved);
+    try{
+      const res = await requests.application.getProjectApplications(
+        {
+          page: 1,
+          size: 1,
+          sort_field: 'create_ts',
+          sort_order: 'desc',
+        },
+        {
+          state: ApplicationStatus.Processing,
+        },
+      );
+      setIsProcessing(!!res.data.rows.length);
+      setSelectStatus(res.data.rows.length ? ApplicationStatus.Processing : ApplicationStatus.Approved);
+    }catch(error:any){
+      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
+    }
+
   };
 
   useEffect(() => {
@@ -178,8 +186,13 @@ export default function Issued() {
   }, []);
 
   const getST = async() =>{
-    let rt = await getStatistics();
-    setStatistics(rt.data)
+    try{
+      let rt = await getStatistics();
+      setStatistics(rt.data)
+    }catch(error:any){
+      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
+    }
+
   }
 
   useEffect(() => {

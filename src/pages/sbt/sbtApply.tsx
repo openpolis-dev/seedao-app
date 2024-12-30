@@ -241,8 +241,9 @@ export default function SbtApply() {
       })
 
       setList(arrItem);
-    }catch(error){
+    }catch(error:any){
       console.log(error);
+      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
     }finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }
@@ -291,8 +292,9 @@ export default function SbtApply() {
           window.location.reload();
         },1500)
       }
-    }catch(error){
+    }catch(error:any){
       console.error(error);
+      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
     }finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }

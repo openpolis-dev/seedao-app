@@ -19,6 +19,7 @@ import sns from "@seedao/sns-js";
 
 import { useNavigate } from "react-router-dom";
 import getConfig from "../../../utils/envCofnig";
+import useToast, { ToastType } from "../../../hooks/useToast";
 const { Check } = Form;
 
 type ExtraType = { id: number; name: string };
@@ -88,6 +89,7 @@ export default function ChooseTypeStep() {
   const [snsName,setSnsName] = useState<string>();
   const navigate = useNavigate();
   const [radioValue, setRadioValue] = useState('single');
+  const { showToast } = useToast();
 
   const onChooseTemplate = (tp: ICategory, template: ITemplate) => {
     if (template.id === 0) {
@@ -132,8 +134,13 @@ export default function ChooseTypeStep() {
   }, [account]);
 
   const getSnS = async() =>{
-    let rt = await sns.name(account!,getConfig().NETWORK.rpcs[0])
-    setSnsName(rt)
+    try{
+      let rt = await sns.name(account!,getConfig().NETWORK.rpcs[0])
+      setSnsName(rt)
+    }catch(error:any){
+      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
+    }
+
   }
 
   const checkSNS =   () =>{

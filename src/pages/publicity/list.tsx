@@ -17,6 +17,7 @@ import useQuerySNS from "../../hooks/useQuerySNS";
 import { ContainerPadding } from "../../assets/styles/global";
 import Tabbar from "../../components/common/tabbar";
 import defaultImg from "../../assets/Imgs/defaultAvatar.png";
+import useToast, { ToastType } from "../../hooks/useToast";
 
 const Page = styled.div`
     ${ContainerPadding};
@@ -142,7 +143,7 @@ export default function PublicityList(){
   const { getMultiSNS } = useQuerySNS();
   const navigate = useNavigate();
   const { t } = useTranslation();
-
+  const { showToast } = useToast();
   const [page,setPage] = useState<number>(1);
   const [size] = useState<number>(10);
   const [total,setTotal] = useState<number>(10);
@@ -165,13 +166,18 @@ export default function PublicityList(){
   };
 
   const getList = async() =>{
-    let rt = await getPublicity(page,size,"list")
-    const {data:{page:pg,rows,total}} = rt;
-    setPage(pg)
-    setTotal(total)
-    setList(rows)
+    try{
+      let rt = await getPublicity(page,size,"list")
+      const {data:{page:pg,rows,total}} = rt;
+      setPage(pg)
+      setTotal(total)
+      setList(rows)
 
-    handleSNS(rows.filter((d:any) => !!d.creator).map((d:any) => d.creator));
+      handleSNS(rows.filter((d:any) => !!d.creator).map((d:any) => d.creator));
+    }catch(error:any){
+      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
+    }
+
   }
 
 

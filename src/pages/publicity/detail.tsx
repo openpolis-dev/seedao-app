@@ -16,6 +16,7 @@ import defaultImg from "../../assets/Imgs/defaultAvatar.png";
 import ProfileComponent from "../../profile-components/profile";
 import publicJs from "../../utils/publicJs";
 import useQuerySNS from "../../hooks/useQuerySNS";
+import useToast, { ToastType } from "../../hooks/useToast";
 
 
 const Page = styled.div`
@@ -198,7 +199,7 @@ export default function DetailPublicity(){
   const [snsName,setSnsName] = useState<string>();
   const [showModal, setShowModal] = useState(false);
   const [snsMap, setSnsMap] = useState<Map<string, string>>(new Map());
-
+  const { showToast } = useToast();
   const { getMultiSNS } = useQuerySNS();
 
   const handleSNS = async (wallets: string[]) => {
@@ -225,8 +226,10 @@ export default function DetailPublicity(){
       setLog(rt.data.Log)
       handleSNS(rt.data.Log.filter((d:any) => !!d.eidtor).map((d:any) => d.eidtor));
       getSnS(rt.data.Detail.creator.toLowerCase())
-    }catch(error){
+    }catch(error:any){
       console.error(error)
+      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
+
     }finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }
