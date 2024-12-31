@@ -57,8 +57,13 @@ export default function ProjectAudit() {
   };
 
   const handleSNS = async (wallets: string[]) => {
-    const sns_map = await getMultiSNS(wallets);
-    setSnsMap(sns_map);
+    try{
+      const sns_map = await getMultiSNS(wallets);
+      setSnsMap(sns_map);
+    }catch(error:any){
+      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
+    }
+
   };
 
   const getRecords = async () => {

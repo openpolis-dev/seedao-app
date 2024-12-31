@@ -121,8 +121,13 @@ export default function ProposalIndexPage() {
   }, [keyword_addr, sort_field_addr, sip_addr, sort_order_addr, page_addr, category_id]);
 
   const handleSNS = async (wallets: string[]) => {
-    const sns_map = await getMultiSNS(wallets);
-    setSnsMap(sns_map);
+    try{
+      const sns_map = await getMultiSNS(wallets);
+      setSnsMap(sns_map);
+    }catch(error:any){
+      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
+    }
+
   };
 
   const formatSNS = (wallet: string) => {

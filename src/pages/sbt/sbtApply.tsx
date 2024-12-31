@@ -284,7 +284,6 @@ export default function SbtApply() {
           organization_contract_id:list[current!].organization_contract_id
         }
         let rt = await applySBT(obj)
-        console.log(rt)
 
         showToast(t('sbt.ApplySuccess'), ToastType.Success);
         setTimeout(()=>{

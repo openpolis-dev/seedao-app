@@ -137,7 +137,7 @@ export default function RegisterSNSStep2() {
         } catch (error: any) {
           closeLoading();
           logError('[step-2] estimate white-mint failed', error);
-          showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
+          showToast(`${error?.data?.msg || error?.code || error}`, ToastType.Danger);
           // handleError(parseError(error));
           return;
         }
@@ -169,7 +169,7 @@ export default function RegisterSNSStep2() {
           closeLoading();
           logError('[step-2] estimate pay-mint failed', error);
           // handleError(parseError(error));
-          showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
+          showToast(`${error?.data?.msg || error?.code || error}`, ToastType.Danger);
           return;
         }
 
@@ -188,7 +188,7 @@ export default function RegisterSNSStep2() {
     } catch (error: any) {
       closeLoading();
       logError('register failed', error);
-      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
+      showToast(`${error?.data?.msg || error?.code || error}`, ToastType.Danger);
       // handleError(parseError(error));
     } finally {
     }
