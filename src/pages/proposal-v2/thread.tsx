@@ -50,6 +50,7 @@ import useQueryUser from 'hooks/useQueryUser';
 import defaultImg from '../../assets/Imgs/defaultAvatar.png';
 import getConfig from "../../utils/envCofnig";
 import { useNetwork } from "wagmi";
+import { checkCanVote } from "../../requests/proposalV2";
 
 enum BlockContentType {
   Reply = 1,
@@ -83,6 +84,8 @@ export default function ThreadPage() {
   const [applicant, setApplicant] = useState('');
   const [applicantAvatar, setApplicantAvatar] = useState(DefaultAvatarIcon);
   const [showModal, setShowModal] = useState(false);
+
+  const [hasPermission, setHasPermission] = useState(false);
 
   const [showConfirmWithdraw, setShowConfirmWithdraw] = useState(false);
   const [hasMore, setHasMore] = useState(false);
@@ -261,6 +264,17 @@ export default function ThreadPage() {
   };
 
   useEffect(() => {
+    console.error(showVote())
+    if(!id ||!showVote() )return;
+    const getVotePermission = () => {
+      checkCanVote(Number(id)).then((r) => {
+        setHasPermission(r.data);
+      });
+    };
+    getVotePermission()
+  }, [id,data]);
+
+  useEffect(() => {
     if (state) {
       setData(state);
     }
@@ -380,13 +394,14 @@ export default function ThreadPage() {
     return true;
   };
 
+
   const showVotedTag = (currentState:ProposalState | undefined) =>{
     if (!data?.votes?.[0]) {
       return false;
     }
     const votedItem = data?.votes?.[0].options.filter((item)=>item.is_vote);
 
-    return (!!votedItem?.length &&  currentState === "voting" && !!metaforoToken)
+    return (!!votedItem?.length &&  currentState === "voting" && !!metaforoToken) && hasPermission
   }
 
   const showVotedNot = (currentState:ProposalState | undefined) =>{
@@ -395,7 +410,7 @@ export default function ThreadPage() {
     }
     const votedItem = data?.votes?.[0].options.filter((item)=>item.is_vote);
 
-    return (!votedItem?.length &&  currentState === "voting"&& !!metaforoToken)
+    return (!votedItem?.length &&  currentState === "voting"&& !!metaforoToken) && hasPermission
   }
 
   const isCurrentApplicant = data?.applicant?.toLocaleLowerCase() === account?.toLocaleLowerCase();
@@ -736,6 +751,7 @@ export default function ThreadPage() {
                 voteGate={data?.vote_gate}
                 poll={data!.votes[0]}
                 id={Number(id)}
+                hasPermission={hasPermission}
                 currentState={currentState}
                 showMultiple={data!.is_multiple_vote}
                 updateStatus={getProposalDetail}
