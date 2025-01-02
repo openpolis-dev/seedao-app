@@ -264,7 +264,6 @@ export default function ThreadPage() {
   };
 
   useEffect(() => {
-    console.error(showVote())
     if(!id ||!showVote() )return;
     const getVotePermission = () => {
       checkCanVote(Number(id)).then((r) => {

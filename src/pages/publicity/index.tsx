@@ -244,9 +244,9 @@ export default function Publicity(){
     }finally {
       setTobeDeletedId(undefined)
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
-      // setTimeout(()=>{
-      //   window.location.reload();
-      // },2000)
+      setTimeout(()=>{
+        window.location.reload();
+      },2000)
     }
   }
 
@@ -300,7 +300,7 @@ export default function Publicity(){
                 !!item.isDraft &&  <InnerTag>{t("city-hall.draft")}</InnerTag>
               }
               {
-                tabsArr[current]?.type === "del" &&<InnerTag2>{t("city-hall.deleted")}</InnerTag2>
+                ((tabsArr[current]?.type === "del" || !tabsArr[current]?.type) && !!item.isDel) &&<InnerTag2>{t("city-hall.deleted")}</InnerTag2>
               }
             </FlexLine>
             <CardBody>
