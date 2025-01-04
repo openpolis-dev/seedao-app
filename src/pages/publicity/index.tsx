@@ -295,7 +295,10 @@ export default function Publicity(){
               <Title>{item?.title}</Title>
             </CardHeaderStyled>
             <FlexLine>
-              <InnerBox>S{item?.season}{t("city-hall.CityHallMembers")}</InnerBox>
+              {
+                item?.isDraft !==1 && <InnerBox>S{item?.season}{t("city-hall.CityHallMembers")}</InnerBox>
+              }
+
               {
                 !!item.isDraft &&  <InnerTag>{t("city-hall.draft")}</InnerTag>
               }
@@ -316,7 +319,7 @@ export default function Publicity(){
               </AvaBox>
 
               {
-                tabsArr[current]?.type !== "del" &&    <TagsBox>
+                tabsArr[current]?.type !== "del"   && item?.isDraft !== 1 &&   <TagsBox>
                   <Link to={`/city-hall/publicity/edit/${item?.id}`}>
                     <Pencil size={16} />
                   </Link>
