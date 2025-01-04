@@ -364,7 +364,7 @@ export default function SbtApply() {
                         </dt>
                         <dd>
                           <div>{item?.nft_name}</div>
-                          <div className="nftId">#{item?.nft_id}</div>
+                          <div className="nftId">Token Id {item?.nft_id}</div>
                         </dd>
                       </dl>))
                   }
