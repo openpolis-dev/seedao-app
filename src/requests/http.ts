@@ -26,11 +26,12 @@ instance.interceptors.request.use(
       !config.url.includes('app_bundles') &&
       !config.url.includes('list_with_perm') &&
       !config.url.includes('creating_project_proposals')&&
-      !config.url.includes('proposals/list') &&
-      !config.url.includes('applications/assets/statistics')
+      !config.url.includes('applications/assets/statistics')&&
+      !config.url.includes('proposals/list')
     ) {
       return config;
     }
+
     let urls = ['/user/login', '/user/refresh_nonce', '/seeauth/login',"/user/users"];
 
     const isValid = urls.some(prefix => config.url.startsWith(prefix));
@@ -40,10 +41,23 @@ instance.interceptors.request.use(
     }
 
     const tokenstr = localStorage.getItem(SEEDAO_USER);
+    const tokenData = parseToken(tokenstr!);
+
+
+    if(config.url.indexOf("proposals/list") > -1) {
+      if (tokenstr && tokenstr !== "null" ){
+        config.headers['Authorization'] = `Bearer ${tokenData?.token || ''}`;
+        return config;
+      }else{
+        return config;
+      }
+    }
+
+
     if (!tokenstr) {
       return config;
     }
-    const tokenData = parseToken(tokenstr);
+
     if (!checkTokenValid(tokenData?.token, tokenData?.token_exp)) {
 
       clearStorage();

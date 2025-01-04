@@ -163,6 +163,7 @@ export default function ProposalIndexPage() {
   };
 
   useEffect(() => {
+    if(metaforoToken === undefined) return;
     getProposalList(page);
   }, [selectCategory, selectTime, selectStatus, searchKeyword, isFilterSIP, page,metaforoToken]);
 
