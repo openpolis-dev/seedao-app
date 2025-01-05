@@ -319,7 +319,7 @@ export default function Publicity(){
               </AvaBox>
 
               {
-                tabsArr[current]?.type !== "del"   && item?.isDraft !== 1 &&   <TagsBox>
+                tabsArr[current]?.type !== "del"   && item?.isDel !== 1 &&   <TagsBox>
                   <Link to={`/city-hall/publicity/edit/${item?.id}`}>
                     <Pencil size={16} />
                   </Link>
