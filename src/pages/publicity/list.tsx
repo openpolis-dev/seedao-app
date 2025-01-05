@@ -253,7 +253,7 @@ export default function PublicityList(){
     }
 
     {
-      list.length > 1 && <div>
+      total > size && <div>
         <Pagination itemsPerPage={size} total={total} current={page - 1} handleToPage={go2page} />
       </div>
     }
