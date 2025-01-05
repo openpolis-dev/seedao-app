@@ -238,15 +238,17 @@ export default function Publicity(){
     try{
 
       let rt = await deletePublicity(toBeDeleteId!)
+      getList()
+
     }catch(error:any){
       showToast(error?.response?.data?.message || error, ToastType.Danger);
       console.error(error)
     }finally {
       setTobeDeletedId(undefined)
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
-      setTimeout(()=>{
-        window.location.reload();
-      },2000)
+      // setTimeout(()=>{
+      //   window.location.reload();
+      // },2000)
     }
   }
 
