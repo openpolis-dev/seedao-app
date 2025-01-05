@@ -220,13 +220,23 @@ export default function Publicity(){
   };
 
   const getList = async() =>{
-    let rt = await getPublicity(page,size,tabsArr[current]?.type)
-    const {data:{page:pg,rows,total}} = rt;
-    setPage(pg)
-    setTotal(total)
-    setList(rows)
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    try{
+      let rt = await getPublicity(page,size,tabsArr[current]?.type)
+      const {data:{page:pg,rows,total}} = rt;
+      setPage(pg)
+      setTotal(total)
+      setList(rows)
+      handleSNS(rows.filter((d:any) => !!d.creator).map((d:any) => d.creator));
+    }catch(error:any){
+      console.error(error)
+      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
+    }finally {
+      dispatch({ type: AppActionType.SET_LOADING, payload: false });
+    }
 
-    handleSNS(rows.filter((d:any) => !!d.creator).map((d:any) => d.creator));
+
+
   }
 
   const onDelete = (id: number) => {
@@ -344,7 +354,7 @@ export default function Publicity(){
     }
 
     {
-      list.length > 1 && <div>
+      total > size && <div>
         <Pagination itemsPerPage={size} total={total} current={page - 1} handleToPage={go2page} />
       </div>
     }
