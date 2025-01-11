@@ -5,6 +5,8 @@ import { InjectedConnector } from 'wagmi/connectors/injected';
 import { UniPassConnector } from '@unipasswallet/wagmi-connector';
 import { JoyIdConnector } from '@joyid/wagmi';
 import { amoy } from 'utils/chain';
+import { WalletConnectConnector } from 'wagmi/connectors/walletConnect'
+
 
 import getConfig from 'utils/envCofnig';
 const networkConfig = getConfig().NETWORK;
@@ -54,6 +56,18 @@ export default function WagmiProvider(props: React.PropsWithChildren) {
         chains,
         options: {
           shimDisconnect: false,
+        },
+      }),
+      new WalletConnectConnector({
+        chains,
+        options: {
+          showQrModal: true,
+          projectId:"bfa9036cfdc020f867087ce4cadffe13",
+          qrModalOptions:{
+            themeVariables:{
+              "--wcm-z-index": "9999999999999"
+            }
+          }
         },
       }),
       joyidConnector,
