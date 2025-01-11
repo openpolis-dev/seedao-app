@@ -452,51 +452,51 @@ export default function Home() {
         </Col>
         <Col md={4}>
 
-          <CityBox>
-            <a href="https://seedao.notion.site/f57031667089473faa7ea3560d05960c" target="_blank" rel="noreferrer">
-              <TitBox2>
-                <span>{t('Home.Publicity')}</span>
-                <div className="toGo">
-                  {t('Home.viewAll')}
-                  <img src={ArrowImg} alt="" />
-                </div>
-              </TitBox2>
-            </a>
+          {/*<CityBox>*/}
+          {/*  <a href="https://seedao.notion.site/f57031667089473faa7ea3560d05960c" target="_blank" rel="noreferrer">*/}
+          {/*    <TitBox2>*/}
+          {/*      <span>{t('Home.Publicity')}</span>*/}
+          {/*      <div className="toGo">*/}
+          {/*        {t('Home.viewAll')}*/}
+          {/*        <img src={ArrowImg} alt="" />*/}
+          {/*      </div>*/}
+          {/*    </TitBox2>*/}
+          {/*  </a>*/}
 
-            <LinkBox>
-              {Publicitys.slice(0, 5).map((item: any, index) => {
-                return item.id.startsWith('module') ? (
-                  <Col key={index}>
-                    <Link to={item.link}>
-                      <BtmBox>
-                        <div>
-                          <div className="tit">{item.name}</div>
-                          {/*<div className="desc">{item.time}</div>*/}
-                        </div>
-                        <div className="link">
-                          <img src={LinkImg} alt="" />
-                        </div>
-                      </BtmBox>
-                    </Link>
-                  </Col>
-                ) : (
-                  <Col key={`publicity_${index}`}>
-                    <a href={item.link} target="_blank" rel="noreferrer">
-                      <BtmBox>
-                        <div>
-                          <div className="tit">{item.name}</div>
-                          {/*<div className="desc">{item.time}</div>*/}
-                        </div>
-                        <div className="link">
-                          <img src={LinkImg} alt="" />
-                        </div>
-                      </BtmBox>
-                    </a>
-                  </Col>
-                );
-              })}
-            </LinkBox>
-          </CityBox>
+          {/*  <LinkBox>*/}
+          {/*    {Publicitys.slice(0, 5).map((item: any, index) => {*/}
+          {/*      return item.id.startsWith('module') ? (*/}
+          {/*        <Col key={index}>*/}
+          {/*          <Link to={item.link}>*/}
+          {/*            <BtmBox>*/}
+          {/*              <div>*/}
+          {/*                <div className="tit">{item.name}</div>*/}
+          {/*                /!*<div className="desc">{item.time}</div>*!/*/}
+          {/*              </div>*/}
+          {/*              <div className="link">*/}
+          {/*                <img src={LinkImg} alt="" />*/}
+          {/*              </div>*/}
+          {/*            </BtmBox>*/}
+          {/*          </Link>*/}
+          {/*        </Col>*/}
+          {/*      ) : (*/}
+          {/*        <Col key={`publicity_${index}`}>*/}
+          {/*          <a href={item.link} target="_blank" rel="noreferrer">*/}
+          {/*            <BtmBox>*/}
+          {/*              <div>*/}
+          {/*                <div className="tit">{item.name}</div>*/}
+          {/*                /!*<div className="desc">{item.time}</div>*!/*/}
+          {/*              </div>*/}
+          {/*              <div className="link">*/}
+          {/*                <img src={LinkImg} alt="" />*/}
+          {/*              </div>*/}
+          {/*            </BtmBox>*/}
+          {/*          </a>*/}
+          {/*        </Col>*/}
+          {/*      );*/}
+          {/*    })}*/}
+          {/*  </LinkBox>*/}
+          {/*</CityBox>*/}
           <CityBox>
             <Link to="/publicity">
               <TitBox2>
