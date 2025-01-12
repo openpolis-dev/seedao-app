@@ -416,7 +416,8 @@
     "deleted": "Deleted",
     "all": "All",
     "Published": "Published",
-    "Unpublished": "Unpublished"
+    "Unpublished": "Unpublished",
+    "whitePaper": "SeeDAO WhitePaper"
   },
   "GovernanceNodeResult": {
     "SearchTip": "SNS",

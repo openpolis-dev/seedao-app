@@ -416,8 +416,8 @@
     "deleted": "已删除",
     "all": "所有",
     "Published": "已发布",
-    "Unpublished": "未发布"
-
+    "Unpublished": "未发布",
+    "whitePaper": "SeeDAO白皮书"
 
   },
   "GovernanceNodeResult": {

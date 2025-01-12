@@ -64,6 +64,11 @@ export default function Members() {
         type:"inner",
         link: '/node',
       },
+      {
+        name: t('city-hall.whitePaper'),
+        // type:"inner",
+        link: 'https://seedao.xyz/SeeDAO-WhitePaper.pdf'
+      },
     ];
   }, [t]);
 
@@ -334,6 +339,9 @@ const TopList = styled.div`
 `;
 
 const UlBox = styled(Row)`
+    .col-xl-3{
+        margin-bottom: 20px;
+    }
   .boxAll {
     background: var(--bs-box--background);
     border: ${(props) => props.border};
@@ -345,6 +353,7 @@ const UlBox = styled(Row)`
     display: flex;
     align-items: center;
     justify-content: space-between;
+
     .link {
       display: none;
     }
