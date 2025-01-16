@@ -22,6 +22,7 @@ import useCheckMetaforoLogin from 'hooks/useMetaforoLogin';
 import MyProposalsTab from 'components/proposalCom/myProposalsTab';
 import { useNetwork } from "wagmi";
 import useToast, { ToastType } from "../../hooks/useToast";
+import { SEEDAO_USER } from "../../utils/constant";
 
 const PAGE_SIZE = 10;
 let RESULT_ID = 0;
@@ -162,10 +163,13 @@ export default function ProposalIndexPage() {
     }
   };
 
+  const tokenstr = localStorage.getItem(SEEDAO_USER);
+
   useEffect(() => {
-    if(metaforoToken === undefined) return;
+    // if(metaforoToken === undefined) return;
+
     getProposalList(page);
-  }, [selectCategory, selectTime, selectStatus, searchKeyword, isFilterSIP, page,metaforoToken]);
+  }, [selectCategory, selectTime, selectStatus, searchKeyword, isFilterSIP, page,metaforoToken,tokenstr]);
 
   const onKeyUp = (e: any) => {
     if (e.keyCode === 13) {
