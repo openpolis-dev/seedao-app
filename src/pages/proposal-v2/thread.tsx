@@ -102,6 +102,7 @@ export default function ThreadPage() {
   const [dataSource, setDatasource] = useState<any>();
 
   const posts = commentsArray.length ? commentsArray.reduce((a, b) => [...a, ...b], []) : [];
+  const [errorTips,setErrorTips] = useState<string>("");
 
   const { getMultiSNS } = useQuerySNS();
   const { getUsers } = useQueryUser();
@@ -257,7 +258,8 @@ export default function ThreadPage() {
       }
     } catch (error: any) {
       logError('get proposal detail error:', error);
-      showToast(error?.data?.msg || error?.code || error, ToastType.Danger, { autoClose: false });
+      showToast(error.response?.data?.msg|| error?.data?.msg || error?.code || error, ToastType.Danger, { autoClose: false });
+      setErrorTips(error.response?.data?.msg|| error?.data?.msg || error?.code || error)
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }
@@ -624,6 +626,8 @@ export default function ThreadPage() {
       )}
 
       <ContentOuter>
+        {!!errorTips &&<ErrorBox>{errorTips}</ErrorBox>
+        }
         <Preview
           rpc={getConfig().NETWORK.rpcs[0]}
           DataSource={JSON.parse(JSON.stringify(dataSource || []))}
@@ -1155,4 +1159,11 @@ const VotedBox2 = styled(VotedBox)`
 
     background: rgba(255, 81, 209,0.2);
 
+`
+const ErrorBox = styled.div`
+  padding: 30px;
+    color: var(--bs-danger);
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
 `
