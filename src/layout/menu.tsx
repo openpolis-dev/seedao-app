@@ -53,6 +53,10 @@ import FreshImg from '../assets/Imgs/darkMenu/fresh.png';
 import FreshWhite from '../assets/Imgs/darkMenu/freshWhite.png';
 import FreshActive from '../assets/Imgs/darkMenu/fresh_active.png';
 
+import ResourceImg from "../assets/Imgs/darkMenu/resouce.svg"
+import ResourceWhite from "../assets/Imgs/lightMenu/resouce.svg"
+import ResourceActive from "../assets/Imgs/darkMenu/resouce_active.png"
+
 import React from 'react';
 import useCheckLogin from 'hooks/useCheckLogin';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
@@ -309,20 +313,20 @@ const items: MenuItemType[] = [
     },
     link: { href: '/apps' },
   },
-  // {
-  //   title: 'menus.Event',
-  //   icon: {
-  //     dark: {
-  //       nor: EventImg,
-  //       active: EventImgActive,
-  //     },
-  //     light: {
-  //       nor: EventImgLight,
-  //       active: EventImgActive,
-  //     },
-  //   },
-  //   link: { href: '/event' },
-  // },
+  {
+    title: 'menus.archive',
+    icon: {
+      dark: {
+        nor: ResourceImg,
+        active: ResourceActive,
+      },
+      light: {
+        nor: ResourceWhite,
+        active: ResourceActive,
+      },
+    },
+    link: { href: 'https://seedao.notion.site/SeeDAO-f57031667089473faa7ea3560d05960c' },
+  },
   // {
   //   title: 'Home.OnlineEvent',
   //   icon: {
@@ -450,7 +454,13 @@ export default function Menu({ isMedium }: { isMedium: boolean }) {
   const isLogin = useCheckLogin(account);
 
   const onSelectMenu = (m: MenuItemType) => {
-    navigate(m.link.href);
+    if(m.link.href.startsWith("http")) {
+      window.open(m.link.href, "_blank");
+    }else{
+      navigate(m.link.href);
+    }
+
+
     if (isMedium && open) {
       dispatch({ type: AppActionType.SET_EXPAND_MENU, payload: false });
     }
