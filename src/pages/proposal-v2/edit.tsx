@@ -303,7 +303,7 @@ export default function EditProposal() {
 
       const budgetData = submitData.filter((item: any) => item.name === 'budget') || [];
       if (budgetData.length) {
-        budgetData[0].data.budgetList.map((item: any) => {
+        budgetData[0].data.budgetList?.map((item: any) => {
           if (item.typeTest.name === 'USDC') {
             if (Number(item.amount) > 1000) {
               err = true;
@@ -333,14 +333,14 @@ export default function EditProposal() {
     let holderNew = [...holder];
 
 
-    if (holder?.length) {
+    if (holder?.length && typeof holder[0]?.name !== 'string') {
       holderNew[0].name = JSON.stringify(holder[0]?.name);
     }
 
     let arr = [...previewOrg, ...beforeList, ...holderNew, ...contentBlocks];
     let newVoteList: string[] = [];
     if (voteType === 99 || voteType === 98) {
-      voteList.map((item) => {
+      voteList?.map((item) => {
         newVoteList.push(item.label);
       });
     }
@@ -362,7 +362,7 @@ export default function EditProposal() {
           submitType === 'submit' ? t('Msg.SubmitProposalSuccess') : t('Msg.SaveProposalSuccess'),
           ToastType.Success,
         );
-        navigate(`/proposal/thread/${r.data.id}`);
+        // navigate(`/proposal/thread/${r.data.id}`);
       })
       .catch((error: any) => {
         logError('saveOrSubmitProposal failed', error);
@@ -583,7 +583,7 @@ export default function EditProposal() {
                   <ItemBox>
                     <TitleBox>投票选项</TitleBox>
                     <VoteBox>
-                      {voteList.map((item, index) => (
+                      {voteList?.map((item, index) => (
                         <li key={`vote_${index}`}>
                           <input type="text" value={item.label} onChange={(e) => handleVoteInput(e, index)} />
                           {voteList.length - 1 === index && (
