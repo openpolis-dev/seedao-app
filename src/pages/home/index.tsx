@@ -23,6 +23,7 @@ import {BookMarked} from "lucide-react";
 import { getPublicity } from "../../requests/publicity";
 import { formatTime } from "../../utils/time";
 import useToast, { ToastType } from "../../hooks/useToast";
+import { getNodeSBT } from "../../requests/publicData";
 
 const Box = styled.div`
   background: var(--bs-background);
@@ -276,6 +277,7 @@ export default function Home() {
   const [onboardingHolders, setOnboardingHolders] = useState(0);
   const [onNewHolders, setNewHolders] = useState(0);
   const [list,setList] = useState([]);
+  const [sbtHolders,setSbtHolders] = useState(0);
   const { showToast } = useToast();
   const navigate = useNavigate();
 
@@ -294,6 +296,25 @@ export default function Home() {
   }, [t]);
 
   useEffect(() => {
+    getStatics()
+  }, []);
+
+  const getStatics = async() =>{
+   let rt = await getNodeSBT()
+    console.log(rt.data)
+
+    let obj:any={}
+    for (let i = 0; i < rt.data.length; i++) {
+      let item= rt.data[i];
+      console.log(item.Name,item.NumValue)
+      obj[item.Name]=item.NumValue
+    }
+    console.log("obj",obj)
+    setSbtHolders(obj.compute_sbt_num)
+    setGovernNodes(obj.compute_node_num)
+  }
+
+  useEffect(() => {
     const handleSEEDHolders = async () => {
       fetch(`${getConfig().INDEXER_ENDPOINT}/insight/erc721/total_supply/0x30093266E34a816a53e302bE3e59a93B52792FD4
 `)
@@ -310,60 +331,60 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    const handleGovNodes = async () => {
-      fetch(
-        `${
-          getConfig().INDEXER_ENDPOINT
-        }/insight/erc1155/total_supply_of_tokenId/0x9d34D407D8586478b3e4c39BE633ED3D7be1c80C/4`,
-      )
-        .then((res: any) => res.json())
-        .then((r) => {
-          setGovernNodes(Number(r.totalSupply));
-        })
-        .catch((error: any) => {
-          showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
-          logError('[SBT] get gov nodes failed', error);
-        });
-    };
-    handleGovNodes();
+    // const handleGovNodes = async () => {
+    //   fetch(
+    //     `${
+    //       getConfig().INDEXER_ENDPOINT
+    //     }/insight/erc1155/total_supply_of_tokenId/0x9d34D407D8586478b3e4c39BE633ED3D7be1c80C/4`,
+    //   )
+    //     .then((res: any) => res.json())
+    //     .then((r) => {
+    //       setGovernNodes(Number(r.totalSupply));
+    //     })
+    //     .catch((error: any) => {
+    //       showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
+    //       logError('[SBT] get gov nodes failed', error);
+    //     });
+    // };
+    // handleGovNodes();
     getList()
   }, []);
 
-  const sbtHolders = useMemo(() => {
-    const SBT_155 = 9;
-    return governNodes + onboardingHolders + onNewHolders + SBT_155;
-  }, [governNodes, onboardingHolders, onNewHolders]);
-
-  useEffect(() => {
-    const getOnboardingHolders = async () => {
-      fetch(
-        `${
-          getConfig().INDEXER_ENDPOINT
-        }/insight/erc1155/total_supply_of_tokenId/0x0D9ea891B4C30e17437D00151399990ED7965F00/157`,
-      )
-        .then((res: any) => res.json())
-        .then((r) => {
-          setOnboardingHolders(Number(r.totalSupply));
-        })
-        .catch((error: any) => {
-          showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
-          logError('[SBT] get onboarding-sbt holders failed', error);
-        });
-    };
-    const getNewHolders = async () => {
-      fetch(`${getConfig().INDEXER_ENDPOINT}/insight/erc1155/total_supply/0x2221F5d189c611B09D7f7382Ce557ec66365C8fc`)
-        .then((res: any) => res.json())
-        .then((r) => {
-          setNewHolders(Number(r.totalSupply));
-        })
-        .catch((error: any) => {
-          showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
-          logError('[SBT] get new-sbt holders failed', error);
-        });
-    };
-    getOnboardingHolders();
-    getNewHolders();
-  }, []);
+  // const sbtHolders = useMemo(() => {
+  //   const SBT_155 = 9;
+  //   return governNodes + onboardingHolders + onNewHolders + SBT_155;
+  // }, [governNodes, onboardingHolders, onNewHolders]);
+  //
+  // useEffect(() => {
+  //   const getOnboardingHolders = async () => {
+  //     fetch(
+  //       `${
+  //         getConfig().INDEXER_ENDPOINT
+  //       }/insight/erc1155/total_supply_of_tokenId/0x0D9ea891B4C30e17437D00151399990ED7965F00/157`,
+  //     )
+  //       .then((res: any) => res.json())
+  //       .then((r) => {
+  //         setOnboardingHolders(Number(r.totalSupply));
+  //       })
+  //       .catch((error: any) => {
+  //         showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
+  //         logError('[SBT] get onboarding-sbt holders failed', error);
+  //       });
+  //   };
+  //   const getNewHolders = async () => {
+  //     fetch(`${getConfig().INDEXER_ENDPOINT}/insight/erc1155/total_supply/0x2221F5d189c611B09D7f7382Ce557ec66365C8fc`)
+  //       .then((res: any) => res.json())
+  //       .then((r) => {
+  //         setNewHolders(Number(r.totalSupply));
+  //       })
+  //       .catch((error: any) => {
+  //         showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
+  //         logError('[SBT] get new-sbt holders failed', error);
+  //       });
+  //   };
+  //   getOnboardingHolders();
+  //   getNewHolders();
+  // }, []);
 
   const togo = (url: string) => {
     navigate(url);
