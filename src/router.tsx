@@ -62,6 +62,7 @@ import SbtList from "./pages/sbt/sbtList";
 import SbtApply from "./pages/sbt/sbtApply";
 import DetailPublicity from "./pages/publicity/detail";
 import PublicityList from "./pages/publicity/list";
+import Archive from "./pages/archive";
 
 
 
@@ -135,6 +136,7 @@ export default function RouterLink() {
           <Route path="/sbt/list/:type" element={<SbtList />} />
           <Route path="/sbt/create" element={<SbtCreate />} />
           <Route path="/sbt/apply" element={<SbtApply />} />
+          <Route path="/archive" element={<Archive />} />
 
 
           {/* <Route path="/sns/user" element={<UserSNS />} /> */}

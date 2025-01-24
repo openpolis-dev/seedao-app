@@ -325,7 +325,7 @@ const items: MenuItemType[] = [
         active: ResourceActive,
       },
     },
-    link: { href: 'https://seedao.notion.site/SeeDAO-f57031667089473faa7ea3560d05960c' },
+    link: { href: '/archive' },
   },
   // {
   //   title: 'Home.OnlineEvent',
@@ -454,12 +454,12 @@ export default function Menu({ isMedium }: { isMedium: boolean }) {
   const isLogin = useCheckLogin(account);
 
   const onSelectMenu = (m: MenuItemType) => {
-    if(m.link.href.startsWith("http")) {
-      window.open(m.link.href, "_blank");
-    }else{
-      navigate(m.link.href);
-    }
-
+    // if(m.link.href.startsWith("http")) {
+    //   window.open(m.link.href, "_blank");
+    // }else{
+    //   navigate(m.link.href);
+    // }
+    navigate(m.link.href);
 
     if (isMedium && open) {
       dispatch({ type: AppActionType.SET_EXPAND_MENU, payload: false });
