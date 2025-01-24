@@ -27,6 +27,10 @@ const ContentBox = styled.ul`
         padding-bottom: 10px;
         color: var( --menu-color);
     }
+    .error{
+        color: var(--bs-danger);
+        font-size: 14px;
+    }
 `
 
 const Box = styled.div`
@@ -52,6 +56,7 @@ const Box = styled.div`
       transform: rotate(360deg);
     }
   }
+ 
 `;
 
 interface Iprops {
@@ -85,8 +90,9 @@ export default function SbtModal({handleClose,detail}:Iprops){
 
       // let result = await sns.names(unique_list,getConfig().NETWORK.rpcs[0])
       const result = await PublicJs.splitWallets(unique_list);
-      const arr = (result as any).filter((item:any)=>item.indexOf("seedao")>-1)
-      setAddress(arr);
+      // const arr = (result as any).filter((item:any)=>item.indexOf("seedao")>-1)
+      // console.log(result)
+      setAddress(result);
     }catch(error){
       console.error(error);
     }finally {
@@ -102,7 +108,15 @@ export default function SbtModal({handleClose,detail}:Iprops){
         </Box>
       }
       {
-        address.map((item,index)=> (<li key={index}>{item}</li>))
+        address.map((item,index)=> (<li key={index}>
+          {
+            !!item && <span>{item}</span>
+          }
+          {
+            !item && <span className="error" >{t('SNS.notSNS')}</span>
+          }
+
+        </li>))
       }
 
 
