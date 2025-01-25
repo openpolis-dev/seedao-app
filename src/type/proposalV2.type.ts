@@ -41,6 +41,7 @@ export interface ISimpleProposal {
   create_ts: number;
   sip?: number;
   is_voted?:boolean;
+  can_vote?:boolean;
 }
 
 export interface IContentBlock {

@@ -175,12 +175,17 @@ export default function SbtCreate() {
   }, []);
 
   const getList = async() =>{
-    let rt = await getContracts(sbtToken);
-    rt.data.map((item:any)=>{
-      item.label =`${item.name}(${item.contract_address})`;
-      item.value = item.contract_address;
-    })
-    setList(rt.data)
+   try{
+     let rt = await getContracts(sbtToken);
+     rt.data.map((item:any)=>{
+       item.label =`${item.name}(${item.contract_address})`;
+       item.value = item.contract_address;
+     })
+     setList(rt.data)
+   }catch(error:any){
+     showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
+   }
+
   }
 
 
@@ -224,8 +229,9 @@ export default function SbtCreate() {
       setResult(result)
       setCurrent(1)
 
-    }catch(e){
-      showToast(t('Msg.ApproveFailed'), ToastType.Danger);
+    }catch(error:any){
+      // showToast(t('Msg.ApproveFailed'), ToastType.Danger);
+      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
     }finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }
@@ -255,8 +261,9 @@ export default function SbtCreate() {
         window.location.reload();
       },1500)
 
-    }catch(e){
-      showToast(t('Msg.ApproveFailed'), ToastType.Danger);
+    }catch(error:any){
+      // showToast(t('Msg.ApproveFailed'), ToastType.Danger);
+      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
     }finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }
@@ -277,11 +284,12 @@ export default function SbtCreate() {
       let rt = await publicJs.getImage(result.data.ipfs_hash);
       setAvatar(rt as string);
       showToast(t('sbt.uploadSuccess'), ToastType.Success);
-    }catch(e){
-      console.log(e);
+    }catch(error:any){
+      console.log(error);
       setAvatar("")
       setIpfsHash("")
-      showToast(t('sbt.uploadFailed'), ToastType.Danger);
+      // showToast(t('sbt.uploadFailed'), ToastType.Danger);
+      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
     }finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }

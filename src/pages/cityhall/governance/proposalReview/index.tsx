@@ -13,6 +13,7 @@ import NoItem from 'components/noItem';
 import useQuerySNS from 'hooks/useQuerySNS';
 import publicJs from 'utils/publicJs';
 import Pagination from 'components/pagination';
+import useToast, { ToastType } from "../../../../hooks/useToast";
 
 const STATUS = [
   { name: 'Proposal.Draft', value: ProposalState.Draft },
@@ -39,7 +40,7 @@ export default function ProposalReview() {
   const [initPage, setInitPage] = useState(true);
 
   const { getMultiSNS } = useQuerySNS();
-
+  const { showToast } = useToast();
   const [snsMap, setSnsMap] = useState<Map<string, string>>(new Map());
 
   const handleSNS = async (wallets: string[]) => {
@@ -66,8 +67,9 @@ export default function ProposalReview() {
       setTotalCount(resp.data.total);
       setProposalList(resp.data.rows);
       handleSNS(resp.data.rows.filter((d) => !!d.applicant).map((d) => d.applicant));
-    } catch (error) {
+    } catch (error:any) {
       logError('getAllProposals failed', error);
+      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }

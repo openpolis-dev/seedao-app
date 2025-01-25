@@ -196,8 +196,9 @@ export default function Index() {
         credit_used_amount: Number(res.data.credit_used_amount),
         credit_total_amount: Number(res.data.credit_total_amount),
       });
-    } catch (error) {
+    } catch (error:any) {
       logError('getTreasury error', error);
+      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
     }
   };
   useEffect(() => {
@@ -220,7 +221,7 @@ export default function Index() {
       setshowModifyModal(undefined);
     } catch (error: any) {
       logError('updateBudget error', error);
-      showToast(error?.data?.msg || 'failed', ToastType.Danger);
+      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }
@@ -235,7 +236,8 @@ export default function Index() {
           totalSupply: r.totalSupply,
         });
       })
-      .catch((error) => {
+      .catch((error:any) => {
+        showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
         logError('getFloorPrice error', error);
       });
   };
@@ -264,8 +266,9 @@ export default function Index() {
       );
       const supply = await contract.totalSupply();
       setTotalSCR(Number(ethers.utils.formatEther(supply)).format());
-    } catch (error) {
+    } catch (error:any) {
       logError('getSCR error', error);
+      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
     }
   };
 
@@ -280,8 +283,9 @@ export default function Index() {
       let v: number = 0;
       res.data.wallets.forEach((w) => (v += Number(w.fiatTotal)));
       setTotalBalance(v.format());
-    } catch (error) {
+    } catch (error:any) {
       logError(error);
+      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
     }
   };
 

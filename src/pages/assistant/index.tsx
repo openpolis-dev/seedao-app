@@ -8,6 +8,7 @@ import BackerNav from '../../components/common/backNav';
 import { useTranslation } from 'react-i18next';
 import requests from "../../requests";
 import { getUserLevel } from "../../requests/user";
+import useToast, { ToastType } from "../../hooks/useToast";
 
 const OuterBox = styled.div`
   min-height: 100%;
@@ -26,7 +27,7 @@ export default function Assistant() {
 
   const { dispatch } = useAuthContext();
   const navigate = useNavigate();
-
+  const { showToast } = useToast();
 
 
   useEffect(() => {
@@ -34,9 +35,14 @@ export default function Assistant() {
   }, []);
 
   const getLevel = async() =>{
-    const res = await requests.user.getUserLevel();
-    const current_lv = res.data?.current_lv;
-    setLevel(current_lv);
+    try{
+      const res = await requests.user.getUserLevel();
+      const current_lv = res.data?.current_lv;
+      setLevel(current_lv);
+    }catch(error:any){
+      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
+    }
+
   }
 
   useEffect(() => {
@@ -76,8 +82,9 @@ export default function Assistant() {
     try {
       let result = await axios.get(`https://kind-emu-97.deno.dev/page/${articleId}`);
       setList(result.data);
-    } catch (e: any) {
-      console.log(e);
+    } catch (error: any) {
+      console.log(error);
+      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }

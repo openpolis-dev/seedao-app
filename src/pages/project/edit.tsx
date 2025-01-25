@@ -9,12 +9,14 @@ import { ContainerPadding } from 'assets/styles/global';
 import BackerNav from 'components/common/backNav';
 import { useLocation, useParams } from 'react-router-dom';
 import EditProject from 'components/projectInfoCom/edit';
+import useToast, { ToastType } from "../../hooks/useToast";
 
 export default function EditPage() {
   const { id } = useParams();
   const { state } = useLocation();
   const { dispatch } = useAuthContext();
   const [detail, setDetail] = useState<IProjectDisplay>();
+  const { showToast } = useToast();
 
   useEffect(() => {
     const getDetail = async () => {
@@ -22,8 +24,9 @@ export default function EditPage() {
       try {
         const dt = await getProjectById(id as string);
         setDetail(dt.data);
-      } catch (error) {
+      } catch (error:any) {
         logError(error);
+        showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
       } finally {
         dispatch({ type: AppActionType.SET_LOADING, payload: null });
       }

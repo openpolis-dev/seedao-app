@@ -7,13 +7,14 @@ export default function useSeasons() {
     const getSeasonList = async () => {
       try {
         const resp = await getSeasons();
+        let seasons:any[] =  resp.data?.map((item) => ({
+          label: item.name,
+          value: item.id,
+          start: parseInt(item.start_at),
+          end: parseInt(item.end_at),
+        }))
         setSeasons(
-          resp.data?.map((item) => ({
-            label: item.name,
-            value: item.id,
-            start: parseInt(item.start_at),
-            end: parseInt(item.end_at),
-          })),
+          seasons?.reverse()
         );
       } catch (error) {
         logError('getSeasons failed', error);

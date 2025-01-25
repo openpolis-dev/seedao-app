@@ -91,13 +91,18 @@ export default function Profile() {
     getSeed();
 
     const getSbt = async () => {
-      let arr = [];
-      for (let i = 0; i < sbt.length; i++) {
-        let item = sbt[i];
-        let url = await PublicJs.getImage(item.image_uri);
-        arr.push({ ...item, url });
-      }
-      setSbtList([...arr]);
+     try{
+       let arr = [];
+       for (let i = 0; i < sbt.length; i++) {
+         let item = sbt[i];
+         let url = await PublicJs.getImage(item.image_uri);
+         arr.push({ ...item, url });
+       }
+       setSbtList([...arr]);
+     }catch(error:any){
+       showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
+     }
+
     };
     getSbt();
   }, [seed, sbt]);
@@ -143,8 +148,9 @@ export default function Profile() {
       .then((r) => {
         setInviteScr(r.data.total_rewards);
       })
-      .catch((e) => {
-        showToast(`get invite rewards failed: ${e?.data?.msg || e}`, ToastType.Danger);
+      .catch((error:any) => {
+        // showToast(`get invite rewards failed: ${e?.data?.msg || e}`, ToastType.Danger);
+        showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
       });
   };
 

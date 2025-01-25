@@ -50,6 +50,7 @@ import useQueryUser from 'hooks/useQueryUser';
 import defaultImg from '../../assets/Imgs/defaultAvatar.png';
 import getConfig from "../../utils/envCofnig";
 import { useNetwork } from "wagmi";
+import { checkCanVote } from "../../requests/proposalV2";
 
 enum BlockContentType {
   Reply = 1,
@@ -84,6 +85,8 @@ export default function ThreadPage() {
   const [applicantAvatar, setApplicantAvatar] = useState(DefaultAvatarIcon);
   const [showModal, setShowModal] = useState(false);
 
+  const [hasPermission, setHasPermission] = useState(false);
+
   const [showConfirmWithdraw, setShowConfirmWithdraw] = useState(false);
   const [hasMore, setHasMore] = useState(false);
   const [components, setComponents] = useState<any[]>([]);
@@ -99,6 +102,7 @@ export default function ThreadPage() {
   const [dataSource, setDatasource] = useState<any>();
 
   const posts = commentsArray.length ? commentsArray.reduce((a, b) => [...a, ...b], []) : [];
+  const [errorTips,setErrorTips] = useState<string>("");
 
   const { getMultiSNS } = useQuerySNS();
   const { getUsers } = useQueryUser();
@@ -114,6 +118,7 @@ export default function ThreadPage() {
     getMetaforo()
   }, [metaforoToken,account,userData,chain]);
   const getMetaforo = async()=>{
+
     await checkMetaforoLogin();
   }
 
@@ -253,11 +258,22 @@ export default function ThreadPage() {
       }
     } catch (error: any) {
       logError('get proposal detail error:', error);
-      showToast(error?.data?.msg || error?.code || error, ToastType.Danger, { autoClose: false });
+      showToast(error.response?.data?.msg|| error?.data?.msg || error?.code || error, ToastType.Danger);
+      setErrorTips(error.response?.data?.msg|| error?.data?.msg || error?.code || error)
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }
   };
+
+  useEffect(() => {
+    if(!id ||!showVote() )return;
+    const getVotePermission = () => {
+      checkCanVote(Number(id)).then((r) => {
+        setHasPermission(r.data);
+      });
+    };
+    getVotePermission()
+  }, [id,data]);
 
   useEffect(() => {
     if (state) {
@@ -282,8 +298,9 @@ export default function ThreadPage() {
       });
 
       setComponents(resp.data);
-    } catch (error) {
+    } catch (error:any) {
       logError('getAllProposals failed', error);
+      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
     } finally {
       // dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }
@@ -378,13 +395,14 @@ export default function ThreadPage() {
     return true;
   };
 
+
   const showVotedTag = (currentState:ProposalState | undefined) =>{
     if (!data?.votes?.[0]) {
       return false;
     }
     const votedItem = data?.votes?.[0].options.filter((item)=>item.is_vote);
 
-    return (!!votedItem?.length &&  currentState === "voting" && !!metaforoToken)
+    return (!!votedItem?.length &&  currentState === "voting" && !!metaforoToken) && hasPermission
   }
 
   const showVotedNot = (currentState:ProposalState | undefined) =>{
@@ -393,7 +411,7 @@ export default function ThreadPage() {
     }
     const votedItem = data?.votes?.[0].options.filter((item)=>item.is_vote);
 
-    return (!votedItem?.length &&  currentState === "voting"&& !!metaforoToken)
+    return (!votedItem?.length &&  currentState === "voting"&& !!metaforoToken) && hasPermission
   }
 
   const isCurrentApplicant = data?.applicant?.toLocaleLowerCase() === account?.toLocaleLowerCase();
@@ -608,6 +626,8 @@ export default function ThreadPage() {
       )}
 
       <ContentOuter>
+        {!!errorTips &&<ErrorBox>{errorTips}</ErrorBox>
+        }
         <Preview
           rpc={getConfig().NETWORK.rpcs[0]}
           DataSource={JSON.parse(JSON.stringify(dataSource || []))}
@@ -734,6 +754,7 @@ export default function ThreadPage() {
                 voteGate={data?.vote_gate}
                 poll={data!.votes[0]}
                 id={Number(id)}
+                hasPermission={hasPermission}
                 currentState={currentState}
                 showMultiple={data!.is_multiple_vote}
                 updateStatus={getProposalDetail}
@@ -1138,4 +1159,11 @@ const VotedBox2 = styled(VotedBox)`
 
     background: rgba(255, 81, 209,0.2);
 
+`
+const ErrorBox = styled.div`
+  padding: 30px;
+    color: var(--bs-danger);
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
 `

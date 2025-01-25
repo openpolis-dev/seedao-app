@@ -171,7 +171,7 @@ export default function Profile() {
       showToast(t('My.IncorrectMirror'), ToastType.Danger);
       return;
     }
-    if (twitter && !twitter.startsWith('https://twitter.com/')) {
+    if (twitter && !twitter.startsWith('https://x.com/')) {
       showToast(t('My.IncorrectLink', { media: 'Twitter' }), ToastType.Danger);
       return;
     }
@@ -205,8 +205,9 @@ export default function Profile() {
       }, 1000);
     } catch (error: any) {
       logError('updateUser failed', error);
-      const msg = error?.data?.msg || error;
-      showToast(msg, ToastType.Danger);
+      // const msg = error?.data?.msg || error;
+      // showToast(msg, ToastType.Danger);
+      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }
   };
@@ -235,11 +236,16 @@ export default function Profile() {
   }, [userData]);
 
   const updateLogo = async (e: FormEvent) => {
-    const { files } = e.target as any;
-    const file = files[0];
-    const new_file = await compressionFile(file, file.type);
-    const base64 = await fileToDataURL(new_file);
-    setAvatar(base64);
+    try{
+      const { files } = e.target as any;
+      const file = files[0];
+      const new_file = await compressionFile(file, file.type);
+      const base64 = await fileToDataURL(new_file);
+      setAvatar(base64);
+    }catch(error:any){
+      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
+    }
+
   };
 
   const removeUrl = () => {

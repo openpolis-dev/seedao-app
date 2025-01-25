@@ -48,8 +48,9 @@ const RegisterSNSWrapper = () => {
     try {
       const hasReached = await controllerContract.maxOwnedNumberReached(account);
       dispatchSNS({ type: ACTIONS.SET_HAS_REACHED, payload: hasReached });
-    } catch (error) {
+    } catch (error:any) {
       logError('query maxOwnedNumberReached failed', error);
+      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
     }
   };
 
@@ -62,8 +63,9 @@ const RegisterSNSWrapper = () => {
         if (isInWhitelist) {
           dispatchSNS({ type: ACTIONS.SET_USER_PROOF, payload: isInWhitelist.proof });
         }
-      } catch (error) {
+      } catch (error:any) {
         logError('checkUserInwhitelist failed', error);
+        showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
       }
     };
     const checkMaxOwnedNumber = () => {
@@ -74,6 +76,7 @@ const RegisterSNSWrapper = () => {
         })
         .catch((error: any) => {
           logError('checkMaxOwnedNumber failed', error);
+          showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
         });
     };
     if (account && controllerContract) {
@@ -93,6 +96,7 @@ const RegisterSNSWrapper = () => {
         .catch((error: any) => {
           dispatchSNS({ type: ACTIONS.SET_WHITELIST_IS_OPEN, payload: true });
           logError('checkWhitelistOpen failed', error);
+          showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
         });
     };
     const checkHadMintByWhitelist = async () => {
@@ -103,6 +107,7 @@ const RegisterSNSWrapper = () => {
         })
         .catch((error: any) => {
           logError('checkWhitelistOpen failed', error);
+          showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
         });
     };
     if (account && minterContract) {
@@ -143,6 +148,7 @@ const RegisterSNSWrapper = () => {
         data = JSON.parse(localsns);
       } catch (error) {
         dispatchSNS({ type: ACTIONS.SET_STEP, payload: 1 });
+
         return;
       }
       dispatchSNS({ type: ACTIONS.SET_LOCAL_DATA, payload: data });

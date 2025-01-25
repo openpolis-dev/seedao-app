@@ -9,11 +9,13 @@ import requests from '../../../requests';
 import { getTemplate } from '../../../requests/proposalV2';
 import usePermission from 'hooks/usePermission';
 import { PermissionAction, PermissionObject } from 'utils/constant';
+import useToast, { ToastType } from "../../../hooks/useToast";
 
 export default function ChooseTemplateStep() {
   const { t } = useTranslation();
   const { proposalType, chooseTemplate, changeStep } = useCreateProposalContext();
   const [templates, setTemplates] = useState<ITemplate[]>([]);
+  const { showToast } = useToast();
 
   const {
     state: { loading },
@@ -32,8 +34,9 @@ export default function ChooseTemplateStep() {
       const resp = await requests.proposalV2.getTemplate();
       console.log(resp.data);
       setTemplates(resp.data);
-    } catch (error) {
+    } catch (error:any) {
       logError('getAllProposals failed', error);
+      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }

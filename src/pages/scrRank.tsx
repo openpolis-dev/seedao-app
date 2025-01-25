@@ -19,6 +19,7 @@ import { PermissionObject, PermissionAction } from 'utils/constant';
 import usePermission from 'hooks/usePermission';
 import { PlainButton } from 'components/common/button';
 import publicJs from 'utils/publicJs';
+import useToast, { ToastType } from "../hooks/useToast";
 
 const ColGroup = ({ seasons }: { seasons: number[] }) => {
   return (
@@ -65,7 +66,7 @@ const getRankIcon = (direction: RankDirection) => {
 export default function SCRRank() {
   const { t } = useTranslation();
   const { state } = useLocation();
-
+  const { showToast } = useToast();
   const { dispatch } = useAuthContext();
 
   const [allList, setAllList] = useState<IRowData[]>([]);
@@ -175,8 +176,9 @@ export default function SCRRank() {
             setDataMap(_dataMap);
           });
         })
-        .catch((err) => {
-          logError(err);
+        .catch((error:any) => {
+          logError(error);
+          showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
         })
         .finally(() => {
           dispatch({ type: AppActionType.SET_LOADING, payload: false });

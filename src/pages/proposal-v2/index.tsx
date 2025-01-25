@@ -21,6 +21,8 @@ import AddImg from '../../assets/Imgs/proposal/add-square.svg';
 import useCheckMetaforoLogin from 'hooks/useMetaforoLogin';
 import MyProposalsTab from 'components/proposalCom/myProposalsTab';
 import { useNetwork } from "wagmi";
+import useToast, { ToastType } from "../../hooks/useToast";
+import { SEEDAO_USER } from "../../utils/constant";
 
 const PAGE_SIZE = 10;
 let RESULT_ID = 0;
@@ -28,6 +30,7 @@ let RESULT_ID = 0;
 export default function ProposalIndexPage() {
   const navigate = useNavigate();
   const { state } = useLocation();
+  const { showToast } = useToast();
   const { t } = useTranslation();
   const {
     state: { loading,metaforoToken,account, userData },
@@ -119,8 +122,13 @@ export default function ProposalIndexPage() {
   }, [keyword_addr, sort_field_addr, sip_addr, sort_order_addr, page_addr, category_id]);
 
   const handleSNS = async (wallets: string[]) => {
-    const sns_map = await getMultiSNS(wallets);
-    setSnsMap(sns_map);
+    try{
+      const sns_map = await getMultiSNS(wallets);
+      setSnsMap(sns_map);
+    }catch(error:any){
+      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
+    }
+
   };
 
   const formatSNS = (wallet: string) => {
@@ -147,16 +155,21 @@ export default function ProposalIndexPage() {
       setProposalList(resp.data.rows);
       handleSNS(resp.data.rows.filter((d) => !!d.applicant).map((d) => d.applicant));
       setTotalCount(resp.data.total);
-    } catch (error) {
+    } catch (error:any) {
       logError('getAllProposals failed', error);
+      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }
   };
 
+  const tokenstr = localStorage.getItem(SEEDAO_USER);
+
   useEffect(() => {
+    // if(metaforoToken === undefined) return;
+
     getProposalList(page);
-  }, [selectCategory, selectTime, selectStatus, searchKeyword, isFilterSIP, page,metaforoToken]);
+  }, [selectCategory, selectTime, selectStatus, searchKeyword, isFilterSIP, page,metaforoToken,tokenstr]);
 
   const onKeyUp = (e: any) => {
     if (e.keyCode === 13) {

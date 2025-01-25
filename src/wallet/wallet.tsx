@@ -4,6 +4,7 @@ export enum Wallet {
   UNIPASS = 'UNIPASS',
   JOYID = 'JOYID',
   JOYID_WEB = 'JOYID_WEB',
+  WALLETCONNECT = 'WALLETCONNECT',
 }
 
 export enum WalletType {

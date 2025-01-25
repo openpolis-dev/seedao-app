@@ -15,6 +15,7 @@ import {
 import { Connector } from 'wagmi/connectors';
 
 import MetamaskIcon from 'assets/Imgs/home/METAmask.svg';
+import WalletIcon from 'assets/Imgs/home/walletconnect.png';
 import JoyIdImg from 'assets/Imgs/home/JOYID.png';
 import UnipassIcon from 'assets/Imgs/home/UniPass.svg';
 import { useEffect, useState } from 'react';
@@ -44,6 +45,7 @@ enum CONNECTOR_ID {
   METAMASK = 'injected',
   JOYID = 'joyid',
   UNIPASS = 'unipass',
+  WALLETCONNECT = 'walletConnect',
 }
 
 type ConnectorStatic = {
@@ -58,6 +60,8 @@ export const getSeeAuthWalletName = (connector_id: CONNECTOR_ID) => {
       return WalletName.Metamask;
     case CONNECTOR_ID.JOYID:
       return WalletName.Joyid;
+    case CONNECTOR_ID.WALLETCONNECT:
+      return "walletconnect";
     default:
       return '';
   }
@@ -82,6 +86,12 @@ const getConnectorStatic = (id: CONNECTOR_ID): ConnectorStatic => {
         icon: UnipassIcon,
         walletType: WalletType.AA,
         wallet: Wallet.UNIPASS,
+      };
+      case CONNECTOR_ID.WALLETCONNECT:
+      return {
+        icon: WalletIcon,
+        walletType: WalletType.EOA,
+        wallet: Wallet.WALLETCONNECT,
       };
   }
 };

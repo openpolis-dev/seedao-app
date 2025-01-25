@@ -25,7 +25,8 @@ export default function EventDetailPage() {
         setData(resp.data);
       } catch (error: any) {
         logError(error);
-        showToast(error, ToastType.Danger);
+        showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
+        // showToast(error, ToastType.Danger);
       } finally {
         dispatch({ type: AppActionType.SET_LOADING, payload: false });
       }

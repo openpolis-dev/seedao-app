@@ -111,10 +111,13 @@ export default function Register() {
 
 
       setDetail(data);
-    } catch (error) {
+    } catch (error:any) {
       logError(error);
+      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
+
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: null });
+
     }
   };
 
@@ -165,8 +168,9 @@ export default function Register() {
               })),
             ),
         );
-      } catch (error) {
+      } catch (error:any) {
         logError('getAvailiableProjectsAndGuilds failed:', error);
+        showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
       }
     };
     getAllSources();
@@ -251,8 +255,9 @@ export default function Register() {
           wallet_map.set(sns_list[i], item);
         }
       });
-    } catch (error) {
+    } catch (error:any) {
       logError(error);
+      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
       return 'parse sns error, please try again';
     }
     if (err_sns_list.length) {
