@@ -9,10 +9,12 @@ import { useCreateProposalContext } from './store';
 import { useEffect } from 'react';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import { getTemplates } from 'requests/proposalV2';
+import useToast, { ToastType } from "../../../hooks/useToast";
 
 const CreateProposalSteps = () => {
   const { t } = useTranslation();
   const { currentStep, proposalType, goBackStepOne } = useCreateProposalContext();
+  const { showToast } = useToast();
 
   const {
     dispatch,
@@ -35,8 +37,9 @@ const CreateProposalSteps = () => {
         });
         dispatch({ type: AppActionType.SET_CATEGORIES_TEMPLATES, payload: list });
       })
-      .catch((eror) => {
-        logError('getTemplates failed', eror);
+      .catch((error:any) => {
+        logError('getTemplates failed', error);
+        showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
       })
       .finally(() => {
         dispatch({ type: AppActionType.SET_LOADING, payload: false });

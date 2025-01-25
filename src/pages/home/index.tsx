@@ -19,6 +19,11 @@ import { Link, useNavigate } from 'react-router-dom';
 import getConfig from 'utils/envCofnig';
 import PlayImg from '../../assets/Imgs/podcast.png';
 import { types } from 'sass';
+import {BookMarked} from "lucide-react";
+import { getPublicity } from "../../requests/publicity";
+import { formatTime } from "../../utils/time";
+import useToast, { ToastType } from "../../hooks/useToast";
+import { getNodeSBT } from "../../requests/publicData";
 
 const Box = styled.div`
   background: var(--bs-background);
@@ -123,7 +128,7 @@ const LineBox = styled.div`
 `;
 
 const CityBox = styled.div`
-  margin: 0;
+  margin: 0 0 20px;
 `;
 
 const LinkBox = styled(Row)`
@@ -131,6 +136,7 @@ const LinkBox = styled(Row)`
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
+
   .inn {
     border-radius: 10px;
     overflow: hidden;
@@ -223,13 +229,13 @@ const BtmBox = styled.div`
   background-color: var(--bs-box--background);
   border: 1px solid var(--bs-border-color_opacity);
   box-shadow: var(--box-shadow);
-
+    min-height: 55px;
   padding: 14px;
   box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 24px;
+  margin-bottom: 10px;
   .tit {
     font-size: 14px;
     font-family: Poppins-SemiBold;
@@ -270,7 +276,9 @@ export default function Home() {
   const [governNodes, setGovernNodes] = useState(0);
   const [onboardingHolders, setOnboardingHolders] = useState(0);
   const [onNewHolders, setNewHolders] = useState(0);
-
+  const [list,setList] = useState([]);
+  const [sbtHolders,setSbtHolders] = useState(0);
+  const { showToast } = useToast();
   const navigate = useNavigate();
 
   const {
@@ -288,6 +296,25 @@ export default function Home() {
   }, [t]);
 
   useEffect(() => {
+    getStatics()
+  }, []);
+
+  const getStatics = async() =>{
+   let rt = await getNodeSBT()
+    console.log(rt.data)
+
+    let obj:any={}
+    for (let i = 0; i < rt.data.length; i++) {
+      let item= rt.data[i];
+      console.log(item.Name,item.NumValue)
+      obj[item.Name]=item.NumValue
+    }
+    console.log("obj",obj)
+    setSbtHolders(obj.compute_sbt_num)
+    setGovernNodes(obj.compute_node_num)
+  }
+
+  useEffect(() => {
     const handleSEEDHolders = async () => {
       fetch(`${getConfig().INDEXER_ENDPOINT}/insight/erc721/total_supply/0x30093266E34a816a53e302bE3e59a93B52792FD4
 `)
@@ -297,66 +324,83 @@ export default function Home() {
         })
         .catch((error: any) => {
           logError('[SBT] get sgn owners failed', error);
+          showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
         });
     };
     handleSEEDHolders();
   }, []);
 
   useEffect(() => {
-    const handleGovNodes = async () => {
-      fetch(
-        `${
-          getConfig().INDEXER_ENDPOINT
-        }/insight/erc1155/total_supply_of_tokenId/0x9d34D407D8586478b3e4c39BE633ED3D7be1c80C/4`,
-      )
-        .then((res: any) => res.json())
-        .then((r) => {
-          setGovernNodes(Number(r.totalSupply));
-        })
-        .catch((error: any) => {
-          logError('[SBT] get gov nodes failed', error);
-        });
-    };
-    handleGovNodes();
+    // const handleGovNodes = async () => {
+    //   fetch(
+    //     `${
+    //       getConfig().INDEXER_ENDPOINT
+    //     }/insight/erc1155/total_supply_of_tokenId/0x9d34D407D8586478b3e4c39BE633ED3D7be1c80C/4`,
+    //   )
+    //     .then((res: any) => res.json())
+    //     .then((r) => {
+    //       setGovernNodes(Number(r.totalSupply));
+    //     })
+    //     .catch((error: any) => {
+    //       showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
+    //       logError('[SBT] get gov nodes failed', error);
+    //     });
+    // };
+    // handleGovNodes();
+    getList()
   }, []);
 
-  const sbtHolders = useMemo(() => {
-    const SBT_155 = 9;
-    return governNodes + onboardingHolders + onNewHolders + SBT_155;
-  }, [governNodes, onboardingHolders, onNewHolders]);
-
-  useEffect(() => {
-    const getOnboardingHolders = async () => {
-      fetch(
-        `${
-          getConfig().INDEXER_ENDPOINT
-        }/insight/erc1155/total_supply_of_tokenId/0x0D9ea891B4C30e17437D00151399990ED7965F00/157`,
-      )
-        .then((res: any) => res.json())
-        .then((r) => {
-          setOnboardingHolders(Number(r.totalSupply));
-        })
-        .catch((error: any) => {
-          logError('[SBT] get onboarding-sbt holders failed', error);
-        });
-    };
-    const getNewHolders = async () => {
-      fetch(`${getConfig().INDEXER_ENDPOINT}/insight/erc1155/total_supply/0x2221F5d189c611B09D7f7382Ce557ec66365C8fc`)
-        .then((res: any) => res.json())
-        .then((r) => {
-          setNewHolders(Number(r.totalSupply));
-        })
-        .catch((error: any) => {
-          logError('[SBT] get new-sbt holders failed', error);
-        });
-    };
-    getOnboardingHolders();
-    getNewHolders();
-  }, []);
+  // const sbtHolders = useMemo(() => {
+  //   const SBT_155 = 9;
+  //   return governNodes + onboardingHolders + onNewHolders + SBT_155;
+  // }, [governNodes, onboardingHolders, onNewHolders]);
+  //
+  // useEffect(() => {
+  //   const getOnboardingHolders = async () => {
+  //     fetch(
+  //       `${
+  //         getConfig().INDEXER_ENDPOINT
+  //       }/insight/erc1155/total_supply_of_tokenId/0x0D9ea891B4C30e17437D00151399990ED7965F00/157`,
+  //     )
+  //       .then((res: any) => res.json())
+  //       .then((r) => {
+  //         setOnboardingHolders(Number(r.totalSupply));
+  //       })
+  //       .catch((error: any) => {
+  //         showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
+  //         logError('[SBT] get onboarding-sbt holders failed', error);
+  //       });
+  //   };
+  //   const getNewHolders = async () => {
+  //     fetch(`${getConfig().INDEXER_ENDPOINT}/insight/erc1155/total_supply/0x2221F5d189c611B09D7f7382Ce557ec66365C8fc`)
+  //       .then((res: any) => res.json())
+  //       .then((r) => {
+  //         setNewHolders(Number(r.totalSupply));
+  //       })
+  //       .catch((error: any) => {
+  //         showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
+  //         logError('[SBT] get new-sbt holders failed', error);
+  //       });
+  //   };
+  //   getOnboardingHolders();
+  //   getNewHolders();
+  // }, []);
 
   const togo = (url: string) => {
     navigate(url);
   };
+
+  const getList = async() =>{
+    try {
+      let rt = await getPublicity(1,3,"list")
+      const {data:{rows}} = rt;
+      setList(rows)
+    }catch(error:any){
+      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
+      console.error(error)
+    }
+  }
+
 
   return (
     <Box>
@@ -428,109 +472,81 @@ export default function Home() {
           </ActiveBox>
         </Col>
         <Col md={4}>
+
           {/*<CityBox>*/}
           {/*  <a href="https://seedao.notion.site/f57031667089473faa7ea3560d05960c" target="_blank" rel="noreferrer">*/}
-          {/*    <TitBox>*/}
-          {/*      <span>{t('Home.podcast')}</span>*/}
-          {/*    </TitBox>*/}
+          {/*    <TitBox2>*/}
+          {/*      <span>{t('Home.Publicity')}</span>*/}
+          {/*      <div className="toGo">*/}
+          {/*        {t('Home.viewAll')}*/}
+          {/*        <img src={ArrowImg} alt="" />*/}
+          {/*      </div>*/}
+          {/*    </TitBox2>*/}
           {/*  </a>*/}
 
           {/*  <LinkBox>*/}
-          {/*    <Col>*/}
-          {/*      <a href={Links.podcast.link} target="_blank" rel="noreferrer">*/}
-          {/*        <BtmBox>*/}
-          {/*          <FlexPod>*/}
-          {/*            <img src={Links.podcast.img} alt="" />*/}
-          {/*            <div>*/}
-          {/*              <div className="tit">{t(Links.podcast.name as any)}</div>*/}
-          {/*              <div className="desc">{t(Links.podcast.desc as any)}</div>*/}
-          {/*            </div>*/}
-          {/*          </FlexPod>*/}
-          {/*          <div className="linkRht">/!*<img src={PlayImg} alt="" />*!/</div>*/}
-          {/*        </BtmBox>*/}
-          {/*      </a>*/}
-          {/*    </Col>*/}
+          {/*    {Publicitys.slice(0, 5).map((item: any, index) => {*/}
+          {/*      return item.id.startsWith('module') ? (*/}
+          {/*        <Col key={index}>*/}
+          {/*          <Link to={item.link}>*/}
+          {/*            <BtmBox>*/}
+          {/*              <div>*/}
+          {/*                <div className="tit">{item.name}</div>*/}
+          {/*                /!*<div className="desc">{item.time}</div>*!/*/}
+          {/*              </div>*/}
+          {/*              <div className="link">*/}
+          {/*                <img src={LinkImg} alt="" />*/}
+          {/*              </div>*/}
+          {/*            </BtmBox>*/}
+          {/*          </Link>*/}
+          {/*        </Col>*/}
+          {/*      ) : (*/}
+          {/*        <Col key={`publicity_${index}`}>*/}
+          {/*          <a href={item.link} target="_blank" rel="noreferrer">*/}
+          {/*            <BtmBox>*/}
+          {/*              <div>*/}
+          {/*                <div className="tit">{item.name}</div>*/}
+          {/*                /!*<div className="desc">{item.time}</div>*!/*/}
+          {/*              </div>*/}
+          {/*              <div className="link">*/}
+          {/*                <img src={LinkImg} alt="" />*/}
+          {/*              </div>*/}
+          {/*            </BtmBox>*/}
+          {/*          </a>*/}
+          {/*        </Col>*/}
+          {/*      );*/}
+          {/*    })}*/}
           {/*  </LinkBox>*/}
           {/*</CityBox>*/}
           <CityBox>
-            <a href="https://seedao.notion.site/f57031667089473faa7ea3560d05960c" target="_blank" rel="noreferrer">
+            <Link to="/publicity">
               <TitBox2>
-                <span>{t('Home.Publicity')}</span>
+                <span>{t('Home.information')}</span>
                 <div className="toGo">
                   {t('Home.viewAll')}
                   <img src={ArrowImg} alt="" />
                 </div>
               </TitBox2>
-            </a>
+            </Link>
 
             <LinkBox>
-              {/*<Col onClick={() => window.open(CITY_HALL, '_blank')}>*/}
-              {/*  <div className="inn fst">*/}
-              {/*     <div className="lft">*/}
-              {/*       <img src={CityHallImg} alt="" />*/}
-              {/*       <div className="tit">{t('Home.CityHall')}</div>*/}
-              {/*     </div>*/}
+              {list.map((item: any, index) => (<Col key={index}>
+                  <Link to={`/publicity/detail/${item?.id}`}>
+                    <BtmBox>
+                      <div>
+                        <div className="tit">{item?.title}</div>
+                        <div className="desc">{formatTime(item?.updateAt * 1000)}</div>
+                      </div>
+                      <div className="link">
+                        <img src={LinkImg} alt="" />
+                      </div>
+                    </BtmBox>
+                  </Link>
+                </Col>)
 
-              {/*    <div className="link">*/}
-              {/*      <img src={LinkImg} alt="" />*/}
-              {/*    </div>*/}
-              {/*  </div>*/}
 
-              {/*</Col>*/}
-              {/*<Col onClick={() => window.open(CITY_HALL_MEMBERS, '_blank')}>*/}
-              {/*  <div className="inn snd">*/}
-              {/*    <div className="lft">*/}
-              {/*      <img src={MembersImg} alt="" />*/}
-              {/*      <div className="tit">{t('Home.CityHallMembers')}</div>*/}
-              {/*    </div>*/}
-              {/*    <div className="link">*/}
-              {/*      <img src={LinkImg} alt="" />*/}
-              {/*    </div>*/}
-              {/*  </div>*/}
-              {/*</Col>*/}
-              {/*<Col onClick={() => window.open(CITY_HALL_MEMBERS, '_blank')}>*/}
-              {/*  <div className="inn snd">*/}
-              {/*    <div className="lft">*/}
-              {/*      <img src={ProposalImg} alt="" />*/}
-              {/*      <div className="tit">{t('Home.proposal')}</div>*/}
-              {/*    </div>*/}
-              {/*    <div className="link">*/}
-              {/*      <img src={LinkImg} alt="" />*/}
-              {/*    </div>*/}
-              {/*  </div>*/}
-              {/*</Col>*/}
 
-              {Publicitys.slice(0, 5).map((item: any, index) => {
-                return item.id.startsWith('module') ? (
-                  <Col key={index}>
-                    <Link to={item.link}>
-                      <BtmBox>
-                        <div>
-                          <div className="tit">{item.name}</div>
-                          {/*<div className="desc">{item.time}</div>*/}
-                        </div>
-                        <div className="link">
-                          <img src={LinkImg} alt="" />
-                        </div>
-                      </BtmBox>
-                    </Link>
-                  </Col>
-                ) : (
-                  <Col key={`publicity_${index}`}>
-                    <a href={item.link} target="_blank" rel="noreferrer">
-                      <BtmBox>
-                        <div>
-                          <div className="tit">{item.name}</div>
-                          {/*<div className="desc">{item.time}</div>*/}
-                        </div>
-                        <div className="link">
-                          <img src={LinkImg} alt="" />
-                        </div>
-                      </BtmBox>
-                    </a>
-                  </Col>
-                );
-              })}
+              )}
             </LinkBox>
           </CityBox>
         </Col>

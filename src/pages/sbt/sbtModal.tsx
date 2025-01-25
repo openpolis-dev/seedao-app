@@ -11,6 +11,9 @@ import { AppActionType, useAuthContext } from "../../providers/authProvider";
 import LoadingImg from "../../assets/Imgs/loading.png";
 import getConfig from "../../utils/envCofnig";
 import PublicJs from "../../utils/publicJs";
+import publicJs from "../../utils/publicJs";
+import CopyBox from "../../components/copy";
+import CopyIconSVG from "../../assets/Imgs/copy.svg";
 
 
 const ContentBox = styled.ul`
@@ -26,6 +29,20 @@ const ContentBox = styled.ul`
         border-bottom: 1px solid var(--bs-border-color);
         padding-bottom: 10px;
         color: var( --menu-color);
+        display: flex;
+        align-items: center;
+    }
+    .error{
+        color: var(--bs-danger);
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        span{
+            display: flex;
+            gap: 3px;
+            align-items: center;
+        }
     }
 `
 
@@ -52,6 +69,7 @@ const Box = styled.div`
       transform: rotate(360deg);
     }
   }
+ 
 `;
 
 interface Iprops {
@@ -83,9 +101,21 @@ export default function SbtModal({handleClose,detail}:Iprops){
     try{
       const unique_list = Array.from(new Set(to_be_address));
 
+      let arr:any[] = [];
+
       // let result = await sns.names(unique_list,getConfig().NETWORK.rpcs[0])
       const result = await PublicJs.splitWallets(unique_list);
-      const arr = (result as any).filter((item:any)=>item.indexOf("seedao")>-1)
+
+      // const arr = (result as any).filter((item:any)=>item.indexOf("seedao")>-1)
+      result.forEach((item,index) => {
+        if(item){
+          arr.push(item)
+        }else{
+          arr.push(unique_list[index])
+        }
+      })
+
+
       setAddress(arr);
     }catch(error){
       console.error(error);
@@ -102,7 +132,17 @@ export default function SbtModal({handleClose,detail}:Iprops){
         </Box>
       }
       {
-        address.map((item,index)=> (<li key={index}>{item}</li>))
+        address.map((item,index)=> (<li key={index}>
+          {
+            item.endsWith(".seedao") && <span>{item}</span>
+          }
+          {
+            !item.endsWith(".seedao") && <div className="error" ><span>{publicJs.AddressToShow(item)}   <CopyBox text={item!} dir="right">
+                    <img src={CopyIconSVG} alt="" />
+                  </CopyBox></span>({t('SNS.notSNS')})</div>
+          }
+
+        </li>))
       }
 
 

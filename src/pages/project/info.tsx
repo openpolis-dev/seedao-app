@@ -25,6 +25,7 @@ import DefaultAvatar from 'assets/Imgs/defaultAvatar.png';
 import dayjs from 'dayjs';
 import ReactQuill from 'react-quill';
 import ProfileComponent from 'profile-components/profile';
+import useToast, { ToastType } from "../../hooks/useToast";
 
 const formatLink = (link: string) => {
   console.log('link', link, link.length);
@@ -51,7 +52,7 @@ export default function InfoPage() {
   const [sponserList, setSponserList] = useState<any[]>([]);
   const [show, setShow] = useState(false);
   const [profileVisible, setProfileVisible] = useState(false);
-
+  const { showToast } = useToast();
   const canCreateProject = usePermission(PermissionAction.CreateApplication, PermissionObject.Project);
 
   useEffect(() => {
@@ -107,8 +108,9 @@ export default function InfoPage() {
       });
 
       setSponserList([...arr]);
-    } catch (error) {
+    } catch (error:any) {
       logError('getUsersInfo error:', error);
+      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: null });
     }
@@ -147,8 +149,9 @@ export default function InfoPage() {
 
       console.error(budgets);
       setDetail(data);
-    } catch (error) {
+    } catch (error:any) {
       logError(error);
+      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: null });
     }

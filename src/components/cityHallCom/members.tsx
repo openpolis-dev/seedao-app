@@ -17,6 +17,7 @@ import publicJs from 'utils/publicJs';
 import BookImg from 'assets/Imgs/handbook.svg';
 import LinkImg from '../../assets/Imgs/link.svg';
 import ProfileComponent from '../../profile-components/profile';
+import useToast, { ToastType } from "../../hooks/useToast";
 
 type UserMap = { [w: string]: IUser };
 
@@ -26,6 +27,7 @@ export default function Members() {
     dispatch,
     state: { snsMap, theme },
   } = useAuthContext();
+  const { showToast } = useToast();
 
   const [id, setId] = useState<number>();
   const [membersGroupMap, setMembersGroupMap] = useState<{ [w: string]: string[] }>({});
@@ -61,6 +63,11 @@ export default function Members() {
         name: t('city-hall.nodeMembers'),
         type:"inner",
         link: '/node',
+      },
+      {
+        name: t('city-hall.whitePaper'),
+        // type:"inner",
+        link: 'https://seedao.xyz/SeeDAO-WhitePaper.pdf'
       },
     ];
   }, [t]);
@@ -116,8 +123,9 @@ export default function Members() {
       const wallets = Array.from(new Set(_wallets));
       getUsersInfo(wallets);
       getMultiSNS(wallets);
-    } catch (error) {
+    } catch (error:any) {
       logError(error);
+      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: null });
     }
@@ -136,8 +144,9 @@ export default function Members() {
         userData[(r.wallet || '').toLowerCase()] = r;
       });
       setUserMap(userData);
-    } catch (error) {
+    } catch (error:any) {
       logError('getUsersInfo error:', error);
+      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: null });
     }
@@ -330,6 +339,9 @@ const TopList = styled.div`
 `;
 
 const UlBox = styled(Row)`
+    .col-xl-3{
+        margin-bottom: 20px;
+    }
   .boxAll {
     background: var(--bs-box--background);
     border: ${(props) => props.border};
@@ -341,6 +353,7 @@ const UlBox = styled(Row)`
     display: flex;
     align-items: center;
     justify-content: space-between;
+
     .link {
       display: none;
     }

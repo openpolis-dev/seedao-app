@@ -59,6 +59,8 @@ export default function EditProposal() {
   const [voteList, setVoteList] = useState<any[]>([]);
   const [detail, setDetail] = useState<any>(null);
 
+  const [initList, setInitList] = useState<any[]>([]);
+
   useEffect(() => {
     if (state) {
       setData(state);
@@ -138,14 +140,40 @@ export default function EditProposal() {
           setVoteType(res.data?.vote_type);
           setDataSource(res.data?.components ?? []);
           setShowRht(!res.data?.is_based_on_custom_template);
-        } catch (error) {
+        } catch (error:any) {
           logError('get proposal detail error:', error);
+          showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
         } finally {
           dispatch({ type: AppActionType.SET_LOADING, payload: false });
         }
       };
     }
   }, [id, state]);
+
+  useEffect(() => {
+
+    if(holder.length){
+      let arr = JSON.parse((holder[0] as any)?.name)
+      if(typeof arr == "string"){
+        arr = JSON.parse(arr);
+      }
+      if(!arr.length){
+        setInitList([])
+        return;
+      }
+      let newArr: any[] = []
+      arr?.map((com:string)=>{
+        const hasArr = components.filter((item)=> item.schema.type === com || item.name == com )
+        newArr = [...newArr,...hasArr]
+      })
+      setInitList([...newArr])
+
+    }else{
+      setInitList([])
+    }
+
+
+  }, [holder,components]);
 
   useEffect(() => {
     if (data) {
@@ -157,14 +185,17 @@ export default function EditProposal() {
       const beforeComponents = arr.filter(
         (item: any) => item.type !== 'components' && item.type !== 'preview' && arr.indexOf(item) < componentsIndex,
       );
+
       let componentsList = arr.filter((item: any) => item.type === 'components') || [];
       const afterComponents = arr.filter(
         (item: any) => item.type !== 'components' && item.type !== 'preview' && arr.indexOf(item) > componentsIndex,
       );
 
+
       const preview = arr.filter((i: any) => i.type === 'preview');
       setPreviewOrg(preview);
       const preArr = JSON.parse(preview[0].content);
+
 
       setPreview(preArr);
       setPreviewTitle(preview[0].title);
@@ -212,9 +243,11 @@ export default function EditProposal() {
         }
         return item;
       });
+
       setComponents(components);
-    } catch (error) {
+    } catch (error:any) {
       logError('getAllProposals failed', error);
+      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }
@@ -243,7 +276,6 @@ export default function EditProposal() {
     if (!data || !success) {
       return;
     }
-    console.log(success,data);
     const newTime = new Date().valueOf();
     const publicity_ts = (data?.publicity_ts ?? 0) * 1000
 
@@ -271,7 +303,7 @@ export default function EditProposal() {
 
       const budgetData = submitData.filter((item: any) => item.name === 'budget') || [];
       if (budgetData.length) {
-        budgetData[0].data.budgetList.map((item: any) => {
+        budgetData[0].data.budgetList?.map((item: any) => {
           if (item.typeTest.name === 'USDC') {
             if (Number(item.amount) > 1000) {
               err = true;
@@ -300,14 +332,15 @@ export default function EditProposal() {
 
     let holderNew = [...holder];
 
-    if (holder?.length) {
+
+    if (holder?.length && typeof holder[0]?.name !== 'string') {
       holderNew[0].name = JSON.stringify(holder[0]?.name);
     }
 
     let arr = [...previewOrg, ...beforeList, ...holderNew, ...contentBlocks];
     let newVoteList: string[] = [];
     if (voteType === 99 || voteType === 98) {
-      voteList.map((item) => {
+      voteList?.map((item) => {
         newVoteList.push(item.label);
       });
     }
@@ -329,7 +362,7 @@ export default function EditProposal() {
           submitType === 'submit' ? t('Msg.SubmitProposalSuccess') : t('Msg.SaveProposalSuccess'),
           ToastType.Success,
         );
-        navigate(`/proposal/thread/${r.data.id}`);
+        // navigate(`/proposal/thread/${r.data.id}`);
       })
       .catch((error: any) => {
         logError('saveOrSubmitProposal failed', error);
@@ -383,8 +416,9 @@ export default function EditProposal() {
     try {
       const urlObjArr = await UploadPictures(files[0]);
       callback([urlObjArr]);
-    } catch (e) {
-      console.error('uploadPic', e);
+    } catch (error:any) {
+      console.error('uploadPic', error);
+      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: null });
     }
@@ -432,7 +466,7 @@ export default function EditProposal() {
           <Template
             DataSource={dataSource}
             operate="edit"
-            initialItems={components}
+            initialItems={initList}
             language={i18n.language}
             showRight={showRht}
             theme={theme}
@@ -549,7 +583,7 @@ export default function EditProposal() {
                   <ItemBox>
                     <TitleBox>投票选项</TitleBox>
                     <VoteBox>
-                      {voteList.map((item, index) => (
+                      {voteList?.map((item, index) => (
                         <li key={`vote_${index}`}>
                           <input type="text" value={item.label} onChange={(e) => handleVoteInput(e, index)} />
                           {voteList.length - 1 === index && (

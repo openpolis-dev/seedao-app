@@ -11,6 +11,7 @@ import { ChevronLeft } from 'react-bootstrap-icons';
 import { publicList } from '../../requests/publicData';
 import Page from '../../components/pagination';
 import BackerNav from '../../components/common/backNav';
+import useToast, { ToastType } from "../../hooks/useToast";
 
 const PageStyle = styled.div`
   ${ContainerPadding};
@@ -178,6 +179,7 @@ export default function Pub() {
   const [pageCur, setPageCur] = useState(1);
   const [pageSize, setPageSize] = useState(30);
   const [total, setTotal] = useState(1);
+  const { showToast } = useToast();
 
   useEffect(() => {
     getList();
@@ -207,8 +209,9 @@ export default function Pub() {
       setPageSize(size);
       setTotal(total);
       setPageCur(page);
-    } catch (e: any) {
-      logError(e);
+    } catch (error: any) {
+      logError(error);
+      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }

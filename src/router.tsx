@@ -60,6 +60,11 @@ import SearchProfile from "./components/profile/search";
 import SbtCreate from "./pages/sbt/sbtCreate";
 import SbtList from "./pages/sbt/sbtList";
 import SbtApply from "./pages/sbt/sbtApply";
+import DetailPublicity from "./pages/publicity/detail";
+import PublicityList from "./pages/publicity/list";
+import Archive from "./pages/archive";
+
+
 
 const isOnlyDev = !process.env.REACT_APP_ENV_VERSION || process.env.REACT_APP_ENV_VERSION === 'dev';
 
@@ -110,6 +115,10 @@ export default function RouterLink() {
           <Route path="/city-hall/governance/issue" element={<Issue />} />
           <Route path="/city-hall/governance/review-proposal" element={<ProposalReview />} />
           <Route path="/city-hall/governance/review-proposal/:id" element={<ProposalThreadV2 />} />
+          <Route path="publicity/detail/:id" element={<DetailPublicity />} />
+          <Route path="publicity" element={<PublicityList />} />
+
+
           {['dev', undefined].includes(process.env.REACT_APP_ENV_VERSION || '') && (
             <Route path="/chat" element={<Chat />} />
           )}
@@ -127,6 +136,7 @@ export default function RouterLink() {
           <Route path="/sbt/list/:type" element={<SbtList />} />
           <Route path="/sbt/create" element={<SbtCreate />} />
           <Route path="/sbt/apply" element={<SbtApply />} />
+          <Route path="/archive" element={<Archive />} />
 
 
           {/* <Route path="/sns/user" element={<UserSNS />} /> */}

@@ -317,23 +317,29 @@ export default function CreateGuild() {
       }
       showToast('Success', ToastType.Success);
       navigate('/event');
-    } catch (e: any) {
-      showToast(e.response?.data?.msg || JSON.stringify(e), ToastType.Danger);
-      console.log(e.response?.data?.msg);
-      logError('create event error:', e);
+    } catch (error: any) {
+      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
+      // showToast(e.response?.data?.msg || JSON.stringify(e), ToastType.Danger);
+      console.log(error);
+      logError('create event error:', error);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: null });
     }
   };
 
   const updateLogo = async (e: FormEvent) => {
-    const { files } = e.target as any;
-    // const url = window.URL.createObjectURL(files[0]);
-    const { name, type } = files[0];
-    dispatch({ type: AppActionType.SET_LOADING, payload: true });
-    const urlObj = await uplodaEventImage(name, type, files[0]);
-    dispatch({ type: AppActionType.SET_LOADING, payload: null });
-    setUrl(urlObj);
+    try{
+      const { files } = e.target as any;
+      // const url = window.URL.createObjectURL(files[0]);
+      const { name, type } = files[0];
+      dispatch({ type: AppActionType.SET_LOADING, payload: true });
+      const urlObj = await uplodaEventImage(name, type, files[0]);
+      dispatch({ type: AppActionType.SET_LOADING, payload: null });
+      setUrl(urlObj);
+    }catch(error:any){
+      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
+    }
+
   };
 
   const removeUrl = () => {

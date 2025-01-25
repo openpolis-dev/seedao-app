@@ -26,10 +26,11 @@ import getConfig from 'utils/envCofnig';
 
 import LoginModal from 'components/modals/login';
 import useMetaforoLogin from 'hooks/useMetaforoLogin';
+import useToast, { ToastType } from "../hooks/useToast";
 
 export default function Header() {
   const { i18n } = useTranslation();
-
+  const { showToast } = useToast();
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { pathname } = useLocation();
@@ -139,9 +140,15 @@ export default function Header() {
   }, [address, isConnected, show_login_modal]);
 
   const getUser = async () => {
-    const res = await requests.user.getUser();
-    dispatch({ type: AppActionType.SET_USER_DATA, payload: res });
-    initAuth();
+    try{
+      const res = await requests.user.getUser();
+      dispatch({ type: AppActionType.SET_USER_DATA, payload: res });
+      initAuth();
+
+    }catch(error:any){
+      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
+    }
+
   };
 
   const handleAccountChanged = (data: any) => {

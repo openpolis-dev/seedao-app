@@ -138,8 +138,9 @@ export default function GoveranceNodeResult() {
           //   setDataMap(_dataMap);
           // });
         })
-        .catch((err) => {
-          logError(err);
+        .catch((error:any) => {
+          logError(error);
+          showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
         })
         .finally(() => {
           dispatch({ type: AppActionType.SET_LOADING, payload: false });
@@ -214,8 +215,9 @@ export default function GoveranceNodeResult() {
       await requestApproveMintReward();
       showToast(t('Msg.ApproveSuccess'), ToastType.Success);
       setHasSentFlag(true);
-    } catch (error) {
-      showToast(t('Msg.ApproveFailed'), ToastType.Danger);
+    } catch (error:any) {
+      // showToast(t('Msg.ApproveFailed'), ToastType.Danger);
+      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }
@@ -227,8 +229,9 @@ export default function GoveranceNodeResult() {
       await requestSnapshotSeed();
       showToast(t('Msg.ApproveSuccess'), ToastType.Success);
       setSnapshot(true);
-    } catch (error) {
-      showToast(t('Msg.ApproveFailed'), ToastType.Danger);
+    } catch (error:any) {
+      // showToast(t('Msg.ApproveFailed'), ToastType.Danger);
+      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }

@@ -128,6 +128,7 @@ const PushHistoryContent = () => {
   const [showRecord, setShowRecord] = useState<IPushDisplay>();
   const [wallet2snsMap] = useState<{ [k: string]: string }>({});
   const [snsMap, setSnsMap] = useState<Map<string, string>>(new Map());
+  const { showToast } = useToast();
 
   const { getMultiSNS } = useQuerySNS();
 
@@ -163,8 +164,9 @@ const PushHistoryContent = () => {
         wallets.add(item.creator_wallet.toLocaleLowerCase());
       });
       handleSNS(Array.from(wallets));
-    } catch (error) {
+    } catch (error:any) {
       logError(error);
+      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
     }
   };
 

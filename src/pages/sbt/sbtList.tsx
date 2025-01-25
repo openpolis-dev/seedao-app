@@ -173,8 +173,9 @@ export default function SbtList(){
       setPage(pageNum);
       setTotal(total);
       setPageSize(size);
-    } catch (error) {
+    } catch (error:any) {
       logError('getCloseProjectApplications failed:', error);
+      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }
@@ -199,8 +200,9 @@ export default function SbtList(){
         arr.push(item)
       }
       setSbtList(arr);
-    }catch(error){
+    }catch(error:any){
       console.log(error);
+      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
     }finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }

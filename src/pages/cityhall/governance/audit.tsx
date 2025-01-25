@@ -147,18 +147,23 @@ export default function Register() {
   };
 
   const checkProcessStatus = async () => {
-    const res = await requests.application.getProjectApplications(
-      {
-        page: 1,
-        size: 1,
-        sort_field: 'create_ts',
-        sort_order: 'desc',
-      },
-      {
-        state: ApplicationStatus.Processing,
-      },
-    );
-    setIsProcessing(!!res.data.rows.length);
+    try{
+      const res = await requests.application.getProjectApplications(
+        {
+          page: 1,
+          size: 1,
+          sort_field: 'create_ts',
+          sort_order: 'desc',
+        },
+        {
+          state: ApplicationStatus.Processing,
+        },
+      );
+      setIsProcessing(!!res.data.rows.length);
+    }catch(error:any){
+      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
+    }
+
   };
 
   const getRecords = async () => {
@@ -216,8 +221,9 @@ export default function Register() {
           assets_display: item.assets.map((a) => `${Number(a.amount).format()} ${a.name}`),
         })),
       );
-    } catch (error) {
+    } catch (error:any) {
       logError('getProjectApplications failed', error);
+      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
     } finally {
       showLoading(false);
     }
@@ -252,22 +258,27 @@ export default function Register() {
   };
 
   const handleSearch = async (keyword: string, setSearchVal: (v: string) => void) => {
-    if (keyword.endsWith('.seedao')) {
-      // sns
-      dispatch({ type: AppActionType.SET_LOADING, payload: true });
-      const w = await sns.resolve(keyword,getConfig().NETWORK.rpcs[0]);
-      if (w && w !== ethers.constants.AddressZero) {
-        setSearchVal(w?.toLocaleLowerCase());
-      } else {
-        showToast(t('Msg.SnsNotFound', { sns: keyword }), ToastType.Danger);
-      }
-      dispatch({ type: AppActionType.SET_LOADING, payload: false });
-    } else if (ethers.utils.isAddress(keyword)) {
-      // address
-      setSearchVal(keyword?.toLocaleLowerCase());
-    } else {
-      showToast(t('Msg.InvalidAddress', { address: keyword }), ToastType.Danger);
-    }
+   try{
+     if (keyword.endsWith('.seedao')) {
+       // sns
+       dispatch({ type: AppActionType.SET_LOADING, payload: true });
+       const w = await sns.resolve(keyword,getConfig().NETWORK.rpcs[0]);
+       if (w && w !== ethers.constants.AddressZero) {
+         setSearchVal(w?.toLocaleLowerCase());
+       } else {
+         showToast(t('Msg.SnsNotFound', { sns: keyword }), ToastType.Danger);
+       }
+       dispatch({ type: AppActionType.SET_LOADING, payload: false });
+     } else if (ethers.utils.isAddress(keyword)) {
+       // address
+       setSearchVal(keyword?.toLocaleLowerCase());
+     } else {
+       showToast(t('Msg.InvalidAddress', { address: keyword }), ToastType.Danger);
+     }
+   }catch(error:any){
+     showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
+   }
+
   };
 
   const onKeyUp = (e: any, type: string) => {

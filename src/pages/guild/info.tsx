@@ -24,6 +24,7 @@ import LinkImg from '../../assets/Imgs/link.svg';
 import ReactQuill from 'react-quill';
 import DefaultAvatar from 'assets/Imgs/defaultAvatarT.png';
 import ProfileComponent from 'profile-components/profile';
+import useToast, { ToastType } from "../../hooks/useToast";
 
 
 type UserMap = { [w: string]: IUser };
@@ -34,7 +35,7 @@ export default function Index() {
     state: { theme, account },
     dispatch,
   } = useAuthContext();
-
+  const { showToast } = useToast();
   const { id } = useParams();
   const navigate = useNavigate();
   const { getMultiSNS } = useQuerySNS();
@@ -96,8 +97,9 @@ export default function Index() {
       });
 
       setSponserList([...arr]);
-    } catch (error) {
+    } catch (error:any) {
       logError('getUsersInfo error:', error);
+      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: null });
     }
@@ -112,8 +114,9 @@ export default function Index() {
     try {
       const dt = await getProjectById(id as string);
       setDetail(dt.data);
-    } catch (error) {
+    } catch (error:any) {
       logError(error);
+      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: null });
     }
