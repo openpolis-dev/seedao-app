@@ -2,9 +2,11 @@ import { useEffect, useState } from 'react';
 import requests from 'requests';
 import { ApplicationEntity } from 'type/application.type';
 import { ProjectStatus } from 'type/project.type';
+import useToast, { ToastType } from "./useToast";
 
 export default function useBudgetSource(filter_closed = false) {
   const [allSource, setAllSource] = useState<ISelectItem[]>([]);
+  const {  showToast } = useToast();
 
   useEffect(() => {
     const getProjects = async () => {
@@ -21,8 +23,9 @@ export default function useBudgetSource(filter_closed = false) {
           value: item.id,
           data: ApplicationEntity.Project,
         }));
-      } catch (error) {
+      } catch (error:any) {
         logError('getProjects in city-hall failed: ', error);
+        showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
         return [];
       }
     };
@@ -39,8 +42,9 @@ export default function useBudgetSource(filter_closed = false) {
           value: item.id,
           data: ApplicationEntity.Guild,
         }));
-      } catch (error) {
+      } catch (error:any) {
         logError('getGuilds in city-hall failed: ', error);
+        showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
         return [];
       }
     };
@@ -53,23 +57,28 @@ export default function useBudgetSource(filter_closed = false) {
           sort_field: 'create_ts',
         });
 
-        console.log(res.data.rows);
         return res.data.rows.map((item) => ({
           label: item.name,
           value: item.id,
           data: ApplicationEntity.CommonBudget,
         }));
-      } catch (error) {
+      } catch (error:any) {
         logError('getBudgetSources in city-hall failed: ', error);
+        showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
         return [];
       }
     };
 
     const getSources = async () => {
-      const projects = await getProjects();
-      const guilds = await getGuilds();
-      const budgetSources = await getBudgetSources();
-      setAllSource([...projects, ...guilds, ...budgetSources]);
+      try{
+        const projects = await getProjects();
+        const guilds = await getGuilds();
+        const budgetSources = await getBudgetSources();
+        setAllSource([...projects, ...guilds, ...budgetSources]);
+      }catch (error:any){
+        showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
+      }
+
     };
     getSources();
   }, []);

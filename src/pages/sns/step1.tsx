@@ -94,8 +94,9 @@ export default function RegisterSNSStep1() {
         return;
       }
       setAvailable(AvailableStatus.OK);
-    } catch (error) {
+    } catch (error:any) {
       logError('check available error', error);
+      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
       setAvailable(AvailableStatus.DEFAULT);
     } finally {
       setPending(false);
@@ -164,7 +165,8 @@ export default function RegisterSNSStep1() {
       if (r) {
         return;
       }
-    } catch (error) {
+    } catch (error:any) {
+      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
       return;
     }
     // check token balance if mint by paying token
@@ -195,7 +197,8 @@ export default function RegisterSNSStep1() {
     } catch (error: any) {
       dispatchSNS({ type: ACTIONS.CLOSE_LOADING });
       logError(`[step-1] commitment failed`, error);
-      showToast(`make commitment failed: ${error}`, ToastType.Danger);
+      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
+      // showToast(`make commitment failed: ${error}`, ToastType.Danger);
       return;
     }
 
@@ -212,7 +215,8 @@ export default function RegisterSNSStep1() {
     } catch (error: any) {
       dispatchSNS({ type: ACTIONS.CLOSE_LOADING });
       logError('[step-1] estimate commit failed', error);
-      showToast(parseError(error), ToastType.Danger);
+      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
+      // showToast(parseError(error), ToastType.Danger);
       return;
     }
 
@@ -234,7 +238,8 @@ export default function RegisterSNSStep1() {
     } catch (error: any) {
       logError('[step-1] commit failed', error);
       dispatchSNS({ type: ACTIONS.CLOSE_LOADING });
-      showToast(parseError(error), ToastType.Danger);
+      // showToast(parseError(error), ToastType.Danger);
+      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
     }
   };
 
@@ -247,8 +252,9 @@ export default function RegisterSNSStep1() {
       .then((r) => {
         console.log('inviteBy called');
       })
-      .catch((e) => {
-        logError(`use ${inviteCode} to invite ${account} failed`, e);
+      .catch((error:any) => {
+        logError(`use ${inviteCode} to invite ${account} failed`, error);
+        showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
       });
   };
 
@@ -259,9 +265,10 @@ export default function RegisterSNSStep1() {
         showToast(t('SNS.InviteLinkCopied'), ToastType.Success);
         navigator.clipboard.writeText(`${window.location.origin}/sns?invite=${r.data.invite_code}`);
       })
-      .catch((e) => {
-        logError('get invite code failed', e);
-        showToast('get invite code failed, please try again', ToastType.Danger);
+      .catch((error:any) => {
+        logError('get invite code failed', error);
+        // showToast('get invite code failed, please try again', ToastType.Danger);
+        showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
       })
       .finally(() => {
         dispatch({ type: AppActionType.SET_LOADING, payload: false });
@@ -302,6 +309,7 @@ export default function RegisterSNSStep1() {
           });
         } else if (r && r.status === 'reverted') {
           logError(`tx failed: ${hash}`);
+          showToast(`tx failed: ${hash}`, ToastType.Danger);
           _d[account].stepStatus = 'failed';
           dispatchSNS({ type: ACTIONS.SET_STORAGE, payload: JSON.stringify(_d) });
           dispatchSNS({ type: ACTIONS.CLOSE_LOADING });
@@ -350,9 +358,16 @@ export default function RegisterSNSStep1() {
     }
     navigate('/sns/user');
   };
+  const getLink = () =>{
+    const  {NETWORK} = getConfig();
+    // return `${NETWORK.explorer}/address/${builtin.SEEDAO_REGISTRAR_CONTROLLER_ADDR}`
+    return `${NETWORK.explorer}/token/0x5f3bd0ce4445e96f2d7dcc4bba883378ead8e10f`
+  }
   return (
     <Container>
       <ContainerWrapper>
+        <HistoryBox href={getLink()} target="_blank" rel="noreferrer">{t('SNS.view')}</HistoryBox>
+
         <StepTitle>{t('SNS.Step1Title')}</StepTitle>
         <StepDesc>{t('SNS.Step1Desc')}</StepDesc>
         <SearchBox>
@@ -392,7 +407,16 @@ const Container = styled.div`
 const ContainerWrapper = styled.div`
   max-width: 74%;
   display: inline-block;
+    position: relative;
 `;
+
+const HistoryBox = styled.a`
+    position: absolute;
+    right: -20px;
+    top:20px;
+    color: var(--bs-primary);
+    cursor: pointer;
+`
 
 const StepTitle = styled.div`
   font-family: 'Poppins-Medium';

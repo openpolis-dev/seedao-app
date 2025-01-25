@@ -10,6 +10,7 @@ import { pubDetail } from '../../requests/publicData';
 import axios from 'axios';
 
 import BackerNav from 'components/common/backNav';
+import useToast, { ToastType } from "../../hooks/useToast";
 
 const PageStyle = styled.div`
   ${ContainerPadding};
@@ -146,7 +147,7 @@ const PreBox = styled.div`
 export default function PubDetail() {
   const { dispatch } = useAuthContext();
   const { t } = useTranslation();
-
+  const { showToast } = useToast();
   const [title, setTitle] = useState('');
   const [status, setStatus] = useState('');
   const [imgUrl, setImgUrl] = useState('');
@@ -223,8 +224,9 @@ export default function PubDetail() {
         });
         setContact([...arr]);
       });
-    } catch (e) {
-      logError(e);
+    } catch (error:any) {
+      logError(error);
+      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }

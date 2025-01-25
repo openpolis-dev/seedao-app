@@ -284,9 +284,15 @@ export default function CreditRecords() {
   const isLogin = useCheckLogin(account);
   const loginStatus = isLogin && !!account;
 
+
   const handleSNS = async (wallets: string[]) => {
-    const sns_map = await getMultiSNS(wallets);
-    setSnsMap(sns_map);
+    try{
+      const sns_map = await getMultiSNS(wallets);
+      setSnsMap(sns_map);
+    }catch(error:any){
+      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
+    }
+
   };
 
   const formatSNS = (wallet: string, shorten = true) => {
@@ -321,7 +327,9 @@ export default function CreditRecords() {
 
         const _wallets = r.data.map((item) => item.debtor);
         handleSNS(Array.from(_wallets));
-      })
+      }).catch((error:any)=>{
+      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
+    })
       .finally(() => {
         dispatch({ type: AppActionType.SET_LOADING, payload: false });
       });
@@ -395,8 +403,9 @@ export default function CreditRecords() {
           };
           setDetailData(newData);
         })
-        .catch((e: any) => {
-          showToast('获取利息失败, 请重试', ToastType.Danger);
+        .catch((error: any) => {
+          // showToast('获取利息失败, 请重试', ToastType.Danger);
+          showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
         })
         .finally(() => {
           dispatch({ type: AppActionType.SET_LOADING, payload: false });

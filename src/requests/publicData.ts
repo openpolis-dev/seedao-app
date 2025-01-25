@@ -21,3 +21,7 @@ export interface IVaultBalance {
 export const getVaultBalance = (): Promise<ResponseData<{ wallets: IVaultBalance[] }>> => {
   return request.get(`${PATH_PREFIX}/safe_vault`);
 };
+
+export const getNodeSBT = () => {
+  return request.get(`${PATH_PREFIX}/node_sbt_count`);
+};

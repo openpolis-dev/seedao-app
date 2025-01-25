@@ -53,8 +53,9 @@ export default function CreateGuild() {
           return;
         }
         _leader = res[0];
-      } catch (error) {
-        showToast(t('Msg.QuerySNSFailed'), ToastType.Danger);
+      } catch (error:any) {
+        // showToast(t('Msg.QuerySNSFailed'), ToastType.Danger);
+        showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
         dispatch({ type: AppActionType.SET_LOADING, payload: false });
         return;
       }
@@ -80,18 +81,24 @@ export default function CreateGuild() {
       showToast(t('Guild.createSuccess'), ToastType.Success);
       navigate(`/guild/info/${resp.data.id}`);
     } catch (error: any) {
-      showToast(error?.response?.data?.message || error, ToastType.Danger);
+      // showToast(error?.response?.data?.message || error, ToastType.Danger);
+      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }
   };
 
   const updateLogo = async (e: FormEvent) => {
-    const { files } = e.target as any;
-    const file = files[0];
-    const new_file = await compressionFile(file, file.type);
-    const base64 = await fileToDataURL(new_file);
-    setUrl(base64);
+    try{
+      const { files } = e.target as any;
+      const file = files[0];
+      const new_file = await compressionFile(file, file.type);
+      const base64 = await fileToDataURL(new_file);
+      setUrl(base64);
+    }catch(error:any){
+      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
+    }
+
   };
 
   const handleBack = () => {

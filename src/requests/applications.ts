@@ -243,3 +243,7 @@ interface ISourceResponse {
 export const getAvailiableProjectsAndGuilds = (): Promise<ResponseData<ISourceResponse>> => {
   return request.get(`${BUNDLE_PATH_PREFIX}available_projects_guilds`);
 };
+
+export const getStatistics = () =>{
+  return request.get(`${PATH_PREFIX}assets/statistics`);
+}

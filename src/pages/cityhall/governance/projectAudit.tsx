@@ -57,8 +57,13 @@ export default function ProjectAudit() {
   };
 
   const handleSNS = async (wallets: string[]) => {
-    const sns_map = await getMultiSNS(wallets);
-    setSnsMap(sns_map);
+    try{
+      const sns_map = await getMultiSNS(wallets);
+      setSnsMap(sns_map);
+    }catch(error:any){
+      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
+    }
+
   };
 
   const getRecords = async () => {
@@ -91,8 +96,9 @@ export default function ProjectAudit() {
         reviewer_name: item.reviewer_wallet?.toLocaleLowerCase(),
       }));
       setList(_list);
-    } catch (error) {
+    } catch (error:any) {
       logError('getCloseProjectApplications failed:', error);
+      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
     } finally {
       showLoading(false);
     }
@@ -108,9 +114,10 @@ export default function ProjectAudit() {
       await requests.application.approveApplications([id]);
       showToast(t('Msg.ApproveSuccess'), ToastType.Success);
       getRecords();
-    } catch (error) {
+    } catch (error:any) {
       logError('handle approve failed', error);
-      showToast(t('Msg.ApproveFailed'), ToastType.Danger);
+      // showToast(t('Msg.ApproveFailed'), ToastType.Danger);
+      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
     } finally {
       showLoading(false);
     }
@@ -122,9 +129,10 @@ export default function ProjectAudit() {
       await requests.application.rejectApplications([id]);
       showToast(t('Msg.ApproveSuccess'), ToastType.Success);
       getRecords();
-    } catch (error) {
+    } catch (error:any) {
       logError('handle reject failed', error);
-      showToast(t('Msg.ApproveFailed'), ToastType.Danger);
+      // showToast(t('Msg.ApproveFailed'), ToastType.Danger);
+      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
     } finally {
       showLoading(false);
     }

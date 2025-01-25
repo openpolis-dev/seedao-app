@@ -28,6 +28,7 @@ interface IProps {
   updateStatus: () => void;
   currentState?:string;
   showMultiple?:boolean
+  hasPermission?:boolean
 }
 
 type VoteOptionItem = {
@@ -54,6 +55,7 @@ export default function ProposalVote({
   poll,
   voteGate,
   isOverrideProposal,
+  hasPermission,
   voteOptionType,
   updateStatus,
  currentState,
@@ -64,7 +66,7 @@ export default function ProposalVote({
   const [openVoteItem, setOpenVoteItem] = useState<VoteOptionItem>();
   const [showConfirmVote, setShowConfirmVote] = useState(false);
   const [showConfirmClose, setShowConfirmClose] = useState(false);
-  const [hasPermission, setHasPermission] = useState(false);
+  // const [hasPermission, setHasPermission] = useState(false);
   const [hasClosed, setHasClosed] = useState(false);
   //
   // const [showMultiple, setShowMultiple] = useState(true);
@@ -193,16 +195,16 @@ export default function ProposalVote({
     setShowConfirmVote(true);
   };
 
-  useEffect(() => {
-    const getVotePermission = () => {
-      checkCanVote(id).then((r) => {
-        setHasPermission(r.data);
-      });
-    };
-    if (!onlyShowVoteOption && pollStatus === VoteType.Open && !poll.is_vote) {
-      getVotePermission();
-    }
-  }, [poll, pollStatus, onlyShowVoteOption]);
+  // useEffect(() => {
+  //   const getVotePermission = () => {
+  //     checkCanVote(id).then((r) => {
+  //       setHasPermission(r.data);
+  //     });
+  //   };
+  //   if (!onlyShowVoteOption && pollStatus === VoteType.Open && !poll.is_vote) {
+  //     getVotePermission();
+  //   }
+  // }, [poll, pollStatus, onlyShowVoteOption]);
 
 
   const handleMultiSelect = (e:ChangeEvent) =>{

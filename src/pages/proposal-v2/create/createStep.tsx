@@ -302,60 +302,65 @@ export default function CreateStep({ onClick }: any) {
 
   const getPreview = async () => {
     if (!extraData) return;
-    const res = await requests.proposalV2.getProposalDetail(extraData?.id, 0);
+    try{
+      const res = await requests.proposalV2.getProposalDetail(extraData?.id, 0);
 
-    let titleComponents = {
-      component_id: 16,
-      name: 'relate',
-      schema: '',
-      data: {
-        relate: extraData?.name,
-        proposal_id: extraData?.id,
-      },
-    };
-    const comStr = res.data.components || [];
-    comStr.map((item: any) => {
-      if (typeof item.data === 'string') {
-        item.data = JSON.parse(item.data);
-      }
-      return item;
-    });
-    comStr.unshift(titleComponents);
+      let titleComponents = {
+        component_id: 16,
+        name: 'relate',
+        schema: '',
+        data: {
+          relate: extraData?.name,
+          proposal_id: extraData?.id,
+        },
+      };
+      const comStr = res.data.components || [];
+      comStr.map((item: any) => {
+        if (typeof item.data === 'string') {
+          item.data = JSON.parse(item.data);
+        }
+        return item;
+      });
+      comStr.unshift(titleComponents);
 
-    const { associated_project_budgets: budgets } = res.data;
+      const { associated_project_budgets: budgets } = res.data;
 
-    let total: string[] = [];
-    let ratio: string[] = [];
-    let paid: string[] = [];
-    let remainAmount: string[] = [];
-    let prepayTotal: string[] = [];
-    let prepayRemain: string[] = [];
-    let canUse: string[] = [];
+      let total: string[] = [];
+      let ratio: string[] = [];
+      let paid: string[] = [];
+      let remainAmount: string[] = [];
+      let prepayTotal: string[] = [];
+      let prepayRemain: string[] = [];
+      let canUse: string[] = [];
 
-    let data: any = {};
+      let data: any = {};
 
-    budgets?.map((item: any) => {
-      total.push(`${item.total_amount} ${item.asset_name}`);
-      ratio.push(`${item.advance_ratio * 100}% ${item.asset_name}`);
-      paid.push(`${item.used_advance_amount} ${item.asset_name}`);
-      remainAmount.push(`${item.remain_amount} ${item.asset_name}`);
-      prepayTotal.push(`${item.total_advance_amount} ${item.asset_name}`);
-      prepayRemain.push(`${item.remain_advance_amount} ${item.asset_name}`);
-      let cU = Number(item.total_amount) - Number(item.used_advance_amount);
-      canUse.push(`${cU} ${item.asset_name}`);
-    });
+      budgets?.map((item: any) => {
+        total.push(`${item.total_amount} ${item.asset_name}`);
+        ratio.push(`${item.advance_ratio * 100}% ${item.asset_name}`);
+        paid.push(`${item.used_advance_amount} ${item.asset_name}`);
+        remainAmount.push(`${item.remain_amount} ${item.asset_name}`);
+        prepayTotal.push(`${item.total_advance_amount} ${item.asset_name}`);
+        prepayRemain.push(`${item.remain_advance_amount} ${item.asset_name}`);
+        let cU = Number(item.total_amount) - Number(item.used_advance_amount);
+        canUse.push(`${cU} ${item.asset_name}`);
+      });
 
-    data.total = total.join(' , ');
-    data.ratio = ratio.join(' , ');
-    data.paid = paid.join(' , ');
-    data.remainAmount = remainAmount.join(' , ');
-    data.prepayTotal = prepayTotal.join(' , ');
-    data.prepayRemain = prepayRemain.join(' , ');
-    data.canUse = canUse.join(',');
+      data.total = total.join(' , ');
+      data.ratio = ratio.join(' , ');
+      data.paid = paid.join(' , ');
+      data.remainAmount = remainAmount.join(' , ');
+      data.prepayTotal = prepayTotal.join(' , ');
+      data.prepayRemain = prepayRemain.join(' , ');
+      data.canUse = canUse.join(',');
 
-    setDetail(data);
+      setDetail(data);
 
-    setPreview(comStr ?? []);
+      setPreview(comStr ?? []);
+    }catch(error:any){
+      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
+    }
+
   };
 
   const getComponentsList = async () => {
@@ -373,8 +378,10 @@ export default function CreateStep({ onClick }: any) {
       });
 
       setInitList(resp.data);
-    } catch (error) {
+    } catch (error:any) {
       logError('getAllProposals failed', error);
+      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
+
     } finally {
       // dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }
@@ -399,8 +406,9 @@ export default function CreateStep({ onClick }: any) {
       });
 
       setComponents(components);
-    } catch (error) {
+    } catch (error:any) {
       logError('getAllProposals failed', error);
+      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }
@@ -632,8 +640,9 @@ export default function CreateStep({ onClick }: any) {
     try {
       const urlObjArr = await UploadPictures(files[0]);
       callback([urlObjArr]);
-    } catch (e) {
-      console.error('uploadPic', e);
+    } catch (error:any) {
+      console.error('uploadPic', error);
+      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: null });
     }

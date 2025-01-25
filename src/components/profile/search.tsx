@@ -94,13 +94,18 @@ export default function SearchProfile(){
   };
 
   const handleSubmit = async () =>{
-    const address = await sns.resolve(`${snsName}.seedao`,getConfig().NETWORK.rpcs[0])
-    if(address === AddressZero){
-      showToast(t('SNS.snsError'), ToastType.Danger);
-    }else{
-      setAddress(address)
-      setShowModal(true);
+    try{
+      const address = await sns.resolve(`${snsName}.seedao`,getConfig().NETWORK.rpcs[0])
+      if(address === AddressZero){
+        showToast(t('SNS.snsError'), ToastType.Danger);
+      }else{
+        setAddress(address)
+        setShowModal(true);
+      }
+    }catch(error:any){
+      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
     }
+
 
   }
 

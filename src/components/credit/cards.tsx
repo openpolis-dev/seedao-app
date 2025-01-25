@@ -16,6 +16,7 @@ import { erc20ABI } from 'wagmi';
 import { getBorrowList, getVaultData, VaultData } from 'requests/credit';
 import { CreditRecordStatus, ICreditRecord } from 'type/credit.type';
 import BorrowAndRepay from './BorrowAndRepay';
+import useToast, { ToastType } from "../../hooks/useToast";
 
 const networkConfig = getConfig().NETWORK;
 const lendToken = networkConfig.lend.lendToken;
@@ -128,7 +129,7 @@ const MyBorrowing = ({ isLogin }: BorrowCardProps) => {
   const {
     state: { myOverdueAmount, myInuseAmount, myOverdueCount, myInUseCount },
   } = useCreditContext();
-
+  const { showToast } = useToast();
   const [earlyDate, setEarlyDate] = useState('');
 
   const getMyData = () => {
@@ -144,6 +145,8 @@ const MyBorrowing = ({ isLogin }: BorrowCardProps) => {
         const d = r.data[0] as ICreditRecord;
         setEarlyDate(d.overdueTime.slice(0, -5));
       }
+    }).catch((error:any)=>{
+      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
     });
   };
 

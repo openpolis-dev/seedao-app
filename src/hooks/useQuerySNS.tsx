@@ -46,8 +46,10 @@ export default function useQuerySNS() {
         // const data = await sns.names(_to_be_queried, getConfig().NETWORK.rpcs[0]);
         const data = await PublicJs.splitWallets(_to_be_queried);
 
-        data.forEach((d, idx) => {
+        data.map((d, idx) => {
+          if(!d)return;
           _snsMap.set(_to_be_queried[idx], d || ethers.utils.getAddress(_to_be_queried[idx]));
+
         });
       } catch (error) {
         console.log(error);

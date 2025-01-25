@@ -7,6 +7,7 @@ import AppCard, { EmptyAppCard } from 'components/common/appCard';
 import { AppActionType, useAuthContext } from "../../providers/authProvider";
 import { getCityHallDetail } from "../../requests/cityHall";
 import publicJs from "../../utils/publicJs";
+import useToast, { ToastType } from "../../hooks/useToast";
 
 const AppBox = styled(Row)`
   div[class^='col'] {
@@ -41,7 +42,7 @@ const AppBox = styled(Row)`
 
 export default function TechPanel() {
   const { t } = useTranslation();
-
+  const { showToast } = useToast();
   const {
     state: { theme,account },
     dispatch
@@ -63,8 +64,9 @@ export default function TechPanel() {
 
       const disabledArr = members.filter((item) => item.toLowerCase() === account!.toLowerCase());
       setDisabled(!disabledArr?.length)
-    } catch (error) {
+    } catch (error:any) {
       logError(error);
+      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: null });
     }
