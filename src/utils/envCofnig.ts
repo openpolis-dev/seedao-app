@@ -3,7 +3,7 @@ import PolygonIcon from 'assets/Imgs/network/polygon.svg';
 import { amoy } from 'utils/chain';
 import { polygon } from 'viem/chains';
 
-const VERSION = '0.7.3';
+const VERSION = '0.7.4';
 
 const SENTRY_DSN = 'https://b36d900b0a63b0466ff4e73d55e359b2@o4505590144106496.ingest.sentry.io/4506445116604416';
 
