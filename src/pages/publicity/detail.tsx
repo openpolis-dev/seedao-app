@@ -296,27 +296,30 @@ export default function DetailPublicity(){
        </PushItemContent>
      </ContentOuter>
 
-     <CardStyle>
-       <BlockTab>
-         {log.map((item, index) => (
-           <Aciton key={index}>
-             <div className="action-content">
-               <TitleBlock>{formatSNS(item?.eidtor)}</TitleBlock>
-               <div>
-                 <Trans
-                   //@ts-ignore
-                   i18nKey={item?.isCreate ? 'city-hall.HistoryCreate' : 'city-hall.HistoryEdit'}
-                   values={{ title: detail?.title, time: formatTime(item?.updateAt * 1000) }}
-                   components={{
-                     title: <TitleBlock2 />,
-                   }}
-                 />
+     {
+       !!log.length &&     <CardStyle>
+         <BlockTab>
+           {  log.map((item, index) => (
+             <Aciton key={index}>
+               <div className="action-content">
+                 <TitleBlock>{formatSNS(item?.eidtor)}</TitleBlock>
+                 <div>
+                   <Trans
+                     //@ts-ignore
+                     i18nKey={item?.isCreate ? 'city-hall.HistoryCreate' : 'city-hall.HistoryEdit'}
+                     values={{ title: detail?.title, time: formatTime(item?.updateAt * 1000) }}
+                     components={{
+                       title: <TitleBlock2 />,
+                     }}
+                   />
+                 </div>
                </div>
-             </div>
-           </Aciton>
-         ))}
-       </BlockTab>
-     </CardStyle>
+             </Aciton>
+           ))}
+         </BlockTab>
+       </CardStyle>
+     }
+
 
    </Page>;
 }
