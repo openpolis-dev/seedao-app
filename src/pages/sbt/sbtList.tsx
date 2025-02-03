@@ -20,6 +20,12 @@ import SBTabi from "../../assets/abi/SBT.json";
 import {BookmarkCheck,BookmarkX} from "lucide-react"
 import { IUser } from "../../type/user.type";
 import useQuerySNS from "../../hooks/useQuerySNS";
+import getConfig from "../../utils/envCofnig";
+import { useNetwork, useSwitchNetwork } from "wagmi";
+import { amoy } from 'utils/chain';
+import CopyBox from "../../components/copy";
+import CopyIconSVG from "../../assets/Imgs/copy.svg";
+import { isNotOnline } from "../../utils";
 
 type UserMap = { [w: string]: IUser };
 
@@ -30,6 +36,11 @@ const Box = styled.div`
   ${ContainerPadding};
     button{
         padding: 5px 20px;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+    .lineFlex{
         display: flex;
         align-items: center;
         gap: 5px;
@@ -122,7 +133,8 @@ export default function SbtList(){
   const { getMultiSNS } = useQuerySNS();
   const [snsMap,setSnsMap] = useState<any>(null);
 
-
+  const { switchNetwork } = useSwitchNetwork();
+  const { chain } = useNetwork();
 
   const {
     state:{
@@ -135,8 +147,21 @@ export default function SbtList(){
     navigate(url);
   }
 
+  useEffect(() => {
+    if(isNotOnline()){
+      if (chain && switchNetwork && chain?.id !== amoy.id) {
+        switchNetwork(amoy.id);
+        return;
+      }
+    }
+
+
+
+  }, []);
+
 
   useEffect(() => {
+
     getSns()
   }, [userMap,list]);
 
@@ -380,6 +405,10 @@ export default function SbtList(){
         <th >{t("sbt.applicant")}</th>
         <th >{t("sbt.Auditor")}</th>
         <th>{t("sbt.receivers")}</th>
+        {
+          type === "minted" && <th>Tx Hash</th>
+        }
+
         <th>{t("sbt.status")}</th>
         <th></th>
       </tr>
@@ -395,6 +424,15 @@ export default function SbtList(){
             <td>{returnSns(item?.applicant)}</td>
             <td>{returnSns(item?.approver)}</td>
             <td > <MoreButton onClick={() => handleDetail(item)}>{t('application.Detail')}</MoreButton></td>
+            {
+              type === "minted" && <td>
+              <div className="lineFlex">
+                {publicJs.AddressToShow(item.mint_tx_hash, 4)} <CopyBox text={item.mint_tx_hash} dir="right">
+                <img src={CopyIconSVG} alt="" />
+              </CopyBox>
+              </div>
+          </td>
+            }
             <td ><ApplicationStatusTagNew status={item.status} /></td>
             <td >
               {
