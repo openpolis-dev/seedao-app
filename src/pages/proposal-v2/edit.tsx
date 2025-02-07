@@ -142,7 +142,7 @@ export default function EditProposal() {
           setShowRht(!res.data?.is_based_on_custom_template);
         } catch (error:any) {
           logError('get proposal detail error:', error);
-          showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
+          showToast(`${error?.data?.msg || error?.code || error}`, ToastType.Danger);
         } finally {
           dispatch({ type: AppActionType.SET_LOADING, payload: false });
         }
@@ -152,12 +152,13 @@ export default function EditProposal() {
 
   useEffect(() => {
 
-    if(holder.length){
+    if(holder?.length){
       let arr = JSON.parse((holder[0] as any)?.name)
+      console.log(arr);
       if(typeof arr == "string"){
         arr = JSON.parse(arr);
       }
-      if(!arr.length){
+      if(!arr?.length){
         setInitList([])
         return;
       }
@@ -247,7 +248,7 @@ export default function EditProposal() {
       setComponents(components);
     } catch (error:any) {
       logError('getAllProposals failed', error);
-      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
+      showToast(`${error?.data?.msg || error?.code || error}`, ToastType.Danger);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }
@@ -289,7 +290,7 @@ export default function EditProposal() {
 
     if (((data as any)?.template_name === 'P2提案结项' || (data as any)?.template_name === 'P3提案结项' )) {
 
-      if(!submitData.length && submitType === 'submit'){
+      if(!submitData?.length && submitType === 'submit'){
         showToast(t('Msg.motivationError'), ToastType.Danger);
         return;
       }
@@ -302,7 +303,7 @@ export default function EditProposal() {
       let err = false;
 
       const budgetData = submitData.filter((item: any) => item.name === 'budget') || [];
-      if (budgetData.length) {
+      if (budgetData?.length) {
         budgetData[0].data.budgetList?.map((item: any) => {
           if (item.typeTest.name === 'USDC') {
             if (Number(item.amount) > 1000) {
@@ -418,7 +419,7 @@ export default function EditProposal() {
       callback([urlObjArr]);
     } catch (error:any) {
       console.error('uploadPic', error);
-      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
+      showToast(`${error?.data?.msg || error?.code || error}`, ToastType.Danger);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: null });
     }
@@ -586,13 +587,13 @@ export default function EditProposal() {
                       {voteList?.map((item, index) => (
                         <li key={`vote_${index}`}>
                           <input type="text" value={item.label} onChange={(e) => handleVoteInput(e, index)} />
-                          {voteList.length - 1 === index && (
+                          {voteList?.length - 1 === index && (
                             <span onClick={() => handleAdd()}>
                               <img src={PlusImg} alt="" />
                             </span>
                           )}
 
-                          {!!(voteList.length - 1) && (
+                          {!!(voteList?.length - 1) && (
                             <span onClick={() => removeVote(index)}>
                               <img src={MinusImg} alt="" />
                             </span>

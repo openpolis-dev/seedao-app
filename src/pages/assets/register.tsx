@@ -61,8 +61,8 @@ export default function Register() {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     setShowInfo(false)
     try {
-      let data;
-      let budgets;
+      let data:any = {};
+      let budgets = [];
       if(selectSource?.data === "project"){
         const dt = await getProjectById(selectSource?.value.toString());
 
@@ -78,7 +78,7 @@ export default function Register() {
 
       }
 
-      setShowInfo(!!budgets.length);
+      setShowInfo(!!budgets?.length);
       setBudgets(budgets);
 
 
@@ -92,13 +92,15 @@ export default function Register() {
       let applied: string[] = [];
 
       budgets?.map((item: any) => {
-        total.push(`${item.total_amount} ${item.asset_name}`);
-        ratio.push(`${item.advance_ratio * 100}% ${item.asset_name}`);
-        paid.push(`${item.used_advance_amount} ${item.asset_name}`);
-        remainAmount.push(`${item.remain_amount} ${item.asset_name}`);
-        prepayTotal.push(`${item.total_advance_amount} ${item.asset_name}`);
-        prepayRemain.push(`${item.remain_advance_amount} ${item.asset_name}`);
-        applied.push(`${item.used_amount} ${item.asset_name}`);
+        if(item){
+          total.push(`${item.total_amount} ${item.asset_name}`);
+          ratio.push(`${item.advance_ratio * 100}% ${item.asset_name}`);
+          paid.push(`${item.used_advance_amount} ${item.asset_name}`);
+          remainAmount.push(`${item.remain_amount} ${item.asset_name}`);
+          prepayTotal.push(`${item.total_advance_amount} ${item.asset_name}`);
+          prepayRemain.push(`${item.remain_advance_amount} ${item.asset_name}`);
+          applied.push(`${item.used_amount} ${item.asset_name}`);
+        }
       });
 
       data.total = total.join(' , ');
@@ -113,7 +115,7 @@ export default function Register() {
       setDetail(data);
     } catch (error:any) {
       logError(error);
-      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
+      showToast(`${error?.data?.msg || error?.code || error}`, ToastType.Danger);
 
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: null });
@@ -170,7 +172,7 @@ export default function Register() {
         );
       } catch (error:any) {
         logError('getAvailiableProjectsAndGuilds failed:', error);
-        showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
+        showToast(`${error?.data?.msg || error?.code || error}`, ToastType.Danger);
       }
     };
     getAllSources();
@@ -204,11 +206,11 @@ export default function Register() {
       if (isNaN(_amount) || _amount <= 0) {
         err.errorKeys.push(t('Msg.AssetAmountError'));
       }
-      if (err.errorKeys.length > 0) {
+      if (err.errorKeys?.length > 0) {
         err_list.push(err);
       }
     });
-    if (err_list.length) {
+    if (err_list?.length) {
       let msgs: string[] = [];
       err_list.forEach((item) => msgs.push(`L${item.line}: ${item.errorKeys.join(', ')}`));
       return msgs.join('\n');
@@ -233,11 +235,11 @@ export default function Register() {
       } else if (!ethers.utils.isAddress(item.address)) {
         err.errorKeys.push(t('Msg.RequiredWallet'));
       }
-      if (err.errorKeys.length > 0) {
+      if (err.errorKeys?.length > 0) {
         err_list.push(err);
       }
     });
-    if (err_list.length) {
+    if (err_list?.length) {
       let msgs: string[] = [];
       err_list.forEach((item) => msgs.push(`L${item.line}: ${item.errorKeys.join(', ')}`));
       return msgs.join('\n');
@@ -257,10 +259,10 @@ export default function Register() {
       });
     } catch (error:any) {
       logError(error);
-      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
+      showToast(`${error?.data?.msg || error?.code || error}`, ToastType.Danger);
       return 'parse sns error, please try again';
     }
-    if (err_sns_list.length) {
+    if (err_sns_list?.length) {
       return `${t('Msg.RequiredWallet')}: ${err_sns_list.join(', ')}`;
     }
     // check SNS
@@ -418,7 +420,7 @@ export default function Register() {
   }, [total,budgets]);
 
   const returnDisable = () => {
-    return !list.length || !selectSource || !content || !content.trim() || checkSum();
+    return !list?.length || !selectSource || !content || !content.trim() || checkSum();
   };
 
   return (
