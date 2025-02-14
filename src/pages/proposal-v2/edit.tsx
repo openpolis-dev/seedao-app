@@ -150,14 +150,25 @@ export default function EditProposal() {
     }
   }, [id, state]);
 
+  const handleParse = (arr:any) =>{
+    let strArr = JSON.parse(arr)
+
+    if (typeof strArr == "string") {
+      strArr = handleParse(strArr)
+
+    }
+    return strArr;
+  }
+
   useEffect(() => {
 
     if(holder?.length){
-      let arr = JSON.parse((holder[0] as any)?.name)
+      // let arr = JSON.parse((holder[0] as any)?.name)
+      let arr = handleParse((holder[0] as any)?.name)
       console.log(arr);
-      if(typeof arr == "string"){
-        arr = JSON.parse(arr);
-      }
+      // if(typeof arr == "string"){
+      //   arr = JSON.parse(arr);
+      // }
       if(!arr?.length){
         setInitList([])
         return;
