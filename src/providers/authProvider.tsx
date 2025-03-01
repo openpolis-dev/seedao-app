@@ -171,11 +171,11 @@ const reducer = (state: IState, action: IAction): IState => {
     case AppActionType.SET_SNS_MAP:
 
       const newMap = new Map(action.payload);
+      const newStateMap = new Map(state.snsMap);
       newMap.forEach((value:any, key:any) => {
-        state.snsMap.set(key, value);
+        newStateMap.set(key, value);
       });
-
-      return { ...state };
+      return { ...state,snsMap: newStateMap };
     case AppActionType.SET_SNS:
       return { ...state, sns: action.payload };
     case AppActionType.SET_HAD_ONBOARDING:
