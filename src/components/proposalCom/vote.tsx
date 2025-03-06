@@ -278,7 +278,7 @@ export default function ProposalVote({
                   type="radio"
                   checked={selectOption?.id === option.id}
                   onChange={(e) => setSelectOption(e.target.checked ? option : undefined)}
-                  disabled={!hasPermission}
+                  disabled={!hasPermission || onlyShowVoteOption}
                 />
               }
 
@@ -288,14 +288,14 @@ export default function ProposalVote({
                   value={option.id}
                   // checked={selectOption?.id === option.id}
                   onChange={(e) => handleMultiSelect(e)}
-                  disabled={!hasPermission}
+                  disabled={!hasPermission || onlyShowVoteOption}
                 />
               }
 
               <OptionContentPure>{option.html}</OptionContentPure>
             </VoteOptionSelect>
           ))}
-          {hasPermission && (
+          {(hasPermission && !onlyShowVoteOption) && (
             <VoteButton onClick={goVote} disabled={selectOption === void 0 && multiArr.length === 0}>
               {t('Proposal.Vote')}
             </VoteButton>

@@ -201,13 +201,14 @@ export default function Header() {
 
   const getLanguages = () => [
     {
-      value: 'en',
-      label: 'English',
-    },
-    {
       value: 'zh',
       label: '中文',
     },
+    {
+      value: 'en',
+      label: 'English',
+    },
+
   ];
 
   const showWalletLogin = async () => {
