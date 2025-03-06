@@ -12,9 +12,9 @@ export const resources = {
 const localLang = localStorage.getItem('language');
 
 i18n.use(initReactI18next).init({
-  lng: localLang || 'en',
+  lng: localLang || 'zh',
   resources,
-  fallbackLng: 'en', // default lang
+  fallbackLng: 'zh', // default lang
   debug: true,
 });
 
