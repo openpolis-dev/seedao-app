@@ -56,11 +56,12 @@ export default function useQuerySNS() {
       }
     }
 
-    dispatch({ type: AppActionType.SET_SNS_MAP, payload: _snsMap });
+    // dispatch({ type: AppActionType.SET_SNS_MAP, payload: _snsMap });
 
     _wallets.forEach((w) => {
       wallet_sns_map.set(w, _snsMap.get(w) || w);
     });
+    dispatch({ type: AppActionType.SET_SNS_MAP, payload: wallet_sns_map });
     return wallet_sns_map;
   };
 

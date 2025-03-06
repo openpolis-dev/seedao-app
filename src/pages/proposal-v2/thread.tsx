@@ -236,8 +236,8 @@ export default function ThreadPage() {
         all_comments.forEach((item) => (now_count += item.children?.length || 0));
         setHasMore(all_comments.length === 0 ? false : now_count < res.data.comment_count);
         const query_wallets = Array.from(new Set(all_comments.map((item) => item.wallet)));
-        getMultiSNS(query_wallets);
-        getUsers(query_wallets);
+       await getMultiSNS(query_wallets);
+        await getUsers(query_wallets);
       }
       setTotalPostsCount(res.data.comment_count);
 
