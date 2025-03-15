@@ -305,6 +305,8 @@ export default function CreateStep({ onClick }: any) {
     try{
       const res = await requests.proposalV2.getProposalDetail(extraData?.id, 0);
 
+
+
       let titleComponents = {
         component_id: 16,
         name: 'relate',
@@ -324,6 +326,7 @@ export default function CreateStep({ onClick }: any) {
       comStr.unshift(titleComponents);
 
       const { associated_project_budgets: budgets } = res.data;
+
 
       let total: string[] = [];
       let ratio: string[] = [];
@@ -540,7 +543,7 @@ export default function CreateStep({ onClick }: any) {
 
 
     let budgetArr = template?.components?.filter((item) => item.name === 'budget') || [];
-    if (template?.name === 'P2提案立项' && budgetArr?.length > 0) {
+    if ((template?.name === 'P2提案立项' && budgetArr?.length > 0) ||(template?.name === 'P3提案立项' && budgetArr?.length > 0)) {
       let err = false;
 
       const budgetData = data.filter((item: any) => item.name === 'budget') || [];
@@ -849,7 +852,7 @@ export default function CreateStep({ onClick }: any) {
       {showErrorTips && (
         <ConfirmModal
           title=""
-          msg={t('Proposal.p2Tips')}
+          msg={template?.name === 'P2提案立项' ? t('Proposal.p2Tips'): t('Proposal.p3Tips') }
           onConfirm={() => handleErrorClose()}
           onClose={handleErrorClose}
         />
