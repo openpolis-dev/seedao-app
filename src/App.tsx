@@ -7,6 +7,9 @@ import GlobalStyle from 'assets/styles/global';
 import 'md-editor-rt/lib/style.css';
 import ErrorBoundary from 'components/ErrorBoundary';
 import WagmiProvider from 'providers/wagmiProvider';
+import { initDB } from "react-indexed-db-hook";
+import { DBConfig } from "./utils/DBconfig";
+initDB(DBConfig);
 
 function App() {
   return (

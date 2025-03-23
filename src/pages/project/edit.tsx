@@ -26,7 +26,7 @@ export default function EditPage() {
         setDetail(dt.data);
       } catch (error:any) {
         logError(error);
-        showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
+        showToast(`${error?.data?.msg || error?.code || error}`, ToastType.Danger);
       } finally {
         dispatch({ type: AppActionType.SET_LOADING, payload: null });
       }

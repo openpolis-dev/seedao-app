@@ -1,0 +1,509 @@
+import React, { useState, useRef, useEffect } from 'react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import './ChatInterface.scss';
+import {useIndexedDB} from "react-indexed-db-hook";
+import { nanoid } from 'nanoid'
+import axios from "axios";
+import {Message, ResponseMessage} from "./DBTypes";
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+import Code from "./code";
+
+import LogoImg from '../../assets/Imgs/light/creditLogo2.svg';
+import LogoImgDark from '../../assets/Imgs/dark/creditLogo.svg';
+import { useAuthContext } from "../../providers/authProvider";
+import PublicJs from "../../utils/publicJs";
+import DefaultAvatar from "../../assets/Imgs/defaultAvatarT.png";
+
+
+export const ChatInterface= () => {
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [inputMessage, setInputMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [isCopied, setCopied] = useState(false);
+  const [avatar, setAvatar] = useState('');
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const [controller, setController] = useState<any>(null);
+
+  const [collection, setCollection] = useState<string[]>([]);
+  const { add,getAll ,deleteRecord,clear} = useIndexedDB("list");
+
+  const {
+    state: { theme,userData},
+  } = useAuthContext();
+
+
+  useEffect(() => {
+    getModels()
+  }, []);
+
+  const getModels = async() =>{
+    const response = await axios.get(`${process.env.REACT_APP_DEEPSEEK_API_URL}/api/models`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${process.env.REACT_APP_DEEPSEEK_API_KEY}`
+      }
+    });
+
+    let arr =  response.data.data
+        .filter((item:any) => item.info?.meta?.knowledge !== undefined)
+        .map((item:any) => item.info?.meta?.knowledge);
+
+    let newIds = arr[0]?.map((item:any) => item.id) ??[];
+
+    setCollection(newIds)
+  }
+
+  useEffect(() => {
+    getMessage()
+  }, []);
+
+  const getMessage = async () => {
+    let newMessages = await getAll()
+    setMessages(newMessages)
+  }
+
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages,isLoading]);
+
+  const handleUserMsg = async() =>{
+    if (!inputMessage.trim()) return;
+
+    let uId = nanoid();
+    const userMessage: Message = {
+      id: Date.now().toString(),
+      content: inputMessage,
+      role: 'user',
+      uniqueId:uId,
+      questionId:uId,
+      timestamp: Date.now(),
+    };
+
+
+    setMessages(prev => {
+      return  [...prev, userMessage]
+    });
+    setInputMessage('');
+    await sendMessage(userMessage)
+
+  }
+
+  const estimateTokenCount = (text:string)=> {
+
+    const chineseChars = text.match(/[\u4e00-\u9fa5]/g) || [];
+    const englishWords = text.match(/\b\w+\b/g) || [];
+    const punctuationAndSpaces = text.match(/[\s\p{P}]/gu) || [];
+
+    return (
+        chineseChars.length * 0.6 + englishWords.length * 0.3 + punctuationAndSpaces.length
+    );
+  }
+
+  const truncateContext = (messages:ResponseMessage[], maxTokens:number) => {
+    let totalTokens = 0;
+    const truncatedMessages = [];
+
+    for (let i = messages.length - 1; i >= 0; i--) {
+      const message = messages[i];
+      const messageTokens = estimateTokenCount(message.content);
+
+      if (totalTokens + messageTokens <= maxTokens) {
+        truncatedMessages.unshift(message);
+        totalTokens += messageTokens;
+      } else {
+        break;
+      }
+    }
+    return truncatedMessages;
+  }
+
+  const sendMessage = async (userMessage:Message) => {
+
+    await add({...userMessage})
+    let newMessages = await getAll()
+
+    setIsLoading(true);
+    const abortController = new AbortController();
+    setController(abortController);
+
+    const systemRoleObj = {
+      role: "system",
+      content: "你是一个有帮助的AI助手。请用中文回答。当你收到消息时，首先在<think>标签内展示你的思考过程，然后提供你的回答。请确保所有回复都使用简体中文，包括思考过程。以专业、友好的语气回答，并在合适的时候使用emoji表情",
+    }
+    let content = "";
+    let currentId = "";
+
+    try {
+
+      const collectionIds = collection.map((item:any) => ({"type": "collection", "id": item}));
+      const newMsg = [...newMessages].map(({role, content})=>({role,content})).filter(({content})=>!!content);
+
+      const truncatedMessages = truncateContext(newMsg, 8000-500);
+
+      const response = await fetch(`${process.env.REACT_APP_DEEPSEEK_API_URL}/api/chat/completions`, {
+        "headers": {
+          "content-type": "application/json",
+          'Authorization': `Bearer ${process.env.REACT_APP_DEEPSEEK_API_KEY}`
+        },
+
+        "body": JSON.stringify({
+          model: process.env.REACT_APP_DEEPSEEK_MODEL,
+          messages:[systemRoleObj,...truncatedMessages],
+          "files": collectionIds,
+          "stream": true
+        }),
+        "method": "POST",
+        signal: abortController.signal,
+        // "mode": "cors",
+        // "credentials": "include"
+      });
+
+      if (!response.ok) {
+        throw new Error(`API request failed with status ${response.status}`);
+      }
+
+
+      const reader = response.body?.getReader();
+      const decoder = new TextDecoder();
+
+      if (!reader) return;
+
+      const readChunk = async () => {
+        const { done, value } = await reader?.read();
+
+        if (done) {
+          setIsLoading(false);
+          return;
+        }
+        const chunkText = decoder.decode(value);
+        const lines = chunkText.split('\n');
+
+        for (const line of lines) {
+          if (line.startsWith('data:')) {
+            const jsonStr = line.slice(5);
+            if (jsonStr === '[DONE]') {
+                const thinkingMatch = content.match(/<think>([^]*?)<\/think>/);
+                const responseContent = content.replace(/<think>[^]*?<\/think>/, '').trim();
+
+
+                console.log("thinkingMatch",thinkingMatch);
+                console.log("responseContent",responseContent);
+
+
+
+              const responseMessage: Message = {
+                id: currentId,
+                content: responseContent??"",
+                role: 'assistant',
+                type: 'response',
+                timestamp: Date.now(),
+                uniqueId:nanoid(),
+                questionId:userMessage.uniqueId,
+              };
+                if (thinkingMatch) {
+
+                  setMessages((old)=> {
+                    let msg = [...old]
+                    msg[msg.length-1].content = thinkingMatch[1].trim();
+                    msg[msg.length-1].type = 'thinking';
+                    return msg;
+                  });
+                  await add({
+                    content: thinkingMatch[1].trim(),
+                    role: 'assistant',
+                    type: 'thinking',
+                    timestamp: Date.now(),
+                    id:currentId,
+                    uniqueId:nanoid(),
+                    questionId:userMessage.uniqueId,
+                  })
+
+                  if (responseContent) {
+                    setMessages(prev => [...prev, responseMessage]);
+                  }
+                }
+
+              if (responseContent) {
+                await add(responseMessage)
+              }
+
+
+              return;
+            }
+            try {
+
+              const data = JSON.parse(jsonStr);
+              currentId = data.id;
+              const text = data.choices[0]?.delta?.content || '';
+
+              for (const char of text) {
+                content+=char;
+                setMessages((old)=> {
+                  let msg = [...old]
+                  msg[msg.length-1].content = content;
+                  msg[msg.length-1].id = data.id;
+                  return msg;
+                });
+                await new Promise(resolve => setTimeout(resolve, 50));
+
+              }
+            } catch (error) {
+              console.log('解析 JSON 时出错:', error);
+              console.log(jsonStr);
+            }
+          }
+        }
+
+        await readChunk();
+      };
+
+      setMessages(prev => [...prev, {
+        id: "",
+        content: "",
+        role: 'assistant',
+        type: 'response',
+        uniqueId:nanoid(),
+        questionId:userMessage.uniqueId,
+        timestamp: Date.now(),
+      }])
+
+      await readChunk();
+    } catch (error) {
+      if ((error as any).name === 'AbortError') {
+        const errorSystemMessage: Message = {
+          id: Date.now().toString(),
+          content:content?content:"...",
+          role: 'assistant',
+          type:"response",
+          uniqueId:nanoid(),
+          questionId:userMessage.uniqueId,
+          timestamp: Date.now(),
+        };
+        setMessages(prev => [...prev, errorSystemMessage]);
+
+        await add(errorSystemMessage)
+      } else {
+        console.error('Error sending message:', error);
+        const errorMessage = error instanceof Error ? error.message : 'Failed to send message';
+        setError(errorMessage);
+        const errorSystemMessage: Message = {
+          id: Date.now().toString(),
+          content: `Error: ${errorMessage}. Please try again.`,
+          role: 'assistant',
+          timestamp: Date.now(),
+          uniqueId:nanoid(),
+          questionId:userMessage.uniqueId
+
+        };
+        setMessages(prev => [...prev, errorSystemMessage]);
+      }
+
+    } finally {
+      setIsLoading(false);
+      setError(null);
+    }
+  };
+
+  const handleStop = ()=>{
+    if (controller) {
+      controller.abort();
+      setController(null);
+      setIsLoading(false);
+    }
+  }
+
+  const handleKeyPress = async(e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      await handleUserMsg();
+    }
+  };
+
+  const handleReSend = async(qid:string) =>{
+    let newMessages = await getAll()
+    const needResend = newMessages.find(msg=>msg.uniqueId === qid);
+    if(!needResend)return;
+    const findIdx = needResend.messageId!;
+    let arr = []
+
+    for(let i = 0; i < newMessages.length; i++) {
+      if(newMessages[i].messageId! >= findIdx){
+        await deleteRecord(newMessages[i].messageId!)
+      }else{
+        arr.push(newMessages[i]);
+      }
+
+    }
+    setMessages(arr)
+    delete needResend.messageId;
+
+    setMessages(prev => {
+      return  [...prev, needResend]
+    });
+
+    await sendMessage(needResend);
+
+
+  }
+ const handleDelete = async(qid:string) =>{
+
+   let newMessages = await getAll()
+
+   const needDelete = newMessages.filter(msg=>msg.questionId === qid);
+   if(!needDelete)return;
+
+   for(let i = 0; i < needDelete.length; i++) {
+     await deleteRecord(needDelete[i].messageId!)
+
+   }
+   const needDisplay = newMessages.filter(msg=>msg.questionId !== qid);
+
+   console.log(needDisplay);
+   console.error(newMessages);
+   setMessages(needDisplay);
+
+
+
+  }
+  const handleCopy = (content:string) =>{
+    // console.log(content);
+    setCopied(true)
+    setTimeout(()=>{
+      setCopied(false)
+    },1000)
+  }
+
+  const handleClear = async() =>{
+    await clear()
+    setMessages([])
+  }
+
+  useEffect(() => {
+    if (!(userData as any)?.data) return;
+    getAvatar();
+  }, [userData]);
+
+  const getAvatar = async () => {
+    let avarUrl = await PublicJs.getImage((userData as any)?.data?.avatar ?? '');
+    setAvatar(avarUrl!);
+  };
+
+  return (
+    <div className="chat-container">
+      <div className="top-header">
+        <span onClick={()=>handleClear()}>
+                 清除聊天
+        </span>
+
+      </div>
+      <div className="chat-box">
+        <div className="chat-messages">
+          {messages.map((message) => (
+            <div  key={nanoid()} className={`${message.role === 'user'?"flexBox flexEnd":"flexBox flexStart"}`}>
+
+              {/*{*/}
+              {/*  message.role === 'user' && <div className="logoBox frht">*/}
+              {/*    {*/}
+              {/*      !!(userData as any)?.data &&  <img src={avatar || DefaultAvatar} alt="" />*/}
+              {/*    }*/}
+              {/*    {*/}
+              {/*      !(userData as any)?.data && <img src={DefaultAvatar} alt="" />*/}
+              {/*    }*/}
+
+              {/*  </div>*/}
+              {/*}*/}
+              {
+                message.role !== 'user'&&  <div className="logoBox">
+                  <img src={theme ? LogoImgDark : LogoImg} alt="" />
+                </div>
+              }
+
+              <div
+
+              className={`${message.role === 'user' ? 'user-message' :
+                message.type === 'thinking' ? 'assistant-thinking' : 'assistant-response'}`}
+            >
+                <div className={`${message.role === 'user' ? 'ss' : "msgFlex"}`}>
+
+                  {message?.type === 'thinking' ? (
+                    <div className="message thinking-content">
+                      <div className="thinking-icon">🤔</div>
+                      <div className="thinking-text">{message.content}</div>
+                    </div>
+                  ) : (
+                    <div className="message message-content">
+                      <ReactMarkdown
+                        remarkPlugins={[remarkGfm]}
+                        components={{
+                          code({ node, inline, className, children, ...props }:any) {
+                            return <Code node={node} inline={inline} className={className} children={children} />
+                          },
+                        }}
+                      >
+                        {message.content}
+                      </ReactMarkdown>
+                    </div>
+                  )}
+                </div>
+
+              {
+                ( message.role !== 'user' && message.type !== 'thinking'  && !isLoading ) &&   <div className="flexLine">
+                  <span onClick={()=>handleReSend(message.questionId)}>重新发送</span>
+                  <span onClick={()=>handleDelete(message.questionId)}>删除</span>
+                  {
+                    !isCopied && <CopyToClipboard text={message.content} onCopy={handleCopy}>
+                      <span>复制</span>
+                    </CopyToClipboard>
+                  }
+                  {
+                    isCopied && <span>成功</span>
+                  }
+                </div>
+              }
+
+            </div>
+            </div>
+
+          ))}
+          {isLoading && (
+            <div className="message assistant-message">
+              <div className="loading-indicator">
+                <div className="dot"></div>
+                <div className="dot"></div>
+                <div className="dot"></div>
+              </div>
+            </div>
+          )}
+          <div ref={messagesEndRef} />
+        </div>
+        <div className="chat-input">
+        <textarea
+          value={inputMessage}
+          onChange={(e) => setInputMessage(e.target.value)}
+          onKeyPress={handleKeyPress}
+          placeholder="Type your message..."
+          rows={1}
+        />
+          <button
+            onClick={handleUserMsg}
+            disabled={isLoading || !inputMessage.trim()}
+          >
+            Send
+          </button>
+          <button
+            onClick={()=>handleStop()}
+            disabled={!isLoading}>stop</button>
+        </div>
+      </div>
+
+    </div>
+  );
+};
