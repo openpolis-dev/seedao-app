@@ -919,5 +919,7 @@
     "step2": "Set NFT URI",
     "selectSBT": "Select SBT",
     "tips": "The auditor  can't be same as applicant"
-  }
+  },
+  "aiTips": "Send message to AI",
+  "clearTips": "Clear Chat"
 }

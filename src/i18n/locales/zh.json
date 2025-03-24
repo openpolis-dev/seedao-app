@@ -921,5 +921,7 @@
     "selectSBT": "选择SBT",
     "tips": "审核人和申请人不能相同"
 
-  }
+  },
+  "aiTips": "给AI发消息",
+  "clearTips": "清除聊天"
 }
