@@ -700,7 +700,9 @@
     "SNSQueryDesc": "通过SNS查询社区成员在社区里的公开信息",
     "podcastTitle": "SeeTalk播客",
     "podcastDesc": "SeeTalk是一档由SeeDAO社区成员共创Web3节目，传递着社区成员的共创涌现和SeeDAO当前正在做的重要工作与规划",
-    "whitePaper": "白皮书"
+    "whitePaper": "白皮书",
+    "chatAI": "SeeChat",
+    "chatAITips": "网页版的 SeeChat (DeepSeek + SeeDAO 知识库)，大家可以跟 AI 聊天了"
   },
   "SNS": {
     "EntranceTitle": "获取你的 SNS，开始你的 SeeDAO 之旅",
