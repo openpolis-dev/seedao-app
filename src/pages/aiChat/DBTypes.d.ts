@@ -8,7 +8,7 @@ export interface Message {
     messageId?:number;
     uniqueId:string;
     questionId:string;
-
+    address:string;
 }
 
 export interface ResponseMessage {

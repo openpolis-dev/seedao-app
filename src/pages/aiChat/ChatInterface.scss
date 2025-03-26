@@ -352,7 +352,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-top: 20px;
+  margin-top: 6px;
   //position: absolute;
   //bottom: -30px;
   //left: 0;
@@ -404,4 +404,8 @@
 }
 .frht{
   order: 2;
+}
+
+.flexTB{
+  margin-bottom: 10px;
 }

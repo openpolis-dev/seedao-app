@@ -1,6 +1,6 @@
 export const DBConfig = {
     name: "MyDB",
-    version: 3,
+    version: 5,
     objectStoresMeta: [
         {
             store: "list",
@@ -13,8 +13,7 @@ export const DBConfig = {
                 { name:"timestamp", keypath: "timestamp", options: { unique: false } },
                 { name:"uniqueId", keypath: "uniqueId", options: { unique: true } },
                 { name:"questionId", keypath: "questionId", options: { unique: false } },
-
-
+                { name:"address", keypath: "address", options: { unique: false } },
             ],
         },
 

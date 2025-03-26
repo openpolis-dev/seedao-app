@@ -5,19 +5,21 @@ import './ChatInterface.scss';
 import {useIndexedDB} from "react-indexed-db-hook";
 import { nanoid } from 'nanoid'
 import {Message} from "./DBTypes";
-import { CopyToClipboard } from 'react-copy-to-clipboard';
 import Code from "./code";
 
 import LogoImg from '../../assets/Imgs/light/creditLogo2.svg';
 import LogoImgDark from '../../assets/Imgs/dark/creditLogo.svg';
-import { useAuthContext } from "../../providers/authProvider";
+import { AppActionType, useAuthContext } from "../../providers/authProvider";
 import PublicJs from "../../utils/publicJs";
 import DefaultAvatar from "../../assets/Imgs/defaultAvatarT.png";
 
-import {Copy,CopyCheck,Trash2,RefreshCcw,ArrowUp,Square,Eraser} from "lucide-react";
+import {Trash2,RefreshCcw,ArrowUp,Square,Eraser} from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { chatCompletions, getAllModels } from "../../requests/chatAI";
 import {  truncateContext } from "../../utils/chatTool";
+import useCheckLogin from "../../hooks/useCheckLogin";
+import { SEEDAO_ACCOUNT } from "../../utils/constant";
+import Copied from "./copied";
 
 
 export const ChatInterface= () => {
@@ -25,7 +27,7 @@ export const ChatInterface= () => {
   const [inputMessage, setInputMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [isCopied, setCopied] = useState(false);
+
   const [avatar, setAvatar] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { t } = useTranslation();
@@ -34,10 +36,15 @@ export const ChatInterface= () => {
 
   const [collection, setCollection] = useState<string[]>([]);
   const { add,getAll ,deleteRecord,clear} = useIndexedDB("list");
+  const acc = localStorage.getItem(SEEDAO_ACCOUNT);
+
 
   const {
-    state: { theme,userData},
+    state: { theme,userData,account},
+    dispatch
   } = useAuthContext();
+
+  const isLogin = useCheckLogin(account);
 
 
   useEffect(() => {
@@ -56,11 +63,13 @@ export const ChatInterface= () => {
   }
 
   useEffect(() => {
+    if(!account)return;
     getMessage()
-  }, []);
+  }, [account]);
 
   const getMessage = async () => {
-    let newMessages = await getAll()
+    let rt = await getAll()
+    const newMessages = rt.filter((item:Message) => item.address?.toLowerCase() === account?.toLowerCase())
     setMessages(newMessages)
   }
 
@@ -74,6 +83,11 @@ export const ChatInterface= () => {
   }, [messages,isLoading]);
 
   const handleUserMsg = async() =>{
+
+    if (!isLogin && acc === "null") {
+      dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: true });
+      return;
+    }
     if (!inputMessage.trim()) return;
 
     let uId = nanoid();
@@ -84,6 +98,7 @@ export const ChatInterface= () => {
       uniqueId:uId,
       questionId:uId,
       timestamp: Date.now(),
+      address:account!
     };
 
 
@@ -97,7 +112,8 @@ export const ChatInterface= () => {
   const sendMessage = async (userMessage:Message) => {
 
     await add({...userMessage})
-    let newMessages = await getAll()
+    let rt = await getAll()
+    const newMessages = rt.filter((item:Message) => item.address?.toLowerCase() === account?.toLowerCase())
 
     setIsLoading(true);
     const abortController = new AbortController();
@@ -105,7 +121,7 @@ export const ChatInterface= () => {
 
     const systemRoleObj = {
       role: "system",
-      content: "你是一个有帮助的AI助手。请用中文回答。当你收到消息时，首先将你的思考过程嵌入到<think>和</think>标签之间，然后提供你的回答。请确保所有回复都使用简体中文，包括思考过程。以专业、友好的语气回答，并在合适的时候使用emoji表情",
+      content: "你是一个有帮助的AI助手。请用中文回答。当你收到消息时，首先在<think>标签内展示你的思考过程，然后提供你的回答。请确保所有回复都使用简体中文，包括思考过程。以专业、友好的语气回答，并在合适的时候使用emoji表情",
     }
     let content = "";
     let currentId = "";
@@ -157,6 +173,7 @@ export const ChatInterface= () => {
                 timestamp: Date.now(),
                 uniqueId:nanoid(),
                 questionId:userMessage.uniqueId,
+                address:account!
               };
                 if (thinkingMatch) {
 
@@ -174,6 +191,7 @@ export const ChatInterface= () => {
                     id:currentId,
                     uniqueId:nanoid(),
                     questionId:userMessage.uniqueId,
+                    address:account!
                   })
 
                   if (responseContent) {
@@ -220,6 +238,7 @@ export const ChatInterface= () => {
         uniqueId:nanoid(),
         questionId:userMessage.uniqueId,
         timestamp: Date.now(),
+        address:account!
       }])
 
       await readChunk();
@@ -233,6 +252,7 @@ export const ChatInterface= () => {
           uniqueId:nanoid(),
           questionId:userMessage.uniqueId,
           timestamp: Date.now(),
+          address:account!
         };
         setMessages(prev => [...prev, errorSystemMessage]);
 
@@ -247,7 +267,8 @@ export const ChatInterface= () => {
           role: 'assistant',
           timestamp: Date.now(),
           uniqueId:nanoid(),
-          questionId:userMessage.uniqueId
+          questionId:userMessage.uniqueId,
+          address:account!
 
         };
         setMessages(prev => [...prev, errorSystemMessage]);
@@ -275,7 +296,9 @@ export const ChatInterface= () => {
   };
 
   const handleReSend = async(qid:string) =>{
-    let newMessages = await getAll()
+    let rt = await getAll()
+
+    const newMessages = rt.filter((item:Message) => item.address?.toLowerCase() === account?.toLowerCase())
     const needResend = newMessages.find(msg=>msg.uniqueId === qid);
     if(!needResend)return;
     const findIdx = needResend.messageId!;
@@ -309,35 +332,45 @@ export const ChatInterface= () => {
 
    for(let i = 0; i < needDelete.length; i++) {
      await deleteRecord(needDelete[i].messageId!)
-
    }
    const needDisplay = newMessages.filter(msg=>msg.questionId !== qid);
 
    setMessages(needDisplay);
 
   }
-  const handleCopy = (content:string) =>{
-    // console.log(content);
-    setCopied(true)
-    setTimeout(()=>{
-      setCopied(false)
-    },1000)
-  }
+
 
   const handleClear = async() =>{
-    await clear()
+
+
+    let rt = await getAll()
+
+    const newMessages = rt.filter((item:Message) => item.address?.toLowerCase() === account?.toLowerCase())
+    for(let i = 0; i < newMessages.length; i++) {
+      await deleteRecord(newMessages[i].messageId!)
+    }
+    
     setMessages([])
   }
 
-  // useEffect(() => {
-  //   if (!(userData as any)?.data) return;
-  //   getAvatar();
-  // }, [userData]);
-  //
-  // const getAvatar = async () => {
-  //   let avarUrl = await PublicJs.getImage((userData as any)?.data?.avatar ?? '');
-  //   setAvatar(avarUrl!);
-  // };
+  useEffect(() => {
+
+
+    if (!isLogin && acc === "null") {
+      dispatch({ type: AppActionType.SET_LOGIN_MODAL, payload: true });
+      return;
+    }
+  }, [isLogin]);
+  useEffect(() => {
+    if (!isLogin) return;
+
+    getAvatar();
+  }, [userData,isLogin]);
+
+  const getAvatar = async () => {
+    let avarUrl = await PublicJs.getImage((userData as any)?.data?.avatar ?? '');
+    setAvatar(avarUrl!);
+  };
 
   return (
     <div className="chat-container">
@@ -353,74 +386,70 @@ export const ChatInterface= () => {
             {messages.map((message) => (
               <div  key={nanoid()} className={`${message.role === 'user'?"flexBox flexEnd":"flexBox flexStart"}`}>
 
-                {/*{*/}
-                {/*  message.role === 'user' && <div className="logoBox frht">*/}
-                {/*    {*/}
-                {/*      !!(userData as any)?.data &&  <img src={avatar || DefaultAvatar} alt="" />*/}
-                {/*    }*/}
-                {/*    {*/}
-                {/*      !(userData as any)?.data && <img src={DefaultAvatar} alt="" />*/}
-                {/*    }*/}
+                {
+                  message.role === 'user' && <div className="logoBox frht">
+                    {
+                      !!(userData as any)?.data &&  <img src={avatar || DefaultAvatar} alt="" />
+                    }
+                    {
+                      !(userData as any)?.data && <img src={DefaultAvatar} alt="" />
+                    }
 
-                {/*  </div>*/}
-                {/*}*/}
+                  </div>
+                }
                 {
                   message.role !== 'user'&&  <div className="logoBox">
                     <img src={theme ? LogoImgDark : LogoImg} alt="" />
                   </div>
                 }
 
-                <div
+                <div className="flexTB">
+                  <div
 
-                  className={`${message.role === 'user' ? 'user-message' :
-                    message.type === 'thinking' ? 'assistant-thinking' : 'assistant-response'}`}
-                >
-                  <div className={`${message.role === 'user' ? 'ss' : "msgFlex"}`}>
+                    className={`${message.role === 'user' ? 'user-message' :
+                      message.type === 'thinking' ? 'assistant-thinking' : 'assistant-response'}`}
+                  >
+                    <div className="msgFlex">
 
-                    {message?.type === 'thinking' ? (
-                      <div className="message thinking-content">
-                        <div className="thinking-icon">🤔</div>
-                        <div className="thinking-text">{message.content}</div>
-                      </div>
-                    ) : (
-                      <div className="message message-content">
-                        <ReactMarkdown
-                          remarkPlugins={[remarkGfm]}
-                          components={{
-                            code({ node, inline, className, children, ...props }:any) {
-                              return <Code node={node} inline={inline} className={className} children={children} />
-                            },
-                          }}
-                        >
-                          {message.content}
-                        </ReactMarkdown>
-                      </div>
-                    )}
+                      {message?.type === 'thinking' ? (
+                        <div className="message thinking-content">
+                          <div className="thinking-icon">🤔</div>
+                          <div className="thinking-text">{message.content}</div>
+                        </div>
+                      ) : (
+                        <div className="message message-content">
+                          <ReactMarkdown
+                            remarkPlugins={[remarkGfm]}
+                            components={{
+                              code({ node, inline, className, children, ...props }:any) {
+                                return <Code node={node} inline={inline} className={className} children={children} />
+                              },
+                            }}
+                          >
+                            {message.content}
+                          </ReactMarkdown>
+                        </div>
+                      )}
+                    </div>
+
+
+
                   </div>
-
                   {
-                    ( message.role !== 'user' && message.type !== 'thinking'  && !isLoading ) &&   <div className="flexLine">
+                    ( message.type !== 'thinking'  && !isLoading ) &&   <div className="flexLine">
   <span onClick={()=>handleReSend(message.questionId)}>
                           <RefreshCcw size={18} />
                     </span>
                       <span onClick={()=>handleDelete(message.questionId)}>
                     <Trash2 size={18} />
                   </span>
-                      <span>
-                  {
-                    !isCopied && <CopyToClipboard text={message.content} onCopy={handleCopy}>
-                      <Copy size={18} />
-                    </CopyToClipboard>
-                  }
-                        {
-                          isCopied && <CopyCheck size={18} color="#5200FF" />
-                        }
-                </span>
+                      <Copied content={message.content} />
+
 
                     </div>
                   }
-
                 </div>
+
               </div>
 
             ))}
