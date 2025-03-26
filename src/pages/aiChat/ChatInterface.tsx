@@ -349,7 +349,7 @@ export const ChatInterface= () => {
     for(let i = 0; i < newMessages.length; i++) {
       await deleteRecord(newMessages[i].messageId!)
     }
-    
+
     setMessages([])
   }
 

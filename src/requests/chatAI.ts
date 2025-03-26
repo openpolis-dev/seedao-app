@@ -1,4 +1,7 @@
 import axios from "axios";
+import request from "./http";
+
+const PATH_PREFIX = '/user';
 
 export const getAllModels = async () => {
   const response = await axios.get(`${process.env.REACT_APP_DEEPSEEK_API_URL}/api/models`, {
@@ -31,4 +34,9 @@ export const chatCompletions = async (obj:string,abortController: typeof AbortCo
     throw new Error(`API request failed with status ${response.status}`);
   }
   return response;
+}
+
+
+export const getNewToken = async () => {
+  return request.post(`${PATH_PREFIX}/refresh/dsapikey`);
 }
