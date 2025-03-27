@@ -37,7 +37,7 @@ export const ChatInterface= () => {
   const [controller, setController] = useState<any>(null);
 
   const [collection, setCollection] = useState<string[]>([]);
-  const { add,getAll ,deleteRecord,clear} = useIndexedDB("list");
+  const { add,getAll ,deleteRecord} = useIndexedDB("list");
   const acc = localStorage.getItem(SEEDAO_ACCOUNT);
   const {  showToast } = useToast();
 
@@ -74,8 +74,6 @@ export const ChatInterface= () => {
       console.log(error);
       showToast(`${error?.data?.msg || error?.code || error}`, ToastType.Danger);
     }
-
-
   }
 
   const getModels = async() =>{
@@ -267,7 +265,7 @@ export const ChatInterface= () => {
       }])
 
       await readChunk();
-    } catch (error) {
+    } catch (error:any) {
       if ((error as any).name === 'AbortError') {
         const errorSystemMessage: Message = {
           id: Date.now().toString(),
@@ -297,6 +295,7 @@ export const ChatInterface= () => {
 
         };
         setMessages(prev => [...prev, errorSystemMessage]);
+        showToast(`${error?.data?.msg || error?.code || error}`, ToastType.Danger);
       }
 
     } finally {

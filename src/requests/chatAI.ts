@@ -2,7 +2,7 @@ import axios from "axios";
 import request from "./http";
 
 const PATH_PREFIX = '/user';
-const DEEPSEEK_API_URL ="https://dschat.seedao.tech/v1"
+export const DEEPSEEK_API_URL ="https://dschat.seedao.tech/v1"
 
 
 export const getAllModels = async (apiKey:string) => {

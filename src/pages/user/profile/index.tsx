@@ -26,7 +26,7 @@ import SeedList from '../../../components/profile/seed';
 import Sbt from '../../../components/profile/Sbt';
 import { getMyRewards } from 'requests/invite';
 import {RefreshCcw} from "lucide-react";
-import { getNewToken } from "../../../requests/chatAI";
+import { DEEPSEEK_API_URL, getNewToken } from "../../../requests/chatAI";
 
 const OuterBox = styled.div`
   margin-bottom: 50px;
@@ -340,21 +340,32 @@ export default function Profile() {
           </InviteDetail>
         </LevelInfo>
       </ProgressOuter>
-      <BgBox>
+      <BgBox2>
         <TitleLft>
           <img src={AiKeyImg} alt="" />
           <span>SeeChat Api Key</span>
         </TitleLft>
         <RhtBox2>
-          {apiKey}
-          <CopyBox text={apiKey || ''} dir="left">
-            <img src={CopyIconSVG} alt="" />
-          </CopyBox>
-
-
-          <RefreshCcw size={16} className="refresh" onClick={()=>refreshToken()} />
+          <div className="tp">
+            {apiKey}
+            <CopyBox text={apiKey || ''} dir="left">
+              <img src={CopyIconSVG} alt="" />
+            </CopyBox>
+            <RefreshCcw size={16} className="refresh" onClick={()=>refreshToken()} />
+          </div>
+          <div className="tp btm">
+            <div className="lft">
+              API Endpoint
+            </div>
+            <div>
+              {DEEPSEEK_API_URL}
+            </div>
+            <CopyBox text={DEEPSEEK_API_URL || ''} dir="left">
+              <img src={CopyIconSVG} alt="" />
+            </CopyBox>
+          </div>
         </RhtBox2>
-      </BgBox>
+      </BgBox2>
       <BgBox>
         <TitleLft>
           <img src={SeedImg} alt="" />
@@ -625,6 +636,12 @@ const BgBox = styled.div`
   display: flex;
   align-items: center;
 `;
+
+const BgBox2 = styled(BgBox)`
+  align-content: flex-start;
+    padding: 0 24px 20px;
+    
+`
 const RhtBoxB = styled.div`
   flex-grow: 1;
   font-size: 12px;
@@ -636,11 +653,25 @@ const RhtBoxB = styled.div`
 
 const RhtBox2 = styled(RhtBoxB)`
     display: flex;
-    align-items: center;
+    flex-direction: column;
     gap: 10px;
+    margin-top:25px;
     .refresh{
         color: var(--bs-body-color);
         cursor: pointer;
+    }
+    .tp{
+        display: flex;
+        align-items: center;
+        gap: 10px; 
+        
+    }
+    .btm{
+        color: var(--bs-primary);
+        
+    }
+    .lft{
+        font-weight: bold;
     }
 `
 
