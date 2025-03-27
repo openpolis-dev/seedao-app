@@ -348,8 +348,8 @@ export const ChatInterface= () => {
 
   }
  const handleDelete = async(qid:string) =>{
-
-   let newMessages = await getAll()
+   let rt = await getAll()
+   const newMessages = rt.filter((item) => item.address?.toLowerCase() === account?.toLowerCase())
 
    const needDelete = newMessages.filter(msg=>msg.questionId === qid);
    if(!needDelete)return;
