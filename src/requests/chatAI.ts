@@ -2,25 +2,27 @@ import axios from "axios";
 import request from "./http";
 
 const PATH_PREFIX = '/user';
+const DEEPSEEK_API_URL ="https://dschat.seedao.tech/v1"
 
-export const getAllModels = async () => {
-  const response = await axios.get(`${process.env.REACT_APP_DEEPSEEK_API_URL}/api/models`, {
+
+export const getAllModels = async (apiKey:string) => {
+  const response = await axios.get(`${DEEPSEEK_API_URL}/api/models`, {
     headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${process.env.REACT_APP_DEEPSEEK_API_KEY}`
-    }
+      "content-type": "application/json",
+      'X-API-Key': apiKey
+    },
   });
 
   return response.data.data;
 }
 
 
-export const chatCompletions = async (obj:string,abortController: typeof AbortController.prototype) => {
+export const chatCompletions = async (obj:string,abortController: typeof AbortController.prototype,apiKey:string) => {
 
-  const response = await fetch(`${process.env.REACT_APP_DEEPSEEK_API_URL}/api/chat/completions`, {
+  const response = await fetch(`${DEEPSEEK_API_URL}/api/chat/completions`, {
     "headers": {
       "content-type": "application/json",
-      'Authorization': `Bearer ${process.env.REACT_APP_DEEPSEEK_API_KEY}`
+      'X-API-Key': apiKey
     },
 
     "body": obj,
@@ -40,3 +42,8 @@ export const chatCompletions = async (obj:string,abortController: typeof AbortCo
 export const getNewToken = async () => {
   return request.post(`${PATH_PREFIX}/refresh/dsapikey`);
 }
+
+export const loginChat = async () => {
+  return request.post(`${PATH_PREFIX}/auth/dschat`);
+}
+

@@ -15,11 +15,12 @@ import DefaultAvatar from "../../assets/Imgs/defaultAvatarT.png";
 
 import {Trash2,RefreshCcw,ArrowUp,Square,Eraser} from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { chatCompletions, getAllModels } from "../../requests/chatAI";
+import { chatCompletions, getAllModels, loginChat } from "../../requests/chatAI";
 import {  truncateContext } from "../../utils/chatTool";
 import useCheckLogin from "../../hooks/useCheckLogin";
 import { SEEDAO_ACCOUNT } from "../../utils/constant";
 import Copied from "./copied";
+import useToast, { ToastType } from "../../hooks/useToast";
 
 
 export const ChatInterface= () => {
@@ -27,6 +28,7 @@ export const ChatInterface= () => {
   const [inputMessage, setInputMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [apiKey, setApiKey] = useState<string>("");
 
   const [avatar, setAvatar] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -37,6 +39,7 @@ export const ChatInterface= () => {
   const [collection, setCollection] = useState<string[]>([]);
   const { add,getAll ,deleteRecord,clear} = useIndexedDB("list");
   const acc = localStorage.getItem(SEEDAO_ACCOUNT);
+  const {  showToast } = useToast();
 
 
   const {
@@ -46,27 +49,53 @@ export const ChatInterface= () => {
 
   const isLogin = useCheckLogin(account);
 
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages,isLoading]);
+
 
   useEffect(() => {
+    if(!apiKey) return;
     getModels()
-  }, []);
-
-  const getModels = async() =>{
-    const rt = await getAllModels();
-    let arr =  rt
-        .filter((item:any) => item.info?.meta?.knowledge !== undefined)
-        .map((item:any) => item.info?.meta?.knowledge);
-
-    let newIds = arr[0]?.map((item:any) => item.id) ??[];
-
-    setCollection(newIds)
-  }
+  }, [apiKey]);
 
   useEffect(() => {
     if(!account)return;
+    getApiKey()
     getMessage()
   }, [account]);
 
+
+  const getApiKey = async () => {
+    try{
+      let rt = await loginChat();
+      setApiKey(rt.data.apiKey)
+    }catch(error:any){
+      console.log(error);
+      showToast(`${error?.data?.msg || error?.code || error}`, ToastType.Danger);
+    }
+
+
+  }
+
+  const getModels = async() =>{
+    try {
+      const rt = await getAllModels(apiKey);
+      let arr =  rt
+        .filter((item:any) => item.info?.meta?.knowledge !== undefined)
+        .map((item:any) => item.info?.meta?.knowledge);
+
+      let newIds = arr[0]?.map((item:any) => item.id) ??[];
+
+      setCollection(newIds)
+
+    }catch(error:any){
+      console.log(error);
+      showToast(`${error?.data?.msg || error?.code || error}`, ToastType.Danger);
+    }
+
+
+  }
   const getMessage = async () => {
     let rt = await getAll()
     const newMessages = rt.filter((item:Message) => item.address?.toLowerCase() === account?.toLowerCase())
@@ -77,10 +106,6 @@ export const ChatInterface= () => {
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
-
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages,isLoading]);
 
   const handleUserMsg = async() =>{
 
@@ -134,14 +159,14 @@ export const ChatInterface= () => {
       const truncatedMessages = truncateContext(newMsg, 8000-500);
 
       let obj = JSON.stringify({
-        model: process.env.REACT_APP_DEEPSEEK_MODEL,
+        model:"deepseek-reasoner",
         messages:[systemRoleObj,...truncatedMessages],
         "files": collectionIds,
         "stream": true
       });
 
 
-    let response = await chatCompletions(obj,abortController);
+    let response = await chatCompletions(obj,abortController,apiKey);
 
       const reader = response.body?.getReader();
       const decoder = new TextDecoder();
