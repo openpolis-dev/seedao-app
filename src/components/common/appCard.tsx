@@ -9,6 +9,8 @@ import AddImg from '../../assets/Imgs/dark/addWhite.svg';
 import AddImgLight from '../../assets/Imgs/light/add.svg';
 import LinkImg from '../../assets/Imgs/link.svg';
 import React from 'react';
+import { loginChat } from "../../requests/chatAI";
+import useToast, { ToastType } from "../../hooks/useToast";
 
 const AppCard = ({
   icon,
@@ -36,11 +38,35 @@ const AppCard = ({
     state: { theme, userData },
     dispatch,
   } = useAuthContext();
-  const handleClickEvent = () => {
+  const {  showToast } = useToast();
+
+  const getApiKey = async () => {
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    try{
+      let rt = await loginChat();
+      console.log(rt.data.apiKey)
+    }catch(error:any){
+      console.log(error);
+      showToast(`${error?.data?.msg || error?.code || error}`, ToastType.Danger);
+      setTimeout(()=>{
+        navigate(-1)
+      },1000)
+    }finally{
+      dispatch({ type: AppActionType.SET_LOADING, payload: false });
+    }
+  }
+  const handleClickEvent = async () => {
     if (id === 'coming-soon' || (disabled && id==='module-sbt')) {
       return;
     } else if (id.startsWith('module-')) {
-      navigate(link);
+      if(id === "module-ai"){
+        await getApiKey()
+      }else{
+        navigate(link);
+      }
+
+
+
     } else if (id.startsWith('resource-')) {
       if ((hiddenFields && hiddenFields?.length && userData) || !(hiddenFields && hiddenFields?.length)) {
         const url = link.split('https://tally.so/r/')[1];
