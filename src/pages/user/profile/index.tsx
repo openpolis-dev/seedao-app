@@ -350,11 +350,21 @@ export default function Profile() {
             <div className="lft">
               API Key
             </div>
-            {apiKey}
-            <CopyBox text={apiKey || ''} dir="left">
-              <img src={CopyIconSVG} alt="" />
-            </CopyBox>
-            <RefreshCcw size={16} className="refresh" onClick={()=>refreshToken()} />
+            {
+              !!apiKey && <>
+                {apiKey}
+                <CopyBox text={apiKey || ''} dir="left">
+                  <img src={CopyIconSVG} alt="" />
+                </CopyBox>
+                <RefreshCcw size={16} className="refresh" onClick={()=>refreshToken()} />
+              </>
+            }
+            {
+              !apiKey && <>
+                {t('My.seeDaoTips')}
+              </>
+            }
+
           </div>
           <div className="tp btm">
             <div className="lft">
