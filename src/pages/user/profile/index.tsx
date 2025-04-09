@@ -340,13 +340,16 @@ export default function Profile() {
           </InviteDetail>
         </LevelInfo>
       </ProgressOuter>
-      <BgBox2>
+      <BgBox>
         <TitleLft>
           <img src={AiKeyImg} alt="" />
-          <span>SeeChat Api Key</span>
+          <span>SeeChat</span>
         </TitleLft>
         <RhtBox2>
           <div className="tp">
+            <div className="lft">
+              API Key
+            </div>
             {apiKey}
             <CopyBox text={apiKey || ''} dir="left">
               <img src={CopyIconSVG} alt="" />
@@ -355,7 +358,7 @@ export default function Profile() {
           </div>
           <div className="tp btm">
             <div className="lft">
-              API Endpoint
+             Endpoint
             </div>
             <div>
               {DEEPSEEK_API_URL}
@@ -365,7 +368,7 @@ export default function Profile() {
             </CopyBox>
           </div>
         </RhtBox2>
-      </BgBox2>
+      </BgBox>
       <BgBox>
         <TitleLft>
           <img src={SeedImg} alt="" />
@@ -592,7 +595,7 @@ const EditButton = styled(Link)`
 const TitleLft = styled.div`
   display: flex;
   align-items: center;
-  width: 170px;
+  width: 120px;
   flex-shrink: 0;
   img {
     width: 18px;
@@ -637,11 +640,6 @@ const BgBox = styled.div`
   align-items: center;
 `;
 
-const BgBox2 = styled(BgBox)`
-  align-content: flex-start;
-    padding: 0 24px 20px;
-    
-`
 const RhtBoxB = styled.div`
   flex-grow: 1;
   font-size: 12px;
@@ -655,7 +653,7 @@ const RhtBox2 = styled(RhtBoxB)`
     display: flex;
     flex-direction: column;
     gap: 10px;
-    margin-top:25px;
+    margin-top:0;
     .refresh{
         color: var(--bs-body-color);
         cursor: pointer;
@@ -666,12 +664,12 @@ const RhtBox2 = styled(RhtBoxB)`
         gap: 10px; 
         
     }
-    .btm{
-        color: var(--bs-primary);
-        
-    }
     .lft{
         font-weight: bold;
+        width:100px;
+        background:var(--bs-border-color_opacity);
+        padding: 5px;
+        text-align: center;
     }
 `
 
