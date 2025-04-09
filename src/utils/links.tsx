@@ -14,7 +14,9 @@ import SeeUImg from '../assets/Imgs/home/seeuNetwork.jpg';
 import SNSImg from '../assets/Imgs/home/sns2.jpg';
 import EchoImg from '../assets/Imgs/home/echo.svg';
 import CreditImg from '../assets/Imgs/home/credit.jpg';
-import SNSQueryImg from "../assets/Imgs/snsquery.png"
+import SNSQueryImg from "../assets/Imgs/snsquery.png";
+import AiImg from "../assets/Imgs/ai.jpeg";
+
 
 import RImg1 from '../assets/Imgs/resources/1.png';
 import RImg2 from '../assets/Imgs/resources/2.png';
@@ -303,6 +305,13 @@ const links = {
     // },
   ],
   apps: [
+    {
+      id: 'module-ai',
+      name: 'apps.chatAI',
+      link: '/ai',
+      icon: AiImg,
+      desc: 'apps.chatAITips',
+    },
     {
       id: 'podcast',
       name: 'apps.podcastTitle',
