@@ -21,6 +21,7 @@ import useCheckLogin from "../../hooks/useCheckLogin";
 import { SEEDAO_ACCOUNT } from "../../utils/constant";
 import Copied from "./copied";
 import useToast, { ToastType } from "../../hooks/useToast";
+import { useNavigate } from "react-router-dom";
 
 
 export const ChatInterface= () => {
@@ -40,6 +41,7 @@ export const ChatInterface= () => {
   const { add,getAll ,deleteRecord} = useIndexedDB("list");
   const acc = localStorage.getItem(SEEDAO_ACCOUNT);
   const {  showToast } = useToast();
+  const navigate = useNavigate();
 
 
   const {
@@ -73,6 +75,9 @@ export const ChatInterface= () => {
     }catch(error:any){
       console.log(error);
       showToast(`${error?.data?.msg || error?.code || error}`, ToastType.Danger);
+      setTimeout(()=>{
+        navigate("/")
+      },1000)
     }
   }
 
