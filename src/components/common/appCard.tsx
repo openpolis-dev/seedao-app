@@ -45,6 +45,7 @@ const AppCard = ({
     try{
       let rt = await loginChat();
       console.log(rt.data.apiKey)
+      navigate(link);
     }catch(error:any){
       console.log(error);
       showToast(`${error?.data?.msg || error?.code || error}`, ToastType.Danger);
