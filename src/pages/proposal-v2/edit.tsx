@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import BackerNav from 'components/common/backNav';
 import { ContainerPadding } from 'assets/styles/global';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
@@ -7,7 +6,7 @@ import React, { useEffect, useState, useRef, ChangeEvent } from 'react';
 import { IContentBlock, IProposal, ProposalState, Poll } from 'type/proposalV2.type';
 import { useAuthContext, AppActionType } from 'providers/authProvider';
 import { Preview, Template } from '@taoist-labs/components';
-import { MdEditor, MdPreview } from 'md-editor-rt';
+import { MdEditor } from 'md-editor-rt';
 import useCheckMetaforoLogin from 'hooks/useMetaforoLogin';
 import { updateProposal, getProposalDetail, UploadPictures } from 'requests/proposalV2';
 import { Button } from 'react-bootstrap';
@@ -19,7 +18,6 @@ import useProposalCategories from 'hooks/useProposalCategories';
 import PlusImg from '../../assets/Imgs/light/plus.svg';
 import MinusImg from '../../assets/Imgs/light/minus.svg';
 import ConfirmModal from '../../components/modals/confirmModal';
-import dayjs from "dayjs";
 
 export default function EditProposal() {
   const { t, i18n } = useTranslation();
@@ -149,6 +147,27 @@ export default function EditProposal() {
       };
     }
   }, [id, state]);
+
+  const checkBudget = (data: any) => {
+    const budgetData = (data as any)?.filter((item: any) => item.name === 'budget') || [];
+
+    if (budgetData?.length) {
+      let USDCSum =0;
+      let SCRSum =0;
+      budgetData[0]?.data?.budgetList.map((item: any) => {
+        if (item?.typeTest?.name === 'USDC') {
+          USDCSum+=1
+        } else if (item?.typeTest?.name === 'SCR') {
+          SCRSum+=1;
+        }
+      });
+      if(USDCSum>1 || SCRSum>1){
+        return false
+      }
+    }
+    return true;
+
+  }
 
   const handleParse = (arr:any) =>{
     let strArr = JSON.parse(arr)
@@ -288,16 +307,25 @@ export default function EditProposal() {
     if (!data || !success) {
       return;
     }
+
+    let onlyOne = checkBudget(submitData);
+    if(!onlyOne){
+      showToast(t('budgetTips'), ToastType.Danger);
+      return;
+    }
+
     const newTime = new Date().valueOf();
     const publicity_ts = (data?.publicity_ts ?? 0) * 1000
+
+
 
     if( publicity_ts && publicity_ts < newTime && submitType === 'submit'){
       showToast(t("Proposal.reviewTips"), ToastType.Danger, {
         hideProgressBar: true,
       });
+
       return;
     }
-
 
     if (((data as any)?.template_name === 'P2提案结项' || (data as any)?.template_name === 'P3提案结项' )) {
 
@@ -310,6 +338,7 @@ export default function EditProposal() {
 
 
     let budgetArr = data?.components?.filter((item: any) => item.name === 'budget') || [];
+
     if (data?.template_name === 'P2提案立项' && budgetArr?.length > 0) {
       let err = false;
 
@@ -330,7 +359,6 @@ export default function EditProposal() {
       setShowErrorTips(err);
       if (err) return;
     }
-
     // let dataFormat: any = {};
     //
     // for (const dataKey in submitData) {
@@ -358,6 +386,8 @@ export default function EditProposal() {
     }
 
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
+
+
 
     updateProposal(Number(data!.id), {
       title,
