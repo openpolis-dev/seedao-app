@@ -14,7 +14,7 @@ const useCheckLogin = (account?: string) => {
     dispatch({ type: AppActionType.CLEAR_AUTH, payload: undefined });
     return false;
   }
-  return tokenData?.token && account && account === tokenAccount;
+  return !!(tokenData?.token && account && account === tokenAccount);
 };
 
 export default useCheckLogin;

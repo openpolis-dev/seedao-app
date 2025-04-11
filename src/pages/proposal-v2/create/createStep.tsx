@@ -419,17 +419,13 @@ export default function CreateStep({ onClick }: any) {
       return;
     }
 
+    let onlyOne = checkBudget(data);
+    if(!onlyOne){
+      showToast(t('budgetTips'), ToastType.Danger);
+      return;
+    }
+
     setLoading(true);
-    // let dataFormat: any = {};
-    //
-    // for (const dataKey in data) {
-    //   dataFormat[dataKey] = {
-    //     name: dataKey,
-    //     data: data[dataKey],
-    //   };
-    // }
-
-
 
     const canSubmit = await checkMetaforoLogin();
     if (canSubmit) {
@@ -487,6 +483,14 @@ export default function CreateStep({ onClick }: any) {
   };
 
   const handleFormSubmit = async (success: boolean, data: any) => {
+
+    let onlyOne = checkBudget(data);
+    if(!onlyOne){
+      showToast(t('budgetTips'), ToastType.Danger);
+      return;
+    }
+
+
   let checkEth = false;
 
     for (let i = 0; i < data?.length; i++) {
@@ -592,6 +596,28 @@ export default function CreateStep({ onClick }: any) {
       setList([...arr]);
     }
   };
+
+  const checkBudget = (data: any) => {
+
+    const budgetData = data?.filter((item: any) => item.name === 'budget') || [];
+
+    if (budgetData?.length) {
+      let USDCSum =0;
+      let SCRSum =0;
+      budgetData[0]?.data?.budgetList.map((item: any) => {
+        if (item?.typeTest?.name === 'USDC') {
+          USDCSum+=1
+        } else if (item?.typeTest?.name === 'SCR') {
+          SCRSum+=1;
+        }
+      });
+      if(USDCSum>1 || SCRSum>1){
+        return false
+      }
+    }
+    return true;
+
+  }
 
   const allSubmit = () => {
     (childRef.current as any).submitForm();

@@ -12,7 +12,7 @@ import DiscordIcon from '../../../assets/Imgs/profile/discord.svg';
 import WechatIcon from '../../../assets/Imgs/profile/wechat.svg';
 import MirrorImg from '../../../assets/Imgs/profile/mirror.svg';
 import EmailIcon from '../../../assets/Imgs/profile/message.svg';
-import { formatNumber } from 'utils/number';
+import { formatNumber, getShortDisplay } from "utils/number";
 import { Link } from 'react-router-dom';
 import CopyIconSVG from '../../../assets/Imgs/copy.svg';
 import defaultImg from '../../../assets/Imgs/defaultAvatar.png';
@@ -20,10 +20,13 @@ import PublicJs from '../../../utils/publicJs';
 import LevelImg from '../../../assets/Imgs/profile/level.svg';
 import SeedImg from '../../../assets/Imgs/profile/seed.svg';
 import SbtImg from '../../../assets/Imgs/profile/sbt.svg';
+import AiKeyImg from "../../../assets/Imgs/profile/Bulk_Key.svg";
 
 import SeedList from '../../../components/profile/seed';
 import Sbt from '../../../components/profile/Sbt';
 import { getMyRewards } from 'requests/invite';
+import {RefreshCcw} from "lucide-react";
+import { DEEPSEEK_API_URL, getNewToken } from "../../../requests/chatAI";
 
 const OuterBox = styled.div`
   margin-bottom: 50px;
@@ -73,6 +76,7 @@ export default function Profile() {
   const [sbtList, setSbtList] = useState<any[]>([]);
   const [sbtArr, setSbtArr] = useState<any[]>([]);
   const [inviteScr, setInviteScr] = useState<number>(0);
+  const [apiKey, setApiKey] = useState<string>();
 
   useEffect(() => {
     if (!seed?.length) return;
@@ -135,6 +139,7 @@ export default function Profile() {
       setWallet(detail.wallet);
       setBio(detail.bio);
       setRoles(detail.roles!);
+      setApiKey(detail.ds_api_key!);
 
       let sbtArr = detail.sbt;
       const sbtFor = sbtArr?.filter((item: any) => item.name && item.image_uri);
@@ -236,6 +241,20 @@ export default function Profile() {
     }
   };
 
+  const refreshToken = async() => {
+    try {
+
+      let rt = await getNewToken()
+      setApiKey(rt.data.apiKey)
+
+    }catch(error:any) {
+      console.error(error);
+      showToast(`${error?.data?.msg || error?.code || error}`, ToastType.Danger);
+    }
+
+
+  }
+
   return (
     <OuterBox>
       {Toast}
@@ -310,7 +329,8 @@ export default function Profile() {
         <LevelBox>LV{detail?.level?.current_lv}</LevelBox>
         <LevelInfo>
           <span>
-            {t('My.current')} {formatNumber(detail?.scr?.amount)} SCR,
+            {/*{t('My.current')} {(formatNumber(detail?.scr?.amount))} SCR,*/}
+            {t('My.current')} {(getShortDisplay(detail?.scr?.amount))} SCR,
           </span>
           <span>{t('My.levelTips', { level: Number(detail?.level?.current_lv) + 1 })}</span>
           <span>{formatNumber(detail?.level?.scr_to_next_lv)} SCR, </span>
@@ -320,6 +340,45 @@ export default function Profile() {
           </InviteDetail>
         </LevelInfo>
       </ProgressOuter>
+      <BgBox>
+        <TitleLft>
+          <img src={AiKeyImg} alt="" />
+          <span>SeeChat</span>
+        </TitleLft>
+        <RhtBox2>
+          <div className="tp">
+            <div className="lft">
+              API Key
+            </div>
+            {
+              !!apiKey && <>
+                {apiKey}
+                <CopyBox text={apiKey || ''} dir="left">
+                  <img src={CopyIconSVG} alt="" />
+                </CopyBox>
+                <RefreshCcw size={16} className="refresh" onClick={()=>refreshToken()} />
+              </>
+            }
+            {
+              !apiKey && <>
+                {t('My.seeDaoTips')}
+              </>
+            }
+
+          </div>
+          <div className="tp btm">
+            <div className="lft">
+             Endpoint
+            </div>
+            <div>
+              {DEEPSEEK_API_URL}
+            </div>
+            <CopyBox text={DEEPSEEK_API_URL || ''} dir="left">
+              <img src={CopyIconSVG} alt="" />
+            </CopyBox>
+          </div>
+        </RhtBox2>
+      </BgBox>
       <BgBox>
         <TitleLft>
           <img src={SeedImg} alt="" />
@@ -546,7 +605,7 @@ const EditButton = styled(Link)`
 const TitleLft = styled.div`
   display: flex;
   align-items: center;
-  width: 100px;
+  width: 120px;
   flex-shrink: 0;
   img {
     width: 18px;
@@ -590,13 +649,40 @@ const BgBox = styled.div`
   display: flex;
   align-items: center;
 `;
+
 const RhtBoxB = styled.div`
   flex-grow: 1;
   font-size: 12px;
   font-weight: 400;
   color: var(--bs-body-color_active);
   line-height: 14px;
+
 `;
+
+const RhtBox2 = styled(RhtBoxB)`
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top:0;
+    .refresh{
+        color: var(--bs-body-color);
+        cursor: pointer;
+    }
+    .tp{
+        display: flex;
+        align-items: center;
+        gap: 10px; 
+        
+    }
+    .lft{
+        font-weight: bold;
+        width:100px;
+        background:var(--bs-border-color_opacity);
+        padding: 5px;
+        text-align: center;
+    }
+`
+
 const LftBox = styled.div`
   flex-grow: 1;
   display: flex;
