@@ -504,6 +504,7 @@
     "Exit": "Exit",
     "Assets": "Assets",
     "wallet": "Wallet",
+    "seeDaoTips": "SeeDAO members only",
     "Points": "Points(Includes off-chain points to be issued)",
     "Name": "Name",
     "Email": "Email",
@@ -699,7 +700,9 @@
     "SNSQueryDesc": "Query personal information by SNS.",
     "podcastTitle": "SeeTalk Podcast",
     "podcastDesc": "SeeTalk is a Web3 podcast collaboratively created by members of the SeeDAO community, showcasing the emerging collaborations within the community and highlighting SeeDAO's ongoing important work and plans.",
-    "whitePaper": "whitePaper"
+    "whitePaper": "whitePaper",
+    "chatAI": "SeeChat",
+    "chatAITips": "Web version of SeeChat (DeepSeek + SeeDAO Knowledge Base), we can chat with AI now!"
   },
   "SNS": {
     "EntranceTitle": "INVOLVED IN SEEDAO IN YOUR NAME",
@@ -919,5 +922,8 @@
     "step2": "Set NFT URI",
     "selectSBT": "Select SBT",
     "tips": "The auditor  can't be same as applicant"
-  }
+  },
+  "aiTips": "Send message to AI",
+  "clearTips": "Clear Chat",
+  "budgetTips": "每种资产只能输入一次"
 }

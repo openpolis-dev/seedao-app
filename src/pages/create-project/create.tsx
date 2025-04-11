@@ -125,8 +125,7 @@ export default function CreateProject() {
       showToast(t('Project.createSuccess'), ToastType.Success);
       navigate(`/project/info/${resp.data.id}`);
     } catch (error: any) {
-      // showToast(error?.response?.data?.message || error, ToastType.Danger);
-      showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
+      showToast(`${error?.data?.msg || error?.code || error}`, ToastType.Danger);
     } finally {
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }

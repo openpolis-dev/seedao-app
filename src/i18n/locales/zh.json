@@ -145,7 +145,7 @@
     "AssociatedProposalComponent": "关联提案组件",
     "EmptyAssociatedProposal": "暂无可结项的提案",
     "SubmitConfirmTip": "提案提交后即进入投票状态，无法撤回修改，是否确认提交？",
-    "p2Tips": "P2 提案可申请不超过 50000 SCR 和不超过 1000 USDT 的激励",
+    "p2Tips": "P2 提案可申请不超过 50000 SCR 和不超过 1000 USDC 的激励",
     "AutoExecuteLeftTime": "自动执行等待剩余时间 {{h}}小时{{m}}分钟",
     "CloseVote": "提前结束投票",
     "ConfirmToCloseVote": "确认提前结束投票吗",
@@ -505,6 +505,7 @@
     "Exit": "退出",
     "Assets": "USD资产",
     "wallet": "钱包",
+    "seeDaoTips": "SeeDAO成员才能使用",
     "Points": "总积分(包含待发放未上链积分)",
     "Name": "昵称",
     "Email": "邮箱地址",
@@ -700,7 +701,9 @@
     "SNSQueryDesc": "通过SNS查询社区成员在社区里的公开信息",
     "podcastTitle": "SeeTalk播客",
     "podcastDesc": "SeeTalk是一档由SeeDAO社区成员共创Web3节目，传递着社区成员的共创涌现和SeeDAO当前正在做的重要工作与规划",
-    "whitePaper": "白皮书"
+    "whitePaper": "白皮书",
+    "chatAI": "SeeChat",
+    "chatAITips": "网页版的 SeeChat (DeepSeek + SeeDAO 知识库)，大家可以跟 AI 聊天了"
   },
   "SNS": {
     "EntranceTitle": "获取你的 SNS，开始你的 SeeDAO 之旅",
@@ -921,5 +924,8 @@
     "selectSBT": "选择SBT",
     "tips": "审核人和申请人不能相同"
 
-  }
+  },
+  "aiTips": "给AI发消息",
+  "clearTips": "清除聊天",
+  "budgetTips": "每种资产只能输入一次"
 }

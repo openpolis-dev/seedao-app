@@ -63,6 +63,7 @@ import SbtApply from "./pages/sbt/sbtApply";
 import DetailPublicity from "./pages/publicity/detail";
 import PublicityList from "./pages/publicity/list";
 import Archive from "./pages/archive";
+import AiChat from "./pages/aiChat";
 
 
 
@@ -148,6 +149,7 @@ export default function RouterLink() {
           <Route path="/wiki" element={<Wiki />} />
           {/* Credit */}
           <Route path="/credit" element={<Credit />} />
+          <Route path="/ai" element={<AiChat />} />
         </Routes>
       </Layout>
       <RouterChecker />
