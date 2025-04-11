@@ -924,5 +924,6 @@
     "tips": "The auditor  can't be same as applicant"
   },
   "aiTips": "Send message to AI",
-  "clearTips": "Clear Chat"
+  "clearTips": "Clear Chat",
+  "budgetTips": "每种资产只能输入一次"
 }
