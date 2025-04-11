@@ -45,13 +45,10 @@ const AppCard = ({
     try{
       let rt = await loginChat();
       console.log(rt.data.apiKey)
-      navigate(link);
+      navigate(link)
     }catch(error:any){
       console.log(error);
       showToast(`${error?.data?.msg || error?.code || error}`, ToastType.Danger);
-      setTimeout(()=>{
-        navigate(-1)
-      },1000)
     }finally{
       dispatch({ type: AppActionType.SET_LOADING, payload: false });
     }
@@ -65,9 +62,6 @@ const AppCard = ({
       }else{
         navigate(link);
       }
-
-
-
     } else if (id.startsWith('resource-')) {
       if ((hiddenFields && hiddenFields?.length && userData) || !(hiddenFields && hiddenFields?.length)) {
         const url = link.split('https://tally.so/r/')[1];
