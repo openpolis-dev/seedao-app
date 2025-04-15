@@ -164,7 +164,7 @@ export const ChatInterface= () => {
       const truncatedMessages = truncateContext(newMsg, 8000-500);
 
       let obj = JSON.stringify({
-        model:"deepseek-reasoner",
+        model:"deepseek-reasoner-bf16",
         messages:[systemRoleObj,...truncatedMessages],
         "files": collectionIds,
         "stream": true
