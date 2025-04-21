@@ -15,7 +15,7 @@ import DefaultAvatar from "../../assets/Imgs/defaultAvatarT.png";
 
 import {Trash2,RefreshCcw,ArrowUp,Square,Eraser} from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { chatCompletions, getAllModels, loginChat } from "../../requests/chatAI";
+import { chatCompletions, loginChat } from "../../requests/chatAI";
 import {  truncateContext } from "../../utils/chatTool";
 import useCheckLogin from "../../hooks/useCheckLogin";
 import { SEEDAO_ACCOUNT } from "../../utils/constant";
@@ -56,10 +56,10 @@ export const ChatInterface= () => {
   }, [messages,isLoading]);
 
 
-  useEffect(() => {
-    if(!apiKey) return;
-    getModels()
-  }, [apiKey]);
+  // useEffect(() => {
+  //   if(!apiKey) return;
+  //   getModels()
+  // }, [apiKey]);
 
   useEffect(() => {
     if(!account)return;
@@ -81,24 +81,24 @@ export const ChatInterface= () => {
     }
   }
 
-  const getModels = async() =>{
-    try {
-      const rt = await getAllModels(apiKey);
-      let arr =  rt
-        .filter((item:any) => item.info?.meta?.knowledge !== undefined)
-        .map((item:any) => item.info?.meta?.knowledge);
-
-      let newIds = arr[0]?.map((item:any) => item.id) ??[];
-
-      setCollection(newIds)
-
-    }catch(error:any){
-      console.log(error);
-      showToast(`${error?.data?.msg || error?.code || error}`, ToastType.Danger);
-    }
-
-
-  }
+  // const getModels = async() =>{
+  //   try {
+  //     const rt = await getAllModels(apiKey);
+  //     let arr =  rt
+  //       .filter((item:any) => item.info?.meta?.knowledge !== undefined)
+  //       .map((item:any) => item.info?.meta?.knowledge);
+  //
+  //     let newIds = arr[0]?.map((item:any) => item.id) ??[];
+  //
+  //     setCollection(newIds)
+  //
+  //   }catch(error:any){
+  //     console.log(error);
+  //     showToast(`${error?.data?.msg || error?.code || error}`, ToastType.Danger);
+  //   }
+  //
+  //
+  // }
   const getMessage = async () => {
     let rt = await getAll()
     const newMessages = rt.filter((item:Message) => item.address?.toLowerCase() === account?.toLowerCase())
@@ -149,7 +149,8 @@ export const ChatInterface= () => {
 
     const systemRoleObj = {
       role: "system",
-      content: "你是一个有帮助的AI助手。请用中文回答。当你收到消息时，首先在<think>标签内展示你的思考过程，然后提供你的回答。请确保所有回复都使用简体中文，包括思考过程。以专业、友好的语气回答，并在合适的时候使用emoji表情",
+      // content: "你是一个有帮助的AI助手。请用中文回答。当你收到消息时，首先在<think>标签内展示你的思考过程，然后提供你的回答。请确保所有回复都使用简体中文，包括思考过程。以专业、友好的语气回答，并在合适的时候使用emoji表情",
+      content: "你是一个有帮助的AI助手。请用中文回答。请务必每次回答前按照如下格式\n<think>思考内容</think>\n生成",
     }
     let content = "";
     let thinkContent = "";
@@ -158,15 +159,19 @@ export const ChatInterface= () => {
 
     try {
 
-      const collectionIds = collection.map((item:any) => ({"type": "collection", "id": item}));
-      const newMsg = [...newMessages].map(({role, content})=>({role,content})).filter(({content})=>!!content);
+      // const collectionIds = collection.map((item:any) => ({"type": "collection", "id": item}));
+      // const newMsg = [...newMessages].map(({role, content})=>({role,content})).filter(({content})=>!!content);
+      const newMsg = [...newMessages].filter((item:any)=> !!item.content && item.type!=="thinking").map(({role, content})=>({role,content}));
 
       const truncatedMessages = truncateContext(newMsg, 8000-500);
 
       let obj = JSON.stringify({
-        model:"deepseek-reasoner-bf16",
+        // model:"deepseek-reasoner-bf16",
+        model:"deepseek-reasoner",
         messages:[systemRoleObj,...truncatedMessages],
-        "files": collectionIds,
+        knowledge:true,
+        // "files": collectionIds,
+        // "max_tokens":100,
         "stream": true
       });
 
