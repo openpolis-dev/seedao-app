@@ -9,6 +9,7 @@ export interface Message {
     uniqueId:string;
     questionId:string;
     address:string;
+    isNew?:boolean;
 }
 
 export interface ResponseMessage {
