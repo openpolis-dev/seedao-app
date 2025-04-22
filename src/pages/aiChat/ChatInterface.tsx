@@ -15,8 +15,8 @@ import DefaultAvatar from "../../assets/Imgs/defaultAvatarT.png";
 
 import {Trash2,RefreshCcw,ArrowUp,Square,Eraser} from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { chatCompletions, getAllModels, loginChat } from "../../requests/chatAI";
-import {  truncateContext } from "../../utils/chatTool";
+import { chatCompletions, loginChat } from "../../requests/chatAI";
+import { estimateTokenCount, truncateContext } from "../../utils/chatTool";
 import useCheckLogin from "../../hooks/useCheckLogin";
 import { SEEDAO_ACCOUNT } from "../../utils/constant";
 import Copied from "./copied";
@@ -36,8 +36,6 @@ export const ChatInterface= () => {
   const { t } = useTranslation();
 
   const [controller, setController] = useState<any>(null);
-
-  const [collection, setCollection] = useState<string[]>([]);
   const { add,getAll ,deleteRecord} = useIndexedDB("list");
   const acc = localStorage.getItem(SEEDAO_ACCOUNT);
   const {  showToast } = useToast();
@@ -54,12 +52,6 @@ export const ChatInterface= () => {
   useEffect(() => {
     scrollToBottom();
   }, [messages,isLoading]);
-
-
-  useEffect(() => {
-    if(!apiKey) return;
-    getModels()
-  }, [apiKey]);
 
   useEffect(() => {
     if(!account)return;
@@ -81,24 +73,6 @@ export const ChatInterface= () => {
     }
   }
 
-  const getModels = async() =>{
-    try {
-      const rt = await getAllModels(apiKey);
-      let arr =  rt
-        .filter((item:any) => item.info?.meta?.knowledge !== undefined)
-        .map((item:any) => item.info?.meta?.knowledge);
-
-      let newIds = arr[0]?.map((item:any) => item.id) ??[];
-
-      setCollection(newIds)
-
-    }catch(error:any){
-      console.log(error);
-      showToast(`${error?.data?.msg || error?.code || error}`, ToastType.Danger);
-    }
-
-
-  }
   const getMessage = async () => {
     let rt = await getAll()
     const newMessages = rt.filter((item:Message) => item.address?.toLowerCase() === account?.toLowerCase())
@@ -149,22 +123,24 @@ export const ChatInterface= () => {
 
     const systemRoleObj = {
       role: "system",
-      content: "你是一个有帮助的AI助手。请用中文回答。当你收到消息时，首先在<think>标签内展示你的思考过程，然后提供你的回答。请确保所有回复都使用简体中文，包括思考过程。以专业、友好的语气回答，并在合适的时候使用emoji表情",
+      // content: "你是一个有帮助的AI助手。请用中文回答。当你收到消息时，首先在<think>标签内展示你的思考过程，然后提供你的回答。请确保所有回复都使用简体中文，包括思考过程。以专业、友好的语气回答，并在合适的时候使用emoji表情",
+      content: "你是一个有帮助的AI助手。请用中文回答。请务必每次回答前按照如下格式\n<think>思考内容</think>\n生成",
     }
     let content = "";
+    let thinkContent = "";
+    let init = false;
     let currentId = "";
 
     try {
+      const newMsg = [...newMessages].filter((item:any)=> !!item.content && item.type!=="thinking").map(({role, content})=>({role,content}));
 
-      const collectionIds = collection.map((item:any) => ({"type": "collection", "id": item}));
-      const newMsg = [...newMessages].map(({role, content})=>({role,content})).filter(({content})=>!!content);
-
-      const truncatedMessages = truncateContext(newMsg, 8000-500);
+      const truncatedMessages = truncateContext(newMsg, 40 * 1024);
 
       let obj = JSON.stringify({
         model:"deepseek-reasoner",
         messages:[systemRoleObj,...truncatedMessages],
-        "files": collectionIds,
+        knowledge:true,
+        // "max_tokens":100,
         "stream": true
       });
 
@@ -175,6 +151,8 @@ export const ChatInterface= () => {
       const decoder = new TextDecoder();
 
       if (!reader) return;
+
+      let isThinkingMessage = false;
 
       const readChunk = async () => {
         const { done, value } = await reader?.read();
@@ -190,67 +168,93 @@ export const ChatInterface= () => {
           if (line.startsWith('data:')) {
             const jsonStr = line.slice(5);
             if (jsonStr === '[DONE]') {
-                const thinkingMatch = content.match(/<think>([^]*?)<\/think>/);
-                const responseContent = content.replace(/<think>[^]*?<\/think>/, '').trim();
+              setMessages((old)=>{
 
-              const responseMessage: Message = {
-                id: currentId,
-                content: responseContent??"",
-                role: 'assistant',
-                type: 'response',
-                timestamp: Date.now(),
-                uniqueId:nanoid(),
-                questionId:userMessage.uniqueId,
-                address:account!
-              };
-                if (thinkingMatch) {
+                let msgArr = [...old]
+                const arr = msgArr.filter((msg)=>msg.isNew);
 
-                  setMessages((old)=> {
-                    let msg = [...old]
-                    msg[msg.length-1].content = thinkingMatch[1].trim();
-                    msg[msg.length-1].type = 'thinking';
-                    return msg;
-                  });
-                  await add({
-                    content: thinkingMatch[1].trim(),
-                    role: 'assistant',
-                    type: 'thinking',
-                    timestamp: Date.now(),
-                    id:currentId,
-                    uniqueId:nanoid(),
-                    questionId:userMessage.uniqueId,
-                    address:account!
-                  })
-
-                  if (responseContent) {
-                    setMessages(prev => [...prev, responseMessage]);
-                  }
+                for (let i = 0; i < arr.length; i++) {
+                  let item = arr[i];
+                  add(item)
                 }
 
-              if (responseContent) {
-                await add(responseMessage)
-              }
-              return;
+
+                msgArr.map((item)=> {
+                  delete item.isNew;
+                  return item;
+                })
+                return msgArr;
+
+              })
+
             }
             try {
 
               const data = JSON.parse(jsonStr);
               currentId = data.id;
-              const text = data.choices[0]?.delta?.content || '';
+              let text = data.choices[0]?.delta?.content || '';
+              if(!init){
+                setMessages(prev => [...prev, {
+                  id: "",
+                  content: "",
+                  role: 'assistant',
+                  type: 'thinking',
+                  uniqueId:nanoid(),
+                  questionId:userMessage.uniqueId,
+                  timestamp: Date.now(),
+                  address:account!,
+                  isNew:true
+                }])
+                init = true;
+              }
+
+
+              if(text === "<think>"){
+                isThinkingMessage = true;
+              }
+              if (text === "</think>" && isThinkingMessage){
+
+                isThinkingMessage = false;
+                setMessages(prev => [...prev, {
+                  id: "",
+                  content: "",
+                  role: 'assistant',
+                  type: 'response',
+                  uniqueId:nanoid(),
+                  questionId:userMessage.uniqueId,
+                  timestamp: Date.now(),
+                  address:account!,
+                  isNew:true
+                }])
+              }
+
+            text =( text === "</think>"||text === "<think>") ? "" :text;
 
               for (const char of text) {
-                content+=char;
-                setMessages((old)=> {
-                  let msg = [...old]
-                  msg[msg.length-1].content = content;
-                  msg[msg.length-1].id = data.id;
-                  return msg;
-                });
+                if(isThinkingMessage){
+
+                  thinkContent+=char;
+                  setMessages((old)=> {
+                    let msg = [...old]
+                    msg[msg.length-1].content = thinkContent;
+                    msg[msg.length-1].id = data.id;
+                    msg[msg.length-1].type = "thinking";
+                    return msg;
+                  });
+                }else{
+                  content+=char;
+                  setMessages((old)=> {
+                    let msg = [...old]
+                    msg[msg.length-1].content = content;
+                    msg[msg.length-1].id = data.id;
+                    msg[msg.length-1].type = "response";
+                    return msg;
+                  });
+                }
                 await new Promise(resolve => setTimeout(resolve, 50));
               }
             } catch (error) {
               console.log('解析 JSON 时出错:', error);
-              console.log(jsonStr);
             }
           }
         }
@@ -258,16 +262,6 @@ export const ChatInterface= () => {
         await readChunk();
       };
 
-      setMessages(prev => [...prev, {
-        id: "",
-        content: "",
-        role: 'assistant',
-        type: 'response',
-        uniqueId:nanoid(),
-        questionId:userMessage.uniqueId,
-        timestamp: Date.now(),
-        address:account!
-      }])
 
       await readChunk();
     } catch (error:any) {
@@ -503,11 +497,10 @@ export const ChatInterface= () => {
           placeholder={t("aiTips")}
           rows={1}
         />
-
           {
             !isLoading &&<button
             onClick={handleUserMsg}
-            disabled={isLoading || !inputMessage.trim()}
+            disabled={isLoading || !inputMessage.trim()|| estimateTokenCount(inputMessage)>8000}
             >
             <ArrowUp size={18} />
             </button>
