@@ -35,9 +35,10 @@ const AppCard = ({
 }) => {
   const navigate = useNavigate();
   const {
-    state: { theme, userData },
+    state: { theme, userData,account },
     dispatch,
   } = useAuthContext();
+  const { t } = useTranslation();
   const {  showToast } = useToast();
 
   const getApiKey = async () => {
@@ -58,7 +59,12 @@ const AppCard = ({
       return;
     } else if (id.startsWith('module-')) {
       if(id === "module-ai"){
-        await getApiKey()
+        if(account){
+          await getApiKey()
+        }else{
+          showToast(t("Credit.CardLogin"), ToastType.Danger);
+        }
+
       }else{
         navigate(link);
       }
