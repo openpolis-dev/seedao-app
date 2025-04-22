@@ -1,22 +1,7 @@
-import axios from "axios";
 import request from "./http";
 
 const PATH_PREFIX = '/user';
-// export const DEEPSEEK_API_URL ="https://zhaodapao.rebuildtraffic.com/v1"
-// export const DEEPSEEK_API_URL ="https://ds.woolencape.cn/v1"
 export const DEEPSEEK_API_URL ="https://ds.seedao.tech/v1"
-
-// export const getAllModels = async (apiKey:string) => {
-//   const response = await axios.get(`${DEEPSEEK_API_URL}/api/models`, {
-//     headers: {
-//       "content-type": "application/json",
-//       'X-API-Key': apiKey
-//     },
-//   });
-//
-//   return response.data.data;
-// }
-
 
 export const chatCompletions = async (obj:string,abortController: typeof AbortController.prototype,apiKey:string) => {
 

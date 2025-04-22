@@ -36,8 +36,6 @@ export const ChatInterface= () => {
   const { t } = useTranslation();
 
   const [controller, setController] = useState<any>(null);
-
-  const [collection, setCollection] = useState<string[]>([]);
   const { add,getAll ,deleteRecord} = useIndexedDB("list");
   const acc = localStorage.getItem(SEEDAO_ACCOUNT);
   const {  showToast } = useToast();
@@ -54,12 +52,6 @@ export const ChatInterface= () => {
   useEffect(() => {
     scrollToBottom();
   }, [messages,isLoading]);
-
-
-  // useEffect(() => {
-  //   if(!apiKey) return;
-  //   getModels()
-  // }, [apiKey]);
 
   useEffect(() => {
     if(!account)return;
@@ -81,24 +73,6 @@ export const ChatInterface= () => {
     }
   }
 
-  // const getModels = async() =>{
-  //   try {
-  //     const rt = await getAllModels(apiKey);
-  //     let arr =  rt
-  //       .filter((item:any) => item.info?.meta?.knowledge !== undefined)
-  //       .map((item:any) => item.info?.meta?.knowledge);
-  //
-  //     let newIds = arr[0]?.map((item:any) => item.id) ??[];
-  //
-  //     setCollection(newIds)
-  //
-  //   }catch(error:any){
-  //     console.log(error);
-  //     showToast(`${error?.data?.msg || error?.code || error}`, ToastType.Danger);
-  //   }
-  //
-  //
-  // }
   const getMessage = async () => {
     let rt = await getAll()
     const newMessages = rt.filter((item:Message) => item.address?.toLowerCase() === account?.toLowerCase())
@@ -158,19 +132,14 @@ export const ChatInterface= () => {
     let currentId = "";
 
     try {
-
-      // const collectionIds = collection.map((item:any) => ({"type": "collection", "id": item}));
-      // const newMsg = [...newMessages].map(({role, content})=>({role,content})).filter(({content})=>!!content);
       const newMsg = [...newMessages].filter((item:any)=> !!item.content && item.type!=="thinking").map(({role, content})=>({role,content}));
 
       const truncatedMessages = truncateContext(newMsg, 8000-500);
 
       let obj = JSON.stringify({
-        // model:"deepseek-reasoner-bf16",
         model:"deepseek-reasoner",
         messages:[systemRoleObj,...truncatedMessages],
         knowledge:true,
-        // "files": collectionIds,
         // "max_tokens":100,
         "stream": true
       });
@@ -286,7 +255,6 @@ export const ChatInterface= () => {
               }
             } catch (error) {
               console.log('解析 JSON 时出错:', error);
-              console.log(jsonStr);
             }
           }
         }
