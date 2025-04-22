@@ -1,6 +1,6 @@
 import { ResponseMessage } from "../pages/aiChat/DBTypes";
 
-const estimateTokenCount = (text:string)=> {
+export const estimateTokenCount = (text:string)=> {
 
   const chineseChars = text.match(/[\u4e00-\u9fa5]/g) || [];
   const englishWords = text.match(/\b\w+\b/g) || [];

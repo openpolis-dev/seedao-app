@@ -16,7 +16,7 @@ import DefaultAvatar from "../../assets/Imgs/defaultAvatarT.png";
 import {Trash2,RefreshCcw,ArrowUp,Square,Eraser} from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { chatCompletions, loginChat } from "../../requests/chatAI";
-import {  truncateContext } from "../../utils/chatTool";
+import { estimateTokenCount, truncateContext } from "../../utils/chatTool";
 import useCheckLogin from "../../hooks/useCheckLogin";
 import { SEEDAO_ACCOUNT } from "../../utils/constant";
 import Copied from "./copied";
@@ -134,11 +134,11 @@ export const ChatInterface= () => {
     try {
       const newMsg = [...newMessages].filter((item:any)=> !!item.content && item.type!=="thinking").map(({role, content})=>({role,content}));
 
-      const truncatedMessages = truncateContext(newMsg, 8000-500);
+      // const truncatedMessages = truncateContext(newMsg, 32000-500);
 
       let obj = JSON.stringify({
         model:"deepseek-reasoner",
-        messages:[systemRoleObj,...truncatedMessages],
+        messages:[systemRoleObj,...newMsg],
         knowledge:true,
         // "max_tokens":100,
         "stream": true
@@ -497,11 +497,10 @@ export const ChatInterface= () => {
           placeholder={t("aiTips")}
           rows={1}
         />
-
           {
             !isLoading &&<button
             onClick={handleUserMsg}
-            disabled={isLoading || !inputMessage.trim()}
+            disabled={isLoading || !inputMessage.trim()|| estimateTokenCount(inputMessage)>8000}
             >
             <ArrowUp size={18} />
             </button>
