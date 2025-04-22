@@ -371,7 +371,7 @@ export default function Profile() {
              Endpoint
             </div>
             <div>
-              {DEEPSEEK_API_URL}/chat/completions
+              {DEEPSEEK_API_URL}
             </div>
             <CopyBox text={DEEPSEEK_API_URL || ''} dir="left">
               <img src={CopyIconSVG} alt="" />
