@@ -134,11 +134,11 @@ export const ChatInterface= () => {
     try {
       const newMsg = [...newMessages].filter((item:any)=> !!item.content && item.type!=="thinking").map(({role, content})=>({role,content}));
 
-      // const truncatedMessages = truncateContext(newMsg, 32000-500);
+      const truncatedMessages = truncateContext(newMsg, 40 * 1024);
 
       let obj = JSON.stringify({
         model:"deepseek-reasoner",
-        messages:[systemRoleObj,...newMsg],
+        messages:[systemRoleObj,...truncatedMessages],
         knowledge:true,
         // "max_tokens":100,
         "stream": true
