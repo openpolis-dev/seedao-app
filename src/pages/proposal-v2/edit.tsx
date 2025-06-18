@@ -396,6 +396,7 @@ export default function EditProposal() {
       vote_type: voteType,
       vote_options: voteType === 99 || voteType === 98 ? newVoteList : null,
       components: submitData,
+      is_multiple_vote:data!.is_multiple_vote,
       create_project_proposal_id: pid ? pid : 0,
       submit_to_metaforo: submitType === 'submit',
     })
