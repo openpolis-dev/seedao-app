@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { EventCard } from 'seeucomp';
 import { getSeeuEventList } from 'requests/event';
 import Page from 'components/pagination';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
@@ -11,21 +10,19 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import Tabbar from 'components/common/tabbar';
 import BackerNav from '../../components/common/backNav';
+import dayjs from "dayjs";
+import NewEvent from "./newEvent";
 
 interface IEventProps {
+  startDay: string;
   startTime: string;
   thumbnail: string | undefined;
   poster: string;
   subject: string;
-  start_time: string;
-  city: {
-    name: string;
-    latitude: string;
-    longitude: string;
-  };
-  url: string;
-  status: string;
-  tags?: string[];
+  activeTime: string;
+  city:string;
+  fee: string;
+  type: string;
   id: number;
 }
 
@@ -38,23 +35,37 @@ export default function SeeuNetwork() {
   const { t } = useTranslation();
 
   const [lst, setLst] = useState<IEventProps[]>([]);
-  const [pageCur, setPageCur] = useState(1);
-  const [pageSize, setPageSize] = useState(20);
-  const [total, setTotal] = useState(1);
   const { dispatch } = useAuthContext();
   const { showToast } = useToast();
 
-  const handlePage = (num: number) => {
-    setPageCur(num + 1);
-  };
 
   const getList = async () => {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
     try {
-      const resp = await getSeeuEventList({ pageSize, currentPage: pageCur });
-      console.log('resp: ', resp);
-      setTotal(resp.data.total);
-      setLst(resp.data.data);
+      const resp = await fetch("/data/eventList.json");
+      let rt = await resp.json();
+
+      const list = rt.data.items;
+
+      let arr:IEventProps[] = [];
+      list.map((item:any) => {
+        let startDay = dayjs(item.fields['活动日期']).format(`YYYY-MM-DD`);
+        arr.push({
+          startDay,
+          startTime:item.fields['活动时间'] ? item.fields['活动时间'][0].text :"",
+          thumbnail: "string",
+          poster: item.fields['活动照片/海报'] ? item.fields['活动照片/海报'][0].name :"",
+          subject:item.fields['活动名称'][0].text,
+          activeTime:item.fields['活动时长'] ? item.fields['活动时长'][0].text :"",
+          city:item.fields['活动地点'] ? item.fields['活动地点'][0].text :"",
+          fee:item.fields['活动费用'] ?item.fields["活动费用"][0].text:"",
+          type:item?.fields["活动类型"] ?? "",
+          id:item.record_id
+        });
+      })
+
+      // setTotal(resp.data.total);
+      setLst(arr);
     } catch (error: any) {
       // showToast(error, ToastType.Danger);
       showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
@@ -65,7 +76,7 @@ export default function SeeuNetwork() {
 
   useEffect(() => {
     getList();
-  }, [pageCur, pageSize]);
+  }, []);
   return (
     <OuterBox>
       {/*<TitBox>*/}
@@ -79,18 +90,11 @@ export default function SeeuNetwork() {
 
       <Row>
         {lst.map((item, idx) => (
-          <Col key={idx} sm={12} md={6} lg={3} xl={3} style={{ marginBottom: '30px' }}>
-            <Link to={`/event/view?id=${item.id}`}>
-              <EventCard item={item} />
-            </Link>
+          <Col key={idx} sm={12} md={6} lg={3} xl={3} style={{ marginBottom: '30px', }}>
+              <NewEvent item={item} />
           </Col>
         ))}
       </Row>
-      {total > pageSize && (
-        <PageBox>
-          <Page itemsPerPage={pageSize} total={total} current={pageCur - 1} handleToPage={handlePage} />
-        </PageBox>
-      )}
     </OuterBox>
   );
 }
@@ -105,6 +109,8 @@ const OuterBox = styled.div`
   .itemBox {
     background-color: var(--bs-box-background);
     border: 1px solid var(--bs-border-color);
+      border-radius: 10px;
+      overflow: hidden;
   }
   .item-content {
     h5,
