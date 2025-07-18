@@ -71,4 +71,9 @@ export const SBT_BOARDING = '0x0D9ea891B4C30e17437D00151399990ED7965F00';
 
 export const CITYHALL_ID = 14;
 
+export const HELPER ={
+  wechat:"wechat",
+  qrcode:"qrcode",
+  mail:"mail",
+}
 

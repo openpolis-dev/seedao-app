@@ -24,6 +24,8 @@ import { getPublicity } from "../../requests/publicity";
 import { formatTime } from "../../utils/time";
 import useToast, { ToastType } from "../../hooks/useToast";
 import { getNodeSBT } from "../../requests/publicData";
+import { getCityHallNode } from "../../requests/cityHall";
+import axios from "axios";
 
 const Box = styled.div`
   background: var(--bs-background);
@@ -280,6 +282,7 @@ export default function Home() {
   const [sbtHolders,setSbtHolders] = useState(0);
   const { showToast } = useToast();
   const navigate = useNavigate();
+  const [snsNum,setSnsNum] = useState(0);
 
   const {
     state: { theme, hadOnboarding, sns: userSNS },
@@ -297,38 +300,62 @@ export default function Home() {
 
   useEffect(() => {
     getStatics()
+    getScrSns()
   }, []);
 
   const getStatics = async() =>{
-   let rt = await getNodeSBT()
-    console.log(rt.data)
-
-    let obj:any={}
-    for (let i = 0; i < rt.data.length; i++) {
-      let item= rt.data[i];
-      console.log(item.Name,item.NumValue)
-      obj[item.Name]=item.NumValue
+   // let rt = await getNodeSBT()
+   //  console.log(rt.data)
+   //
+   //  let obj:any={}
+   //  for (let i = 0; i < rt.data.length; i++) {
+   //    let item= rt.data[i];
+   //    console.log(item.Name,item.NumValue)
+   //    obj[item.Name]=item.NumValue
+   //  }
+   //  console.log("obj",obj)
+   //  // setSbtHolders(obj.compute_sbt_num)
+    try {
+      const dt = await getCityHallNode();
+      const wallets = dt.data;
+      setGovernNodes(wallets?.length)
+    } catch(error) {
+      console.error(error)
     }
-    console.log("obj",obj)
-    setSbtHolders(obj.compute_sbt_num)
-    setGovernNodes(obj.compute_node_num)
+
   }
 
-  useEffect(() => {
-    const handleSEEDHolders = async () => {
-      fetch(`${getConfig().INDEXER_ENDPOINT}/insight/erc721/total_supply/0x30093266E34a816a53e302bE3e59a93B52792FD4
-`)
-        .then((res: any) => res.json())
-        .then((r) => {
-          setSEEDHolders(Number(r.totalSupply));
-        })
-        .catch((error: any) => {
-          logError('[SBT] get sgn owners failed', error);
-          showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
-        });
-    };
-    handleSEEDHolders();
-  }, []);
+  const getScrSns = async() =>{
+    try {
+      const res = await axios.get(`https://tokentracker.seedao.tech`, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      setSEEDHolders(res.data?.seed?.holders);
+      setSnsNum(res.data?.sns?.holders);
+      // setScr(res.data?.scr?.holders);
+    } catch(error) {
+      console.error(error)
+    }
+  }
+
+//   useEffect(() => {
+//     const handleSEEDHolders = async () => {
+//       fetch(`${getConfig().INDEXER_ENDPOINT}/insight/erc721/total_supply/0x30093266E34a816a53e302bE3e59a93B52792FD4
+// `)
+//         .then((res: any) => res.json())
+//         .then((r) => {
+//           setSEEDHolders(Number(r.totalSupply));
+//         })
+//         .catch((error: any) => {
+//           logError('[SBT] get sgn owners failed', error);
+//           showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
+//         });
+//     };
+//     handleSEEDHolders();
+//   }, []);
 
   useEffect(() => {
     // const handleGovNodes = async () => {
@@ -427,18 +454,8 @@ export default function Home() {
             <img src={theme ? SGNImg : SGNImgLight} alt="" />
           </dt>
           <dd>
-            <div className="num">{seedHolders}</div>
-            <div className="tips">{t('Home.SGNHolder')}</div>
-          </dd>
-        </dl>
-        <div className="rhtLine" />
-        <dl>
-          <dt>
-            <img src={theme ? GovernImg : GovernImgLight} alt="" />
-          </dt>
-          <dd>
-            <div className="num">{governNodes}</div>
-            <div className="tips">{t('Home.GovernNode')}</div>
+            <div className="num">{snsNum}</div>
+            <div className="tips">{t('Home.members')}</div>
           </dd>
         </dl>
         <div className="rhtLine" />
@@ -447,8 +464,20 @@ export default function Home() {
             <img src={theme ? SbtImg : SbtImgLight} alt="" />
           </dt>
           <dd>
-            <div className="num">{sbtHolders}</div>
-            <div className="tips">{t('Home.SBTHolder')}</div>
+            <div className="num">{seedHolders}</div>
+            <div className="tips">{t('Home.SGNHolder')}</div>
+          </dd>
+
+        </dl>
+        <div className="rhtLine" />
+
+        <dl>
+          <dt>
+            <img src={theme ? GovernImg : GovernImgLight} alt="" />
+          </dt>
+          <dd>
+            <div className="num">{governNodes}</div>
+            <div className="tips">{t('Home.GovernNode')}</div>
           </dd>
         </dl>
       </LineBox>

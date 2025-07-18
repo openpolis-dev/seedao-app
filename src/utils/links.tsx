@@ -313,6 +313,13 @@ const links = {
       desc: 'apps.chatAITips',
     },
     {
+      id: 'module-sns',
+      name: 'apps.SNS',
+      link: '/sns/register',
+      icon: SNSImg,
+      desc: 'apps.SNSDesc',
+    },
+    {
       id: 'podcast',
       name: 'apps.podcastTitle',
       link: 'https://www.xiaoyuzhoufm.com/podcast/64a27b216d90c5786108abbc',
@@ -326,13 +333,7 @@ const links = {
       icon: CalendarImg,
       desc: 'apps.OnlineEventDesc',
     },
-    {
-      id: 'module-sns',
-      name: 'apps.SNS',
-      link: '/sns/register',
-      icon: SNSImg,
-      desc: 'apps.SNSDesc',
-    },
+
     {
       id: 'module-sns',
       name: 'apps.snsQuery',
@@ -375,41 +376,41 @@ const links = {
       icon: EventImg,
       desc: 'apps.EventDesc',
     },
-    {
-      id: 'Deschool',
-      name: 'DeSchool',
-      link: 'https://deschool.app/origin/plaza',
-      icon: DeschoolIcon,
-      desc: 'apps.DeschoolDesc',
-    },
-    {
-      id: 'AAAny',
-      name: 'AAAny',
-      link: 'https://apps.apple.com/ca/app/aaany-ask-anyone-anything/id6450619356',
-      icon: AaanyIcon,
-      desc: 'apps.AAAnyDesc',
-    },
-    {
-      id: 'Cascad3',
-      name: 'Cascad3',
-      link: 'https://www.cascad3.com/',
-      icon: Cascad3Icon,
-      desc: 'apps.Cascad3Desc',
-    },
-    {
-      id: 'DAOLink',
-      name: 'DAOLink',
-      link: 'https://app.daolink.space',
-      icon: DaolinkIcon,
-      desc: 'apps.DAOLinkDesc',
-    },
-    {
-      id: 'Wormhole3',
-      name: 'Wormhole3',
-      link: 'https://alpha.wormhole3.io',
-      icon: Wormhole3Icon,
-      desc: 'apps.Wormhole3Desc',
-    },
+    // {
+    //   id: 'Deschool',
+    //   name: 'DeSchool',
+    //   link: 'https://deschool.app/origin/plaza',
+    //   icon: DeschoolIcon,
+    //   desc: 'apps.DeschoolDesc',
+    // },
+    // {
+    //   id: 'AAAny',
+    //   name: 'AAAny',
+    //   link: 'https://apps.apple.com/ca/app/aaany-ask-anyone-anything/id6450619356',
+    //   icon: AaanyIcon,
+    //   desc: 'apps.AAAnyDesc',
+    // },
+    // {
+    //   id: 'Cascad3',
+    //   name: 'Cascad3',
+    //   link: 'https://www.cascad3.com/',
+    //   icon: Cascad3Icon,
+    //   desc: 'apps.Cascad3Desc',
+    // },
+    // {
+    //   id: 'DAOLink',
+    //   name: 'DAOLink',
+    //   link: 'https://app.daolink.space',
+    //   icon: DaolinkIcon,
+    //   desc: 'apps.DAOLinkDesc',
+    // },
+    // {
+    //   id: 'Wormhole3',
+    //   name: 'Wormhole3',
+    //   link: 'https://alpha.wormhole3.io',
+    //   icon: Wormhole3Icon,
+    //   desc: 'apps.Wormhole3Desc',
+    // },
     {
       id: 'Metaforo',
       name: 'Metaforo',
@@ -438,13 +439,13 @@ const links = {
       icon: SeeUImg,
       desc: 'apps.SeeUDesc',
     },
-    {
-      id: 'echo',
-      app: 'apps.Echo',
-      link: 'https://echo3.world/',
-      icon: EchoImg,
-      desc: 'apps.EchoDesc',
-    },
+    // {
+    //   id: 'echo',
+    //   app: 'apps.Echo',
+    //   link: 'https://echo3.world/',
+    //   icon: EchoImg,
+    //   desc: 'apps.EchoDesc',
+    // },
     {
       id: ['preview', 'prod'].includes(process.env.REACT_APP_ENV_VERSION as string)
         ? 'coming-soon'

@@ -47,6 +47,7 @@
     "CityHall": "City Hall",
     "CityHallMembers": "City Hall Members",
     "SGNHolder": "SEED Holder",
+    "members": "Members",
     "SBTHolder": "SBT Holder",
     "GovernNode": "Govern Node",
     "Apps": "Apps",
@@ -925,5 +926,8 @@
   },
   "aiTips": "Send message to AI",
   "clearTips": "Clear Chat",
-  "budgetTips": "每种资产只能输入一次"
+  "budgetTips": "One input per asset only.",
+  "helper": "Contact Assistant",
+  "wechat": "Wechat",
+  "email": "E-Mail"
 }

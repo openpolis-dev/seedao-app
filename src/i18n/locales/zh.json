@@ -46,7 +46,8 @@
     "Publicity": "公示",
     "CityHall": "市政厅",
     "CityHallMembers": "市政厅成员",
-    "SGNHolder": "SEED 持有者",
+    "SGNHolder": "种子成员",
+    "members": "成员",
     "SBTHolder": "SBT 持有者",
     "GovernNode": "治理节点",
     "Apps": "应用",
@@ -927,5 +928,8 @@
   },
   "aiTips": "给AI发消息",
   "clearTips": "清除聊天",
-  "budgetTips": "每种资产只能输入一次"
+  "budgetTips": "每种资产只能输入一次",
+  "helper": "联系小助手",
+  "wechat": "微信",
+  "email": "邮箱"
 }
