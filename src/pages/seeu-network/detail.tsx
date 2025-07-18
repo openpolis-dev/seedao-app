@@ -1,11 +1,11 @@
 import styled from 'styled-components';
-import { EventDetail } from 'seeucomp';
 import { ContainerPadding } from 'assets/styles/global';
 import React, { useEffect, useState } from 'react';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import useToast, { ToastType } from 'hooks/useToast';
 import { getSeeuEventDetail } from 'requests/event';
 import BackerNav from '../../components/common/backNav';
+import NewDetail from "./newDetail";
 
 export default function EventDetailPage() {
   const { search } = window.location;
@@ -20,9 +20,13 @@ export default function EventDetailPage() {
         return;
       }
       try {
-        dispatch({ type: AppActionType.SET_LOADING, payload: true });
-        const resp = await getSeeuEventDetail(id);
-        setData(resp.data);
+        const resp = await fetch("/data/eventList.json");
+        let rt = await resp.json();
+
+        const list = rt.data.items;
+        const detail = list.find((item:any) => item.record_id === id);
+
+        setData(detail);
       } catch (error: any) {
         logError(error);
         showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
@@ -36,7 +40,7 @@ export default function EventDetailPage() {
   return (
     <OuterBox>
       <BackerNav title={''} to="/event" mb="40px" />
-      {data && <EventDetail item={data} />}
+      {!!data && <NewDetail item={data} />}
     </OuterBox>
   );
 }
@@ -55,14 +59,14 @@ const OuterBox = styled.div`
     }
     & > div:first-child {
       gap: 30px;
-      img {
-        width: unset;
-        max-width: 500px;
-      }
-      & > div:first-child {
-        flex: unset !important;
-        width: unset !important;
-      }
+      //img {
+      //  width: unset;
+      //  max-width: 500px;
+      //}
+      //& > div:first-child {
+      //  flex: unset !important;
+      //  width: unset !important;
+      //}
       @media (max-width: 750px) {
         flex-direction: column;
       }
