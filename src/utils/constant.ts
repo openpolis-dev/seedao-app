@@ -55,7 +55,7 @@ export enum PermissionAction {
 export const DefaultAvatar = '/icons/avatar.svg';
 
 export enum AssetName {
-  Credit = 'SCR',
+  Credit = 'SEE',
   Token = 'USDC',
   ETH = 'ETH',
 }
