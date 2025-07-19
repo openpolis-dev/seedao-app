@@ -931,5 +931,12 @@
   "budgetTips": "每种资产只能输入一次",
   "helper": "联系小助手",
   "wechat": "微信",
-  "email": "邮箱"
+  "email": "邮箱",
+  "see": {
+    "transfer": "转账",
+    "receive": "收款",
+    "send": "发送",
+    "sendTo": "发送至",
+    "amount": "数量"
+  }
 }

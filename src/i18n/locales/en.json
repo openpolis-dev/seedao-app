@@ -929,5 +929,12 @@
   "budgetTips": "One input per asset only.",
   "helper": "Contact Assistant",
   "wechat": "Wechat",
-  "email": "E-Mail"
+  "email": "E-Mail",
+  "see": {
+    "transfer": "Transfer",
+    "receive": "Receive",
+    "send": "Send",
+    "sendTo": "Send To",
+    "amount": "Amount"
+  }
 }
