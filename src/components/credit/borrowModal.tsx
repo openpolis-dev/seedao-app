@@ -48,7 +48,7 @@ export default function BorrowModal({ handleClose }: IProps) {
     dispatch,
     state: { account },
   } = useAuthContext();
-  
+
   const [calculating, setCalculating] = useState(false);
   const [allowanceEnough, setAllowanceEnough] = useState(false);
   const [leftTime, setLeftTime] = useState('');
@@ -317,7 +317,7 @@ export default function BorrowModal({ handleClose }: IProps) {
             <div className="left">
               {calculating ? <CalculateLoading style={{ margin: '20px' }} /> : forfeitNum.format(0)}
             </div>
-            <span className="right">SCR</span>
+            <span className="right">SEE</span>
           </LineBox>
           <LineTip>{t('Credit.ForfeitTip')}</LineTip>
           <BorrowTips>

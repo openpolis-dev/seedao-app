@@ -453,7 +453,7 @@ const SelectedRecord = ({ data, total }: { data: ICreditRecord; total: number })
         </li>
         <li>
           <span>
-            {t('Credit.ReturnForfeit')} {data.mortgageSCRAmount.format(4)} SCR
+            {t('Credit.ReturnForfeit')} {data.mortgageSCRAmount.format(4)} SEE
           </span>
         </li>
       </RecordRight>

@@ -229,7 +229,7 @@ export default function CreateProject() {
                       }
 
                     }} />
-                    <span>   SCR</span>
+                    <span>   SEE</span>
 
                   </InputBox>
                   <InputBox>
