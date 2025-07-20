@@ -37,7 +37,7 @@
     "Slogan1": "SeeDAO",
     "Slogan2": " is a network polis to connect millions of nomads ",
     "Slogan3": " in Web3",
-    "allEvents": "All apps",
+    "allEvents": "All projects",
     "viewAll": "View all",
     "SloganVison": "Our Vision",
     "SloganDesc": "Creating an alternative human living space in cyberspace outside the region of the nation-states.",
@@ -50,7 +50,7 @@
     "members": "Members",
     "SBTHolder": "SBT Holder",
     "GovernNode": "Govern Node",
-    "Apps": "Apps",
+    "Apps": "Proposal Project",
     "OnlineEvent": "Calendar",
     "Pub": "Hub",
     "OfflineEvent": "Offline Events",
@@ -528,7 +528,7 @@
     "nextLevel": "Next Level",
     "DefaultName": "No Name",
     "DefaultBio": "No Bio",
-    "InviteInfo": "{{amount}} SCR (including offchain) has been earned through invitation to register for SNS. ",
+    "InviteInfo": "{{amount}} WANG (including offchain) has been earned through invitation to register for SNS. ",
     "ViewDetails": "view details >>"
 
   },

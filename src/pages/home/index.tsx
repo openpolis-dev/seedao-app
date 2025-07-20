@@ -12,7 +12,7 @@ import GovernImg from '../../assets/Imgs/dark/govern.png';
 import SGNImgLight from '../../assets/Imgs/light/sgnHome.png';
 import SbtImgLight from '../../assets/Imgs/light/sbt.png';
 import GovernImgLight from '../../assets/Imgs/light/govern.png';
-import { useAuthContext } from '../../providers/authProvider';
+import { AppActionType, useAuthContext } from "../../providers/authProvider";
 import ArrowImg from '../../assets/Imgs/arrow.png';
 import LinkImg from '../../assets/Imgs/link.svg';
 import { Link, useNavigate } from 'react-router-dom';
@@ -26,6 +26,13 @@ import useToast, { ToastType } from "../../hooks/useToast";
 import { getNodeSBT } from "../../requests/publicData";
 import { getCityHallNode } from "../../requests/cityHall";
 import axios from "axios";
+import { ReTurnProject } from "../../type/project.type";
+import { getProjects, IProjectPageParams } from "../../requests/project";
+import { ethers } from "ethers";
+import ProjectOrGuildItem from "../../components/projectHome";
+import { getUsers } from "../../requests/user";
+import useQuerySNS from "../../hooks/useQuerySNS";
+import { IUser } from "../../type/user.type";
 
 const Box = styled.div`
   background: var(--bs-background);
@@ -52,7 +59,7 @@ const BannerBox = styled.div`
 `;
 
 const ActiveBox = styled.div`
-  margin: 0 40px 0 0;
+  margin: 0 40px 40px 0;
   div[class^='col'] {
     min-height: 116px;
     display: flex;
@@ -272,6 +279,7 @@ const BtmBox = styled.div`
   }
 `;
 
+type UserMap = { [w: string]: IUser };
 export default function Home() {
   const { t } = useTranslation();
   const [seedHolders, setSEEDHolders] = useState(0);
@@ -283,15 +291,85 @@ export default function Home() {
   const { showToast } = useToast();
   const navigate = useNavigate();
   const [snsNum,setSnsNum] = useState(0);
+  const [proList, setProList] = useState<ReTurnProject[]>([]);
+
+  const { getMultiSNS } = useQuerySNS();
 
   const {
     state: { theme, hadOnboarding, sns: userSNS },
+    dispatch
   } = useAuthContext();
 
-  const events = useMemo(() => {
-    // @ts-ignore
-    return Links.apps.map((item) => ({ ...item, name: t(item.name) as string, desc: t(item.desc) as string }));
-  }, [t]);
+
+  const getUsersInfo = async (wallets: string[]) => {
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    try {
+      const res = await getUsers(wallets);
+      const userData: UserMap = {};
+      res.data.forEach((r) => {
+        userData[(r.wallet || '').toLowerCase()] = r;
+      });
+      // setUserMap(userData);
+      return userData;
+    } catch (error) {
+      logError('getUsersInfo error:', error);
+    } finally {
+      dispatch({ type: AppActionType.SET_LOADING, payload: null });
+    }
+  };
+  const getUsersDetail = async (dt: any) => {
+    const _wallets: string[] = [];
+    dt.forEach((key: any) => {
+      if (key.sponsors?.length) {
+        let w = key.sponsors[0];
+        if (ethers.utils.isAddress(w)) {
+          _wallets.push(w);
+        }
+      }
+    });
+    const wallets = Array.from(new Set(_wallets));
+    let rt = await getUsersInfo(wallets);
+    let userSns = await getMultiSNS(wallets);
+
+    return {
+      userMap: rt,
+      userSns,
+    };
+  };
+
+  const getproList = async () => {
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    const obj: IProjectPageParams = {
+      page: 1,
+      size: 9,
+      sort_order: 'desc',
+      sort_field: 'create_ts',
+      keywords: "",
+      wallet: "",
+    };
+    const rt = await getProjects(obj, false);
+
+    dispatch({ type: AppActionType.SET_LOADING, payload: null });
+    const { rows, page, size, total } = rt.data;
+
+    let userRT = await getUsersDetail(rows);
+    const { userMap, userSns } = userRT;
+    rows.map((d: any) => {
+      let m = d.sponsors[0];
+      if (m) {
+        d.user = userMap ? userMap[m] : {};
+        d.sns = userSns ? userSns.get(m) : '';
+      }
+    });
+
+    setProList(rows);
+  };
+
+  // const events = useMemo(() => {
+  //
+  //   // @ts-ignore
+  //   // return Links.apps.map((item) => ({ ...item, name: t(item.name) as string, desc: t(item.desc) as string }));
+  // }, [t]);
 
   const Publicitys = useMemo(() => {
     // @ts-ignore
@@ -301,6 +379,7 @@ export default function Home() {
   useEffect(() => {
     getStatics()
     getScrSns()
+    getproList()
   }, []);
 
   const getStatics = async() =>{
@@ -428,7 +507,9 @@ export default function Home() {
     }
   }
 
-
+  const openDetail = (id: number) => {
+    navigate(`/project/info/${id}`);
+  };
   return (
     <Box>
       <BannerBox>
@@ -486,16 +567,14 @@ export default function Home() {
           <ActiveBox>
             <TitBox>
               <span>{t('Home.Apps')}</span>
-              <div className="toGo" onClick={() => togo('/apps')}>
+              <div className="toGo" onClick={() => togo('/explore')}>
                 {t('Home.allEvents')}
                 <img src={ArrowImg} alt="" />
               </div>
             </TitBox>
             <Row>
-              {events.slice(0, 12).map((item, idx) => (
-                <Col key={idx} sm={12} md={4} lg={4} xl={4}>
-                  <AppCard {...item} />
-                </Col>
+              {proList.map((item) => (
+                <ProjectOrGuildItem key={item.id} data={item} onClickItem={openDetail} />
               ))}
             </Row>
           </ActiveBox>

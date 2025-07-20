@@ -37,7 +37,7 @@
     "Slogan1": "SeeDAO",
     "Slogan2": "是一个致力于连接 100 万数字游民的",
     "Slogan3": "数字城邦",
-    "allEvents": "所有应用",
+    "allEvents": "所有项目",
     "viewAll": "查看全部",
     "SloganVison": "我们的愿景",
     "SloganDesc": "链接数字游民，创造好的生活。",
@@ -50,7 +50,7 @@
     "members": "成员",
     "SBTHolder": "SBT 持有者",
     "GovernNode": "治理节点",
-    "Apps": "应用",
+    "Apps": "社区提案项目",
     "OnlineEvent": "日历",
     "Pub": "酒馆",
     "OfflineEvent": "线下活动",
@@ -530,7 +530,7 @@
     "nextLevel": "下一等级",
     "DefaultName": "TA没有留下昵称",
     "DefaultBio": "TA很神秘哦，并没有介绍自己",
-    "InviteInfo": "已通过邀请注册 SNS 获得 {{amount}} SCR（含未上链）",
+    "InviteInfo": "已通过邀请注册 SNS 获得 {{amount}} WANG（含未上链）",
     "ViewDetails": "查看详情 >>"
 
   },
