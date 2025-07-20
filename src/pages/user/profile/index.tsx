@@ -343,10 +343,10 @@ export default function Profile() {
         <LevelInfo>
           <span>
             {/*{t('My.current')} {(formatNumber(detail?.scr?.amount))} SCR,*/}
-            {t('My.current')} {(getShortDisplay(detail?.scr?.amount))} SCR,
+            {t('My.current')} {(getShortDisplay(detail?.scr?.amount))} WANG,
           </span>
           <span>{t('My.levelTips', { level: Number(detail?.level?.current_lv) + 1 })}</span>
-          <span>{formatNumber(detail?.level?.scr_to_next_lv)} SCR, </span>
+          <span>{formatNumber(detail?.level?.scr_to_next_lv)} WANG, </span>
           <InviteDetail>
             {t('My.InviteInfo', { amount: inviteScr })}
             <Link to={`/assets?target=${wallet}&content=邀请 SNS`}>{t('My.ViewDetails')}</Link>
