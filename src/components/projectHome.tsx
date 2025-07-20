@@ -55,6 +55,7 @@ const CardBox = styled.div`
 const TagBox = styled.div`
   position: absolute;
   right: 10px;
+    bottom: 16px;
 `;
 
 const ImageBox = styled.div`
