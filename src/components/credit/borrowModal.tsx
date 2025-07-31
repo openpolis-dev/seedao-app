@@ -48,7 +48,7 @@ export default function BorrowModal({ handleClose }: IProps) {
     dispatch,
     state: { account },
   } = useAuthContext();
-  
+
   const [calculating, setCalculating] = useState(false);
   const [allowanceEnough, setAllowanceEnough] = useState(false);
   const [leftTime, setLeftTime] = useState('');

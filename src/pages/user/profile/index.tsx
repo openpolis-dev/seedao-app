@@ -21,12 +21,16 @@ import LevelImg from '../../../assets/Imgs/profile/level.svg';
 import SeedImg from '../../../assets/Imgs/profile/seed.svg';
 import SbtImg from '../../../assets/Imgs/profile/sbt.svg';
 import AiKeyImg from "../../../assets/Imgs/profile/Bulk_Key.svg";
+import SeeImg from "../../../assets/Imgs/profile/see.svg"
 
 import SeedList from '../../../components/profile/seed';
 import Sbt from '../../../components/profile/Sbt';
 import { getMyRewards } from 'requests/invite';
-import {RefreshCcw} from "lucide-react";
+import {RefreshCcw,Send,Download} from "lucide-react";
 import { DEEPSEEK_API_URL, getNewToken } from "../../../requests/chatAI";
+import SendModal from "./send";
+import Receive from "./receive";
+import Record from "./record";
 
 const OuterBox = styled.div`
   margin-bottom: 50px;
@@ -77,6 +81,8 @@ export default function Profile() {
   const [sbtArr, setSbtArr] = useState<any[]>([]);
   const [inviteScr, setInviteScr] = useState<number>(0);
   const [apiKey, setApiKey] = useState<string>();
+  const[showTransfer, setShowTransfer] = useState<boolean>(false);
+  const[showReceive, setShowReceive] = useState<boolean>(false);
 
   useEffect(() => {
     if (!seed?.length) return;
@@ -258,6 +264,14 @@ export default function Profile() {
   return (
     <OuterBox>
       {Toast}
+      {
+        showTransfer &&<SendModal handleClose={()=>setShowTransfer(false)} />
+      }
+      {
+        showReceive &&  <Receive handleClose={()=>setShowReceive(false)} />
+      }
+
+
       {/*<TitleBox>{t('My.MyProfile')}</TitleBox>*/}
       <HeadBox>
         <LftBox>
@@ -330,10 +344,10 @@ export default function Profile() {
         <LevelInfo>
           <span>
             {/*{t('My.current')} {(formatNumber(detail?.scr?.amount))} SCR,*/}
-            {t('My.current')} {(getShortDisplay(detail?.scr?.amount))} SCR,
+            {t('My.current')} {(getShortDisplay(detail?.scr?.amount))} WANG,
           </span>
           <span>{t('My.levelTips', { level: Number(detail?.level?.current_lv) + 1 })}</span>
-          <span>{formatNumber(detail?.level?.scr_to_next_lv)} SCR, </span>
+          <span>{formatNumber(detail?.level?.scr_to_next_lv)} WANG, </span>
           <InviteDetail>
             {t('My.InviteInfo', { amount: inviteScr })}
             <Link to={`/assets?target=${wallet}&content=邀请 SNS`}>{t('My.ViewDetails')}</Link>
@@ -342,9 +356,29 @@ export default function Profile() {
       </ProgressOuter>
       <BgBox>
         <TitleLft>
+          <img src={SeeImg} alt="" />
+          <span>SEE</span>
+        </TitleLft>
+        <RhtBoxB>
+          <div className="flexLine">
+            <div className="flexItem">
+              <span>1334 SEE</span>
+              <button onClick={()=>setShowTransfer(true)} ><Send size={16} />{t('see.transfer')}</button>
+              <button onClick={()=>setShowReceive(true)}><Download size={16} />{t('see.receive')}</button>
+
+            </div>
+            <div>交易记录</div>
+          </div>
+        </RhtBoxB>
+        <Record />
+      </BgBox>
+
+      <BgBox>
+        <TitleLft>
           <img src={AiKeyImg} alt="" />
           <span>SeeChat</span>
         </TitleLft>
+
         <RhtBox2>
           <div className="tp">
             <div className="lft">
@@ -379,6 +413,7 @@ export default function Profile() {
           </div>
         </RhtBox2>
       </BgBox>
+
       <BgBox>
         <TitleLft>
           <img src={SeedImg} alt="" />
@@ -648,6 +683,7 @@ const BgBox = styled.div`
   box-shadow: var(--box-shadow);
   display: flex;
   align-items: center;
+    flex-wrap: wrap;
 `;
 
 const RhtBoxB = styled.div`
@@ -656,6 +692,28 @@ const RhtBoxB = styled.div`
   font-weight: 400;
   color: var(--bs-body-color_active);
   line-height: 14px;
+    .flexLine{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap:10px;
+        button{
+            background: transparent;
+            color: var(--bs-primary);
+            border: 1px solid var(--bs-primary);
+            padding: 3px 5px;
+            border-radius: 3px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap:5px;
+        }
+    }
+   .flexItem{
+       display: flex;
+       align-items: center;
+       gap:10px;
+   }
 
 `;
 
@@ -681,6 +739,7 @@ const RhtBox2 = styled(RhtBoxB)`
         padding: 5px;
         text-align: center;
     }
+  
 `
 
 const LftBox = styled.div`
