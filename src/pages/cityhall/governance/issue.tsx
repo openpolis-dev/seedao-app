@@ -253,7 +253,7 @@ export default function Issued() {
         </li>
         <li>
           <LiHead>
-            <LiTitle>{t("Assets.ToBeIssuedSeason")}(SEE)</LiTitle>
+            <LiTitle>{t("Assets.ToBeIssuedSeason")}(WANG)</LiTitle>
           </LiHead>
           <div className="num">{statistics?.wait_for_grant_scr ?? 0}</div>
           <BorderDecoration color="#FFB842" />
@@ -267,7 +267,7 @@ export default function Issued() {
         </li>
         <li>
           <LiHead>
-            <LiTitle>{t("Assets.SentSeason")}(SEE)</LiTitle>
+            <LiTitle>{t("Assets.SentSeason")}(WANG)</LiTitle>
           </LiHead>
           <div className="num">{statistics?.granted_scr ?? 0}</div>
           <BorderDecoration color="#4378FF" />
@@ -281,7 +281,7 @@ export default function Issued() {
         </li>
         <li>
           <LiHead>
-            <LiTitle>{t("Assets.ReviewedSeason")}(SEE)</LiTitle>
+            <LiTitle>{t("Assets.ReviewedSeason")}(WANG)</LiTitle>
           </LiHead>
           <div className="num">{statistics?.checking_scr ?? 0}</div>
           <BorderDecoration color="#8BC34A" />

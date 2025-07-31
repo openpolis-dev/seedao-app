@@ -30,6 +30,7 @@ import {RefreshCcw,Send,Download} from "lucide-react";
 import { DEEPSEEK_API_URL, getNewToken } from "../../../requests/chatAI";
 import SendModal from "./send";
 import Receive from "./receive";
+import Record from "./record";
 
 const OuterBox = styled.div`
   margin-bottom: 50px;
@@ -360,13 +361,18 @@ export default function Profile() {
         </TitleLft>
         <RhtBoxB>
           <div className="flexLine">
-            <span>1334 SEE</span>
-            <button onClick={()=>setShowTransfer(true)} ><Send size={16} />{t('see.transfer')}</button>
-            <button onClick={()=>setShowReceive(true)}><Download size={16} />{t('see.receive')}</button>
-          </div>
+            <div className="flexItem">
+              <span>1334 SEE</span>
+              <button onClick={()=>setShowTransfer(true)} ><Send size={16} />{t('see.transfer')}</button>
+              <button onClick={()=>setShowReceive(true)}><Download size={16} />{t('see.receive')}</button>
 
+            </div>
+            <div>交易记录</div>
+          </div>
         </RhtBoxB>
+        <Record />
       </BgBox>
+
       <BgBox>
         <TitleLft>
           <img src={AiKeyImg} alt="" />
@@ -677,6 +683,7 @@ const BgBox = styled.div`
   box-shadow: var(--box-shadow);
   display: flex;
   align-items: center;
+    flex-wrap: wrap;
 `;
 
 const RhtBoxB = styled.div`
@@ -688,6 +695,7 @@ const RhtBoxB = styled.div`
     .flexLine{
         display: flex;
         align-items: center;
+        justify-content: space-between;
         gap:10px;
         button{
             background: transparent;
@@ -701,6 +709,11 @@ const RhtBoxB = styled.div`
             gap:5px;
         }
     }
+   .flexItem{
+       display: flex;
+       align-items: center;
+       gap:10px;
+   }
 
 `;
 

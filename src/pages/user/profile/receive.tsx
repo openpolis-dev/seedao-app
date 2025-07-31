@@ -5,6 +5,7 @@ import { useAuthContext } from "../../../providers/authProvider";
 import {CopyToClipboard} from "react-copy-to-clipboard";
 import { Copy, CopyCheck } from "lucide-react";
 import React, { useState } from "react";
+import {QRCodeSVG} from 'qrcode.react';
 
 const Box = styled(BasicModal)`
     min-width: 480px;
@@ -37,7 +38,7 @@ const BtmLine = styled.div`
 export default function Receive({handleClose}:any){
   const { t } = useTranslation();
   const {
-    state: { show_login_modal, language, theme, userData, account },
+    state: { sns, account },
     dispatch,
   } = useAuthContext();
 
@@ -51,12 +52,23 @@ export default function Receive({handleClose}:any){
   }
 
   return <Box  handleClose={handleClose} title={t('see.transfer')}>
+
       <div className="inner">
-        <img src="" alt="" />
+        {
+          sns && <QRCodeSVG
+            id="qr-code-canvas"
+            value={sns}
+            bgColor="#FFF"
+            fgColor="#000"
+            level="H"
+            includeMargin={true}
+          />
+            }
+
       </div>
 
     <BtmLine>
-      <span> {account}</span>
+      <span> {sns}</span>
 
 
       {

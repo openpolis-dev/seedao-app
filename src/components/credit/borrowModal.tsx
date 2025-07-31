@@ -317,7 +317,7 @@ export default function BorrowModal({ handleClose }: IProps) {
             <div className="left">
               {calculating ? <CalculateLoading style={{ margin: '20px' }} /> : forfeitNum.format(0)}
             </div>
-            <span className="right">SEE</span>
+            <span className="right">SCR</span>
           </LineBox>
           <LineTip>{t('Credit.ForfeitTip')}</LineTip>
           <BorrowTips>
