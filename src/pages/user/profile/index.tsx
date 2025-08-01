@@ -26,7 +26,7 @@ import SeeImg from "../../../assets/Imgs/profile/see.svg"
 import SeedList from '../../../components/profile/seed';
 import Sbt from '../../../components/profile/Sbt';
 import { getMyRewards } from 'requests/invite';
-import {RefreshCcw,Send,Download} from "lucide-react";
+import {RefreshCcw,Send,Download,ChevronUp,ChevronDown} from "lucide-react";
 import { DEEPSEEK_API_URL, getNewToken } from "../../../requests/chatAI";
 import SendModal from "./send";
 import Receive from "./receive";
@@ -83,6 +83,7 @@ export default function Profile() {
   const [apiKey, setApiKey] = useState<string>();
   const[showTransfer, setShowTransfer] = useState<boolean>(false);
   const[showReceive, setShowReceive] = useState<boolean>(false);
+  const [showHistory, setShowHistory] = useState<boolean>(false);
 
   useEffect(() => {
     if (!seed?.length) return;
@@ -362,15 +363,20 @@ export default function Profile() {
         <RhtBoxB>
           <div className="flexLine">
             <div className="flexItem">
-              <span>1334 SEE</span>
+              <span>{detail?.see?.amount} SEE</span>
               <button onClick={()=>setShowTransfer(true)} ><Send size={16} />{t('see.transfer')}</button>
               <button onClick={()=>setShowReceive(true)}><Download size={16} />{t('see.receive')}</button>
 
             </div>
-            <div>交易记录</div>
+            <div className="history" onClick={()=>setShowHistory(!showHistory)}>{t('see.record')} {showHistory ? <ChevronUp
+              size={14} />:<ChevronDown
+              size={14} />}</div>
           </div>
         </RhtBoxB>
-        <Record />
+        {
+          showHistory &&  <Record />
+        }
+
       </BgBox>
 
       <BgBox>
@@ -714,6 +720,10 @@ const RhtBoxB = styled.div`
        align-items: center;
        gap:10px;
    }
+    .history{
+        color: var(--bs-primary);
+        cursor: pointer;
+    }
 
 `;
 

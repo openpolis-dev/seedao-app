@@ -938,6 +938,10 @@
     "send": "Send",
     "sendTo": "Send To",
     "comment": "Comment",
-    "amount": "Amount"
+    "amount": "Amount",
+    "record": "Record",
+    "from": "From",
+    "to": "To",
+    "time": "Time"
   }
 }

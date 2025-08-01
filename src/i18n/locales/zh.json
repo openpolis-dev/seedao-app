@@ -941,6 +941,11 @@
     "send": "发送",
     "sendTo": "发送至",
     "comment": "备注",
-    "amount": "数量"
+    "amount": "数量",
+    "record": "交易记录",
+    "from": "发送方",
+    "to": "接收方",
+    "time": "交易时间"
+
   }
 }

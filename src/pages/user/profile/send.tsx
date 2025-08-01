@@ -7,6 +7,8 @@ import {ScanLine,X} from "lucide-react";
 import QrScanner from "./scan";
 import { transferSEE } from "../../../requests/see";
 import useToast, { ToastType } from "../../../hooks/useToast";
+import sns from "@seedao/sns-js";
+import getConfig from "../../../utils/envCofnig";
 
 const Box = styled(BasicModal)`
   min-width: 480px;
@@ -66,14 +68,24 @@ export default function SendModal({handleClose}:any){
 
   const handleSend = async() => {
 
-    let obj= {
-      to:address,
+
+
+    try {
+      const rpc  = getConfig().NETWORK.rpcs[0];
+      let snsAddress = await sns.resolve(address,rpc);
+      console.log(snsAddress);
+
+      let obj= {
+      to:snsAddress,
       amount,
+      asset_name:"SEE",
       comment
     }
-    try {
+
       await transferSEE(obj)
       showToast(t('see.transferSuccess'), ToastType.Success);
+      handleClose()
+      // window.location.reload();
     } catch(error:any) {
       console.error(error)
       showToast(`${error?.data?.msg || error?.code || error}`, ToastType.Danger);
