@@ -72,7 +72,7 @@ export default function Receive({handleClose}:any){
 
 
       {
-        !codeCopied &&   <CopyToClipboard text={account as any} onCopy={handleCodeCopy}>
+        !codeCopied &&   <CopyToClipboard text={sns as any} onCopy={handleCodeCopy}>
           <Copy size={18} />
         </CopyToClipboard>
       }

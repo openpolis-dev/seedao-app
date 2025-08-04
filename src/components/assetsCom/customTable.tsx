@@ -112,7 +112,7 @@ const CustomTable = ({ updateList }: IProps) => {
               </td>
               <td style={{ width: '120px' }}>
                 <AssetSelect
-                  width="80px"
+                  width="120px"
                   options={[
                     { value: AssetName.Credit, label: AssetName.Credit },
                     { value: AssetName.Credit2, label: AssetName.Credit2 },
