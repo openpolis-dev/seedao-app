@@ -221,6 +221,7 @@ export default function CreateStep({ onClick }: any) {
     let { vote_type } = template;
     setVoteType(vote_type || 0);
 
+
     if (template.id) {
       setShowType('template');
       setShowRht(false);
@@ -334,6 +335,8 @@ export default function CreateStep({ onClick }: any) {
       let canUse: string[] = [];
 
       let data: any = {};
+
+      console.error("budgets",budgets)
 
       budgets?.map((item: any) => {
         total.push(`${item.total_amount} ${item.asset_name}`);
@@ -555,10 +558,8 @@ export default function CreateStep({ onClick }: any) {
             if (Number(item.amount) > 1000) {
               err = true;
             }
-          } else if (item?.typeTest?.name === 'SCR') {
-            if (Number(item.amount) > 50000) {
-              err = true;
-            }
+          }else{
+            err = true;
           }
         });
       }
