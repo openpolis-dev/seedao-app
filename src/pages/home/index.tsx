@@ -33,6 +33,7 @@ import ProjectOrGuildItem from "../../components/projectHome";
 import { getUsers } from "../../requests/user";
 import useQuerySNS from "../../hooks/useQuerySNS";
 import { IUser } from "../../type/user.type";
+import LoadingInner from "../../components/loadingInner";
 
 const Box = styled.div`
   background: var(--bs-background);
@@ -339,30 +340,37 @@ export default function Home() {
 
   const getproList = async () => {
     dispatch({ type: AppActionType.SET_LOADING, payload: true });
-    const obj: IProjectPageParams = {
-      page: 1,
-      size: 9,
-      sort_order: 'desc',
-      sort_field: 'create_ts',
-      keywords: "",
-      wallet: "",
-    };
-    const rt = await getProjects(obj, false);
+    try {
+      const obj: IProjectPageParams = {
+        page: 1,
+        size: 9,
+        sort_order: 'desc',
+        sort_field: 'create_ts',
+        keywords: "",
+        wallet: "",
+      };
+      const rt = await getProjects(obj, false);
 
-    dispatch({ type: AppActionType.SET_LOADING, payload: null });
-    const { rows, page, size, total } = rt.data;
 
-    let userRT = await getUsersDetail(rows);
-    const { userMap, userSns } = userRT;
-    rows.map((d: any) => {
-      let m = d.sponsors[0];
-      if (m) {
-        d.user = userMap ? userMap[m] : {};
-        d.sns = userSns ? userSns.get(m) : '';
-      }
-    });
+      const { rows, page, size, total } = rt.data;
 
-    setProList(rows);
+      let userRT = await getUsersDetail(rows);
+      const { userMap, userSns } = userRT;
+      rows.map((d: any) => {
+        let m = d.sponsors[0];
+        if (m) {
+          d.user = userMap ? userMap[m] : {};
+          d.sns = userSns ? userSns.get(m) : '';
+        }
+      });
+
+      setProList(rows);
+    } catch(error) {
+      console.error(error)
+    }finally {
+      dispatch({ type: AppActionType.SET_LOADING, payload: null });
+    }
+
   };
 
   // const events = useMemo(() => {
@@ -573,7 +581,11 @@ export default function Home() {
               </div>
             </TitBox>
             <Row>
-              {proList.map((item) => (
+              {
+                proList.length === 0 && <BtmLoading><LoadingInner /></BtmLoading>
+              }
+
+              {!!proList.length && proList.map((item) => (
                 <ProjectOrGuildItem key={item.id} data={item} onClickItem={openDetail} />
               ))}
             </Row>
@@ -683,3 +695,10 @@ const FlexPod = styled.div`
     border-radius: 16px;
   }
 `;
+const BtmLoading = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+`
