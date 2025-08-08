@@ -177,6 +177,8 @@ export default function Index() {
     token_total_amount: 0,
     credit_used_amount: 0,
     credit_total_amount: 0,
+    see_used_amount:0,
+    see_total_amount:0
   });
   const [showModifyModal, setshowModifyModal] = useState<BudgetType>();
   const [totalBalance, setTotalBalance] = useState('0.00');
@@ -195,6 +197,8 @@ export default function Index() {
         token_total_amount: Number(res.data.token_total_amount),
         credit_used_amount: Number(res.data.credit_used_amount),
         credit_total_amount: Number(res.data.credit_total_amount),
+        see_total_amount: Number(res.data.see_total_amount ??0),
+        see_used_amount: Number(res.data.see_used_amount ??0),
       });
     } catch (error:any) {
       logError('getTreasury error', error);
@@ -386,7 +390,7 @@ export default function Index() {
             <LiHead>
               <LiTitle>{t('Assets.SupplySEE', { season: currentSeason })}</LiTitle>
             </LiHead>
-            <div className="num">{Number(asset.credit_used_amount).format()}</div>
+            <div className="num">{Number(asset.see_total_amount).format()}</div>
             {/*<AssetBox className="tips">*/}
             {/*  /!* <span>{t('Assets.SeasonBudget')} : </span>*/}
             {/*  <span>{formatNumber(asset.credit_total_amount)}</span>*/}
@@ -402,7 +406,7 @@ export default function Index() {
             <LiHead>
               <LiTitle>{t('Assets.SeasonUsedSEE', { season: currentSeason })}</LiTitle>
             </LiHead>
-            <div className="num">{Number(asset.credit_used_amount).format()}</div>
+            <div className="num">{Number(asset.see_used_amount).format()}</div>
             {/*<AssetBox className="tips">*/}
             {/*  /!* <span>{t('Assets.SeasonBudget')} : </span>*/}
             {/*  <span>{formatNumber(asset.credit_total_amount)}</span>*/}
