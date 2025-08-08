@@ -574,7 +574,7 @@ export default function Home() {
         <Col md={8}>
           <ActiveBox>
             <TitBox>
-              <span>{t('Home.Apps')}</span>
+              <span>{t('Home.AllProject')}</span>
               <div className="toGo" onClick={() => togo('/explore')}>
                 {t('Home.allEvents')}
                 <img src={ArrowImg} alt="" />
