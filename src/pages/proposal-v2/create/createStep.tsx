@@ -546,11 +546,11 @@ export default function CreateStep({ onClick }: any) {
 
 
 
-    let budgetArr = template?.components?.filter((item) => item.name === 'budget') || [];
+    let budgetArr = template?.components?.filter((item) => item.name === 'budget_p2') || [];
     if (template?.name === 'P2提案立项' && budgetArr?.length > 0) {
       let err = false;
 
-      const budgetData = data.filter((item: any) => item.name === 'budget') || [];
+      const budgetData = data.filter((item: any) => item.name === 'budget_p2') || [];
       if (budgetData?.length) {
         budgetData[0]?.data?.budgetList.map((item: any) => {
 
@@ -566,7 +566,6 @@ export default function CreateStep({ onClick }: any) {
       setShowErrorTips(err);
       if (err) return;
     }
-
     setResult(data);
     if (template?.is_instant_vote) {
       setIsInstantVoteAlertVisible(true);

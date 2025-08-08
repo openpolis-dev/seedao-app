@@ -146,7 +146,7 @@
     "AssociatedProposalComponent": "Associated Proposal Component",
     "EmptyAssociatedProposal": "No proposals ready for closure",
     "SubmitConfirmTip": "Once a proposal is submitted, it goes to a vote and cannot be withdrawn for modification, is the submission confirmed?",
-    "p2Tips": "P2 proposals can apply for incentives of no more than 50,000 SEE and no more than 1,000 {{token}}.",
+    "p2Tips": "P2 proposals can apply for incentives of no more than 1,000 USDC.",
     "AutoExecuteLeftTime": "Auto-execute wait time left {{h}} hour(s) {{m}} minute(s)",
     "CloseVote": "Early closure of polls",
     "ConfirmToCloseVote": "Confirmation of the early closing of the polls?",
