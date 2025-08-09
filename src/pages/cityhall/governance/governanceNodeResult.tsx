@@ -162,10 +162,10 @@ export default function GoveranceNodeResult() {
           array: [
             [
               'SNS',
-              ...allSeasons.map((s) => `S${s}(SCR)`),
+              ...allSeasons.map((s) => `S${s}(WANG)`),
               t('GovernanceNodeResult.VoteCount', { season: currentSeason }),
-              t('GovernanceNodeResult.MinerReward', { season: currentSeason }) + '(SCR)',
-              t('GovernanceNodeResult.Total') + '(SCR)',
+              t('GovernanceNodeResult.MinerReward', { season: currentSeason }) + '(WANG)',
+              t('GovernanceNodeResult.Total') + '(WANG)',
               t('GovernanceNodeResult.ActiveSCR'),
               t('GovernanceNodeResult.EffectiveSCR'),
               t('GovernanceNodeResult.SeedCount'),
@@ -371,19 +371,19 @@ export default function GoveranceNodeResult() {
             {allSeasons.map((s, i) => {
               return i === allSeasons.length - 1 ? (
                 <th className="right" key={i}>
-                  <CurrentSeason>{currentSeason}</CurrentSeason>(SCR)
+                  <CurrentSeason>{currentSeason}</CurrentSeason>(WANG)
                 </th>
               ) : (
-                <th key={s} className="right">{`S${s}(SCR)`}</th>
+                <th key={s} className="right">{`S${s}(WANG)`}</th>
               );
             })}
             <th className="center">{t('GovernanceNodeResult.VoteCount', { season: currentSeason })}</th>
 
             {
-              ((!hasSentFlag && show) || hasSentFlag ) && <th className="right">{t("GovernanceNodeResult.MinerReward", { season: currentSeason })}(SCR)</th>
+              ((!hasSentFlag && show) || hasSentFlag ) && <th className="right">{t("GovernanceNodeResult.MinerReward", { season: currentSeason })}(WANG)</th>
             }
 
-            <th className="right">{t("GovernanceNodeResult.Total")}(SCR)</th>
+            <th className="right">{t("GovernanceNodeResult.Total")}(WANG)</th>
             <th className="right">{t('GovernanceNodeResult.ActiveSCR')}</th>
             <th className="right">{t('GovernanceNodeResult.EffectiveSCR')}</th>
             <th className="center">{t('GovernanceNodeResult.SeedCount')}</th>

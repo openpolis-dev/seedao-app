@@ -221,6 +221,7 @@ export default function CreateStep({ onClick }: any) {
     let { vote_type } = template;
     setVoteType(vote_type || 0);
 
+
     if (template.id) {
       setShowType('template');
       setShowRht(false);
@@ -334,6 +335,8 @@ export default function CreateStep({ onClick }: any) {
       let canUse: string[] = [];
 
       let data: any = {};
+
+      console.error("budgets",budgets)
 
       budgets?.map((item: any) => {
         total.push(`${item.total_amount} ${item.asset_name}`);
@@ -543,11 +546,11 @@ export default function CreateStep({ onClick }: any) {
 
 
 
-    let budgetArr = template?.components?.filter((item) => item.name === 'budget') || [];
+    let budgetArr = template?.components?.filter((item) => item.name === 'budget_p2') || [];
     if (template?.name === 'P2提案立项' && budgetArr?.length > 0) {
       let err = false;
 
-      const budgetData = data.filter((item: any) => item.name === 'budget') || [];
+      const budgetData = data.filter((item: any) => item.name === 'budget_p2') || [];
       if (budgetData?.length) {
         budgetData[0]?.data?.budgetList.map((item: any) => {
 
@@ -555,17 +558,14 @@ export default function CreateStep({ onClick }: any) {
             if (Number(item.amount) > 1000) {
               err = true;
             }
-          } else if (item?.typeTest?.name === 'SCR') {
-            if (Number(item.amount) > 50000) {
-              err = true;
-            }
+          }else{
+            err = true;
           }
         });
       }
       setShowErrorTips(err);
       if (err) return;
     }
-
     setResult(data);
     if (template?.is_instant_vote) {
       setIsInstantVoteAlertVisible(true);
