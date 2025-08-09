@@ -18,9 +18,9 @@ export default function IssuedModal(props: Iprops) {
   const onClickConfirm = () => {
     const list = value.split(';');
     const txs: string[] = list.filter((item) => !!item);
-    if (!txs.length) {
-      return;
-    }
+    // if (!txs.length) {
+    //   return;
+    // }
     handleConfirm(txs);
   };
 
