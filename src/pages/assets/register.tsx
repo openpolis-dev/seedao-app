@@ -198,9 +198,9 @@ export default function Register() {
         err.errorKeys.push(t('Msg.SelectAssetTypeError'));
       }
 
-      if (!item.assetType || (item.assetType !== AssetName.Credit && item.assetType !== AssetName.Token && item.assetType !== AssetName.ETH)) {
-        err.errorKeys.push(t('Msg.SelectAssetType'));
-      }
+      // if (!item.assetType || (item.assetType !== AssetName.Credit && item.assetType !== AssetName.Token && item.assetType !== AssetName.ETH)) {
+      //   err.errorKeys.push(t('Msg.SelectAssetType'));
+      // }
       const _amount = Number(item.amount);
 
       if (isNaN(_amount) || _amount <= 0) {

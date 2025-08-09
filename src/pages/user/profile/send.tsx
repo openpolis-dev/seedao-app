@@ -85,7 +85,7 @@ export default function SendModal({handleClose}:any){
       await transferSEE(obj)
       showToast(t('see.transferSuccess'), ToastType.Success);
       handleClose()
-      // window.location.reload();
+      window.location.reload();
     } catch(error:any) {
       console.error(error)
       showToast(`${error?.data?.msg || error?.code || error}`, ToastType.Danger);
