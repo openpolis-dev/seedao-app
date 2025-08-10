@@ -138,7 +138,7 @@ export default function SCRRank() {
           name: t('GovernanceNodeResult.SCRSeasonRankFilename', { season: currentSeason }),
           from: {
             array: [
-              ['SNS', ...allSeasons.map((s) => `S${s}(SCR)`), t('GovernanceNodeResult.Total') + '(SCR)'],
+              ['SNS', ...allSeasons.map((s) => `S${s}(WANG)`), t('GovernanceNodeResult.Total') + '(WANG)'],
               ...displayList.map((item) => [
                 dataMap.get(item.wallet) || item.wallet,
                 ...allSeasons.map((i) => {
@@ -224,17 +224,17 @@ export default function SCRRank() {
               return i === allSeasons.length - 1 ? (
                 <th key={i} className="right">
                   <ColumnSort onClick={onClickCurrentRank}>
-                    <span>{currentSeason} (SCR)</span>
+                    <span>{currentSeason} (WANG)</span>
                     <img src={getRankIcon(rankCurrent)} alt="" />
                   </ColumnSort>
                 </th>
               ) : (
-                <th className="right" key={s}>{`S${s}(SCR)`}</th>
+                <th className="right" key={i}>{`S${s}(WANG)`}</th>
               );
             })}
             <th className="right">
               <ColumnSort onClick={onClicktotalRank}>
-                <span>{t('GovernanceNodeResult.Total')}(SCR)</span>
+                <span>{t('GovernanceNodeResult.Total')}(WANG)</span>
                 <img src={getRankIcon(rankTotal)} alt="" />
               </ColumnSort>
             </th>

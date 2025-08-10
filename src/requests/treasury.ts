@@ -11,6 +11,8 @@ interface ITreasuryResponse {
   credit_used_amount: number;
   token_total_amount: number;
   token_used_amount: number;
+  see_used_amount?: number;
+  see_total_amount?: number;
 }
 
 export const getTreasury = (): Promise<ResponseData<ITreasuryResponse>> => {

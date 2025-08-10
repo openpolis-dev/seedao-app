@@ -12,7 +12,7 @@ import GovernImg from '../../assets/Imgs/dark/govern.png';
 import SGNImgLight from '../../assets/Imgs/light/sgnHome.png';
 import SbtImgLight from '../../assets/Imgs/light/sbt.png';
 import GovernImgLight from '../../assets/Imgs/light/govern.png';
-import { useAuthContext } from '../../providers/authProvider';
+import { AppActionType, useAuthContext } from "../../providers/authProvider";
 import ArrowImg from '../../assets/Imgs/arrow.png';
 import LinkImg from '../../assets/Imgs/link.svg';
 import { Link, useNavigate } from 'react-router-dom';
@@ -24,6 +24,16 @@ import { getPublicity } from "../../requests/publicity";
 import { formatTime } from "../../utils/time";
 import useToast, { ToastType } from "../../hooks/useToast";
 import { getNodeSBT } from "../../requests/publicData";
+import { getCityHallNode } from "../../requests/cityHall";
+import axios from "axios";
+import { ReTurnProject } from "../../type/project.type";
+import { getProjects, IProjectPageParams } from "../../requests/project";
+import { ethers } from "ethers";
+import ProjectOrGuildItem from "../../components/projectHome";
+import { getUsers } from "../../requests/user";
+import useQuerySNS from "../../hooks/useQuerySNS";
+import { IUser } from "../../type/user.type";
+import LoadingInner from "../../components/loadingInner";
 
 const Box = styled.div`
   background: var(--bs-background);
@@ -50,7 +60,7 @@ const BannerBox = styled.div`
 `;
 
 const ActiveBox = styled.div`
-  margin: 0 40px 0 0;
+  margin: 0 40px 40px 0;
   div[class^='col'] {
     min-height: 116px;
     display: flex;
@@ -270,6 +280,7 @@ const BtmBox = styled.div`
   }
 `;
 
+type UserMap = { [w: string]: IUser };
 export default function Home() {
   const { t } = useTranslation();
   const [seedHolders, setSEEDHolders] = useState(0);
@@ -280,15 +291,93 @@ export default function Home() {
   const [sbtHolders,setSbtHolders] = useState(0);
   const { showToast } = useToast();
   const navigate = useNavigate();
+  const [snsNum,setSnsNum] = useState(0);
+  const [proList, setProList] = useState<ReTurnProject[]>([]);
+
+  const { getMultiSNS } = useQuerySNS();
 
   const {
     state: { theme, hadOnboarding, sns: userSNS },
+    dispatch
   } = useAuthContext();
 
-  const events = useMemo(() => {
-    // @ts-ignore
-    return Links.apps.map((item) => ({ ...item, name: t(item.name) as string, desc: t(item.desc) as string }));
-  }, [t]);
+
+  const getUsersInfo = async (wallets: string[]) => {
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    try {
+      const res = await getUsers(wallets);
+      const userData: UserMap = {};
+      res.data.forEach((r) => {
+        userData[(r.wallet || '').toLowerCase()] = r;
+      });
+      // setUserMap(userData);
+      return userData;
+    } catch (error) {
+      logError('getUsersInfo error:', error);
+    } finally {
+      dispatch({ type: AppActionType.SET_LOADING, payload: null });
+    }
+  };
+  const getUsersDetail = async (dt: any) => {
+    const _wallets: string[] = [];
+    dt.forEach((key: any) => {
+      if (key.sponsors?.length) {
+        let w = key.sponsors[0];
+        if (ethers.utils.isAddress(w)) {
+          _wallets.push(w);
+        }
+      }
+    });
+    const wallets = Array.from(new Set(_wallets));
+    let rt = await getUsersInfo(wallets);
+    let userSns = await getMultiSNS(wallets);
+
+    return {
+      userMap: rt,
+      userSns,
+    };
+  };
+
+  const getproList = async () => {
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    try {
+      const obj: IProjectPageParams = {
+        page: 1,
+        size: 9,
+        sort_order: 'desc',
+        sort_field: 'create_ts',
+        keywords: "",
+        wallet: "",
+      };
+      const rt = await getProjects(obj, false);
+
+
+      const { rows, page, size, total } = rt.data;
+
+      let userRT = await getUsersDetail(rows);
+      const { userMap, userSns } = userRT;
+      rows.map((d: any) => {
+        let m = d.sponsors[0];
+        if (m) {
+          d.user = userMap ? userMap[m] : {};
+          d.sns = userSns ? userSns.get(m) : '';
+        }
+      });
+
+      setProList(rows);
+    } catch(error) {
+      console.error(error)
+    }finally {
+      dispatch({ type: AppActionType.SET_LOADING, payload: null });
+    }
+
+  };
+
+  // const events = useMemo(() => {
+  //
+  //   // @ts-ignore
+  //   // return Links.apps.map((item) => ({ ...item, name: t(item.name) as string, desc: t(item.desc) as string }));
+  // }, [t]);
 
   const Publicitys = useMemo(() => {
     // @ts-ignore
@@ -297,38 +386,63 @@ export default function Home() {
 
   useEffect(() => {
     getStatics()
+    getScrSns()
+    getproList()
   }, []);
 
   const getStatics = async() =>{
-   let rt = await getNodeSBT()
-    console.log(rt.data)
-
-    let obj:any={}
-    for (let i = 0; i < rt.data.length; i++) {
-      let item= rt.data[i];
-      console.log(item.Name,item.NumValue)
-      obj[item.Name]=item.NumValue
+   // let rt = await getNodeSBT()
+   //  console.log(rt.data)
+   //
+   //  let obj:any={}
+   //  for (let i = 0; i < rt.data.length; i++) {
+   //    let item= rt.data[i];
+   //    console.log(item.Name,item.NumValue)
+   //    obj[item.Name]=item.NumValue
+   //  }
+   //  console.log("obj",obj)
+   //  // setSbtHolders(obj.compute_sbt_num)
+    try {
+      const dt = await getCityHallNode();
+      const wallets = dt.data;
+      setGovernNodes(wallets?.length)
+    } catch(error) {
+      console.error(error)
     }
-    console.log("obj",obj)
-    setSbtHolders(obj.compute_sbt_num)
-    setGovernNodes(obj.compute_node_num)
+
   }
 
-  useEffect(() => {
-    const handleSEEDHolders = async () => {
-      fetch(`${getConfig().INDEXER_ENDPOINT}/insight/erc721/total_supply/0x30093266E34a816a53e302bE3e59a93B52792FD4
-`)
-        .then((res: any) => res.json())
-        .then((r) => {
-          setSEEDHolders(Number(r.totalSupply));
-        })
-        .catch((error: any) => {
-          logError('[SBT] get sgn owners failed', error);
-          showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
-        });
-    };
-    handleSEEDHolders();
-  }, []);
+  const getScrSns = async() =>{
+    try {
+      const res = await axios.get(`https://tokentracker.seedao.tech`, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      setSEEDHolders(res.data?.seed?.holders);
+      setSnsNum(res.data?.sns?.holders);
+      // setScr(res.data?.scr?.holders);
+    } catch(error) {
+      console.error(error)
+    }
+  }
+
+//   useEffect(() => {
+//     const handleSEEDHolders = async () => {
+//       fetch(`${getConfig().INDEXER_ENDPOINT}/insight/erc721/total_supply/0x30093266E34a816a53e302bE3e59a93B52792FD4
+// `)
+//         .then((res: any) => res.json())
+//         .then((r) => {
+//           setSEEDHolders(Number(r.totalSupply));
+//         })
+//         .catch((error: any) => {
+//           logError('[SBT] get sgn owners failed', error);
+//           showToast(`${error?.data?.code}:${error?.data?.msg || error?.code || error}`, ToastType.Danger);
+//         });
+//     };
+//     handleSEEDHolders();
+//   }, []);
 
   useEffect(() => {
     // const handleGovNodes = async () => {
@@ -401,7 +515,9 @@ export default function Home() {
     }
   }
 
-
+  const openDetail = (id: number) => {
+    navigate(`/project/info/${id}`);
+  };
   return (
     <Box>
       <BannerBox>
@@ -427,11 +543,23 @@ export default function Home() {
             <img src={theme ? SGNImg : SGNImgLight} alt="" />
           </dt>
           <dd>
-            <div className="num">{seedHolders}</div>
-            <div className="tips">{t('Home.SGNHolder')}</div>
+            <div className="num">{snsNum}</div>
+            <div className="tips">{t('Home.members')}</div>
           </dd>
         </dl>
         <div className="rhtLine" />
+        <dl>
+          <dt>
+            <img src={theme ? SbtImg : SbtImgLight} alt="" />
+          </dt>
+          <dd>
+            <div className="num">{seedHolders}</div>
+            <div className="tips">{t('Home.SGNHolder')}</div>
+          </dd>
+
+        </dl>
+        <div className="rhtLine" />
+
         <dl>
           <dt>
             <img src={theme ? GovernImg : GovernImgLight} alt="" />
@@ -441,32 +569,24 @@ export default function Home() {
             <div className="tips">{t('Home.GovernNode')}</div>
           </dd>
         </dl>
-        <div className="rhtLine" />
-        <dl>
-          <dt>
-            <img src={theme ? SbtImg : SbtImgLight} alt="" />
-          </dt>
-          <dd>
-            <div className="num">{sbtHolders}</div>
-            <div className="tips">{t('Home.SBTHolder')}</div>
-          </dd>
-        </dl>
       </LineBox>
       <Row className="lline">
         <Col md={8}>
           <ActiveBox>
             <TitBox>
-              <span>{t('Home.Apps')}</span>
-              <div className="toGo" onClick={() => togo('/apps')}>
+              <span>{t('Home.AllProject')}</span>
+              <div className="toGo" onClick={() => togo('/explore')}>
                 {t('Home.allEvents')}
                 <img src={ArrowImg} alt="" />
               </div>
             </TitBox>
             <Row>
-              {events.slice(0, 12).map((item, idx) => (
-                <Col key={idx} sm={12} md={4} lg={4} xl={4}>
-                  <AppCard {...item} />
-                </Col>
+              {
+                proList.length === 0 && <BtmLoading><LoadingInner /></BtmLoading>
+              }
+
+              {!!proList.length && proList.map((item) => (
+                <ProjectOrGuildItem key={item.id} data={item} onClickItem={openDetail} />
               ))}
             </Row>
           </ActiveBox>
@@ -575,3 +695,10 @@ const FlexPod = styled.div`
     border-radius: 16px;
   }
 `;
+const BtmLoading = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+`
