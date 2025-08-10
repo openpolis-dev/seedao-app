@@ -3,6 +3,9 @@ import './ContactAssistant.css';
 import {X} from "lucide-react"
 import { useTranslation } from "react-i18next";
 import { HELPER } from "../utils/constant";
+import WechatImg from "../assets/Imgs/wechat/wechat.jpg";
+import styled from "styled-components";
+
 
 
 const ContactAssistant = () => {
@@ -33,20 +36,24 @@ const ContactAssistant = () => {
           <div className="contact-details">
             <h4>{t("helper")}</h4>
             <div className="contact-method">
-              <strong>{t("wechat")}</strong>
-              <span>{HELPER.wechat}</span>
+              <div className="flexLine">
+                <strong>{t("wechat")}</strong>
+                <span>Fatfingererr2022</span>
+              </div>
+
               <div className="box">
                 <img
-                  src={HELPER.qrcode}
+                  src={WechatImg}
                   className="qr-code"
                 />
               </div>
 
             </div>
-            <div className="contact-method">
-              <strong>{t("email")}</strong>
-              <a href={`mailto:${HELPER.mail}`}>{HELPER.mail}</a>
-            </div>
+            <div className="flexLine"> <strong>技术助手微信：</strong>Gxx320</div>
+            {/*<div className="contact-method">*/}
+            {/*  <strong>{t("email")}</strong>*/}
+            {/*  <a href={`mailto:${HELPER.mail}`}>{HELPER.mail}</a>*/}
+            {/*</div>*/}
           </div>
         </>
       )}
