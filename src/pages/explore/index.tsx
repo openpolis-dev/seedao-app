@@ -105,7 +105,7 @@ export default function ExplorePage() {
         <Tabbar
           tabs={[
             { key: 0, title: t('menus.Project') },
-            { key: 1, title: t('menus.Guild') },
+            // { key: 1, title: t('menus.Guild') },
           ]}
           defaultActiveKey={key}
           onSelect={(v: string | number) => {

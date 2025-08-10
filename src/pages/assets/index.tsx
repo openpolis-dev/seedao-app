@@ -38,7 +38,7 @@ const FirstLine = styled.ul<{ border: string }>`
   margin-bottom: 40px;
   li {
     position: relative;
-    width: 23%;
+    flex:1;
     height: 153px;
     border-radius: 16px;
     padding: 20px 25px;
@@ -177,6 +177,8 @@ export default function Index() {
     token_total_amount: 0,
     credit_used_amount: 0,
     credit_total_amount: 0,
+    see_used_amount:0,
+    see_total_amount:0
   });
   const [showModifyModal, setshowModifyModal] = useState<BudgetType>();
   const [totalBalance, setTotalBalance] = useState('0.00');
@@ -195,6 +197,8 @@ export default function Index() {
         token_total_amount: Number(res.data.token_total_amount),
         credit_used_amount: Number(res.data.credit_used_amount),
         credit_total_amount: Number(res.data.credit_total_amount),
+        see_total_amount: Number(res.data.see_total_amount ??0),
+        see_used_amount: Number(res.data.see_used_amount ??0),
       });
     } catch (error:any) {
       logError('getTreasury error', error);
@@ -331,14 +335,7 @@ export default function Index() {
           </VaultOverview>
         </Vault>
         <FirstLine border={borderStyle}>
-          <li>
-            <LiHead>
-              <LiTitle>{t('Assets.SupplySCR')}</LiTitle>
-            </LiHead>
-            <div className="num">{totalSCR}</div>
-            {/*<AssetBox></AssetBox>*/}
-            <BorderDecoration color="#FF86CB" />
-          </li>
+
           <li className="center">
             <LiHead>
               <LiTitle>{t('Assets.SupplySGN')}</LiTitle>
@@ -365,6 +362,14 @@ export default function Index() {
             {/*</AssetBox>*/}
             <BorderDecoration color="#03DACD" />
           </li>
+          <li>
+            <LiHead>
+              <LiTitle>{t('Assets.SupplySCR')}</LiTitle>
+            </LiHead>
+            <div className="num">{totalSCR}</div>
+            {/*<AssetBox></AssetBox>*/}
+            <BorderDecoration color="#FF86CB" />
+          </li>
           <li className="center">
             <LiHead>
               <LiTitle>{t('Assets.SeasonUsedSCR', { season: currentSeason })}</LiTitle>
@@ -380,6 +385,38 @@ export default function Index() {
             {/*  )} *!/*/}
             {/*</AssetBox>*/}
             <BorderDecoration color="#4378FF" />
+          </li>
+          <li className="center">
+            <LiHead>
+              <LiTitle>{t('Assets.SupplySEE', { season: currentSeason })}</LiTitle>
+            </LiHead>
+            <div className="num">{Number(asset.see_total_amount).format()}</div>
+            {/*<AssetBox className="tips">*/}
+            {/*  /!* <span>{t('Assets.SeasonBudget')} : </span>*/}
+            {/*  <span>{formatNumber(asset.credit_total_amount)}</span>*/}
+            {/*  {canUseCityhall && (*/}
+            {/*    <span className="btn-edit" onClick={() => setshowModifyModal(BudgetType.Credit)}>*/}
+            {/*      <Pencil />*/}
+            {/*    </span>*/}
+            {/*  )} *!/*/}
+            {/*</AssetBox>*/}
+            <BorderDecoration color="#C97CFF" />
+          </li>
+          <li className="center">
+            <LiHead>
+              <LiTitle>{t('Assets.SeasonUsedSEE', { season: currentSeason })}</LiTitle>
+            </LiHead>
+            <div className="num">{Number(asset.see_used_amount).format()}</div>
+            {/*<AssetBox className="tips">*/}
+            {/*  /!* <span>{t('Assets.SeasonBudget')} : </span>*/}
+            {/*  <span>{formatNumber(asset.credit_total_amount)}</span>*/}
+            {/*  {canUseCityhall && (*/}
+            {/*    <span className="btn-edit" onClick={() => setshowModifyModal(BudgetType.Credit)}>*/}
+            {/*      <Pencil />*/}
+            {/*    </span>*/}
+            {/*  )} *!/*/}
+            {/*</AssetBox>*/}
+            <BorderDecoration color="#4CEEB9" />
           </li>
         </FirstLine>
 

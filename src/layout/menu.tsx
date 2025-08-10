@@ -62,6 +62,9 @@ import useCheckLogin from 'hooks/useCheckLogin';
 import { AppActionType, useAuthContext } from 'providers/authProvider';
 import { WalletType } from 'wallet/wallet';
 import AppVersion from '../components/version';
+import useToast, { ToastType } from "../hooks/useToast";
+import { loginChat } from "../requests/chatAI";
+import ContactAssistant from "../components/assistant";
 
 const LftLi = styled.div<{ selected?: boolean }>`
   padding: 10px 0;
@@ -257,20 +260,20 @@ const items: MenuItemType[] = [
     },
     link: { href: '/proposal' },
   },
-  {
-    title: 'menus.Resources',
-    icon: {
-      dark: {
-        nor: ApplyImg,
-        active: ApplyImgActive,
-      },
-      light: {
-        nor: ApplyImgLight,
-        active: ApplyImgActive,
-      },
-    },
-    link: { href: '/resources' },
-  },
+  // {
+  //   title: 'menus.Resources',
+  //   icon: {
+  //     dark: {
+  //       nor: ApplyImg,
+  //       active: ApplyImgActive,
+  //     },
+  //     light: {
+  //       nor: ApplyImgLight,
+  //       active: ApplyImgActive,
+  //     },
+  //   },
+  //   link: { href: '/resources' },
+  // },
   {
     title: 'menus.city-hall',
     icon: {
@@ -326,6 +329,20 @@ const items: MenuItemType[] = [
       },
     },
     link: { href: '/archive' },
+  },
+  {
+    title: 'SeeChat',
+    icon: {
+      dark: {
+        nor: EventImg,
+        active: EventImgActive,
+      },
+      light: {
+        nor: EventImgLight,
+        active: EventImgActive,
+      },
+    },
+    link: { href: '/ai' },
   },
   // {
   //   title: 'Home.OnlineEvent',
@@ -452,14 +469,41 @@ export default function Menu({ isMedium }: { isMedium: boolean }) {
   } = useAuthContext();
 
   const isLogin = useCheckLogin(account);
+  const {  showToast } = useToast();
 
-  const onSelectMenu = (m: MenuItemType) => {
+  const getApiKey = async (link:string) => {
+    dispatch({ type: AppActionType.SET_LOADING, payload: true });
+    try{
+      let rt = await loginChat();
+      console.log(rt.data.apiKey)
+      navigate(link)
+    }catch(error:any){
+      console.log(error);
+      showToast(`${error?.data?.msg || error?.code || error}`, ToastType.Danger);
+    }finally{
+      dispatch({ type: AppActionType.SET_LOADING, payload: false });
+    }
+  }
+
+  const onSelectMenu = async(m: MenuItemType) => {
     // if(m.link.href.startsWith("http")) {
     //   window.open(m.link.href, "_blank");
     // }else{
     //   navigate(m.link.href);
     // }
-    navigate(m.link.href);
+
+    if(m.link.href === "/ai"){
+      if(account){
+        await getApiKey(m.link.href)
+      }else{
+        showToast(t("Credit.CardLogin"), ToastType.Danger);
+      }
+
+    }else {
+      console.log(m.link.href);
+
+      navigate(m.link.href);
+    }
 
     if (isMedium && open) {
       dispatch({ type: AppActionType.SET_EXPAND_MENU, payload: false });
@@ -499,6 +543,7 @@ export default function Menu({ isMedium }: { isMedium: boolean }) {
         >
           <img src={theme ? MenuSwitch : MenuSwitchLight} alt="" />
         </SwitchBox>
+        <ContactAssistant />
         {menuItemsFormat.map((item) => (
           <MenuItem
             open={open}

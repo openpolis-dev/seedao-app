@@ -60,6 +60,7 @@ export default function EditProposal() {
   const [initList, setInitList] = useState<any[]>([]);
 
   useEffect(() => {
+
     if (state) {
       setData(state);
       // setVoteList((state?.votes as any)?.options ?? []);
@@ -145,6 +146,7 @@ export default function EditProposal() {
           dispatch({ type: AppActionType.SET_LOADING, payload: false });
         }
       };
+      getDetail()
     }
   }, [id, state]);
 

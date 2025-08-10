@@ -55,7 +55,8 @@ export enum PermissionAction {
 export const DefaultAvatar = '/icons/avatar.svg';
 
 export enum AssetName {
-  Credit = 'SCR',
+  Credit = 'WANG',
+  Credit2 = 'SEE',
   Token = 'USDC',
   ETH = 'ETH',
 }
@@ -71,4 +72,9 @@ export const SBT_BOARDING = '0x0D9ea891B4C30e17437D00151399990ED7965F00';
 
 export const CITYHALL_ID = 14;
 
+export const HELPER ={
+  wechat:"wechat",
+  qrcode:"qrcode",
+  mail:"mail",
+}
 
