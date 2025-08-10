@@ -73,9 +73,10 @@
 
 .contact-method {
     margin-bottom: 15px;
+
 }
 
-.contact-method strong {
+.contact-method strong,.flexLine strong {
     display: block;
     color: #666;
 }
