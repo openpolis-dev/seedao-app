@@ -38,7 +38,7 @@ const ContactAssistant = () => {
             <div className="contact-method">
               <div className="flexLine">
                 <strong>{t("wechat")}</strong>
-                <span>Fatfingererr2022</span>
+                <span>SeeDAO新人小助手</span>
               </div>
 
               <div className="box">
