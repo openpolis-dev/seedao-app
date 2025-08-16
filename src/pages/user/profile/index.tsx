@@ -1,7 +1,7 @@
 import { Button } from 'react-bootstrap';
 import styled from 'styled-components';
 import React, { useEffect, useState } from 'react';
-import { useAuthContext } from 'providers/authProvider';
+import { AppActionType, useAuthContext } from "providers/authProvider";
 import { Trans, useTranslation } from 'react-i18next';
 import useToast, { ToastType } from 'hooks/useToast';
 import { ContainerPadding } from 'assets/styles/global';
@@ -26,11 +26,14 @@ import SeeImg from "../../../assets/Imgs/profile/see.svg"
 import SeedList from '../../../components/profile/seed';
 import Sbt from '../../../components/profile/Sbt';
 import { getMyRewards } from 'requests/invite';
-import {RefreshCcw,Send,Download,ChevronUp,ChevronDown} from "lucide-react";
+import {RefreshCcw,Send,Download,ChevronUp,ChevronDown,DollarSign} from "lucide-react";
 import { DEEPSEEK_API_URL, getNewToken } from "../../../requests/chatAI";
 import SendModal from "./send";
 import Receive from "./receive";
 import Record from "./record";
+import dayjs from "dayjs";
+import requests from "../../../requests";
+import { claimSee } from "../../../requests/see";
 
 const OuterBox = styled.div`
   margin-bottom: 50px;
@@ -64,6 +67,7 @@ const AvatarBox = styled.div`
 export default function Profile() {
   const {
     state: { userData, sns },
+    dispatch
   } = useAuthContext();
   const { t } = useTranslation();
   const { Toast, showToast } = useToast();
@@ -84,6 +88,8 @@ export default function Profile() {
   const[showTransfer, setShowTransfer] = useState<boolean>(false);
   const[showReceive, setShowReceive] = useState<boolean>(false);
   const [showHistory, setShowHistory] = useState<boolean>(false);
+  const [claimed, setClaimed] = useState(false);
+  const[claimAmount, setClaimAmount] = useState<string>("");
 
   useEffect(() => {
     if (!seed?.length) return;
@@ -147,6 +153,9 @@ export default function Profile() {
       setBio(detail.bio);
       setRoles(detail.roles!);
       setApiKey(detail.ds_api_key!);
+
+      setClaimAmount(Number(detail.see?.amount_can_be_claimed).toFixed(2) ?? "0");
+      setClaimed(detail.see?.claimed ?? false);
 
       let sbtArr = detail.sbt;
       const sbtFor = sbtArr?.filter((item: any) => item.name && item.image_uri);
@@ -262,6 +271,19 @@ export default function Profile() {
 
   }
 
+  const handleClaim = async() =>{
+    // setClaimed(true)
+    try {
+      await claimSee()
+      const res = await requests.user.getUser();
+      dispatch({ type: AppActionType.SET_USER_DATA, payload: res });
+      showToast(`领取成功`, ToastType.Success);
+    } catch(error:any) {
+      console.error(error)
+      showToast(`${error?.data?.msg || error?.code || error}`, ToastType.Danger);
+    }
+
+  }
   return (
     <OuterBox>
       {Toast}
@@ -360,19 +382,31 @@ export default function Profile() {
           <img src={SeeImg} alt="" />
           <span>SEE</span>
         </TitleLft>
-        <RhtBoxB>
-          <div className="flexLine">
-            <div className="flexItem">
-              <span>{detail?.see?.amount} SEE</span>
-              <button onClick={()=>setShowTransfer(true)} ><Send size={16} />{t('see.transfer')}</button>
-              <button onClick={()=>setShowReceive(true)}><Download size={16} />{t('see.receive')}</button>
-
+        {
+          !claimed && <RhtBoxB >
+            <div className="flexLine">
+              <button onClick={()=>handleClaim()} className="claimBtn" >
+                <DollarSign size={16} /> <span>{t('see.claim')} {claimAmount} SEE</span></button>
+              <div> {t('see.timeBefore',{time:dayjs('2026.1.11 00:00:00 UTC+8').format("YYYY-MM-DD HH:mm:ss")})}</div>
             </div>
-            <div className="history" onClick={()=>setShowHistory(!showHistory)}>{t('see.record')} {showHistory ? <ChevronUp
-              size={14} />:<ChevronDown
-              size={14} />}</div>
-          </div>
-        </RhtBoxB>
+          </RhtBoxB>
+        }
+        {
+          claimed &&   <RhtBoxB>
+            <div className="flexLine">
+              <div className="flexItem">
+                <span>{detail?.see?.amount} SEE</span>
+                <button onClick={()=>setShowTransfer(true)} ><Send size={16} />{t('see.transfer')}</button>
+                <button onClick={()=>setShowReceive(true)}><Download size={16} />{t('see.receive')}</button>
+
+              </div>
+              <div className="history" onClick={()=>setShowHistory(!showHistory)}>{t('see.record')} {showHistory ? <ChevronUp
+                size={14} />:<ChevronDown
+                size={14} />}</div>
+            </div>
+          </RhtBoxB>
+        }
+
         {
           showHistory &&  <Record />
         }
@@ -724,6 +758,13 @@ const RhtBoxB = styled.div`
         color: var(--bs-primary);
         cursor: pointer;
     }
+    .claimBtn{
+        gap:20px;
+        background: var(--bs-primary)!important;
+        color: white!important;
+        padding: 10px!important;
+        border-radius: 10px!important;
+    }
 
 `;
 
@@ -763,6 +804,7 @@ const RhtBox = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-end;
+
 `;
 
 const InviteDetail = styled.span`
