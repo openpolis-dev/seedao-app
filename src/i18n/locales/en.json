@@ -943,6 +943,8 @@
     "record": "Record",
     "from": "From",
     "to": "To",
-    "time": "Time"
+    "time": "Time",
+    "claim": "Claim",
+    "timeBefore": "Valid until {{time}}"
   }
 }

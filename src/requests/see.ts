@@ -11,7 +11,7 @@ interface dataParams {
 }
 
 export const transferSEE = (data:dataParams): Promise<ResponseData<any>> => {
-  return request.post(`${PATH_PREFIX}`,data);
+  return request.post(`${PATH_PREFIX}/new`,data);
 };
 
 interface dataObj {
@@ -24,5 +24,12 @@ interface dataObj {
 export const getSeeList = (data:dataObj): Promise<ResponseData<any>> => {
 
   const {from_user,to_user,page,size} = data;
-  return request.get(`${PATH_PREFIX}?from_user=${from_user??""}&to_user=${to_user??""}&page=${page}&size=${size}`);
+  return request.get(`${PATH_PREFIX}/my?from_user=${from_user??""}&to_user=${to_user??""}&page=${page}&size=${size}`);
 };
+
+export const claimSee = (): Promise<ResponseData<any>> => {
+
+  return request.post(`${PATH_PREFIX}claim_see`);
+};
+
+

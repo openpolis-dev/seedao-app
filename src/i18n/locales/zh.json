@@ -946,7 +946,9 @@
     "record": "交易记录",
     "from": "发送方",
     "to": "接收方",
-    "time": "交易时间"
+    "time": "交易时间",
+    "claim": "领取",
+    "timeBefore": "{{time}} 前有效"
 
   }
 }
