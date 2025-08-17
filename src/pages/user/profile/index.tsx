@@ -282,7 +282,6 @@ export default function Profile() {
       console.error(error)
       showToast(`${error?.data?.msg || error?.code || error}`, ToastType.Danger);
     }
-
   }
   return (
     <OuterBox>
@@ -385,7 +384,7 @@ export default function Profile() {
         {
           !claimed && <RhtBoxB >
             <div className="flexLine">
-              <button onClick={()=>handleClaim()} className="claimBtn" >
+              <button onClick={()=>handleClaim()} className="claimBtn" disabled={!Number(claimAmount)} >
                 <DollarSign size={16} /> <span>{t('see.claim')} {claimAmount} SEE</span></button>
               <div> {t('see.timeBefore',{time:dayjs('2026.1.11 00:00:00 UTC+8').format("YYYY-MM-DD HH:mm:ss")})}</div>
             </div>
@@ -764,6 +763,10 @@ const RhtBoxB = styled.div`
         color: white!important;
         padding: 10px!important;
         border-radius: 10px!important;
+        &:disabled{
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
     }
 
 `;
