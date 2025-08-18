@@ -1,6 +1,6 @@
 import request, { ResponseData } from './http';
 
-const PATH_PREFIX = '/asset_trade/';
+const PATH_PREFIX = '/asset_trade';
 
 
 interface dataParams {
@@ -29,7 +29,7 @@ export const getSeeList = (data:dataObj): Promise<ResponseData<any>> => {
 
 export const claimSee = (): Promise<ResponseData<any>> => {
 
-  return request.post(`${PATH_PREFIX}claim_see`);
+  return request.post(`${PATH_PREFIX}/claim_see`);
 };
 
 
