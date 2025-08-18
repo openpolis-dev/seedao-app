@@ -74,6 +74,11 @@ export default function SendModal({handleClose}:any){
       const rpc  = getConfig().NETWORK.rpcs[0];
       let snsAddress = await sns.resolve(address,rpc);
       console.log(snsAddress);
+      const isZeroAddress = snsAddress === "0x0000000000000000000000000000000000000000";
+      if(isZeroAddress){
+        showToast(t('Msg.RequiredWallet'), ToastType.Danger);
+        return;
+      }
 
       let obj= {
       to:snsAddress,
