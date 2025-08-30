@@ -328,8 +328,8 @@ export default function Index() {
               <VaultInfo>
                 <SeeVault v={wallets[VaultAddress.CommunityVaultPolygon.toLocaleLowerCase()]} t={t} />
                 <SeeVault v={wallets[VaultAddress.CommunityVault.toLocaleLowerCase()]} t={t} />
-                <SeeVault v={wallets[VaultAddress.CityHallVault.toLocaleLowerCase()]} t={t} />
-                <SeeVault v={wallets[VaultAddress.IncubatorVault.toLocaleLowerCase()]} t={t} />
+                {/*<SeeVault v={wallets[VaultAddress.CityHallVault.toLocaleLowerCase()]} t={t} />*/}
+                {/*<SeeVault v={wallets[VaultAddress.IncubatorVault.toLocaleLowerCase()]} t={t} />*/}
               </VaultInfo>
             </div>
           </VaultOverview>
@@ -553,7 +553,7 @@ const VaultItem = styled.li`
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  width: 25%;
+  width: 50%;
   color: #fff;
   .info-left {
     .name {
