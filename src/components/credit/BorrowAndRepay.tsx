@@ -50,7 +50,7 @@ export default function BorrowAndRepay({ isLogin, onUpdate }: { isLogin: boolean
 
   return (
     <BorrowAndRepayStyle>
-      <CreditButton onClick={openBorrow}>{t('Credit.GoToBorrow')}</CreditButton>
+      {/*<CreditButton onClick={openBorrow}>{t('Credit.GoToBorrow')}</CreditButton>*/}
       <CreditPlainButton onClick={openRepay}>{t('Credit.GoToRepay')}</CreditPlainButton>
       {showModal === 'borrow' && <BorrowModal handleClose={handleCloseModal} />}
       {showModal === 'repay' && <RepayModal handleClose={handleCloseModal} />}
